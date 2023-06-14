@@ -16,12 +16,13 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-node/esm' --trace-warnings src/main.ts | pino-pretty",
+    "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-node/esm' src/main.ts | pino-pretty",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "fastify": "^4.18.0",
     "pino-pretty": "^10.0.0",
+    "prisma": "^4.15.0",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.7.0"
   },
