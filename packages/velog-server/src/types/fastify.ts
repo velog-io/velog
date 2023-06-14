@@ -2,6 +2,7 @@ import "fastify";
 
 declare module "fastify" {
   interface FastifyRequest {
-    ipaddr: string;
+    user: null;
+    ipaddr: string | null;
   }
 }

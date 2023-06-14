@@ -4,6 +4,7 @@ export type EnvVars = {
   appEnv: Envrionment;
   port: number;
   clientHost: string;
+  cookieSecretKey: string;
   jwtSecretKey: string;
   awsDefaultProfile: string;
   esHost: string;
