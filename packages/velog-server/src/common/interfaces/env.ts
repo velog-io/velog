@@ -1,7 +1,7 @@
 export type Envrionment = "development" | "production" | "test" | "stage";
 export type EnvFiles = Record<Envrionment, string>;
 export type EnvVars = {
-  appEnv: string;
+  appEnv: Envrionment;
   port: number;
   clientHost: string;
   jwtSecretKey: string;
