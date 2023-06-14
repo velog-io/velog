@@ -1,5 +1,5 @@
 import Fastify from "fastify";
-import { ipaddr } from "@common/plugins/ipaddr.plugin";
+import { ipaddr } from "@common/plugins/ipaddr.plugin.js";
 
 const app = Fastify({
   logger: true,
