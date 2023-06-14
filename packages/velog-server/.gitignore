@@ -11,12 +11,8 @@
 # build
 /dist
 
-# config
-/config/development.ts
-/config/production.ts
-/config/test.ts
-
 #env
-.env.development
-.env.production
+/env/.env.*
+!/env/.gitkeep
+.env.*
 .env

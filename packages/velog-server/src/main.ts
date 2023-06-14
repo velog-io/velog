@@ -1,10 +1,9 @@
 import app from "./app.js";
+import { ENV } from "./env.js";
 
 async function bootstrap() {
-  const PORT = process.env.PORT || "5000";
-  app.listen({ port: parseInt(PORT) });
-
-  console.log(`Server listening on port ${PORT}`);
+  app.listen({ port: ENV.port });
+  console.log(`Server listening on port ${ENV.port}`);
 }
 
 bootstrap();
