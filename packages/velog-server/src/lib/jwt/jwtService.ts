@@ -1,6 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
 import { injectable } from 'tsyringe'
-import { ONE_DAY_IN_MS } from '@constants/time.constants.js'
+import { ONE_DAY_IN_MS } from '@constants/timeConstants.js'
 import { ENV } from 'src/env.js'
 
 @injectable()
