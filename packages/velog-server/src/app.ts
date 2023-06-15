@@ -3,7 +3,8 @@ import Fastify from "fastify";
 import formbody from "@fastify/formbody";
 import cookie from "@fastify/cookie";
 import { ENV } from "src/env.js";
-import { resolveDir } from "@common/utils/resolveDir.js";
+import { Utils } from "@lib/utils/utils.js";
+import { container } from "tsyringe";
 
 const app = Fastify({
   logger: true,
@@ -11,8 +12,10 @@ const app = Fastify({
 
 app.register(cookie, { secret: ENV.cookieSecretKey });
 app.register(formbody);
+
+const utils = container.resolve(Utils);
 app.register(autoload, {
-  dir: resolveDir("src/common/plugins/global/"),
+  dir: utils.resolveDir("src/common/plugins/global/"),
   encapsulate: false,
   forceESM: true,
 });

@@ -1,9 +1,7 @@
 import dotenv from "dotenv";
-
-import { dirname, resolve } from "path";
-import { fileURLToPath } from "url";
 import { Envrionment, EnvFiles, EnvVars } from "./common/interfaces/env";
-import { resolveDir } from "@common/utils/resolveDir.js";
+import { container } from "tsyringe";
+import { Utils } from "@lib/utils/utils";
 
 const envFiles: EnvFiles = {
   development: ".env.development",
@@ -15,7 +13,8 @@ const envFiles: EnvFiles = {
 const appEnv = (process.env.APP_ENV as Envrionment) || "development";
 
 const file = envFiles[appEnv];
-dotenv.config({ path: resolveDir(`./env/${file}`) });
+const utils = container.resolve(Utils);
+dotenv.config({ path: utils.resolveDir(`./env/${file}`) });
 
 export const ENV = {
   appEnv,
