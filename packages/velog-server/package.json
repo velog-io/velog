@@ -18,6 +18,7 @@
     "build": "tsc",
     "dev": "dotenv -e ./env/.env.development | nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
     "start": "node ./dist/main.js",
+    "codegen": "graphql-codegen --config codegen.yml",
     "test": "jest"
   },
   "dependencies": {
@@ -25,17 +26,27 @@
     "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.3.0",
     "@fastify/formbody": "^7.4.0",
+    "@graphql-tools/graphql-file-loader": "^8.0.0",
+    "@graphql-tools/load": "^8.0.0",
+    "@graphql-tools/merge": "^9.0.0",
+    "@graphql-tools/schema": "^10.0.0",
     "@prisma/client": "4.15.0",
     "dotenv": "^16.1.4",
     "fastify": "^4.18.0",
     "graphql": "^16.6.0",
+    "graphql-scalars": "^1.22.2",
     "mercurius": "^13.0.0",
     "pino-pretty": "^10.0.0",
     "prisma": "^4.15.0",
     "reflect-metadata": "^0.1.13",
-    "tsyringe": "^4.7.0"
+    "tsyringe": "^4.7.0",
+    "utility-types": "^3.10.0"
   },
   "devDependencies": {
+    "@graphql-codegen/add": "^5.0.0",
+    "@graphql-codegen/cli": "^4.0.1",
+    "@graphql-codegen/typescript": "^4.0.0",
+    "@graphql-codegen/typescript-resolvers": "^4.0.0",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
     "@typescript-eslint/eslint-plugin": "^5.59.11",

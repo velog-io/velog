@@ -1,0 +1,18 @@
+type Series {
+  id: ID!
+  user: User
+  name: String
+  description: String
+  url_slug: String
+  created_at: Date
+  updated_at: Date
+  series_posts: [SeriesPost]
+  thumbnail: String
+  posts_count: Int
+}
+
+type SeriesPost {
+  id: ID!
+  index: Int
+  post: Post
+}

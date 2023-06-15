@@ -1,0 +1,114 @@
+enum ReadingListOption {
+  LIKED
+  READ
+}
+
+type ReadCountByDay {
+  count: Int
+  day: Date
+}
+
+type Stats {
+  total: Int
+  count_by_day: [ReadCountByDay]
+}
+
+type LinkedPosts {
+  previous: Post
+  next: Post
+}
+
+type Post {
+  id: ID!
+  title: String
+  body: String
+  thumbnail: String
+  is_markdown: Boolean
+  is_temp: Boolean
+  user: User
+  url_slug: String
+  likes: Int
+  meta: JSON
+  views: Int
+  is_private: Boolean
+  released_at: Date
+  created_at: Date
+  updated_at: Date
+  short_description: String
+  comments: [Comment]
+  tags: [String]
+  comments_count: Int
+  series: Series
+  liked: Boolean
+  linked_posts: LinkedPosts
+  last_read_at: Date
+  recommended_posts: [Post]
+}
+
+type SearchResult {
+  count: Int
+  posts: [Post]
+}
+
+type PostHistory {
+  id: ID
+  fk_post_id: ID
+  title: String
+  body: String
+  is_markdown: Boolean
+  created_at: Date
+}
+
+type Query {
+  # post(id: ID, username: String, url_slug: String): Post
+  posts(cursor: ID, limit: Int, username: String, temp_only: Boolean, tag: String): [Post]
+  recentPosts(cursor: ID, limit: Int): [Post]
+  trendingPosts(offset: Int, limit: Int, timeframe: String): [Post]
+  # searchPosts(keyword: String!, offset: Int, limit: Int, username: String): SearchResult
+  # postHistories(post_id: ID): [PostHistory]
+  # lastPostHistory(post_id: ID!): PostHistory
+  # readingList(type: ReadingListOption, cursor: ID, limit: Int): [Post]
+  # getStats(post_id: ID!): Stats
+}
+
+input WritePostInput {
+  title: String
+  body: String
+  tags: [String]
+  is_markdown: Boolean
+  is_temp: Boolean
+  is_private: Boolean
+  url_slug: String
+  thumbnail: String
+  meta: JSON
+  series_id: ID
+}
+
+input EditPostInput {
+  id: ID!
+  title: String
+  body: String
+  tags: [String]
+  is_markdown: Boolean
+  is_temp: Boolean
+  url_slug: String
+  thumbnail: String
+  meta: JSON
+  is_private: Boolean
+  series_id: ID
+}
+
+type Mutation {
+  writePost(input: WritePostInput!): Post
+  editPost(input: EditPostInput): Post
+  createPostHistory(
+    post_id: ID!
+    title: String!
+    body: String!
+    is_markdown: Boolean!
+  ): PostHistory
+  # removePost(id: ID!): Boolean
+  # likePost(id: ID!): Post
+  # unlikePost(id: ID!): Post
+  # postView(id: ID!): Boolean
+}

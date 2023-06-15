@@ -1,0 +1,12 @@
+type Comment {
+  id: ID!
+  text: String
+  likes: Int
+  level: Int
+  has_replies: Boolean
+  deleted: Boolean
+  user: User
+  replies: [Comment]
+  created_at: Date
+  replies_count: Int
+}

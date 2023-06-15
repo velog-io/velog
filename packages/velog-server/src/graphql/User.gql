@@ -1,0 +1,35 @@
+type User {
+  id: ID!
+  username: String
+  email: String
+  created_at: Date
+  updated_at: Date
+  is_certified: Boolean
+  profile: UserProfile
+  velog_config: VelogConfig
+  series_list: [Series]
+  user_meta: UserMeta
+}
+
+type UserProfile {
+  id: ID!
+  display_name: String
+  short_bio: String
+  thumbnail: String
+  created_at: Date
+  updated_at: Date
+  about: String
+  profile_links: JSON
+}
+
+type VelogConfig {
+  id: ID!
+  title: String
+  logo_image: String
+}
+
+type UserMeta {
+  id: ID!
+  email_notification: Boolean
+  email_promotion: Boolean
+}
