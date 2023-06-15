@@ -1,4 +1,4 @@
-import { HttpError } from '@common/errors/httpError.js'
+import { HttpError } from './httpError.js'
 
 export class ConfilctError extends HttpError {
   constructor(description = 'CONFILCT') {

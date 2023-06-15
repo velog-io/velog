@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
-import { Envrionment, EnvFiles, EnvVars } from './common/interfaces/env'
+import { Envrionment, EnvFiles, EnvVars } from './common/interfaces/env.js'
 import { container } from 'tsyringe'
-import { Utils } from '@lib/utils/utils.js'
+import { UtilService } from '@lib/utils/utilService.js'
 
 const envFiles: EnvFiles = {
   development: '.env.development',
@@ -13,7 +13,7 @@ const envFiles: EnvFiles = {
 const appEnv = (process.env.APP_ENV as Envrionment) || 'development'
 
 const file = envFiles[appEnv]
-const utils = container.resolve(Utils)
+const utils = container.resolve(UtilService)
 dotenv.config({ path: utils.resolveDir(`./env/${file}`) })
 
 export const ENV = {

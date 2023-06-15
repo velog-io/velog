@@ -6,10 +6,10 @@ type TokenData = {
 }
 
 export type AccessTokenData = {
-  user_id: string
+  userId: string
 } & TokenData
 
 export type RefreshTokenData = {
-  user_id: string
-  token_id: string
+  userId: string
+  tokenId: string
 } & TokenData

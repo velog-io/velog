@@ -1,4 +1,4 @@
-import { HttpError } from '@common/errors/httpError.js'
+import { HttpError } from './httpError.js'
 
 export class NotFoundError extends HttpError {
   constructor(description = 'NOT_FOUND') {

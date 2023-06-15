@@ -6,7 +6,7 @@ import { IResolvers, MercuriusContext } from 'mercurius'
 import { resolve } from 'path'
 
 export const schema = loadSchemaSync(
-  resolve(__dirname, './../../src/graphql/*.gql'),
+  resolve(process.cwd(), 'src/graphql/*.gql'),
   {
     loaders: [new GraphQLFileLoader()],
   }

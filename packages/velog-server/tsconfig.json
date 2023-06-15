@@ -8,7 +8,6 @@
     "moduleResolution": "Node",                   
     "baseUrl": "./",                               
     "paths": {                                     
-      "@common/*": ["src/common/*"],
       "@plugins/*": ["src/common/plugins/*"],
       "@constants/*": ["src/common/constants/*"],
       "@errors/*": ["src/common/errors/*"],

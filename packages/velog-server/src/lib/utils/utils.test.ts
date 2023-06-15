@@ -1,10 +1,10 @@
-import { Utils } from '@lib/utils/utils'
+import { UtilService } from '@lib/utils/utilService'
 import { container } from 'tsyringe'
 
 describe('Utils', () => {
-  const utils = container.resolve(Utils)
+  const utilServie = container.resolve(UtilService)
   it('[resolveDir]', () => {
     const path = '/env/.env.developent'
-    expect(utils.resolveDir(path)).toContain(path)
+    expect(utilServie.resolveDir(path)).toContain(path)
   })
 })

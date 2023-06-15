@@ -1,8 +1,8 @@
 import mercurius from 'mercurius'
 import { schema, resolvers } from '@graphql/index.js'
 import type { FastifyPluginAsync } from 'fastify'
-import { GraphQLContext } from '@common/interfaces/graphql'
-import { ENV } from 'src/env'
+import { GraphQLContext } from '@interfaces/graphql.js'
+import { ENV } from 'src/env.js'
 
 const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.register(mercurius, {

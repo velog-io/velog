@@ -1,9 +1,10 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
-import { ENV } from 'src/env'
 import { injectable } from 'tsyringe'
+import { ONE_DAY_IN_MS } from '@constants/time.constants.js'
+import { ENV } from 'src/env.js'
 
 @injectable()
-export class Jwt {
+export class JwtService {
   public generateToken(
     payload: string | Buffer | object,
     options?: SignOptions
@@ -34,5 +35,40 @@ export class Jwt {
         resolve(decoded as T)
       })
     })
+  }
+  public async refreshUserToken(
+    userId: string,
+    tokenId: string,
+    refreshTokenExp: number,
+    originalRefreshToken: string
+  ) {
+    const now = new Date().getTime()
+    const diff = refreshTokenExp * 1000 - now
+    let refreshToken = originalRefreshToken
+    if (diff < ONE_DAY_IN_MS * 23) {
+      console.log('refreshing refreshToken')
+      refreshToken = await this.generateToken(
+        {
+          userId,
+          tokenId,
+        },
+        {
+          subject: 'refresh_token',
+          expiresIn: '30d',
+        }
+      )
+    }
+
+    const accessToken = await this.generateToken(
+      {
+        userId: userId,
+      },
+      {
+        subject: 'access_token',
+        expiresIn: '1h',
+      }
+    )
+
+    return { accessToken, refreshToken }
   }
 }
