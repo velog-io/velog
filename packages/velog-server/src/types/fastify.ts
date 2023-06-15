@@ -1,8 +1,8 @@
-import "fastify";
+import 'fastify'
 
-declare module "fastify" {
+declare module 'fastify' {
   interface FastifyRequest {
-    user: null;
-    ipaddr: string | null;
+    user: null
+    ipaddr: string | null
   }
 }
