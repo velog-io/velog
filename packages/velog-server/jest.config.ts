@@ -18,7 +18,7 @@ const config: Config = {
   testEnvironment: "node",
   rootDir: "./",
   modulePaths: ["./"],
-  // moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 };
 
 export default config;
