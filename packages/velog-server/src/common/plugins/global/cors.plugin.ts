@@ -1,9 +1,9 @@
 import { FastifyPluginAsync } from 'fastify'
 import { ENV } from 'src/env.js'
-import { default as fastifyCors } from '@fastify/cors'
+import cors from '@fastify/cors'
 import { ForbiddenError } from '@common/errors/forbiddenError.js'
 
-const cors: FastifyPluginAsync = async (fastify) => {
+const corsPlugin: FastifyPluginAsync = async (fastify) => {
   const corsWhitelist: RegExp[] = [
     /^https:\/\/velog.io$/,
     /^https:\/\/alpha.velog.io$/,
@@ -16,7 +16,7 @@ const cors: FastifyPluginAsync = async (fastify) => {
     corsWhitelist.push(/^http:\/\/localhost/)
   }
 
-  fastify.register(fastifyCors, {
+  fastify.register(cors, {
     credentials: true,
     origin: (origin, callback) => {
       if (!origin || corsWhitelist.some((re) => re.test(origin))) {
@@ -28,4 +28,4 @@ const cors: FastifyPluginAsync = async (fastify) => {
   })
 }
 
-export default cors
+export default corsPlugin

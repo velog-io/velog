@@ -5,7 +5,7 @@ export const startClosing = () => {
   isClosing = true
 }
 
-const keepAlive: FastifyPluginAsync = async (fastify) => {
+const keepAlivePlugin: FastifyPluginAsync = async (fastify) => {
   fastify.addHook('onRequest', (_, reply, done) => {
     if (isClosing) {
       // http.send but nothing contents
@@ -15,4 +15,4 @@ const keepAlive: FastifyPluginAsync = async (fastify) => {
   })
 }
 
-export default keepAlive
+export default keepAlivePlugin

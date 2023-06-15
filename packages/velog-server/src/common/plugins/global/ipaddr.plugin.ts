@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify'
 
-const ipaddr: FastifyPluginAsync = async (fastify) => {
+const ipaddrPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('ipaddr', null)
   fastify.addHook('onRequest', (request) => {
     const fromCdnIp = request.headers['gcdn-client-ip']
@@ -9,4 +9,4 @@ const ipaddr: FastifyPluginAsync = async (fastify) => {
   })
 }
 
-export default ipaddr
+export default ipaddrPlugin

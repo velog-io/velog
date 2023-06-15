@@ -9,6 +9,11 @@
     "baseUrl": "./",                               
     "paths": {                                     
       "@common/*": ["src/common/*"],
+      "@plugins/*": ["src/common/plugins/*"],
+      "@constants/*": ["src/common/constants/*"],
+      "@errors/*": ["src/common/errors/*"],
+      "@templates/*": ["src/common/templates/*"],
+      "@interfaces/*": ["src/common/interfaces/*"],
       "@graphql/*": ["src/graphql/*"],
       "@test/*": ["src/test/*"],
       "@lib/*": ["src/lib/*"],
