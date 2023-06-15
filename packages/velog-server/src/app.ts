@@ -6,6 +6,8 @@ import { ENV } from "src/env.js";
 import { Utils } from "@lib/utils/utils.js";
 import { container } from "tsyringe";
 
+const a = "helo";
+
 const app = Fastify({
   logger: true,
 });

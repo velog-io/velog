@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-import { pathsToModuleNameMapper } from "ts-jest";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const compilerOptions = require("./tsconfig.json");
+import { pathsToModuleNameMapper } from "ts-jest";
 import type { Config } from "jest";
 
 const config: Config = {
