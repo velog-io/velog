@@ -4,8 +4,16 @@ import { UserService } from '@services/userService/userService.js'
 import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import { container } from 'tsyringe'
 import { CookieService } from '@lib/cookie/cookieService.js'
+import {
+  ONE_DAY_IN_MS,
+  ONE_HOUR_IN_MS,
+  ONE_MINUTE_IN_MS,
+} from '@constants/timeConstants'
 
-const refresh = async (reply: FastifyReply, refreshToken: string) => {
+const refresh = async (
+  reply: FastifyReply,
+  refreshToken: string
+): Promise<string> => {
   try {
     const jwtService = container.resolve(JwtService)
     const decoded = await jwtService.decodeToken<RefreshTokenData>(refreshToken)
@@ -13,8 +21,7 @@ const refresh = async (reply: FastifyReply, refreshToken: string) => {
     const user = await userService.findById(decoded.userId)
 
     if (!user) {
-      const error = new Error('InvalidUserError')
-      throw error
+      throw new Error('InvalidUserError')
     }
 
     const tokens = await jwtService.refreshUserToken(
@@ -26,9 +33,12 @@ const refresh = async (reply: FastifyReply, refreshToken: string) => {
 
     const cookieService = container.resolve(CookieService)
     cookieService.setCookie(reply, 'access_token', tokens.accessToken, {
-      maxAge: 1000 * 60 * 60,
+      maxAge: ONE_HOUR_IN_MS,
     })
-    return decoded.userId
+    cookieService.setCookie(reply, 'refresh_token', tokens.refreshToken, {
+      maxAge: ONE_DAY_IN_MS * 30,
+    })
+    return user.id
   } catch (e) {
     throw e
   }
@@ -42,7 +52,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
     let accessToken: string | undefined = request.cookies['access_token']
     const refreshToken: string | undefined = request.cookies['refresh_token']
 
-    const { authorization } = request.headers
+    const authorization = request.headers['authorization']
 
     if (!accessToken && authorization) {
       accessToken = authorization.split(' ')[1]
@@ -60,7 +70,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
       request.user!.id = accessTokenData.userId
       // refresh token when life < 30mins
       const diff = accessTokenData.exp * 1000 - new Date().getTime()
-      if (diff < 1000 * 60 * 30 && refreshToken) {
+      if (diff < ONE_MINUTE_IN_MS * 30 && refreshToken) {
         await refresh(reply, refreshToken)
       }
     } catch (e) {
