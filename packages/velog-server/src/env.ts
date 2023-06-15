@@ -43,7 +43,6 @@ export const ENV = {
     token: process.env.SLACK_TOKEN,
     image: process.env.SLACK_IMAGE,
   },
-
   googleApplicationCredentials: process.env.GOOGLE_APPLICATION_CREDENTIALS,
   banned: {
     keywords: process.env.BANNED_KEYWORDS,

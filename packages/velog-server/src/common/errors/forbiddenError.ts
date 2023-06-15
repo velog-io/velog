@@ -1,4 +1,4 @@
-import { HttpError } from "@common/errors/httpError";
+import { HttpError } from "@common/errors/httpError.js";
 
 export class ForbiddenError extends HttpError {
   constructor(description = "FORBIDDEN") {
