@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from "fastify";
 
-export const consumeUser: FastifyPluginAsync = async (fastify) => {
+const consumeUser: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest("user", null);
   fastify.addHook("preHandler", (request, reply, done) => {
     if (request.url.includes("/auth/logout")) return;
@@ -38,3 +38,5 @@ export const consumeUser: FastifyPluginAsync = async (fastify) => {
     // }
   });
 };
+
+export default consumeUser;

@@ -1,10 +1,9 @@
+import autoload from "@fastify/autoload";
 import Fastify from "fastify";
 import formbody from "@fastify/formbody";
 import cookie from "@fastify/cookie";
 import { ENV } from "src/env.js";
-import { ipaddr } from "@common/plugins/hooks/ipaddr.plugin.js";
-import { cors } from "@common/plugins/global/cors.plugin.js";
-import { keepAlive } from "@common/plugins/hooks/keepAlive.plugin.js";
+import { resolveDir } from "@common/utils/resolveDir.js";
 
 const app = Fastify({
   logger: true,
@@ -12,8 +11,10 @@ const app = Fastify({
 
 app.register(cookie, { secret: ENV.cookieSecretKey });
 app.register(formbody);
-app.register(ipaddr);
-app.register(cors);
-app.register(keepAlive);
+app.register(autoload, {
+  dir: resolveDir("src/common/plugins/global/"),
+  encapsulate: false,
+  forceESM: true,
+});
 
 export default app;
