@@ -6,7 +6,7 @@ export const startClosing = () => {
 };
 
 export const keepAlive: FastifyPluginAsync = async (fastify) => {
-  fastify.addHook("preHandler", (_, reply, done) => {
+  fastify.addHook("onRequest", (_, reply, done) => {
     if (isClosing) {
       // http.send but nothing contents
       reply.send();

@@ -20,6 +20,7 @@
     "start": "node ./dist/main.js"
   },
   "dependencies": {
+    "@fastify/autoload": "^5.7.1",
     "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.3.0",
     "@fastify/formbody": "^7.4.0",

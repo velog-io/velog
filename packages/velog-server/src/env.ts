@@ -3,12 +3,7 @@ import dotenv from "dotenv";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import { Envrionment, EnvFiles, EnvVars } from "./common/interfaces/env";
-
-function resolveDir(dir: string) {
-  const currentDir = dirname(fileURLToPath(import.meta.url));
-  const resolvedDir = resolve(currentDir, dir);
-  return resolvedDir;
-}
+import { resolveDir } from "@common/utils/resolveDir.js";
 
 const envFiles: EnvFiles = {
   development: ".env.development",
@@ -20,8 +15,7 @@ const envFiles: EnvFiles = {
 const appEnv = (process.env.APP_ENV as Envrionment) || "development";
 
 const file = envFiles[appEnv];
-
-dotenv.config({ path: resolveDir(`../env/${file}`) });
+dotenv.config({ path: resolveDir(`./env/${file}`) });
 
 export const ENV = {
   appEnv,

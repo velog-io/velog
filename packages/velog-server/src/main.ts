@@ -3,7 +3,7 @@ import { Db } from "@lib/db/db.js";
 import app from "./app.js";
 import { ENV } from "./env.js";
 import { container } from "tsyringe";
-import { startClosing } from "@common/plugins/keepAlive.plugin.js";
+import { startClosing } from "@common/plugins/hooks/keepAlive.plugin.js";
 
 async function bootstrap() {
   const dbService = container.resolve(Db);
