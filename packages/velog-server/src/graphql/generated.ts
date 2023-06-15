@@ -137,8 +137,6 @@ export type PostHistory = {
 export type Query = {
   __typename?: 'Query'
   posts?: Maybe<Array<Maybe<Post>>>
-  recentPosts?: Maybe<Array<Maybe<Post>>>
-  trendingPosts?: Maybe<Array<Maybe<Post>>>
 }
 
 export type QueryPostsArgs = {
@@ -147,17 +145,6 @@ export type QueryPostsArgs = {
   tag?: InputMaybe<Scalars['String']['input']>
   temp_only?: InputMaybe<Scalars['Boolean']['input']>
   username?: InputMaybe<Scalars['String']['input']>
-}
-
-export type QueryRecentPostsArgs = {
-  cursor?: InputMaybe<Scalars['ID']['input']>
-  limit?: InputMaybe<Scalars['Int']['input']>
-}
-
-export type QueryTrendingPostsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  timeframe?: InputMaybe<Scalars['String']['input']>
 }
 
 export type ReadCountByDay = {
@@ -585,18 +572,6 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     Partial<QueryPostsArgs>
-  >
-  recentPosts?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['Post']>>>,
-    ParentType,
-    ContextType,
-    Partial<QueryRecentPostsArgs>
-  >
-  trendingPosts?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['Post']>>>,
-    ParentType,
-    ContextType,
-    Partial<QueryTrendingPostsArgs>
   >
 }
 

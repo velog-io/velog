@@ -8,7 +8,7 @@ import {
   ONE_DAY_IN_MS,
   ONE_HOUR_IN_MS,
   ONE_MINUTE_IN_MS,
-} from '@constants/timeConstants'
+} from '@constants/timeConstants.js'
 
 const refresh = async (
   reply: FastifyReply,

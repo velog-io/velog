@@ -62,8 +62,8 @@ type PostHistory {
 type Query {
   # post(id: ID, username: String, url_slug: String): Post
   posts(cursor: ID, limit: Int, username: String, temp_only: Boolean, tag: String): [Post]
-  recentPosts(cursor: ID, limit: Int): [Post]
-  trendingPosts(offset: Int, limit: Int, timeframe: String): [Post]
+  # recentPosts(cursor: ID, limit: Int): [Post]
+  # trendingPosts(offset: Int, limit: Int, timeframe: String): [Post]
   # searchPosts(keyword: String!, offset: Int, limit: Int, username: String): SearchResult
   # postHistories(post_id: ID): [PostHistory]
   # lastPostHistory(post_id: ID!): PostHistory
