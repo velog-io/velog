@@ -1,5 +1,10 @@
-describe("Utils", () => {
-  it("should return a string", () => {
-    expect(1 + 1).toBe(2);
-  });
-});
+import { Utils } from '@lib/utils/utils'
+import { container } from 'tsyringe'
+
+describe('Utils', () => {
+  const utils = container.resolve(Utils)
+  it('[resolveDir]', () => {
+    const path = '/env/.env.developent'
+    expect(utils.resolveDir(path)).toContain(path)
+  })
+})

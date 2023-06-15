@@ -1,20 +1,20 @@
-import dotenv from "dotenv";
-import { Envrionment, EnvFiles, EnvVars } from "./common/interfaces/env";
-import { container } from "tsyringe";
-import { Utils } from "@lib/utils/utils";
+import dotenv from 'dotenv'
+import { Envrionment, EnvFiles, EnvVars } from './common/interfaces/env'
+import { container } from 'tsyringe'
+import { Utils } from '@lib/utils/utils.js'
 
 const envFiles: EnvFiles = {
-  development: ".env.development",
-  production: ".env.production",
-  test: ".env.test",
-  stage: ".env.stage",
-};
+  development: '.env.development',
+  production: '.env.production',
+  test: '.env.test',
+  stage: '.env.stage',
+}
 
-const appEnv = (process.env.APP_ENV as Envrionment) || "development";
+const appEnv = (process.env.APP_ENV as Envrionment) || 'development'
 
-const file = envFiles[appEnv];
-const utils = container.resolve(Utils);
-dotenv.config({ path: utils.resolveDir(`./env/${file}`) });
+const file = envFiles[appEnv]
+const utils = container.resolve(Utils)
+dotenv.config({ path: utils.resolveDir(`./env/${file}`) })
 
 export const ENV = {
   appEnv,
@@ -66,4 +66,4 @@ export const ENV = {
     callback: process.env.CODENARY_CALLBACK,
   },
   databaseUrl: process.env.DATABASE_URL,
-} as EnvVars;
+} as EnvVars
