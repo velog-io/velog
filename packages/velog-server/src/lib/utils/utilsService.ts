@@ -1,7 +1,8 @@
 import { resolve } from 'path'
-import { injectable } from 'tsyringe'
+import { injectable, singleton } from 'tsyringe'
 
 @injectable()
+@singleton()
 export class UtilsService {
   public resolveDir = (dir: string): string => {
     return resolve(process.cwd(), dir)

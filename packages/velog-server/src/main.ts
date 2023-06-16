@@ -5,7 +5,7 @@ import { container } from 'tsyringe'
 import { startClosing } from '@plugins/global/keepAlivePlugin.js'
 import { DbService } from '@lib/db/dbService.js'
 
-async function bootstrap() {
+async function main() {
   const dbService = container.resolve(DbService)
 
   await dbService.$connect()
@@ -20,4 +20,4 @@ async function bootstrap() {
   })
 }
 
-bootstrap()
+main()

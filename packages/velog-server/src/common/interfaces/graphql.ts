@@ -1,4 +1,4 @@
-import { CurrentUser } from '@common/interfaces/user'
+import { CurrentUser } from '@interfaces/user'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 export type GraphQLContext = {
