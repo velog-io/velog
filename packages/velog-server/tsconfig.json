@@ -30,7 +30,9 @@
     "skipLibCheck": true
   },
   "include": ["./src", ".eslintrc.cjs", "jest.*"],
-  "exclude": [],
+    "exclude": [
+    "src/**/*.test.ts"
+  ],
   "ts-node": {
     "transpileOnly": true
   }

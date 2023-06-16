@@ -136,21 +136,23 @@ export type PostHistory = {
 
 export type Query = {
   __typename?: 'Query'
-  posts?: Maybe<Array<Maybe<Post>>>
+  readingList?: Maybe<Array<Maybe<Post>>>
 }
 
-export type QueryPostsArgs = {
-  cursor?: InputMaybe<Scalars['ID']['input']>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  tag?: InputMaybe<Scalars['String']['input']>
-  temp_only?: InputMaybe<Scalars['Boolean']['input']>
-  username?: InputMaybe<Scalars['String']['input']>
+export type QueryReadingListArgs = {
+  input: ReadingListInput
 }
 
 export type ReadCountByDay = {
   __typename?: 'ReadCountByDay'
   count?: Maybe<Scalars['Int']['output']>
   day?: Maybe<Scalars['Date']['output']>
+}
+
+export type ReadingListInput = {
+  cursor?: InputMaybe<Scalars['ID']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  type?: InputMaybe<ReadingListOption>
 }
 
 export enum ReadingListOption {
@@ -364,6 +366,7 @@ export type ResolversTypes = {
   PostHistory: ResolverTypeWrapper<DeepPartial<PostHistory>>
   Query: ResolverTypeWrapper<{}>
   ReadCountByDay: ResolverTypeWrapper<DeepPartial<ReadCountByDay>>
+  ReadingListInput: ResolverTypeWrapper<DeepPartial<ReadingListInput>>
   ReadingListOption: ResolverTypeWrapper<DeepPartial<ReadingListOption>>
   SearchResult: ResolverTypeWrapper<DeepPartial<SearchResult>>
   Series: ResolverTypeWrapper<DeepPartial<Series>>
@@ -392,6 +395,7 @@ export type ResolversParentTypes = {
   PostHistory: DeepPartial<PostHistory>
   Query: {}
   ReadCountByDay: DeepPartial<ReadCountByDay>
+  ReadingListInput: DeepPartial<ReadingListInput>
   SearchResult: DeepPartial<SearchResult>
   Series: DeepPartial<Series>
   SeriesPost: DeepPartial<SeriesPost>
@@ -567,11 +571,11 @@ export type QueryResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
-  posts?: Resolver<
+  readingList?: Resolver<
     Maybe<Array<Maybe<ResolversTypes['Post']>>>,
     ParentType,
     ContextType,
-    Partial<QueryPostsArgs>
+    RequireFields<QueryReadingListArgs, 'input'>
   >
 }
 
