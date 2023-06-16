@@ -6,15 +6,7 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-const templateDir = path.resolve(__dirname, './templates/service')
-const files = fs.readdirSync(templateDir)
 const filesData = new Map<string, string>()
-
-files.forEach((file) => {
-  const filePath = path.resolve(templateDir, file)
-  const fileData = fs.readFileSync(filePath, 'utf8')
-  filesData.set(file, fileData)
-})
 
 function toPascalCase(str: string) {
   return str
@@ -24,35 +16,11 @@ function toPascalCase(str: string) {
 }
 
 function replaceCode(text: string, name: string) {
-  return text
-    .replace('./MyService', `./${name}Service`)
-    .replace(/MyService/g, `${toPascalCase(name)}Service`)
+  return text.replace(/MyService/g, `${toPascalCase(name)}Service`)
 }
 
 function replaceFilename(text: string, name: string) {
-  return text.replace(/My/g, name)
-}
-
-function createService(type: string, directory: string, filename: string) {
-  const serviceDir = path.resolve(directory, filename)
-
-  // create directory if not exist
-  if (!fs.existsSync(serviceDir)) {
-    fs.mkdirSync(serviceDir, { recursive: true })
-  }
-  files.forEach((file) => {
-    const fileData = filesData.get(file)
-    if (fileData === undefined) return
-    const code = replaceCode(fileData, filename)
-
-    const newFilePath = path.resolve(
-      serviceDir,
-      replaceFilename(file, filename)
-    )
-    fs.writeFileSync(newFilePath, code)
-  })
-
-  console.log(`Service files are created at ${serviceDir}`)
+  return text.replace(/My/g, `${toPascalCase(name)}`)
 }
 
 async function main() {
@@ -66,6 +34,15 @@ async function main() {
     },
   ])
 
+  const templateDir = path.resolve(__dirname, `./templates/${type}`)
+  const files = fs.readdirSync(templateDir)
+
+  files.forEach((file) => {
+    const filePath = path.resolve(templateDir, file)
+    const fileData = fs.readFileSync(filePath, 'utf8')
+    filesData.set(file, fileData)
+  })
+
   const answer = await inquirer.prompt([
     {
       name: 'feature',
@@ -73,13 +50,57 @@ async function main() {
     },
   ])
 
-  const dir =
+  const dirPath =
     type === 'lib'
       ? path.resolve(__dirname, '../lib')
       : path.resolve(__dirname, `../services`)
 
-  const feature = answer.feature.trim()
-  createService(type, dir, type === 'services' ? `${feature}Service` : feature)
+  const filename = answer.feature.trim()
+
+  createService({
+    type,
+    dirPath,
+    filename,
+    files,
+  })
+}
+
+function createService({
+  type,
+  dirPath,
+  filename,
+  files,
+}: CreateServiceParams) {
+  const newFilename =
+    type === 'services' ? `${toPascalCase(filename)}Service` : filename
+
+  const serviceDir = path.resolve(dirPath, newFilename)
+
+  // create directory if not exist
+  if (!fs.existsSync(serviceDir)) {
+    fs.mkdirSync(serviceDir, { recursive: true })
+  }
+
+  files.forEach((file) => {
+    const fileData = filesData.get(file)
+    if (fileData === undefined) return
+    const code = replaceCode(fileData, filename)
+
+    const newFilePath = path.resolve(
+      serviceDir,
+      replaceFilename(file, newFilename)
+    )
+    fs.writeFileSync(newFilePath, code)
+  })
+
+  console.log(`Service files are created at ${serviceDir}`)
 }
 
 main()
+
+type CreateServiceParams = {
+  type: string
+  dirPath: string
+  filename: string
+  files: string[]
+}

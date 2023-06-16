@@ -1,5 +1,5 @@
-import { BadRequestError } from '@errors/badRequestErrors'
 import { Resolvers } from '@graphql/generated'
+import { BadRequestError } from '@errors/badRequestErrors'
 import { UserService } from '@services/UserService'
 import { container } from 'tsyringe'
 
