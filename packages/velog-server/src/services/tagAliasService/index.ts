@@ -1,7 +1,7 @@
-import { DbService } from '@lib/db/dbService'
-import { UtilsService } from '@lib/utils/utilsService'
+import { DbService } from '@lib/db/DbService'
+import { UtilsService } from '@lib/utils/UtilsService'
 import { Tag, TagAlias } from '@prisma/client'
-import { TagService } from '@services/tagService/tagService'
+import { TagService } from '@services/TagService'
 import { container, injectable } from 'tsyringe'
 
 interface Service {

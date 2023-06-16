@@ -1,4 +1,4 @@
-import { UtilsService } from '@lib/utils/utilsService'
+import { UtilsService } from '@lib/utils/UtilsService'
 import { container } from 'tsyringe'
 
 describe('Utils', () => {

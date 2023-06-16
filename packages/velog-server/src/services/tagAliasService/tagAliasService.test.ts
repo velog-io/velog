@@ -1,4 +1,4 @@
-import { TagAliasService } from './index'
+import { TagAliasService } from './index.js'
 
 describe('TagAliasService', () => {
   it('TagAliasService is defined', () => {

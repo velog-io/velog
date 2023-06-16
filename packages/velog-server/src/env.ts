@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { Envrionment, EnvFiles, EnvVars } from './common/interfaces/env.js'
 import { container } from 'tsyringe'
-import { UtilsService } from '@lib/utils/utilsService.js'
+import { UtilsService } from '@lib/utils/UtilsService.js'
 
 const envFiles: EnvFiles = {
   development: '.env.development',

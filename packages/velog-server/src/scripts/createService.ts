@@ -34,12 +34,8 @@ function replaceFilename(text: string, name: string) {
 }
 
 function createService(type: string, directory: string, filename: string) {
-  const serviceDir = path.resolve(
-    directory,
-    type === 'services' ? `${filename}Service` : filename
-  )
+  const serviceDir = path.resolve(directory, filename)
 
-  console.log('serviceDir', serviceDir)
   // create directory if not exist
   if (!fs.existsSync(serviceDir)) {
     fs.mkdirSync(serviceDir, { recursive: true })
@@ -70,7 +66,7 @@ async function main() {
     },
   ])
 
-  const { feature } = await inquirer.prompt([
+  const answer = await inquirer.prompt([
     {
       name: 'feature',
       message: 'Enter service name',
@@ -82,7 +78,8 @@ async function main() {
       ? path.resolve(__dirname, '../lib')
       : path.resolve(__dirname, `../services`)
 
-  createService(type, dir, feature.trim())
+  const feature = answer.feature.trim()
+  createService(type, dir, type === 'services' ? `${feature}Service` : feature)
 }
 
 main()

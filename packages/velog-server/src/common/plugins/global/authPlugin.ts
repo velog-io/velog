@@ -1,9 +1,9 @@
-import { JwtService } from '@lib/jwt/jwtService.js'
+import { JwtService } from '@lib/jwt/JwtService.js'
 import { AccessTokenData, RefreshTokenData } from '@lib/jwt/jwt.interface'
-import { UserService } from '@services/userService/userService.js'
+import { UserService } from '@services/UserService/index.js'
 import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import { container } from 'tsyringe'
-import { CookieService } from '@lib/cookie/cookieService.js'
+import { CookieService } from '@lib/cookie/CookieService.js'
 import {
   ONE_DAY_IN_MS,
   ONE_HOUR_IN_MS,

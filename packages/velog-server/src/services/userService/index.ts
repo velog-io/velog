@@ -1,4 +1,4 @@
-import { DbService } from '@lib/db/dbService.js'
+import { DbService } from '@lib/db/DbService.js'
 import { User } from '@prisma/client'
 import { injectable } from 'tsyringe'
 

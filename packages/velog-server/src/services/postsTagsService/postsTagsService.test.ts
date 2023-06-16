@@ -1,4 +1,4 @@
-import { PostsTagsService } from './index'
+import { PostsTagsService } from './index.js'
 
 describe('postsTagsService', () => {
   it('postsTagsService is defined', () => {

@@ -3,7 +3,7 @@ import Fastify from 'fastify'
 import formbody from '@fastify/formbody'
 import cookie from '@fastify/cookie'
 import { ENV } from 'src/env.js'
-import { UtilsService } from '@lib/utils/utilsService.js'
+import { UtilsService } from '@lib/utils/UtilsService.js'
 import { container } from 'tsyringe'
 
 const app = Fastify({

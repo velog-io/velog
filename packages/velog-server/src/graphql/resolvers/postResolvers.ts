@@ -1,6 +1,6 @@
 import { BadRequestError } from '@errors/badRequestErrors'
 import { Resolvers } from '@graphql/generated'
-import { UserService } from '@services/userService/userService'
+import { UserService } from '@services/UserService'
 import { container } from 'tsyringe'
 
 const postResolvers: Resolvers = {

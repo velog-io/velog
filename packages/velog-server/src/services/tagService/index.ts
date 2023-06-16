@@ -1,4 +1,4 @@
-import { DbService } from '@lib/db/dbService'
+import { DbService } from '@lib/db/DbService'
 import { Tag } from '@prisma/client'
 import { injectable } from 'tsyringe'
 
