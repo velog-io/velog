@@ -4,4 +4,4 @@ interface Service {}
 
 @injectable()
 @singleton()
-export class PostService implements Service {}
+export class MyService implements Service {}

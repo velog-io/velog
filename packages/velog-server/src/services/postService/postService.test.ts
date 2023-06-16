@@ -1,8 +1,9 @@
-import { PostService } from "@services/postService/postService";
+import { container } from 'tsyringe'
+import { PostService } from './postService'
 
-describe("PostService", () => {
-  const postService = new PostService();
-  it("should be defined", () => {
-    expect(postService).toBeDefined();
-  });
-});
+describe('PostService', () => {
+  const postService = container.resolve(PostService)
+  it('should be defined', () => {
+    expect(postService).toBeDefined()
+  })
+})
