@@ -1,8 +1,9 @@
 import type { CookieSerializeOptions } from '@fastify/cookie'
 import { FastifyReply } from 'fastify'
-import { injectable } from 'tsyringe'
+import { injectable, singleton } from 'tsyringe'
 
 @injectable()
+@singleton()
 export class CookieService {
   private domains: (string | undefined)[] = ['.velog.io', undefined]
   public setCookie(

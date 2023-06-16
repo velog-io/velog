@@ -1,9 +1,10 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
-import { injectable } from 'tsyringe'
+import { injectable, singleton } from 'tsyringe'
 import { ONE_DAY_IN_MS } from '@constants/timeConstants.js'
 import { ENV } from 'src/env.js'
 
 @injectable()
+@singleton()
 export class JwtService {
   public generateToken(
     payload: string | Buffer | object,
