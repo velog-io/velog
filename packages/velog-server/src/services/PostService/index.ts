@@ -2,12 +2,19 @@ import { BadRequestError } from '@errors/badRequestErrors'
 import { UnauthorizedError } from '@errors/unauthorizedError'
 import { ReadingListInput } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService'
+import { Post } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
+import {
+  GetPostsByTypeParams,
+  PostServiceBase,
+} from '@services/PostService/interface'
 
 @injectable()
 @singleton()
-export class PostService {
-  constructor(private readonly db: DbService) {}
+export class PostService extends PostServiceBase {
+  constructor(private readonly db: DbService) {
+    super()
+  }
   public async getReadingList(
     input: ReadingListInput,
     userId: string | undefined
@@ -30,11 +37,10 @@ export class PostService {
     const selectedGetter = postGetter[type]
     return await selectedGetter({ cursor, userId, limit })
   }
-  private async getPostsByLiked({
-    cursor,
-    userId,
-    limit,
-  }: GetPostsByTypeParams) {
+  protected async getPostsByLiked(
+    input: GetPostsByTypeParams
+  ): Promise<Post[]> {
+    const { cursor, userId, limit } = input
     const cursorData = cursor
       ? await this.db.postLike.findFirst({
           where: {
@@ -69,11 +75,8 @@ export class PostService {
     })
     return likes.map((like) => like.Post!)
   }
-  private async getPostsByRead({
-    cursor,
-    userId,
-    limit,
-  }: GetPostsByTypeParams) {
+  protected async getPostsByRead(input: GetPostsByTypeParams) {
+    const { cursor, userId, limit } = input
     const cursorData = cursor
       ? await this.db.postReadLog.findFirst({
           where: {
@@ -110,10 +113,4 @@ export class PostService {
     })
     return logs.map((log) => log.Post)
   }
-}
-
-type GetPostsByTypeParams = {
-  cursor: string | undefined
-  userId: string
-  limit: number
 }
