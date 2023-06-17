@@ -4,10 +4,10 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql'
+import { Post as PostModel } from '.prisma/client'
 import { GraphQLContext } from './../common/interfaces/graphql'
-import { DeepPartial } from 'utility-types'
 export type Maybe<T> = T | null
-export type InputMaybe<T> = Maybe<T>
+export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K]
 }
@@ -26,6 +26,7 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never
     }
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>
 }
@@ -54,46 +55,10 @@ export type Comment = {
   user?: Maybe<User>
 }
 
-export type EditPostInput = {
-  body?: InputMaybe<Scalars['String']['input']>
-  id: Scalars['ID']['input']
-  is_markdown?: InputMaybe<Scalars['Boolean']['input']>
-  is_private?: InputMaybe<Scalars['Boolean']['input']>
-  is_temp?: InputMaybe<Scalars['Boolean']['input']>
-  meta?: InputMaybe<Scalars['JSON']['input']>
-  series_id?: InputMaybe<Scalars['ID']['input']>
-  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
-  thumbnail?: InputMaybe<Scalars['String']['input']>
-  title?: InputMaybe<Scalars['String']['input']>
-  url_slug?: InputMaybe<Scalars['String']['input']>
-}
-
 export type LinkedPosts = {
   __typename?: 'LinkedPosts'
   next?: Maybe<Post>
   previous?: Maybe<Post>
-}
-
-export type Mutation = {
-  __typename?: 'Mutation'
-  createPostHistory?: Maybe<PostHistory>
-  editPost?: Maybe<Post>
-  writePost?: Maybe<Post>
-}
-
-export type MutationCreatePostHistoryArgs = {
-  body: Scalars['String']['input']
-  is_markdown: Scalars['Boolean']['input']
-  post_id: Scalars['ID']['input']
-  title: Scalars['String']['input']
-}
-
-export type MutationEditPostArgs = {
-  input?: InputMaybe<EditPostInput>
-}
-
-export type MutationWritePostArgs = {
-  input: WritePostInput
 }
 
 export type Post = {
@@ -152,7 +117,7 @@ export type ReadCountByDay = {
 export type ReadingListInput = {
   cursor?: InputMaybe<Scalars['ID']['input']>
   limit?: InputMaybe<Scalars['Int']['input']>
-  type?: InputMaybe<ReadingListOption>
+  type: ReadingListOption
 }
 
 export enum ReadingListOption {
@@ -163,7 +128,7 @@ export enum ReadingListOption {
 export type SearchResult = {
   __typename?: 'SearchResult'
   count?: Maybe<Scalars['Int']['output']>
-  posts?: Maybe<Array<Maybe<Post>>>
+  posts: Array<Post>
 }
 
 export type Series = {
@@ -231,19 +196,6 @@ export type VelogConfig = {
   id: Scalars['ID']['output']
   logo_image?: Maybe<Scalars['String']['output']>
   title?: Maybe<Scalars['String']['output']>
-}
-
-export type WritePostInput = {
-  body?: InputMaybe<Scalars['String']['input']>
-  is_markdown?: InputMaybe<Scalars['Boolean']['input']>
-  is_private?: InputMaybe<Scalars['Boolean']['input']>
-  is_temp?: InputMaybe<Scalars['Boolean']['input']>
-  meta?: InputMaybe<Scalars['JSON']['input']>
-  series_id?: InputMaybe<Scalars['ID']['input']>
-  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
-  thumbnail?: InputMaybe<Scalars['String']['input']>
-  title?: InputMaybe<Scalars['String']['input']>
-  url_slug?: InputMaybe<Scalars['String']['input']>
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
@@ -353,59 +305,91 @@ export type DirectiveResolverFn<
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']['output']>>
-  Comment: ResolverTypeWrapper<DeepPartial<Comment>>
-  Date: ResolverTypeWrapper<DeepPartial<Scalars['Date']['output']>>
-  EditPostInput: ResolverTypeWrapper<DeepPartial<EditPostInput>>
-  ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']['output']>>
-  Int: ResolverTypeWrapper<DeepPartial<Scalars['Int']['output']>>
-  JSON: ResolverTypeWrapper<DeepPartial<Scalars['JSON']['output']>>
-  LinkedPosts: ResolverTypeWrapper<DeepPartial<LinkedPosts>>
-  Mutation: ResolverTypeWrapper<{}>
-  Post: ResolverTypeWrapper<DeepPartial<Post>>
-  PostHistory: ResolverTypeWrapper<DeepPartial<PostHistory>>
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
+  Comment: ResolverTypeWrapper<
+    Omit<Comment, 'replies' | 'user'> & {
+      replies?: Maybe<Array<Maybe<ResolversTypes['Comment']>>>
+      user?: Maybe<ResolversTypes['User']>
+    }
+  >
+  Date: ResolverTypeWrapper<Scalars['Date']['output']>
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>
+  JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
+  LinkedPosts: ResolverTypeWrapper<
+    Omit<LinkedPosts, 'next' | 'previous'> & {
+      next?: Maybe<ResolversTypes['Post']>
+      previous?: Maybe<ResolversTypes['Post']>
+    }
+  >
+  Post: ResolverTypeWrapper<PostModel>
+  PostHistory: ResolverTypeWrapper<PostHistory>
   Query: ResolverTypeWrapper<{}>
-  ReadCountByDay: ResolverTypeWrapper<DeepPartial<ReadCountByDay>>
-  ReadingListInput: ResolverTypeWrapper<DeepPartial<ReadingListInput>>
-  ReadingListOption: ResolverTypeWrapper<DeepPartial<ReadingListOption>>
-  SearchResult: ResolverTypeWrapper<DeepPartial<SearchResult>>
-  Series: ResolverTypeWrapper<DeepPartial<Series>>
-  SeriesPost: ResolverTypeWrapper<DeepPartial<SeriesPost>>
-  Stats: ResolverTypeWrapper<DeepPartial<Stats>>
-  String: ResolverTypeWrapper<DeepPartial<Scalars['String']['output']>>
-  User: ResolverTypeWrapper<DeepPartial<User>>
-  UserMeta: ResolverTypeWrapper<DeepPartial<UserMeta>>
-  UserProfile: ResolverTypeWrapper<DeepPartial<UserProfile>>
-  VelogConfig: ResolverTypeWrapper<DeepPartial<VelogConfig>>
-  WritePostInput: ResolverTypeWrapper<DeepPartial<WritePostInput>>
+  ReadCountByDay: ResolverTypeWrapper<ReadCountByDay>
+  ReadingListInput: ReadingListInput
+  ReadingListOption: ReadingListOption
+  SearchResult: ResolverTypeWrapper<
+    Omit<SearchResult, 'posts'> & { posts: Array<ResolversTypes['Post']> }
+  >
+  Series: ResolverTypeWrapper<
+    Omit<Series, 'series_posts' | 'user'> & {
+      series_posts?: Maybe<Array<Maybe<ResolversTypes['SeriesPost']>>>
+      user?: Maybe<ResolversTypes['User']>
+    }
+  >
+  SeriesPost: ResolverTypeWrapper<
+    Omit<SeriesPost, 'post'> & { post?: Maybe<ResolversTypes['Post']> }
+  >
+  Stats: ResolverTypeWrapper<Stats>
+  String: ResolverTypeWrapper<Scalars['String']['output']>
+  User: ResolverTypeWrapper<
+    Omit<User, 'series_list'> & {
+      series_list?: Maybe<Array<Maybe<ResolversTypes['Series']>>>
+    }
+  >
+  UserMeta: ResolverTypeWrapper<UserMeta>
+  UserProfile: ResolverTypeWrapper<UserProfile>
+  VelogConfig: ResolverTypeWrapper<VelogConfig>
 }
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Boolean: DeepPartial<Scalars['Boolean']['output']>
-  Comment: DeepPartial<Comment>
-  Date: DeepPartial<Scalars['Date']['output']>
-  EditPostInput: DeepPartial<EditPostInput>
-  ID: DeepPartial<Scalars['ID']['output']>
-  Int: DeepPartial<Scalars['Int']['output']>
-  JSON: DeepPartial<Scalars['JSON']['output']>
-  LinkedPosts: DeepPartial<LinkedPosts>
-  Mutation: {}
-  Post: DeepPartial<Post>
-  PostHistory: DeepPartial<PostHistory>
+  Boolean: Scalars['Boolean']['output']
+  Comment: Omit<Comment, 'replies' | 'user'> & {
+    replies?: Maybe<Array<Maybe<ResolversParentTypes['Comment']>>>
+    user?: Maybe<ResolversParentTypes['User']>
+  }
+  Date: Scalars['Date']['output']
+  ID: Scalars['ID']['output']
+  Int: Scalars['Int']['output']
+  JSON: Scalars['JSON']['output']
+  LinkedPosts: Omit<LinkedPosts, 'next' | 'previous'> & {
+    next?: Maybe<ResolversParentTypes['Post']>
+    previous?: Maybe<ResolversParentTypes['Post']>
+  }
+  Post: PostModel
+  PostHistory: PostHistory
   Query: {}
-  ReadCountByDay: DeepPartial<ReadCountByDay>
-  ReadingListInput: DeepPartial<ReadingListInput>
-  SearchResult: DeepPartial<SearchResult>
-  Series: DeepPartial<Series>
-  SeriesPost: DeepPartial<SeriesPost>
-  Stats: DeepPartial<Stats>
-  String: DeepPartial<Scalars['String']['output']>
-  User: DeepPartial<User>
-  UserMeta: DeepPartial<UserMeta>
-  UserProfile: DeepPartial<UserProfile>
-  VelogConfig: DeepPartial<VelogConfig>
-  WritePostInput: DeepPartial<WritePostInput>
+  ReadCountByDay: ReadCountByDay
+  ReadingListInput: ReadingListInput
+  SearchResult: Omit<SearchResult, 'posts'> & {
+    posts: Array<ResolversParentTypes['Post']>
+  }
+  Series: Omit<Series, 'series_posts' | 'user'> & {
+    series_posts?: Maybe<Array<Maybe<ResolversParentTypes['SeriesPost']>>>
+    user?: Maybe<ResolversParentTypes['User']>
+  }
+  SeriesPost: Omit<SeriesPost, 'post'> & {
+    post?: Maybe<ResolversParentTypes['Post']>
+  }
+  Stats: Stats
+  String: Scalars['String']['output']
+  User: Omit<User, 'series_list'> & {
+    series_list?: Maybe<Array<Maybe<ResolversParentTypes['Series']>>>
+  }
+  UserMeta: UserMeta
+  UserProfile: UserProfile
+  VelogConfig: VelogConfig
 }
 
 export type CommentResolvers<
@@ -454,33 +438,6 @@ export type LinkedPostsResolvers<
   next?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>
   previous?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
-}
-
-export type MutationResolvers<
-  ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
-> = {
-  createPostHistory?: Resolver<
-    Maybe<ResolversTypes['PostHistory']>,
-    ParentType,
-    ContextType,
-    RequireFields<
-      MutationCreatePostHistoryArgs,
-      'body' | 'is_markdown' | 'post_id' | 'title'
-    >
-  >
-  editPost?: Resolver<
-    Maybe<ResolversTypes['Post']>,
-    ParentType,
-    ContextType,
-    Partial<MutationEditPostArgs>
-  >
-  writePost?: Resolver<
-    Maybe<ResolversTypes['Post']>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationWritePostArgs, 'input'>
-  >
 }
 
 export type PostResolvers<
@@ -593,11 +550,7 @@ export type SearchResultResolvers<
   ParentType extends ResolversParentTypes['SearchResult'] = ResolversParentTypes['SearchResult']
 > = {
   count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
-  posts?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['Post']>>>,
-    ParentType,
-    ContextType
-  >
+  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -746,7 +699,6 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Date?: GraphQLScalarType
   JSON?: GraphQLScalarType
   LinkedPosts?: LinkedPostsResolvers<ContextType>
-  Mutation?: MutationResolvers<ContextType>
   Post?: PostResolvers<ContextType>
   PostHistory?: PostHistoryResolvers<ContextType>
   Query?: QueryResolvers<ContextType>

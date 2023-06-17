@@ -49,6 +49,7 @@
     "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/typescript": "^4.0.0",
+    "@graphql-codegen/typescript-operations": "^4.0.0",
     "@graphql-codegen/typescript-resolvers": "^4.0.0",
     "@types/inquirer": "^9.0.3",
     "@types/jest": "^29.5.2",

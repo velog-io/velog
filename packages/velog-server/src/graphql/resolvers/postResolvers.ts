@@ -1,3 +1,4 @@
+import { Post } from '@prisma/client'
 import { Resolvers } from '@graphql/generated'
 import { BadRequestError } from '@errors/badRequestErrors'
 import { UserService } from '@services/UserService/index.js'
@@ -6,26 +7,29 @@ import { UnauthorizedError } from '@errors/unauthorizedError'
 import { PostService } from '@services/PostService'
 
 const postResolvers: Resolvers = {
-  Post: {},
   Query: {
-    readingList: async (_, { input }, ctx) => {
-      const { cursor, limit, type } = input
+    readingList: async (parent, { input }, ctx) => {
+      const { cursor, limit = 20, type } = input
       if (limit && limit > 100) {
         throw new BadRequestError('Max limit is 100')
       }
-
       if (!ctx.user?.id) {
         throw new UnauthorizedError('Not Logged In')
       }
 
       const postService = container.resolve(PostService)
-      if (type === 'LIKED') {
-        return await postService.getReadingListLikedType(
-          cursor as any,
-          ctx.user.id,
-          limit!
-        )
-      }
+      return await postService.getPostsLikedType(
+        cursor as any,
+        ctx.user.id,
+        limit!
+      )
+      // if (type === 'LIKED') {
+      //   return await postService.getPostsLikedType(
+      //     cursor as any,
+      //     ctx.user.id,
+      //     limit!
+      //   )
+      // }
     },
   },
 }

@@ -1,16 +1,12 @@
 import { DbService } from '@lib/db/DbService'
-import type { Post } from '@prisma/client'
+import { Post } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 
 @injectable()
 @singleton()
 export class PostService {
   constructor(private readonly db: DbService) {}
-  public async getReadingListLikedType(
-    postId: string | null,
-    userId: string,
-    limit: number
-  ): Promise<Post[]> {
+  public async getPostsLikedType(postId, userId, limit) {
     const cursorData = postId
       ? await this.db.postLike.findFirst({
           where: {
@@ -39,7 +35,7 @@ export class PostService {
         id: 'asc',
       },
       take: limit,
-      include: {
+      select: {
         Post: true,
       },
     })
