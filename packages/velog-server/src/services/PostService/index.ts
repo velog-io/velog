@@ -1,17 +1,45 @@
+import { BadRequestError } from '@errors/badRequestErrors'
+import { UnauthorizedError } from '@errors/unauthorizedError'
+import { ReadingListInput } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService'
-import { Post } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 
 @injectable()
 @singleton()
 export class PostService {
   constructor(private readonly db: DbService) {}
-  public async getPostsLikedType(postId, userId, limit) {
-    const cursorData = postId
+  public async getReadingList(
+    input: ReadingListInput,
+    userId: string | undefined
+  ) {
+    const { cursor, limit = 20, type } = input
+
+    if (limit > 100) {
+      throw new BadRequestError('Max limit is 100')
+    }
+
+    if (!userId) {
+      throw new UnauthorizedError('Not Logged In')
+    }
+
+    const postGetter = {
+      LIKED: this.getPostsByLiked,
+      READ: this.getPostsByRead,
+    }
+
+    const selectedGetter = postGetter[type]
+    return await selectedGetter({ cursor, userId, limit })
+  }
+  private async getPostsByLiked({
+    cursor,
+    userId,
+    limit,
+  }: GetPostsByTypeParams) {
+    const cursorData = cursor
       ? await this.db.postLike.findFirst({
           where: {
             fk_user_id: userId,
-            fk_post_id: postId,
+            fk_post_id: cursor,
           },
         })
       : null
@@ -41,4 +69,51 @@ export class PostService {
     })
     return likes.map((like) => like.Post!)
   }
+  private async getPostsByRead({
+    cursor,
+    userId,
+    limit,
+  }: GetPostsByTypeParams) {
+    const cursorData = cursor
+      ? await this.db.postReadLog.findFirst({
+          where: {
+            fk_post_id: cursor,
+            fk_user_id: userId,
+          },
+        })
+      : null
+
+    const cursorQueryOption = cursorData
+      ? {
+          updated_at: {
+            lt: cursorData?.updated_at,
+          },
+          id: {
+            not: cursorData?.id,
+          },
+        }
+      : {}
+
+    const logs = await this.db.postReadLog.findMany({
+      where: {
+        fk_user_id: userId,
+        ...cursorQueryOption,
+      },
+      orderBy: {
+        updated_at: 'desc',
+        id: 'asc',
+      },
+      take: limit,
+      include: {
+        Post: true,
+      },
+    })
+    return logs.map((log) => log.Post)
+  }
+}
+
+type GetPostsByTypeParams = {
+  cursor: string | undefined
+  userId: string
+  limit: number
 }
