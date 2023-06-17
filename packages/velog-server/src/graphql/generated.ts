@@ -4,7 +4,7 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from 'graphql'
-import { Post as PostModel } from '.prisma/client'
+import { Post as PostModel } from '@prisma/client'
 import { GraphQLContext } from './../common/interfaces/graphql'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = T | undefined

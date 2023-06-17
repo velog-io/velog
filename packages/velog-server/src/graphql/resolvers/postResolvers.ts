@@ -18,18 +18,13 @@ const postResolvers: Resolvers = {
       }
 
       const postService = container.resolve(PostService)
-      return await postService.getPostsLikedType(
-        cursor as any,
-        ctx.user.id,
-        limit!
-      )
-      // if (type === 'LIKED') {
-      //   return await postService.getPostsLikedType(
-      //     cursor as any,
-      //     ctx.user.id,
-      //     limit!
-      //   )
-      // }
+      if (type === 'LIKED') {
+        return await postService.getPostsLikedType(
+          cursor as any,
+          ctx.user.id,
+          limit!
+        )
+      }
     },
   },
 }

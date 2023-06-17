@@ -16,7 +16,7 @@ generates:
       contextType: ./../common/interfaces/graphql#GraphQLContext
       mappers:
         # User: .prisma/client#User as UserModel
-        Post: .prisma/client#Post as PostModel
+        Post: '@prisma/client#Post as PostModel'
       inputMaybeValue: T | undefined
       scalars:
         Date: Date
