@@ -7,7 +7,7 @@ import { injectable, singleton } from 'tsyringe'
 import {
   GetPostsByTypeParams,
   PostServiceBase,
-} from '@services/PostService/interface'
+} from '@services/PostService/PostServiceBase'
 
 @injectable()
 @singleton()
@@ -18,7 +18,7 @@ export class PostService extends PostServiceBase {
   public async getReadingList(
     input: ReadingListInput,
     userId: string | undefined
-  ) {
+  ): Promise<Post[]> {
     const { cursor, limit = 20, type } = input
 
     if (limit > 100) {

@@ -5,7 +5,7 @@ export abstract class PostServiceBase {
   abstract getReadingList(
     input: ReadingListInput,
     userId: string | undefined
-  ): Promise<any>
+  ): Promise<Post[]>
   protected abstract getPostsByLiked(
     input: GetPostsByTypeParams
   ): Promise<Post[]>
