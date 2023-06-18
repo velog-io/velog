@@ -15,11 +15,7 @@ function toPascalCase(str: string) {
     .join('')
 }
 
-function replaceCode(text: string, name: string) {
-  return text.replace(/MyService/g, `${toPascalCase(name)}Service`)
-}
-
-function replaceFilename(text: string, name: string) {
+function replace(text: string, name: string) {
   return text.replace(/My/g, `${toPascalCase(name)}`)
 }
 
@@ -84,12 +80,9 @@ function createService({
   files.forEach((file) => {
     const fileData = filesData.get(file)
     if (fileData === undefined) return
-    const code = replaceCode(fileData, filename)
+    const code = replace(fileData, filename)
 
-    const newFilePath = path.resolve(
-      serviceDir,
-      replaceFilename(file, newFilename)
-    )
+    const newFilePath = path.resolve(serviceDir, replace(file, newFilename))
     fs.writeFileSync(newFilePath, code)
   })
 
