@@ -225,23 +225,24 @@ export class PostService implements PostServiceInterface {
       offset,
       limit
     )
+
     const cachedIds = this.cache.lruCache.get(cacheKey)
     if (cachedIds) {
       ids = cachedIds
     } else {
       const rows = (await this.db.$queryRaw(Prisma.sql`
-          select posts.id, posts.title, SUM(score) as score from post_scores
-          inner join posts on post_scores.fk_post_id = posts.id
-          where post_scores.created_at > now() - interval ${
-            selectedTimeframe[1]
-          } days
-          and posts.released_at > now() - interval ${
-            selectedTimeframe[1] * 1.5
-          } days
-          group by posts.id
-          order by score desc, posts.id desc
-          offset ${offset}
-          limit ${limit}
+        select posts.id, posts.title, SUM(score) as score from post_scores
+        inner join posts on post_scores.fk_post_id = posts.id
+        where post_scores.created_at > now() - interval '1 day' * ${
+          selectedTimeframe[1]
+        }
+        and posts.released_at > now() - interval '1 day' * ${
+          selectedTimeframe[1] * 1.5
+        }
+        group by posts.id
+        order by score desc, posts.id desc
+        offset ${offset}
+        limit ${limit}
       `)) as { id: string; score: number }[]
 
       ids = rows.map((row) => row.id)
