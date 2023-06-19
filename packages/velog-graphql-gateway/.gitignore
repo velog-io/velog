@@ -1,0 +1,18 @@
+# dependencies
+/node_modules
+
+# ide
+.idea
+.code
+
+# etc
+.DS_Store
+
+# build
+/dist
+
+#env
+/env/.env.*
+!/env/.gitkeep
+.env.*
+.env
