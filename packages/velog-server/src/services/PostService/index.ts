@@ -13,8 +13,8 @@ import {
   GetPostsByTypeParams,
   PostServiceInterface,
 } from './PostServiceInterface'
-import { CacheService } from '@lib/cache/CacheService'
-import { UtilsService } from '@lib/utils/UtilsService'
+import { CacheService } from '@lib/cache/CacheService.js'
+import { UtilsService } from '@lib/utils/UtilsService.js'
 
 @injectable()
 @singleton()

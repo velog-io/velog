@@ -1,6 +1,6 @@
 import { injectable, singleton } from 'tsyringe'
 import { LRUCache } from 'lru-cache'
-import { ONE_HOUR_IN_MS } from '@constants/timeConstants'
+import { ONE_HOUR_IN_MS } from '@constants/timeConstants.js'
 
 interface Service {}
 
