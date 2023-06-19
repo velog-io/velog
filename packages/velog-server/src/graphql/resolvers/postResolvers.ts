@@ -1,6 +1,6 @@
 import { Resolvers } from '@graphql/generated'
 import { container } from 'tsyringe'
-import { PostService } from '@services/PostService'
+import { PostService } from '@services/PostService/index.js'
 
 const postResolvers: Resolvers = {
   Query: {

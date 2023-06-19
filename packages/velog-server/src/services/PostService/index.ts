@@ -1,20 +1,19 @@
-import { BadRequestError } from '@errors/badRequestErrors'
-import { UnauthorizedError } from '@errors/unauthorizedError'
-import { ReadingListInput } from '@graphql/generated'
-import { DbService } from '@lib/db/DbService'
 import { Post } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
+import { ReadingListInput } from '@graphql/generated.js'
+import { DbService } from '@lib/db/DbService.js'
+import { BadRequestError } from '@errors/badRequestErrors.js'
+import { UnauthorizedError } from '@errors/unauthorizedError.js'
+
 import {
   GetPostsByTypeParams,
-  PostServiceBase,
-} from '@services/PostService/PostServiceBase'
+  PostServiceInterface,
+} from './PostServiceInterface'
 
 @injectable()
 @singleton()
-export class PostService extends PostServiceBase {
-  constructor(private readonly db: DbService) {
-    super()
-  }
+export class PostService implements PostServiceInterface {
+  constructor(private readonly db: DbService) {}
   public async getReadingList(
     input: ReadingListInput,
     userId: string | undefined
@@ -28,18 +27,14 @@ export class PostService extends PostServiceBase {
     if (!userId) {
       throw new UnauthorizedError('Not Logged In')
     }
-
     const postGetter = {
       LIKED: this.getPostsByLiked,
       READ: this.getPostsByRead,
     }
-
     const selectedGetter = postGetter[type]
     return await selectedGetter({ cursor, userId, limit })
   }
-  protected async getPostsByLiked(
-    input: GetPostsByTypeParams
-  ): Promise<Post[]> {
+  private async getPostsByLiked(input: GetPostsByTypeParams): Promise<Post[]> {
     const { cursor, userId, limit } = input
     const cursorData = cursor
       ? await this.db.postLike.findFirst({
@@ -75,7 +70,7 @@ export class PostService extends PostServiceBase {
     })
     return likes.map((like) => like.Post!)
   }
-  protected async getPostsByRead(input: GetPostsByTypeParams) {
+  private async getPostsByRead(input: GetPostsByTypeParams) {
     const { cursor, userId, limit } = input
     const cursorData = cursor
       ? await this.db.postReadLog.findFirst({
