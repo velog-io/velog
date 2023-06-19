@@ -15,13 +15,13 @@ app.register(formbody)
 
 const utils = container.resolve(UtilsService)
 app.register(autoload, {
-  dir: utils.resolveDir('src/common/plugins/global/'),
+  dir: utils.resolveDir('src/common/plugins/global'),
   encapsulate: false,
   forceESM: true,
 })
 
 app.register(autoload, {
-  dir: utils.resolveDir('src/routes/'),
+  dir: utils.resolveDir('src/routes'),
   options: Object.assign({ prefix: '/api' }),
   forceESM: true,
 })

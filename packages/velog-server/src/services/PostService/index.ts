@@ -1,9 +1,9 @@
-import { Post } from '@prisma/client'
+import type { Post, Prisma } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
-import { ReadingListInput } from '@graphql/generated.js'
+import { ReadingListInput, RecentPostsInput } from '@graphql/generated.js'
 import { DbService } from '@lib/db/DbService.js'
-import { BadRequestError } from '@errors/badRequestErrors.js'
-import { UnauthorizedError } from '@errors/unauthorizedError.js'
+import { BadRequestError } from '@errors/BadRequestErrors.js'
+import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 
 import {
   GetPostsByTypeParams,
@@ -31,6 +31,7 @@ export class PostService implements PostServiceInterface {
       LIKED: this.getPostsByLiked,
       READ: this.getPostsByRead,
     }
+
     const selectedGetter = postGetter[type]
     return await selectedGetter({ cursor, userId, limit })
   }
@@ -107,5 +108,61 @@ export class PostService implements PostServiceInterface {
       },
     })
     return logs.map((log) => log.Post)
+  }
+  public async getRecentPosts(input: RecentPostsInput, userId: string) {
+    const { cursor, limit = 20 } = input
+
+    if (limit > 100) {
+      throw new BadRequestError('Max limit is 100')
+    }
+
+    let whereInput: Prisma.PostWhereInput = {
+      is_temp: false,
+      OR: [],
+    }
+
+    if (!userId) {
+      whereInput.is_private = false
+    } else {
+      whereInput.OR = [{ is_private: false }, { fk_user_id: userId }]
+    }
+
+    if (cursor) {
+      const post = await this.db.post.findUnique({
+        where: {
+          id: cursor,
+        },
+      })
+
+      if (!post) {
+        throw new BadRequestError('Invalid cursor')
+      }
+
+      whereInput = {
+        released_at: {
+          gt: post.released_at!,
+        },
+        OR: [
+          { released_at: post.released_at },
+          { id: { gt: post.id } },
+          ...(whereInput.OR as []),
+        ],
+        ...whereInput,
+      }
+    }
+
+    const posts = await this.db.post.findMany({
+      where: whereInput,
+      orderBy: {
+        released_at: 'desc',
+        id: 'desc',
+      },
+      include: {
+        user: true,
+      },
+      take: limit,
+    })
+
+    return posts
   }
 }

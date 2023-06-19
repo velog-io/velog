@@ -32,7 +32,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
 }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string }
+  ID: { input: string | undefined; output: string | undefined }
   String: { input: string; output: string }
   Boolean: { input: boolean; output: boolean }
   Int: { input: number; output: number }
@@ -102,10 +102,22 @@ export type PostHistory = {
 export type Query = {
   __typename?: 'Query'
   readingList?: Maybe<Array<Maybe<Post>>>
+  recentPosts?: Maybe<Array<Maybe<Post>>>
+  trendingPosts?: Maybe<Array<Maybe<Post>>>
 }
 
 export type QueryReadingListArgs = {
   input: ReadingListInput
+}
+
+export type QueryRecentPostsArgs = {
+  input?: InputMaybe<RecentPostsInput>
+}
+
+export type QueryTrendingPostsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  timeframe?: InputMaybe<Scalars['String']['input']>
 }
 
 export type ReadCountByDay = {
@@ -123,6 +135,11 @@ export type ReadingListInput = {
 export enum ReadingListOption {
   Liked = 'LIKED',
   Read = 'READ',
+}
+
+export type RecentPostsInput = {
+  cursor?: InputMaybe<Scalars['ID']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
 }
 
 export type SearchResult = {
@@ -328,6 +345,7 @@ export type ResolversTypes = {
   ReadCountByDay: ResolverTypeWrapper<ReadCountByDay>
   ReadingListInput: ReadingListInput
   ReadingListOption: ReadingListOption
+  RecentPostsInput: RecentPostsInput
   SearchResult: ResolverTypeWrapper<
     Omit<SearchResult, 'posts'> & { posts: Array<ResolversTypes['Post']> }
   >
@@ -372,6 +390,7 @@ export type ResolversParentTypes = {
   Query: {}
   ReadCountByDay: ReadCountByDay
   ReadingListInput: ReadingListInput
+  RecentPostsInput: RecentPostsInput
   SearchResult: Omit<SearchResult, 'posts'> & {
     posts: Array<ResolversParentTypes['Post']>
   }
@@ -533,6 +552,18 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryReadingListArgs, 'input'>
+  >
+  recentPosts?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['Post']>>>,
+    ParentType,
+    ContextType,
+    Partial<QueryRecentPostsArgs>
+  >
+  trendingPosts?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes['Post']>>>,
+    ParentType,
+    ContextType,
+    Partial<QueryTrendingPostsArgs>
   >
 }
 
