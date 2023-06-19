@@ -111,13 +111,11 @@ export type QueryReadingListArgs = {
 }
 
 export type QueryRecentPostsArgs = {
-  input?: InputMaybe<RecentPostsInput>
+  input: RecentPostsInput
 }
 
 export type QueryTrendingPostsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  timeframe?: InputMaybe<Scalars['String']['input']>
+  input: TrendingPostsInput
 }
 
 export type ReadCountByDay = {
@@ -173,6 +171,12 @@ export type Stats = {
   __typename?: 'Stats'
   count_by_day?: Maybe<Array<Maybe<ReadCountByDay>>>
   total?: Maybe<Scalars['Int']['output']>
+}
+
+export type TrendingPostsInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  timeframe?: InputMaybe<Scalars['String']['input']>
 }
 
 export type User = {
@@ -360,6 +364,7 @@ export type ResolversTypes = {
   >
   Stats: ResolverTypeWrapper<Stats>
   String: ResolverTypeWrapper<Scalars['String']['output']>
+  TrendingPostsInput: TrendingPostsInput
   User: ResolverTypeWrapper<
     Omit<User, 'series_list'> & {
       series_list?: Maybe<Array<Maybe<ResolversTypes['Series']>>>
@@ -403,6 +408,7 @@ export type ResolversParentTypes = {
   }
   Stats: Stats
   String: Scalars['String']['output']
+  TrendingPostsInput: TrendingPostsInput
   User: Omit<User, 'series_list'> & {
     series_list?: Maybe<Array<Maybe<ResolversParentTypes['Series']>>>
   }
@@ -557,13 +563,13 @@ export type QueryResolvers<
     Maybe<Array<Maybe<ResolversTypes['Post']>>>,
     ParentType,
     ContextType,
-    Partial<QueryRecentPostsArgs>
+    RequireFields<QueryRecentPostsArgs, 'input'>
   >
   trendingPosts?: Resolver<
     Maybe<Array<Maybe<ResolversTypes['Post']>>>,
     ParentType,
     ContextType,
-    Partial<QueryTrendingPostsArgs>
+    RequireFields<QueryTrendingPostsArgs, 'input'>
   >
 }
 

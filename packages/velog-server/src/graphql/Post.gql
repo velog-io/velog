@@ -59,28 +59,33 @@ type PostHistory {
   created_at: Date
 }
 
-input ReadingListInput {
-  type: ReadingListOption!
-  cursor: ID
-  limit: Int
-}
-
-input RecentPostsInput {
-  cursor: ID
-  limit: Int
-}
-
 type Query {
   # post(id: ID, username: String, url_slug: String): Post
   # posts(cursor: ID, limit: Int, username: String, temp_only: Boolean, tag: String): [Post]
-  recentPosts(input: RecentPostsInput): [Post]
-  trendingPosts(offset: Int, limit: Int, timeframe: String): [Post]
+  recentPosts(input: RecentPostsInput!): [Post]
+  trendingPosts(input: TrendingPostsInput!): [Post]
   # searchPosts(keyword: String!, offset: Int, limit: Int, username: String): SearchResult
   # postHistories(post_id: ID): [PostHistory]
   # lastPostHistory(post_id: ID!): PostHistory
   readingList(input: ReadingListInput!): [Post]
   # getStats(post_id: ID!): Stats
 }
+
+# type Mutation {
+#   writePost(input: WritePostInput!): Post
+#   editPost(input: EditPostInput): Post
+#   createPostHistory(
+#     post_id: ID!
+#     title: String!
+#     body: String!
+#     is_markdown: Boolean!
+#   ): PostHistory
+#   # removePost(id: ID!): Boolean
+#   # likePost(id: ID!): Post
+#   # unlikePost(id: ID!): Post
+#   # postView(id: ID!): Boolean
+# }
+
 
 # input WritePostInput {
 #   title: String
@@ -109,17 +114,21 @@ type Query {
 #   series_id: ID
 # }
 
-# type Mutation {
-#   writePost(input: WritePostInput!): Post
-#   editPost(input: EditPostInput): Post
-#   createPostHistory(
-#     post_id: ID!
-#     title: String!
-#     body: String!
-#     is_markdown: Boolean!
-#   ): PostHistory
-#   # removePost(id: ID!): Boolean
-#   # likePost(id: ID!): Post
-#   # unlikePost(id: ID!): Post
-#   # postView(id: ID!): Boolean
-# }
+
+input ReadingListInput {
+  type: ReadingListOption!
+  cursor: ID
+  limit: Int
+}
+
+input RecentPostsInput {
+  cursor: ID
+  limit: Int
+}
+
+input TrendingPostsInput {
+  offset: Int
+  limit: Int
+  timeframe: String
+}
+

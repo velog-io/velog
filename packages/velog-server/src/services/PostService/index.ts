@@ -1,6 +1,10 @@
-import type { Post, Prisma } from '@prisma/client'
+import { Post, Prisma } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
-import { ReadingListInput, RecentPostsInput } from '@graphql/generated.js'
+import {
+  ReadingListInput,
+  RecentPostsInput,
+  TrendingPostsInput,
+} from '@graphql/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
@@ -9,11 +13,27 @@ import {
   GetPostsByTypeParams,
   PostServiceInterface,
 } from './PostServiceInterface'
+import { CacheService } from '@lib/cache/CacheService'
+import { UtilsService } from '@lib/utils/UtilsService'
 
 @injectable()
 @singleton()
 export class PostService implements PostServiceInterface {
-  constructor(private readonly db: DbService) {}
+  constructor(
+    private readonly db: DbService,
+    private readonly cache: CacheService,
+    private readonly utils: UtilsService
+  ) {}
+  public async postsByIds(ids: string[]): Promise<Post[]> {
+    const posts = await this.db.post.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    })
+    return posts
+  }
   public async getReadingList(
     input: ReadingListInput,
     userId: string | undefined
@@ -109,7 +129,10 @@ export class PostService implements PostServiceInterface {
     })
     return logs.map((log) => log.Post)
   }
-  public async getRecentPosts(input: RecentPostsInput, userId: string) {
+  public async getRecentPosts(
+    input: RecentPostsInput,
+    userId: string | undefined
+  ): Promise<Post[]> {
     const { cursor, limit = 20 } = input
 
     if (limit > 100) {
@@ -118,13 +141,14 @@ export class PostService implements PostServiceInterface {
 
     let whereInput: Prisma.PostWhereInput = {
       is_temp: false,
-      OR: [],
     }
+
+    const whereOr: any[] = []
 
     if (!userId) {
       whereInput.is_private = false
     } else {
-      whereInput.OR = [{ is_private: false }, { fk_user_id: userId }]
+      whereOr.concat([{ is_private: false }, { fk_user_id: userId }])
     }
 
     if (cursor) {
@@ -142,13 +166,13 @@ export class PostService implements PostServiceInterface {
         released_at: {
           gt: post.released_at!,
         },
-        OR: [
-          { released_at: post.released_at },
-          { id: { gt: post.id } },
-          ...(whereInput.OR as []),
-        ],
         ...whereInput,
       }
+
+      const addOrQuery = [
+        { AND: [{ released_at: post.released_at }, { id: { lt: post.id } }] },
+      ]
+      whereOr.concat(addOrQuery)
     }
 
     const posts = await this.db.post.findMany({
@@ -164,5 +188,69 @@ export class PostService implements PostServiceInterface {
     })
 
     return posts
+  }
+  public async getTrendingPosts(
+    input: TrendingPostsInput,
+    ip: string | null
+  ): Promise<Post[]> {
+    const { offset = 0, limit = 20, timeframe = 'month' } = input
+    const timeframes: [string, number][] = [
+      ['day', 1],
+      ['week', 7],
+      ['month', 30],
+      ['year', 365],
+    ]
+    const selectedTimeframe = timeframes.find(([text]) => text === timeframe)
+
+    if (!selectedTimeframe) {
+      throw new BadRequestError('Invalid timeframe')
+    }
+
+    if (timeframe === 'year') {
+      console.log('trendingPosts - year', { offset, limit, ip })
+    }
+
+    if (timeframe === 'year' && offset > 1000) {
+      console.log('Detected GraphQL Abuse', ip)
+      return []
+    }
+
+    if (limit > 100) {
+      throw new BadRequestError('Limit is too high')
+    }
+
+    let ids: string[] = []
+    const cacheKey = this.cache.generateKey.trending(
+      selectedTimeframe[0],
+      offset,
+      limit
+    )
+    const cachedIds = this.cache.lruCache.get(cacheKey)
+    if (cachedIds) {
+      ids = cachedIds
+    } else {
+      const rows = (await this.db.$queryRaw(Prisma.sql`
+          select posts.id, posts.title, SUM(score) as score from post_scores
+          inner join posts on post_scores.fk_post_id = posts.id
+          where post_scores.created_at > now() - interval ${
+            selectedTimeframe[1]
+          } days
+          and posts.released_at > now() - interval ${
+            selectedTimeframe[1] * 1.5
+          } days
+          group by posts.id
+          order by score desc, posts.id desc
+          offset ${offset}
+          limit ${limit}
+      `)) as { id: string; score: number }[]
+
+      ids = rows.map((row) => row.id)
+      this.cache.lruCache.set(cacheKey, ids)
+    }
+
+    const posts = await this.postsByIds(ids)
+    const normalized = this.utils.normalize(posts)
+    const ordered = ids.map((id) => normalized[id])
+    return ordered
   }
 }

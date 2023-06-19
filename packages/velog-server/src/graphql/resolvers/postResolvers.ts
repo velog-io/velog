@@ -8,6 +8,10 @@ const postResolvers: Resolvers = {
       const postService = container.resolve(PostService)
       return postService.getRecentPosts(input, ctx.user?.id)
     },
+    trendingPosts: async (_, { input }, ctx) => {
+      const postService = container.resolve(PostService)
+      return postService.getTrendingPosts(input, ctx.ip)
+    },
     readingList: async (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
       return postService.getReadingList(input, ctx.user?.id)

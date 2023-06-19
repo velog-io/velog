@@ -38,6 +38,7 @@
     "graphql-scalars": "^1.22.2",
     "inquirer": "^9.2.7",
     "jsonwebtoken": "^9.0.0",
+    "lru-cache": "^10.0.0",
     "mercurius": "^13.0.0",
     "pino-pretty": "^10.0.0",
     "prisma": "^4.15.0",
