@@ -1,4 +1,8 @@
-import { ReadingListInput, RecentPostsInput } from '@graphql/generated'
+import {
+  ReadingListInput,
+  RecentPostsInput,
+  TrendingPostsInput,
+} from '@graphql/generated'
 import { Post } from '@prisma/client'
 
 export interface PostServiceInterface {
@@ -11,6 +15,10 @@ export interface PostServiceInterface {
   getRecentPosts(
     input: RecentPostsInput,
     userId: string | undefined
+  ): Promise<Post[]>
+  getTrendingPosts(
+    input: TrendingPostsInput,
+    ip: string | null
   ): Promise<Post[]>
 }
 

@@ -131,7 +131,7 @@ export class PostService implements PostServiceInterface {
   }
   public async getRecentPosts(
     input: RecentPostsInput,
-    userId: string | undefined
+    userId: string | undefined = '7c8ea530-b4df-11e8-abf8-1d1c94b7551f'
   ): Promise<Post[]> {
     const { cursor, limit = 20 } = input
 
@@ -143,50 +143,55 @@ export class PostService implements PostServiceInterface {
       is_temp: false,
     }
 
-    const whereOr: any[] = []
-
+    let whereOr: any[] = []
     if (!userId) {
-      whereInput.is_private = false
+      whereInput = { is_private: false, ...whereInput }
     } else {
-      whereOr.concat([{ is_private: false }, { fk_user_id: userId }])
+      whereOr = whereOr.concat({
+        OR: [{ is_private: false }, { fk_user_id: userId }],
+      })
     }
+    const post = await this.db.post.findUnique({
+      where: {
+        id: cursor,
+      },
+    })
 
     if (cursor) {
-      const post = await this.db.post.findUnique({
-        where: {
-          id: cursor,
-        },
-      })
-
       if (!post) {
         throw new BadRequestError('Invalid cursor')
       }
 
-      whereInput = {
-        released_at: {
-          gt: post.released_at!,
-        },
-        ...whereInput,
-      }
-
       const addOrQuery = [
+        {
+          released_at: { lt: post!.released_at! },
+        },
         { AND: [{ released_at: post.released_at }, { id: { lt: post.id } }] },
       ]
-      whereOr.concat(addOrQuery)
+      whereOr = whereOr.concat(addOrQuery)
     }
 
     const posts = await this.db.post.findMany({
-      where: whereInput,
+      where: {
+        is_temp: false,
+        released_at: { lt: post!.released_at! },
+        OR: [
+          { is_private: false },
+          { fk_user_id: userId },
+          {
+            AND: [{ released_at: post!.released_at }, { id: { lt: post!.id } }],
+          },
+        ],
+      },
       orderBy: {
         released_at: 'desc',
-        id: 'desc',
+        // id: 'desc',
       },
       include: {
         user: true,
       },
       take: limit,
     })
-
     return posts
   }
   public async getTrendingPosts(
