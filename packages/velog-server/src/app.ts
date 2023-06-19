@@ -20,4 +20,10 @@ app.register(autoload, {
   forceESM: true,
 })
 
+app.register(autoload, {
+  dir: utils.resolveDir('src/routes/'),
+  options: Object.assign({ prefix: '/api' }),
+  forceESM: true,
+})
+
 export default app

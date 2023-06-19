@@ -18,7 +18,7 @@ const refresh = async (
     const jwtService = container.resolve(JwtService)
     const decoded = await jwtService.decodeToken<RefreshTokenData>(refreshToken)
     const userService = container.resolve(UserService)
-    const user = await userService.findById(decoded.userId)
+    const user = await userService.findById(decoded.user_id)
 
     if (!user) {
       throw new Error('InvalidUserError')
@@ -26,7 +26,7 @@ const refresh = async (
 
     const tokens = await jwtService.refreshUserToken(
       user.id,
-      decoded.tokenId,
+      decoded.token_id,
       decoded.exp,
       refreshToken
     )
@@ -63,11 +63,12 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
       if (!accessToken) {
         throw new Error('NoAccessToken')
       }
+
       const accessTokenData = await jwt.decodeToken<AccessTokenData>(
         accessToken
       )
 
-      request.user!.id = accessTokenData.userId
+      request.user = { id: accessTokenData.user_id }
       // refresh token when life < 30mins
       const diff = accessTokenData.exp * 1000 - new Date().getTime()
       if (diff < ONE_MINUTE_IN_MS * 30 && refreshToken) {
@@ -79,7 +80,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
       try {
         const userId = await refresh(reply, refreshToken)
         // set user_id if succeeds
-        request.user.id = userId
+        request.user = { id: userId }
       } catch (e) {}
     }
   })
