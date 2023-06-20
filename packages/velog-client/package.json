@@ -1,7 +1,8 @@
 {
   "name": "velog-client",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "private": true,
+  "license": "MIT",
   "engines": {
     "node": ">=18.16"
   },
@@ -9,7 +10,9 @@
     "name": "velopert",
     "email": "public.velopert@gmail.com"
   },
-  "keywords": ["velog"],
+  "keywords": [
+    "velog"
+  ],
   "scripts": {
     "build": "next build",
     "dev": "next dev",
@@ -17,14 +20,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@types/node": "20.3.1",
-    "@types/react": "18.2.12",
-    "@types/react-dom": "18.2.5",
-    "eslint": "8.42.0",
-    "eslint-config-next": "13.4.5",
-    "next": "13.4.5",
+    "next": "13.4.6",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "@types/react": "^18.2.13",
+    "@types/react-dom": "18.2.6",
+    "eslint": "8.43.0",
+    "eslint-config-next": "13.4.6",
     "typescript": "5.1.3"
   }
 }
