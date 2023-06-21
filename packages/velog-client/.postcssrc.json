@@ -1,9 +1,6 @@
 {
   "plugins": [
-    "postcss-modules",
-    "postcss-modules-values",
-    "postcss-import",
-    "postcss-custom-media",
+    "postcss-modules-values-replace",
     "postcss-flexbugs-fixes",
     [
       "postcss-preset-env",
@@ -13,8 +10,7 @@
         },
         "stage": 3,
         "features": {
-          "custom-properties": false,
-          "custom-media-queries": true
+          "custom-properties": false
         }
       }
     ]

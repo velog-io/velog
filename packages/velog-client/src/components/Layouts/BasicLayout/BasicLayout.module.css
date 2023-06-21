@@ -1,0 +1,14 @@
+@value color, mobile from "./colors.module.css";
+
+.block {
+
+}
+
+
+.test {
+  background-color: gold;
+
+  .inner-test {
+    background-color: black;
+  }
+}

@@ -8,7 +8,10 @@ function BasicLayout({ children }: Props) {
   return (
     <main className={styles.block}>
       {children}
-      <div className="test">test</div>
+      <div className={styles.test}>
+        test
+        <div className="innder-test">inner-test</div>
+      </div>
     </main>
   )
 }
