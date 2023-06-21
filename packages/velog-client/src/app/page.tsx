@@ -1,7 +1,11 @@
+import BasicLayout from '@/components/Layouts/BasicLayout/BasicLayout'
+
 export default function Home() {
   return (
     <main>
-      <div>Velog</div>
+      <BasicLayout>
+        <div>Velog</div>
+      </BasicLayout>
     </main>
   )
 }

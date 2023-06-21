@@ -1,9 +1,6 @@
-import { Inter } from 'next/font/google'
 import Head from 'next/head'
 import '@/styles/reset.css'
 import '@/styles/global.css'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'velog',
@@ -49,7 +46,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#12B886" />
       </Head>
-      <body className={inter.className}>{children}</body>
+      <body>{children}</body>
     </html>
   )
 }
