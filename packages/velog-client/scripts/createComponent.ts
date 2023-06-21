@@ -77,8 +77,8 @@ async function main() {
 
   const dir =
     type === 'components'
-      ? path.resolve(__dirname, '../components')
-      : path.resolve(__dirname, `../features/${answers.feature}/components`)
+      ? path.resolve(__dirname, '../src/components')
+      : path.resolve(__dirname, `../src/features/${answers.feature}/components`)
 
   const names = answers.names.split(' ') as string[]
 
