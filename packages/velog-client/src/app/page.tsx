@@ -3,5 +3,5 @@ export default function Home() {
     <main>
       <div>Velog</div>
     </main>
-  );
+  )
 }
