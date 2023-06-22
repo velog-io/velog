@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import '@/styles/reset.css'
-import '@/styles/global.css'
+import '../styles/global.css'
+import BasicLayout from '@/components/Layouts/BasicLayout'
 
 export const metadata = {
   title: 'velog',
@@ -46,7 +47,9 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#12B886" />
       </Head>
-      <body>{children}</body>
+      <body data-theme="light">
+        <BasicLayout>{children}</BasicLayout>
+      </body>
     </html>
   )
 }

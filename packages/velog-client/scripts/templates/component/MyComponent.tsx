@@ -1,6 +1,6 @@
 import styles from './MyComponent.module.css'
 
-interface Props {}
+type Props = {}
 
 function MyComponent({}: Props) {
   return <div className={styles.block}></div>

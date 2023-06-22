@@ -1,6 +1,5 @@
 {
   "plugins": [
-    "postcss-modules-values-replace",
     "postcss-flexbugs-fixes",
     [
       "postcss-preset-env",
@@ -8,7 +7,7 @@
         "autoprefixer": {
           "flexbox": "no-2009"
         },
-        "stage": 3,
+        "stage": 1,
         "features": {
           "custom-properties": false
         }

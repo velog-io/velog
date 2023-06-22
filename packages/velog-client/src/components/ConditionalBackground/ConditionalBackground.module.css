@@ -1,2 +1,15 @@
-.block {
+.isGray {
+  :global {
+    body {
+      background: red;
+    }
+  }
+}
+
+.isWhite {
+  :global {
+    body {
+      background: yellow;
+    }
+  }
 }

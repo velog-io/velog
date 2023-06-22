@@ -1,2 +1,5 @@
 .block {
+  height: 4rem;
+  background-color: red;
+  width: 100%;
 }

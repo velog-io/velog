@@ -1,14 +1,10 @@
-@value color, mobile from "./colors.module.css";
-
 .block {
+  display: flex;
+  max-width: 1376px;
+  margin: 0 auto;
+  height: 100%;
 
-}
-
-
-.test {
-  background-color: gold;
-
-  .inner-test {
-    background-color: black;
+  @media (min-width: 1376px) {
+    width: 100%;
   }
 }

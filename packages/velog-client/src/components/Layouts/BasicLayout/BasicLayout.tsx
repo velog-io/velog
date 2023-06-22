@@ -1,4 +1,8 @@
+import { bindClassNames } from '@/lib/styles/bindClassNames'
 import styles from './BasicLayout.module.css'
+import ConditionalBackground from '@/components/ConditionalBackground'
+
+const cx = bindClassNames(styles)
 
 interface Props {
   children?: React.ReactNode
@@ -6,12 +10,9 @@ interface Props {
 
 function BasicLayout({ children }: Props) {
   return (
-    <main className={styles.block}>
+    <main className={cx('block')}>
+      <ConditionalBackground />
       {children}
-      <div className={styles.test}>
-        test
-        <div className="innder-test">inner-test</div>
-      </div>
     </main>
   )
 }
