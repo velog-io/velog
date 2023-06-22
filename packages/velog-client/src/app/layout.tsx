@@ -2,6 +2,7 @@ import Head from 'next/head'
 import '@/styles/reset.css'
 import '../styles/global.css'
 import BasicLayout from '@/components/Layouts/BasicLayout'
+import ConditionalBackground from '@/components/ConditionalBackground/ConditionalBackground'
 
 export const metadata = {
   title: 'velog',
@@ -47,7 +48,8 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#12B886" />
       </Head>
-      <body data-theme="light">
+      <body className="body" data-theme="light">
+        <ConditionalBackground />
         <BasicLayout>{children}</BasicLayout>
       </body>
     </html>

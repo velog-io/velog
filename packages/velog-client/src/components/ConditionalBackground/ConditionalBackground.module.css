@@ -1,15 +1,12 @@
+.default {
+  width: 100%;
+  height: 100%;
+}
+
 .isGray {
-  :global {
-    body {
-      background: red;
-    }
-  }
+  background-color: var(--bg-page1);
 }
 
 .isWhite {
-  :global {
-    body {
-      background: yellow;
-    }
-  }
+  background-color: var(--bg-page2);
 }

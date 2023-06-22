@@ -9,12 +9,7 @@ interface Props {
 }
 
 function BasicLayout({ children }: Props) {
-  return (
-    <main className={cx('block')}>
-      <ConditionalBackground />
-      {children}
-    </main>
-  )
+  return <main className={cx('block')}>{children}</main>
 }
 
 export default BasicLayout

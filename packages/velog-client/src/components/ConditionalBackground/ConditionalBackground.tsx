@@ -17,7 +17,7 @@ function ConditionalBackground({}: Props) {
     [pathname]
   )
 
-  return <div className={cx(isGray ? 'isGray' : 'isWhite')}></div>
+  return <div className={cx('default', isGray ? 'isGray' : 'isWhite')}></div>
 }
 
 export default ConditionalBackground
