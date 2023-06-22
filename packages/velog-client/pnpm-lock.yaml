@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  classnames:
-    specifier: ^2.3.2
-    version: 2.3.2
   inquirer:
     specifier: ^9.2.7
     version: 9.2.7
@@ -17,9 +14,6 @@ dependencies:
   postcss-flexbugs-fixes:
     specifier: ^5.0.2
     version: 5.0.2(postcss@8.4.24)
-  postcss-nesting:
-    specifier: ^11.3.0
-    version: 11.3.0(postcss@8.4.24)
   postcss-preset-env:
     specifier: ^8.5.0
     version: 8.5.0(postcss@8.4.24)
@@ -2884,10 +2878,6 @@ packages:
     resolution: {integrity: sha512-eXTggHWSooYhq49F2opQhuHWgzucfF2YgODK4e1566GQs5BIfP30B0oenwBJHfWxAs2fyPB1s7Mg949zLf61Yw==}
     engines: {node: '>=8'}
     dev: true
-
-  /classnames@2.3.2:
-    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
-    dev: false
 
   /cli-cursor@3.1.0:
     resolution: {integrity: sha512-I/zHAwsKf9FqGoXM4WWRACob9+SNukZTd94DWF57E4toouRulbCxcUh6RKUEOQlYTHJnzkPMySvPNaaSLNfLZw==}

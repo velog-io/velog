@@ -1,6 +1,7 @@
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import styles from './BasicLayout.module.css'
 import ConditionalBackground from '@/components/ConditionalBackground'
+import Header from '@/components/Header/Header'
 
 const cx = bindClassNames(styles)
 
@@ -9,7 +10,12 @@ interface Props {
 }
 
 function BasicLayout({ children }: Props) {
-  return <main className={cx('block')}>{children}</main>
+  return (
+    <main className={cx('block')}>
+      <Header />
+      {children}
+    </main>
+  )
 }
 
 export default BasicLayout
