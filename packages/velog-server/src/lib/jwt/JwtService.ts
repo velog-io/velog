@@ -27,7 +27,6 @@ export class JwtService {
   }
   public decodeToken<T = unknown>(token: string): Promise<T> {
     return new Promise((resolve, reject) => {
-      if (!ENV.jwtSecretKey) return
       jwt.verify(token, ENV.jwtSecretKey, (err, decoded) => {
         if (err) reject(err)
         resolve(decoded as T)
@@ -47,8 +46,8 @@ export class JwtService {
       console.log('refreshing refreshToken')
       refreshToken = await this.generateToken(
         {
-          userId,
-          tokenId,
+          user_id: userId,
+          token_Id: tokenId,
         },
         {
           subject: 'refresh_token',
@@ -59,7 +58,7 @@ export class JwtService {
 
     const accessToken = await this.generateToken(
       {
-        userId: userId,
+        user_id: userId,
       },
       {
         subject: 'access_token',

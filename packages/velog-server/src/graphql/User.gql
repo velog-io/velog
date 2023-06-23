@@ -37,8 +37,11 @@ type UserMeta {
 type CurrentUser {
   id: ID!
   username: String
-  profile: UserProfile
   email: String
+  created_at: Date
+  updated_at: Date
+  is_certified: Boolean
+  profile: UserProfile
 }
 
 type Query {

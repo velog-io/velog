@@ -26,6 +26,14 @@ export class UserService implements UserServiceInterface {
         userProfile: true,
       },
     })
-    return user
+
+    if (!user) return null
+
+    const { userProfile, ...rest } = user
+
+    return {
+      profile: userProfile!,
+      ...rest,
+    }
   }
 }

@@ -44,7 +44,6 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
 
     let accessToken: string | undefined = request.cookies['access_token']
     const refreshToken: string | undefined = request.cookies['refresh_token']
-
     const authorization = request.headers['authorization']
 
     if (!accessToken && authorization) {
@@ -68,11 +67,14 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
     } catch (e) {
       // invalid token! try token refresh...
       if (!refreshToken) return
+
       try {
         const userId = await refresh(reply, refreshToken)
         // set user_id if succeeds
         request.user = { id: userId }
-      } catch (e) {}
+      } catch (e) {
+        console.log(e)
+      }
     }
   })
 }
