@@ -29,7 +29,7 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["./src", ".eslintrc.cjs", "jest.*"],
+  "include": ["./src", ".eslintrc.cjs", "jest.*", "codegen.ts"],
   "exclude": [],
   "ts-node": {
     "transpileOnly": true

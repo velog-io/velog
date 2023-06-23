@@ -19,7 +19,7 @@
     "build": "tsc",
     "dev": "dotenv -e ./env/.env.development | nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
     "start": "node ./dist/main.js",
-    "codegen": "graphql-codegen --config codegen.yml",
+    "codegen": "graphql-codegen --config codegen.ts",
     "test": "jest",
     "create-service": "node --loader ts-node/esm ./src/scripts/createService.ts"
   },
