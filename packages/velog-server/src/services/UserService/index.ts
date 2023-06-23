@@ -18,7 +18,6 @@ export class UserService implements UserServiceInterface {
     if (!userId) {
       throw new UnauthorizedError('Not Logged In')
     }
-
     const user = await this.db.user.findUnique({
       where: {
         id: userId,
@@ -27,7 +26,6 @@ export class UserService implements UserServiceInterface {
         userProfile: true,
       },
     })
-
     return user
   }
 }
