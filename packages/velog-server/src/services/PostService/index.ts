@@ -1,18 +1,11 @@
 import { Post, Prisma } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
-import {
-  ReadingListInput,
-  RecentPostsInput,
-  TrendingPostsInput,
-} from '@graphql/generated.js'
+import { ReadingListInput, RecentPostsInput, TrendingPostsInput } from '@graphql/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 
-import {
-  GetPostsByTypeParams,
-  PostServiceInterface,
-} from './PostServiceInterface'
+import { GetPostsByTypeParams, PostServiceInterface } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 
@@ -186,10 +179,7 @@ export class PostService implements PostServiceInterface {
 
     return posts
   }
-  public async getTrendingPosts(
-    input: TrendingPostsInput,
-    ip: string | null
-  ): Promise<Post[]> {
+  public async getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]> {
     const { offset = 0, limit = 20, timeframe = 'month' } = input
     const timeframes: [string, number][] = [
       ['day', 1],
@@ -217,11 +207,7 @@ export class PostService implements PostServiceInterface {
     }
 
     let ids: string[] = []
-    const cacheKey = this.cache.generateKey.trending(
-      selectedTimeframe[0],
-      offset,
-      limit
-    )
+    const cacheKey = this.cache.generateKey.trending(selectedTimeframe[0], offset, limit)
 
     const cachedIds = this.cache.lruCache.get(cacheKey)
     if (cachedIds) {
@@ -230,12 +216,8 @@ export class PostService implements PostServiceInterface {
       const rows = (await this.db.$queryRaw(Prisma.sql`
         select posts.id, posts.title, SUM(score) as score from post_scores
         inner join posts on post_scores.fk_post_id = posts.id
-        where post_scores.created_at > now() - interval '1 day' * ${
-          selectedTimeframe[1]
-        }
-        and posts.released_at > now() - interval '1 day' * ${
-          selectedTimeframe[1] * 1.5
-        }
+        where post_scores.created_at > now() - interval '1 day' * ${selectedTimeframe[1]}
+        and posts.released_at > now() - interval '1 day' * ${selectedTimeframe[1] * 1.5}
         group by posts.id
         order by score desc, posts.id desc
         offset ${offset}

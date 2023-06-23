@@ -8,5 +8,4 @@ export class HttpError extends Error {
   }
 }
 
-export const isHttpError = (e: unknown): e is HttpError =>
-  e instanceof HttpError
+export const isHttpError = (e: unknown): e is HttpError => e instanceof HttpError

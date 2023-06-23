@@ -6,10 +6,7 @@ import { ENV } from 'src/env.js'
 @injectable()
 @singleton()
 export class JwtService {
-  public generateToken(
-    payload: string | Buffer | object,
-    options?: SignOptions
-  ): Promise<string> {
+  public generateToken(payload: string | Buffer | object, options?: SignOptions): Promise<string> {
     const jwtOptions: SignOptions = {
       issuer: 'velog.io',
       expiresIn: '7d',

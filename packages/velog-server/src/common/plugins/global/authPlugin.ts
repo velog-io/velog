@@ -4,16 +4,9 @@ import { UserService } from '@services/UserService/index.js'
 import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import { container } from 'tsyringe'
 import { CookieService } from '@lib/cookie/CookieService.js'
-import {
-  ONE_DAY_IN_MS,
-  ONE_HOUR_IN_MS,
-  ONE_MINUTE_IN_MS,
-} from '@constants/timeConstants.js'
+import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from '@constants/timeConstants.js'
 
-const refresh = async (
-  reply: FastifyReply,
-  refreshToken: string
-): Promise<string> => {
+const refresh = async (reply: FastifyReply, refreshToken: string): Promise<string> => {
   try {
     const jwtService = container.resolve(JwtService)
     const decoded = await jwtService.decodeToken<RefreshTokenData>(refreshToken)
@@ -64,9 +57,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
         throw new Error('NoAccessToken')
       }
 
-      const accessTokenData = await jwt.decodeToken<AccessTokenData>(
-        accessToken
-      )
+      const accessTokenData = await jwt.decodeToken<AccessTokenData>(accessToken)
 
       request.user = { id: accessTokenData.user_id }
       // refresh token when life < 30mins

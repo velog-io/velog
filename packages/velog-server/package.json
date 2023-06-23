@@ -15,6 +15,7 @@
   "main": "main.ts",
   "type": "module",
   "scripts": {
+    "prisma": "dotenv -e ./env/.env.development npx prisma",
     "build": "tsc",
     "dev": "dotenv -e ./env/.env.development | nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
     "start": "node ./dist/main.js",
@@ -31,7 +32,7 @@
     "@graphql-tools/load": "^8.0.0",
     "@graphql-tools/merge": "^9.0.0",
     "@graphql-tools/schema": "^10.0.0",
-    "@prisma/client": "4.15.0",
+    "@prisma/client": "4.16.1",
     "dotenv": "^16.1.4",
     "fastify": "^4.18.0",
     "graphql": "^16.6.0",
