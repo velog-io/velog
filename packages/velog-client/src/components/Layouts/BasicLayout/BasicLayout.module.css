@@ -4,15 +4,15 @@
   margin: 0 auto;
   height: 100%;
 
-  @media (max-width: 1919px) {
+  @media screen and (max-width: 1919px) {
     width: 1376px;
   }
 
-  @media (max-width: 1440px) {
+  @media screen and (max-width: 1440px) {
     width: 1024px;
   }
 
-  @media (max-width: 1056px) {
+  @media screen and (max-width: 1056px) {
     width: calc(100% - 2rem);
   }
 }

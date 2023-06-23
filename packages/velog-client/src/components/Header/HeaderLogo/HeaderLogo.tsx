@@ -9,7 +9,13 @@ function HeaderLogo({}: Props) {
   return (
     <div className={styles.block}>
       <Link href="/">
-        <Image src={VelogIcon} alt="logo" data-testid="velog-logo" className='velog-logo'/>
+        <Image
+          src={VelogIcon}
+          alt="logo"
+          data-testid="velog-logo"
+          className="velog-logo"
+          priority={true}
+        />
       </Link>
     </div>
   )

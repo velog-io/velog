@@ -9,7 +9,7 @@
   height: 100%;
   line-height: 10px;
 
-  @media (min-width: 1024px) {
+  @media screen and (min-width: 1024px) {
     font-size: 18px;
     .velog-logo {
       height: 20px;
