@@ -64,7 +64,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
       if (diff < ONE_MINUTE_IN_MS * 30 && refreshToken) {
         await refresh(reply, refreshToken)
       }
-    } finally {
+    } catch (e) {
       // invalid token! try token refresh...
       if (!refreshToken) return
       const userId = await refresh(reply, refreshToken)
