@@ -6,7 +6,9 @@ interface Props {}
 function Header({}: Props) {
   return (
     <div className={styles.block}>
-      <HeaderLogo />
+      <div className={styles['inner-block']}>
+        <HeaderLogo />
+      </div>
     </div>
   )
 }

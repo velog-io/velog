@@ -2,7 +2,7 @@ import Head from 'next/head'
 import '@/styles/reset.css'
 import '../styles/global.css'
 import BasicLayout from '@/components/Layouts/BasicLayout'
-import ConditionalBackground from '@/components/ConditionalBackground/ConditionalBackground'
+import ConditionalBackground from '@/components/ConditionalBackground'
 
 export const metadata = {
   title: 'velog',

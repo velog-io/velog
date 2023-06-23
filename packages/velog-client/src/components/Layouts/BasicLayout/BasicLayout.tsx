@@ -1,6 +1,5 @@
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import styles from './BasicLayout.module.css'
-import ConditionalBackground from '@/components/ConditionalBackground'
 import Header from '@/components/Header/Header'
 
 const cx = bindClassNames(styles)
