@@ -1,4 +1,3 @@
-import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { CurrentUser } from '@interfaces/user'
 import { DbService } from '@lib/db/DbService.js'
 import { User } from '@prisma/client'
@@ -16,8 +15,9 @@ export class UserService implements UserServiceInterface {
   }
   async getCurrentUser(userId: string | undefined): Promise<CurrentUser | null> {
     if (!userId) {
-      throw new UnauthorizedError('Not Logged In')
+      return null
     }
+
     const user = await this.db.user.findUnique({
       where: {
         id: userId,
