@@ -5,7 +5,6 @@ import '@/styles/reset.css'
 import '../styles/global.css'
 import ConditionalBackground from '@/components/ConditionalBackground'
 import { SangteProvider } from 'sangte'
-import { useUserLoader } from '@/hooks/useUserLoader'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 export const metadata = {

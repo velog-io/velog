@@ -13,10 +13,9 @@ const initialState: AuthState = {
 
 const authState = sangte(initialState, (prev) => ({
   update(user: CurrentUser | undefined) {
-    if (user) {
-      localStorage.setItem('CURRENT_USER', JSON.stringify(user))
-      prev.user = user
-    }
+    if (!user) return
+    localStorage.setItem('CURRENT_USER', JSON.stringify(user))
+    prev.user = user
   },
   logout() {
     localStorage.removeItem('CURRENT_USER')
