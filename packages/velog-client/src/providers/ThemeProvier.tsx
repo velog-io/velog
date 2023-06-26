@@ -1,7 +1,7 @@
 'use client'
 
 import { useThemeEffect } from '@/hooks/useThemeEffect'
-import { Theme, useTheme } from '@/state/theme'
+import { useTheme } from '@/state/theme'
 import { useEffect } from 'react'
 
 type Props = {
@@ -10,16 +10,6 @@ type Props = {
 
 function ThemeProvier({ children }: Props) {
   useThemeEffect()
-  const theme = localStorage.getItem('THEME')
-  const { actions } = useTheme()
-  useEffect(() => {
-    if (theme === 'dark') {
-      actions.enableDarkMode()
-    }
-    if (theme === 'light') {
-      actions.enableLightMode()
-    }
-  }, [theme, actions])
 
   return <>{children}</>
 }

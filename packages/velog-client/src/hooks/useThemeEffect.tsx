@@ -17,4 +17,14 @@ export function useThemeEffect() {
     if (!theme) return
     document.body.dataset.theme = theme
   }, [theme])
+
+  const currentTheme = localStorage.getItem('THEME')
+  useEffect(() => {
+    if (currentTheme === 'dark') {
+      actions.enableDarkMode()
+    }
+    if (currentTheme === 'light') {
+      actions.enableLightMode()
+    }
+  }, [currentTheme, actions])
 }
