@@ -6,7 +6,6 @@ import '../styles/global.css'
 import ConditionalBackground from '@/components/ConditionalBackground'
 import { SangteProvider } from 'sangte'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import BasicLayout from '@/components/Layouts/BasicLayout'
 
 export const metadata = {
   title: 'velog',
@@ -28,8 +27,6 @@ export default function RootLayout({
     <html lang="ko">
       <Head>
         <meta charSet="utf-8" />
-        <meta property="fb:app_id" content="203040656938507" />
-        <meta property="og:image" content="https://images.velog.io/velog.png" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link
           rel="icon"
