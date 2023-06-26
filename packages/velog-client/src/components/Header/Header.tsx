@@ -1,3 +1,5 @@
+'use client'
+
 import HeaderLogo from '@/components/Header/HeaderLogo'
 import styles from './Header.module.css'
 import RoundButton from '@/components/RoundButton/RoundButton'

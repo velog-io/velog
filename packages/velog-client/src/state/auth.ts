@@ -36,11 +36,6 @@ export function useAuth() {
       if (user) {
         const parsed: CurrentUser = JSON.parse(user)
         actions.update(parsed)
-        setCrispUser({
-          email: parsed.email,
-          nickname: parsed.username,
-          avatar: parsed.profile.thumbnail,
-        })
       }
     } finally {
       setLoading(false)

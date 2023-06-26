@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.15",
+    "framer-motion": "^10.12.17",
     "graphql-request": "^6.1.0",
     "inquirer": "^9.2.7",
     "next": "^13.4.7",

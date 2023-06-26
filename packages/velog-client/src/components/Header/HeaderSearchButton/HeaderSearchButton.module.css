@@ -11,7 +11,7 @@
     background: var(--slight-layer);
   }
 
-  .svg {
+  svg {
     fill: var(--text1);
   }
 }

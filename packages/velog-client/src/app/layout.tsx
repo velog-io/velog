@@ -1,14 +1,12 @@
-'use client'
-
 import Head from 'next/head'
 import '@/styles/reset.css'
-import '../styles/global.css'
-import ConditionalBackground from '@/components/ConditionalBackground'
-import { SangteProvider } from 'sangte'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import '@/styles/global.css'
+import ConditionalBackgroundProvider from '@/providers/ConditionalBackgroundProvider'
+import ReactQueryProvider from '@/providers/ReactQueryProvider'
+import SangteContextProvider from '@/providers/SangteContextProvider'
+import UserContextProvider from '@/providers/UserContextProvider'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const queryClient = new QueryClient()
   return (
     <html lang="ko">
       <Head>
@@ -29,10 +27,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" content="#12B886" />
       </Head>
       <body className="body" data-theme="light">
-        <ConditionalBackground />
-        <QueryClientProvider client={queryClient}>
-          <SangteProvider>{children}</SangteProvider>
-        </QueryClientProvider>
+        <ConditionalBackgroundProvider>
+          <ReactQueryProvider>
+            <SangteContextProvider>
+              <UserContextProvider>{children}</UserContextProvider>
+            </SangteContextProvider>
+          </ReactQueryProvider>
+        </ConditionalBackgroundProvider>
       </body>
     </html>
   )

@@ -7,16 +7,16 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 
 const cx = bindClassNames(styles)
 
-interface Props {}
+type Props = { children: React.ReactNode }
 
-function ConditionalBackground({}: Props) {
+function ConditionalBackground({ children }: Props) {
   const pathname = usePathname()
 
   const isGray = useMemo(
     () => ['/', '/recent', '/lists'].some((path) => path.includes(pathname)),
     [pathname]
   )
-  return <div className={cx('block', isGray ? 'isGray' : 'isWhite')}></div>
+  return <div className={cx('block', isGray ? 'isGray' : 'isWhite')}>{children}</div>
 }
 
 export default ConditionalBackground

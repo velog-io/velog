@@ -4,13 +4,12 @@ import Link from 'next/link'
 
 type Props = {
   to: string
-  isDark: boolean
 }
 
-function HeaderSearchButton({ to, isDark }: Props) {
+function HeaderSearchButton({ to }: Props) {
   return (
     <Link href={to} className={styles.block}>
-      <SearchIcon2 className={styles.svg} />
+      <SearchIcon2 />
     </Link>
   )
 }
