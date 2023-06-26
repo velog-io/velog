@@ -1,0 +1,18 @@
+.block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: var(--text1);
+  font-size: 21px;
+  font-family: Fira Mono, monospace;
+  height: 100%;
+  line-height: 10px;
+
+  @media screen and (min-width: 1024px) {
+    font-size: 18px;
+    .velog-logo {
+      height: 20px;
+    }
+  }
+}

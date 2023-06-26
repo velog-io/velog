@@ -16,8 +16,7 @@ function ConditionalBackground({}: Props) {
     () => ['/', '/recent', '/lists'].some((path) => path.includes(pathname)),
     [pathname]
   )
-
-  return <div className={cx('default', isGray ? 'isGray' : 'isWhite')}></div>
+  return <div className={cx('block', isGray ? 'isGray' : 'isWhite')}></div>
 }
 
 export default ConditionalBackground

@@ -1,8 +1,11 @@
+'use client'
+
 import Head from 'next/head'
 import '@/styles/reset.css'
 import '../styles/global.css'
-import BasicLayout from '@/components/Layouts/BasicLayout'
-import ConditionalBackground from '@/components/ConditionalBackground/ConditionalBackground'
+import ConditionalBackground from '@/components/ConditionalBackground'
+import { SangteProvider } from 'sangte'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 export const metadata = {
   title: 'velog',
@@ -15,6 +18,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const queryClient = new QueryClient()
   return (
     <html lang="ko">
       <Head>
@@ -50,7 +54,9 @@ export default function RootLayout({
       </Head>
       <body className="body" data-theme="light">
         <ConditionalBackground />
-        <BasicLayout>{children}</BasicLayout>
+        <QueryClientProvider client={queryClient}>
+          <SangteProvider>{children}</SangteProvider>
+        </QueryClientProvider>
       </body>
     </html>
   )

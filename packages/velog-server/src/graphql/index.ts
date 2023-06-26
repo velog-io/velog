@@ -21,14 +21,12 @@ async function resolverLoader(): Promise<Resolvers[]> {
   return await Promise.all(promises)
 }
 
-export const schema = loadSchemaSync(
-  resolve(process.cwd(), 'src/graphql/*.gql'),
-  {
-    loaders: [new GraphQLFileLoader()],
-  }
-)
+export const schema = loadSchemaSync(resolve(process.cwd(), 'src/graphql/*.gql'), {
+  loaders: [new GraphQLFileLoader()],
+})
 
 const loadedResolver = await resolverLoader()
+
 export const resolvers = mergeResolvers(
   loadedResolver.concat([
     {

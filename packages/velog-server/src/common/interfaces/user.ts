@@ -1,3 +1,5 @@
-export type CurrentUser = {
-  id: string
+import { User, UserProfile } from '@prisma/client'
+
+export type CurrentUser = User & {
+  profile: UserProfile
 }

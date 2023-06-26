@@ -86,7 +86,6 @@ type Query {
 #   # postView(id: ID!): Boolean
 # }
 
-
 # input WritePostInput {
 #   title: String
 #   body: String
@@ -114,7 +113,6 @@ type Query {
 #   series_id: ID
 # }
 
-
 input ReadingListInput {
   type: ReadingListOption!
   cursor: ID
@@ -131,4 +129,3 @@ input TrendingPostsInput {
   limit: Int
   timeframe: String
 }
-

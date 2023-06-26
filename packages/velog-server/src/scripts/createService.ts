@@ -47,9 +47,7 @@ async function main() {
   ])
 
   const dirPath =
-    type === 'lib'
-      ? path.resolve(__dirname, '../lib')
-      : path.resolve(__dirname, `../services`)
+    type === 'lib' ? path.resolve(__dirname, '../lib') : path.resolve(__dirname, `../services`)
 
   const filename = answer.feature.trim()
 
@@ -61,14 +59,8 @@ async function main() {
   })
 }
 
-function createService({
-  type,
-  dirPath,
-  filename,
-  files,
-}: CreateServiceParams) {
-  const newFilename =
-    type === 'services' ? `${toPascalCase(filename)}Service` : filename
+function createService({ type, dirPath, filename, files }: CreateServiceParams) {
+  const newFilename = type === 'services' ? `${toPascalCase(filename)}Service` : filename
 
   const serviceDir = path.resolve(dirPath, newFilename)
 
