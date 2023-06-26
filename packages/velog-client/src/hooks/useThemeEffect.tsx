@@ -13,11 +13,6 @@ export function useThemeEffect() {
     actions.setSystemTheme(systemPrefersDark ? 'dark' : 'light')
   }, [actions])
 
-  useEffect(() => {
-    if (!theme) return
-    document.body.dataset.theme = theme
-  }, [theme])
-
   const currentTheme = localStorage.getItem('THEME')
   useEffect(() => {
     if (currentTheme === 'dark') {
@@ -27,4 +22,9 @@ export function useThemeEffect() {
       actions.enableLightMode()
     }
   }, [currentTheme, actions])
+
+  useEffect(() => {
+    if (!theme) return
+    document.body.dataset.theme = theme
+  }, [theme])
 }
