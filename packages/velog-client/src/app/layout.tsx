@@ -6,18 +6,20 @@ import ReactQueryProvider from '@/providers/ReactQueryProvider'
 import SangteContextProvider from '@/providers/SangteContextProvider'
 import UserContextProvider from '@/providers/UserContextProvider'
 
+export const metadata = {
+  title: 'velog',
+  description: '개발자들을 위한 블로그 서비스. 어디서 글 쓸지 고민하지 말고 벨로그에서 시작하세요.',
+  other: {
+    'fb:app_id': '203040656938507',
+    'og:image': 'https://images.velog.io/velog.png',
+  },
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
       <Head>
         <meta charSet="utf-8" />
-        <title>velog</title>
-        <meta
-          name="description"
-          content="개발자들을 위한 블로그 서비스. 어디서 글 쓸지 고민하지 말고 벨로그에서 시작하세요."
-        />
-        <meta property="fb:app_id" content="203040656938507" />
-        <meta property="og:image" content="https://images.velog.io/velog.png" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
