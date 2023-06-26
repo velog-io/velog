@@ -3,7 +3,6 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  color: var(--text1);
   font-size: 21px;
   font-family: Fira Mono, monospace;
   height: 100%;
@@ -14,5 +13,9 @@
     .velog-logo {
       height: 20px;
     }
+  }
+
+  svg {
+    color: var(--text1);
   }
 }

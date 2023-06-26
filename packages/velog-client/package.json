@@ -14,7 +14,7 @@
     "velog"
   ],
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -25,7 +25,7 @@
     "@tanstack/react-query": "^4.29.15",
     "graphql-request": "^6.1.0",
     "inquirer": "^9.2.7",
-    "next": "13.4.6",
+    "next": "^13.4.7",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^8.5.0",
     "react": "18.2.0",

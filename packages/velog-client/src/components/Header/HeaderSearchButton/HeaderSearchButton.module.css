@@ -1,0 +1,17 @@
+.block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 8px;
+  border-radius: 50%;
+
+  &:hover {
+    background: var(--slight-layer);
+  }
+
+  .svg {
+    fill: var(--text1);
+  }
+}

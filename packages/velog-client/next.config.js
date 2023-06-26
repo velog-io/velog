@@ -2,12 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    turbo: {
-      rules: {
-        '.svg': ['@svgr/webpack'],
-      },
-    },
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    })
+
+    return config
   },
 }
 
