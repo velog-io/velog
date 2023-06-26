@@ -1,5 +1,3 @@
-'use client'
-
 import { useMemo } from 'react'
 import styles from './ConditionalBackground.module.css'
 import { usePathname } from 'next/navigation'
@@ -16,7 +14,10 @@ function ConditionalBackground({ children }: Props) {
     () => ['/', '/recent', '/lists'].some((path) => path.includes(pathname)),
     [pathname]
   )
-  return <div className={cx('block', isGray ? 'isGray' : 'isWhite')}>{children}</div>
+
+  return (
+    <div className={cx('block', isGray ? 'isGray' : 'isWhite')}>{children}</div>
+  )
 }
 
 export default ConditionalBackground

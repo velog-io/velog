@@ -1,6 +1,6 @@
 'use client'
 
-import ConditionalBackground from '@/components/ConditionalBackground/ConditionalBackground'
+import ConditionalBackground from '@/components/ConditionalBackground'
 
 type Props = {
   children: React.ReactNode
