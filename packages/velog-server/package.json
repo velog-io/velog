@@ -20,7 +20,7 @@
     "start": "node ./dist/main.js",
     "codegen": "graphql-codegen --config codegen.yml",
     "test": "jest",
-    "create-service": "node --loader ts-node/esm ./src/scripts/createService.ts"
+    "create-service": "tsx ./src/scripts/createService.ts"
   },
   "dependencies": {
     "@fastify/autoload": "^5.7.1",
@@ -43,6 +43,7 @@
     "pino-pretty": "^10.0.0",
     "prisma": "^4.15.0",
     "reflect-metadata": "^0.1.13",
+    "tsx": "^3.12.7",
     "tsyringe": "^4.7.0",
     "utility-types": "^3.10.0"
   },
