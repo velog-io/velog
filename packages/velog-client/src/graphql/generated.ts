@@ -22,7 +22,7 @@ export type Incremental<T> =
 
 function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
-    const res = await fetch('http://localhost:5001/graphql', {
+    const res = await fetch('http://localhost:5003/graphql', {
       method: 'POST',
       ...{
         headers: {

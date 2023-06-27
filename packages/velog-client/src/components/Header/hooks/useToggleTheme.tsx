@@ -6,6 +6,7 @@ export function useToggleTheme() {
 
   const saveToStorage = (value: Theme) => {
     localStorage.setItem('THEME', value)
+    document.cookie = `theme=${value}; path=/;`
   }
 
   const toggle = useCallback(() => {

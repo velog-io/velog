@@ -7,6 +7,7 @@ import SangteContextProvider from '@/providers/SangteContextProvider'
 import UserLoaderProvider from '@/providers/UserLoaderProvider'
 import ThemeProvier from '@/providers/ThemeProvier'
 import InteractiveViewProvider from '@/providers/InteractiveViewProvider'
+import { cookies } from 'next/headers'
 
 export const metadata = {
   title: 'velog',
@@ -23,6 +24,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const theme = cookies().get('theme')
   return (
     <html lang="ko">
       <Head>
@@ -54,7 +56,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#12B886" />
       </Head>
-      <body className="body">
+      <body className="body" data-theme={theme?.value ?? 'light'}>
         <ConditionalBackgroundProvider>
           <ReactQueryProvider>
             <SangteContextProvider>

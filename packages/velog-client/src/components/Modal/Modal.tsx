@@ -40,12 +40,6 @@ function Modal({ children, isVisible, onOverlayClick }: Props) {
     }
   }, [isVisible])
 
-  const modalRoot = document.getElementById('modal-root')
-
-  if (!modalRoot) {
-    return null
-  }
-
   if (!isVisible && closed) return null
   return (
     <div
