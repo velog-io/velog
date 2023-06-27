@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.15",
+    "axios": "^1.4.0",
     "framer-motion": "^10.12.17",
     "graphql-request": "^6.1.0",
     "inquirer": "^9.2.7",
@@ -33,6 +34,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
     "sangte": "^0.1.26",
+    "snakecase-keys": "^5.4.6",
     "tsx": "^3.12.7"
   },
   "devDependencies": {

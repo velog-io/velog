@@ -2,7 +2,6 @@ import Modal from '@/components/Modal/Modal'
 import styles from './AuthModal.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useModal } from '@/state/modal'
-import { undrawJoyride } from '@/public/images'
 import Image from 'next/image'
 import { MdClose } from 'react-icons/md'
 
