@@ -8,7 +8,7 @@ import { MdClose } from 'react-icons/md'
 const cx = bindClassNames(styles)
 
 type Props = {
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 function AuthModal({ children }: Props) {

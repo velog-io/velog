@@ -1,6 +1,7 @@
 'use client'
 
 import AuthModal from '@/components/AuthModal/AuthModal'
+import { ToastContainer, Flip } from 'react-toastify'
 
 type Props = {
   children: React.ReactNode
@@ -10,8 +11,14 @@ function InteractiveViewProvider({ children }: Props) {
   return (
     <>
       {children}
-      <div id="modal-root" />
       <AuthModal />
+      <ToastContainer
+        transition={Flip}
+        position="top-right"
+        autoClose={2000}
+        closeOnClick
+        pauseOnHover
+      />
     </>
   )
 }

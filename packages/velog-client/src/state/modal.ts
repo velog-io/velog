@@ -8,19 +8,21 @@ type ModalState = {
 }
 
 const initialState: ModalState = {
-  isVisible: true,
-  mode: 'login',
+  isVisible: false,
+  mode: '',
 }
 
 const modalState = sangte(initialState, (prev) => ({
   showModal(mode: ModalMode) {
-    if (!mode) return
     prev.mode = mode
     prev.isVisible = true
   },
   closeModal() {
     prev.mode = ''
     prev.isVisible = false
+  },
+  changeMode(mode: ModalMode) {
+    prev.mode = mode
   },
 }))
 
