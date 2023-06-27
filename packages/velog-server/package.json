@@ -42,7 +42,7 @@
     "lru-cache": "^10.0.0",
     "mercurius": "^13.0.0",
     "pino-pretty": "^10.0.0",
-    "prisma": "^4.15.0",
+    "prisma": "^4.16.1",
     "reflect-metadata": "^0.1.13",
     "tsx": "^3.12.7",
     "tsyringe": "^4.7.0",
