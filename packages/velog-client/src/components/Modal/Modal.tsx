@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './Modal.module.css'
-import { createPortal } from 'react-dom'
-import { isServerSide } from '@/lib/isServerSide'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 
 const cx = bindClassNames(styles)

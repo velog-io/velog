@@ -1,3 +1,4 @@
+import { isClientSide } from '@/lib/isClientSide'
 import { useTheme } from '@/state/theme'
 import { useEffect } from 'react'
 
@@ -13,7 +14,7 @@ export function useThemeEffect() {
     actions.setSystemTheme(systemPrefersDark ? 'dark' : 'light')
   }, [actions])
 
-  const currentTheme = localStorage?.getItem('THEME')
+  const currentTheme = isClientSide && localStorage.getItem('THEME')
   useEffect(() => {
     if (currentTheme === 'dark') {
       actions.enableDarkMode()
