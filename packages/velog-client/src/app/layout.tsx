@@ -54,7 +54,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#12B886" />
       </Head>
-      <body className="body" data-theme="light">
+      <body className="body">
         <ConditionalBackgroundProvider>
           <ReactQueryProvider>
             <SangteContextProvider>

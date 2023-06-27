@@ -1,0 +1,12 @@
+.block {
+  display: flex;
+  width: 606px;
+  height: 530px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.09);
+
+  @media screen and (max-width: 768px) {
+    flex: 1;
+    width: auto;
+    height: 100%;
+  }
+}

@@ -3,12 +3,12 @@ import { sangte, useSangteActions, useSangteValue } from 'sangte'
 type ModalMode = 'register' | 'login' | ''
 
 type ModalState = {
-  visible: boolean
+  isVisible: boolean
   mode: ModalMode
 }
 
 const initialState: ModalState = {
-  visible: false,
+  isVisible: false,
   mode: '',
 }
 
@@ -16,11 +16,11 @@ const modalState = sangte(initialState, (prev) => ({
   showModal(mode: ModalMode) {
     if (!mode) return
     prev.mode = mode
-    prev.visible = true
+    prev.isVisible = true
   },
   closeModal() {
     prev.mode = ''
-    prev.visible = false
+    prev.isVisible = false
   },
 }))
 

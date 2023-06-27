@@ -1,5 +1,7 @@
 'use client'
 
+import AuthModal from '@/components/AuthModal/AuthModal'
+
 type Props = {
   children: React.ReactNode
 }
@@ -9,6 +11,7 @@ function InteractiveViewProvider({ children }: Props) {
     <>
       {children}
       <div id="modal-root" />
+      <AuthModal />
     </>
   )
 }
