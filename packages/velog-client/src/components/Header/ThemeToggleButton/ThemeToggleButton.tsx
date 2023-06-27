@@ -1,12 +1,12 @@
-import { useToggleTheme } from '@/hooks/useToggleTheme'
+import { useToggleTheme } from '@/components/Header/hooks/useToggleTheme'
 import styles from './ThemeToggleButton.module.css'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MoonIcon, SunIcon } from '@/../public/svg'
+import { MoonIcon, SunIcon } from '@/public/svg'
 
 type Props = {}
 
 function ThemeToggleButton({}: Props) {
-  const [theme, toggle] = useToggleTheme()
+  const { theme, toggle } = useToggleTheme()
   const isDark = theme === 'dark'
 
   return (

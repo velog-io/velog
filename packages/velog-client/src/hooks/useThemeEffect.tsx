@@ -13,15 +13,15 @@ export function useThemeEffect() {
     actions.setSystemTheme(systemPrefersDark ? 'dark' : 'light')
   }, [actions])
 
-  const currentTheme = localStorage.getItem('THEME')
   useEffect(() => {
+    const currentTheme = localStorage.getItem('THEME')
     if (currentTheme === 'dark') {
       actions.enableDarkMode()
     }
     if (currentTheme === 'light') {
       actions.enableLightMode()
     }
-  }, [currentTheme, actions])
+  }, [actions])
 
   useEffect(() => {
     if (!theme) return

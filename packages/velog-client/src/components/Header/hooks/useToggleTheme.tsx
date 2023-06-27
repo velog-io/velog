@@ -1,4 +1,5 @@
 import { type Theme, useTheme } from '@/state/theme'
+import { useCallback } from 'react'
 
 export function useToggleTheme() {
   const { actions, theme } = useTheme()
@@ -7,7 +8,7 @@ export function useToggleTheme() {
     localStorage.setItem('THEME', value)
   }
 
-  const toggle = () => {
+  const toggle = useCallback(() => {
     if (!theme) return
     if (theme === 'dark') {
       actions.enableLightMode()
@@ -16,7 +17,7 @@ export function useToggleTheme() {
       actions.enableDarkMode()
       saveToStorage('dark')
     }
-  }
+  }, [theme, actions])
 
-  return [theme, toggle] as const
+  return { theme, toggle }
 }

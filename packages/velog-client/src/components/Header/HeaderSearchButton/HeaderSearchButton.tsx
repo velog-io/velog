@@ -1,4 +1,4 @@
-import { SearchIcon2 } from '@/../public/svg'
+import { SearchIcon2 } from '@/public/svg'
 import styles from './HeaderSearchButton.module.css'
 import Link from 'next/link'
 

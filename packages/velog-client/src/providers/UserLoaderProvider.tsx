@@ -6,9 +6,9 @@ type Props = {
   children: React.ReactNode
 }
 
-function UserContextProvider({ children }: Props) {
+function UserLoaderProvider({ children }: Props) {
   useUserLoader()
   return <>{children}</>
 }
 
-export default UserContextProvider
+export default UserLoaderProvider

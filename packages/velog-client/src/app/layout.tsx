@@ -4,8 +4,9 @@ import '@/styles/global.css'
 import ConditionalBackgroundProvider from '@/providers/ConditionalBackgroundProvider'
 import ReactQueryProvider from '@/providers/ReactQueryProvider'
 import SangteContextProvider from '@/providers/SangteContextProvider'
-import UserContextProvider from '@/providers/UserContextProvider'
+import UserLoaderProvider from '@/providers/UserLoaderProvider'
 import ThemeProvier from '@/providers/ThemeProvier'
+import InteractiveViewProvider from '@/providers/InteractiveViewProvider'
 
 export const metadata = {
   title: 'velog',
@@ -57,9 +58,11 @@ export default function RootLayout({
         <ConditionalBackgroundProvider>
           <ReactQueryProvider>
             <SangteContextProvider>
-              <UserContextProvider>
-                <ThemeProvier>{children}</ThemeProvier>
-              </UserContextProvider>
+              <UserLoaderProvider>
+                <ThemeProvier>
+                  <InteractiveViewProvider>{children}</InteractiveViewProvider>
+                </ThemeProvier>
+              </UserLoaderProvider>
             </SangteContextProvider>
           </ReactQueryProvider>
         </ConditionalBackgroundProvider>
