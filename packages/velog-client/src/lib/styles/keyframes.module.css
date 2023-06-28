@@ -1,16 +1,16 @@
-.fade-in {
+.fadeIn {
   animation-name: fade-in;
   animation-duration: 0.25s;
   animation-fill-mode: forwards;
 }
 
-.fade-out {
+.fadeOut {
   animation-name: fade-out;
   animation-duration: 0.25s;
   animation-fill-mode: forwards;
 }
 
-.pop-in-from-bottom {
+.popInFromBottom {
   animation-name: pop-in-from-bottom;
   animation-duration: 0.4s;
   animation-fill-mode: forwards;
@@ -18,7 +18,7 @@
   /* animation: popInFromBottom 0.4s forwards ease-in-out; */
 }
 
-.pop-out-to-Bottom {
+.popOutToBottom {
   animation-name: pop-out-to-Bottom;
   animation-duration: 0.2s;
   animation-fill-mode: forwards;

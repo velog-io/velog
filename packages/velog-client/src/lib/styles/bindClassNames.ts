@@ -24,7 +24,8 @@ export function bindClassNames<T extends Styles>(styles: T) {
       | null
       | undefined
       | BooleanMap
-      | UnionStyleKey
+      // | UnionStyleKey
+      | (string & {})
     )[]
   ) => {
     return (classNames.filter((cn) => cn) as (keyof T | UnionStyleKey)[])

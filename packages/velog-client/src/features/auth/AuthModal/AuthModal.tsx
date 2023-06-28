@@ -23,7 +23,7 @@ function AuthModal() {
       <div
         className={cx(
           'wrapper',
-          isVisible ? 'pop-in-from-bottom' : 'pop-out-to-Bottom'
+          isVisible ? 'popInFromBottom' : 'popOutToBottom'
         )}
       >
         <div className={cx('gray-block')}>

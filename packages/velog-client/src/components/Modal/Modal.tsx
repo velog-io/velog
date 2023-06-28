@@ -44,7 +44,7 @@ function Modal({ children, isVisible, onOverlayClick }: Props) {
   return (
     <div
       ref={backdropRef}
-      className={cx('backdrop', isVisible ? 'fade-in' : 'fade-out')}
+      className={cx('backdrop', isVisible ? 'fadeIn' : 'fadeOut')}
       onClick={handleClickBackdrop}
     >
       {children}
