@@ -2,14 +2,21 @@
   height: 4rem;
   width: 100%;
 
-  .inner-block {
+  .innerBlock {
     display: flex;
     height: 100%;
     align-items: center;
     justify-content: space-between;
   }
+
   .right {
     display: flex;
     align-items: center;
+
+    .writeButton {
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    }
   }
 }

@@ -9,7 +9,10 @@ import HeaderSearchButton from '@/components/Header/HeaderSearchButton'
 import ThemeToggleButton from '@/components/Header/ThemeToggleButton'
 import { useModal } from '@/state/modal'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { memo } from 'react'
+import { memo, useCallback, useRef } from 'react'
+import useToggle from '@/hooks/useToggle'
+import HeaderUserIcon from '@/components/Header/HeaderUserIcon/HeaderUserIcon'
+import HeaderUserMenu from '@/components/Header/HeaderUserMenu/HeaderUserMenu'
 
 const cx = bindClassNames(styles)
 
@@ -20,6 +23,8 @@ function Header() {
   const {
     value: { systemTheme },
   } = useTheme()
+  const [userMenu, toggleUserMenu] = useToggle(false)
+  const ref = useRef<HTMLDivElement>(null)
   const { actions } = useModal()
   const themeReady = systemTheme !== 'not-ready'
 
@@ -28,15 +33,29 @@ function Header() {
 
   return (
     <div className={cx('block')}>
-      <div className={cx('inner-block')}>
+      <div className={cx('innerBlock')}>
         <HeaderLogo />
         <div className={cx('right')}>
+          {themeReady && <ThemeToggleButton />}
+          <HeaderSearchButton to={urlForSearch} />
           {user ? (
-            <Button color="darkGray">로그인 됨</Button>
+            <>
+              <Button
+                color="darkGray"
+                border={true}
+                style={{ marginRight: '1.25rem' }}
+                to="/write"
+                className={cx('writeButton')}
+              >
+                새 글 작성
+              </Button>
+              <div ref={ref}>
+                <HeaderUserIcon user={user} onClick={toggleUserMenu} />
+              </div>
+              <HeaderUserMenu onClose={toggleUserMenu} isVisible={userMenu} />
+            </>
           ) : (
             <>
-              {themeReady && <ThemeToggleButton />}
-              <HeaderSearchButton to={urlForSearch} />
               <Button
                 color="darkGray"
                 border={false}
