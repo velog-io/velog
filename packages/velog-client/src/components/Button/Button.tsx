@@ -1,7 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
-import styles from './RoundButton.module.css'
-import { type StyleButtonKey, bindClassNames } from '@/lib/styles/bindClassNames'
+import styles from './Button.module.css'
+import {
+  type StyleButtonKey,
+  bindClassNames,
+} from '@/lib/styles/bindClassNames'
 
 type ButtonProps = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -20,7 +23,7 @@ interface Props extends ButtonProps {
 
 const cx = bindClassNames(styles)
 
-function RoundButton({
+function Button({
   ref,
   to,
   color = 'teal',
@@ -28,7 +31,8 @@ function RoundButton({
   border = false,
   ...rest
 }: Props) {
-  const colorClassNamePrefix = (str: string) => `btn-${str}` as Partial<StyleButtonKey>
+  const colorClassNamePrefix = (str: string) =>
+    `btn-${str}` as Partial<StyleButtonKey>
   const ButtonComponent = (
     <button
       className={cx('block', `${colorClassNamePrefix(color)}`, `${size}`, {
@@ -39,7 +43,11 @@ function RoundButton({
   )
 
   const WrapperComponent = to ? Link : React.Fragment
-  return React.createElement(WrapperComponent, to ? { href: to } : null, ButtonComponent)
+  return React.createElement(
+    WrapperComponent,
+    to ? { href: to } : null,
+    ButtonComponent
+  )
 }
 
-export default RoundButton
+export default Button

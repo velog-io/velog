@@ -4,18 +4,19 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useModal } from '@/state/modal'
 import Image from 'next/image'
 import { MdClose } from 'react-icons/md'
+import AuthForm from '@/features/auth/AuthModal/AuthForm/AuthForm'
 
 const cx = bindClassNames(styles)
 
-type Props = {
-  children?: React.ReactNode
-}
-
-function AuthModal({ children }: Props) {
+function AuthModal() {
   const {
-    value: { isVisible },
+    value: { isVisible, mode },
     actions,
   } = useModal()
+
+  if (!['register', 'login', ''].includes(mode)) {
+    throw new Error('Invalid mode')
+  }
 
   return (
     <Modal isVisible={isVisible} onOverlayClick={() => actions.closeModal()}>
@@ -40,7 +41,9 @@ function AuthModal({ children }: Props) {
           <div className={cx('exit-wrapper')}>
             <MdClose onClick={() => actions.closeModal()} tabIndex={1} />
           </div>
-          <div className={cx('block-content')}>{children}</div>
+          <div className={cx('block-content')}>
+            <AuthForm />
+          </div>
         </div>
       </div>
     </Modal>

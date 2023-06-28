@@ -1,0 +1,50 @@
+.block {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  line-height: 1.5;
+
+  .upper-warepper {
+    @media screen and (min-width: 768px) {
+      margin-top: 32px;
+    }
+  }
+
+  h2,
+  h4 {
+    margin: 0;
+  }
+  h2 {
+    font-size: 1.3125rem;
+    color: var(--text1);
+  }
+  h4 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: var(--text3);
+  }
+
+  section + section {
+    margin-top: 2.5rem;
+  }
+
+  .foot {
+    @media screen and (min-width: 768px) {
+      margin-top: 2rem;
+    }
+    text-align: right;
+    span {
+      margin-right: 0.25rem;
+    }
+    .link {
+      display: inline-block;
+      font-weight: bold;
+      color: var(--primary1);
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

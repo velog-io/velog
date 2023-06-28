@@ -7,7 +7,7 @@ type Props = {
 }
 
 function UserLoaderProvider({ children }: Props) {
-  useUserLoader()
+  // useUserLoader()
   return <>{children}</>
 }
 

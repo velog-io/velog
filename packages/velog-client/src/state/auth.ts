@@ -31,11 +31,11 @@ export function useAuth() {
   useEffect(() => {
     try {
       setLoading(true)
-      const user = localStorage.getItem('CURRENT_USER')
-      if (user) {
-        const parsed: CurrentUser = JSON.parse(user)
-        actions.update(parsed)
-      }
+      // const user = localStorage.getItem('CURRENT_USER')
+      // if (user) {
+      //   const parsed: CurrentUser = JSON.parse(user)
+      //   actions.update(parsed)
+      // }
     } finally {
       setLoading(false)
     }

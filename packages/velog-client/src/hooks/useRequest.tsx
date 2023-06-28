@@ -3,13 +3,13 @@ import { AxiosPromise } from 'axios'
 
 type PromiseCreator<R> = (...params: any[]) => AxiosPromise<R>
 
-type UseRequestReturnType<R> = {
-  onRequest: Function
-  loading: boolean
-  data: R | null
-  error: Error | null
-  onReset: () => void
-}
+type UseRequestReturnType<R> = [
+  Function,
+  boolean,
+  R | null,
+  Error | null,
+  () => void
+]
 
 export default function useRequest<R = any>(
   promiseCreator: PromiseCreator<R>
@@ -40,5 +40,5 @@ export default function useRequest<R = any>(
     setError(null)
   }
 
-  return { onRequest, loading, data, error, onReset }
+  return [onRequest, loading, data, error, onReset]
 }

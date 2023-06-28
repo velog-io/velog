@@ -2,6 +2,9 @@ import { useToggleTheme } from '@/components/Header/hooks/useToggleTheme'
 import styles from './ThemeToggleButton.module.css'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MoonIcon, SunIcon } from '@/public/svg'
+import { bindClassNames } from '@/lib/styles/bindClassNames'
+
+const cx = bindClassNames(styles)
 
 type Props = {}
 
@@ -10,11 +13,11 @@ function ThemeToggleButton({}: Props) {
   const isDark = theme === 'dark'
 
   return (
-    <button className={styles.block} onClick={toggle}>
+    <button className={cx('block')} onClick={toggle}>
       <AnimatePresence initial={false}>
         {isDark ? (
-          <div className={styles.positional}>
-            <div className={styles['svg-wrapper']}>
+          <div className={cx('positional')}>
+            <div className={cx('svgWrapper')}>
               <motion.div
                 key="dark"
                 initial={{ scale: 0, rotate: -180, opacity: 0 }}
@@ -28,11 +31,11 @@ function ThemeToggleButton({}: Props) {
           </div>
         ) : (
           <div className={styles.positional}>
-            <div className={styles['svg-wrapper']}>
+            <div className={cx('svgWrapper')}>
               <motion.div
                 key="light"
                 initial={{ scale: 1, rotate: 0, opacity: 1 }}
-                animate={{ scale: 1, rotate: -180, opacity: 1 }}
+                animate={{ scale: 1, rotate: 90, opacity: 1 }}
                 exit={{ scale: 1, rotate: 0, opacity: 1 }}
                 transition={{ reverse: true }}
               >

@@ -11,18 +11,18 @@
   &:hover {
     background: var(--slight-layer);
   }
-}
 
-.positional {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+  .positional {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
-.svg-wrapper {
-  color: var(--text1);
-  svg {
-    display: block;
+    .svgWrapper {
+      color: var(--text1);
+      svg {
+        display: block;
+      }
+    }
   }
 }

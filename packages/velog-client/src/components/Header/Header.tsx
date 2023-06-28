@@ -2,18 +2,18 @@
 
 import HeaderLogo from '@/components/Header/HeaderLogo'
 import styles from './Header.module.css'
-import RoundButton from '@/components/RoundButton/'
+import Button from '@/components/Button'
 import { useAuth } from '@/state/auth'
 import { useTheme } from '@/state/theme'
 import HeaderSearchButton from '@/components/Header/HeaderSearchButton'
 import ThemeToggleButton from '@/components/Header/ThemeToggleButton'
-import AuthModal from '@/components/AuthModal/AuthModal'
-import { useState } from 'react'
 import { useModal } from '@/state/modal'
+import { bindClassNames } from '@/lib/styles/bindClassNames'
+import { memo } from 'react'
 
-interface Props {}
+const cx = bindClassNames(styles)
 
-function Header({}: Props) {
+function Header() {
   const {
     value: { user },
   } = useAuth()
@@ -27,17 +27,17 @@ function Header({}: Props) {
   const urlForSearch = '/search'
 
   return (
-    <div className={styles.block}>
-      <div className={styles['inner-block']}>
+    <div className={cx('block')}>
+      <div className={cx('inner-block')}>
         <HeaderLogo />
-        <div className={styles.right}>
+        <div className={cx('right')}>
           {user ? (
-            <RoundButton color="darkGray">로그인 됨</RoundButton>
+            <Button color="darkGray">로그인 됨</Button>
           ) : (
             <>
               {themeReady && <ThemeToggleButton />}
               <HeaderSearchButton to={urlForSearch} />
-              <RoundButton
+              <Button
                 color="darkGray"
                 border={false}
                 onClick={() => {
@@ -45,7 +45,7 @@ function Header({}: Props) {
                 }}
               >
                 로그인
-              </RoundButton>
+              </Button>
             </>
           )}
         </div>
@@ -54,4 +54,4 @@ function Header({}: Props) {
   )
 }
 
-export default Header
+export default memo(Header)

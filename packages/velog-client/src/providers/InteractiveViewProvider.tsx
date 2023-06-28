@@ -1,6 +1,6 @@
 'use client'
 
-import AuthModal from '@/components/AuthModal/AuthModal'
+import AuthModal from '@/features/auth/AuthModal/AuthModal'
 import { ToastContainer, Flip } from 'react-toastify'
 
 type Props = {

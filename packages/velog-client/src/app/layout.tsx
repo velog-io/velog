@@ -1,13 +1,8 @@
 import Head from 'next/head'
 import '@/styles/reset.css'
 import '@/styles/global.css'
-import ConditionalBackgroundProvider from '@/providers/ConditionalBackgroundProvider'
-import ReactQueryProvider from '@/providers/ReactQueryProvider'
-import SangteContextProvider from '@/providers/SangteContextProvider'
-import UserLoaderProvider from '@/providers/UserLoaderProvider'
-import ThemeProvier from '@/providers/ThemeProvier'
-import InteractiveViewProvider from '@/providers/InteractiveViewProvider'
 import { cookies } from 'next/headers'
+import CoreProvider from '@/providers/CoreProvider'
 
 export const metadata = {
   title: 'velog',
@@ -57,17 +52,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#12B886" />
       </Head>
       <body className="body" data-theme={theme?.value ?? 'light'}>
-        <ConditionalBackgroundProvider>
-          <ReactQueryProvider>
-            <SangteContextProvider>
-              <UserLoaderProvider>
-                <ThemeProvier>
-                  <InteractiveViewProvider>{children}</InteractiveViewProvider>
-                </ThemeProvier>
-              </UserLoaderProvider>
-            </SangteContextProvider>
-          </ReactQueryProvider>
-        </ConditionalBackgroundProvider>
+        <CoreProvider>{children}</CoreProvider>
       </body>
     </html>
   )

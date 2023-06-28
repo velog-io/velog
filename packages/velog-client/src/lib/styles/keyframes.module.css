@@ -1,17 +1,17 @@
 .fade-in {
-  animation-name: fadeIn;
+  animation-name: fade-in;
   animation-duration: 0.25s;
   animation-fill-mode: forwards;
 }
 
 .fade-out {
-  animation-name: fadeOut;
+  animation-name: fade-out;
   animation-duration: 0.25s;
   animation-fill-mode: forwards;
 }
 
 .pop-in-from-bottom {
-  animation-name: popInFromBottom;
+  animation-name: pop-in-from-bottom;
   animation-duration: 0.4s;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
@@ -19,13 +19,13 @@
 }
 
 .pop-out-to-Bottom {
-  animation-name: popOutToBottom;
+  animation-name: pop-out-to-Bottom;
   animation-duration: 0.2s;
   animation-fill-mode: forwards;
   animation-timing-function: ease-in-out;
 }
 
-@keyframes fadeIn {
+@keyframes fade-in {
   0% {
     opacity: 0;
   }
@@ -34,7 +34,7 @@
   }
 }
 
-@keyframes fadeOut {
+@keyframes fade-out {
   0% {
     opacity: 1;
   }
@@ -43,7 +43,7 @@
   }
 }
 
-@keyframes popInFromBottom {
+@keyframes pop-in-from-bottom {
   0% {
     opacity: 0;
     transform: translateY(400px) scale(0.75);
@@ -58,7 +58,7 @@
   }
 }
 
-@keyframes popOutToBottom {
+@keyframes pop-out-to-Bottom {
   0% {
     opacity: 1;
     transform: translateY(0px) scale(1);

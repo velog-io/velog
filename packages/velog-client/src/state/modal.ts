@@ -1,6 +1,7 @@
 import { sangte, useSangteActions, useSangteValue } from 'sangte'
 
-export type ModalMode = 'register' | 'login' | ''
+export type AuthMode = 'register' | 'login'
+export type ModalMode = AuthMode | ''
 
 type ModalState = {
   isVisible: boolean
