@@ -6,7 +6,6 @@ const userResolvers: Resolvers = {
   Query: {
     currentUser: async (_, __, ctx) => {
       const userService = container.resolve(UserService)
-      console.log('ctx.user?.id', ctx.user?.id)
       return await userService.getCurrentUser(ctx.user?.id)
     },
   },

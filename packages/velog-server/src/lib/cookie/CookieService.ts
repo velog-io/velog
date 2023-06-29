@@ -13,19 +13,17 @@ export class CookieService {
     options?: CookieSerializeOptions
   ): void {
     this.domains.forEach((domain) => {
-      reply.setCookie(name, value, {
-        // httpOnly: true,
-        // domain,
+      reply.cookie(name, value, {
+        httpOnly: true,
+        domain,
         ...options,
       })
     })
   }
   public clearCookie(reply: FastifyReply, name: string): void {
     this.domains.forEach((domain) => {
-      reply.setCookie(name, '', {
-        httpOnly: true,
+      reply.clearCookie(name, {
         domain,
-        secure: true,
         maxAge: 0,
       })
     })
