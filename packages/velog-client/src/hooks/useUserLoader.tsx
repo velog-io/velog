@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 export function useUserLoader() {
   const { data } = useCurrentUserQuery<{
     currentUser: CurrentUser
-  }>({}, { cacheTime: 1000 })
+  }>()
 
   const {
     value: { user: prevUser },

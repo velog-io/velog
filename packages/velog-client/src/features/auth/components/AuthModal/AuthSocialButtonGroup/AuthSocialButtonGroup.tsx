@@ -1,4 +1,4 @@
-import AuthSocialButton from '@/features/auth/AuthModal/AuthSocialButton/AuthSocialButton'
+import AuthSocialButton from '@/features/auth/components/AuthModal/AuthSocialButton/AuthSocialButton'
 import styles from './AuthSocialButtonGroup.module.css'
 import { AuthProvider } from '@/types/auth'
 import { usePathname, useSearchParams } from 'next/navigation'
