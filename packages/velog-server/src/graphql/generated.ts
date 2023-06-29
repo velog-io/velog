@@ -44,21 +44,15 @@ export type Comment = {
   user?: Maybe<User>
 }
 
-export type CurrentUser = {
-  __typename?: 'CurrentUser'
-  created_at?: Maybe<Scalars['Date']['output']>
-  email?: Maybe<Scalars['String']['output']>
-  id: Scalars['ID']['output']
-  is_certified?: Maybe<Scalars['Boolean']['output']>
-  profile?: Maybe<UserProfile>
-  updated_at?: Maybe<Scalars['Date']['output']>
-  username?: Maybe<Scalars['String']['output']>
-}
-
 export type LinkedPosts = {
   __typename?: 'LinkedPosts'
   next?: Maybe<Post>
   previous?: Maybe<Post>
+}
+
+export type Mutation = {
+  __typename?: 'Mutation'
+  logout: Scalars['Boolean']['output']
 }
 
 export type Post = {
@@ -101,7 +95,7 @@ export type PostHistory = {
 
 export type Query = {
   __typename?: 'Query'
-  currentUser?: Maybe<CurrentUser>
+  currentUser?: Maybe<User>
   readingList?: Maybe<Array<Maybe<Post>>>
   recentPosts?: Maybe<Array<Maybe<Post>>>
   trendingPosts?: Maybe<Array<Maybe<Post>>>
@@ -182,15 +176,15 @@ export type TrendingPostsInput = {
 
 export type User = {
   __typename?: 'User'
-  created_at?: Maybe<Scalars['Date']['output']>
-  email?: Maybe<Scalars['String']['output']>
+  created_at: Scalars['Date']['output']
+  email: Scalars['String']['output']
   id: Scalars['ID']['output']
-  is_certified?: Maybe<Scalars['Boolean']['output']>
-  profile?: Maybe<UserProfile>
+  is_certified: Scalars['Boolean']['output']
+  profile: UserProfile
   series_list?: Maybe<Array<Maybe<Series>>>
-  updated_at?: Maybe<Scalars['Date']['output']>
+  updated_at: Scalars['Date']['output']
   user_meta?: Maybe<UserMeta>
-  username?: Maybe<Scalars['String']['output']>
+  username: Scalars['String']['output']
   velog_config?: Maybe<VelogConfig>
 }
 
@@ -203,14 +197,14 @@ export type UserMeta = {
 
 export type UserProfile = {
   __typename?: 'UserProfile'
-  about?: Maybe<Scalars['String']['output']>
-  created_at?: Maybe<Scalars['Date']['output']>
-  display_name?: Maybe<Scalars['String']['output']>
+  about: Scalars['String']['output']
+  created_at: Scalars['Date']['output']
+  display_name: Scalars['String']['output']
   id: Scalars['ID']['output']
-  profile_links?: Maybe<Scalars['JSON']['output']>
-  short_bio?: Maybe<Scalars['String']['output']>
-  thumbnail?: Maybe<Scalars['String']['output']>
-  updated_at?: Maybe<Scalars['Date']['output']>
+  profile_links: Scalars['JSON']['output']
+  short_bio: Scalars['String']['output']
+  thumbnail: Scalars['String']['output']
+  updated_at: Scalars['Date']['output']
 }
 
 export type VelogConfig = {
@@ -311,9 +305,6 @@ export type ResolversTypes = {
       user?: Maybe<ResolversTypes['User']>
     }
   >
-  CurrentUser: ResolverTypeWrapper<
-    Omit<CurrentUser, 'profile'> & { profile?: Maybe<ResolversTypes['UserProfile']> }
-  >
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
   Int: ResolverTypeWrapper<Scalars['Int']['output']>
@@ -324,6 +315,7 @@ export type ResolversTypes = {
       previous?: Maybe<ResolversTypes['Post']>
     }
   >
+  Mutation: ResolverTypeWrapper<{}>
   Post: ResolverTypeWrapper<PostModel>
   PostHistory: ResolverTypeWrapper<PostHistory>
   Query: ResolverTypeWrapper<{}>
@@ -359,9 +351,6 @@ export type ResolversParentTypes = {
     replies?: Maybe<Array<Maybe<ResolversParentTypes['Comment']>>>
     user?: Maybe<ResolversParentTypes['User']>
   }
-  CurrentUser: Omit<CurrentUser, 'profile'> & {
-    profile?: Maybe<ResolversParentTypes['UserProfile']>
-  }
   Date: Scalars['Date']['output']
   ID: Scalars['ID']['output']
   Int: Scalars['Int']['output']
@@ -370,6 +359,7 @@ export type ResolversParentTypes = {
     next?: Maybe<ResolversParentTypes['Post']>
     previous?: Maybe<ResolversParentTypes['Post']>
   }
+  Mutation: {}
   Post: PostModel
   PostHistory: PostHistory
   Query: {}
@@ -408,20 +398,6 @@ export type CommentResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
-export type CurrentUserResolvers<
-  ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['CurrentUser'] = ResolversParentTypes['CurrentUser']
-> = {
-  created_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  is_certified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
-  profile?: Resolver<Maybe<ResolversTypes['UserProfile']>, ParentType, ContextType>
-  updated_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
-  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
-}
-
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date'
 }
@@ -437,6 +413,13 @@ export type LinkedPostsResolvers<
   next?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>
   previous?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
+export type MutationResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
+> = {
+  logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
 }
 
 export type PostResolvers<
@@ -487,7 +470,7 @@ export type QueryResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
-  currentUser?: Resolver<Maybe<ResolversTypes['CurrentUser']>, ParentType, ContextType>
+  currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
   readingList?: Resolver<
     Maybe<Array<Maybe<ResolversTypes['Post']>>>,
     ParentType,
@@ -574,15 +557,15 @@ export type UserResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
 > = {
-  created_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  is_certified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
-  profile?: Resolver<Maybe<ResolversTypes['UserProfile']>, ParentType, ContextType>
+  is_certified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>
   series_list?: Resolver<Maybe<Array<Maybe<ResolversTypes['Series']>>>, ParentType, ContextType>
-  updated_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
+  updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   user_meta?: Resolver<Maybe<ResolversTypes['UserMeta']>, ParentType, ContextType>
-  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   velog_config?: Resolver<Maybe<ResolversTypes['VelogConfig']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
@@ -601,14 +584,14 @@ export type UserProfileResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['UserProfile'] = ResolversParentTypes['UserProfile']
 > = {
-  about?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  created_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
-  display_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  about?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  profile_links?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>
-  short_bio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  updated_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
+  profile_links?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>
+  short_bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -624,10 +607,10 @@ export type VelogConfigResolvers<
 
 export type Resolvers<ContextType = GraphQLContext> = {
   Comment?: CommentResolvers<ContextType>
-  CurrentUser?: CurrentUserResolvers<ContextType>
   Date?: GraphQLScalarType
   JSON?: GraphQLScalarType
   LinkedPosts?: LinkedPostsResolvers<ContextType>
+  Mutation?: MutationResolvers<ContextType>
   Post?: PostResolvers<ContextType>
   PostHistory?: PostHistoryResolvers<ContextType>
   Query?: QueryResolvers<ContextType>

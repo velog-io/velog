@@ -10,3 +10,7 @@ query currentUser {
     }
   }
 }
+
+mutation logout {
+  logout
+}

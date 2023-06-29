@@ -37,21 +37,21 @@ type UserMeta {
 type Query {
   # user(id: ID, username: String): User
   # velog_config(username: String): VelogConfig
-  currentUser: User!
+  currentUser: User
   # unregister_token: String
   # emailExists(email: String!): boolean
 }
 
-# type Mutation {
-#   update_about(about: String!): UserProfile
-#   update_thumbnail(url: String): UserProfile
-#   update_profile(display_name: String!, short_bio: String!): UserProfile
-#   update_velog_title(title: String!): VelogConfig
-#   update_social_info(profile_links: JSON!): UserProfile
-#   update_email_rules(notification: Boolean!, promotion: Boolean!): UserMeta
-#   unregister(token: String!): Boolean
-#   logout: Boolean!
-#   acceptIntegration: String!
-#   initiateChangeEmail(email: String!): Boolean
-#   confirmChangeEmail(code: String!): Boolean
-# }
+type Mutation {
+  # update_about(about: String!): UserProfile
+  # update_thumbnail(url: String): UserProfile
+  # update_profile(display_name: String!, short_bio: String!): UserProfile
+  # update_velog_title(title: String!): VelogConfig
+  # update_social_info(profile_links: JSON!): UserProfile
+  # update_email_rules(notification: Boolean!, promotion: Boolean!): UserMeta
+  # unregister(token: String!): Boolean
+  logout: Boolean!
+  # acceptIntegration: String!
+  # initiateChangeEmail(email: String!): Boolean
+  # confirmChangeEmail(code: String!): Boolean
+}

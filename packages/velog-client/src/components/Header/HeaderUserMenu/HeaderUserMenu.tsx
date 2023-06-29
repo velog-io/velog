@@ -3,6 +3,8 @@ import styles from './HeaderUserMenu.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import HeaderUserMenuItem from '@/components/Header/HeaderUserMenuItem/HeaderUserMenuItem'
 import { useAuth } from '@/state/auth'
+import { getSdk, graphQLClient } from '@/graphql/generated'
+import { useCallback } from 'react'
 
 const cx = bindClassNames(styles)
 
@@ -17,6 +19,13 @@ function HeaderUserMenu({ isVisible, onClose }: Props) {
   } = useAuth()
   const ref = useOutsideClick<HTMLDivElement>(onClose)
 
+  const onLogout = useCallback(async () => {
+    const sdk = getSdk(graphQLClient)
+    await sdk.logout()
+    localStorage.removeItem('CURRENT_USER')
+    window.location.href = '/'
+  }, [])
+
   if (!isVisible) return null
   return (
     <div className={cx('block')} ref={ref}>
@@ -30,7 +39,7 @@ function HeaderUserMenu({ isVisible, onClose }: Props) {
         <HeaderUserMenuItem to="/saves">임시 글</HeaderUserMenuItem>
         <HeaderUserMenuItem to="/lists/liked">읽기 목록</HeaderUserMenuItem>
         <HeaderUserMenuItem to="/setting">설정</HeaderUserMenuItem>
-        {/* <HeaderUserMenuItem onClick={onLogout}>로그아웃</HeaderUserMenuItem> */}
+        <HeaderUserMenuItem onClick={onLogout}>로그아웃</HeaderUserMenuItem>
       </div>
     </div>
   )

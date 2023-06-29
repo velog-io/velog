@@ -14,8 +14,8 @@ export class CookieService {
   ): void {
     this.domains.forEach((domain) => {
       reply.setCookie(name, value, {
-        httpOnly: true,
-        domain,
+        // httpOnly: true,
+        // domain,
         ...options,
       })
     })
@@ -23,7 +23,9 @@ export class CookieService {
   public clearCookie(reply: FastifyReply, name: string): void {
     this.domains.forEach((domain) => {
       reply.setCookie(name, '', {
+        httpOnly: true,
         domain,
+        secure: true,
         maxAge: 0,
       })
     })

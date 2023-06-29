@@ -1,12 +1,14 @@
 import { CurrentUser } from '@interfaces/user'
+import { CookieService } from '@lib/cookie/CookieService.js'
 import { DbService } from '@lib/db/DbService.js'
 import { User } from '@prisma/client'
-import { UserServiceInterface } from '@services/UserService/UserServiceInterface'
+import { UserServiceInterface } from './UserServiceInterface'
+import { FastifyReply } from 'fastify/types/reply'
 import { injectable } from 'tsyringe'
 
 @injectable()
 export class UserService implements UserServiceInterface {
-  constructor(private readonly db: DbService) {}
+  constructor(private readonly db: DbService, private readonly cookie: CookieService) {}
   async findById(userId: string): Promise<User | null> {
     return await this.db.user.findUnique({ where: { id: userId } })
   }
@@ -32,5 +34,9 @@ export class UserService implements UserServiceInterface {
       profile: userProfile!,
       ...rest,
     }
+  }
+  async logout(reply: FastifyReply): Promise<void> {
+    this.cookie.clearCookie(reply, 'access_token')
+    this.cookie.clearCookie(reply, 'refresh_token')
   }
 }

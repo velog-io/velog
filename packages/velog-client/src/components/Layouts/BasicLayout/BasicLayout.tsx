@@ -1,7 +1,7 @@
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import styles from './BasicLayout.module.css'
 import Header from '@/components/Header/Header'
-import loadUesr from '@/lib/loadUser'
+import loadUser from '@/lib/loadUser'
 
 const cx = bindClassNames(styles)
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 async function BasicLayout({ children }: Props) {
-  const user = await loadUesr()
+  const user = await loadUser()
   return (
     <main className={cx('block')}>
       <Header user={user} />

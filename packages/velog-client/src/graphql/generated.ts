@@ -21,7 +21,18 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never
     }
-export const graphQLClient = new GraphQLClient('http://localhost:5003/graphql')
+export const graphQLClient = new GraphQLClient(
+  'http://localhost:5003/graphql',
+  {
+    credentials: 'include',
+    mode: 'cors',
+    headers: {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json',
+    },
+    cache: 'no-cache',
+  }
+)
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string }
@@ -49,6 +60,10 @@ export type Comment = {
 export type LinkedPosts = {
   next: Maybe<Post>
   previous: Maybe<Post>
+}
+
+export type Mutation = {
+  logout: Scalars['Boolean']['output']
 }
 
 export type Post = {
@@ -88,7 +103,7 @@ export type PostHistory = {
 }
 
 export type Query = {
-  currentUser: User
+  currentUser: Maybe<User>
   readingList: Maybe<Array<Maybe<Post>>>
   recentPosts: Maybe<Array<Maybe<Post>>>
   trendingPosts: Maybe<Array<Maybe<Post>>>
@@ -209,6 +224,10 @@ export type CurrentUserQuery = {
   }
 }
 
+export type LogoutMutationVariables = Exact<{ [key: string]: never }>
+
+export type LogoutMutation = { logout: boolean }
+
 export const CurrentUserDocument = gql`
   query currentUser {
     currentUser {
@@ -221,6 +240,11 @@ export const CurrentUserDocument = gql`
         display_name
       }
     }
+  }
+`
+export const LogoutDocument = gql`
+  mutation logout {
+    logout
   }
 `
 
@@ -253,6 +277,20 @@ export function getSdk(
           }),
         'currentUser',
         'query'
+      )
+    },
+    logout(
+      variables?: LogoutMutationVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<LogoutMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<LogoutMutation>(LogoutDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'logout',
+        'mutation'
       )
     },
   }

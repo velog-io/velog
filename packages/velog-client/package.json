@@ -19,7 +19,7 @@
     "start": "next start",
     "lint": "next lint",
     "create-component": "tsx ./scripts/createComponent.ts",
-    "codegen": "dotenv -e .env.development graphql-codegen --config codegen.ts -r dotenv/config"
+    "codegen": "dotenv -e .env graphql-codegen --config codegen.ts -r dotenv/config"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.15",
