@@ -2,6 +2,6 @@ type Props = {
   children: React.ReactNode
 }
 
-export default function RootLayout({ children }: Props) {
+export default function RecentLayout({ children }: Props) {
   return <>{children}</>
 }

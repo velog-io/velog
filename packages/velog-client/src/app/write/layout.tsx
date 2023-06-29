@@ -2,6 +2,6 @@ type Props = {
   children: React.ReactNode
 }
 
-export default function SearchLayout({ children }: Props) {
+export default function WriteLayout({ children }: Props) {
   return <>{children}</>
 }
