@@ -14,6 +14,16 @@ const nextConfig = {
   //     rules: { '.svg': ['@svgr/webpack'] },
   //   },
   // },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'velog.velcdn.com',
+        port: '',
+        pathname: '/images/**',
+      },
+    ],
+  },
 }
 
 module.exports = nextConfig

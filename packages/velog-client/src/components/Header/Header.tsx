@@ -9,17 +9,19 @@ import HeaderSearchButton from '@/components/Header/HeaderSearchButton'
 import ThemeToggleButton from '@/components/Header/ThemeToggleButton'
 import { useModal } from '@/state/modal'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { memo, useCallback, useRef } from 'react'
+import { memo, useRef } from 'react'
 import useToggle from '@/hooks/useToggle'
 import HeaderUserIcon from '@/components/Header/HeaderUserIcon/HeaderUserIcon'
 import HeaderUserMenu from '@/components/Header/HeaderUserMenu/HeaderUserMenu'
+import { CurrentUser } from '@/types/user'
 
 const cx = bindClassNames(styles)
 
-function Header() {
-  const {
-    value: { user },
-  } = useAuth()
+type Props = {
+  user: CurrentUser | null
+}
+
+function Header({ user }: Props) {
   const {
     value: { systemTheme },
   } = useTheme()

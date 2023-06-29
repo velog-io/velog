@@ -3,14 +3,11 @@ import styleButtons from './buttons.module.css'
 import styleKeyframes from './keyframes.module.css'
 
 type Styles = { [key: string]: string }
-type StyleUtilKey = keyof typeof styleUtils
-export type StyleButtonKey = keyof typeof styleButtons
-export type StyleKeyframeKey = keyof typeof styleKeyframes
 
-type UnionStyleKey = StyleUtilKey | StyleButtonKey | StyleKeyframeKey
+export type StyleButtonKey = keyof typeof styleButtons
 
 export function bindClassNames<T extends Styles>(styles: T) {
-  type BooleanMap = Partial<{ [key in keyof T | UnionStyleKey]: boolean }>
+  type BooleanMap = Partial<{ [key in keyof T]: boolean }>
   const stylesWithUtils = {
     ...styles,
     ...styleUtils,
@@ -24,11 +21,10 @@ export function bindClassNames<T extends Styles>(styles: T) {
       | null
       | undefined
       | BooleanMap
-      // | UnionStyleKey
       | (string & {})
     )[]
   ) => {
-    return (classNames.filter((cn) => cn) as (keyof T | UnionStyleKey)[])
+    return (classNames.filter((cn) => cn) as (keyof T)[])
       .map((className) => {
         if (typeof className === 'object') {
           const keys = Object.keys(className) as (keyof T)[]

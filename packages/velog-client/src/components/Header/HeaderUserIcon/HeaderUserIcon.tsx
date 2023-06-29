@@ -15,7 +15,12 @@ type Props = {
 function HeaderUserIcon({ user, onClick }: Props) {
   return (
     <div className={cx('block')} onClick={onClick}>
-      <Image src={user.profile.thumbnail || userThumbnail} alt="thumbnail" />
+      <Image
+        src="https://velog.velcdn.com/images/carrick/profile/a54ea444-7dbb-4f14-91c1-4bfbb5b8e5ad/social_profile.png"
+        alt="thumbnail"
+        width={40}
+        height={40}
+      />
       <MdArrowDropDown />
     </div>
   )

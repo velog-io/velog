@@ -36,7 +36,7 @@ export type CurrentUser = {
   profile: {
     id: string
     thumbnail: string | null
-    display_name: string
+    display_name: string | null
   }
   email: string
 }

@@ -5,7 +5,6 @@ import InteractiveViewProvider from '@/providers/InteractiveViewProvider'
 import ReactQueryProvider from '@/providers/ReactQueryProvider'
 import SangteContextProvider from '@/providers/SangteContextProvider'
 import ThemeProvier from '@/providers/ThemeProvier'
-import UserLoaderProvider from '@/providers/UserLoaderProvider'
 
 type Props = {
   children: React.ReactNode
@@ -16,11 +15,9 @@ function CoreProvider({ children }: Props) {
     <ConditionalBackgroundProvider>
       <ReactQueryProvider>
         <SangteContextProvider>
-          <UserLoaderProvider>
-            <ThemeProvier>
-              <InteractiveViewProvider>{children}</InteractiveViewProvider>
-            </ThemeProvier>
-          </UserLoaderProvider>
+          <ThemeProvier>
+            <InteractiveViewProvider>{children}</InteractiveViewProvider>
+          </ThemeProvier>
         </SangteContextProvider>
       </ReactQueryProvider>
     </ConditionalBackgroundProvider>

@@ -19,6 +19,7 @@ interface Props extends ButtonProps {
   size?: ButtonSize
   color: ButtonColor
   border?: boolean
+  className?: string
 }
 
 const cx = bindClassNames(styles)
@@ -29,15 +30,22 @@ function Button({
   color = 'teal',
   size = 'default',
   border = false,
+  className,
   ...rest
 }: Props) {
   const colorClassNamePrefix = (str: string) =>
     `btn-${str}` as Partial<StyleButtonKey>
   const ButtonComponent = (
     <button
-      className={cx('block', `${colorClassNamePrefix(color)}`, `${size}`, {
-        border: border,
-      })}
+      className={cx(
+        'block',
+        `${colorClassNamePrefix(color)}`,
+        `${size}`,
+        {
+          border: border,
+        },
+        `${className}`
+      )}
       {...rest}
     />
   )
