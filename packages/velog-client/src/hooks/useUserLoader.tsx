@@ -1,5 +1,4 @@
 import { useCurrentUserQuery } from '@/graphql/generated'
-import { setCrispUser } from '@/lib/crisp'
 import { useAuth } from '@/state/auth'
 import { CurrentUser } from '@/types/user'
 import { useEffect } from 'react'
@@ -25,10 +24,5 @@ export function useUserLoader() {
 
   useEffect(() => {
     if (!currentUser) return
-    setCrispUser({
-      email: currentUser.email,
-      nickname: currentUser.username,
-      avatar: currentUser.profile.thumbnail,
-    })
   }, [currentUser])
 }

@@ -1,5 +1,3 @@
-'use client'
-
 import { useUserLoader } from '@/hooks/useUserLoader'
 
 type Props = {
@@ -7,7 +5,7 @@ type Props = {
 }
 
 function UserLoaderProvider({ children }: Props) {
-  // useUserLoader()
+  useUserLoader()
   return <>{children}</>
 }
 
