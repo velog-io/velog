@@ -6,7 +6,7 @@
   line-height: 1.5;
 
   .upper-warepper {
-    @media screen and (min-width: 768px) {
+    @media screen and (max-width: 768px) {
       margin-top: 32px;
     }
   }
@@ -30,7 +30,7 @@
   }
 
   .foot {
-    @media screen and (min-width: 768px) {
+    @media screen and (max-width: 768px) {
       margin-top: 2rem;
     }
     text-align: right;

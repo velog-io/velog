@@ -12,6 +12,7 @@
   .right {
     display: flex;
     align-items: center;
+    position: relative;
 
     .writeButton {
       @media screen and (max-width: 768px) {

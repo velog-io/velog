@@ -9,10 +9,10 @@ import HeaderSearchButton from '@/components/Header/HeaderSearchButton'
 import ThemeToggleButton from '@/components/Header/ThemeToggleButton'
 import { useModal } from '@/state/modal'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { memo, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import useToggle from '@/hooks/useToggle'
-import HeaderUserIcon from '@/components/Header/HeaderUserIcon/HeaderUserIcon'
-import HeaderUserMenu from '@/components/Header/HeaderUserMenu/HeaderUserMenu'
+import HeaderUserIcon from '@/components/Header/HeaderUserIcon'
+import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
 import { CurrentUser } from '@/types/user'
 
 const cx = bindClassNames(styles)
@@ -28,7 +28,14 @@ function Header({ user }: Props) {
   const [userMenu, toggleUserMenu] = useToggle(false)
   const ref = useRef<HTMLDivElement>(null)
   const { actions } = useModal()
+  const {
+    actions: { update },
+  } = useAuth()
   const themeReady = systemTheme !== 'not-ready'
+
+  useEffect(() => {
+    update(user)
+  }, [user, update])
 
   // const urlForSearch = customHeader.custom ? `/search?username=${customHeader.username}` : '/search'
   const urlForSearch = '/search'
