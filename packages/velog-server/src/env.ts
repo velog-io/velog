@@ -20,7 +20,7 @@ export const ENV = {
   appEnv,
   port: Number(process.env.PORT),
   clientHost: process.env.CLIENT_HOST,
-  jwtSecretKey: process.env.SECRET_KEY,
+  jwtSecretKey: process.env.JWT_SECRET_KEY,
   awsDefaultProfile: process.env.AWS_DEFAULT_PROFILE,
   esHost: process.env.ES_HOST,
   social: {
