@@ -34,10 +34,10 @@ function Button({
     <button
       className={cx(
         'block',
-        `${size}`,
+        size,
         border ? 'border' : 'notBorder',
         color,
-        `${className}`
+        className
       )}
       {...rest}
     />
