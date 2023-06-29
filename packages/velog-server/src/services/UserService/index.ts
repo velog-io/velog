@@ -14,10 +14,7 @@ export class UserService implements UserServiceInterface {
     return await this.db.user.findFirst({ where: { username } })
   }
   async getCurrentUser(userId: string | undefined): Promise<CurrentUser | null> {
-    if (!userId) {
-      return null
-    }
-
+    if (!userId) return null
     const user = await this.db.user.findUnique({
       where: {
         id: userId,
