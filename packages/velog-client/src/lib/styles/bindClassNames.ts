@@ -4,8 +4,6 @@ import styleKeyframes from './keyframes.module.css'
 
 type Styles = { [key: string]: string }
 
-export type StyleButtonKey = keyof typeof styleButtons
-
 export function bindClassNames<T extends Styles>(styles: T) {
   type BooleanMap = Partial<{ [key in keyof T]: boolean }>
   const stylesWithUtils = {

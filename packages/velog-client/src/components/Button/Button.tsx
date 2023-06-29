@@ -1,10 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import styles from './Button.module.css'
-import {
-  type StyleButtonKey,
-  bindClassNames,
-} from '@/lib/styles/bindClassNames'
+import { bindClassNames } from '@/lib/styles/bindClassNames'
 
 type ButtonProps = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -33,17 +30,13 @@ function Button({
   className,
   ...rest
 }: Props) {
-  const colorClassNamePrefix = (str: string) =>
-    `btn-${str}` as Partial<StyleButtonKey>
   const ButtonComponent = (
     <button
       className={cx(
         'block',
-        `${colorClassNamePrefix(color)}`,
         `${size}`,
-        {
-          border: border,
-        },
+        border ? 'border' : 'notBorder',
+        color,
         `${className}`
       )}
       {...rest}

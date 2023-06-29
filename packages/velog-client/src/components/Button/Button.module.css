@@ -1,9 +1,4 @@
 .block {
-  border: none;
-  outline: none;
-  font-weight: bold;
-  word-break: keep-all;
-
   &.small {
     height: 1.5rem;
     padding-left: 0.75rem;
@@ -28,30 +23,80 @@
     border-radius: 1.5rem;
   }
 
-  .border {
+  &.notBorder {
+    &.teal {
+      background: var(--primary1);
+      color: var(--button-text);
+      &:hover {
+        background: var(--primary2);
+      }
+    }
+
+    &.lightGray {
+      background: var(--bg-element4);
+      color: var(--text1);
+      &:hover {
+        background: var(--bg-element3);
+      }
+    }
+
+    &.gray {
+      background: var(--gray6);
+      color: white;
+      &:hover {
+        background: var(--gray5);
+      }
+    }
+
+    &.darkGray {
+      background: var(--bg-element5);
+      color: var(--button-text);
+      &:hover {
+        background: var(--bg-element6);
+      }
+    }
+
+    &.trasnparent {
+      background: none;
+      color: var(--primary1);
+      &:hover {
+        background: var(--slight-layer);
+      }
+    }
+
+    &.red {
+      background: var(--destructive1);
+      color: var(--button-text);
+      &:hover {
+        background: var(--destructive2);
+      }
+    }
+  }
+
+  &.border {
     background: var(--bg-element2);
-    &.btn-teal {
+    &.teal {
       border: 1px solid var(--primary1);
       color: var(--primary1);
       &:hover {
         background: var(--bg-element2);
       }
     }
-    &.btn-gray {
+    &.gray {
       border: 1px solid var(--gray6);
       color: var(--gray6);
       &:hover {
         background: var(--gray6);
       }
     }
-    &.btn-darkGray {
+    &.darkGray {
       border: 1px solid var(--bg-element5);
       color: var(--bg-element5);
       &:hover {
         background: var(--bg-element5);
       }
     }
-    &.btn-lightGray {
+    &.lightGray {
       border: 1px solid var(--bg-element4);
       color: var(--bg-element4);
       &:hover {
@@ -72,4 +117,9 @@
   &:disabled {
     background: var(--bg-element2);
   }
+
+  border: none;
+  outline: none;
+  font-weight: bold;
+  word-break: keep-all;
 }
