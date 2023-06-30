@@ -34,10 +34,16 @@ type UserMeta {
   email_promotion: Boolean
 }
 
+type UserToken {
+  accessToken: String!
+  refreshToken: String!
+}
+
 type Query {
   # user(id: ID, username: String): User
   # velog_config(username: String): VelogConfig
   currentUser: User
+  restoreToken: UserToken
   # unregister_token: String
   # emailExists(email: String!): boolean
 }

@@ -31,7 +31,6 @@ export type Scalars = {
 }
 
 export type Comment = {
-  __typename?: 'Comment'
   created_at?: Maybe<Scalars['Date']['output']>
   deleted?: Maybe<Scalars['Boolean']['output']>
   has_replies?: Maybe<Scalars['Boolean']['output']>
@@ -45,18 +44,15 @@ export type Comment = {
 }
 
 export type LinkedPosts = {
-  __typename?: 'LinkedPosts'
   next?: Maybe<Post>
   previous?: Maybe<Post>
 }
 
 export type Mutation = {
-  __typename?: 'Mutation'
   logout: Scalars['Boolean']['output']
 }
 
 export type Post = {
-  __typename?: 'Post'
   body?: Maybe<Scalars['String']['output']>
   comments?: Maybe<Array<Maybe<Comment>>>
   comments_count?: Maybe<Scalars['Int']['output']>
@@ -84,7 +80,6 @@ export type Post = {
 }
 
 export type PostHistory = {
-  __typename?: 'PostHistory'
   body?: Maybe<Scalars['String']['output']>
   created_at?: Maybe<Scalars['Date']['output']>
   fk_post_id?: Maybe<Scalars['ID']['output']>
@@ -94,10 +89,10 @@ export type PostHistory = {
 }
 
 export type Query = {
-  __typename?: 'Query'
   currentUser?: Maybe<User>
   readingList?: Maybe<Array<Maybe<Post>>>
   recentPosts?: Maybe<Array<Maybe<Post>>>
+  restoreToken?: Maybe<UserToken>
   trendingPosts?: Maybe<Array<Maybe<Post>>>
 }
 
@@ -114,7 +109,6 @@ export type QueryTrendingPostsArgs = {
 }
 
 export type ReadCountByDay = {
-  __typename?: 'ReadCountByDay'
   count?: Maybe<Scalars['Int']['output']>
   day?: Maybe<Scalars['Date']['output']>
 }
@@ -136,13 +130,11 @@ export type RecentPostsInput = {
 }
 
 export type SearchResult = {
-  __typename?: 'SearchResult'
   count?: Maybe<Scalars['Int']['output']>
   posts: Array<Post>
 }
 
 export type Series = {
-  __typename?: 'Series'
   created_at?: Maybe<Scalars['Date']['output']>
   description?: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
@@ -156,14 +148,12 @@ export type Series = {
 }
 
 export type SeriesPost = {
-  __typename?: 'SeriesPost'
   id: Scalars['ID']['output']
   index?: Maybe<Scalars['Int']['output']>
   post?: Maybe<Post>
 }
 
 export type Stats = {
-  __typename?: 'Stats'
   count_by_day?: Maybe<Array<Maybe<ReadCountByDay>>>
   total?: Maybe<Scalars['Int']['output']>
 }
@@ -175,7 +165,6 @@ export type TrendingPostsInput = {
 }
 
 export type User = {
-  __typename?: 'User'
   created_at: Scalars['Date']['output']
   email: Scalars['String']['output']
   id: Scalars['ID']['output']
@@ -189,14 +178,12 @@ export type User = {
 }
 
 export type UserMeta = {
-  __typename?: 'UserMeta'
   email_notification?: Maybe<Scalars['Boolean']['output']>
   email_promotion?: Maybe<Scalars['Boolean']['output']>
   id: Scalars['ID']['output']
 }
 
 export type UserProfile = {
-  __typename?: 'UserProfile'
   about: Scalars['String']['output']
   created_at: Scalars['Date']['output']
   display_name: Scalars['String']['output']
@@ -207,8 +194,12 @@ export type UserProfile = {
   updated_at: Scalars['Date']['output']
 }
 
+export type UserToken = {
+  accessToken: Scalars['String']['output']
+  refreshToken: Scalars['String']['output']
+}
+
 export type VelogConfig = {
-  __typename?: 'VelogConfig'
   id: Scalars['ID']['output']
   logo_image?: Maybe<Scalars['String']['output']>
   title?: Maybe<Scalars['String']['output']>
@@ -341,6 +332,7 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<UserModel>
   UserMeta: ResolverTypeWrapper<UserMeta>
   UserProfile: ResolverTypeWrapper<UserProfileModel>
+  UserToken: ResolverTypeWrapper<UserToken>
   VelogConfig: ResolverTypeWrapper<VelogConfig>
 }
 
@@ -378,6 +370,7 @@ export type ResolversParentTypes = {
   User: UserModel
   UserMeta: UserMeta
   UserProfile: UserProfileModel
+  UserToken: UserToken
   VelogConfig: VelogConfig
 }
 
@@ -483,6 +476,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryRecentPostsArgs, 'input'>
   >
+  restoreToken?: Resolver<Maybe<ResolversTypes['UserToken']>, ParentType, ContextType>
   trendingPosts?: Resolver<
     Maybe<Array<Maybe<ResolversTypes['Post']>>>,
     ParentType,
@@ -595,6 +589,15 @@ export type UserProfileResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
+export type UserTokenResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['UserToken'] = ResolversParentTypes['UserToken']
+> = {
+  accessToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  refreshToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
 export type VelogConfigResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['VelogConfig'] = ResolversParentTypes['VelogConfig']
@@ -622,5 +625,6 @@ export type Resolvers<ContextType = GraphQLContext> = {
   User?: UserResolvers<ContextType>
   UserMeta?: UserMetaResolvers<ContextType>
   UserProfile?: UserProfileResolvers<ContextType>
+  UserToken?: UserTokenResolvers<ContextType>
   VelogConfig?: VelogConfigResolvers<ContextType>
 }

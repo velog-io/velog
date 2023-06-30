@@ -8,6 +8,10 @@ const userResolvers: Resolvers = {
       const userService = container.resolve(UserService)
       return await userService.getCurrentUser(ctx.user?.id)
     },
+    restoreToken: async (_, __, ctx) => {
+      const userService = container.resolve(UserService)
+      return await userService.restoreToken(ctx)
+    },
   },
   Mutation: {
     logout: async (_, __, ctx) => {

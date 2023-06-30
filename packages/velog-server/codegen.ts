@@ -19,6 +19,7 @@ const config: CodegenConfig = {
         },
       ],
       config: {
+        // skipTypename: true,
         contextType: './../common/interfaces/graphql#GraphQLContext',
         mappers: {
           User: '@prisma/client#User as UserModel',
