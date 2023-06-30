@@ -31,6 +31,7 @@ function Header({ user }: Props) {
   const {
     actions: { update },
   } = useAuth()
+
   const themeReady = systemTheme !== 'not-ready'
 
   useEffect(() => {

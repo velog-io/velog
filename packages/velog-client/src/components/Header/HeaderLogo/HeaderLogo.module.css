@@ -8,15 +8,11 @@
   height: 100%;
   line-height: 10px;
 
-  @media screen and (max-width: 1024px) {
-    font-size: 18px;
-
-    .velogLogo {
-      height: 100%;
-    }
-  }
-
   svg {
     color: var(--text1);
+    height: 24px;
+    @media screen and (max-width: 1024px) {
+      height: 20px;
+    }
   }
 }

@@ -22,7 +22,6 @@ function HeaderUserMenu({ isVisible, onClose }: Props) {
   const onLogout = useCallback(async () => {
     const sdk = getSdk(graphQLClient)
     await sdk.logout()
-    localStorage.removeItem('CURRENT_USER')
     window.location.href = '/'
   }, [])
 

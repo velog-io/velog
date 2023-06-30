@@ -1,4 +1,4 @@
-import { getSdk, graphQLClient, sdk } from '@/graphql/generated'
+import { getSdk, graphQLClient } from '@/graphql/generated'
 import { cookies } from 'next/headers'
 
 export default async function loadUser() {

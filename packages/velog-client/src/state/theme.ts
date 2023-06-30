@@ -14,10 +14,12 @@ const initialState: ThemeState = {
 const themeState = sangte(initialState, (prev) => ({
   enableLightMode() {
     localStorage.setItem('THEME', 'light')
+    document.cookie = `theme=light; path=/;`
     prev.theme = 'light'
   },
   enableDarkMode() {
     localStorage.setItem('THEME', 'dark')
+    document.cookie = `theme=dark; path=/;`
     prev.theme = 'dark'
   },
   setSystemTheme(theme: Theme) {

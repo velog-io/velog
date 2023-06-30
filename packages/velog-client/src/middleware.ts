@@ -1,4 +1,5 @@
 import { RestoreTokenDocument, UserToken } from '@/graphql/generated'
+import postData from '@/lib/postData'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export default async function middleware(req: NextRequest) {
@@ -7,45 +8,40 @@ export default async function middleware(req: NextRequest) {
 
   if (!accessToken && originRefreshToken) {
     try {
-      const result = await fetch(
-        `${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql`,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            query: RestoreTokenDocument.loc?.source.body,
-          }),
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            Cookie: `refresh_token=${originRefreshToken}`,
-          },
-          cache: 'no-cache',
-        }
-      )
+      const endpoint = `${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql`
+      const query = RestoreTokenDocument.loc?.source.body || ''
+      const { data } = await postData({
+        url: endpoint,
+        body: { query },
+        headers: { cookie: `refresh_token=${originRefreshToken}` },
+        init: { cache: 'no-cache' },
+      })
 
-      const {
-        data: { restoreToken },
-      } = await result.json()
-
+      const { restoreToken } = data
       const { refreshToken, accessToken } = restoreToken as UserToken
 
-      const res = NextResponse.next()
+      const response = NextResponse.next()
       const domains = ['.velog.io', undefined]
+
       domains.forEach((domain) => {
-        res.cookies.set({
+        response.cookies.set({
           name: 'access_token',
           value: accessToken,
           httpOnly: true,
           domain,
+          maxAge: 1000000,
         })
 
-        res.cookies.set({
+        response.cookies.set({
           name: 'refresh_token',
           value: refreshToken,
           httpOnly: true,
           domain,
+          maxAge: 1000000,
         })
       })
+
+      return response
     } catch (e) {
       throw new Error(String(e))
     }

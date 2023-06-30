@@ -12,7 +12,6 @@
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
 
     .mobile-only {
-      background-color: red;
       display: none;
       @media screen and (max-width: 768px) {
         display: block;
