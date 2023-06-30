@@ -21,18 +21,17 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never
     }
+
 export const graphQLClient = new GraphQLClient(
   'http://localhost:5003/graphql',
   {
     credentials: 'include',
-    mode: 'cors',
     headers: {
-      Accept: 'application/json, text/plain, */*',
       'Content-Type': 'application/json',
     },
-    cache: 'no-cache',
   }
 )
+
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string }
@@ -106,6 +105,7 @@ export type Query = {
   currentUser: Maybe<User>
   readingList: Maybe<Array<Maybe<Post>>>
   recentPosts: Maybe<Array<Maybe<Post>>>
+  restoreToken: Maybe<UserToken>
   trendingPosts: Maybe<Array<Maybe<Post>>>
 }
 
@@ -207,6 +207,11 @@ export type UserProfile = {
   updated_at: Scalars['Date']['output']
 }
 
+export type UserToken = {
+  accessToken: Scalars['String']['output']
+  refreshToken: Scalars['String']['output']
+}
+
 export type VelogConfig = {
   id: Scalars['ID']['output']
   logo_image: Maybe<Scalars['String']['output']>
@@ -224,6 +229,12 @@ export type CurrentUserQuery = {
   }
 }
 
+export type RestoreTokenQueryVariables = Exact<{ [key: string]: never }>
+
+export type RestoreTokenQuery = {
+  restoreToken: { accessToken: string; refreshToken: string }
+}
+
 export type LogoutMutationVariables = Exact<{ [key: string]: never }>
 
 export type LogoutMutation = { logout: boolean }
@@ -239,6 +250,14 @@ export const CurrentUserDocument = gql`
         thumbnail
         display_name
       }
+    }
+  }
+`
+export const RestoreTokenDocument = gql`
+  query restoreToken {
+    restoreToken {
+      accessToken
+      refreshToken
     }
   }
 `
@@ -276,6 +295,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'currentUser',
+        'query'
+      )
+    },
+    restoreToken(
+      variables?: RestoreTokenQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<RestoreTokenQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<RestoreTokenQuery>(RestoreTokenDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'restoreToken',
         'query'
       )
     },

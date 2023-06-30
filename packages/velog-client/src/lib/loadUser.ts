@@ -1,4 +1,4 @@
-import { getSdk, graphQLClient } from '@/graphql/generated'
+import { getSdk, graphQLClient, sdk } from '@/graphql/generated'
 import { cookies } from 'next/headers'
 
 export default async function loadUser() {
@@ -7,7 +7,6 @@ export default async function loadUser() {
 
   if (!accessToken && !refreshToken) return null
 
-  console.log('accessToken', accessToken)
   if (accessToken) {
     graphQLClient.setHeader('authorization', `Bearer ${accessToken}`)
   }

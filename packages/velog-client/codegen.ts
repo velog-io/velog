@@ -10,7 +10,7 @@ const config: CodegenConfig = {
   generates: {
     'src/graphql/generated.ts': {
       config: {
-        skipTypename: true,
+        // skipTypename: true,
         avoidOptionals: true,
         maybeValue: 'T',
       },
@@ -20,7 +20,10 @@ const config: CodegenConfig = {
         '@graphql-codegen/typescript-graphql-request',
         {
           add: {
-            content: `export const graphQLClient = new GraphQLClient('${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql');`,
+            content: `
+            export const graphQLClient = new GraphQLClient('${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql');\n
+            // export const sdk = getSdk(graphQLClient);
+            `,
           },
         },
       ],

@@ -23,7 +23,7 @@ function Modal({ children, isVisible, onOverlayClick }: Props) {
       },
       [onOverlayClick]
     )
-
+  // TODO: Using React.Potal
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout> | null = null
     if (isVisible) {
