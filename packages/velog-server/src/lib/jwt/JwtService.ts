@@ -43,7 +43,6 @@ export class JwtService {
     const diff = refreshTokenExp * 1000 - now
     let refreshToken = originalRefreshToken
     if (diff < ONE_DAY_IN_MS * 23) {
-      console.log('refreshing refreshToken')
       refreshToken = await this.generateToken(
         {
           user_id: userId,

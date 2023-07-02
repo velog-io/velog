@@ -46,7 +46,7 @@ export class UserService implements UserServiceInterface {
       ...rest,
     }
   }
-  async restoreToken(ctx: GraphQLContext): Promise<UserToken> {
+  async restoreToken(ctx: Pick<GraphQLContext, 'request' | 'reply'>): Promise<UserToken> {
     const refreshToken: string | undefined = ctx.request.cookies['refresh_token']
     if (!refreshToken) {
       throw new UnauthorizedError('Not logged in')
