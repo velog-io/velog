@@ -7,5 +7,7 @@ type Props = {
 }
 
 export default function Velog({ children, params }: Props) {
+  const username = decodeURIComponent(params.username).replace('@', '')
+  console.log(username)
   return <BasicLayout>{children}</BasicLayout>
 }
