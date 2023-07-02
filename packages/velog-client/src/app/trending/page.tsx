@@ -6,5 +6,9 @@ type Props = {
 }
 
 export default function Home({ children }: Props) {
-  return <BasicLayout>{children}</BasicLayout>
+  return (
+    <BasicLayout>
+      {children}
+    </BasicLayout>
+  )
 }

@@ -29,7 +29,7 @@ export default async function middleware(req: NextRequest) {
           value: accessToken,
           httpOnly: true,
           domain,
-          maxAge: 1000000,
+          maxAge: 1000 * 60 * 60, // 1hour
         })
 
         response.cookies.set({
@@ -37,7 +37,7 @@ export default async function middleware(req: NextRequest) {
           value: refreshToken,
           httpOnly: true,
           domain,
-          maxAge: 1000000,
+          maxAge: 1000 * 60 * 60 * 24 * 30, // 30days
         })
       })
 

@@ -1,4 +1,5 @@
 import BasicLayout from '@/components/Layouts/BasicLayout'
+import HomeTab from '@/features/home/components/HomeTab/HomeTab'
 
 type Props = {
   children: React.ReactNode

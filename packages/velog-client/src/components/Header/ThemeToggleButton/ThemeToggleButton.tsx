@@ -15,9 +15,9 @@ function ThemeToggleButton({}: Props) {
   return (
     <button className={cx('block')} onClick={toggle}>
       <AnimatePresence initial={false}>
-        {isDark ? (
-          <div className={cx('positional')}>
-            <div className={cx('svgWrapper')}>
+        <div className={cx('positional')}>
+          <div className={cx('svgWrapper')}>
+            {isDark ? (
               <motion.div
                 key="dark"
                 initial={{ scale: 0, rotate: -180, opacity: 0 }}
@@ -27,11 +27,7 @@ function ThemeToggleButton({}: Props) {
               >
                 <MoonIcon />
               </motion.div>
-            </div>
-          </div>
-        ) : (
-          <div className={styles.positional}>
-            <div className={cx('svgWrapper')}>
+            ) : (
               <motion.div
                 key="light"
                 initial={{ scale: 1, rotate: 0, opacity: 1 }}
@@ -41,9 +37,9 @@ function ThemeToggleButton({}: Props) {
               >
                 <SunIcon />
               </motion.div>
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </AnimatePresence>
     </button>
   )

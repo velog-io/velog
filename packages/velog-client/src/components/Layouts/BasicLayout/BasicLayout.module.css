@@ -1,5 +1,6 @@
 .block {
   display: flex;
+  flex-flow: column nowrap;
   width: 1728px;
   margin: 0 auto;
   height: 100%;

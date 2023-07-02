@@ -1,0 +1,65 @@
+.wrapper {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 3rem;
+}
+
+.block {
+  display: flex;
+  position: relative;
+  width: 14rem;
+  height: 100%;
+
+  @media screen and (max-width: 944px) {
+    width: 10rem;
+  }
+
+  a {
+    display: flex;
+    width: 7rem;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.125rem;
+    text-decoration: none;
+    color: var(--text3);
+
+    svg {
+      font-size: 1.5rem;
+      margin-right: 0.5rem;
+    }
+
+    span {
+      margin-top: -1px; /* make corrections */
+    }
+
+    @media screen and (max-width: 944px) {
+      font-size: 1rem;
+      width: 5rem;
+      svg {
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  .active {
+    color: var(--text1);
+    font-weight: bold;
+  }
+
+  .indicator {
+    position: absolute;
+    bottom: 0px;
+    width: 50%;
+    height: 2px;
+    background: var(--border1);
+  }
+}

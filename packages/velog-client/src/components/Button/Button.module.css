@@ -103,7 +103,6 @@
         background: var(--bg-element4);
       }
     }
-
     &:hover {
       color: var(--button-text);
     }

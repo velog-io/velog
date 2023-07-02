@@ -1,7 +1,7 @@
 type Parameter = {
   url: string
-  body: Record<string, any>
-  headers: HeadersInit
+  body?: Record<string, any>
+  headers?: HeadersInit
   init?: Omit<RequestInit, 'body' | 'headers'>
 }
 
@@ -11,14 +11,12 @@ export default async function postData({
   headers,
   ...init
 }: Parameter) {
+  console.log('url', url)
   const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(body),
+    headers: new Headers({ 'Content-Type': 'application/json', ...headers }),
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers,
-    },
     ...init,
   })
 
@@ -26,5 +24,5 @@ export default async function postData({
     throw new Error(res.statusText)
   }
 
-  return await res.json()
+  return res.json()
 }

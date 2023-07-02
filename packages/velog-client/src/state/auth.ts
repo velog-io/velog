@@ -1,6 +1,5 @@
 import { sangte, useSangteActions, useSangteValue } from 'sangte'
 import { CurrentUser } from '@/types/user'
-import { useEffect, useState } from 'react'
 
 type AuthState = {
   user: CurrentUser | null

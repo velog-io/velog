@@ -17,9 +17,10 @@ function HeaderUserIcon({ user, onClick }: Props) {
     <div className={cx('block')} onClick={onClick}>
       <Image
         src={user.profile.thumbnail || userThumbnail}
-        alt="thumbnail"
+        alt="user thumbnail"
         width={40}
         height={40}
+        priority={true}
       />
       <MdArrowDropDown />
     </div>
