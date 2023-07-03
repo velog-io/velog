@@ -3,6 +3,7 @@ import '@/styles/reset.css'
 import '@/styles/global.css'
 import { cookies } from 'next/headers'
 import CoreProvider from '@/providers/CoreProvider'
+import BasicLayout from '@/components/Layouts/BasicLayout/BasicLayout'
 
 export const metadata = {
   title: 'velog',
@@ -12,6 +13,35 @@ export const metadata = {
     'fb:app_id': '203040656938507',
     'og:image': 'https://images.velog.io/velog.png',
   },
+  icons: [
+    {
+      rel: 'shortcut icon',
+      href: '/favicon.ico',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '16x16',
+      href: '/favicons/favicon-16x16.png',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '32x32',
+      href: '/favicons/favicon-32x32.png',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '96x96',
+      href: '/favicons/favicon-96x96.png',
+    },
+    {
+      rel: 'apple-touch-icon',
+      sizes: '152x152',
+      href: '/favicons/apple-icon-152x152.png',
+    },
+  ],
 }
 
 export default async function RootLayout({
@@ -24,30 +54,6 @@ export default async function RootLayout({
     <html lang="ko">
       <Head>
         <meta charSet="utf-8" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicons/favicon-16x16.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicons/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="96x96"
-          href="/favicons/favicon-96x96.png"
-        />
-        <link
-          rel="apple-touch-icon"
-          sizes="152x152"
-          href="/favicons/apple-icon-152x152.png"
-        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#12B886" />
       </Head>

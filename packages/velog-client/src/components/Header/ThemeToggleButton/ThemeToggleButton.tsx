@@ -3,6 +3,7 @@ import styles from './ThemeToggleButton.module.css'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MoonIcon, SunIcon } from '@/public/svg'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
+import { useEffect } from 'react'
 
 const cx = bindClassNames(styles)
 

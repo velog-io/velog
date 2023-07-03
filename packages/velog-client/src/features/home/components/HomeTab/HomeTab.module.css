@@ -37,10 +37,6 @@
       margin-right: 0.5rem;
     }
 
-    span {
-      margin-top: -1px; /* make corrections */
-    }
-
     @media screen and (max-width: 944px) {
       font-size: 1rem;
       width: 5rem;
@@ -57,9 +53,41 @@
 
   .indicator {
     position: absolute;
-    bottom: 0px;
     width: 50%;
     height: 2px;
     background: var(--border1);
+    bottom: 0%;
+  }
+}
+
+.selector {
+  background: var(--bg-element1);
+  height: 2rem;
+  width: 6rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-weight: 600;
+  color: var(--text2);
+  font-size: 0.875rem;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.05);
+  user-select: none;
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  cursor: pointer;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+
+  @media screen and (max-width: 1024) {
+    width: 5.25rem;
+    font-size: 0.75rem;
   }
 }

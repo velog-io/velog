@@ -18,5 +18,5 @@ export default function useOutsideClick<T extends Element>(
     }
   }, [ref, callback])
 
-  return ref
+  return { ref }
 }

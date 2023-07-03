@@ -4,11 +4,13 @@ import { usePathname } from 'next/navigation'
 import styles from './HomeTab.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import useToggle from '@/hooks/useToggle'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTimeframe } from '@/features/home/state/timeframe'
 import ActiveLink from '@/components/ActiveLink/ActiveLink'
-import { MdAccessTime, MdTrendingUp } from 'react-icons/md'
+import { MdAccessTime, MdArrowDropDown, MdTrendingUp } from 'react-icons/md'
 import { AnimatePresence, motion } from 'framer-motion'
+import { timeframes } from '@/features/home/utils/timeframeMap'
+import TimeframePicker from '@/features/home/components/TimeframePicker/TimeframePicker'
 
 const cx = bindClassNames(styles)
 
@@ -48,28 +50,30 @@ function HomeTab({}: Props) {
             <MdAccessTime />
             <span>최신</span>
           </ActiveLink>
-          <AnimatePresence initial={true} mode="popLayout">
-            {isRecent ? (
-              <motion.div
-                key="recent"
-                initial={{ left: '0%', opacity: 0 }}
-                animate={{ left: '50%', opacity: 1 }}
-                exit={{ left: '0%' }}
-                transition={{ type: 'spring', bounce: 0.35 }}
-                className={cx('indicator')}
-              />
-            ) : (
-              <motion.div
-                key="trending"
-                initial={{ left: '50%', opacity: 0 }}
-                animate={{ left: '0%', opacity: 1 }}
-                exit={{ left: '50%' }}
-                transition={{ type: 'spring', bounce: 0.35 }}
-                className={cx('indicator')}
-              />
-            )}
-          </AnimatePresence>
+          <motion.div
+            initial={false}
+            animate={{
+              left: isRecent ? '50%' : '0%',
+            }}
+            className={cx('indicator')}
+          />
         </div>
+        {['/', '/trending'].includes(pathname) && (
+          <>
+            <div
+              className={cx('selector')}
+              onClick={toggleTimeframePicker}
+              ref={timeframeRef}
+            >
+              {timeframes.find((t) => t[0] === timeframe)![1]}
+              <MdArrowDropDown />
+            </div>
+            <TimeframePicker
+              isVisible={timeframePicker}
+              onClose={toggleTimeframePicker}
+            />
+          </>
+        )}
       </div>
     </div>
   )

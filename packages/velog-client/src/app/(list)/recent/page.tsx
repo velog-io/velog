@@ -1,7 +1,9 @@
+
+
 type Props = {
   children: React.ReactNode
 }
 
-export default function VelogLayout({ children }: Props) {
+export default function Recent({ children }: Props) {
   return <>{children}</>
 }

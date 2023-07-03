@@ -9,7 +9,7 @@ import { useCallback } from 'react'
 const cx = bindClassNames(styles)
 
 type Props = {
-  onClose(): void
+  onClose: () => void
   isVisible: boolean
 }
 
@@ -17,7 +17,7 @@ function HeaderUserMenu({ isVisible, onClose }: Props) {
   const {
     value: { user },
   } = useAuth()
-  const ref = useOutsideClick<HTMLDivElement>(onClose)
+  const { ref } = useOutsideClick<HTMLDivElement>(onClose)
 
   const onLogout = useCallback(async () => {
     const sdk = getSdk(graphQLClient)
