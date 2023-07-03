@@ -16,7 +16,7 @@ import {
 import { motion } from 'framer-motion'
 import { timeframes } from '@/features/home/utils/timeframeMap'
 import TimeframePicker from '@/features/home/components/TimeframePicker'
-import HomeHeadExtra from '@/features/home/components/HomeHeadExtra'
+// import HomeHeadExtra from '@/features/home/components/HomeHeadExtra'
 
 const cx = bindClassNames(styles)
 
@@ -82,7 +82,7 @@ function HomeTab({}: Props) {
         )}
       </div>
       <MdMoreVert onClick={togglHeadExtra} className={cx('extra')} />
-      <HomeHeadExtra isVisible={headExtra} onClose={togglHeadExtra} />
+      {/* <HomeHeadExtra isVisible={headExtra} onClose={togglHeadExtra} /> */}
     </div>
   )
 }
