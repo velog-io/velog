@@ -86,8 +86,14 @@
     }
   }
 
-  @media screen and (max-width: 1024) {
+  @media screen and (max-width: 1024px) {
     width: 5.25rem;
     font-size: 0.75rem;
   }
+}
+
+.extra {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--text3);
 }

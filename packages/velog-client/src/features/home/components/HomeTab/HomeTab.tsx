@@ -7,10 +7,16 @@ import useToggle from '@/hooks/useToggle'
 import { useEffect, useRef } from 'react'
 import { useTimeframe } from '@/features/home/state/timeframe'
 import ActiveLink from '@/components/ActiveLink/ActiveLink'
-import { MdAccessTime, MdArrowDropDown, MdTrendingUp } from 'react-icons/md'
-import { AnimatePresence, motion } from 'framer-motion'
+import {
+  MdAccessTime,
+  MdArrowDropDown,
+  MdMoreVert,
+  MdTrendingUp,
+} from 'react-icons/md'
+import { motion } from 'framer-motion'
 import { timeframes } from '@/features/home/utils/timeframeMap'
-import TimeframePicker from '@/features/home/components/TimeframePicker/TimeframePicker'
+import TimeframePicker from '@/features/home/components/TimeframePicker'
+import HomeHeadExtra from '@/features/home/components/HomeHeadExtra'
 
 const cx = bindClassNames(styles)
 
@@ -19,9 +25,9 @@ type Props = {}
 function HomeTab({}: Props) {
   const pathname = usePathname()
 
-  const [extra, toggle] = useToggle(false)
+  const [headExtra, togglHeadExtra] = useToggle(false)
   const [timeframePicker, toggleTimeframePicker] = useToggle(false)
-  const moreButtonRef = useRef<HTMLDivElement | null>(null)
+  const headExtraRef = useRef<HTMLDivElement | null>(null)
   const timeframeRef = useRef<HTMLDivElement | null>(null)
   const {
     value: { timeframe },
@@ -75,6 +81,8 @@ function HomeTab({}: Props) {
           </>
         )}
       </div>
+      <MdMoreVert onClick={togglHeadExtra} className={cx('extra')} />
+      <HomeHeadExtra isVisible={headExtra} onClose={togglHeadExtra} />
     </div>
   )
 }
