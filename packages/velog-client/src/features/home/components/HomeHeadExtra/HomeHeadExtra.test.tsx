@@ -3,6 +3,6 @@ import { render, screen } from '@testing-library/react'
 
 describe('HomeHeadExtra', () => {
   it('renders successfully', () => {
-    render(<HomeHeadExtra />)
+    render(<HomeHeadExtra isVisible={true} onClose={() => {}} />)
   })
 })

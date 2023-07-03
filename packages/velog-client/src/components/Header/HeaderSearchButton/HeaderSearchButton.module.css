@@ -13,6 +13,7 @@
   }
 
   svg {
-    fill: var(--text1);
+    width: 1.125rem;
+    height: 1.125rem;
   }
 }
