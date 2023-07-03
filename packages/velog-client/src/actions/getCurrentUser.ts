@@ -1,7 +1,7 @@
 import { getSdk, graphQLClient } from '@/graphql/generated'
 import { cookies } from 'next/headers'
 
-export default async function loadUser() {
+export default async function getCurrentUser() {
   const accessToken = cookies().get('access_token')?.value
   const refreshToken = cookies().get('refresh_token')?.value
 

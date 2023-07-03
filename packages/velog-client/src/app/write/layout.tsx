@@ -1,3 +1,5 @@
+import BasicLayout from '@/components/Layouts/BasicLayout/BasicLayout'
+
 type Props = {
   children: React.ReactNode
 }

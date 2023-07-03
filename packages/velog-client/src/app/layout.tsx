@@ -3,45 +3,49 @@ import '@/styles/reset.css'
 import '@/styles/global.css'
 import { cookies } from 'next/headers'
 import CoreProvider from '@/providers/CoreProvider'
-import BasicLayout from '@/components/Layouts/BasicLayout/BasicLayout'
+import { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'velog',
   description:
     '개발자들을 위한 블로그 서비스. 어디서 글 쓸지 고민하지 말고 벨로그에서 시작하세요.',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#1e1e1e' },
+  ],
+  icons: {
+    icon: [
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '16x16',
+        url: '/favicons/favicon-16x16.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        url: '/favicons/favicon-32x32.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '96x96',
+        url: '/favicons/favicon-96x96.png',
+      },
+    ],
+    apple: [
+      {
+        rel: 'apple-touch-icon',
+        sizes: '152x152',
+        url: '/favicons/apple-icon-152x152.png',
+      },
+    ],
+  },
   other: {
     'fb:app_id': '203040656938507',
     'og:image': 'https://images.velog.io/velog.png',
   },
-  icons: [
-    {
-      rel: 'shortcut icon',
-      href: '/favicon.ico',
-    },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '16x16',
-      href: '/favicons/favicon-16x16.png',
-    },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '32x32',
-      href: '/favicons/favicon-32x32.png',
-    },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '96x96',
-      href: '/favicons/favicon-96x96.png',
-    },
-    {
-      rel: 'apple-touch-icon',
-      sizes: '152x152',
-      href: '/favicons/apple-icon-152x152.png',
-    },
-  ],
 }
 
 export default async function RootLayout({
@@ -52,11 +56,6 @@ export default async function RootLayout({
   const theme = cookies().get('theme')
   return (
     <html lang="ko">
-      <Head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#12B886" />
-      </Head>
       <body className="body" data-theme={theme?.value ?? 'light'}>
         <CoreProvider>{children}</CoreProvider>
       </body>
