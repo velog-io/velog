@@ -279,7 +279,7 @@ model Post {
   PostRead          PostRead[]
   PostScore         PostScore[]
   PostTagLegacy     PostTagLegacy[]
-  user              User                     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  User              User                     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   PostCategory      PostCategory[]
   postTags          PostTag[]
   SeriesPost        SeriesPost[]

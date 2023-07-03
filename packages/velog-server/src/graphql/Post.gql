@@ -60,7 +60,7 @@ type PostHistory {
 }
 
 type Query {
-  # post(id: ID, username: String, url_slug: String): Post
+  post(input: PostInput!): Post
   # posts(cursor: ID, limit: Int, username: String, temp_only: Boolean, tag: String): [Post]
   recentPosts(input: RecentPostsInput!): [Post]
   trendingPosts(input: TrendingPostsInput!): [Post]
@@ -112,6 +112,12 @@ type Query {
 #   is_private: Boolean
 #   series_id: ID
 # }
+
+input PostInput {
+  id: ID
+  username: String
+  url_slug: String
+}
 
 input ReadingListInput {
   type: ReadingListOption!

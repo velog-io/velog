@@ -4,6 +4,10 @@ import { PostService } from '@services/PostService/index.js'
 
 const postResolvers: Resolvers = {
   Query: {
+    post: async (_, { input }, ctx) => {
+      const postService = container.resolve(PostService)
+      return postService.getPost(input, ctx.user?.id)
+    },
     recentPosts: async (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
       return postService.getRecentPosts(input, ctx.user?.id)

@@ -1,6 +1,11 @@
 import { Post, Prisma } from '@prisma/client'
-import { injectable, singleton } from 'tsyringe'
-import { ReadingListInput, RecentPostsInput, TrendingPostsInput } from '@graphql/generated.js'
+import { container, injectable, singleton } from 'tsyringe'
+import {
+  PostInput,
+  ReadingListInput,
+  RecentPostsInput,
+  TrendingPostsInput,
+} from '@graphql/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
@@ -8,6 +13,7 @@ import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { GetPostsByTypeParams, PostServiceInterface } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
+import { PostReadLogService } from '@services/PostReadLogService'
 
 @injectable()
 @singleton()
@@ -232,5 +238,73 @@ export class PostService implements PostServiceInterface {
     const normalized = this.utils.normalize(posts)
     const ordered = ids.map((id) => normalized[id])
     return ordered
+  }
+  public async getPost(input: PostInput, userId: string | undefined): Promise<Post | null> {
+    const { id, url_slug, username } = input
+    if (id) {
+      const post = await this.db.post.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          User: true,
+        },
+      })
+
+      if (!post || ((post.is_temp || post.is_private) && post.fk_user_id !== userId)) {
+        return null
+      }
+      return post
+    }
+
+    let post = await this.db.post.findFirst({
+      where: {
+        url_slug,
+        User: {
+          username,
+        },
+      },
+      include: {
+        User: true,
+      },
+    })
+
+    if (!post) {
+      const fallbackPost = await this.db.urlSlugHistory.findFirst({
+        where: {
+          url_slug,
+          User: {
+            username,
+          },
+        },
+        include: {
+          Post: {
+            include: {
+              User: true,
+            },
+          },
+          User: true,
+        },
+      })
+      if (fallbackPost) {
+        post = fallbackPost.Post!
+      }
+    }
+    if (!post) return null
+    if ((post.is_temp || post.is_private) && post.fk_user_id !== userId) return null
+
+    setTimeout(async () => {
+      if (post?.fk_user_id === userId || !userId) return
+      if (!post) return
+      const postReadLogService = container.resolve(PostReadLogService)
+      postReadLogService.log({
+        userId: userId,
+        postId: post.id,
+        resumeTitleId: null,
+        percentage: 0,
+      })
+    }, 0)
+
+    return post
   }
 }
