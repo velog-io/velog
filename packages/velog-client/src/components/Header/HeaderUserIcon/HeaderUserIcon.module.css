@@ -1,5 +1,6 @@
 .block {
   cursor: pointer;
+  user-select: none;
   img {
     display: block;
     height: 2.5rem;

@@ -16,7 +16,7 @@ import {
 import { motion } from 'framer-motion'
 import { timeframes } from '@/features/home/utils/timeframeMap'
 import TimeframePicker from '@/features/home/components/TimeframePicker'
-// import HomeHeadExtra from '@/features/home/components/HomeHeadExtra'
+import HomeMoreButton from '@/features/home/components/HomeMoreButton'
 
 const cx = bindClassNames(styles)
 
@@ -25,7 +25,7 @@ type Props = {}
 function HomeTab({}: Props) {
   const pathname = usePathname()
 
-  const [headExtra, togglHeadExtra] = useToggle(false)
+  const [moreButton, toggleMoreButton] = useToggle(false)
   const [timeframePicker, toggleTimeframePicker] = useToggle(false)
   const headExtraRef = useRef<HTMLDivElement | null>(null)
   const timeframeRef = useRef<HTMLDivElement | null>(null)
@@ -81,8 +81,8 @@ function HomeTab({}: Props) {
           </>
         )}
       </div>
-      <MdMoreVert onClick={togglHeadExtra} className={cx('extra')} />
-      {/* <HomeHeadExtra isVisible={headExtra} onClose={togglHeadExtra} /> */}
+      <MdMoreVert onClick={toggleMoreButton} className={cx('extra')} />
+      <HomeMoreButton isVisible={moreButton} onClose={toggleMoreButton} />
     </div>
   )
 }
