@@ -15,7 +15,7 @@ const postResolvers: Resolvers = {
       return parent.user
     },
     short_description: (parent: PostWith) => {
-      if (parent.body) return ''
+      if (!parent.body) return ''
       if ((parent.meta as any)?.short_description) {
         return (parent.meta as any).short_description
       }
