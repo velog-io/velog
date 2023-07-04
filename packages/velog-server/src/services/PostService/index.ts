@@ -1,7 +1,7 @@
 import { Post, Prisma } from '@prisma/client'
 import { container, injectable, singleton } from 'tsyringe'
 import {
-  PostInput,
+  ReadPostInput,
   ReadingListInput,
   RecentPostsInput,
   TrendingPostsInput,
@@ -13,7 +13,7 @@ import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { GetPostsByTypeParams, PostServiceInterface } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { PostReadLogService } from '@services/PostReadLogService'
+import { PostReadLogService } from '@services/PostReadLogService/index.js'
 
 @injectable()
 @singleton()
@@ -178,7 +178,7 @@ export class PostService implements PostServiceInterface {
         released_at: 'desc',
       },
       include: {
-        user: true,
+        User: true,
       },
       take: limit,
     })
@@ -239,7 +239,7 @@ export class PostService implements PostServiceInterface {
     const ordered = ids.map((id) => normalized[id])
     return ordered
   }
-  public async getPost(input: PostInput, userId: string | undefined): Promise<Post | null> {
+  public async getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null> {
     const { id, url_slug, username } = input
     if (id) {
       const post = await this.db.post.findUnique({

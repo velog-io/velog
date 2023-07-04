@@ -1,4 +1,4 @@
-import { DbService } from '@lib/db/DbService'
+import { DbService } from '@lib/db/DbService.js'
 import { LogParams, PostReadLogInterface } from './PostReadLogInterface'
 import { injectable, singleton } from 'tsyringe'
 import { PostReadLog } from '@prisma/client'

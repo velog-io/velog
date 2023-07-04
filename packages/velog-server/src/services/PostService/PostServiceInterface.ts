@@ -1,5 +1,5 @@
 import {
-  PostInput,
+  ReadPostInput,
   ReadingListInput,
   RecentPostsInput,
   TrendingPostsInput,
@@ -12,7 +12,7 @@ export interface PostServiceInterface {
   // private getPostsByLiked(input: GetPostsByTypeParams): Promise<Post[]>
   getRecentPosts(input: RecentPostsInput, userId: string | undefined): Promise<Post[]>
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
-  getPost(input: PostInput, userId: string | undefined): Promise<Post | null>
+  getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>
 }
 
 export type GetPostsByTypeParams = {

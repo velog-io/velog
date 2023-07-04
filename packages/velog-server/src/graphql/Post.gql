@@ -60,7 +60,7 @@ type PostHistory {
 }
 
 type Query {
-  post(input: PostInput!): Post
+  post(input: ReadPostInput!): Post
   # posts(cursor: ID, limit: Int, username: String, temp_only: Boolean, tag: String): [Post]
   recentPosts(input: RecentPostsInput!): [Post]
   trendingPosts(input: TrendingPostsInput!): [Post]
@@ -113,7 +113,7 @@ type Query {
 #   series_id: ID
 # }
 
-input PostInput {
+input ReadPostInput {
   id: ID
   username: String
   url_slug: String

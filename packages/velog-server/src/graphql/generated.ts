@@ -93,12 +93,6 @@ export type PostHistory = {
   title?: Maybe<Scalars['String']['output']>
 }
 
-export type PostInput = {
-  id?: InputMaybe<Scalars['ID']['input']>
-  url_slug?: InputMaybe<Scalars['String']['input']>
-  username?: InputMaybe<Scalars['String']['input']>
-}
-
 export type Query = {
   __typename?: 'Query'
   currentUser?: Maybe<User>
@@ -110,7 +104,7 @@ export type Query = {
 }
 
 export type QueryPostArgs = {
-  input: PostInput
+  input: ReadPostInput
 }
 
 export type QueryReadingListArgs = {
@@ -129,6 +123,12 @@ export type ReadCountByDay = {
   __typename?: 'ReadCountByDay'
   count?: Maybe<Scalars['Int']['output']>
   day?: Maybe<Scalars['Date']['output']>
+}
+
+export type ReadPostInput = {
+  id?: InputMaybe<Scalars['ID']['input']>
+  url_slug?: InputMaybe<Scalars['String']['input']>
+  username?: InputMaybe<Scalars['String']['input']>
 }
 
 export type ReadingListInput = {
@@ -336,9 +336,9 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>
   Post: ResolverTypeWrapper<PostModel>
   PostHistory: ResolverTypeWrapper<PostHistory>
-  PostInput: PostInput
   Query: ResolverTypeWrapper<{}>
   ReadCountByDay: ResolverTypeWrapper<ReadCountByDay>
+  ReadPostInput: ReadPostInput
   ReadingListInput: ReadingListInput
   ReadingListOption: ReadingListOption
   RecentPostsInput: RecentPostsInput
@@ -382,9 +382,9 @@ export type ResolversParentTypes = {
   Mutation: {}
   Post: PostModel
   PostHistory: PostHistory
-  PostInput: PostInput
   Query: {}
   ReadCountByDay: ReadCountByDay
+  ReadPostInput: ReadPostInput
   ReadingListInput: ReadingListInput
   RecentPostsInput: RecentPostsInput
   SearchResult: Omit<SearchResult, 'posts'> & { posts: Array<ResolversParentTypes['Post']> }
