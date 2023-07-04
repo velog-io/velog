@@ -11,7 +11,6 @@ export default async function postData({
   headers,
   ...init
 }: Parameter) {
-  console.log('url', url)
   const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(body),

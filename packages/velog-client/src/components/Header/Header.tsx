@@ -18,7 +18,7 @@ import { CurrentUser } from '@/types/user'
 const cx = bindClassNames(styles)
 
 type Props = {
-  user: CurrentUser | null
+  user?: CurrentUser
 }
 
 function Header({ user }: Props) {
@@ -42,7 +42,7 @@ function Header({ user }: Props) {
   const urlForSearch = '/search'
 
   return (
-    <div className={cx('block')}>
+    <header className={cx('block')}>
       <div className={cx('innerBlock')}>
         <HeaderLogo />
         <div className={cx('right')}>
@@ -79,7 +79,7 @@ function Header({ user }: Props) {
           )}
         </div>
       </div>
-    </div>
+    </header>
   )
 }
 

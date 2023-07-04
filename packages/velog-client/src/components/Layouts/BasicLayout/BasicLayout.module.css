@@ -17,3 +17,12 @@
     width: calc(100% - 2rem);
   }
 }
+
+.mainWrapper {
+  display: flex;
+  margin-top: 2rem;
+
+  main {
+    flex: 1;
+  }
+}

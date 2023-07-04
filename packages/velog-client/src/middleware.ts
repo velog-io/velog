@@ -10,6 +10,9 @@ export default async function middleware(req: NextRequest) {
     try {
       const endpoint = `${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql`
       const query = RestoreTokenDocument.loc?.source.body || ''
+
+      if (!query) return
+
       const { data } = await postData({
         url: endpoint,
         body: { query },

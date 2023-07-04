@@ -24,6 +24,7 @@
   "dependencies": {
     "@tanstack/react-query": "^4.29.15",
     "axios": "^1.4.0",
+    "date-fns": "^2.30.0",
     "framer-motion": "^10.12.17",
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",

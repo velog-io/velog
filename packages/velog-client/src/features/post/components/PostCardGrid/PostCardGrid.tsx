@@ -10,11 +10,16 @@ const cx = bindClassNames(styles)
 type Props = {
   posts: (PartialPost | undefined)[]
   loading?: boolean
-  forHome?: boolean
-  forPost?: boolean
+  forHome: boolean
+  forPost: boolean
 }
 
-function PostCardGrid({ posts, loading, forHome, forPost }: Props) {
+function PostCardGrid({
+  posts,
+  loading,
+  forHome = false,
+  forPost = false,
+}: Props) {
   const [adBlocked, setAdBlocked] = useState(false)
 
   useAdblockDetect().then((detected) => {
@@ -26,7 +31,14 @@ function PostCardGrid({ posts, loading, forHome, forPost }: Props) {
     <div className={cx('block')}>
       {posts.map((post, i) => {
         if (!post) return null
-        return <PostCard key={post.id} post={post} />
+        return (
+          <PostCard
+            key={post.id}
+            post={post}
+            forHome={forHome}
+            forPost={forPost}
+          />
+        )
       })}
     </div>
   )

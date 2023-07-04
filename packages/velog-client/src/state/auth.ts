@@ -10,7 +10,7 @@ const initialState: AuthState = {
 }
 
 const authState = sangte(initialState, (prev) => ({
-  update(user: CurrentUser | null) {
+  update(user?: CurrentUser) {
     if (!user) return
     prev.user = user
   },

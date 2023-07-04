@@ -13,11 +13,13 @@ interface Props {
 async function BasicLayout({ children }: Props) {
   const user = await getCurrentUser()
   return (
-    <main className={cx('block')}>
+    <div className={cx('block')}>
       <Header user={user} />
       <HomeTab />
-      {children}
-    </main>
+      <div className={cx('mainWrapper')}>
+        <main>{children}</main>
+      </div>
+    </div>
   )
 }
 

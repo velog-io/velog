@@ -11,7 +11,7 @@ const config: CodegenConfig = {
     'src/graphql/generated.ts': {
       config: {
         skipTypename: true,
-        avoidOptionals: true,
+        avoidOptionals: false,
         maybeValue: 'T',
       },
       plugins: [
