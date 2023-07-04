@@ -16,7 +16,7 @@ function RatioImage({ widthRatio, heightRatio, src, alt, className }: Props) {
   const paddingTop = `${(heightRatio / widthRatio) * 100}%`
   return (
     <div className={cx('block')} style={{ paddingTop }}>
-      <Image src={src} alt={alt} />
+      <Image src={src} alt={alt} width={320} height={167} />
     </div>
   )
 }

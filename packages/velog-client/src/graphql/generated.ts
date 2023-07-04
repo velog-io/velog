@@ -69,24 +69,25 @@ export type Post = {
   body?: Maybe<Scalars['String']['output']>
   comments?: Maybe<Array<Maybe<Comment>>>
   comments_count?: Maybe<Scalars['Int']['output']>
-  created_at?: Maybe<Scalars['Date']['output']>
+  created_at: Scalars['Date']['output']
+  fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
   is_markdown?: Maybe<Scalars['Boolean']['output']>
-  is_private?: Maybe<Scalars['Boolean']['output']>
+  is_private: Scalars['Boolean']['output']
   is_temp?: Maybe<Scalars['Boolean']['output']>
   last_read_at?: Maybe<Scalars['Date']['output']>
   liked?: Maybe<Scalars['Boolean']['output']>
   likes?: Maybe<Scalars['Int']['output']>
   linked_posts?: Maybe<LinkedPosts>
   meta?: Maybe<Scalars['JSON']['output']>
+  original_post_id?: Maybe<Scalars['ID']['output']>
   recommended_posts?: Maybe<Array<Maybe<Post>>>
   released_at?: Maybe<Scalars['Date']['output']>
   series?: Maybe<Series>
   short_description?: Maybe<Scalars['String']['output']>
-  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>
   thumbnail?: Maybe<Scalars['String']['output']>
   title?: Maybe<Scalars['String']['output']>
-  updated_at?: Maybe<Scalars['Date']['output']>
+  updated_at: Scalars['Date']['output']
   url_slug?: Maybe<Scalars['String']['output']>
   user?: Maybe<User>
   views?: Maybe<Scalars['Int']['output']>
@@ -238,12 +239,11 @@ export type ReadPostQuery = {
     id: string
     title?: string
     released_at?: any
-    updated_at?: any
-    tags?: Array<string>
+    updated_at: any
     body?: string
     short_description?: string
     is_markdown?: boolean
-    is_private?: boolean
+    is_private: boolean
     is_temp?: boolean
     thumbnail?: string
     comments_count?: number
@@ -306,6 +306,54 @@ export type ReadPostQuery = {
   }
 }
 
+export type RecentPostsQueryVariables = Exact<{
+  input: RecentPostsInput
+}>
+
+export type RecentPostsQuery = {
+  recentPosts?: Array<{
+    id: string
+    title?: string
+    short_description?: string
+    thumbnail?: string
+    url_slug?: string
+    released_at?: any
+    updated_at: any
+    comments_count?: number
+    is_private: boolean
+    likes?: number
+    user?: {
+      id: string
+      username: string
+      profile: { id: string; thumbnail: string }
+    }
+  }>
+}
+
+export type TrendingPostsQueryVariables = Exact<{
+  input: TrendingPostsInput
+}>
+
+export type TrendingPostsQuery = {
+  trendingPosts?: Array<{
+    id: string
+    title?: string
+    short_description?: string
+    thumbnail?: string
+    likes?: number
+    url_slug?: string
+    released_at?: any
+    updated_at: any
+    comments_count?: number
+    is_private: boolean
+    user?: {
+      id: string
+      username: string
+      profile: { id: string; thumbnail: string }
+    }
+  }>
+}
+
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
 
 export type CurrentUserQuery = {
@@ -334,7 +382,6 @@ export const ReadPostDocument = gql`
       title
       released_at
       updated_at
-      tags
       body
       short_description
       is_markdown
@@ -416,6 +463,54 @@ export const ReadPostDocument = gql`
     }
   }
 `
+export const RecentPostsDocument = gql`
+  query recentPosts($input: RecentPostsInput!) {
+    recentPosts(input: $input) {
+      id
+      title
+      short_description
+      thumbnail
+      user {
+        id
+        username
+        profile {
+          id
+          thumbnail
+        }
+      }
+      url_slug
+      released_at
+      updated_at
+      comments_count
+      is_private
+      likes
+    }
+  }
+`
+export const TrendingPostsDocument = gql`
+  query trendingPosts($input: TrendingPostsInput!) {
+    trendingPosts(input: $input) {
+      id
+      title
+      short_description
+      thumbnail
+      likes
+      user {
+        id
+        username
+        profile {
+          id
+          thumbnail
+        }
+      }
+      url_slug
+      released_at
+      updated_at
+      comments_count
+      is_private
+    }
+  }
+`
 export const CurrentUserDocument = gql`
   query currentUser {
     currentUser {
@@ -472,6 +567,34 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'readPost',
+        'query'
+      )
+    },
+    recentPosts(
+      variables: RecentPostsQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<RecentPostsQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<RecentPostsQuery>(RecentPostsDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'recentPosts',
+        'query'
+      )
+    },
+    trendingPosts(
+      variables: TrendingPostsQueryVariables,
+      requestHeaders?: GraphQLClientRequestHeaders
+    ): Promise<TrendingPostsQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<TrendingPostsQuery>(TrendingPostsDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'trendingPosts',
         'query'
       )
     },

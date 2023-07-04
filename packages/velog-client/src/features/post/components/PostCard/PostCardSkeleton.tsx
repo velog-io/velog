@@ -1,3 +1,5 @@
+'use client'
+
 import Skeleton from '@/components/Skeleton/Skeleton'
 import styles from './PostCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'

@@ -79,6 +79,8 @@ function PostCard({ post, forHome = false, forPost = false }: Props) {
           <Image
             src={post.user.profile.thumbnail || userThumbnail}
             alt={`user thumbnail of ${post.user.username}`}
+            width={24}
+            height={24}
           />
           <span>
             by <b>{post.user.username}</b>

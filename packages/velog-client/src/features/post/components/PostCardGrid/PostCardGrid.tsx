@@ -1,7 +1,9 @@
+'use client'
+
 import { PartialPost } from '@/types/post'
 import styles from './PostCardGrid.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import useAdblockDetect from '@/hooks/useAdblockDetect'
 import PostCard from '@/features/post/components/PostCard/PostCard'
 
