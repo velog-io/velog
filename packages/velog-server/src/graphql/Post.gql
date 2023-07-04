@@ -36,10 +36,9 @@ type Post {
   updated_at: Date!
   is_private: Boolean!
   released_at: Date
-  
   user: User
   comments: [Comment]
-  # tags: [String]
+  tags: [String]
   comments_count: Int
   series: Series
   liked: Boolean
