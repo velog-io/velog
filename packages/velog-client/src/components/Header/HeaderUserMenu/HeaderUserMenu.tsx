@@ -5,6 +5,7 @@ import HeaderUserMenuItem from '@/components/Header/HeaderUserMenuItem/HeaderUse
 import { useAuth } from '@/state/auth'
 import { getSdk, graphQLClient } from '@/graphql/generated'
 import { useCallback } from 'react'
+import { sdk } from '@/lib/sdk'
 
 const cx = bindClassNames(styles)
 
@@ -20,7 +21,6 @@ function HeaderUserMenu({ isVisible, onClose }: Props) {
   const { ref } = useOutsideClick<HTMLDivElement>(onClose)
 
   const onLogout = useCallback(async () => {
-    const sdk = getSdk(graphQLClient)
     await sdk.logout()
     window.location.href = '/'
   }, [])

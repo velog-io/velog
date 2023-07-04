@@ -1,4 +1,5 @@
 import { getSdk, graphQLClient } from '@/graphql/generated'
+import { sdk } from '@/lib/sdk'
 import { CurrentUser } from '@/types/user'
 import { cookies } from 'next/headers'
 
@@ -18,7 +19,6 @@ export default async function getCurrentUser(): Promise<
     graphQLClient.setHeader('Cookie', `refresh_token=${refreshToken}`)
   }
 
-  const sdk = getSdk(graphQLClient)
   const { currentUser } = await sdk.currentUser()
   return currentUser
 }
