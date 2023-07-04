@@ -44,6 +44,7 @@
     "pino-pretty": "^10.0.0",
     "prisma": "^4.16.1",
     "reflect-metadata": "^0.1.13",
+    "remove-markdown": "^0.5.0",
     "tsx": "^3.12.7",
     "tsyringe": "^4.7.0",
     "utility-types": "^3.10.0"
@@ -58,6 +59,7 @@
     "@types/jest": "^29.5.2",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^20.3.1",
+    "@types/remove-markdown": "^0.3.1",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
     "eslint": "^8.42.0",

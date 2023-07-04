@@ -178,7 +178,7 @@ export class PostService implements PostServiceInterface {
         released_at: 'desc',
       },
       include: {
-        User: true,
+        user: true,
       },
       take: limit,
     })
@@ -193,6 +193,7 @@ export class PostService implements PostServiceInterface {
       ['month', 30],
       ['year', 365],
     ]
+
     const selectedTimeframe = timeframes.find(([text]) => text === timeframe)
 
     if (!selectedTimeframe) {
@@ -237,6 +238,7 @@ export class PostService implements PostServiceInterface {
     const posts = await this.postsByIds(ids)
     const normalized = this.utils.normalize(posts)
     const ordered = ids.map((id) => normalized[id])
+
     return ordered
   }
   public async getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null> {
@@ -247,7 +249,7 @@ export class PostService implements PostServiceInterface {
           id,
         },
         include: {
-          User: true,
+          user: true,
         },
       })
 
@@ -260,12 +262,12 @@ export class PostService implements PostServiceInterface {
     let post = await this.db.post.findFirst({
       where: {
         url_slug,
-        User: {
+        user: {
           username,
         },
       },
       include: {
-        User: true,
+        user: true,
       },
     })
 
@@ -280,7 +282,7 @@ export class PostService implements PostServiceInterface {
         include: {
           Post: {
             include: {
-              User: true,
+              user: true,
             },
           },
           User: true,

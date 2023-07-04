@@ -205,6 +205,7 @@ model PostReadLog {
   @@map("post_read_logs")
 }
 
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model PostRead {
   id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   ip_hash    String?  @db.VarChar(255)
@@ -279,7 +280,7 @@ model Post {
   PostRead          PostRead[]
   PostScore         PostScore[]
   PostTagLegacy     PostTagLegacy[]
-  User              User                     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user              User                     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   PostCategory      PostCategory[]
   postTags          PostTag[]
   SeriesPost        SeriesPost[]
@@ -519,40 +520,39 @@ model UserThumbnail {
 }
 
 model User {
-  id                                               String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  username                                         String                @unique @db.VarChar(255)
-  email                                            String?               @unique @db.VarChar(255)
-  created_at                                       DateTime              @default(now()) @db.Timestamptz(6)
-  updated_at                                       DateTime              @default(now()) @db.Timestamptz(6)
-  is_certified                                     Boolean?              @default(false)
+  id                                               String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  username                                         String                       @unique @db.VarChar(255)
+  email                                            String?                      @unique @db.VarChar(255)
+  created_at                                       DateTime                     @default(now()) @db.Timestamptz(6)
+  updated_at                                       DateTime                     @default(now()) @db.Timestamptz(6)
+  is_certified                                     Boolean?                     @default(false)
   AdminUser                                        AdminUser[]
   AuthToken                                        AuthToken[]
   Category                                         Category[]
   Comment                                          Comment[]
   EmailCert                                        EmailCert[]
+  ExternalIntegrationHistory                       ExternalIntegrationHistory[]
+  ExternalIntegration                              ExternalIntegration[]
   Feed                                             Feed[]
   FollowTag                                        FollowTag[]
-  follow_user_follow_user_fk_follow_user_idTousers FollowUser[]          @relation("follow_user_fk_follow_user_idTousers")
-  follow_user_follow_user_fk_user_idTousers        FollowUser[]          @relation("follow_user_fk_user_idTousers")
+  follow_user_follow_user_fk_follow_user_idTousers FollowUser[]                 @relation("follow_user_fk_follow_user_idTousers")
+  follow_user_follow_user_fk_user_idTousers        FollowUser[]                 @relation("follow_user_fk_user_idTousers")
   PostImage                                        PostImage[]
   PostLike                                         PostLike[]
   PostReadLog                                      PostReadLog[]
   PostRead                                         PostRead[]
   PostScore                                        PostScore[]
-  Post                                             Post[]
+  post                                             Post[]
   Series                                           Series[]
   SocialAccount                                    SocialAccount[]
+  UrlSlugHistory                                   UrlSlugHistory[]
   UserImage                                        UserImage[]
   UserImageCloudflare                              UserImageCloudflare[]
   UserImageNext                                    UserImageNext[]
   UserMeta                                         UserMeta[]
-
-  UserThumbnail              UserThumbnail[]
-  VelogConfig                VelogConfig?
-  UrlSlugHistory             UrlSlugHistory[]
-  ExternalIntegration        ExternalIntegration[]
-  ExternalIntegrationHistory ExternalIntegrationHistory[]
-  userProfile                UserProfile?
+  userProfile                                      UserProfile?
+  UserThumbnail                                    UserThumbnail[]
+  VelogConfig                                      VelogConfig?
 
   @@index([email], map: "users_email")
   @@index([username], map: "users_username")
@@ -572,14 +572,13 @@ model VelogConfig {
 }
 
 model ExternalIntegration {
-  id             String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  user           User    @relation(fields: [fk_user_id], references: [id])
-  code           String  @unique @db.VarChar(64)
-  is_consumed    Boolean @default(false)
-  app_identifier String  @db.VarChar(64)
-
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  fk_user_id String   @db.Uuid
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  code           String   @unique @db.VarChar(64)
+  is_consumed    Boolean  @default(false)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  fk_user_id     String   @db.Uuid
+  app_identifier String   @db.VarChar(64)
+  user           User     @relation(fields: [fk_user_id], references: [id])
 
   @@index([fk_user_id])
   @@index([app_identifier])
@@ -587,12 +586,11 @@ model ExternalIntegration {
 }
 
 model ExternalIntegrationHistory {
-  id             String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  user           User   @relation(fields: [fk_user_id], references: [id])
-  app_identifier String @db.VarChar(64)
-
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  fk_user_id String   @db.Uuid
+  id             String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  app_identifier String   @db.VarChar(64)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  fk_user_id     String   @db.Uuid
+  user           User     @relation(fields: [fk_user_id], references: [id])
 
   @@unique([app_identifier, fk_user_id])
   @@index([fk_user_id])

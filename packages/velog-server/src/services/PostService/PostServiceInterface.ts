@@ -4,7 +4,7 @@ import {
   RecentPostsInput,
   TrendingPostsInput,
 } from '@graphql/generated'
-import { Post } from '@prisma/client'
+import { Post, Prisma } from '@prisma/client'
 
 export interface PostServiceInterface {
   getReadingList(input: ReadingListInput, userId: string | undefined): Promise<Post[]>
@@ -20,3 +20,22 @@ export type GetPostsByTypeParams = {
   userId: string
   limit: number
 }
+
+export type PostWith = Prisma.PostGetPayload<{
+  include: {
+    user?: true
+    Comment?: true
+    Feed?: true
+    PostCategory?: true
+    PostHistory?: true
+    PostImage?: true
+    PostLike?: true
+    PostRead?: true
+    PostReadLog?: true
+    PostScore?: true
+    PostTagLegacy?: true
+    SeriesPost?: true
+    UrlSlugHistory?: true
+    postTags?: true
+  }
+}>

@@ -31,7 +31,6 @@ export type Scalars = {
 }
 
 export type Comment = {
-  __typename?: 'Comment'
   created_at?: Maybe<Scalars['Date']['output']>
   deleted?: Maybe<Scalars['Boolean']['output']>
   has_replies?: Maybe<Scalars['Boolean']['output']>
@@ -45,31 +44,30 @@ export type Comment = {
 }
 
 export type LinkedPosts = {
-  __typename?: 'LinkedPosts'
   next?: Maybe<Post>
   previous?: Maybe<Post>
 }
 
 export type Mutation = {
-  __typename?: 'Mutation'
   logout: Scalars['Boolean']['output']
 }
 
 export type Post = {
-  __typename?: 'Post'
   body?: Maybe<Scalars['String']['output']>
   comments?: Maybe<Array<Maybe<Comment>>>
   comments_count?: Maybe<Scalars['Int']['output']>
-  created_at?: Maybe<Scalars['Date']['output']>
+  created_at: Scalars['Date']['output']
+  fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
   is_markdown?: Maybe<Scalars['Boolean']['output']>
-  is_private?: Maybe<Scalars['Boolean']['output']>
+  is_private: Scalars['Boolean']['output']
   is_temp?: Maybe<Scalars['Boolean']['output']>
   last_read_at?: Maybe<Scalars['Date']['output']>
   liked?: Maybe<Scalars['Boolean']['output']>
   likes?: Maybe<Scalars['Int']['output']>
   linked_posts?: Maybe<LinkedPosts>
   meta?: Maybe<Scalars['JSON']['output']>
+  original_post_id?: Maybe<Scalars['ID']['output']>
   recommended_posts?: Maybe<Array<Maybe<Post>>>
   released_at?: Maybe<Scalars['Date']['output']>
   series?: Maybe<Series>
@@ -77,14 +75,13 @@ export type Post = {
   tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>
   thumbnail?: Maybe<Scalars['String']['output']>
   title?: Maybe<Scalars['String']['output']>
-  updated_at?: Maybe<Scalars['Date']['output']>
+  updated_at: Scalars['Date']['output']
   url_slug?: Maybe<Scalars['String']['output']>
   user?: Maybe<User>
   views?: Maybe<Scalars['Int']['output']>
 }
 
 export type PostHistory = {
-  __typename?: 'PostHistory'
   body?: Maybe<Scalars['String']['output']>
   created_at?: Maybe<Scalars['Date']['output']>
   fk_post_id?: Maybe<Scalars['ID']['output']>
@@ -94,7 +91,6 @@ export type PostHistory = {
 }
 
 export type Query = {
-  __typename?: 'Query'
   currentUser?: Maybe<User>
   post?: Maybe<Post>
   readingList?: Maybe<Array<Maybe<Post>>>
@@ -120,7 +116,6 @@ export type QueryTrendingPostsArgs = {
 }
 
 export type ReadCountByDay = {
-  __typename?: 'ReadCountByDay'
   count?: Maybe<Scalars['Int']['output']>
   day?: Maybe<Scalars['Date']['output']>
 }
@@ -148,13 +143,11 @@ export type RecentPostsInput = {
 }
 
 export type SearchResult = {
-  __typename?: 'SearchResult'
   count?: Maybe<Scalars['Int']['output']>
   posts: Array<Post>
 }
 
 export type Series = {
-  __typename?: 'Series'
   created_at?: Maybe<Scalars['Date']['output']>
   description?: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
@@ -168,14 +161,12 @@ export type Series = {
 }
 
 export type SeriesPost = {
-  __typename?: 'SeriesPost'
   id: Scalars['ID']['output']
   index?: Maybe<Scalars['Int']['output']>
   post?: Maybe<Post>
 }
 
 export type Stats = {
-  __typename?: 'Stats'
   count_by_day?: Maybe<Array<Maybe<ReadCountByDay>>>
   total?: Maybe<Scalars['Int']['output']>
 }
@@ -187,7 +178,6 @@ export type TrendingPostsInput = {
 }
 
 export type User = {
-  __typename?: 'User'
   created_at: Scalars['Date']['output']
   email: Scalars['String']['output']
   id: Scalars['ID']['output']
@@ -201,14 +191,12 @@ export type User = {
 }
 
 export type UserMeta = {
-  __typename?: 'UserMeta'
   email_notification?: Maybe<Scalars['Boolean']['output']>
   email_promotion?: Maybe<Scalars['Boolean']['output']>
   id: Scalars['ID']['output']
 }
 
 export type UserProfile = {
-  __typename?: 'UserProfile'
   about: Scalars['String']['output']
   created_at: Scalars['Date']['output']
   display_name: Scalars['String']['output']
@@ -220,13 +208,11 @@ export type UserProfile = {
 }
 
 export type UserToken = {
-  __typename?: 'UserToken'
   accessToken: Scalars['String']['output']
   refreshToken: Scalars['String']['output']
 }
 
 export type VelogConfig = {
-  __typename?: 'VelogConfig'
   id: Scalars['ID']['output']
   logo_image?: Maybe<Scalars['String']['output']>
   title?: Maybe<Scalars['String']['output']>
@@ -451,16 +437,18 @@ export type PostResolvers<
   body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   comments?: Resolver<Maybe<Array<Maybe<ResolversTypes['Comment']>>>, ParentType, ContextType>
   comments_count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
-  created_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
+  created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_markdown?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
-  is_private?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
+  is_private?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   is_temp?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   last_read_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
   liked?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   likes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   linked_posts?: Resolver<Maybe<ResolversTypes['LinkedPosts']>, ParentType, ContextType>
   meta?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>
+  original_post_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   recommended_posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>
   released_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
   series?: Resolver<Maybe<ResolversTypes['Series']>, ParentType, ContextType>
@@ -468,7 +456,7 @@ export type PostResolvers<
   tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>
   thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  updated_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
+  updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   url_slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
   views?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>

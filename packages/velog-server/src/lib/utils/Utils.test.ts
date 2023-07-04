@@ -17,13 +17,10 @@ describe('Utils', () => {
     ]
     contents.forEach((context) => {
       const result = utils.escapeForUrl(context)
-      console.log(result)
       expect(!/\s/.test(result)).toBeTruthy()
       // only allow ko,en, jp, cn
       expect(
-        /^[a-zA-Z0-9ㄱ-힣\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\.-]*$/gu.test(
-          result
-        )
+        /^[a-zA-Z0-9ㄱ-힣\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\.-]*$/gu.test(result)
       ).toBeTruthy()
     })
   })
