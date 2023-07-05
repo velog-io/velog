@@ -12,7 +12,7 @@ model AdminUser {
   fk_user_id String   @db.Uuid
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @default(now()) @db.Timestamp(6)
-  User       User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_548ae43e47192962c941abbc4d1")
+  user       User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_548ae43e47192962c941abbc4d1")
 
   @@index([fk_user_id], map: "IDX_548ae43e47192962c941abbc4d")
   @@map("admin_users")
@@ -24,7 +24,7 @@ model AuthToken {
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @default(now()) @db.Timestamp(6)
   disabled   Boolean  @default(false)
-  User       User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_71e1bb3fd8c767a404b1a6a211e")
+  user       User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_71e1bb3fd8c767a404b1a6a211e")
 
   @@map("auth_tokens")
 }
@@ -39,8 +39,8 @@ model Category {
   private      Boolean?       @default(false)
   created_at   DateTime       @default(now()) @db.Timestamptz(6)
   updated_at   DateTime       @default(now()) @db.Timestamptz(6)
-  User         User?          @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  PostCategory PostCategory[]
+  user         User?          @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  postCategory PostCategory[]
 
   @@index([url_slug], map: "categories_url_slug")
   @@index([fk_user_id, parent, order], map: "category_order_of_user")
@@ -60,8 +60,8 @@ model Comment {
   deleted     Boolean? @default(false)
   created_at  DateTime @default(now()) @db.Timestamptz(6)
   updated_at  DateTime @default(now()) @db.Timestamptz(6)
-  Post        Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  User        User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  post        Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user        User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@index([created_at], map: "comments_created_at")
   @@index([deleted])
@@ -88,7 +88,7 @@ model EmailCert {
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
   status     Boolean? @default(true)
-  User       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@index([fk_user_id], map: "email_cert_fk_user_id")
   @@map("email_cert")
@@ -102,8 +102,8 @@ model Feed {
   score      Int?     @default(1)
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
-  Post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  User       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@index([created_at], map: "feeds_created_at")
   @@map("feeds")
@@ -116,8 +116,8 @@ model FollowTag {
   score      Int?
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
-  Tag        Tag?     @relation(fields: [fk_tag_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  User       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  tag        Tag?     @relation(fields: [fk_tag_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@map("follow_tag")
 }
@@ -152,7 +152,7 @@ model PostHistory {
   created_at  DateTime @default(now()) @db.Timestamptz(6)
   updated_at  DateTime @default(now()) @db.Timestamptz(6)
   is_markdown Boolean  @default(false)
-  Post        Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  post        Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@index([created_at], map: "post_histories_created_at")
   @@index([fk_post_id], map: "post_histories_fk_post_id")
@@ -167,8 +167,8 @@ model PostImage {
   filesize   Int?
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
-  Post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  User       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@map("post_images")
 }
@@ -179,8 +179,8 @@ model PostLike {
   fk_user_id String?  @db.Uuid
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
-  Post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  User       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@unique([fk_post_id, fk_user_id], map: "post_likes_fk_post_id_fk_user_id")
   @@index([created_at], map: "post_likes_created_at")
@@ -196,8 +196,8 @@ model PostReadLog {
   resume_title_id String?  @db.VarChar(255)
   created_at      DateTime @default(now()) @db.Timestamp(6)
   updated_at      DateTime @default(now()) @db.Timestamp(6)
-  Post            Post     @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_7b37d3334ab7d049a97f8b2ee0c")
-  User            User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_d4fd1d180f05445287d377ba49c")
+  post            Post     @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_7b37d3334ab7d049a97f8b2ee0c")
+  user            User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_d4fd1d180f05445287d377ba49c")
 
   @@index([fk_post_id], map: "IDX_7b37d3334ab7d049a97f8b2ee0")
   @@index([updated_at], map: "IDX_b5a284ac996f5c21be43611214")
@@ -212,8 +212,8 @@ model PostRead {
   fk_post_id String?  @db.Uuid
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
-  Post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  User       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@index([created_at], map: "post_reads_created_at")
   @@index([fk_post_id], map: "post_reads_fk_post_id")
@@ -230,8 +230,8 @@ model PostScore {
   score      Float?   @default(0)
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
-  Post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  User       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@index([created_at], map: "post_scores_created_at")
   @@index([fk_post_id], map: "post_scores_fk_post_id")
@@ -242,8 +242,8 @@ model PostScore {
 model PostTagLegacy {
   fk_post_id String @db.Uuid
   fk_tag_id  String @db.Uuid
-  Post       Post   @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, map: "FK_3d4d13db047f2b2ca7671b84034")
-  Tag        Tag    @relation(fields: [fk_tag_id], references: [id], onDelete: Cascade, map: "FK_4de7a827965a085c53d7983f480")
+  post       Post   @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, map: "FK_3d4d13db047f2b2ca7671b84034")
+  tag        Tag    @relation(fields: [fk_tag_id], references: [id], onDelete: Cascade, map: "FK_4de7a827965a085c53d7983f480")
 
   @@id([fk_post_id, fk_tag_id], map: "PK_0734929674029206aa2b8b4554a")
   @@index([fk_post_id], map: "IDX_3d4d13db047f2b2ca7671b8403")
@@ -270,20 +270,20 @@ model Post {
   is_private        Boolean                  @default(false)
   released_at       DateTime?                @default(now()) @db.Timestamptz(6)
   tsv               Unsupported("tsvector")?
-  Comment           Comment[]
-  Feed              Feed[]
-  PostHistory       PostHistory[]
-  PostImage         PostImage[]
-  PostLike          PostLike[]
-  PostReadLog       PostReadLog[]
-  PostRead          PostRead[]
-  PostScore         PostScore[]
-  PostTagLegacy     PostTagLegacy[]
+  comment           Comment[]
+  feed              Feed[]
+  postHistory       PostHistory[]
+  postImage         PostImage[]
+  postLike          PostLike[]
+  postReadLog       PostReadLog[]
+  postRead          PostRead[]
+  postScore         PostScore[]
+  postTagLegacy     PostTagLegacy[]
   user              User                     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  PostCategory      PostCategory[]
+  postCategory      PostCategory[]
   postTags          PostTag[]
-  SeriesPost        SeriesPost[]
-  UrlSlugHistory    UrlSlugHistory[]
+  seriesPost        SeriesPost[]
+  urlSlugHistory    UrlSlugHistory[]
 
   @@index([created_at], map: "posts_created_at")
   @@index([fk_user_id], map: "posts_fk_user_id")
@@ -302,8 +302,8 @@ model PostCategory {
   fk_category_id String?   @db.Uuid
   created_at     DateTime  @default(now()) @db.Timestamptz(6)
   updated_at     DateTime  @default(now()) @db.Timestamptz(6)
-  Category       Category? @relation(fields: [fk_category_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  Post           Post?     @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  category       Category? @relation(fields: [fk_category_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  post           Post?     @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@unique([fk_post_id, fk_category_id])
   @@map("posts_categories")
@@ -315,7 +315,7 @@ model PostTag {
   fk_tag_id  String?  @db.Uuid
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
-  Post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   tag        Tag?     @relation(fields: [fk_tag_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@unique([fk_post_id, fk_tag_id])
@@ -331,8 +331,8 @@ model Series {
   url_slug    String?      @db.VarChar(255)
   created_at  DateTime     @default(now()) @db.Timestamptz(6)
   updated_at  DateTime     @default(now()) @db.Timestamptz(6)
-  User        User?        @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  SeriesPost  SeriesPost[]
+  user        User?        @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  seriesPost  SeriesPost[]
 
   @@index([created_at], map: "series_created_at")
   @@index([fk_user_id], map: "series_fk_user_id")
@@ -348,8 +348,8 @@ model SeriesPost {
   index        Int?
   created_at   DateTime @default(now()) @db.Timestamptz(6)
   updated_at   DateTime @default(now()) @db.Timestamptz(6)
-  Post         Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  Series       Series?  @relation(fields: [fk_series_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  post         Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  series       Series?  @relation(fields: [fk_series_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@index([fk_post_id], map: "series_posts_fk_post_id")
   @@index([fk_series_id], map: "series_posts_fk_series_id")
@@ -364,7 +364,7 @@ model SocialAccount {
   created_at   DateTime @default(now()) @db.Timestamptz(6)
   updated_at   DateTime @default(now()) @db.Timestamptz(6)
   fk_user_id   String?  @db.Uuid
-  User         User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user         User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@index([provider, social_id], map: "social_accounts_provider_social_id")
   @@map("social_accounts")
@@ -393,9 +393,9 @@ model Tag {
   thumbnail                                 String?         @db.VarChar(255)
   name_filtered                             String?         @db.VarChar(255)
   is_alias                                  Boolean         @default(false)
-  FollowTag                                 FollowTag[]
-  PostTagLegacy                             PostTagLegacy[]
-  PostTag                                   PostTag[]
+  followTag                                 FollowTag[]
+  postTagLegacy                             PostTagLegacy[]
+  postTag                                   PostTag[]
   tag_alias_tag_alias_fk_tag_idTotags       TagAlias[]      @relation("tag_alias_fk_tag_idTotags")
   tag_alias_tag_alias_fk_alias_tag_idTotags TagAlias[]      @relation("tag_alias_fk_alias_tag_idTotags")
 
@@ -411,8 +411,8 @@ model UrlSlugHistory {
   url_slug   String?  @db.VarChar(255)
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
-  Post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  User       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@index([created_at], map: "url_slug_histories_created_at")
   @@index([url_slug], map: "url_slug_histories_url_slug")
@@ -428,7 +428,7 @@ model UserImage {
   ref_id     String?  @db.Uuid
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
-  User       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@index([fk_user_id], map: "user_images_fk_user_id")
   @@index([ref_id], map: "user_images_ref_id")
@@ -447,7 +447,7 @@ model UserImageCloudflare {
   result_id  String   @db.VarChar(64)
   tracked    Boolean
   filename   String   @db.VarChar(255)
-  User       User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_47800d2104cdf1e4c7999e6357a")
+  user       User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_47800d2104cdf1e4c7999e6357a")
 
   @@index([created_at], map: "IDX_3e1934c686ba81d69d94c7eaca")
   @@index([fk_user_id], map: "IDX_47800d2104cdf1e4c7999e6357")
@@ -468,7 +468,7 @@ model UserImageNext {
   tracked    Boolean
   file_id    String?  @db.VarChar(255)
   path       String?  @db.VarChar(512)
-  User       User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_9d2936750a40b9b10b860c8f772")
+  user       User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_9d2936750a40b9b10b860c8f772")
 
   @@index([tracked], map: "IDX_0c612fa2d1476216b46248ba97")
   @@index([fk_user_id], map: "IDX_9d2936750a40b9b10b860c8f77")
@@ -484,7 +484,7 @@ model UserMeta {
   email_promotion    Boolean? @default(false)
   created_at         DateTime @default(now()) @db.Timestamptz(6)
   updated_at         DateTime @default(now()) @db.Timestamptz(6)
-  User               User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user               User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@index([fk_user_id], map: "user_meta_fk_user_id")
   @@map("user_meta")
@@ -500,7 +500,7 @@ model UserProfile {
   fk_user_id    String?  @unique @db.Uuid
   profile_links Json     @default("{}")
   about         String   @default("")
-  User          User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade)
+  user          User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade)
 
   @@index([fk_user_id], map: "user_profiles_fk_user_id")
   @@map("user_profiles")
@@ -513,7 +513,7 @@ model UserThumbnail {
   filesize   Int?
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
-  User       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@map("user_thumbnails")
 }
@@ -525,33 +525,33 @@ model User {
   created_at                                       DateTime              @default(now()) @db.Timestamptz(6)
   updated_at                                       DateTime              @default(now()) @db.Timestamptz(6)
   is_certified                                     Boolean?              @default(false)
-  AdminUser                                        AdminUser[]
-  AuthToken                                        AuthToken[]
-  Category                                         Category[]
-  Comment                                          Comment[]
-  EmailCert                                        EmailCert[]
-  Feed                                             Feed[]
-  FollowTag                                        FollowTag[]
+  adminUser                                        AdminUser[]
+  authToken                                        AuthToken[]
+  category                                         Category[]
+  comment                                          Comment[]
+  emailCert                                        EmailCert[]
+  feed                                             Feed[]
+  followTag                                        FollowTag[]
   follow_user_follow_user_fk_follow_user_idTousers FollowUser[]          @relation("follow_user_fk_follow_user_idTousers")
   follow_user_follow_user_fk_user_idTousers        FollowUser[]          @relation("follow_user_fk_user_idTousers")
-  PostImage                                        PostImage[]
-  PostLike                                         PostLike[]
-  PostReadLog                                      PostReadLog[]
-  PostRead                                         PostRead[]
-  PostScore                                        PostScore[]
-  Post                                             Post[]
-  Series                                           Series[]
-  SocialAccount                                    SocialAccount[]
-  UserImage                                        UserImage[]
-  UserImageCloudflare                              UserImageCloudflare[]
-  UserImageNext                                    UserImageNext[]
-  UserMeta                                         UserMeta[]
+  postImage                                        PostImage[]
+  postLike                                         PostLike[]
+  postReadLog                                      PostReadLog[]
+  postRead                                         PostRead[]
+  postScore                                        PostScore[]
+  post                                             Post[]
+  series                                           Series[]
+  socialAccount                                    SocialAccount[]
+  userImage                                        UserImage[]
+  userImageCloudflare                              UserImageCloudflare[]
+  userImageNext                                    UserImageNext[]
+  userMeta                                         UserMeta[]
 
-  UserThumbnail              UserThumbnail[]
-  VelogConfig                VelogConfig?
-  UrlSlugHistory             UrlSlugHistory[]
-  ExternalIntegration        ExternalIntegration[]
-  ExternalIntegrationHistory ExternalIntegrationHistory[]
+  userThumbnail              UserThumbnail[]
+  velogConfig                VelogConfig?
+  urlSlugHistory             UrlSlugHistory[]
+  externalIntegration        ExternalIntegration[]
+  externalIntegrationHistory ExternalIntegrationHistory[]
   userProfile                UserProfile?
 
   @@index([email], map: "users_email")
@@ -566,7 +566,7 @@ model VelogConfig {
   title      String?  @db.VarChar(255)
   logo_image String?  @db.VarChar(255)
   fk_user_id String   @unique(map: "REL_8b5be783e08f563452ec0c489e") @db.Uuid
-  User       User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_8b5be783e08f563452ec0c489e1")
+  user       User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_8b5be783e08f563452ec0c489e1")
 
   @@map("velog_configs")
 }
@@ -599,3 +599,4 @@ model ExternalIntegrationHistory {
   @@index([app_identifier])
   @@map("external_integration_histories")
 }
+
