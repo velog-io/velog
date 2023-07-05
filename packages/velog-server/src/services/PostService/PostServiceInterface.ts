@@ -24,17 +24,16 @@ export type GetPostsByTypeParams = {
 export type PostWith = Prisma.PostGetPayload<{
   include: {
     user?: true
-    Comment?: true
-    Feed?: true
-    PostCategory?: true
-    PostHistory?: true
-    PostImage?: true
-    PostLike?: true
-    PostRead?: true
-    PostReadLog?: true
-    PostScore?: true
-    PostTagLegacy?: true
-    SeriesPost?: true
+    feed?: true
+    postCategory?: true
+    postHistory?: true
+    postImage?: true
+    postLike?: true
+    postRead?: true
+    postReadLog?: true
+    postScore?: true
+    postTagLegacy?: true
+    seriesPost?: true
     UrlSlugHistory?: true
     postTags?: true
   }

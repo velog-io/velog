@@ -249,7 +249,11 @@ export class PostService implements PostServiceInterface {
           id,
         },
         include: {
-          user: true,
+          user: {
+            include: {
+              userProfile: true,
+            },
+          },
         },
       })
 
@@ -267,7 +271,11 @@ export class PostService implements PostServiceInterface {
         },
       },
       include: {
-        user: true,
+        user: {
+          include: {
+            userProfile: true,
+          },
+        },
       },
     })
 
@@ -282,7 +290,11 @@ export class PostService implements PostServiceInterface {
         include: {
           Post: {
             include: {
-              user: true,
+              user: {
+                include: {
+                  userProfile: true,
+                },
+              },
             },
           },
           User: true,
