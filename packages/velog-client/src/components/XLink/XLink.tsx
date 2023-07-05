@@ -5,8 +5,8 @@ const cx = bindClassNames(styles)
 
 type Props = {
   href: string
-  className: string
-  children: React.ReactNode
+  className?: string
+  children?: React.ReactNode
 }
 
 function XLink({ href, children, className = '' }: Props) {

@@ -3,6 +3,7 @@ import styles from './AuthSocialButtonGroup.module.css'
 import { AuthProvider } from '@/types/auth'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useMemo } from 'react'
+import useCurrentPath from '@/hooks/useCurrentPath'
 
 type Providers = { provider: AuthProvider; tabIndex: number }[]
 
@@ -13,13 +14,7 @@ const providers: Providers = [
 ]
 
 function AuthSocialButtonGroup() {
-  const pathname = usePathname()
-  const search = useSearchParams()
-
-  const currentPath = useMemo(() => {
-    const query = search.toString()
-    return `${pathname === '/' ? '' : pathname}${query ? `?${query}` : ''}`
-  }, [pathname, search])
+  const { currentPath } = useCurrentPath()
 
   return (
     <div className={styles.block}>
