@@ -16,12 +16,13 @@
   "type": "module",
   "scripts": {
     "prisma": "dotenv -e ./env/.env.development npx prisma",
+    "prisma:format": "tsx ./scripts/prismaFormatter.ts && pnpm prisma generate",
     "build": "tsc",
     "dev": "dotenv -e ./env/.env.development | nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
     "start": "node ./dist/main.js",
     "codegen": "graphql-codegen --config codegen.ts",
     "test": "jest",
-    "create-service": "tsx ./src/scripts/createService.ts"
+    "create-service": "tsx ./scripts/createService.ts"
   },
   "dependencies": {
     "@fastify/autoload": "^5.7.1",

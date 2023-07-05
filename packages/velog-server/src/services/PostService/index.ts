@@ -85,10 +85,10 @@ export class PostService implements PostServiceInterface {
       },
       take: limit,
       select: {
-        Post: true,
+        post: true,
       },
     })
-    return likes.map((like) => like.Post!)
+    return likes.map((like) => like.post!)
   }
   private async getPostsByRead(input: GetPostsByTypeParams) {
     const { cursor, userId, limit } = input
@@ -123,10 +123,10 @@ export class PostService implements PostServiceInterface {
       },
       take: limit,
       include: {
-        Post: true,
+        post: true,
       },
     })
-    return logs.map((log) => log.Post)
+    return logs.map((log) => log.post)
   }
   public async getRecentPosts(
     input: RecentPostsInput,
@@ -283,12 +283,12 @@ export class PostService implements PostServiceInterface {
       const fallbackPost = await this.db.urlSlugHistory.findFirst({
         where: {
           url_slug,
-          User: {
+          user: {
             username,
           },
         },
         include: {
-          Post: {
+          post: {
             include: {
               user: {
                 include: {
@@ -297,11 +297,11 @@ export class PostService implements PostServiceInterface {
               },
             },
           },
-          User: true,
+          user: true,
         },
       })
       if (fallbackPost) {
-        post = fallbackPost.Post!
+        post = fallbackPost.post!
       }
     }
     if (!post) return null
