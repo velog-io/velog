@@ -1,5 +1,7 @@
-import { User, UserProfile } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
-export type CurrentUser = User & {
-  profile: UserProfile
-}
+export type CurrentUser = Prisma.UserGetPayload<{
+  include: {
+    profile: true
+  }
+}>

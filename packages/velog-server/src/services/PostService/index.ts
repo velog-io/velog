@@ -251,7 +251,7 @@ export class PostService implements PostServiceInterface {
         include: {
           user: {
             include: {
-              userProfile: true,
+              profile: true,
             },
           },
         },
@@ -273,7 +273,7 @@ export class PostService implements PostServiceInterface {
       include: {
         user: {
           include: {
-            userProfile: true,
+            profile: true,
           },
         },
       },
@@ -292,7 +292,7 @@ export class PostService implements PostServiceInterface {
             include: {
               user: {
                 include: {
-                  userProfile: true,
+                  profile: true,
                 },
               },
             },

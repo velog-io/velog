@@ -2,19 +2,19 @@ import { Resolvers } from '@graphql/generated'
 import { container } from 'tsyringe'
 import { PostService } from '@services/PostService/index.js'
 import { UserService } from '@services/UserService/index.js'
-import { PostWith } from '@services/PostService/PostServiceInterface.js'
+import { PostAllInclude } from '@services/PostService/PostServiceInterface.js'
 import removeMd from 'remove-markdown'
 
 const postResolvers: Resolvers = {
   Post: {
-    user: async (parent: PostWith) => {
+    user: async (parent: PostAllInclude) => {
       if (!parent?.user) {
         const userService = container.resolve(UserService)
         return await userService.getCurrentUser(parent.fk_user_id)
       }
       return parent.user
     },
-    short_description: (parent: PostWith) => {
+    short_description: (parent: PostAllInclude) => {
       if (!parent.body) return ''
       if ((parent.meta as any)?.short_description) {
         return (parent.meta as any).short_description

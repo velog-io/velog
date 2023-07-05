@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES2022",                                      
+    "target": "ES2022",
     "module": "ES2022",
-    "lib": ["ES2022"], 
+    "lib": ["ES2022"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "moduleResolution": "Node",                   
-    "baseUrl": "./",                               
-    "paths": {                                     
+    "moduleResolution": "Node",
+    "baseUrl": "./",
+    "paths": {
       "@plugins/*": ["src/common/plugins/*"],
       "@constants/*": ["src/common/constants/*"],
       "@errors/*": ["src/common/errors/*"],
@@ -18,13 +18,10 @@
       "@lib/*": ["src/lib/*"],
       "@routes/*": ["src/routes/*"],
       "@services/*": ["src/services/*"]
-    },                                     
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
-    ],                                 
+    },
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "outDir": "./dist",
-    "esModuleInterop": true,   
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true

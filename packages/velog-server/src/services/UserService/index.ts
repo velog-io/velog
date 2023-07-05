@@ -33,18 +33,12 @@ export class UserService implements UserServiceInterface {
         id: userId,
       },
       include: {
-        userProfile: true,
+        profile: true,
       },
     })
-
     if (!user) return null
 
-    const { userProfile, ...rest } = user
-
-    return {
-      profile: userProfile!,
-      ...rest,
-    }
+    return user
   }
   async restoreToken(ctx: Pick<GraphQLContext, 'request' | 'reply'>): Promise<UserToken> {
     const refreshToken: string | undefined = ctx.request.cookies['refresh_token']

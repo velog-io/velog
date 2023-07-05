@@ -19,6 +19,10 @@ const tryGetSchema = (): string => {
   }
 }
 
+const tableAlias: Record<string, string> = {
+  UserProfile: 'profile',
+}
+
 const getNewSchema = (schema: string, models: string[]) =>
   lines(schema)
     .map((line) => {
@@ -29,10 +33,11 @@ const getNewSchema = (schema: string, models: string[]) =>
       const [column] = line.replace(/\s/gi, ',').split(',').filter(Boolean)
 
       if (!models.includes(column)) return line
-      const newLine = line.replace(column, toCamelCase(column))
+      const newColumn = tableAlias[column] ?? toCamelCase(column)
+      const newLine = line.replace(column, newColumn)
       return newLine
     })
-    .map((line: string, index, origin) => (index === origin.length - 1 ? line : `${line}\n`))
+    .map((line: string) => `${line}\n`)
     .join('')
 
 const tryWriteSchema = (schema: string) => {

@@ -21,9 +21,13 @@ export type GetPostsByTypeParams = {
   limit: number
 }
 
-export type PostWith = Prisma.PostGetPayload<{
+export type PostAllInclude = Prisma.PostGetPayload<{
   include: {
-    user?: true
+    user?: {
+      select: {
+        profile: true
+      }
+    }
     feed?: true
     postCategory?: true
     postHistory?: true
