@@ -10,13 +10,29 @@ type Props = {
   src: string
   alt: string
   className?: string
+  width: number
+  height: number
 }
 
-function RatioImage({ widthRatio, heightRatio, src, alt, className }: Props) {
+function RatioImage({
+  widthRatio,
+  heightRatio,
+  src,
+  alt,
+  className = '',
+  width,
+  height,
+}: Props) {
   const paddingTop = `${(heightRatio / widthRatio) * 100}%`
   return (
-    <div className={cx('block')} style={{ paddingTop }}>
-      <Image src={src} alt={alt} width={320} height={167} />
+    <div className={cx('block', className)} style={{ paddingTop }}>
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        priority={true}
+      />
     </div>
   )
 }

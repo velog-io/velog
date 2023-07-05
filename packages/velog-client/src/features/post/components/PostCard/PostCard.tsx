@@ -2,8 +2,6 @@ import { PartialPost } from '@/types/post'
 import styles from './PostCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 
-import { useRef } from 'react'
-import usePrefetchPost from '@/features/post/hooks/usePrefetchPost'
 import gtag from '@/lib/gtag'
 import Link from 'next/link'
 import RatioImage from '@/components/RatioImage/RatioImage'
@@ -11,6 +9,7 @@ import { formatDate } from '@/lib/utils'
 import Image from 'next/image'
 import { userThumbnail } from '@/public/images'
 import { LikeIcon } from '@/public/svg'
+import XLink from '@/components/XLink/XLink'
 
 const cx = bindClassNames(styles)
 
@@ -22,43 +21,19 @@ type Props = {
 
 async function PostCard({ post, forHome = false, forPost = false }: Props) {
   const url = `/@${post.user.username}/${post.url_slug}`
-
-  const prefetch = usePrefetchPost({
-    username: post.user.username,
-    url_slug: post.url_slug,
-  })
-
-  console.log('prefetch', prefetch)
-  const prefetchTimerId = useRef(-1)
-
-  const onMouseEnter = () => {
-    prefetchTimerId.current = window.setTimeout(() => {
-      prefetch // default from cache
-    }, 2000)
-  }
-
-  const onMouseLeave = () => {
-    if (prefetchTimerId.current) {
-      clearTimeout(prefetchTimerId.current)
-    }
-  }
-
   return (
-    <div
-      className={cx('block', { isNotHomeAndPost: !forHome && !forPost })}
-      onClick={() => {
-        gtag('event', 'recommend_click')
-      }}
-    >
+    <div className={cx('block', { isNotHomeAndPost: !forHome && !forPost })}>
       {post.thumbnail && (
-        <Link href={url} className={cx('styleLink')}>
+        <XLink href={url} className={cx('styleLink')}>
           <RatioImage
             widthRatio={1.916}
             heightRatio={1}
             src={post.thumbnail}
             alt={`${post.title} post`}
+            width={320}
+            height={167}
           />
-        </Link>
+        </XLink>
       )}
       <div className={cx('content')}>
         <Link href={url} className={cx('styleLink')}>

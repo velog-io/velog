@@ -320,7 +320,6 @@ export type RecentPostsQuery = {
     url_slug?: string
     released_at?: any
     updated_at: any
-    comments_count?: number
     is_private: boolean
     likes?: number
     user?: {
@@ -481,7 +480,6 @@ export const RecentPostsDocument = gql`
       url_slug
       released_at
       updated_at
-      comments_count
       is_private
       likes
     }

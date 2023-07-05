@@ -6,6 +6,7 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useState } from 'react'
 import useAdblockDetect from '@/hooks/useAdblockDetect'
 import PostCard from '@/features/post/components/PostCard/PostCard'
+import Link from 'next/link'
 
 const cx = bindClassNames(styles)
 
@@ -24,10 +25,10 @@ function PostCardGrid({
 }: Props) {
   const [adBlocked, setAdBlocked] = useState(false)
 
-  useAdblockDetect().then((detected) => {
-    if (!detected) return
-    setAdBlocked(true)
-  })
+  // useAdblockDetect().then((detected) => {
+  //   if (!detected) return
+  //   setAdBlocked(true)
+  // })
 
   return (
     <div className={cx('block')}>

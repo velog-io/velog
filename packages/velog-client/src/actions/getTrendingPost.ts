@@ -1,7 +1,6 @@
 import { TrendingPostsInput } from '@/graphql/generated'
 import { sdk } from '@/lib/sdk'
 import { PartialPost } from '@/types/post'
-import { useState } from 'react'
 
 export default async function getTrendingPosts({
   limit,
