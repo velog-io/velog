@@ -20,13 +20,15 @@ type Props = {
   forPost: boolean
 }
 
-function PostCard({ post, forHome = false, forPost = false }: Props) {
+async function PostCard({ post, forHome = false, forPost = false }: Props) {
   const url = `/@${post.user.username}/${post.url_slug}`
 
   const prefetch = usePrefetchPost({
     username: post.user.username,
     url_slug: post.url_slug,
   })
+
+  console.log('prefetch', prefetch)
   const prefetchTimerId = useRef(-1)
 
   const onMouseEnter = () => {

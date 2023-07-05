@@ -107,7 +107,6 @@ query recentPosts($input: RecentPostsInput!) {
     url_slug
     released_at
     updated_at
-    comments_count
     is_private
     likes
   }
@@ -136,7 +135,6 @@ query trendingPosts($input: TrendingPostsInput!) {
     url_slug
     released_at
     updated_at
-    comments_count
     is_private
   }
 }

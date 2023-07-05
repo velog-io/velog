@@ -18,11 +18,6 @@ async function TrendingPosts() {
     timeframe: 'week',
   })
 
-  data.forEach((d) => {
-    const { short_description, ...rest } = d
-    console.log(rest)
-  })
-
   return (
     <>
       <PostCardGrid

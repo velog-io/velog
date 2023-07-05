@@ -85,6 +85,7 @@ export type Post = {
   released_at?: Maybe<Scalars['Date']['output']>
   series?: Maybe<Series>
   short_description?: Maybe<Scalars['String']['output']>
+  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>
   thumbnail?: Maybe<Scalars['String']['output']>
   title?: Maybe<Scalars['String']['output']>
   updated_at: Scalars['Date']['output']
@@ -344,7 +345,6 @@ export type TrendingPostsQuery = {
     url_slug?: string
     released_at?: any
     updated_at: any
-    comments_count?: number
     is_private: boolean
     user?: {
       id: string
@@ -506,7 +506,6 @@ export const TrendingPostsDocument = gql`
       url_slug
       released_at
       updated_at
-      comments_count
       is_private
     }
   }
