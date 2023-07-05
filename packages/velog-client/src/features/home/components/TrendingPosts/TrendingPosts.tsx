@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 async function TrendingPosts() {
   const data = await getTrendingPosts({
-    limit: 2,
+    limit: 1,
     offset: 0,
     timeframe: 'week',
   })

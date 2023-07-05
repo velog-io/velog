@@ -11,9 +11,6 @@
   }
 
   .gray-block {
-    @media screen and (max-width: 768px) {
-      display: none;
-    }
     width: 216px;
     background: var(--bg-element2);
     padding: 24px;
@@ -21,6 +18,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    user-select: none;
+
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
 
     .image-wrapper {
       img {
@@ -43,6 +45,7 @@
     padding: 24px;
     display: flex;
     flex-direction: column;
+    user-select: none;
 
     @media screen and (max-width: 768px) {
       overflow-y: auto;

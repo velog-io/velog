@@ -1,10 +1,10 @@
-import Modal from '@/components/Modal/Modal'
 import styles from './AuthModal.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useModal } from '@/state/modal'
 import Image from 'next/image'
 import { MdClose } from 'react-icons/md'
-import AuthForm from '@/features/auth/components/AuthModal/AuthForm/AuthForm'
+import AuthForm from '@/features/auth/components/AuthModal/AuthForm'
+import Modal from '@/components/Modal'
 
 const cx = bindClassNames(styles)
 
