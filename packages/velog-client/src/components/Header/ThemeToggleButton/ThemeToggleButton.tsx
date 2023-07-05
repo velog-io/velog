@@ -1,9 +1,8 @@
 import { useToggleTheme } from '@/components/Header/hooks/useToggleTheme'
 import styles from './ThemeToggleButton.module.css'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MoonIcon, SunIcon } from '@/public/svg'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { useEffect } from 'react'
+import Image from 'next/image'
 
 const cx = bindClassNames(styles)
 
@@ -26,7 +25,12 @@ function ThemeToggleButton({}: Props) {
                 exit={{ scale: 0, rotate: 180, opacity: 0 }}
                 transition={{ reverse: true }}
               >
-                <MoonIcon />
+                <Image
+                  src="/svg/icon-moon.svg"
+                  alt="dark-theme"
+                  width={24}
+                  height={24}
+                />
               </motion.div>
             ) : (
               <motion.div
@@ -36,7 +40,12 @@ function ThemeToggleButton({}: Props) {
                 exit={{ scale: 1, rotate: 0, opacity: 1 }}
                 transition={{ reverse: true }}
               >
-                <SunIcon />
+                <Image
+                  src="/svg/icon-sun.svg"
+                  alt="light-theme"
+                  width={24}
+                  height={24}
+                />
               </motion.div>
             )}
           </div>

@@ -2,27 +2,20 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ['@svgr/webpack'],
-    })
-    return config
-  },
-  // experimental: {
-  //   turbo: {
-  //     rules: { '.svg': ['@svgr/webpack'] },
-  //   },
+  // webpack(config) {
+  //   config.module.rules.push({
+  //     test: /\.svg$/,
+  //     use: ['@svgr/webpack'],
+  //   })
+  //   return config
   // },
+  experimental: {
+    turbo: {
+      rules: { '.svg': ['@svgr/webpack'] },
+    },
+  },
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'velog.velcdn.com',
-        port: '',
-        pathname: '/images/**',
-      },
-    ],
+    domains: ['velog.velcdn.com', 'images.velog.io'],
   },
 }
 

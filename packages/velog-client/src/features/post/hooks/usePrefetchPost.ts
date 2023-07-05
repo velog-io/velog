@@ -4,9 +4,8 @@ import { useCallback } from 'react'
 
 export default function usePrefetchPost({ username, url_slug }: ReadPostInput) {
   return useCallback(() => {
-    const a = sdk.readPost({
+    sdk.readPost({
       input: { username, url_slug },
     })
-    console.log('a', a)
   }, [username, url_slug])
 }

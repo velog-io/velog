@@ -1,5 +1,5 @@
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import styles from './BasicLayout.module.css'
+import styles from './Skeleton.module.css'
 import Skeleton from '@/components/Skeleton/Skeleton'
 
 const cx = bindClassNames(styles)

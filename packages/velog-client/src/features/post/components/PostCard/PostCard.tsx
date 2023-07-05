@@ -8,8 +8,7 @@ import RatioImage from '@/components/RatioImage/RatioImage'
 import { formatDate } from '@/lib/utils'
 import Image from 'next/image'
 import { userThumbnail } from '@/public/images'
-import { LikeIcon } from '@/public/svg'
-import XLink from '@/components/XLink/XLink'
+import XLink from '@/components/XLink'
 
 const cx = bindClassNames(styles)
 
@@ -36,7 +35,7 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
         </XLink>
       )}
       <div className={cx('content')}>
-        <Link href={url} className={cx('styleLink')}>
+        <XLink href={url} className={cx('styleLink')}>
           <h4>{post.title}</h4>
           <div className={cx('descriptionWrapper')}>
             <p className={cx({ clamp: !!post.thumbnail })}>
@@ -44,7 +43,7 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
               {post.short_description.length === 150 && '...'}
             </p>
           </div>
-        </Link>
+        </XLink>
         <div className={cx('subInfo')}>
           <span>{formatDate(post.released_at)}</span>
           <span className={cx('separator')}>·</span>
@@ -52,7 +51,7 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
         </div>
       </div>
       <div className={cx('footer')}>
-        <Link className={cx('userInfo')} href={`/@${post.user.username}`}>
+        <XLink className={cx('userInfo')} href={`/@${post.user.username}`}>
           <Image
             src={post.user.profile.thumbnail || userThumbnail}
             alt={`user thumbnail of ${post.user.username}`}
@@ -62,9 +61,9 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
           <span>
             by <b>{post.user.username}</b>
           </span>
-        </Link>
+        </XLink>
         <div className={cx('likes')}>
-          <LikeIcon />
+          <Image src="/svg/icon-like.svg" alt="likes" width={12} height={12} />
           {post.likes}
         </div>
       </div>

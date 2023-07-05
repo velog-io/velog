@@ -1,6 +1,7 @@
 .block {
-  height: 4rem;
+  height: 64px;
   width: 100%;
+  flex-shrink: 0;
 
   .innerBlock {
     display: flex;

@@ -129,9 +129,8 @@
   .likes {
     display: flex;
     align-items: center;
-    svg {
-      width: 0.75rem;
-      height: 0.75rem;
+
+    img {
       margin-right: 0.5rem;
     }
   }

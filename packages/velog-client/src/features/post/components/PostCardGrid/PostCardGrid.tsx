@@ -1,12 +1,9 @@
-'use client'
-
 import { PartialPost } from '@/types/post'
 import styles from './PostCardGrid.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { useState } from 'react'
-import useAdblockDetect from '@/hooks/useAdblockDetect'
 import PostCard from '@/features/post/components/PostCard/PostCard'
-import Link from 'next/link'
+import { Suspense } from 'react'
+import { PostCardSkeleton } from '@/features/post/components/PostCard/PostCardSkeleton'
 
 const cx = bindClassNames(styles)
 
@@ -23,24 +20,22 @@ function PostCardGrid({
   forHome = false,
   forPost = false,
 }: Props) {
-  const [adBlocked, setAdBlocked] = useState(false)
-
-  // useAdblockDetect().then((detected) => {
-  //   if (!detected) return
-  //   setAdBlocked(true)
-  // })
-
   return (
     <div className={cx('block')}>
       {posts.map((post, i) => {
         if (!post) return null
         return (
-          <PostCard
+          <Suspense
             key={post.id}
-            post={post}
-            forHome={forHome}
-            forPost={forPost}
-          />
+            fallback={<PostCardSkeleton forHome={forHome} forPost={forPost} />}
+          >
+            <PostCard
+              key={post.id}
+              post={post}
+              forHome={forHome}
+              forPost={forPost}
+            />
+          </Suspense>
         )
       })}
     </div>

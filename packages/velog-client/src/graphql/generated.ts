@@ -216,7 +216,7 @@ export type UserProfile = {
   id: Scalars['ID']['output']
   profile_links: Scalars['JSON']['output']
   short_bio: Scalars['String']['output']
-  thumbnail: Scalars['String']['output']
+  thumbnail?: Maybe<Scalars['String']['output']>
   updated_at: Scalars['Date']['output']
 }
 
@@ -257,7 +257,7 @@ export type ReadPostQuery = {
       profile: {
         id: string
         display_name: string
-        thumbnail: string
+        thumbnail?: string
         short_bio: string
         profile_links: any
       }
@@ -273,7 +273,7 @@ export type ReadPostQuery = {
       user?: {
         id: string
         username: string
-        profile: { id: string; thumbnail: string }
+        profile: { id: string; thumbnail?: string }
       }
     }>
     series?: {
@@ -325,7 +325,7 @@ export type RecentPostsQuery = {
     user?: {
       id: string
       username: string
-      profile: { id: string; thumbnail: string }
+      profile: { id: string; thumbnail?: string }
     }
   }>
 }
@@ -348,7 +348,7 @@ export type TrendingPostsQuery = {
     user?: {
       id: string
       username: string
-      profile: { id: string; thumbnail: string }
+      profile: { id: string; thumbnail?: string }
     }
   }>
 }
@@ -360,7 +360,7 @@ export type CurrentUserQuery = {
     id: string
     username: string
     email: string
-    profile: { id: string; thumbnail: string; display_name: string }
+    profile: { id: string; thumbnail?: string; display_name: string }
   }
 }
 

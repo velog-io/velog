@@ -3,6 +3,7 @@ import { FacebookIcon, GithubIcon, GoogleIcon } from '@/public/svg'
 import { useMemo } from 'react'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { AuthProvider } from '@/types/auth'
+import Image from 'next/image'
 
 const cx = bindClassNames(styles)
 
@@ -15,24 +16,27 @@ type Props = {
 const providerMap = {
   github: {
     color: '#272e33',
-    icon: GithubIcon,
+    icon: '/svg/icon-github.svg',
     border: false,
+    alt: 'github-button',
   },
   google: {
     color: 'white',
-    icon: GoogleIcon,
+    icon: '/svg/icon-google.svg',
     border: true,
+    alt: 'google-button',
   },
   facebook: {
     color: '#3b5998',
-    icon: FacebookIcon,
+    icon: '/svg/icon-facebook.svg',
     border: false,
+    alt: 'facebook-button',
   },
 }
 
 function AuthSocialButton({ provider, tabIndex, currentPath }: Props) {
   const info = useMemo(() => providerMap[provider], [provider])
-  const { icon: Icon, color, border } = info
+  const { icon, color, border, alt } = info
 
   const host =
     process.env.NODE_ENV === 'production'
@@ -50,7 +54,7 @@ function AuthSocialButton({ provider, tabIndex, currentPath }: Props) {
         background: color,
       }}
     >
-      <Icon />
+      <Image src={icon} alt={alt} width={20} height={20} />
     </a>
   )
 }
