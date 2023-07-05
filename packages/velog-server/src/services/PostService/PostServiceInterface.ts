@@ -38,7 +38,8 @@ export type PostAllInclude = Prisma.PostGetPayload<{
     postScore?: true
     postTagLegacy?: true
     seriesPost?: true
-    UrlSlugHistory?: true
+    urlSlugHistory?: true
     postTags?: true
+    comment?: true
   }
 }>

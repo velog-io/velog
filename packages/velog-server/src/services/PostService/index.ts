@@ -10,10 +10,11 @@ import { DbService } from '@lib/db/DbService.js'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 
-import { GetPostsByTypeParams, PostServiceInterface } from './PostServiceInterface'
+import { GetPostsByTypeParams, PostAllInclude, PostServiceInterface } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { PostReadLogService } from '@services/PostReadLogService/index.js'
+import { ENV } from 'src/env.js'
 
 @injectable()
 @singleton()
@@ -23,14 +24,18 @@ export class PostService implements PostServiceInterface {
     private readonly cache: CacheService,
     private readonly utils: UtilsService
   ) {}
-  public async postsByIds(ids: string[]): Promise<Post[]> {
+  public async postsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]> {
     const posts = await this.db.post.findMany({
       where: {
         id: {
           in: ids,
         },
       },
+      include: {
+        ...(include || {}),
+      },
     })
+
     return posts
   }
   public async getReadingList(
@@ -232,13 +237,14 @@ export class PostService implements PostServiceInterface {
       `)) as { id: string; score: number }[]
 
       ids = rows.map((row) => row.id)
-      this.cache.lruCache.set(cacheKey, ids)
+      if (ENV.appEnv === 'production') {
+        this.cache.lruCache.set(cacheKey, ids)
+      }
     }
 
-    const posts = await this.postsByIds(ids)
-    const normalized = this.utils.normalize(posts)
+    const posts = await this.postsByIds(ids, { user: { include: { profile: true } } })
+    const normalized = this.utils.normalize<PostAllInclude>(posts)
     const ordered = ids.map((id) => normalized[id])
-
     return ordered
   }
   public async getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null> {

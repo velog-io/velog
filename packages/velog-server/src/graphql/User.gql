@@ -15,7 +15,7 @@ type UserProfile {
   id: ID!
   display_name: String!
   short_bio: String!
-  thumbnail: String!
+  thumbnail: String
   created_at: Date!
   updated_at: Date!
   about: String!

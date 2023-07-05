@@ -47,7 +47,9 @@ async function main() {
   ])
 
   const dirPath =
-    type === 'lib' ? path.resolve(__dirname, '../lib') : path.resolve(__dirname, `../services`)
+    type === 'lib'
+      ? path.resolve(__dirname, '../src/lib')
+      : path.resolve(__dirname, `../src/services`)
 
   const filename = answer.feature.trim()
 

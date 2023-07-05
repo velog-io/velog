@@ -4,11 +4,12 @@ import { PostService } from '@services/PostService/index.js'
 import { UserService } from '@services/UserService/index.js'
 import { PostAllInclude } from '@services/PostService/PostServiceInterface.js'
 import removeMd from 'remove-markdown'
+import { CommentService } from '@services/CommentService/index.js'
 
 const postResolvers: Resolvers = {
   Post: {
     user: async (parent: PostAllInclude) => {
-      if (!parent?.user) {
+      if (!parent.user) {
         const userService = container.resolve(UserService)
         return await userService.getCurrentUser(parent.fk_user_id)
       }
@@ -27,6 +28,12 @@ const postResolvers: Resolvers = {
           .slice(0, 500)
       )
       return removed.slice(0, 200) + (removed.length > 200 ? '...' : '')
+    },
+    comments_count: async (parent: PostAllInclude) => {
+      if (parent?.comment) return parent.comment.length
+      const commentService = container.resolve(CommentService)
+      const count = await commentService.count(parent.id)
+      return count
     },
   },
   Query: {

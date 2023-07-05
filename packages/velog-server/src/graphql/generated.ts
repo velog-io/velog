@@ -203,7 +203,7 @@ export type UserProfile = {
   id: Scalars['ID']['output']
   profile_links: Scalars['JSON']['output']
   short_bio: Scalars['String']['output']
-  thumbnail: Scalars['String']['output']
+  thumbnail?: Maybe<Scalars['String']['output']>
   updated_at: Scalars['Date']['output']
 }
 
@@ -607,7 +607,7 @@ export type UserProfileResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   profile_links?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>
   short_bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
