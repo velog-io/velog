@@ -599,4 +599,3 @@ model ExternalIntegrationHistory {
   @@index([app_identifier])
   @@map("external_integration_histories")
 }
-

@@ -32,7 +32,7 @@ const getNewSchema = (schema: string, models: string[]) =>
       const newLine = line.replace(column, toCamelCase(column))
       return newLine
     })
-    .map((line: string) => `${line}\n`)
+    .map((line: string, index, origin) => (index === origin.length - 1 ? line : `${line}\n`))
     .join('')
 
 const tryWriteSchema = (schema: string) => {
