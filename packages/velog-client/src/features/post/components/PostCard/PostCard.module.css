@@ -59,8 +59,8 @@
     margin-bottom: 0.25rem;
     line-height: 1.5;
     word-break: break-word;
-
     color: var(--text1);
+
     @media screen and (max-width: 767px) {
       white-space: initial;
     }
@@ -75,6 +75,7 @@
     overflow-wrap: break-word;
     font-size: 0.875rem;
     line-height: 1.5;
+
     &.clamp {
       height: 3.9375rem;
       display: -webkit-box;
@@ -83,6 +84,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     color: var(--text2);
     margin-bottom: 1.5rem;
   }
@@ -129,7 +131,7 @@
     display: flex;
     align-items: center;
 
-    img {
+    svg {
       margin-right: 0.5rem;
     }
   }

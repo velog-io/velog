@@ -9,6 +9,7 @@ import { formatDate } from '@/lib/utils'
 import Image from 'next/image'
 import { userThumbnail } from '@/public/images'
 import VLink from '@/components/VLink/VLink'
+import { IconLike } from '@/icons/svg'
 
 const cx = bindClassNames(styles)
 
@@ -63,7 +64,7 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
           </span>
         </VLink>
         <div className={cx('likes')}>
-          <Image src="/svg/icon-like.svg" alt="likes" width={12} height={12} />
+          <IconLike />
           {post.likes}
         </div>
       </div>

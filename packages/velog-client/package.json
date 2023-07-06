@@ -19,6 +19,7 @@
     "start": "next start",
     "lint": "next lint",
     "create-component": "tsx ./scripts/createComponent.ts",
+    "create-svg": "tsx ./scripts/createSvgComponent.ts",
     "codegen": "dotenv -e .env graphql-codegen --config codegen.ts -r dotenv/config"
   },
   "dependencies": {
@@ -45,6 +46,7 @@
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/typescript-graphql-request": "^5.0.0",
     "@graphql-codegen/typescript-operations": "^4.0.1",
+    "@svgr/cli": "^8.0.1",
     "@svgr/webpack": "^8.0.1",
     "@testing-library/react": "^14.0.0",
     "@types/inquirer": "^9.0.3",

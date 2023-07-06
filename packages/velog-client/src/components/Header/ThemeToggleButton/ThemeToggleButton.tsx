@@ -3,6 +3,7 @@ import styles from './ThemeToggleButton.module.css'
 import { motion, AnimatePresence } from 'framer-motion'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import Image from 'next/image'
+import { IconMoon, IconSun } from '@/icons/svg'
 
 const cx = bindClassNames(styles)
 
@@ -25,12 +26,7 @@ function ThemeToggleButton({}: Props) {
                 exit={{ scale: 0, rotate: 180, opacity: 0 }}
                 transition={{ reverse: true }}
               >
-                <Image
-                  src="/svg/icon-moon.svg"
-                  alt="dark-theme"
-                  width={24}
-                  height={24}
-                />
+                <IconMoon width={24} height={24} />
               </motion.div>
             ) : (
               <motion.div
@@ -40,12 +36,7 @@ function ThemeToggleButton({}: Props) {
                 exit={{ scale: 1, rotate: 0, opacity: 1 }}
                 transition={{ reverse: true }}
               >
-                <Image
-                  src="/svg/icon-sun.svg"
-                  alt="light-theme"
-                  width={24}
-                  height={24}
-                />
+                <IconSun width={24} height={24} />
               </motion.div>
             )}
           </div>
