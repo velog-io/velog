@@ -7,6 +7,7 @@ export default async function middleware(req: NextRequest) {
   const originRefreshToken = req.cookies.get('refresh_token')?.value
 
   if (!accessToken && originRefreshToken) {
+    const response = NextResponse.next()
     try {
       const endpoint = `${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql`
       const query = RestoreTokenDocument.loc?.source.body || ''
@@ -23,7 +24,6 @@ export default async function middleware(req: NextRequest) {
       const { restoreToken } = data
       const { refreshToken, accessToken } = restoreToken as UserToken
 
-      const response = NextResponse.next()
       const domains = ['.velog.io', undefined]
 
       domains.forEach((domain) => {
@@ -46,7 +46,9 @@ export default async function middleware(req: NextRequest) {
 
       return response
     } catch (e) {
-      throw new Error(String(e))
+      response.cookies.delete('access_token')
+      response.cookies.delete('refresh_token')
+      return response
     }
   }
 }

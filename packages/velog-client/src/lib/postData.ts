@@ -20,6 +20,10 @@ export default async function postData({
   })
 
   if (!res.ok) {
+    const errors = await res.json()
+    if (errors) {
+      console.error(errors[0]?.extensions?.description)
+    }
     throw new Error(res.statusText)
   }
 
