@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import styles from './Button.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import XLink from '@/components/XLink/XLink'
+import VLink from '@/components/VLink/VLink'
 
 type ButtonProps = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -44,7 +44,7 @@ function Button({
     />
   )
 
-  const WrapperComponent = to ? XLink : React.Fragment
+  const WrapperComponent = to ? VLink : React.Fragment
   return React.createElement(
     WrapperComponent,
     to ? { href: to } : null,

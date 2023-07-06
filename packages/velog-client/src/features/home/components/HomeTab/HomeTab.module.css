@@ -11,6 +11,7 @@
   align-items: center;
   position: relative;
   height: 3rem;
+  user-select: none;
 }
 
 .block {

@@ -14,7 +14,6 @@ import { GetPostsByTypeParams, PostAllInclude, PostServiceInterface } from './Po
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { PostReadLogService } from '@services/PostReadLogService/index.js'
-import { ENV } from 'src/env.js'
 
 @injectable()
 @singleton()
@@ -183,11 +182,14 @@ export class PostService implements PostServiceInterface {
         released_at: 'desc',
       },
       include: {
-        user: true,
+        user: {
+          include: {
+            profile: true,
+          },
+        },
       },
       take: limit,
     })
-
     return posts
   }
   public async getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]> {
@@ -237,9 +239,7 @@ export class PostService implements PostServiceInterface {
       `)) as { id: string; score: number }[]
 
       ids = rows.map((row) => row.id)
-      if (ENV.appEnv === 'production') {
-        this.cache.lruCache.set(cacheKey, ids)
-      }
+      this.cache.lruCache.set(cacheKey, ids)
     }
 
     const posts = await this.postsByIds(ids, { user: { include: { profile: true } } })

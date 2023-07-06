@@ -26,7 +26,7 @@ function PostCardGrid({
         if (!post) return null
         return (
           <Suspense
-            key={post.id}
+            key={i}
             fallback={<PostCardSkeleton forHome={forHome} forPost={forPost} />}
           >
             <PostCard

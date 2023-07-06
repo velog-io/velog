@@ -19,14 +19,12 @@ async function TrendingPosts() {
   })
 
   return (
-    <>
-      <PostCardGrid
-        posts={data || []}
-        forHome={true}
-        forPost={false}
-        loading={!data}
-      />
-    </>
+    <PostCardGrid
+      posts={data || []}
+      forHome={true}
+      forPost={false}
+      loading={!data}
+    />
   )
 }
 

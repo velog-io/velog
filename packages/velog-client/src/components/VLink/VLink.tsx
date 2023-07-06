@@ -1,4 +1,4 @@
-import styles from './XLink.module.css'
+import styles from './VLink.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 
 const cx = bindClassNames(styles)
@@ -9,7 +9,7 @@ type Props = {
   children?: React.ReactNode
 }
 
-function XLink({ href, children, className = '' }: Props) {
+function VLink({ href, children, className = '' }: Props) {
   const url = `${process.env.NEXT_PUBLIC_CLIENT_V2_HOST}${href}`
   return (
     <a href={url} className={cx('block', className)}>
@@ -18,4 +18,4 @@ function XLink({ href, children, className = '' }: Props) {
   )
 }
 
-export default XLink
+export default VLink

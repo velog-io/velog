@@ -1,8 +1,8 @@
-import XLink from './XLink'
+import VLink from './VLink'
 import { render, screen } from '@testing-library/react'
 
-describe('XLink', () => {
+describe('VLink', () => {
   it('renders successfully', () => {
-    render(<XLink />)
+    render(<VLink />)
   })
 })

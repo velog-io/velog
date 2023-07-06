@@ -322,6 +322,7 @@ export type RecentPostsQuery = {
     updated_at: any
     is_private: boolean
     likes?: number
+    comments_count?: number
     user?: {
       id: string
       username: string
@@ -345,6 +346,7 @@ export type TrendingPostsQuery = {
     released_at?: any
     updated_at: any
     is_private: boolean
+    comments_count?: number
     user?: {
       id: string
       username: string
@@ -482,6 +484,7 @@ export const RecentPostsDocument = gql`
       updated_at
       is_private
       likes
+      comments_count
     }
   }
 `
@@ -505,6 +508,7 @@ export const TrendingPostsDocument = gql`
       released_at
       updated_at
       is_private
+      comments_count
     }
   }
 `

@@ -8,7 +8,7 @@ import RatioImage from '@/components/RatioImage/RatioImage'
 import { formatDate } from '@/lib/utils'
 import Image from 'next/image'
 import { userThumbnail } from '@/public/images'
-import XLink from '@/components/XLink'
+import VLink from '@/components/VLink/VLink'
 
 const cx = bindClassNames(styles)
 
@@ -23,7 +23,7 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
   return (
     <div className={cx('block', { isNotHomeAndPost: !forHome && !forPost })}>
       {post.thumbnail && (
-        <XLink href={url} className={cx('styleLink')}>
+        <VLink href={url} className={cx('styleLink')}>
           <RatioImage
             widthRatio={1.916}
             heightRatio={1}
@@ -32,10 +32,10 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
             width={320}
             height={167}
           />
-        </XLink>
+        </VLink>
       )}
       <div className={cx('content')}>
-        <XLink href={url} className={cx('styleLink')}>
+        <VLink href={url} className={cx('styleLink')}>
           <h4>{post.title}</h4>
           <div className={cx('descriptionWrapper')}>
             <p className={cx({ clamp: !!post.thumbnail })}>
@@ -43,7 +43,7 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
               {post.short_description.length === 150 && '...'}
             </p>
           </div>
-        </XLink>
+        </VLink>
         <div className={cx('subInfo')}>
           <span>{formatDate(post.released_at)}</span>
           <span className={cx('separator')}>·</span>
@@ -51,7 +51,7 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
         </div>
       </div>
       <div className={cx('footer')}>
-        <XLink className={cx('userInfo')} href={`/@${post.user.username}`}>
+        <VLink className={cx('userInfo')} href={`/@${post.user.username}`}>
           <Image
             src={post.user.profile.thumbnail || userThumbnail}
             alt={`user thumbnail of ${post.user.username}`}
@@ -61,7 +61,7 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
           <span>
             by <b>{post.user.username}</b>
           </span>
-        </XLink>
+        </VLink>
         <div className={cx('likes')}>
           <Image src="/svg/icon-like.svg" alt="likes" width={12} height={12} />
           {post.likes}
