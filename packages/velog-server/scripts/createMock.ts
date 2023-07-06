@@ -31,10 +31,11 @@ class Seeder {
     return users
       .map((user) => posts.map((post) => ({ ...post, fk_user_id: user.id })))
       .flat()
-      .map((mockPost) => {
+      .map((mockPost, i) => {
         return this.db.post.create({
           data: {
             ...mockPost,
+            url_slug: `${mockPost.url_slug}${i * 11}`,
           },
         })
       })
@@ -64,18 +65,6 @@ class Seeder {
   }
 }
 
-function checkAppEnv(env: EnvVars) {
-  if (env.appEnv !== 'development') {
-    throw Error('Only Allow development environment')
-  }
-}
-
-function checkDatabaseUrl(env: EnvVars) {
-  if (env.databaseUrl.indexOf('localhost') < 0) {
-    throw new Error('Database host must be localhost')
-  }
-}
-
 async function main() {
   try {
     const db = new DbService()
@@ -92,6 +81,18 @@ async function main() {
     await Promise.all(createComments)
   } catch (error) {
     throw error
+  }
+}
+
+function checkAppEnv(env: EnvVars) {
+  if (env.appEnv !== 'development') {
+    throw Error('Only Allow development environment')
+  }
+}
+
+function checkDatabaseUrl(env: EnvVars) {
+  if (env.databaseUrl.indexOf('localhost') < 0) {
+    throw new Error('Database host must be localhost')
   }
 }
 
