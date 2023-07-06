@@ -212,3 +212,10 @@ body {
   max-width: 100%;
   min-height: 100vh;
 }
+
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}

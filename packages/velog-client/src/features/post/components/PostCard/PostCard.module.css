@@ -53,14 +53,13 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  h4 {
+  .h4 {
     font-size: 1rem;
     margin: 0;
     margin-bottom: 0.25rem;
     line-height: 1.5;
     word-break: break-word;
 
-    /* ${ellipsis} */
     color: var(--text1);
     @media screen and (max-width: 767px) {
       white-space: initial;

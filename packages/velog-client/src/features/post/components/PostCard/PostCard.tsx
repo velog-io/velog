@@ -36,7 +36,7 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
       )}
       <div className={cx('content')}>
         <VLink href={url} className={cx('styleLink')}>
-          <h4>{post.title}</h4>
+          <h4 className={cx('h4', 'ellipsis')}>{post.title}</h4>
           <div className={cx('descriptionWrapper')}>
             <p className={cx({ clamp: !!post.thumbnail })}>
               {post.short_description.replace(/&#x3A;/g, ':')}
