@@ -3,9 +3,8 @@ import type { SVGProps } from 'react'
 const SvgUndrawLoginV483 = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={528.717}
-    height={699.768}
     data-name="Layer 1"
+    viewBox="0 0 528.717 699.768"
     {...props}
   >
     <path fill="#535461" d="M0 17.063h444v657H0z" />

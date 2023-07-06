@@ -3,9 +3,8 @@ import type { SVGProps } from 'react'
 const SvgUndrawEmpty = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={1009.54}
-    height={789.93}
     data-name="Layer 1"
+    viewBox="0 0 1009.54 789.93"
     {...props}
   >
     <defs>

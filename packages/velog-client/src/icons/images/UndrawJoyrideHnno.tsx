@@ -3,9 +3,8 @@ import type { SVGProps } from 'react'
 const SvgUndrawJoyrideHnno = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={1068.79}
-    height={689.43}
     data-name="Layer 1"
+    viewBox="0 0 1068.79 689.43"
     {...props}
   >
     <path

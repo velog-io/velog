@@ -3,9 +3,8 @@ import type { SVGProps } from 'react'
 const SvgUndrawBugFixingOc7A = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={1022.7}
-    height={785.81}
     data-name="Layer 1"
+    viewBox="0 0 1022.7 785.81"
     {...props}
   >
     <defs>

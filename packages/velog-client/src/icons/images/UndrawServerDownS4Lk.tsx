@@ -3,9 +3,8 @@ import type { SVGProps } from 'react'
 const SvgUndrawServerDownS4Lk = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={1119.609}
-    height={699}
     data-name="Layer 1"
+    viewBox="0 0 1119.609 699"
     {...props}
   >
     <circle cx={292.609} cy={213} r={213} fill="#f2f2f2" />

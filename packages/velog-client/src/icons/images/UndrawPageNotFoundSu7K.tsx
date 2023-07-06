@@ -3,9 +3,8 @@ import type { SVGProps } from 'react'
 const SvgUndrawPageNotFoundSu7K = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={1074.392}
-    height={584.231}
     data-name="Layer 1"
+    viewBox="0 0 1074.392 584.231"
     {...props}
   >
     <ellipse cx={540.643} cy={549.309} fill="#f2f2f2" rx={527.5} ry={34.922} />

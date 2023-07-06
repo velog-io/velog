@@ -3,9 +3,8 @@ import type { SVGProps } from 'react'
 const SvgUndrawSearching = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={1104.469}
-    height={797.515}
     data-name="Layer 1"
+    viewBox="0 0 1104.469 797.515"
     {...props}
   >
     <path fill="#3f3d56" d="M959.049 388.464h9.832v388.345h-9.832z" />

@@ -3,9 +3,8 @@ import type { SVGProps } from 'react'
 const SvgSeriesThumbnail = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={368}
-    height={193}
     fill="none"
+    viewBox="0 0 368 193"
     {...props}
   >
     <path fill="#E9ECEF" d="M0 0h368v193H0z" />
