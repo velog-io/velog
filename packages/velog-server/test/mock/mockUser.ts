@@ -1,3 +1,4 @@
+export type MockUserWithProfileType = (typeof mockUserWithProfile)[0]
 export const mockUserWithProfile = [
   {
     username: 'velopert',

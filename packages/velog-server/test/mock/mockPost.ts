@@ -1,3 +1,4 @@
+export type MockPostsType = (typeof mockPosts)[0]
 export const mockPosts = [
   {
     title: '리액트 프로젝트에서 타입스크립트 사용하기',
@@ -17,40 +18,6 @@ export const mockPosts = [
     },
     is_private: false,
     released_at: '2019-09-27T05:04:47.242Z',
-    comment: [
-      {
-        text: '타입스크립트 공부중인데 너무너무 기대됩니다!!',
-        likes: 0,
-      },
-      {
-        text: '음? 넘나 기대되눈거 ㅠ',
-        likes: 210,
-      },
-      {
-        text: '잘 읽고 갑니다!',
-        likes: 0,
-      },
-      {
-        text: '현재 타입스크립트 공부중인데 기대되요~!!! 감ㅅㅏ합니다! ',
-        likes: 0,
-      },
-      {
-        text: '출퇴근길에 너무 재밌게 잘 읽습니다\n감사합니다! 😀😀',
-        likes: 0,
-      },
-      {
-        text: '타입스크립트 공부 시작해보겠습니다.\n언제나 양질의 컨텐츠 감사드려요 ^^',
-        likes: 0,
-      },
-      {
-        text: '이 글이 있어 정말 다행이다 싶습니다! 감사합니당 ㅎㅎ',
-        likes: 0,
-      },
-      {
-        text: '감사합니다 :)',
-        likes: 0,
-      },
-    ],
   },
   {
     title: 'Redux (3) 리덕스를 리액트와 함께 사용하기',

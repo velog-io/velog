@@ -39,4 +39,22 @@ export class UtilsService {
     })
     return object
   }
+  public shuffle<T>(array: T[]): T[] {
+    let currentIndex = array.length
+    let temporaryValue: T
+    let randomIndex: number
+
+    // 배열이 모두 섞일 때까지 반복
+    while (0 !== currentIndex) {
+      // 남은 요소 중에서 무작위 요소를 선택
+      randomIndex = Math.floor(Math.random() * currentIndex)
+      currentIndex -= 1
+
+      // 현재 요소와 선택한 요소를 교환
+      temporaryValue = array[currentIndex]
+      array[currentIndex] = array[randomIndex]
+      array[randomIndex] = temporaryValue
+    }
+    return array
+  }
 }
