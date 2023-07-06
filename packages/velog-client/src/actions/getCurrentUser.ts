@@ -3,13 +3,11 @@ import { sdk } from '@/lib/sdk'
 import { CurrentUser } from '@/types/user'
 import { cookies } from 'next/headers'
 
-export default async function getCurrentUser(): Promise<
-  CurrentUser | undefined
-> {
+export default async function getCurrentUser(): Promise<CurrentUser | null> {
   const accessToken = cookies().get('access_token')?.value
   const refreshToken = cookies().get('refresh_token')?.value
 
-  if (!accessToken && !refreshToken) return undefined
+  if (!accessToken && !refreshToken) return null
 
   if (accessToken) {
     graphQLClient.setHeader('authorization', `Bearer ${accessToken}`)

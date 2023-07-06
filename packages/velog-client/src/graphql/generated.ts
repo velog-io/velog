@@ -1,8 +1,8 @@
 import { GraphQLClient } from 'graphql-request'
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types'
 import gql from 'graphql-tag'
-export type Maybe<T> = T
-export type InputMaybe<T> = T
+export type Maybe<T> = T | null
+export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K]
 }
@@ -44,21 +44,21 @@ export type Scalars = {
 }
 
 export type Comment = {
-  created_at?: Maybe<Scalars['Date']['output']>
-  deleted?: Maybe<Scalars['Boolean']['output']>
-  has_replies?: Maybe<Scalars['Boolean']['output']>
+  created_at: Maybe<Scalars['Date']['output']>
+  deleted: Maybe<Scalars['Boolean']['output']>
+  has_replies: Maybe<Scalars['Boolean']['output']>
   id: Scalars['ID']['output']
-  level?: Maybe<Scalars['Int']['output']>
-  likes?: Maybe<Scalars['Int']['output']>
-  replies?: Maybe<Array<Maybe<Comment>>>
-  replies_count?: Maybe<Scalars['Int']['output']>
-  text?: Maybe<Scalars['String']['output']>
-  user?: Maybe<User>
+  level: Maybe<Scalars['Int']['output']>
+  likes: Maybe<Scalars['Int']['output']>
+  replies: Maybe<Array<Maybe<Comment>>>
+  replies_count: Maybe<Scalars['Int']['output']>
+  text: Maybe<Scalars['String']['output']>
+  user: Maybe<User>
 }
 
 export type LinkedPosts = {
-  next?: Maybe<Post>
-  previous?: Maybe<Post>
+  next: Maybe<Post>
+  previous: Maybe<Post>
 }
 
 export type Mutation = {
@@ -66,50 +66,50 @@ export type Mutation = {
 }
 
 export type Post = {
-  body?: Maybe<Scalars['String']['output']>
-  comments?: Maybe<Array<Maybe<Comment>>>
-  comments_count?: Maybe<Scalars['Int']['output']>
+  body: Maybe<Scalars['String']['output']>
+  comments: Maybe<Array<Maybe<Comment>>>
+  comments_count: Maybe<Scalars['Int']['output']>
   created_at: Scalars['Date']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
-  is_markdown?: Maybe<Scalars['Boolean']['output']>
+  is_markdown: Maybe<Scalars['Boolean']['output']>
   is_private: Scalars['Boolean']['output']
-  is_temp?: Maybe<Scalars['Boolean']['output']>
-  last_read_at?: Maybe<Scalars['Date']['output']>
-  liked?: Maybe<Scalars['Boolean']['output']>
-  likes?: Maybe<Scalars['Int']['output']>
-  linked_posts?: Maybe<LinkedPosts>
-  meta?: Maybe<Scalars['JSON']['output']>
-  original_post_id?: Maybe<Scalars['ID']['output']>
-  recommended_posts?: Maybe<Array<Maybe<Post>>>
-  released_at?: Maybe<Scalars['Date']['output']>
-  series?: Maybe<Series>
-  short_description?: Maybe<Scalars['String']['output']>
-  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>
-  thumbnail?: Maybe<Scalars['String']['output']>
-  title?: Maybe<Scalars['String']['output']>
+  is_temp: Maybe<Scalars['Boolean']['output']>
+  last_read_at: Maybe<Scalars['Date']['output']>
+  liked: Maybe<Scalars['Boolean']['output']>
+  likes: Maybe<Scalars['Int']['output']>
+  linked_posts: Maybe<LinkedPosts>
+  meta: Maybe<Scalars['JSON']['output']>
+  original_post_id: Maybe<Scalars['ID']['output']>
+  recommended_posts: Maybe<Array<Maybe<Post>>>
+  released_at: Maybe<Scalars['Date']['output']>
+  series: Maybe<Series>
+  short_description: Maybe<Scalars['String']['output']>
+  tags: Maybe<Array<Maybe<Scalars['String']['output']>>>
+  thumbnail: Maybe<Scalars['String']['output']>
+  title: Maybe<Scalars['String']['output']>
   updated_at: Scalars['Date']['output']
-  url_slug?: Maybe<Scalars['String']['output']>
-  user?: Maybe<User>
-  views?: Maybe<Scalars['Int']['output']>
+  url_slug: Maybe<Scalars['String']['output']>
+  user: Maybe<User>
+  views: Maybe<Scalars['Int']['output']>
 }
 
 export type PostHistory = {
-  body?: Maybe<Scalars['String']['output']>
-  created_at?: Maybe<Scalars['Date']['output']>
-  fk_post_id?: Maybe<Scalars['ID']['output']>
-  id?: Maybe<Scalars['ID']['output']>
-  is_markdown?: Maybe<Scalars['Boolean']['output']>
-  title?: Maybe<Scalars['String']['output']>
+  body: Maybe<Scalars['String']['output']>
+  created_at: Maybe<Scalars['Date']['output']>
+  fk_post_id: Maybe<Scalars['ID']['output']>
+  id: Maybe<Scalars['ID']['output']>
+  is_markdown: Maybe<Scalars['Boolean']['output']>
+  title: Maybe<Scalars['String']['output']>
 }
 
 export type Query = {
-  currentUser?: Maybe<User>
-  post?: Maybe<Post>
-  readingList?: Maybe<Array<Maybe<Post>>>
-  recentPosts?: Maybe<Array<Maybe<Post>>>
-  restoreToken?: Maybe<UserToken>
-  trendingPosts?: Maybe<Array<Maybe<Post>>>
+  currentUser: Maybe<User>
+  post: Maybe<Post>
+  readingList: Maybe<Array<Maybe<Post>>>
+  recentPosts: Maybe<Array<Maybe<Post>>>
+  restoreToken: Maybe<UserToken>
+  trendingPosts: Maybe<Array<Maybe<Post>>>
 }
 
 export type QueryPostArgs = {
@@ -129,19 +129,19 @@ export type QueryTrendingPostsArgs = {
 }
 
 export type ReadCountByDay = {
-  count?: Maybe<Scalars['Int']['output']>
-  day?: Maybe<Scalars['Date']['output']>
+  count: Maybe<Scalars['Int']['output']>
+  day: Maybe<Scalars['Date']['output']>
 }
 
 export type ReadPostInput = {
-  id?: InputMaybe<Scalars['ID']['input']>
-  url_slug?: InputMaybe<Scalars['String']['input']>
-  username?: InputMaybe<Scalars['String']['input']>
+  id: InputMaybe<Scalars['ID']['input']>
+  url_slug: InputMaybe<Scalars['String']['input']>
+  username: InputMaybe<Scalars['String']['input']>
 }
 
 export type ReadingListInput = {
-  cursor?: InputMaybe<Scalars['ID']['input']>
-  limit?: InputMaybe<Scalars['Int']['input']>
+  cursor: InputMaybe<Scalars['ID']['input']>
+  limit: InputMaybe<Scalars['Int']['input']>
   type: ReadingListOption
 }
 
@@ -151,43 +151,43 @@ export enum ReadingListOption {
 }
 
 export type RecentPostsInput = {
-  cursor?: InputMaybe<Scalars['ID']['input']>
-  limit?: InputMaybe<Scalars['Int']['input']>
+  cursor: InputMaybe<Scalars['ID']['input']>
+  limit: InputMaybe<Scalars['Int']['input']>
 }
 
 export type SearchResult = {
-  count?: Maybe<Scalars['Int']['output']>
+  count: Maybe<Scalars['Int']['output']>
   posts: Array<Post>
 }
 
 export type Series = {
-  created_at?: Maybe<Scalars['Date']['output']>
-  description?: Maybe<Scalars['String']['output']>
+  created_at: Maybe<Scalars['Date']['output']>
+  description: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
-  name?: Maybe<Scalars['String']['output']>
-  posts_count?: Maybe<Scalars['Int']['output']>
-  series_posts?: Maybe<Array<Maybe<SeriesPost>>>
-  thumbnail?: Maybe<Scalars['String']['output']>
-  updated_at?: Maybe<Scalars['Date']['output']>
-  url_slug?: Maybe<Scalars['String']['output']>
-  user?: Maybe<User>
+  name: Maybe<Scalars['String']['output']>
+  posts_count: Maybe<Scalars['Int']['output']>
+  series_posts: Maybe<Array<Maybe<SeriesPost>>>
+  thumbnail: Maybe<Scalars['String']['output']>
+  updated_at: Maybe<Scalars['Date']['output']>
+  url_slug: Maybe<Scalars['String']['output']>
+  user: Maybe<User>
 }
 
 export type SeriesPost = {
   id: Scalars['ID']['output']
-  index?: Maybe<Scalars['Int']['output']>
-  post?: Maybe<Post>
+  index: Maybe<Scalars['Int']['output']>
+  post: Maybe<Post>
 }
 
 export type Stats = {
-  count_by_day?: Maybe<Array<Maybe<ReadCountByDay>>>
-  total?: Maybe<Scalars['Int']['output']>
+  count_by_day: Maybe<Array<Maybe<ReadCountByDay>>>
+  total: Maybe<Scalars['Int']['output']>
 }
 
 export type TrendingPostsInput = {
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  timeframe?: InputMaybe<Scalars['String']['input']>
+  limit: InputMaybe<Scalars['Int']['input']>
+  offset: InputMaybe<Scalars['Int']['input']>
+  timeframe: InputMaybe<Scalars['String']['input']>
 }
 
 export type User = {
@@ -196,16 +196,16 @@ export type User = {
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
-  series_list?: Maybe<Array<Maybe<Series>>>
+  series_list: Maybe<Array<Maybe<Series>>>
   updated_at: Scalars['Date']['output']
-  user_meta?: Maybe<UserMeta>
+  user_meta: Maybe<UserMeta>
   username: Scalars['String']['output']
-  velog_config?: Maybe<VelogConfig>
+  velog_config: Maybe<VelogConfig>
 }
 
 export type UserMeta = {
-  email_notification?: Maybe<Scalars['Boolean']['output']>
-  email_promotion?: Maybe<Scalars['Boolean']['output']>
+  email_notification: Maybe<Scalars['Boolean']['output']>
+  email_promotion: Maybe<Scalars['Boolean']['output']>
   id: Scalars['ID']['output']
 }
 
@@ -216,7 +216,7 @@ export type UserProfile = {
   id: Scalars['ID']['output']
   profile_links: Scalars['JSON']['output']
   short_bio: Scalars['String']['output']
-  thumbnail?: Maybe<Scalars['String']['output']>
+  thumbnail: Maybe<Scalars['String']['output']>
   updated_at: Scalars['Date']['output']
 }
 
@@ -227,8 +227,8 @@ export type UserToken = {
 
 export type VelogConfig = {
   id: Scalars['ID']['output']
-  logo_image?: Maybe<Scalars['String']['output']>
-  title?: Maybe<Scalars['String']['output']>
+  logo_image: Maybe<Scalars['String']['output']>
+  title: Maybe<Scalars['String']['output']>
 }
 
 export type ReadPostQueryVariables = Exact<{
@@ -236,75 +236,75 @@ export type ReadPostQueryVariables = Exact<{
 }>
 
 export type ReadPostQuery = {
-  post?: {
+  post: {
     id: string
-    title?: string
-    released_at?: any
+    title: string | null
+    released_at: any | null
     updated_at: any
-    body?: string
-    short_description?: string
-    is_markdown?: boolean
+    body: string | null
+    short_description: string | null
+    is_markdown: boolean | null
     is_private: boolean
-    is_temp?: boolean
-    thumbnail?: string
-    comments_count?: number
-    url_slug?: string
-    likes?: number
-    liked?: boolean
-    user?: {
+    is_temp: boolean | null
+    thumbnail: string | null
+    comments_count: number | null
+    url_slug: string | null
+    likes: number | null
+    liked: boolean | null
+    user: {
       id: string
       username: string
       profile: {
         id: string
         display_name: string
-        thumbnail?: string
+        thumbnail: string | null
         short_bio: string
         profile_links: any
       }
-      velog_config?: { title?: string }
-    }
-    comments?: Array<{
+      velog_config: { title: string | null } | null
+    } | null
+    comments: Array<{
       id: string
-      text?: string
-      replies_count?: number
-      level?: number
-      created_at?: any
-      deleted?: boolean
-      user?: {
+      text: string | null
+      replies_count: number | null
+      level: number | null
+      created_at: any | null
+      deleted: boolean | null
+      user: {
         id: string
         username: string
-        profile: { id: string; thumbnail?: string }
-      }
-    }>
-    series?: {
+        profile: { id: string; thumbnail: string | null }
+      } | null
+    } | null> | null
+    series: {
       id: string
-      name?: string
-      url_slug?: string
-      series_posts?: Array<{
+      name: string | null
+      url_slug: string | null
+      series_posts: Array<{
         id: string
-        post?: {
+        post: {
           id: string
-          title?: string
-          url_slug?: string
-          user?: { id: string; username: string }
-        }
-      }>
-    }
-    linked_posts?: {
-      previous?: {
+          title: string | null
+          url_slug: string | null
+          user: { id: string; username: string } | null
+        } | null
+      } | null> | null
+    } | null
+    linked_posts: {
+      previous: {
         id: string
-        title?: string
-        url_slug?: string
-        user?: { id: string; username: string }
-      }
-      next?: {
+        title: string | null
+        url_slug: string | null
+        user: { id: string; username: string } | null
+      } | null
+      next: {
         id: string
-        title?: string
-        url_slug?: string
-        user?: { id: string; username: string }
-      }
-    }
-  }
+        title: string | null
+        url_slug: string | null
+        user: { id: string; username: string } | null
+      } | null
+    } | null
+  } | null
 }
 
 export type RecentPostsQueryVariables = Exact<{
@@ -312,23 +312,23 @@ export type RecentPostsQueryVariables = Exact<{
 }>
 
 export type RecentPostsQuery = {
-  recentPosts?: Array<{
+  recentPosts: Array<{
     id: string
-    title?: string
-    short_description?: string
-    thumbnail?: string
-    url_slug?: string
-    released_at?: any
+    title: string | null
+    short_description: string | null
+    thumbnail: string | null
+    url_slug: string | null
+    released_at: any | null
     updated_at: any
     is_private: boolean
-    likes?: number
-    comments_count?: number
-    user?: {
+    likes: number | null
+    comments_count: number | null
+    user: {
       id: string
       username: string
-      profile: { id: string; thumbnail?: string }
-    }
-  }>
+      profile: { id: string; thumbnail: string | null }
+    } | null
+  } | null> | null
 }
 
 export type TrendingPostsQueryVariables = Exact<{
@@ -336,40 +336,40 @@ export type TrendingPostsQueryVariables = Exact<{
 }>
 
 export type TrendingPostsQuery = {
-  trendingPosts?: Array<{
+  trendingPosts: Array<{
     id: string
-    title?: string
-    short_description?: string
-    thumbnail?: string
-    likes?: number
-    url_slug?: string
-    released_at?: any
+    title: string | null
+    short_description: string | null
+    thumbnail: string | null
+    likes: number | null
+    url_slug: string | null
+    released_at: any | null
     updated_at: any
     is_private: boolean
-    comments_count?: number
-    user?: {
+    comments_count: number | null
+    user: {
       id: string
       username: string
-      profile: { id: string; thumbnail?: string }
-    }
-  }>
+      profile: { id: string; thumbnail: string | null }
+    } | null
+  } | null> | null
 }
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
 
 export type CurrentUserQuery = {
-  currentUser?: {
+  currentUser: {
     id: string
     username: string
     email: string
-    profile: { id: string; thumbnail?: string; display_name: string }
-  }
+    profile: { id: string; thumbnail: string | null; display_name: string }
+  } | null
 }
 
 export type RestoreTokenQueryVariables = Exact<{ [key: string]: never }>
 
 export type RestoreTokenQuery = {
-  restoreToken?: { accessToken: string; refreshToken: string }
+  restoreToken: { accessToken: string; refreshToken: string } | null
 }
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never }>

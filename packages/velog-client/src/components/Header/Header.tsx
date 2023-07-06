@@ -18,7 +18,7 @@ import { CurrentUser } from '@/types/user'
 const cx = bindClassNames(styles)
 
 type Props = {
-  user?: CurrentUser
+  user: CurrentUser | null
 }
 
 function Header({ user }: Props) {
