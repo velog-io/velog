@@ -1,17 +1,16 @@
 import { TrendingPostsInput } from '@/graphql/generated'
 import { sdk } from '@/lib/sdk'
 import { Posts } from '@/types/post'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
-export default function useTrendingPosts(defaultPosts: Posts[] = []) {
+export default function useTrendingPosts() {
   const [loading, setLoading] = useState(false)
-  const [posts, setPosts] = useState<Posts[]>(defaultPosts)
-  const [hasPetched, setHasPetched] = useState(false)
+  const [posts, setPosts] = useState<Posts[]>([])
 
   const fetching = useCallback(
     async ({ limit, offset, timeframe }: TrendingPostsInput) => {
-      if (!hasPetched) return posts
       setLoading(true)
+
       const { trendingPosts } = await sdk.trendingPosts({
         input: { limit, offset, timeframe },
       })
@@ -21,12 +20,8 @@ export default function useTrendingPosts(defaultPosts: Posts[] = []) {
       }
       setLoading(false)
     },
-    [posts, hasPetched]
+    []
   )
-
-  useEffect(() => {
-    setHasPetched(true)
-  }, [])
 
   return { loading, posts, fetching }
 }

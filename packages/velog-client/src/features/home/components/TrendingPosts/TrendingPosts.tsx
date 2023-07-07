@@ -1,7 +1,7 @@
 'use client'
 
 import PostCardGrid from '@/features/post/components/PostCardGrid'
-import { useEffect } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { Posts } from '@/types/post'
 import { useTimeframeValue } from '@/features/home/state/timeframe'
 import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
@@ -12,9 +12,11 @@ type Props = {
 
 function TrendingPosts({ data }: Props) {
   const { timeframe } = useTimeframeValue()
-  const { loading, posts, fetching } = useTrendingPosts(data)
+  const { loading, posts, fetching } = useTrendingPosts()
+  const hasFetching = useRef<boolean>(false)
 
   useEffect(() => {
+    if (hasFetching) return
     fetching({
       limit: 24,
       offset: 0,
@@ -22,13 +24,19 @@ function TrendingPosts({ data }: Props) {
     })
   }, [timeframe, fetching])
 
+  useEffect(() => {
+    hasFetching.current = true
+  }, [])
+
   return (
-    <PostCardGrid
-      data={posts}
-      forHome={true}
-      forPost={false}
-      loading={loading}
-    />
+    <Suspense>
+      <PostCardGrid
+        data={[...data, ...posts]}
+        forHome={true}
+        forPost={false}
+        loading={loading}
+      />
+    </Suspense>
   )
 }
 

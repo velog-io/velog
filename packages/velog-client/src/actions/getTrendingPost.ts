@@ -3,7 +3,7 @@ import { sdk } from '@/lib/sdk'
 import { Posts } from '@/types/post'
 
 export default async function getTrendingPosts({
-  limit = 24,
+  limit = 5,
   offset = 0,
   timeframe = 'week',
 }: Partial<TrendingPostsInput> = {}) {
