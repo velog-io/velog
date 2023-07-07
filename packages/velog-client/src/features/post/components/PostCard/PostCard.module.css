@@ -130,6 +130,7 @@
   .likes {
     display: flex;
     align-items: center;
+    color: var(--text1);
     svg {
       width: 0.75rem;
       height: 0.75rem;
