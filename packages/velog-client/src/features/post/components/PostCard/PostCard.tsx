@@ -1,4 +1,4 @@
-import { PartialPost } from '@/types/post'
+import { Posts } from '@/types/post'
 import styles from './PostCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 
@@ -7,14 +7,14 @@ import Link from 'next/link'
 import RatioImage from '@/components/RatioImage/RatioImage'
 import { formatDate } from '@/lib/utils'
 import Image from 'next/image'
-import { userThumbnail } from '@/public/images'
+import { userThumbnail } from '@/assets/vectors/svg'
 import VLink from '@/components/VLink/VLink'
 import { IconLike } from '@/icons/svg'
 
 const cx = bindClassNames(styles)
 
 type Props = {
-  post: PartialPost
+  post: Posts
   forHome: boolean
   forPost: boolean
 }

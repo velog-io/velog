@@ -1,8 +1,6 @@
-import AuthSocialButton from '@/features/auth/components/AuthModal/AuthSocialButton/AuthSocialButton'
+import AuthSocialButton from '@/features/auth/components/AuthModal/AuthSocialButton'
 import styles from './AuthSocialButtonGroup.module.css'
 import { AuthProvider } from '@/types/auth'
-import { usePathname, useSearchParams } from 'next/navigation'
-import { useMemo } from 'react'
 import useCurrentPath from '@/hooks/useCurrentPath'
 
 type Providers = { provider: AuthProvider; tabIndex: number }[]

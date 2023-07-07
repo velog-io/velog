@@ -1,29 +1,33 @@
-import { Metadata } from 'next'
-import styles from './TrendingPosts.module.css'
-import { bindClassNames } from '@/lib/styles/bindClassNames'
-import getTrendingPosts from '@/actions/getTrendingPost'
-import { useTimeframe } from '@/features/home/state/timeframe'
-import PostCardGrid from '@/features/post/components/PostCardGrid/PostCardGrid'
+'use client'
 
-const cx = bindClassNames(styles)
+import PostCardGrid from '@/features/post/components/PostCardGrid'
+import { useEffect } from 'react'
+import { Posts } from '@/types/post'
+import { useTimeframeValue } from '@/features/home/state/timeframe'
+import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
 
-export const metadata: Metadata = {
-  alternates: { canonical: 'https://velog.io/' },
+type Props = {
+  data: Posts[]
 }
 
-async function TrendingPosts() {
-  const data = await getTrendingPosts({
-    limit: 12,
-    offset: 0,
-    timeframe: 'week',
-  })
+function TrendingPosts({ data }: Props) {
+  const { timeframe } = useTimeframeValue()
+  const { loading, posts, fetching } = useTrendingPosts(data)
+
+  useEffect(() => {
+    fetching({
+      limit: 24,
+      offset: 0,
+      timeframe,
+    })
+  }, [timeframe, fetching])
 
   return (
     <PostCardGrid
-      posts={data || []}
+      data={posts}
       forHome={true}
       forPost={false}
-      loading={!data}
+      loading={loading}
     />
   )
 }

@@ -15,6 +15,10 @@ const timeframeState = sangte(initialState, (prev) => ({
   },
 }))
 
+export function useTimeframeValue() {
+  return useSangteValue(timeframeState)
+}
+
 export function useTimeframe() {
   const value = useSangteValue(timeframeState)
   const actions = useSangteActions(timeframeState)

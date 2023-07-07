@@ -1,28 +1,28 @@
-import { PartialPost } from '@/types/post'
+import { Posts } from '@/types/post'
 import styles from './PostCardGrid.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import PostCard from '@/features/post/components/PostCard/PostCard'
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { PostCardSkeleton } from '@/features/post/components/PostCard/PostCardSkeleton'
 
 const cx = bindClassNames(styles)
 
 type Props = {
-  posts: (PartialPost | undefined)[]
-  loading?: boolean
+  data: Posts[]
   forHome: boolean
   forPost: boolean
+  loading?: boolean
 }
 
 function PostCardGrid({
-  posts,
-  loading,
+  data = [],
   forHome = false,
   forPost = false,
+  loading = false,
 }: Props) {
   return (
     <div className={cx('block')}>
-      {posts.map((post, i) => {
+      {data.map((post, i) => {
         if (!post) return null
         return (
           <Suspense
@@ -38,6 +38,12 @@ function PostCardGrid({
           </Suspense>
         )
       })}
+      {loading &&
+        Array(8)
+          .fill(0)
+          .map((_, i) => (
+            <PostCardSkeleton key={i} forHome={forHome} forPost={forPost} />
+          ))}
     </div>
   )
 }

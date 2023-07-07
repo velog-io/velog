@@ -1,8 +1,8 @@
 import { exec } from 'child_process'
 
 const commands = [
-  'npx @svgr/cli --out-dir src/icons/images --ignore-existing --typescript --no-dimensions -- public/images',
-  'npx @svgr/cli --out-dir src/icons/svg --ignore-existing --typescript --no-dimensions -- public/svg',
+  'npx @svgr/cli --out-dir src/assets/icons/components --ignore-existing --typescript --no-dimensions -- src/assets/icons/svg',
+  'npx @svgr/cli --out-dir src/assets/vectors/components --typescript --no-dimensions -- src/assets/vectors/svg',
 ]
 
 commands.forEach((commend) => {

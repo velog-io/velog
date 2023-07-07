@@ -41,7 +41,7 @@ export interface Comment {
 }
 
 // Post Type for PostList
-export type PartialPost = {
+export type Posts = {
   id: string
   title: string
   short_description: string
@@ -55,6 +55,7 @@ export type PartialPost = {
   comments_count: number
   likes: number
 }
+export type PartialPosts = Partial<Posts>
 
 export type SeriesPost = {
   id: string
@@ -138,12 +139,12 @@ export interface Stats {
 }
 
 export type GetTrendingPostsResponse = {
-  trendingPosts: PartialPost[]
+  trendingPosts: Posts[]
 }
 
 export type GetRecommendedPostResponse = {
   post: {
-    recommended_posts: PartialPost[]
+    recommended_posts: Posts[]
   }
 }
 
@@ -197,7 +198,7 @@ export type EditPostResult = {
 
 export type SearchPostsResponse = {
   searchPosts: {
-    posts: PartialPost[]
+    posts: Posts[]
     count: number
   }
 }
@@ -218,5 +219,5 @@ export type PostViewResponse = {
 }
 
 export type GetReadingListResponse = {
-  readingList: PartialPost[]
+  readingList: Posts[]
 }

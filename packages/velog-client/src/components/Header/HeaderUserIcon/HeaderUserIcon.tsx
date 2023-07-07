@@ -2,7 +2,7 @@ import { CurrentUser } from '@/types/user'
 import styles from './HeaderUserIcon.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import Image from 'next/image'
-import { userThumbnail } from '@/public/images'
+import { userThumbnail } from '@/assets/vectors/svg'
 import { MdArrowDropDown } from 'react-icons/md'
 
 const cx = bindClassNames(styles)

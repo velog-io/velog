@@ -2,10 +2,8 @@ import { useTimeframe } from '@/features/home/state/timeframe'
 import styles from './TimeframePicker.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import useOutsideClick from '@/hooks/useOutsideClick'
-import Link from 'next/link'
 import { timeframes } from '@/features/home/utils/timeframeMap'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
 
 const cx = bindClassNames(styles)
 
@@ -37,11 +35,11 @@ function TimeframePicker({ isVisible, onClose }: Props) {
               {timeframes.map(([value, text]) => (
                 <li
                   key={value}
+                  className={cx({ active: value === timeframe })}
                   onClick={() => {
                     actions.choose(value)
                     onClose()
                   }}
-                  className={cx({ active: value === timeframe })}
                 >
                   {text}
                 </li>

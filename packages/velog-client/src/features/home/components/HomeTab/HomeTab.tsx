@@ -4,8 +4,11 @@ import { usePathname } from 'next/navigation'
 import styles from './HomeTab.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import useToggle from '@/hooks/useToggle'
-import { useEffect, useRef } from 'react'
-import { useTimeframe } from '@/features/home/state/timeframe'
+import { useRef } from 'react'
+import {
+  useTimeframe,
+  useTimeframeValue,
+} from '@/features/home/state/timeframe'
 import ActiveLink from '@/components/ActiveLink/ActiveLink'
 import {
   MdAccessTime,
@@ -27,12 +30,8 @@ function HomeTab({}: Props) {
 
   const [moreButton, toggleMoreButton] = useToggle(false)
   const [timeframePicker, toggleTimeframePicker] = useToggle(false)
-  const headExtraRef = useRef<HTMLDivElement | null>(null)
   const timeframeRef = useRef<HTMLDivElement | null>(null)
-  const {
-    value: { timeframe },
-    actions: { choose },
-  } = useTimeframe()
+  const { timeframe } = useTimeframeValue()
 
   const isRecent = pathname === '/recent'
 

@@ -1,5 +1,5 @@
 import styles from './HeaderLogo.module.css'
-import { Logo as VelogIcon } from '@/public/svg'
+import { Logo as VelogIcon } from '@/assets/icons/svg'
 import Link from 'next/link'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import Image from 'next/image'

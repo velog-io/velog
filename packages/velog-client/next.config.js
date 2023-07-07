@@ -15,7 +15,7 @@ const nextConfig = {
     },
   },
   images: {
-    domains: ['velog.velcdn.com', 'images.velog.io'],
+    domains: ['velog.velcdn.com', 'images.velog.io', 'media.vlpt.us'],
   },
 }
 
