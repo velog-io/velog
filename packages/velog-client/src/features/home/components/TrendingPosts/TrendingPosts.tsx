@@ -5,6 +5,9 @@ import { Suspense, useEffect, useRef } from 'react'
 import { Posts } from '@/types/post'
 import { useTimeframeValue } from '@/features/home/state/timeframe'
 import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
+import useEffectOnce from '@/hooks/useEffectOnce'
+import { time } from 'console'
+import PostCardSkeletonGrid from '@/features/post/components/PostCardGrid/PostCardSkeletonGrid'
 
 type Props = {
   data: Posts[]
@@ -12,26 +15,28 @@ type Props = {
 
 function TrendingPosts({ data }: Props) {
   const { timeframe } = useTimeframeValue()
-  const { loading, posts, fetching } = useTrendingPosts()
-  const hasFetching = useRef<boolean>(false)
+  const { loading, posts, fetching, beforeTimeframe } = useTrendingPosts(data)
+  const hasFetchingPosts = useRef<boolean>(true)
 
   useEffect(() => {
-    if (hasFetching) return
-    fetching({
-      limit: 24,
-      offset: 0,
-      timeframe,
-    })
-  }, [timeframe, fetching])
-
-  useEffect(() => {
-    hasFetching.current = true
-  }, [])
+    if (hasFetchingPosts.current) {
+      hasFetchingPosts.current = false
+    } else {
+      if (beforeTimeframe === timeframe) return
+      fetching({
+        limit: 2,
+        offset: 0,
+        timeframe,
+      })
+    }
+  }, [fetching, timeframe, beforeTimeframe])
 
   return (
-    <Suspense>
+    <Suspense
+      fallback={<PostCardSkeletonGrid forHome={true} forPost={false} />}
+    >
       <PostCardGrid
-        data={[...data, ...posts]}
+        data={posts}
         forHome={true}
         forPost={false}
         loading={loading}

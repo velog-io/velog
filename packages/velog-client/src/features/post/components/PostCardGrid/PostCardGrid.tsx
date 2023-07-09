@@ -23,19 +23,13 @@ function PostCardGrid({
   return (
     <div className={cx('block')}>
       {data.map((post, i) => {
-        if (!post) return null
         return (
-          <Suspense
-            key={i}
-            fallback={<PostCardSkeleton forHome={forHome} forPost={forPost} />}
-          >
-            <PostCard
-              key={post.id}
-              post={post}
-              forHome={forHome}
-              forPost={forPost}
-            />
-          </Suspense>
+          <PostCard
+            key={`${post.id}+${i}`}
+            post={post}
+            forHome={forHome}
+            forPost={forPost}
+          />
         )
       })}
       {loading &&
