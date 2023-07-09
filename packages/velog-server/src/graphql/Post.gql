@@ -35,7 +35,7 @@ type Post {
   created_at: Date!
   updated_at: Date!
   is_private: Boolean!
-  released_at: String
+  released_at: Date
   user: User
   comments: [Comment]
   tags: [String]

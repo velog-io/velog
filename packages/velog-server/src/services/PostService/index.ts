@@ -192,7 +192,7 @@ export class PostService implements PostServiceInterface {
     })
     return posts
   }
-  public async getTrendingPosts(input: TrendingPostsInput, ip: string | null) {
+  public async getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]> {
     const { offset = 0, limit = 20, timeframe = 'month' } = input
     const timeframes: [string, number][] = [
       ['day', 1],
@@ -253,9 +253,7 @@ export class PostService implements PostServiceInterface {
     const posts = await this.postsByIds(ids, { user: { include: { profile: true } } })
 
     const normalized = this.utils.normalize<PostAllInclude>(posts)
-    const ordered = ids
-      .map((id) => normalized[id])
-      .map((post) => ({ ...post, released_at: String(post.released_at) }))
+    const ordered = ids.map((id) => normalized[id])
     return ordered
   }
   public async getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null> {

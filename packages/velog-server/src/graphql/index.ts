@@ -3,7 +3,7 @@ import { loadSchemaSync } from '@graphql-tools/load'
 import { mergeResolvers } from '@graphql-tools/merge'
 import { Resolvers } from '@graphql/generated'
 import { readdirSync } from 'fs'
-import { JSONResolver, DateResolver } from 'graphql-scalars'
+import { JSONResolver, DateTimeISOResolver } from 'graphql-scalars'
 import { IResolvers, MercuriusContext } from 'mercurius'
 import { basename, dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
@@ -31,7 +31,7 @@ export const resolvers = mergeResolvers(
   loadedResolver.concat([
     {
       JSON: JSONResolver,
-      Date: DateResolver,
+      Date: DateTimeISOResolver,
     },
   ])
 ) as IResolvers<any, MercuriusContext>
