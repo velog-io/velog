@@ -7,9 +7,9 @@ import Link from 'next/link'
 import RatioImage from '@/components/RatioImage/RatioImage'
 import { formatDate } from '@/lib/utils'
 import Image from 'next/image'
-import { userThumbnail } from '@/assets/vectors/svg'
+import userThumbnail from '@/assets/vectors/svg/user-thumbnail.png'
 import VLink from '@/components/VLink/VLink'
-import { IconLike } from '@/icons/svg'
+import { LikeIcon } from '@/assets/icons/components'
 
 const cx = bindClassNames(styles)
 
@@ -64,7 +64,7 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
           </span>
         </VLink>
         <div className={cx('likes')}>
-          <IconLike />
+          <LikeIcon />
           {post.likes}
         </div>
       </div>

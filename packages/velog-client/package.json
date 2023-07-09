@@ -19,7 +19,7 @@
     "start": "next start",
     "lint": "next lint",
     "create-component": "tsx ./scripts/createComponent.ts",
-    "create-svg": "tsx ./scripts/createSvgComponent.ts",
+    "create-svg-component": "tsx ./scripts/createSvgComponent.ts",
     "codegen": "dotenv -e .env graphql-codegen --config codegen.ts -r dotenv/config"
   },
   "dependencies": {

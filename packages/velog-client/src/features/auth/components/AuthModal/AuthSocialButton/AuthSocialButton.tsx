@@ -1,5 +1,5 @@
 import styles from './AuthSocialButton.module.css'
-import { FacebookIcon, GithubIcon, GoogleIcon } from '@/assets/icons/svg'
+import { FacebookIcon, GithubIcon, GoogleIcon } from '@/assets/icons/components'
 import { useMemo } from 'react'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { AuthProvider } from '@/types/auth'

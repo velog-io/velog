@@ -2,9 +2,7 @@ import { useToggleTheme } from '@/components/Header/hooks/useToggleTheme'
 import styles from './ThemeToggleButton.module.css'
 import { motion, AnimatePresence } from 'framer-motion'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import Image from 'next/image'
-import { IconMoon, IconSun } from '@/icons/svg'
-
+import { MoonIcon, SunIcon } from '@/assets/icons/components'
 const cx = bindClassNames(styles)
 
 type Props = {}
@@ -26,7 +24,7 @@ function ThemeToggleButton({}: Props) {
                 exit={{ scale: 0, rotate: 180, opacity: 0 }}
                 transition={{ reverse: true }}
               >
-                <IconMoon width={24} height={24} />
+                <MoonIcon width={24} height={24} />
               </motion.div>
             ) : (
               <motion.div
@@ -36,7 +34,7 @@ function ThemeToggleButton({}: Props) {
                 exit={{ scale: 1, rotate: 0, opacity: 1 }}
                 transition={{ reverse: true }}
               >
-                <IconSun width={24} height={24} />
+                <SunIcon width={24} height={24} />
               </motion.div>
             )}
           </div>
