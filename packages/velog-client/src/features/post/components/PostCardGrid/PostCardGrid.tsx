@@ -2,7 +2,6 @@ import { Posts } from '@/types/post'
 import styles from './PostCardGrid.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import PostCard from '@/features/post/components/PostCard/PostCard'
-import { Suspense, useEffect } from 'react'
 import { PostCardSkeleton } from '@/features/post/components/PostCard/PostCardSkeleton'
 
 const cx = bindClassNames(styles)

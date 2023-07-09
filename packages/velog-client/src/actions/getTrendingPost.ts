@@ -3,7 +3,7 @@ import { sdk } from '@/lib/sdk'
 import { Posts } from '@/types/post'
 
 export default async function getTrendingPosts({
-  limit = 20,
+  limit = 3,
   offset = 0,
   timeframe = process.env.NEXT_PUBLIC_DEFAULT_TIMEFRAME,
 }: Partial<TrendingPostsInput> = {}) {

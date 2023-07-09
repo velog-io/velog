@@ -1,11 +1,15 @@
 import distanceInWordsToNow from 'date-fns/formatDistanceToNow'
 import format from 'date-fns/format'
 import koLocale from 'date-fns/locale/ko'
+import { zonedTimeToUtc } from 'date-fns-tz'
+
+const formate = (data: Date) => format(data, 'yyyy-MM-dd HH:MM:SS')
 
 export const formatDate = (date: string): string => {
   const d = new Date(date)
-  const now = Date.now()
-  const diff = now - new Date(date).getTime()
+  const now = zonedTimeToUtc(new Date(), 'Asia/Seoul')
+  const diff = now.getTime() - d.getTime()
+
   // less than 5 minutes
   if (diff < 1000 * 60 * 5) {
     return '방금 전'

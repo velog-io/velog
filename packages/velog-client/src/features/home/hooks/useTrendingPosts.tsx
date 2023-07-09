@@ -1,8 +1,8 @@
-import { Timeframe, useTimeframeValue } from '@/features/home/state/timeframe'
+import { Timeframe } from '@/features/home/state/timeframe'
 
 import { sdk } from '@/lib/sdk'
 import { Posts } from '@/types/post'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 type TrendingPostsInput = {
   limit: number
@@ -14,9 +14,9 @@ if (!process.env.NEXT_PUBLIC_DEFAULT_TIMEFRAME) {
   throw new Error('please set default timeframe')
 }
 
-export default function useTrendingPosts(data: Posts[]) {
+export default function useTrendingPosts(intialPosts: Posts[]) {
   const [loading, setLoading] = useState(false)
-  const [posts, setPosts] = useState<Posts[]>(data)
+  const [posts, setPosts] = useState<Posts[]>(intialPosts)
   const [beforeSelectedTimeframe, setBeforeSelectedTimeframe] =
     useState<string>(process.env.NEXT_PUBLIC_DEFAULT_TIMEFRAME!)
 

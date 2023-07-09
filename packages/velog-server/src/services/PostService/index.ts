@@ -192,7 +192,7 @@ export class PostService implements PostServiceInterface {
     })
     return posts
   }
-  public async getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]> {
+  public async getTrendingPosts(input: TrendingPostsInput, ip: string | null) {
     const { offset = 0, limit = 20, timeframe = 'month' } = input
     const timeframes: [string, number][] = [
       ['day', 1],
@@ -227,7 +227,8 @@ export class PostService implements PostServiceInterface {
     if (cachedIds) {
       ids = cachedIds
     } else {
-      const rows = (await this.db.$queryRaw(Prisma.sql`
+      try {
+        const rows = (await this.db.$queryRaw(Prisma.sql`
         select posts.id, posts.title, SUM(score) as score from post_scores
         inner join posts on post_scores.fk_post_id = posts.id
         where post_scores.created_at > now() - interval '1 day' * ${selectedTimeframe[1]}
@@ -238,13 +239,23 @@ export class PostService implements PostServiceInterface {
         limit ${limit}
       `)) as { id: string; score: number }[]
 
-      ids = rows.map((row) => row.id)
-      this.cache.lruCache.set(cacheKey, ids)
+        ids = rows.map((row) => row.id)
+        this.cache.lruCache.set(cacheKey, ids)
+      } catch (error) {
+        console.log('input', input)
+        console.log('${selectedTimeframe[1]}', `${selectedTimeframe[1]}`)
+        console.log('${selectedTimeframe[1] * 1.5}', `${selectedTimeframe[1] * 1.5}`)
+        console.log(error)
+        return []
+      }
     }
 
     const posts = await this.postsByIds(ids, { user: { include: { profile: true } } })
+
     const normalized = this.utils.normalize<PostAllInclude>(posts)
-    const ordered = ids.map((id) => normalized[id])
+    const ordered = ids
+      .map((id) => normalized[id])
+      .map((post) => ({ ...post, released_at: String(post.released_at) }))
     return ordered
   }
   public async getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null> {

@@ -1,4 +1,4 @@
-import { ReadPostInput, getSdk, graphQLClient } from '@/graphql/generated'
+import { ReadPostInput } from '@/graphql/generated'
 import { sdk } from '@/lib/sdk'
 import { useCallback } from 'react'
 

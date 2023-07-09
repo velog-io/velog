@@ -23,7 +23,7 @@ function TrendingPosts({ data }: Props) {
     } else {
       if (beforeSelectedTimeframe === timeframe) return
       fetching({
-        limit: 20,
+        limit: 2,
         offset: 0,
         timeframe,
       })
