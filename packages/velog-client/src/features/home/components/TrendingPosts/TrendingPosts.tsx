@@ -5,8 +5,6 @@ import { Suspense, useEffect, useRef } from 'react'
 import { Posts } from '@/types/post'
 import { useTimeframeValue } from '@/features/home/state/timeframe'
 import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
-import useEffectOnce from '@/hooks/useEffectOnce'
-import { time } from 'console'
 import PostCardSkeletonGrid from '@/features/post/components/PostCardGrid/PostCardSkeletonGrid'
 
 type Props = {
@@ -15,21 +13,22 @@ type Props = {
 
 function TrendingPosts({ data }: Props) {
   const { timeframe } = useTimeframeValue()
-  const { loading, posts, fetching, beforeTimeframe } = useTrendingPosts(data)
+  const { loading, posts, fetching, beforeSelectedTimeframe } =
+    useTrendingPosts(data)
   const hasFetchingPosts = useRef<boolean>(true)
 
   useEffect(() => {
     if (hasFetchingPosts.current) {
       hasFetchingPosts.current = false
     } else {
-      if (beforeTimeframe === timeframe) return
+      if (beforeSelectedTimeframe === timeframe) return
       fetching({
-        limit: 2,
+        limit: 20,
         offset: 0,
         timeframe,
       })
     }
-  }, [fetching, timeframe, beforeTimeframe])
+  }, [fetching, timeframe, beforeSelectedTimeframe])
 
   return (
     <Suspense

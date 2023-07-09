@@ -18,9 +18,7 @@ export default async function Home({ children }: Props) {
   return (
     <>
       {children}
-      <Suspense>
-        <TrendingPosts data={data} />
-      </Suspense>
+      <TrendingPosts data={data} />
     </>
   )
 }
