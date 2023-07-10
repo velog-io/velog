@@ -1,12 +1,12 @@
 type Parameter = {
-  url: string
+  url?: string
   body?: Record<string, any>
   headers?: HeadersInit
   init?: Omit<RequestInit, 'body' | 'headers'>
 }
 
 export default async function postData({
-  url,
+  url = `${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql`,
   body,
   headers,
   ...init
@@ -24,6 +24,7 @@ export default async function postData({
     if (errors) {
       console.error(errors[0]?.extensions?.description)
     }
+
     throw new Error(res.statusText)
   }
 

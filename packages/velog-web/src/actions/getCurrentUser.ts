@@ -1,22 +1,39 @@
-import { getSdk, graphQLClient } from '@/graphql/generated'
-import { sdk } from '@/lib/sdk'
+import { CurrentUserDocument } from '@/graphql/generated'
+import postData from '@/lib/postData'
 import { CurrentUser } from '@/types/user'
 import { cookies } from 'next/headers'
 
 export default async function getCurrentUser(): Promise<CurrentUser | null> {
-  const accessToken = cookies().get('access_token')?.value
-  const refreshToken = cookies().get('refresh_token')?.value
+  try {
+    const accessToken = cookies().get('access_token')?.value
+    const refreshToken = cookies().get('refresh_token')?.value
 
-  if (!accessToken && !refreshToken) return null
+    if (!accessToken && !refreshToken) return null
 
-  if (accessToken) {
-    graphQLClient.setHeader('authorization', `Bearer ${accessToken}`)
+    const headers = {}
+    if (accessToken) {
+      Object.assign(headers, { authorization: `Bearer ${accessToken}` })
+    }
+
+    if (refreshToken) {
+      Object.assign(headers, { Cookie: `refresh_token=${refreshToken}` })
+    }
+
+    const body = {
+      operationName: 'currentUser',
+      query: CurrentUserDocument.loc?.source.body,
+    }
+
+    const {
+      data: { currentUser },
+    } = await postData({
+      body,
+      headers,
+    })
+
+    return currentUser
+  } catch (error) {
+    console.log('getCurrent User error', error)
+    return null
   }
-
-  if (refreshToken) {
-    graphQLClient.setHeader('Cookie', `refresh_token=${refreshToken}`)
-  }
-
-  const { currentUser } = await sdk.currentUser()
-  return currentUser
 }

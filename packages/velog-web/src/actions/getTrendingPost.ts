@@ -1,5 +1,5 @@
-import { TrendingPostsInput } from '@/graphql/generated'
-import { sdk } from '@/lib/sdk'
+import { TrendingPostsDocument, TrendingPostsInput } from '@/graphql/generated'
+import postData from '@/lib/postData'
 import { Posts } from '@/types/post'
 
 export default async function getTrendingPosts({
@@ -7,11 +7,30 @@ export default async function getTrendingPosts({
   offset = 0,
   timeframe = process.env.NEXT_PUBLIC_DEFAULT_TIMEFRAME,
 }: Partial<TrendingPostsInput> = {}) {
-  const { trendingPosts } = await sdk.trendingPosts({
-    input: { limit, offset, timeframe },
-  })
+  try {
+    const body = {
+      operationName: 'trendingPosts',
+      query: TrendingPostsDocument.loc?.source.body,
+      variables: {
+        input: {
+          limit,
+          offset,
+          timeframe,
+        },
+      },
+    }
 
-  if (!trendingPosts) return []
+    const {
+      data: { trendingPosts },
+    } = await postData({
+      body,
+    })
 
-  return trendingPosts as Posts[]
+    if (!trendingPosts) return []
+
+    return trendingPosts as Posts[]
+  } catch (error) {
+    console.log('getTrendingPosts error', error)
+    return []
+  }
 }
