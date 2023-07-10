@@ -27,6 +27,6 @@
       "@/public/*": ["./public/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "public/*", "src/assets/icons/svg", "src/assets/vectors/svg"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "public/*", "src/assets/icons/svg", "src/assets/vectors/svg", "src/hooks/useToggle.ts"],
   "exclude": ["node_modules"]
 }
