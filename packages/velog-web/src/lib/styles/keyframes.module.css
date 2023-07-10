@@ -1,0 +1,70 @@
+.fadeIn {
+  animation-name: fade-in;
+  animation-duration: 0.25s;
+  animation-fill-mode: forwards;
+}
+
+.fadeOut {
+  animation-name: fade-out;
+  animation-duration: 0.25s;
+  animation-fill-mode: forwards;
+}
+
+.popInFromBottom {
+  animation-name: pop-in-from-bottom;
+  animation-duration: 0.4s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+  /* animation: popInFromBottom 0.4s forwards ease-in-out; */
+}
+
+.popOutToBottom {
+  animation-name: pop-out-to-Bottom;
+  animation-duration: 0.2s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes pop-in-from-bottom {
+  0% {
+    opacity: 0;
+    transform: translateY(400px) scale(0.75);
+  }
+  75% {
+    opacity: 1;
+    transform: translateY(-16px) scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+@keyframes pop-out-to-Bottom {
+  0% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(400px) scale(0.75);
+  }
+}

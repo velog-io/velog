@@ -1,0 +1,28 @@
+.block {
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 0.25rem;
+  position: relative;
+
+  &:hover {
+    background: var(--slight-layer);
+  }
+
+  .positional {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    .svgWrapper {
+      color: var(--text1);
+      svg {
+        display: block;
+      }
+    }
+  }
+}

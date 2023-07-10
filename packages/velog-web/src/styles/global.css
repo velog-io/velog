@@ -1,0 +1,221 @@
+:root {
+  --element-height-md: 40px;
+  --element-height-sm: 36px;
+  --border-radius-md: 6px;
+
+  /* from pallett */
+  /* teal */
+  --teal0: #f3fffb;
+  --teal1: #c3fae8;
+  --teal2: #96f2d7;
+  --teal3: #63e6be;
+  --teal4: #38d9a9;
+  --teal5: #20c997;
+  --teal6: #12b886;
+  --eal7: #0ca678;
+  --teal8: #099268;
+  --teal9: #087f5b;
+  /* gray */
+  --gray0: #f8f9fa;
+  --gray1: #f1f3f5;
+  --gray2: #e9ecef;
+  --gray3: #dee2e6;
+  --gray4: #ced4da;
+  --gray5: #adb5bd;
+  --gray6: #868e96;
+  --gray7: #495057;
+  --gray8: #343a40;
+  --gray9: #212529;
+  /* red */
+  --red0: #fff5f5;
+  --red1: #ffe3e3;
+  --red2: #ffc9c9;
+  --red3: #ffa8a8;
+  --red4: #ff8787;
+  --red5: #ff6b6b;
+  --red6: #fa5252;
+  --red7: #f03e3e;
+  --red8: #e03131;
+  --red9: #c92a2a;
+}
+
+[data-theme='dark'] {
+  /* added */
+  --background-base: #212121;
+  --background1: #323232;
+  --background2: #3c3c3c;
+  --background3: #494949;
+  --background4: #565656;
+  --background-invert: #f0f0f0;
+  --background-altbase: #212121;
+  --accent1: #f0f0f0;
+  --accent2: #c2c2c2;
+  --accent3: #999999;
+  --accent4: #707070;
+  --accent-invert: #121212;
+  --border1: #c9c9c9;
+  --border2: #808080;
+  --border3: #3d3d3d;
+  --primary: #80deea;
+  --emphasize: #ffb74d;
+  --destructive: #ef9a9a;
+  --overlay: rgba(255, 255, 255, 0.08);
+
+  /* default */
+  --bg-page1: #121212;
+  --bg-page2: #121212;
+  --bg-element1: #1e1e1e;
+  --bg-element2: #1e1e1e;
+  --bg-element3: #252525;
+  --bg-element4: #2e2e2e;
+  --bg-element5: #f1f3f5;
+  --bg-element6: #f8f9fa;
+  --bg-element7: #252525;
+  --bg-element8: #0c0c0c;
+  --bg-invert: #ffffff;
+  --bg-inline-code: #363636;
+  --bg-tag: #252525;
+  --text1: #ececec;
+  --text2: #d9d9d9;
+  --text3: #acacac;
+  --text4: #595959;
+  --border1: #e0e0e0;
+  --border2: #a0a0a0;
+  --border3: #4d4d4d;
+  --border4: #2a2a2a;
+  --primary1: #96f2d7;
+  --primary2: #63e6be;
+  --destructive1: #ffc9c9;
+  --destructive2: #ffa8a8;
+  --button-text: #121212;
+
+  --slight-layer: rgba(255, 255, 255, 0.1);
+  --opaque-layer: rgba(0, 0, 0, 0.85);
+  --editor-footer: #2e2e2e;
+
+  --prism-bg: #1e1e1e;
+  --prism-default-text: #e0e6f1;
+  --prism-selection-bg: #383e49;
+  --prism-code-block-bg: #1e1e1e;
+  --prism-code-1: #7c858d;
+  --prism-code-2: #abb2bf;
+  --prism-code-3: #e06c75;
+  --prism-code-4: #d19a66;
+  --prism-code-5: #98c379;
+  --prism-code-6: #56b6c2;
+  --prism-code-7: #c678dd;
+  --prism-code-8: #61afef;
+  --prism-code-9: #c678dd;
+  --prism-line-number: #5c6370;
+}
+
+[data-theme='light'] {
+  /* added */
+  --background-base: #ffffff;
+  --background1: #ffffff;
+  --background2: #f5f5f5;
+  --background3: #ebebeb;
+  --background4: #e0e0e0;
+  --background-invert: #212121;
+  --background-altbase: #f5f5f5;
+  --accent1: #121212;
+  --accent2: #4a4a4a;
+  --accent3: #898989;
+  --accent4: #c0c0c0;
+  --accent-invert: #ffffff;
+  --border1: #808080;
+  --border2: #c0c0c0;
+  --border3: #f1f1f1;
+  --primary: #00bcd4;
+  --emphasize: #ff9800;
+  --destructive: #f44336;
+  --overlay: rgba(33, 33, 33, 0.08);
+
+  /* default */
+  --bg-page1: #f8f9fa;
+  --bg-page2: #ffffff;
+  --bg-element1: #ffffff;
+  --bg-element2: #f8f9fa;
+  --bg-element3: #e9ecef;
+  --bg-element4: #dee2e6;
+  --bg-element5: #212529;
+  --bg-element6: #343a40;
+  --bg-element7: #ffffff;
+  --bg-element8: #fbfdfc;
+  --bg-invert: #1e1e1e;
+  --bg-inline-code: #e9ecef;
+  --bg-tag: #f8f9fa;
+
+  --text1: #212529;
+  --text2: #495057;
+  --text3: #868e96;
+  --text4: #ced4da;
+  --border1: #343a40;
+  --border2: #adb5bd;
+  --border3: #dee2e6;
+  --border4: #f1f3f5;
+  --primary1: #12b886;
+  --primary2: #20c997;
+  --destructive1: #ff6b6b;
+  --destructive2: #ff8787;
+  --button-text: #ffffff;
+
+  --slight-layer: rgba(0, 0, 0, 0.05);
+  --opaque-layer: rgba(249, 249, 249, 0.85);
+  --editor-footer: #ffffff;
+
+  --prism-bg: #fbfcfd;
+  --prism-default-text: #24292e;
+  --prism-selection-bg: rgba(0, 0, 0, 0.15);
+  --prism-code-block-bg: #fbfcfd;
+  --prism-code-1: #969896;
+  --prism-code-2: #24292e;
+  --prism-code-3: #a626a4;
+  --prism-code-4: #63a35c;
+  --prism-code-5: #0184bc;
+  --prism-code-6: #50a14f;
+  --prism-code-7: #a626a4;
+  --prism-code-8: #005cc5;
+  --prism-code-9: #a626a4;
+  --prism-line-number: #585c63;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue',
+    'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', 나눔고딕,
+    'Nanum Gothic', 'Noto Sans KR', 'Noto Sans CJK KR', arial, 돋움, Dotum,
+    Tahoma, Geneva, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: inherit;
+}
+
+code {
+  font-family: 'Fira Mono', source-code-pro, Menlo, Monaco, Consolas,
+    'Courier New', monospace;
+}
+
+input,
+button,
+textarea {
+  font-family: inherit;
+}
+
+html,
+body {
+  max-width: 100%;
+  min-height: 100vh;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}

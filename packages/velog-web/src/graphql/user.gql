@@ -1,0 +1,23 @@
+query currentUser {
+  currentUser {
+    id
+    username
+    email
+    profile {
+      id
+      thumbnail
+      display_name
+    }
+  }
+}
+
+query restoreToken {
+  restoreToken {
+    accessToken
+    refreshToken
+  }
+}
+
+mutation logout {
+  logout
+}
