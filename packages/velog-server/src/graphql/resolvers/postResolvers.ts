@@ -37,7 +37,7 @@ const postResolvers: Resolvers = {
     },
   },
   Query: {
-    post: async (_, { input }, ctx) => {
+    post: (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
       return postService.getPost(input, ctx.user?.id)
     },
@@ -45,7 +45,7 @@ const postResolvers: Resolvers = {
       const postService = container.resolve(PostService)
       return postService.getRecentPosts(input, ctx.user?.id)
     },
-    trendingPosts: async (_, { input }, ctx) => {
+    trendingPosts: (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
       return postService.getTrendingPosts(input, ctx.ip)
     },
