@@ -37,21 +37,21 @@ const postResolvers: Resolvers = {
     },
   },
   Query: {
-    post: (_, { input }, ctx) => {
+    post: async (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
-      return postService.getPost(input, ctx.user?.id)
+      return await postService.getPost(input, ctx.user?.id)
     },
     recentPosts: async (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
-      return postService.getRecentPosts(input, ctx.user?.id)
+      return await postService.getRecentPosts(input, ctx.user?.id)
     },
-    trendingPosts: (_, { input }, ctx) => {
+    trendingPosts: async (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
-      return postService.getTrendingPosts(input, ctx.ip)
+      return await postService.getTrendingPosts(input, ctx.ip)
     },
     readingList: async (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
-      return postService.getReadingList(input, ctx.user?.id)
+      return await postService.getReadingList(input, ctx.user?.id)
     },
   },
 }
