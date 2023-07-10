@@ -9,31 +9,20 @@ const config: CodegenConfig = {
   },
   generates: {
     'src/graphql/generated.ts': {
+      documents: 'string',
       config: {
         skipTypename: true,
         avoidOptionals: true,
         maybeValue: 'T | null',
         inputMaybeValue: 'T | undefined',
+        fetcher: {
+          endpoint: `${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql`,
+        },
       },
       plugins: [
         'typescript',
         '@graphql-codegen/typescript-operations',
-        '@graphql-codegen/typescript-graphql-request',
-        {
-          add: {
-            content: `
-            export const graphQLClient = new GraphQLClient(
-              '${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql',
-              {
-                credentials: 'include',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              }
-            )
-            `,
-          },
-        },
+        '@graphql-codegen/typescript-react-query',
       ],
     },
   },

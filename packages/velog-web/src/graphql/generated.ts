@@ -1,6 +1,9 @@
-import { GraphQLClient } from 'graphql-request'
-import { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types'
-import gql from 'graphql-tag'
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -22,16 +25,28 @@ export type Incremental<T> =
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never
     }
 
-export const graphQLClient = new GraphQLClient(
-  'http://localhost:5003/graphql',
-  {
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  }
-)
+function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
+  return async (): Promise<TData> => {
+    const res = await fetch('http://localhost:5003/graphql', {
+      method: 'POST',
+      body: JSON.stringify({ query, variables }),
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
 
+    const json = await res.json()
+
+    if (json.errors) {
+      const { message } = json.errors[0]
+
+      throw new Error(message)
+    }
+
+    return json.data
+  }
+}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string }
@@ -39,12 +54,12 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean }
   Int: { input: number; output: number }
   Float: { input: number; output: number }
-  Date: { input: any; output: any }
+  DateTimeISO: { input: any; output: any }
   JSON: { input: any; output: any }
 }
 
 export type Comment = {
-  created_at: Maybe<Scalars['Date']['output']>
+  created_at: Maybe<Scalars['DateTimeISO']['output']>
   deleted: Maybe<Scalars['Boolean']['output']>
   has_replies: Maybe<Scalars['Boolean']['output']>
   id: Scalars['ID']['output']
@@ -69,26 +84,26 @@ export type Post = {
   body: Maybe<Scalars['String']['output']>
   comments: Maybe<Array<Maybe<Comment>>>
   comments_count: Maybe<Scalars['Int']['output']>
-  created_at: Scalars['Date']['output']
+  created_at: Scalars['DateTimeISO']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
   is_markdown: Maybe<Scalars['Boolean']['output']>
   is_private: Scalars['Boolean']['output']
   is_temp: Maybe<Scalars['Boolean']['output']>
-  last_read_at: Maybe<Scalars['Date']['output']>
+  last_read_at: Maybe<Scalars['DateTimeISO']['output']>
   liked: Maybe<Scalars['Boolean']['output']>
   likes: Maybe<Scalars['Int']['output']>
   linked_posts: Maybe<LinkedPosts>
   meta: Maybe<Scalars['JSON']['output']>
   original_post_id: Maybe<Scalars['ID']['output']>
   recommended_posts: Maybe<Array<Maybe<Post>>>
-  released_at: Maybe<Scalars['Date']['output']>
+  released_at: Maybe<Scalars['DateTimeISO']['output']>
   series: Maybe<Series>
   short_description: Maybe<Scalars['String']['output']>
   tags: Maybe<Array<Maybe<Scalars['String']['output']>>>
   thumbnail: Maybe<Scalars['String']['output']>
   title: Maybe<Scalars['String']['output']>
-  updated_at: Scalars['Date']['output']
+  updated_at: Scalars['DateTimeISO']['output']
   url_slug: Maybe<Scalars['String']['output']>
   user: Maybe<User>
   views: Maybe<Scalars['Int']['output']>
@@ -96,7 +111,7 @@ export type Post = {
 
 export type PostHistory = {
   body: Maybe<Scalars['String']['output']>
-  created_at: Maybe<Scalars['Date']['output']>
+  created_at: Maybe<Scalars['DateTimeISO']['output']>
   fk_post_id: Maybe<Scalars['ID']['output']>
   id: Maybe<Scalars['ID']['output']>
   is_markdown: Maybe<Scalars['Boolean']['output']>
@@ -130,7 +145,7 @@ export type QueryTrendingPostsArgs = {
 
 export type ReadCountByDay = {
   count: Maybe<Scalars['Int']['output']>
-  day: Maybe<Scalars['Date']['output']>
+  day: Maybe<Scalars['DateTimeISO']['output']>
 }
 
 export type ReadPostInput = {
@@ -161,14 +176,14 @@ export type SearchResult = {
 }
 
 export type Series = {
-  created_at: Maybe<Scalars['Date']['output']>
+  created_at: Maybe<Scalars['DateTimeISO']['output']>
   description: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
   name: Maybe<Scalars['String']['output']>
   posts_count: Maybe<Scalars['Int']['output']>
   series_posts: Maybe<Array<Maybe<SeriesPost>>>
   thumbnail: Maybe<Scalars['String']['output']>
-  updated_at: Maybe<Scalars['Date']['output']>
+  updated_at: Maybe<Scalars['DateTimeISO']['output']>
   url_slug: Maybe<Scalars['String']['output']>
   user: Maybe<User>
 }
@@ -191,13 +206,13 @@ export type TrendingPostsInput = {
 }
 
 export type User = {
-  created_at: Scalars['Date']['output']
+  created_at: Scalars['DateTimeISO']['output']
   email: Scalars['String']['output']
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
   series_list: Maybe<Array<Maybe<Series>>>
-  updated_at: Scalars['Date']['output']
+  updated_at: Scalars['DateTimeISO']['output']
   user_meta: Maybe<UserMeta>
   username: Scalars['String']['output']
   velog_config: Maybe<VelogConfig>
@@ -211,13 +226,13 @@ export type UserMeta = {
 
 export type UserProfile = {
   about: Scalars['String']['output']
-  created_at: Scalars['Date']['output']
+  created_at: Scalars['DateTimeISO']['output']
   display_name: Scalars['String']['output']
   id: Scalars['ID']['output']
   profile_links: Scalars['JSON']['output']
   short_bio: Scalars['String']['output']
   thumbnail: Maybe<Scalars['String']['output']>
-  updated_at: Scalars['Date']['output']
+  updated_at: Scalars['DateTimeISO']['output']
 }
 
 export type UserToken = {
@@ -376,271 +391,246 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never }>
 
 export type LogoutMutation = { logout: boolean }
 
-export const ReadPostDocument = gql`
-  query readPost($input: ReadPostInput!) {
-    post(input: $input) {
+export const ReadPostDocument = `
+    query readPost($input: ReadPostInput!) {
+  post(input: $input) {
+    id
+    title
+    released_at
+    updated_at
+    body
+    short_description
+    is_markdown
+    is_private
+    is_temp
+    thumbnail
+    comments_count
+    url_slug
+    likes
+    liked
+    user {
       id
-      title
-      released_at
-      updated_at
-      body
-      short_description
-      is_markdown
-      is_private
-      is_temp
-      thumbnail
-      comments_count
-      url_slug
-      likes
-      liked
+      username
+      profile {
+        id
+        display_name
+        thumbnail
+        short_bio
+        profile_links
+      }
+      velog_config {
+        title
+      }
+    }
+    comments {
+      id
       user {
         id
         username
         profile {
           id
-          display_name
           thumbnail
-          short_bio
-          profile_links
-        }
-        velog_config {
-          title
         }
       }
-      comments {
+      text
+      replies_count
+      level
+      created_at
+      level
+      deleted
+    }
+    series {
+      id
+      name
+      url_slug
+      series_posts {
         id
+        post {
+          id
+          title
+          url_slug
+          user {
+            id
+            username
+          }
+        }
+      }
+    }
+    linked_posts {
+      previous {
+        id
+        title
+        url_slug
         user {
           id
           username
-          profile {
-            id
-            thumbnail
-          }
         }
-        text
-        replies_count
-        level
-        created_at
-        level
-        deleted
       }
-      series {
+      next {
         id
-        name
+        title
         url_slug
-        series_posts {
+        user {
           id
-          post {
-            id
-            title
-            url_slug
-            user {
-              id
-              username
-            }
-          }
-        }
-      }
-      linked_posts {
-        previous {
-          id
-          title
-          url_slug
-          user {
-            id
-            username
-          }
-        }
-        next {
-          id
-          title
-          url_slug
-          user {
-            id
-            username
-          }
+          username
         }
       }
     }
   }
-`
-export const RecentPostsDocument = gql`
-  query recentPosts($input: RecentPostsInput!) {
-    recentPosts(input: $input) {
-      id
-      title
-      short_description
-      thumbnail
-      user {
-        id
-        username
-        profile {
-          id
-          thumbnail
-        }
-      }
-      url_slug
-      released_at
-      updated_at
-      is_private
-      likes
-      comments_count
-    }
-  }
-`
-export const TrendingPostsDocument = gql`
-  query trendingPosts($input: TrendingPostsInput!) {
-    trendingPosts(input: $input) {
-      id
-      title
-      short_description
-      thumbnail
-      likes
-      user {
-        id
-        username
-        profile {
-          id
-          thumbnail
-        }
-      }
-      url_slug
-      released_at
-      updated_at
-      is_private
-      comments_count
-    }
-  }
-`
-export const CurrentUserDocument = gql`
-  query currentUser {
-    currentUser {
+}
+    `
+export const useReadPostQuery = <TData = ReadPostQuery, TError = unknown>(
+  variables: ReadPostQueryVariables,
+  options?: UseQueryOptions<ReadPostQuery, TError, TData>
+) =>
+  useQuery<ReadPostQuery, TError, TData>(
+    ['readPost', variables],
+    fetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables),
+    options
+  )
+export const RecentPostsDocument = `
+    query recentPosts($input: RecentPostsInput!) {
+  recentPosts(input: $input) {
+    id
+    title
+    short_description
+    thumbnail
+    user {
       id
       username
-      email
       profile {
         id
         thumbnail
-        display_name
       }
     }
-  }
-`
-export const RestoreTokenDocument = gql`
-  query restoreToken {
-    restoreToken {
-      accessToken
-      refreshToken
-    }
-  }
-`
-export const LogoutDocument = gql`
-  mutation logout {
-    logout
-  }
-`
-
-export type SdkFunctionWrapper = <T>(
-  action: (requestHeaders?: Record<string, string>) => Promise<T>,
-  operationName: string,
-  operationType?: string
-) => Promise<T>
-
-const defaultWrapper: SdkFunctionWrapper = (
-  action,
-  _operationName,
-  _operationType
-) => action()
-
-export function getSdk(
-  client: GraphQLClient,
-  withWrapper: SdkFunctionWrapper = defaultWrapper
-) {
-  return {
-    readPost(
-      variables: ReadPostQueryVariables,
-      requestHeaders?: GraphQLClientRequestHeaders
-    ): Promise<ReadPostQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<ReadPostQuery>(ReadPostDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'readPost',
-        'query'
-      )
-    },
-    recentPosts(
-      variables: RecentPostsQueryVariables,
-      requestHeaders?: GraphQLClientRequestHeaders
-    ): Promise<RecentPostsQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<RecentPostsQuery>(RecentPostsDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'recentPosts',
-        'query'
-      )
-    },
-    trendingPosts(
-      variables: TrendingPostsQueryVariables,
-      requestHeaders?: GraphQLClientRequestHeaders
-    ): Promise<TrendingPostsQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<TrendingPostsQuery>(TrendingPostsDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'trendingPosts',
-        'query'
-      )
-    },
-    currentUser(
-      variables?: CurrentUserQueryVariables,
-      requestHeaders?: GraphQLClientRequestHeaders
-    ): Promise<CurrentUserQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<CurrentUserQuery>(CurrentUserDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'currentUser',
-        'query'
-      )
-    },
-    restoreToken(
-      variables?: RestoreTokenQueryVariables,
-      requestHeaders?: GraphQLClientRequestHeaders
-    ): Promise<RestoreTokenQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<RestoreTokenQuery>(RestoreTokenDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'restoreToken',
-        'query'
-      )
-    },
-    logout(
-      variables?: LogoutMutationVariables,
-      requestHeaders?: GraphQLClientRequestHeaders
-    ): Promise<LogoutMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<LogoutMutation>(LogoutDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'logout',
-        'mutation'
-      )
-    },
+    url_slug
+    released_at
+    updated_at
+    is_private
+    likes
+    comments_count
   }
 }
-export type Sdk = ReturnType<typeof getSdk>
+    `
+export const useRecentPostsQuery = <TData = RecentPostsQuery, TError = unknown>(
+  variables: RecentPostsQueryVariables,
+  options?: UseQueryOptions<RecentPostsQuery, TError, TData>
+) =>
+  useQuery<RecentPostsQuery, TError, TData>(
+    ['recentPosts', variables],
+    fetcher<RecentPostsQuery, RecentPostsQueryVariables>(
+      RecentPostsDocument,
+      variables
+    ),
+    options
+  )
+export const TrendingPostsDocument = `
+    query trendingPosts($input: TrendingPostsInput!) {
+  trendingPosts(input: $input) {
+    id
+    title
+    short_description
+    thumbnail
+    likes
+    user {
+      id
+      username
+      profile {
+        id
+        thumbnail
+      }
+    }
+    url_slug
+    released_at
+    updated_at
+    is_private
+    comments_count
+  }
+}
+    `
+export const useTrendingPostsQuery = <
+  TData = TrendingPostsQuery,
+  TError = unknown
+>(
+  variables: TrendingPostsQueryVariables,
+  options?: UseQueryOptions<TrendingPostsQuery, TError, TData>
+) =>
+  useQuery<TrendingPostsQuery, TError, TData>(
+    ['trendingPosts', variables],
+    fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
+      TrendingPostsDocument,
+      variables
+    ),
+    options
+  )
+export const CurrentUserDocument = `
+    query currentUser {
+  currentUser {
+    id
+    username
+    email
+    profile {
+      id
+      thumbnail
+      display_name
+    }
+  }
+}
+    `
+export const useCurrentUserQuery = <TData = CurrentUserQuery, TError = unknown>(
+  variables?: CurrentUserQueryVariables,
+  options?: UseQueryOptions<CurrentUserQuery, TError, TData>
+) =>
+  useQuery<CurrentUserQuery, TError, TData>(
+    variables === undefined ? ['currentUser'] : ['currentUser', variables],
+    fetcher<CurrentUserQuery, CurrentUserQueryVariables>(
+      CurrentUserDocument,
+      variables
+    ),
+    options
+  )
+export const RestoreTokenDocument = `
+    query restoreToken {
+  restoreToken {
+    accessToken
+    refreshToken
+  }
+}
+    `
+export const useRestoreTokenQuery = <
+  TData = RestoreTokenQuery,
+  TError = unknown
+>(
+  variables?: RestoreTokenQueryVariables,
+  options?: UseQueryOptions<RestoreTokenQuery, TError, TData>
+) =>
+  useQuery<RestoreTokenQuery, TError, TData>(
+    variables === undefined ? ['restoreToken'] : ['restoreToken', variables],
+    fetcher<RestoreTokenQuery, RestoreTokenQueryVariables>(
+      RestoreTokenDocument,
+      variables
+    ),
+    options
+  )
+export const LogoutDocument = `
+    mutation logout {
+  logout
+}
+    `
+export const useLogoutMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    LogoutMutation,
+    TError,
+    LogoutMutationVariables,
+    TContext
+  >
+) =>
+  useMutation<LogoutMutation, TError, LogoutMutationVariables, TContext>(
+    ['logout'],
+    (variables?: LogoutMutationVariables) =>
+      fetcher<LogoutMutation, LogoutMutationVariables>(
+        LogoutDocument,
+        variables
+      )(),
+    options
+  )

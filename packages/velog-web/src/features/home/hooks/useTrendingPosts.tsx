@@ -1,6 +1,4 @@
 import { Timeframe } from '@/features/home/state/timeframe'
-
-import { sdk } from '@/lib/sdk'
 import { Posts } from '@/types/post'
 import { useCallback, useState } from 'react'
 
@@ -16,6 +14,7 @@ if (!process.env.NEXT_PUBLIC_DEFAULT_TIMEFRAME) {
 
 export default function useTrendingPosts(intialPosts: Posts[]) {
   const [loading, setLoading] = useState(false)
+
   const [posts, setPosts] = useState<Posts[]>(intialPosts)
   const [beforeTimeframe, setBeforeTimeframe] = useState<string>(
     process.env.NEXT_PUBLIC_DEFAULT_TIMEFRAME!
@@ -30,13 +29,9 @@ export default function useTrendingPosts(intialPosts: Posts[]) {
         setPosts([])
       }
 
-      const { trendingPosts } = await sdk.trendingPosts({
-        input: { limit, offset, timeframe },
-      })
-
-      if (Array.isArray(trendingPosts) && trendingPosts.length > 0) {
-        setPosts((prev) => [...prev, ...(trendingPosts as Posts[])])
-      }
+      // if (Array.isArray(trendingPosts) && trendingPosts.length > 0) {
+      //   setPosts((prev) => [...prev, ...(trendingPosts as Posts[])])
+      // }
 
       setLoading(false)
     },

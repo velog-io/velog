@@ -9,7 +9,7 @@ export default async function getRecentPost({
   try {
     const body = {
       operationName: 'recentPosts',
-      query: RecentPostsDocument.loc?.source.body,
+      query: RecentPostsDocument,
       variables: {
         input: {
           cursor,
@@ -18,9 +18,7 @@ export default async function getRecentPost({
       },
     }
 
-    const {
-      data: { recentPosts },
-    } = await postData({
+    const { recentPosts } = await postData({
       body,
     })
 

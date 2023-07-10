@@ -10,7 +10,7 @@ export default async function getTrendingPosts({
   try {
     const body = {
       operationName: 'trendingPosts',
-      query: TrendingPostsDocument.loc?.source.body,
+      query: TrendingPostsDocument,
       variables: {
         input: {
           limit,
@@ -20,9 +20,7 @@ export default async function getTrendingPosts({
       },
     }
 
-    const {
-      data: { trendingPosts },
-    } = await postData({
+    const { trendingPosts } = await postData({
       body,
     })
 

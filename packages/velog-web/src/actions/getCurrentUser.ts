@@ -21,12 +21,10 @@ export default async function getCurrentUser(): Promise<CurrentUser | null> {
 
     const body = {
       operationName: 'currentUser',
-      query: CurrentUserDocument.loc?.source.body,
+      query: CurrentUserDocument,
     }
 
-    const {
-      data: { currentUser },
-    } = await postData({
+    const { currentUser } = await postData({
       body,
       headers,
     })

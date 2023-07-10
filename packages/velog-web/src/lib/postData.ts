@@ -28,5 +28,7 @@ export default async function postData({
     throw new Error(res.statusText)
   }
 
-  return res.json()
+  const json = await res.json()
+
+  return json.data
 }

@@ -43,10 +43,9 @@
     "tsx": "^3.12.7"
   },
   "devDependencies": {
-    "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/cli": "^4.0.1",
-    "@graphql-codegen/typescript-graphql-request": "^5.0.0",
     "@graphql-codegen/typescript-operations": "^4.0.1",
+    "@graphql-codegen/typescript-react-query": "^4.1.0",
     "@svgr/cli": "^8.0.1",
     "@svgr/webpack": "^8.0.1",
     "@testing-library/react": "^14.0.0",

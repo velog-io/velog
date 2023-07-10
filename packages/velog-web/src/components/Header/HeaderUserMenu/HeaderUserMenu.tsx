@@ -3,9 +3,8 @@ import styles from './HeaderUserMenu.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import HeaderUserMenuItem from '@/components/Header/HeaderUserMenuItem/HeaderUserMenuItem'
 import { useAuth } from '@/state/auth'
-import { getSdk, graphQLClient } from '@/graphql/generated'
-import { useCallback } from 'react'
-import { sdk } from '@/lib/sdk'
+import { useCallback, useEffect } from 'react'
+import { useLogoutMutation } from '@/graphql/generated'
 
 const cx = bindClassNames(styles)
 
@@ -19,11 +18,16 @@ function HeaderUserMenu({ isVisible, onClose }: Props) {
     value: { user },
   } = useAuth()
   const { ref } = useOutsideClick<HTMLDivElement>(onClose)
+  const { mutate, isLoading, isSuccess } = useLogoutMutation()
 
   const onLogout = useCallback(async () => {
-    await sdk.logout()
+    mutate({})
+  }, [mutate])
+
+  useEffect(() => {
+    if (!isSuccess) return
     window.location.href = '/'
-  }, [])
+  }, [isSuccess])
 
   if (!isVisible) return null
   return (
