@@ -1,6 +1,6 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import styles from './HomeTab.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import useToggle from '@/hooks/useToggle'
@@ -27,11 +27,12 @@ type Props = {}
 
 function HomeTab({}: Props) {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const timeframe = searchParams.get('timeframe')
 
   const [moreButton, toggleMoreButton] = useToggle(false)
   const [timeframePicker, toggleTimeframePicker] = useToggle(false)
   const timeframeRef = useRef<HTMLDivElement | null>(null)
-  const { timeframe } = useTimeframeValue()
 
   const isRecent = pathname === '/recent'
 

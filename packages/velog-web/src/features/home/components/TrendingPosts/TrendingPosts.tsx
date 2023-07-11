@@ -1,40 +1,47 @@
 'use client'
 
 import PostCardGrid from '@/features/post/components/PostCardGrid'
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { Posts } from '@/types/post'
-import { useTimeframeValue } from '@/features/home/state/timeframe'
+import { Timeframe, useTimeframeValue } from '@/features/home/state/timeframe'
 import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
-import PostCardSkeletonGrid from '@/features/post/components/PostCardGrid/PostCardSkeletonGrid'
-import { useTrendingPostsQuery } from '@/graphql/generated'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import { useSearchParams } from 'next/navigation'
 
 type Props = {
   data: Posts[]
-  items?: any[]
 }
 
-function TrendingPosts({ items = [] }: Props) {
-  const { timeframe } = useTimeframeValue()
-  const { beforeTimeframe, setInput, posts, isLoading } =
-    useTrendingPosts(items)
+function TrendingPosts({ data }: Props) {
+  const searchParmas = useSearchParams()
+  const timeframe = (searchParmas.get('timeframe') || 'week') as Timeframe
+  const { beforeTimeframe, setQuery, posts, isLoading, isLastPage } =
+    useTrendingPosts(data)
+  const ref = useRef<HTMLDivElement>(null)
 
+  // When timeframe was changed
   useEffect(() => {
-    // if (beforeTimeframe === timeframe) return
-    setInput({
-      limit: 2,
+    if (beforeTimeframe === timeframe) return
+    setQuery({
+      limit: 8,
       offset: 0,
       timeframe,
     })
-  }, [timeframe, beforeTimeframe, setInput])
+  }, [timeframe, beforeTimeframe, setQuery, posts])
 
-  const onFetchMore = () => {
+  // infinite scroll
+  const onFetchMore = useCallback(() => {
+    if (isLastPage) return
     const offset = posts.length
-    setInput({
-      limit: 2,
+    setQuery({
+      limit: 8,
       offset: offset,
-      timeframe: timeframe,
+      timeframe,
     })
-  }
+  }, [isLastPage, setQuery, posts.length, timeframe])
+
+  useInfiniteScroll(ref, onFetchMore)
+
   return (
     <>
       <PostCardGrid
@@ -43,8 +50,7 @@ function TrendingPosts({ items = [] }: Props) {
         forPost={false}
         loading={isLoading}
       />
-      <button onClick={onFetchMore}>Fetch More</button>
-      {isLoading && <div>Loading...</div>}
+      <div ref={ref} />
     </>
   )
 }

@@ -36,7 +36,7 @@ function createComponent(directory: string, componentName: string) {
     fs.writeFileSync(newFilePath, code)
   })
 
-  console.log(`Component files are created at ${componentDir}`)
+  `Component files are created at ${componentDir}`)
 }
 
 async function main() {
