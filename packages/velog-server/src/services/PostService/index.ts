@@ -194,6 +194,7 @@ export class PostService implements PostServiceInterface {
   }
   public async getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]> {
     const { offset = 0, limit = 20, timeframe = 'month' } = input
+
     const timeframes: [string, number][] = [
       ['day', 1],
       ['week', 7],
@@ -232,7 +233,9 @@ export class PostService implements PostServiceInterface {
         select posts.id, posts.title, SUM(score) as score from post_scores
         inner join posts on post_scores.fk_post_id = posts.id
         where post_scores.created_at > now() - interval '1 day' * ${selectedTimeframe[1]}
-        and posts.released_at > now() - interval '1 day' * ${selectedTimeframe[1] * 1.5}
+        and posts.released_at > now() - interval '1 day' * ${
+          selectedTimeframe[1]
+        } - interval '1 hour' * ${selectedTimeframe[1] * 12}
         group by posts.id
         order by score desc, posts.id desc
         offset ${offset}
