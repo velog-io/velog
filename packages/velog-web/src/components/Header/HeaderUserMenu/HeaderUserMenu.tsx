@@ -18,7 +18,7 @@ function HeaderUserMenu({ isVisible, onClose }: Props) {
     value: { user },
   } = useAuth()
   const { ref } = useOutsideClick<HTMLDivElement>(onClose)
-  const { mutate, isLoading, isSuccess } = useLogoutMutation()
+  const { mutate, isSuccess } = useLogoutMutation()
 
   const onLogout = useCallback(async () => {
     mutate({})

@@ -7,7 +7,6 @@ import Link from 'next/link'
 import RatioImage from '@/components/RatioImage/RatioImage'
 import { formatDate } from '@/lib/utils'
 import Image from 'next/image'
-import userThumbnail from '@/assets/vectors/svg/user-thumbnail.png'
 import VLink from '@/components/VLink/VLink'
 import { LikeIcon } from '@/assets/icons/components'
 
@@ -19,7 +18,7 @@ type Props = {
   forPost: boolean
 }
 
-async function PostCard({ post, forHome = false, forPost = false }: Props) {
+function PostCard({ post, forHome = false, forPost = false }: Props) {
   const url = `/@${post.user.username}/${post.url_slug}`
   return (
     <div className={cx('block', { isNotHomeAndPost: !forHome && !forPost })}>
@@ -54,7 +53,7 @@ async function PostCard({ post, forHome = false, forPost = false }: Props) {
       <div className={cx('footer')}>
         <VLink className={cx('userInfo')} href={`/@${post.user.username}`}>
           <Image
-            src={post.user.profile.thumbnail || userThumbnail}
+            src={post.user.profile.thumbnail || '/images/user-thumbnail.png'}
             alt={`user thumbnail of ${post.user.username}`}
             width={24}
             height={24}

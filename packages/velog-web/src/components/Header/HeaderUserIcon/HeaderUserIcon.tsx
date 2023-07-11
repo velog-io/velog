@@ -2,7 +2,6 @@ import { CurrentUser } from '@/types/user'
 import styles from './HeaderUserIcon.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import Image from 'next/image'
-import userThumbnail from '@/assets/vectors/svg/user-thumbnail.png'
 import { MdArrowDropDown } from 'react-icons/md'
 
 const cx = bindClassNames(styles)
@@ -16,7 +15,7 @@ function HeaderUserIcon({ user, onClick }: Props) {
   return (
     <div className={cx('block')} onClick={onClick}>
       <Image
-        src={user.profile.thumbnail || userThumbnail}
+        src={user.profile.thumbnail || '/images/user-thumbnail.png'}
         alt="user thumbnail"
         width={40}
         height={40}
