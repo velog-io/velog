@@ -86,6 +86,7 @@ query readPost($input: ReadPostInput!) {
 }
 
 input ReadPostInput {
+  id: String
   username: String
   user_slug: String
 }
