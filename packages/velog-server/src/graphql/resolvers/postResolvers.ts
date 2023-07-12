@@ -20,7 +20,6 @@ const postResolvers: Resolvers = {
       if ((parent.meta as any)?.short_description) {
         return (parent.meta as any).short_description
       }
-
       const removed = removeMd(
         parent.body
           .replace(/```([\s\S]*?)```/g, '')

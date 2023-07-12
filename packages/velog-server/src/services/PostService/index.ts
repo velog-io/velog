@@ -233,9 +233,9 @@ export class PostService implements PostServiceInterface {
         select posts.id, posts.title, SUM(score) as score from post_scores
         inner join posts on post_scores.fk_post_id = posts.id
         where post_scores.created_at > now() - interval '1 day' * ${selectedTimeframe[1]}
-        and posts.released_at > now() - interval '1 day' * ${
+        and posts.released_at > now() - (interval '1 day' * ${
           selectedTimeframe[1]
-        } - interval '1 hour' * ${selectedTimeframe[1] * 12}
+        }) - (interval '1 hour' * ${selectedTimeframe[1] * 12})
         group by posts.id
         order by score desc, posts.id desc
         offset ${offset}
@@ -245,9 +245,6 @@ export class PostService implements PostServiceInterface {
         ids = rows.map((row) => row.id)
         this.cache.lruCache.set(cacheKey, ids)
       } catch (error) {
-        console.log('input', input)
-        console.log('${selectedTimeframe[1]}', `${selectedTimeframe[1]}`)
-        console.log('${selectedTimeframe[1] * 1.5}', `${selectedTimeframe[1] * 1.5}`)
         console.log(error)
         return []
       }
