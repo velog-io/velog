@@ -5,6 +5,7 @@ import HeaderUserMenuItem from '@/components/Header/HeaderUserMenuItem/HeaderUse
 import { useAuth } from '@/state/auth'
 import { useCallback, useEffect } from 'react'
 import { useLogoutMutation } from '@/graphql/generated'
+import { useRouter } from 'next/navigation'
 
 const cx = bindClassNames(styles)
 
@@ -14,20 +15,19 @@ type Props = {
 }
 
 function HeaderUserMenu({ isVisible, onClose }: Props) {
+  const router = useRouter()
   const {
     value: { user },
+    actions: { update },
   } = useAuth()
   const { ref } = useOutsideClick<HTMLDivElement>(onClose)
-  const { mutate, isSuccess } = useLogoutMutation()
+  const { mutate } = useLogoutMutation()
 
   const onLogout = useCallback(async () => {
     mutate({})
-  }, [mutate])
-
-  useEffect(() => {
-    if (!isSuccess) return
-    window.location.href = '/'
-  }, [isSuccess])
+    update(null)
+    router.push('/')
+  }, [mutate, update, router])
 
   if (!isVisible) return null
   return (

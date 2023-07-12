@@ -9,13 +9,11 @@ export default async function middleware(req: NextRequest) {
   if (!accessToken && originRefreshToken) {
     const response = NextResponse.next()
     try {
-      const endpoint = `${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql`
-      const query = RestoreTokenDocument.loc?.source.body || ''
+      const query = RestoreTokenDocument || ''
 
       if (!query) return
 
       const { data } = await postData({
-        url: endpoint,
         body: { query },
         headers: { cookie: `refresh_token=${originRefreshToken}` },
         init: { cache: 'no-cache' },
@@ -46,6 +44,7 @@ export default async function middleware(req: NextRequest) {
 
       return response
     } catch (e) {
+      console.log(e)
       response.cookies.delete('access_token')
       response.cookies.delete('refresh_token')
       return response
