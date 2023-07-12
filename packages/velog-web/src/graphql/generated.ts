@@ -127,14 +127,14 @@ export type ReadCountByDay = {
 }
 
 export type ReadPostInput = {
-  id: InputMaybe<Scalars['ID']['input']>
-  url_slug: InputMaybe<Scalars['String']['input']>
-  username: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['ID']['input']>
+  url_slug?: InputMaybe<Scalars['String']['input']>
+  username?: InputMaybe<Scalars['String']['input']>
 }
 
 export type ReadingListInput = {
-  cursor: InputMaybe<Scalars['ID']['input']>
-  limit: InputMaybe<Scalars['Int']['input']>
+  cursor?: InputMaybe<Scalars['ID']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
   type: ReadingListOption
 }
 
@@ -144,8 +144,8 @@ export enum ReadingListOption {
 }
 
 export type RecentPostsInput = {
-  cursor: InputMaybe<Scalars['ID']['input']>
-  limit: InputMaybe<Scalars['Int']['input']>
+  cursor?: InputMaybe<Scalars['ID']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
 }
 
 export type SearchResult = {
@@ -178,9 +178,9 @@ export type Stats = {
 }
 
 export type TrendingPostsInput = {
-  limit: InputMaybe<Scalars['Int']['input']>
-  offset: InputMaybe<Scalars['Int']['input']>
-  timeframe: InputMaybe<Scalars['String']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  timeframe?: InputMaybe<Scalars['String']['input']>
 }
 
 export type User = {

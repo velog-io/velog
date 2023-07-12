@@ -12,11 +12,16 @@ const config: CodegenConfig = {
       documents: 'string',
       config: {
         skipTypename: true,
-        avoidOptionals: true,
         maybeValue: 'T | null',
         inputMaybeValue: 'T | undefined',
         fetcher: {
           func: './fetcher#fetcher',
+        },
+        avoidOptionals: {
+          field: true,
+          inputValue: false,
+          object: true,
+          defaultValue: true,
         },
       },
       plugins: [

@@ -14,12 +14,7 @@ async function RecentPosts() {
   })
 
   return (
-    <PostCardGrid
-      posts={data || []}
-      forHome={true}
-      forPost={false}
-      loading={!data}
-    />
+    <PostCardGrid data={data} forHome={true} forPost={false} loading={!data} />
   )
 }
 

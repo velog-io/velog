@@ -23,7 +23,7 @@ export default function useTrendingPosts(intialPosts: Posts[] = []) {
   const prevTimeFrame = useRef<Timeframe>(timeframe)
 
   const [fetchPostsInput, fetchNextPosts] = useState<TrendingPostsInput>({
-    limit: 8,
+    limit: 12,
     offset: posts.length,
     timeframe: timeframe as Timeframe,
   })
@@ -43,7 +43,7 @@ export default function useTrendingPosts(intialPosts: Posts[] = []) {
     if (prevTimeFrame.current !== timeframe) {
       setPosts([])
       fetchNextPosts({
-        limit: Number(process.env.NEXT_PUBLIC_DEFAULT_LIMIT),
+        limit: Number(process.env.NEXT_PUBLIC_DEFAULT_POST_LIMIT),
         offset: 0,
         timeframe,
       })

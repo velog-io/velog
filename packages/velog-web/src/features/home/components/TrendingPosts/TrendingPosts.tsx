@@ -24,7 +24,7 @@ function TrendingPosts({ data }: Props) {
   useEffect(() => {
     if (prevTimeFrame.current === timeframe) return
     fetchNextPosts({
-      limit: 24,
+      limit: Number(process.env.NEXT_PUBLIC_DEFAULT_POST_LIMIT) || 24,
       offset: 0,
       timeframe,
     })
@@ -33,7 +33,7 @@ function TrendingPosts({ data }: Props) {
   // infinite scroll
   const getTreningPostsMore = useCallback(() => {
     fetchNextPosts({
-      limit: 8,
+      limit: 12,
       offset: posts.length,
       timeframe,
     })

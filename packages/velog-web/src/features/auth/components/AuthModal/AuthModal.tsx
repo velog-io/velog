@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { MdClose } from 'react-icons/md'
 import AuthForm from '@/features/auth/components/AuthModal/AuthForm'
 import Modal from '@/components/Modal'
+import { UndrawJoyrideHnno } from '@/assets/vectors/components'
 
 const cx = bindClassNames(styles)
 
@@ -28,12 +29,7 @@ function AuthModal() {
       >
         <div className={cx('gray-block')}>
           <div>
-            <Image
-              src="/images/undraw_joyride_hnno.svg"
-              width={168}
-              height={108}
-              alt="welcome"
-            />
+            <UndrawJoyrideHnno width={168} height={108} />
             <div className={cx('welcome')}>환영합니다!</div>
           </div>
         </div>
