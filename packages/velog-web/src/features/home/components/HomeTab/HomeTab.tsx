@@ -28,7 +28,7 @@ type Props = {}
 function HomeTab({}: Props) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const timeframe = searchParams.get('timeframe')
+  const timeframe = searchParams.get('timeframe') || 'week'
 
   const [moreButton, toggleMoreButton] = useToggle(false)
   const [timeframePicker, toggleTimeframePicker] = useToggle(false)

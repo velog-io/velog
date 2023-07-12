@@ -30,7 +30,7 @@ function TimeframePicker({ isVisible, onClose }: Props) {
   const { ref } = useOutsideClick<HTMLDivElement>(onClose)
 
   useEffect(() => {
-    const query = searchParams.get('timeframe')
+    const query = searchParams.get('timeframe') || 'week'
     if (query) {
       actions.choose(query as Timeframe)
     }

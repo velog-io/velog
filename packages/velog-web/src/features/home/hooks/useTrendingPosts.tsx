@@ -16,7 +16,7 @@ type TrendingPostsInput = {
 
 export default function useTrendingPosts(intialPosts: Posts[] = []) {
   const searchParams = useSearchParams()
-  const timeframe = searchParams.get('timeframe') || ('week' as Timeframe)
+  const timeframe = searchParams.get('timeframe') || 'week'
   const [posts, setPosts] = useState<Posts[]>(intialPosts)
 
   const [input, setInput] = useState<TrendingPostsInput>({

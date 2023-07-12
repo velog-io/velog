@@ -30,7 +30,7 @@ function TrendingPosts({ data }: Props) {
   }, [timeframe, beforeTimeframe, setQuery, posts])
 
   // infinite scroll
-  const onFetchMore = useCallback(() => {
+  const getTreningPostsMore = useCallback(() => {
     if (isLastPage) return
     const offset = posts.length
     setQuery({
@@ -40,7 +40,7 @@ function TrendingPosts({ data }: Props) {
     })
   }, [isLastPage, setQuery, posts.length, timeframe])
 
-  useInfiniteScroll(ref, onFetchMore)
+  useInfiniteScroll(ref, getTreningPostsMore)
 
   return (
     <>
