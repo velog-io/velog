@@ -3,7 +3,7 @@ import postData from '@/lib/postData'
 import { Posts } from '@/types/post'
 
 export default async function getTrendingPosts({
-  limit = 24,
+  limit = Number(process.env.NEXT_PUBLIC_DEFAULT_LIMIT) || 20,
   offset = 0,
   timeframe = process.env.NEXT_PUBLIC_DEFAULT_TIMEFRAME,
 }: Partial<TrendingPostsInput> = {}) {

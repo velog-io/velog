@@ -1,9 +1,9 @@
 'use client'
 
 import PostCardGrid from '@/features/post/components/PostCardGrid'
-import { useCallback, useEffect, useRef } from 'react'
+import { Suspense, useCallback, useEffect, useRef } from 'react'
 import { Posts } from '@/types/post'
-import { Timeframe, useTimeframeValue } from '@/features/home/state/timeframe'
+import { Timeframe, useTimeframe } from '@/features/home/state/timeframe'
 import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { useSearchParams } from 'next/navigation'
@@ -15,31 +15,29 @@ type Props = {
 function TrendingPosts({ data }: Props) {
   const searchParmas = useSearchParams()
   const timeframe = (searchParmas.get('timeframe') || 'week') as Timeframe
-  const { beforeTimeframe, setQuery, posts, isLoading, isLastPage } =
+
+  const { prevTimeFrame, posts, isLoading, fetchNextPosts } =
     useTrendingPosts(data)
   const ref = useRef<HTMLDivElement>(null)
 
   // When timeframe was changed
   useEffect(() => {
-    if (beforeTimeframe === timeframe) return
-    setQuery({
-      limit: 8,
+    if (prevTimeFrame.current === timeframe) return
+    fetchNextPosts({
+      limit: 24,
       offset: 0,
       timeframe,
     })
-  }, [timeframe, beforeTimeframe, setQuery, posts])
+  }, [timeframe, prevTimeFrame, fetchNextPosts])
 
   // infinite scroll
   const getTreningPostsMore = useCallback(() => {
-    if (isLastPage) return
-    const offset = posts.length
-    console.log('offset', offset)
-    setQuery({
+    fetchNextPosts({
       limit: 8,
-      offset: offset,
+      offset: posts.length,
       timeframe,
     })
-  }, [isLastPage, setQuery, posts.length, timeframe])
+  }, [fetchNextPosts, posts.length, timeframe])
 
   useInfiniteScroll(ref, getTreningPostsMore)
 

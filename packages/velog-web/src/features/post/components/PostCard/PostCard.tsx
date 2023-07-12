@@ -1,3 +1,5 @@
+'use client'
+
 import { Posts } from '@/types/post'
 import styles from './PostCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'

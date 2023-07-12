@@ -16,7 +16,7 @@ const config: CodegenConfig = {
         maybeValue: 'T | null',
         inputMaybeValue: 'T | undefined',
         fetcher: {
-          endpoint: `${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql`,
+          func: './fetcher#fetcher',
         },
       },
       plugins: [

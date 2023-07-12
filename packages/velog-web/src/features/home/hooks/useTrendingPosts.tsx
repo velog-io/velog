@@ -1,12 +1,14 @@
+import { Timeframe } from '@/features/home/state/timeframe'
+import { fetcher } from '@/graphql/fetcher'
 import {
-  Timeframe,
-  useTimeframe,
-  useTimeframeValue,
-} from '@/features/home/state/timeframe'
-import { useTrendingPostsQuery } from '@/graphql/generated'
+  TrendingPostsDocument,
+  TrendingPostsQuery,
+  TrendingPostsQueryVariables,
+} from '@/graphql/generated'
 import { Posts } from '@/types/post'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type TrendingPostsInput = {
   limit: number
@@ -16,48 +18,53 @@ type TrendingPostsInput = {
 
 export default function useTrendingPosts(intialPosts: Posts[] = []) {
   const searchParams = useSearchParams()
-  const timeframe = searchParams.get('timeframe') || 'week'
+  const timeframe = (searchParams.get('timeframe') ?? 'week') as Timeframe
   const [posts, setPosts] = useState<Posts[]>(intialPosts)
+  const prevTimeFrame = useRef<Timeframe>(timeframe)
 
-  const [input, setInput] = useState<TrendingPostsInput>({
-    limit: 8,
-    offset: posts.length,
+  const [fetchPostsInput, fetchNextPosts] = useState<TrendingPostsInput>({
+    limit: 0,
+    offset: 0,
     timeframe: timeframe as Timeframe,
   })
-  const [beforeTimeframe, setBeforeTimeframe] = useState<string>(timeframe)
-  const { data, isSuccess, isLoading } = useTrendingPostsQuery({ input })
-  const [isLastPage, setIsLastPage] = useState(false)
+
+  const { data, isSuccess, isLoading } = useInfiniteQuery<TrendingPostsQuery>(
+    ['trendingPosts', { input: fetchPostsInput }],
+    fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
+      TrendingPostsDocument,
+      { input: fetchPostsInput }
+    ),
+    {
+      retryDelay: 400,
+    }
+  )
 
   useEffect(() => {
-    if (beforeTimeframe !== input.timeframe) {
-      setBeforeTimeframe(input.timeframe)
-      setIsLastPage(false)
+    if (prevTimeFrame.current !== timeframe) {
+      fetchNextPosts({
+        limit: Number(process.env.NEXT_PUBLIC_DEFAULT_LIMIT),
+        offset: 0,
+        timeframe,
+      })
+      setPosts([])
+      prevTimeFrame.current = fetchPostsInput.timeframe
     }
-  }, [input, beforeTimeframe])
+  }, [fetchPostsInput, timeframe, setPosts])
 
   useEffect(() => {
     if (isSuccess) {
-      const trendinPosts = data.trendingPosts as Posts[]
-      if (trendinPosts.length < input.limit) {
-        setIsLastPage(true)
-      }
-      setPosts((prev) => [...prev, ...trendinPosts])
+      const list = data.pages
+        .map((page) => page.trendingPosts)
+        .flat() as Posts[]
+      setPosts((prev) => [...prev, ...list])
     }
-  }, [isSuccess, data, input.limit])
-
-  const setQuery = (input: TrendingPostsInput) => {
-    if (beforeTimeframe !== input.timeframe) {
-      setPosts([])
-    }
-    setInput(input)
-  }
+  }, [isSuccess, data])
 
   return {
-    setQuery,
     posts,
     data,
     isLoading,
-    beforeTimeframe,
-    isLastPage,
+    prevTimeFrame,
+    fetchNextPosts,
   }
 }

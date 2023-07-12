@@ -1,6 +1,6 @@
 'use client'
 
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import styles from './HomeTab.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import useToggle from '@/hooks/useToggle'
@@ -33,7 +33,6 @@ function HomeTab({}: Props) {
   const [moreButton, toggleMoreButton] = useToggle(false)
   const [timeframePicker, toggleTimeframePicker] = useToggle(false)
   const timeframeRef = useRef<HTMLDivElement | null>(null)
-
   const isRecent = pathname === '/recent'
 
   return (
@@ -41,7 +40,7 @@ function HomeTab({}: Props) {
       <div className={cx('left')}>
         <div className={cx('block')}>
           <ActiveLink
-            href="/"
+            href="/?timeframe=week"
             className={cx({
               active: pathname === '/' || pathname.includes('/trending'),
             })}

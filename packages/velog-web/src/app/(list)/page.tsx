@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 export default async function Home({ children, searchParams }: Props) {
   const { timeframe = 'week' } = searchParams
   const data = await getTrendingPosts({ timeframe })
+
   return (
     <>
       {children}
