@@ -4,8 +4,8 @@ import { Posts } from '@/types/post'
 
 export default async function getTrendingPosts({
   limit = Number(process.env.NEXT_PUBLIC_DEFAULT_POST_LIMIT) || 24,
+  timeframe = process.env.NEXT_PUBLIC_DEFAULT_POST_TIMEFRAME || 'week',
   offset = 0,
-  timeframe = process.env.NEXT_PUBLIC_DEFAULT_POST_TIMEFRAME,
 }: Partial<TrendingPostsInput> = {}) {
   try {
     const body = {

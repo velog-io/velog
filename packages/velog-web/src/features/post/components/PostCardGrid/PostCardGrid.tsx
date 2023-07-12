@@ -1,3 +1,5 @@
+'use client'
+
 import { Posts } from '@/types/post'
 import styles from './PostCardGrid.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
@@ -7,21 +9,21 @@ import { PostCardSkeleton } from '@/features/post/components/PostCard/PostCardSk
 const cx = bindClassNames(styles)
 
 type Props = {
-  data: Posts[]
+  posts: Posts[]
   forHome: boolean
   forPost: boolean
   loading?: boolean
 }
 
 function PostCardGrid({
-  data = [],
+  posts = [],
   forHome = false,
   forPost = false,
   loading = false,
 }: Props) {
   return (
     <div className={cx('block')}>
-      {data.map((post, i) => {
+      {posts.map((post, i) => {
         return (
           <PostCard
             key={post.id}

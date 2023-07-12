@@ -1,5 +1,5 @@
 import getTrendingPosts from '@/actions/getTrendingPost'
-import TrendingPosts from '@/features/home/components/TrendingPosts/TrendingPosts'
+import TrendingPosts from '@/features/home/components/TrendingPosts'
 import { Metadata } from 'next'
 
 type Props = {
