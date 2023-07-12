@@ -33,6 +33,7 @@ function TrendingPosts({ data }: Props) {
   const getTreningPostsMore = useCallback(() => {
     if (isLastPage) return
     const offset = posts.length
+    console.log('offset', offset)
     setQuery({
       limit: 8,
       offset: offset,

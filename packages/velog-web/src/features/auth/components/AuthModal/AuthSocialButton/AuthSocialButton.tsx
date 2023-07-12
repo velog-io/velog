@@ -16,27 +16,24 @@ type Props = {
 const providerMap = {
   github: {
     color: '#272e33',
-    icon: '/svg/icon-github.svg',
+    icon: GithubIcon,
     border: false,
-    alt: 'github-button',
   },
   google: {
     color: 'white',
-    icon: '/svg/icon-google.svg',
+    icon: GoogleIcon,
     border: true,
-    alt: 'google-button',
   },
   facebook: {
     color: '#3b5998',
-    icon: '/svg/icon-facebook.svg',
+    icon: FacebookIcon,
     border: false,
-    alt: 'facebook-button',
   },
 }
 
 function AuthSocialButton({ provider, tabIndex, currentPath }: Props) {
   const info = useMemo(() => providerMap[provider], [provider])
-  const { icon, color, border, alt } = info
+  const { icon: Icon, color, border } = info
 
   const host =
     process.env.NODE_ENV === 'production'
@@ -54,7 +51,7 @@ function AuthSocialButton({ provider, tabIndex, currentPath }: Props) {
         background: color,
       }}
     >
-      <Image src={icon} alt={alt} width={20} height={20} />
+      <Icon height="20px" width="20px" />
     </a>
   )
 }
