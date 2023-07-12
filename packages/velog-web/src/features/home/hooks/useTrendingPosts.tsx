@@ -41,12 +41,12 @@ export default function useTrendingPosts(intialPosts: Posts[] = []) {
 
   useEffect(() => {
     if (prevTimeFrame.current !== timeframe) {
+      setPosts([])
       fetchNextPosts({
         limit: Number(process.env.NEXT_PUBLIC_DEFAULT_LIMIT),
         offset: 0,
         timeframe,
       })
-      setPosts([])
       prevTimeFrame.current = fetchPostsInput.timeframe
     }
   }, [fetchPostsInput, timeframe, setPosts])
