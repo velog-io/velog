@@ -58,6 +58,9 @@
       margin-bottom: 36px;
       svg {
         cursor: pointer;
+        &:focus {
+          outline: none;
+        }
       }
       @media screen and (max-width: 768px) {
         margin-bottom: 0;

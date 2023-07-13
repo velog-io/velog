@@ -22,7 +22,7 @@ function AuthForm() {
   const [email, onChangeEmail] = useInput('')
   const [_sendAuthEmail, loading, data, , resetSendAuthEmail] =
     useRequest<SendAuthEmailResponse>(sendAuthEmail)
-
+  
   const onClose = useCallback(() => {
     actions.closeModal()
     resetSendAuthEmail()
