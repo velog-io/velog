@@ -10,6 +10,7 @@ export const sendAuthEmail = (email: string) =>
   apiClient.post<SendAuthEmailResponse>('/api/v2/auth/sendmail', {
     email,
   })
+
 export type SendAuthEmailResponse = { registered: boolean }
 
 /**

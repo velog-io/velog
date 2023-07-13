@@ -1,52 +1,59 @@
-import { ModalMode, useModal } from '@/state/modal'
+import { useModal } from '@/state/modal'
 import styles from './AuthForm.module.css'
-import useRequest from '@/hooks/useRequest'
-import { SendAuthEmailResponse, sendAuthEmail } from '@/lib/api/auth'
-import { useCallback } from 'react'
-import AuthEmailSuccess from '@/features/auth/components/AuthModal/AuthEmailSuccess/AuthEmailSuccess'
-import AuthEmailForm from '@/features/auth/components/AuthModal/AuthEmailForm/AuthEmailForm'
+import { sendAuthEmail } from '@/lib/api/auth'
+import { useCallback, useEffect, useState } from 'react'
+import AuthEmailSuccess from '@/features/auth/components/AuthModal/AuthEmailSuccess'
+import AuthEmailForm from '@/features/auth/components/AuthModal/AuthEmailForm'
 import useInput from '@/hooks/useInput'
 import { validateEmail } from '@/lib/validate'
 import { toast } from 'react-toastify'
-import AuthSocialButtonGroup from '@/features/auth/components/AuthModal/AuthSocialButtonGroup/AuthSocialButtonGroup'
-
+import AuthSocialButtonGroup from '@/features/auth/components/AuthModal/AuthSocialButtonGroup'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
+import { useQuery } from '@tanstack/react-query'
 
 const cx = bindClassNames(styles)
 
 function AuthForm() {
   const {
     actions,
-    value: { mode },
+    value: { mode, isVisible },
   } = useModal()
   const [email, onChangeEmail] = useInput('')
-  const [_sendAuthEmail, loading, data, , resetSendAuthEmail] =
-    useRequest<SendAuthEmailResponse>(sendAuthEmail)
-  
-  const onClose = useCallback(() => {
-    actions.closeModal()
-    resetSendAuthEmail()
-  }, [actions, resetSendAuthEmail])
+  const [isSendEmail, setSendEmail] = useState(false)
+
+  const { refetch, isFetching, data } = useQuery(
+    ['authEmail'],
+    ({ pageParam = { email } }) => {
+      return sendAuthEmail(pageParam.email)
+    },
+    { enabled: false }
+  )
 
   const onToggleMode = useCallback(() => {
     const nextMode = mode === 'register' ? 'login' : 'register'
     actions.changeMode(nextMode)
   }, [actions, mode])
 
-  const registered = data && data.registered
-
+  const registered = (data && data.data.registered) || false
   const modeText = mode === 'register' ? '회원가입' : '로그인'
 
   const onSendAuthEmail = useCallback(
-    async (email: string) => {
+    (email: string) => {
       if (!validateEmail(email)) {
         toast.error('잘못된 이메일 형식입니다.')
         return
       }
-      _sendAuthEmail(email)
+      refetch()
+      setSendEmail(true)
     },
-    [_sendAuthEmail]
+    [refetch]
   )
+
+  useEffect(() => {
+    if (!isVisible) {
+      setSendEmail(false)
+    }
+  }, [isVisible])
 
   return (
     <div className={cx('block')}>
@@ -54,14 +61,14 @@ function AuthForm() {
         <h2 data-testid="title">{modeText}</h2>
         <section>
           <h4>이메일로 {modeText}</h4>
-          {registered !== null ? (
+          {isSendEmail ? (
             <AuthEmailSuccess registered={registered} />
           ) : (
             <AuthEmailForm
               value={email}
               onChange={onChangeEmail}
               onSubmit={onSendAuthEmail}
-              disabled={loading}
+              disabled={isFetching}
             />
           )}
         </section>
