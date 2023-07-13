@@ -1,3 +1,5 @@
+'use client'
+
 import { Timeframe } from '@/features/home/state/timeframe'
 import { fetcher } from '@/graphql/fetcher'
 import {
@@ -9,59 +11,70 @@ import {
 import { Posts } from '@/types/post'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-export default function useTrendingPosts(intialPosts: Posts[] = []) {
+export default function useTrendingPosts(initialPosts: Posts[] = []) {
   const searchParams = useSearchParams()
   const timeframe = (searchParams.get('timeframe') ?? 'week') as Timeframe
-  const [posts, setPosts] = useState<Posts[]>(intialPosts)
   const prevTimeFrame = useRef<Timeframe>(timeframe)
-  const [fetchPostsInput, fetchNextPosts] = useState<TrendingPostsInput>({
-    limit: 3,
-    offset: posts.length,
-    timeframe,
-  })
 
-  const { data, isSuccess, isLoading, refetch } =
-    useInfiniteQuery<TrendingPostsQuery>(
-      ['trendingPosts', { input: fetchPostsInput }],
+  const limit = 12
+  const fetchInput = {
+    limit,
+    offset: initialPosts.length,
+    timeframe,
+  }
+
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    refetch,
+    isFetching,
+    isRefetching,
+  } = useInfiniteQuery<TrendingPostsQuery>(
+    ['trendingPosts'],
+    ({ pageParam = fetchInput }) =>
       fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
         TrendingPostsDocument,
-        { input: fetchPostsInput }
-      ),
-      {
-        retryDelay: 400,
-      }
-    )
-
-  const prevFetchPostsInput = useRef(fetchPostsInput)
+        {
+          input: pageParam,
+        }
+      )(),
+    {
+      retryDelay: 100,
+      cacheTime: 1000 * 60 * 2,
+      staleTime: 1000 * 60 * 5,
+      getNextPageParam: (pages, allPages) => {
+        if (pages.trendingPosts!.length < limit) return false
+        return {
+          limit,
+          timeframe,
+          offset: allPages.flatMap((f) => f.trendingPosts).length,
+        }
+      },
+    }
+  )
 
   useEffect(() => {
     if (prevTimeFrame.current === timeframe) return
-    setPosts([])
-    fetchNextPosts({
-      limit: Number(process.env.NEXT_PUBLIC_DEFAULT_POST_LIMIT),
-      offset: 0,
-      timeframe,
-    })
-    prevTimeFrame.current = fetchPostsInput.timeframe as Timeframe
-  }, [fetchPostsInput, timeframe, setPosts, posts.length])
-
-  useEffect(() => {
-    if (prevFetchPostsInput.current.offset === fetchPostsInput.offset) return
-    prevFetchPostsInput.current = fetchPostsInput
     refetch()
-  }, [fetchPostsInput, refetch])
+    prevTimeFrame.current = timeframe as Timeframe
+  }, [timeframe, refetch])
 
-  useEffect(() => {
-    if (!isSuccess) return
-    const list = data.pages.map((page) => page.trendingPosts).flat() as Posts[]
-    setPosts((prev) => [...prev, ...list])
-  }, [isSuccess, data])
+  const posts = useMemo(() => {
+    if (isRefetching) return []
+    return [
+      ...initialPosts,
+      ...(data?.pages.flatMap((page) => page.trendingPosts)! || []),
+    ] as Posts[]
+  }, [data?.pages, initialPosts, isRefetching])
 
   return {
-    posts,
+    posts: posts,
     isLoading,
-    fetchNextPosts,
+    fetchNextPage,
+    isFetching,
+    isRefetching,
   }
 }

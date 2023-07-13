@@ -3,7 +3,7 @@ import postData from '@/lib/postData'
 import { Posts } from '@/types/post'
 
 export default async function getTrendingPosts({
-  limit = Number(process.env.NEXT_PUBLIC_DEFAULT_POST_LIMIT) || 24,
+  limit = Number(process.env.NEXT_PUBLIC_DEFAULT_POST_LIMIT) ?? 24,
   timeframe = process.env.NEXT_PUBLIC_DEFAULT_POST_TIMEFRAME || 'week',
   offset = 0,
 }: Partial<TrendingPostsInput> = {}) {
@@ -26,6 +26,7 @@ export default async function getTrendingPosts({
 
     if (!trendingPosts) return []
 
+    console.log('from server')
     return trendingPosts as Posts[]
   } catch (error) {
     console.log('getTrendingPosts error', error)

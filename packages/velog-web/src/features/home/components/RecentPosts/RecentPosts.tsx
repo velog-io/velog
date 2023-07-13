@@ -17,12 +17,12 @@ function RecentPosts({ data }: Props) {
   const getRecentPostsMore = useCallback(() => {
     if (isLoading) return
     fetchNextPosts({
-      limit: 2,
+      limit: 5,
       cursor: posts[posts.length - 1].id,
     })
   }, [fetchNextPosts, posts, isLoading])
 
-  // useInfiniteScroll(ref, getRecentPostsMore)
+  useInfiniteScroll(ref, getRecentPostsMore)
 
   return (
     <>
