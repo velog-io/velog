@@ -146,12 +146,24 @@ export class PostService implements PostServiceInterface {
       is_temp: false,
     }
 
-    const OR: any = []
     if (!userId) {
-      whereInput = { is_private: false, ...whereInput }
+      whereInput = { ...whereInput, is_private: false }
     } else {
-      OR.push({ is_private: false })
-      OR.push({ fk_user_id: userId })
+      whereInput = {
+        AND: [
+          { ...whereInput },
+          {
+            OR: [
+              {
+                is_private: false,
+              },
+              {
+                fk_user_id: userId,
+              },
+            ],
+          },
+        ],
+      }
     }
 
     if (cursor) {
@@ -165,32 +177,53 @@ export class PostService implements PostServiceInterface {
         throw new BadRequestError('Invalid cursor')
       }
 
-      whereInput = { released_at: { lt: post!.released_at! }, ...whereInput }
-
-      OR.push({
-        AND: [{ released_at: post.released_at }, { id: { lt: post.id } }],
-      })
-    }
-
-    if (OR.length > 0) {
-      whereInput.OR = OR
-    }
-
-    const posts = await this.db.post.findMany({
-      where: whereInput,
-      orderBy: {
-        released_at: 'desc',
-      },
-      include: {
-        user: {
-          include: {
-            profile: true,
+      const OR: any[] = [
+        {
+          AND: [
+            {
+              released_at: {
+                equals: post.released_at,
+              },
+            },
+            { id: { lt: post.id } },
+          ],
+        },
+        {
+          released_at: {
+            lt: post.released_at,
           },
         },
-      },
-      take: limit,
-    })
-    return posts
+      ]
+
+      whereInput = { ...whereInput, OR: OR }
+    }
+
+    try {
+      const posts = await this.db.post.findMany({
+        where: whereInput,
+        orderBy: [
+          {
+            released_at: 'desc',
+          },
+          {
+            id: 'desc',
+          },
+        ],
+        include: {
+          user: {
+            include: {
+              profile: true,
+            },
+          },
+        },
+        take: limit,
+      })
+
+      return posts
+    } catch (error) {
+      console.log(error)
+      return []
+    }
   }
   public async getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]> {
     const { offset = 0, limit = 20, timeframe = 'month' } = input

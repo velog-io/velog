@@ -32,8 +32,14 @@ function HomeTab({}: Props) {
 
   const [moreButton, toggleMoreButton] = useToggle(false)
   const [timeframePicker, toggleTimeframePicker] = useToggle(false)
+  const { isLoading } = useTimeframeValue()
   const timeframeRef = useRef<HTMLDivElement | null>(null)
   const isRecent = pathname === '/recent'
+
+  const handleToggle = () => {
+    if (isLoading) return
+    toggleTimeframePicker()
+  }
 
   return (
     <div className={cx('wrapper')}>
@@ -67,7 +73,7 @@ function HomeTab({}: Props) {
           <>
             <div
               className={cx('selector')}
-              onClick={toggleTimeframePicker}
+              onClick={handleToggle}
               ref={timeframeRef}
             >
               {timeframes.find((t) => t[0] === timeframe)![1]}

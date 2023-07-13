@@ -2,7 +2,7 @@
 
 import PostCardGrid from '@/features/post/components/PostCardGrid'
 import { Suspense, useCallback, useEffect, useRef } from 'react'
-import { Posts } from '@/types/post'
+import type { Posts } from '@/types/post'
 import { Timeframe, useTimeframe } from '@/features/home/state/timeframe'
 import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
@@ -13,41 +13,22 @@ type Props = {
 }
 
 function TrendingPosts({ data }: Props) {
-  const searchParmas = useSearchParams()
-  const timeframe = (searchParmas.get('timeframe') || 'week') as Timeframe
-
-  const { prevTimeFrame, posts, isLoading, fetchNextPosts } =
-    useTrendingPosts(data)
+  const { posts, isLoading, fetchNextPage, isFetching } = useTrendingPosts(data)
   const ref = useRef<HTMLDivElement>(null)
 
-  // When timeframe was changed
-  useEffect(() => {
-    if (prevTimeFrame.current === timeframe) return
-    fetchNextPosts({
-      limit: Number(process.env.NEXT_PUBLIC_DEFAULT_POST_LIMIT) || 24,
-      offset: 0,
-      timeframe,
-    })
-  }, [timeframe, prevTimeFrame, fetchNextPosts])
-
-  // infinite scroll
   const getTreningPostsMore = useCallback(() => {
-    fetchNextPosts({
-      limit: 12,
-      offset: posts.length,
-      timeframe,
-    })
-  }, [fetchNextPosts, posts.length, timeframe])
+    if (isLoading) return
+    fetchNextPage()
+  }, [isLoading, fetchNextPage])
 
   useInfiniteScroll(ref, getTreningPostsMore)
-
   return (
     <>
       <PostCardGrid
-        data={posts}
+        posts={posts}
         forHome={true}
         forPost={false}
-        loading={isLoading}
+        loading={isLoading || isFetching}
       />
       <div ref={ref} />
     </>
