@@ -10,7 +10,6 @@ import { useMemo } from 'react'
 
 export default function useRecentPosts(initialPosts: Posts[] = []) {
   const limit = 12
-
   const fetchInput = useMemo(() => {
     return {
       limit,

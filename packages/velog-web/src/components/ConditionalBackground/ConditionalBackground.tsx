@@ -1,12 +1,14 @@
 import { useEffect, useMemo } from 'react'
 import styles from './ConditionalBackground.module.css'
 import { usePathname } from 'next/navigation'
+import { bindClassNames } from '@/lib/styles/bindClassNames'
+
+const cx = bindClassNames(styles)
 
 type Props = { children: React.ReactNode }
 
 function ConditionalBackground({ children }: Props) {
   const pathname = usePathname()
-
   const isGray = useMemo(
     () =>
       ['/', '/recent', '/lists', '/trending'].some((path) =>
@@ -15,17 +17,11 @@ function ConditionalBackground({ children }: Props) {
     [pathname]
   )
 
-  useEffect(() => {
-    if (isGray) {
-      document.body.classList.add(styles.isGray)
-      document.body.classList.remove(styles.isWhite)
-    } else {
-      document.body.classList.remove(styles.isGray)
-      document.body.classList.add(styles.isWhite)
-    }
-  }, [isGray])
-
-  return <>{children}</>
+  return (
+    <div className={cx('block', { isGray: isGray, isWhite: !isGray })}>
+      {children}
+    </div>
+  )
 }
 
 export default ConditionalBackground
