@@ -1,41 +1,56 @@
 import { fetcher } from '@/graphql/fetcher'
 import {
   RecentPostsDocument,
-  RecentPostsInput,
   RecentPostsQuery,
   RecentPostsQueryVariables,
 } from '@/graphql/generated'
 import { Posts } from '@/types/post'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 
 export default function useRecentPosts(initialPosts: Posts[] = []) {
-  const [posts, setPosts] = useState<Posts[]>(initialPosts)
-  const [fetchPostsInput, fetchNextPosts] = useState<RecentPostsInput>({
-    limit: 3,
-    cursor: posts[posts.length - 1].id,
-  })
+  const limit = 12
 
-  const { data, isSuccess, isLoading, isError } =
+  const fetchInput = useMemo(() => {
+    return {
+      limit,
+      cursor: initialPosts[initialPosts.length - 1].id,
+    }
+  }, [initialPosts])
+
+  const { data, isLoading, fetchNextPage, isFetching, isRefetching } =
     useInfiniteQuery<RecentPostsQuery>(
-      ['recentPosts', { input: fetchPostsInput }],
-      fetcher<RecentPostsQuery, RecentPostsQueryVariables>(
-        RecentPostsDocument,
-        {
-          input: fetchPostsInput,
-        }
-      ),
+      ['recentPosts'],
+      ({ pageParam = fetchInput }) =>
+        fetcher<RecentPostsQuery, RecentPostsQueryVariables>(
+          RecentPostsDocument,
+          {
+            input: pageParam,
+          }
+        )(),
       {
-        retryDelay: 400,
-        enabled: false,
+        retryDelay: 100,
+        cacheTime: 1000 * 60 * 2,
+        staleTime: 1000 * 60 * 5,
+        getNextPageParam: (page) => {
+          const recentPosts = page.recentPosts
+          if (!recentPosts) return false
+          if (recentPosts && recentPosts?.length < limit) return false
+          return {
+            limit,
+            cursor: recentPosts[recentPosts.length - 1]?.id,
+          }
+        },
       }
     )
 
-  useEffect(() => {
-    if (!isSuccess) return
-    const list = data.pages.map((page) => page.recentPosts).flat() as Posts[]
-    setPosts((prev) => [...prev, ...list])
-  }, [isSuccess, data, isError, initialPosts])
+  const posts = useMemo(() => {
+    if (isRefetching) return []
+    return [
+      ...initialPosts,
+      ...(data?.pages.flatMap((page) => page.recentPosts)! || []),
+    ] as Posts[]
+  }, [data?.pages, initialPosts, isRefetching])
 
-  return { posts, isLoading, fetchNextPosts }
+  return { posts, isLoading, fetchNextPage, isFetching, isRefetching }
 }

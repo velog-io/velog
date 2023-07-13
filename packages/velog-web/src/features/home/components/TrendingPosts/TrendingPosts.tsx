@@ -16,7 +16,6 @@ function TrendingPosts({ data }: Props) {
   const { posts, isLoading, fetchNextPage, isFetching } = useTrendingPosts(data)
   const ref = useRef<HTMLDivElement>(null)
 
-  // infinite scroll
   const getTreningPostsMore = useCallback(() => {
     if (isLoading) return
     fetchNextPage()

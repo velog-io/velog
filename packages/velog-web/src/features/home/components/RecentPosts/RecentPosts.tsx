@@ -11,16 +11,13 @@ type Props = {
 }
 
 function RecentPosts({ data }: Props) {
-  const { posts, isLoading, fetchNextPosts } = useRecentPosts(data)
+  const { posts, isLoading, fetchNextPage, isFetching } = useRecentPosts(data)
   const ref = useRef<HTMLDivElement>(null)
 
   const getRecentPostsMore = useCallback(() => {
     if (isLoading) return
-    fetchNextPosts({
-      limit: 5,
-      cursor: posts[posts.length - 1].id,
-    })
-  }, [fetchNextPosts, posts, isLoading])
+    fetchNextPage()
+  }, [isLoading, fetchNextPage])
 
   useInfiniteScroll(ref, getRecentPostsMore)
 
@@ -30,7 +27,7 @@ function RecentPosts({ data }: Props) {
         posts={posts}
         forHome={true}
         forPost={false}
-        loading={isLoading}
+        loading={isLoading || isFetching}
       />
       <div ref={ref} />
     </>

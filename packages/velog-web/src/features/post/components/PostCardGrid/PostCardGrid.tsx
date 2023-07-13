@@ -34,7 +34,7 @@ function PostCardGrid({
         )
       })}
       {loading &&
-        Array(8)
+        Array(12)
           .fill(0)
           .map((_, i) => (
             <PostCardSkeleton key={i} forHome={forHome} forPost={forPost} />
