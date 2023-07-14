@@ -1,7 +1,7 @@
 import React from 'react'
-import Link from 'next/link'
 import styles from './HeaderUserMenuItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
+import VLink from '@/components/VLink/VLink'
 
 const cx = bindClassNames(styles)
 
@@ -17,7 +17,7 @@ function HeaderUserMenuItem({ children, to, onClick }: Props) {
       {children}
     </div>
   )
-  const WrapperComponent = to ? Link : React.Fragment
+  const WrapperComponent = to ? VLink : React.Fragment
   return React.createElement(
     WrapperComponent,
     to ? { href: to, className: `${cx('link')}` } : null,
