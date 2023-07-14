@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import styles from './ConditionalBackground.module.css'
 import { usePathname } from 'next/navigation'
 import { bindClassNames } from '@/lib/styles/bindClassNames'

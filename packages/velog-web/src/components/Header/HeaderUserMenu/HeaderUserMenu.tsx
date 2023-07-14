@@ -3,7 +3,7 @@ import styles from './HeaderUserMenu.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import HeaderUserMenuItem from '@/components/Header/HeaderUserMenuItem/HeaderUserMenuItem'
 import { useAuth } from '@/state/auth'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { useLogoutMutation } from '@/graphql/generated'
 import { useRouter } from 'next/navigation'
 

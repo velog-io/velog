@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 export function useInfiniteScroll(
-  ref: React.RefObject<any>,
+  ref: React.RefObject<HTMLElement>,
   fetchNext: () => void
 ) {
   useEffect(() => {

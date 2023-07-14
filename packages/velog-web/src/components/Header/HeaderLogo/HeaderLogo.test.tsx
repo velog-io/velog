@@ -1,5 +1,5 @@
 import HeaderLogo from './HeaderLogo'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 describe('HeaderLogo', () => {
   it('renders successfully', () => {

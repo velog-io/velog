@@ -1,5 +1,5 @@
 import HeaderSearchButton from './HeaderSearchButton'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 describe('HeaderSearchButton', () => {
   it('renders successfully', () => {

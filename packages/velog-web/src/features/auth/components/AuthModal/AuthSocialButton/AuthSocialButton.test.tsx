@@ -1,5 +1,5 @@
 import AuthSocialButton from './AuthSocialButton'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 describe('AuthSocialButton', () => {
   it('renders successfully', () => {

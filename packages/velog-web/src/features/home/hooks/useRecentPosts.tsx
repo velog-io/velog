@@ -47,7 +47,7 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
     if (isRefetching) return []
     return [
       ...initialPosts,
-      ...(data?.pages.flatMap((page) => page.recentPosts)! || []),
+      ...(data?.pages.flatMap((page) => page.recentPosts) || []),
     ] as Posts[]
   }, [data?.pages, initialPosts, isRefetching])
 

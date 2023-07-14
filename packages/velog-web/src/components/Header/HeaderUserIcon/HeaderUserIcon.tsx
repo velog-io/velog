@@ -8,7 +8,7 @@ const cx = bindClassNames(styles)
 
 type Props = {
   user: CurrentUser
-  onClick: (e: React.MouseEvent) => void
+  onClick: () => void
 }
 
 function HeaderUserIcon({ user, onClick }: Props) {

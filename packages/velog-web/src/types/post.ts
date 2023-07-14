@@ -7,7 +7,7 @@ export type Post = {
   thumbnail: string
   is_markdown: boolean
   is_temp: boolean
-  user: any
+  user: User
   url_slug: string
   likes: number
   meta: any

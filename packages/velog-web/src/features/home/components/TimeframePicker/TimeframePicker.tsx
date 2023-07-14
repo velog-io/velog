@@ -6,12 +6,7 @@ import { timeframes } from '@/features/home/utils/timeframeMap'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
 const cx = bindClassNames(styles)
 

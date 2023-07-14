@@ -26,8 +26,8 @@ export type User = {
   username: string
   email: string | null
   is_certified: boolean
-  profile: UserProfile
-  velogConfig: VelogConfig | null
+  profile?: UserProfile
+  velogConfig?: VelogConfig
 }
 
 export type CurrentUser = {

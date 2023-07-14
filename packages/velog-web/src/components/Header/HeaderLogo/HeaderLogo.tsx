@@ -5,9 +5,7 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 
 const cx = bindClassNames(styles)
 
-type Props = {}
-
-function HeaderLogo({}: Props) {
+function HeaderLogo() {
   return (
     <div className={cx('block')}>
       <Link href="/">

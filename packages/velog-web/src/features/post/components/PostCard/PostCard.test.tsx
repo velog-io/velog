@@ -1,5 +1,5 @@
 import PostCard from './PostCard'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 describe('PostCard', () => {
   it('renders successfully', () => {

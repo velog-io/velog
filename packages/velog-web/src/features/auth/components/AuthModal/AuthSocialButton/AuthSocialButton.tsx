@@ -3,7 +3,6 @@ import { FacebookIcon, GithubIcon, GoogleIcon } from '@/assets/icons/components'
 import { useMemo } from 'react'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { AuthProvider } from '@/types/auth'
-import Image from 'next/image'
 
 const cx = bindClassNames(styles)
 

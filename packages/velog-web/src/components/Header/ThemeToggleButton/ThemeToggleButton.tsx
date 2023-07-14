@@ -5,9 +5,7 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { MoonIcon, SunIcon } from '@/assets/icons/components'
 const cx = bindClassNames(styles)
 
-type Props = {}
-
-function ThemeToggleButton({}: Props) {
+function ThemeToggleButton() {
   const { theme, toggle } = useToggleTheme()
   const isDark = theme === 'dark'
 

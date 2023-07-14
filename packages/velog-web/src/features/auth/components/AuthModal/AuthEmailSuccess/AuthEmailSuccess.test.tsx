@@ -1,5 +1,5 @@
 import AuthEmailSuccess from './AuthEmailSuccess'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 describe('AuthEmailSuccess', () => {
   it('renders successfully', () => {

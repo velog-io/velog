@@ -77,7 +77,7 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
 
     return [
       ...initialPosts,
-      ...(data?.pages.flatMap((page) => page.trendingPosts)! || []),
+      ...(data?.pages.flatMap((page) => page.trendingPosts) || []),
     ] as Posts[]
   }, [data?.pages, initialPosts, isRefetching])
 

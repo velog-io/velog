@@ -4,8 +4,6 @@ import { Posts } from '@/types/post'
 import styles from './PostCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 
-import gtag from '@/lib/gtag'
-import Link from 'next/link'
 import RatioImage from '@/components/RatioImage/RatioImage'
 import Image from 'next/image'
 import VLink from '@/components/VLink/VLink'

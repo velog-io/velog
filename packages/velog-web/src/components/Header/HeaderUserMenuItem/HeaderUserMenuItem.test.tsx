@@ -1,5 +1,5 @@
 import HeaderUserMenuItem from './HeaderUserMenuItem'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 describe('HeaderUserMenuItem', () => {
   it('renders successfully', () => {

@@ -1,5 +1,5 @@
 import Modal from './Modal'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 describe('Modal', () => {
   it('renders successfully', () => {

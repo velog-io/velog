@@ -1,5 +1,5 @@
 import AuthModal from './AuthModal'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 describe('AuthModal', () => {
   it('renders successfully', () => {

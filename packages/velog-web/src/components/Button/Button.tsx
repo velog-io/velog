@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
 import styles from './Button.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import VLink from '@/components/VLink/VLink'
@@ -23,7 +22,6 @@ interface Props extends ButtonProps {
 const cx = bindClassNames(styles)
 
 function Button({
-  ref,
   to,
   color = 'teal',
   size = 'default',

@@ -1,5 +1,5 @@
 import PostCardGrid from './PostCardGrid'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 describe('PostCardGrid', () => {
   it('renders successfully', () => {

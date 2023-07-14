@@ -1,5 +1,5 @@
 import RatioImage from './RatioImage'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 
 describe('RatioImage', () => {
   it('renders successfully', () => {

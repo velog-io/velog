@@ -1,14 +1,11 @@
 'use client'
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import styles from './HomeTab.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import useToggle from '@/hooks/useToggle'
 import { useRef } from 'react'
-import {
-  useTimeframe,
-  useTimeframeValue,
-} from '@/features/home/state/timeframe'
+import { useTimeframeValue } from '@/features/home/state/timeframe'
 import ActiveLink from '@/components/ActiveLink/ActiveLink'
 import {
   MdAccessTime,
@@ -23,9 +20,7 @@ import HomeMoreButton from '@/features/home/components/HomeMoreButton'
 
 const cx = bindClassNames(styles)
 
-type Props = {}
-
-function HomeTab({}: Props) {
+function HomeTab() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const timeframe = searchParams.get('timeframe') || 'week'
