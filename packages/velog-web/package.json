@@ -49,6 +49,7 @@
     "@svgr/cli": "^8.0.1",
     "@svgr/webpack": "^8.0.1",
     "@testing-library/react": "^14.0.0",
+    "@types/gtag.js": "^0.0.12",
     "@types/inquirer": "^9.0.3",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
