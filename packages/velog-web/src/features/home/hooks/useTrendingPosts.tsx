@@ -19,13 +19,14 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
   const { actions } = useTimeframe()
 
   const limit = 12
+  const initialOffset = initialPosts.length
   const fetchInput = useMemo(() => {
     return {
       limit,
-      offset: initialPosts.length,
+      offset: initialOffset,
       timeframe,
     }
-  }, [initialPosts.length, timeframe])
+  }, [initialOffset, timeframe])
 
   const { data, isLoading, fetchNextPage, refetch, isFetching, isRefetching } =
     useInfiniteQuery<TrendingPostsQuery>(
@@ -47,7 +48,7 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
           if (trendingPosts.length < limit) return false
           const offset =
             allPages.flatMap((pages) => pages.trendingPosts).length +
-            initialPosts.length
+            initialOffset
 
           return {
             limit,
@@ -62,24 +63,23 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
     if (prevTimeFrame.current === timeframe) return
     refetch()
     prevTimeFrame.current = timeframe as Timeframe
-  }, [timeframe, refetch])
+  }, [timeframe, refetch, data])
 
   useEffect(() => {
-    if (isRefetching) {
-      actions.setLoading(true)
+    if (isFetching) {
+      actions.setIsFetching(true)
     } else {
-      actions.setLoading(false)
+      actions.setIsFetching(false)
     }
-  }, [isRefetching, actions])
+  }, [isFetching, actions])
 
   const posts = useMemo(() => {
-    if (isRefetching) return []
-
+    if (isLoading) return []
     return [
       ...initialPosts,
       ...(data?.pages.flatMap((page) => page.trendingPosts) || []),
     ] as Posts[]
-  }, [data?.pages, initialPosts, isRefetching])
+  }, [data, initialPosts, isLoading])
 
   return {
     posts,

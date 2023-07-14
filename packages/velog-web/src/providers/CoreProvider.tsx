@@ -1,5 +1,3 @@
-'use client'
-
 import ConditionalBackgroundProvider from '@/providers/ConditionalBackgroundProvider'
 import GtagProvider from '@/providers/GtagProvider'
 import InteractiveViewProvider from '@/providers/InteractiveViewProvider'
@@ -14,7 +12,9 @@ type Props = {
 function CoreProvider({ children }: Props) {
   return (
     <>
+      {/* run in server side */}
       <GtagProvider />
+      {/* run in client side */}
       <ConditionalBackgroundProvider>
         <ReactQueryProvider>
           <SangteContextProvider>

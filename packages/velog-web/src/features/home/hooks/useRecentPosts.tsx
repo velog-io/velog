@@ -44,12 +44,12 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
     )
 
   const posts = useMemo(() => {
-    if (isRefetching) return []
+    if (isLoading) return []
     return [
       ...initialPosts,
       ...(data?.pages.flatMap((page) => page.recentPosts) || []),
     ] as Posts[]
-  }, [data?.pages, initialPosts, isRefetching])
+  }, [data, initialPosts, isLoading])
 
   return { posts, isLoading, fetchNextPage, isFetching, isRefetching }
 }

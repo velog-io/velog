@@ -27,12 +27,12 @@ function HomeTab() {
 
   const [moreButton, toggleMoreButton] = useToggle(false)
   const [timeframePicker, toggleTimeframePicker] = useToggle(false)
-  const { isLoading } = useTimeframeValue()
+  const { isFetching } = useTimeframeValue()
   const timeframeRef = useRef<HTMLDivElement | null>(null)
   const isRecent = pathname === '/recent'
 
   const handleToggle = () => {
-    if (isLoading) return
+    if (isFetching) return
     toggleTimeframePicker()
   }
 

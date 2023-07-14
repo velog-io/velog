@@ -23,10 +23,10 @@ function PostCardGrid({
 }: Props) {
   return (
     <div className={cx('block')}>
-      {posts.map((post) => {
+      {posts.map((post, i) => {
         return (
           <PostCard
-            key={post.id}
+            key={`${post}-${i}`}
             post={post}
             forHome={forHome}
             forPost={forPost}

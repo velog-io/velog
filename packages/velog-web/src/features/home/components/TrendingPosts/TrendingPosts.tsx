@@ -20,6 +20,7 @@ function TrendingPosts({ data }: Props) {
   }, [isLoading, fetchNextPage])
 
   useInfiniteScroll(ref, getTreningPostsMore)
+
   return (
     <>
       <PostCardGrid

@@ -3,20 +3,20 @@ import { sangte, useSangteActions, useSangteValue } from 'sangte'
 export type Timeframe = 'day' | 'week' | 'month' | 'year'
 type TimeframeState = {
   timeframe: Timeframe
-  isLoading: boolean
+  isFetching: boolean
 }
 
 const initialState: TimeframeState = {
   timeframe: 'week',
-  isLoading: false,
+  isFetching: false,
 }
 
 const timeframeState = sangte(initialState, (prev) => ({
   choose(time: Timeframe) {
     prev.timeframe = time
   },
-  setLoading(value: boolean) {
-    prev.isLoading = value
+  setIsFetching(value: boolean) {
+    prev.isFetching = value
   },
 }))
 
