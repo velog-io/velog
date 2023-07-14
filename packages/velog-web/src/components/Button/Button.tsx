@@ -3,6 +3,8 @@ import styles from './Button.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import VLink from '@/components/VLink/VLink'
 
+const cx = bindClassNames(styles)
+
 type ButtonProps = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
@@ -18,8 +20,6 @@ interface Props extends ButtonProps {
   border?: boolean
   className?: string
 }
-
-const cx = bindClassNames(styles)
 
 function Button({
   to,

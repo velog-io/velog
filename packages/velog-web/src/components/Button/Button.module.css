@@ -107,16 +107,15 @@
       color: var(--button-text);
     }
   }
-
-  transition: 0.125s all ease-in;
   &:focus {
     box-shadow: 0px 2px 12px #00000030;
   }
-  cursor: pointer;
   &:disabled {
     background: var(--bg-element2);
   }
 
+  transition: 0.125s all ease-in;
+  cursor: pointer;
   border: none;
   outline: none;
   font-weight: bold;
