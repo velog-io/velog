@@ -1,7 +1,5 @@
-type Props = {
-  children: React.ReactNode
-}
+type Props = {}
 
-export default function UrlSlugPage({ children }: Props) {
-  return <>{children}</>
+export default function UrlSlugPage({}: Props) {
+  return <></>
 }

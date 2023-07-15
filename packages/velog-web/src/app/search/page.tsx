@@ -1,9 +1,7 @@
 import BasicLayout from '@/components/Layouts/BasicLayout'
 
-type Props = {
-  children: React.ReactNode
-}
+type Props = {}
 
-export default function SearchPage({ children }: Props) {
-  return <BasicLayout>{children}</BasicLayout>
+export default function SearchPage({}: Props) {
+  return <BasicLayout />
 }

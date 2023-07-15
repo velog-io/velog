@@ -1,7 +1,5 @@
-type Props = {
-  children: React.ReactNode
-}
+type Props = {}
 
-export default function UsernamePage({ children }: Props) {
-  return <>{children}</>
+export default function UsernamePage({}: Props) {
+  return <></>
 }

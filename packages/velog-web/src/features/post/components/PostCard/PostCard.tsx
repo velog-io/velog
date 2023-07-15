@@ -61,7 +61,7 @@ function PostCard({ post, forHome = false, forPost = false }: Props) {
       <div className={cx('footer')}>
         <VLink className={cx('userInfo')} href={`/@${post.user.username}`}>
           <Image
-            src={post.user.profile.thumbnail || '/images/user-thumbnail.png'}
+            src={post.user.profile?.thumbnail || '/images/user-thumbnail.png'}
             alt={`user thumbnail of ${post.user.username}`}
             width={24}
             height={24}

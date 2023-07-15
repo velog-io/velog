@@ -35,8 +35,6 @@ function createComponent(directory: string, componentName: string) {
     )
     fs.writeFileSync(newFilePath, code)
   })
-
-  `Component files are created at ${componentDir}`)
 }
 
 async function main() {

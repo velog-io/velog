@@ -24,6 +24,7 @@ export default async function middleware(req: NextRequest) {
 
       const domains = ['.velog.io', undefined]
 
+      
       domains.forEach((domain) => {
         response.cookies.set({
           name: 'access_token',
