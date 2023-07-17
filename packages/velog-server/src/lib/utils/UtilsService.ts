@@ -1,11 +1,14 @@
-import { resolve } from 'path'
+import { dirname, join } from 'path'
 import { injectable, singleton } from 'tsyringe'
+import { fileURLToPath } from 'url'
 
 @injectable()
 @singleton()
 export class UtilsService {
   public resolveDir(dir: string): string {
-    return resolve(process.cwd(), dir)
+    const __filename = fileURLToPath(import.meta.url)
+    const cwd = dirname(__filename).split('/src')[0]
+    return join(cwd, dir)
   }
   public escapeForUrl(text: string): string {
     return text
