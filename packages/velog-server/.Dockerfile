@@ -11,3 +11,4 @@ COPY . .
 
 EXPOSE 5003
 
+RUN ["pnpm", "prod"]
