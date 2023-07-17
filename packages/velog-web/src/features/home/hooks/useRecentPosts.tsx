@@ -13,7 +13,7 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
   const fetchInput = useMemo(() => {
     return {
       limit,
-      cursor: initialPosts[initialPosts.length - 1].id,
+      cursor: initialPosts[initialPosts.length - 1]?.id,
     }
   }, [initialPosts])
 
