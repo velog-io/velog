@@ -1,4 +1,4 @@
-version: "3.1"
+version: "3.9"
 
 services: 
   db:
@@ -20,3 +20,15 @@ services:
       - '6379:6379'
     volumes:
     - ./docker/redis:/data
+    - ./docker/redis/conf/redis.conf:/usr/local/conf/redis.conf
+    command: redis-server /usr/local/conf/redis.conf
+  server:
+    image: node:18-alpine
+    container_name: "velog_server"
+    working_dir: /usr/src/app
+    build: ../.Dockerfile
+    ports:
+      - '5003:5003'
+    depends_on:
+      - db
+      - redis
