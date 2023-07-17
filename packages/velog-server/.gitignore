@@ -16,3 +16,5 @@
 !/env/.gitkeep
 .env.*
 .env
+
+/dockers/docker/data
