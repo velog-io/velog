@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:11.5
+    container_name: 'velog_db'
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: velog_local
+    ports:
+      - 5432:5432
+    volumes:
+      - ./dockers/docker/db:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    container_name: 'velog_redis'
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - ./dockers/docker/redis:/data
+      - ./dockers/docker/redis/conf/redis.conf:/usr/local/conf/redis.conf
+    command: redis-server /usr/local/conf/redis.conf
+
+  server:
+    container_name: 'velog_server'
+    working_dir: /usr/src/app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 5003:5003
+    depends_on:
+      - redis
+
+volumes:
+  db:
+  redis:

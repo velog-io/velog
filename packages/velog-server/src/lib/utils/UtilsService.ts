@@ -7,7 +7,8 @@ import { fileURLToPath } from 'url'
 export class UtilsService {
   public resolveDir(dir: string): string {
     const __filename = fileURLToPath(import.meta.url)
-    const cwd = dirname(__filename).split('/src')[0]
+    const splited = dirname(__filename).split('/src')
+    const cwd = splited.slice(0, -1).join('/src')
     return join(cwd, dir)
   }
   public escapeForUrl(text: string): string {
