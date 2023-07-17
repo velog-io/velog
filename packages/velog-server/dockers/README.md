@@ -10,10 +10,10 @@ docker exec -it velog_db bash
 
 # 3. login as postgres
 ```sh
-su - postgres
+psql -U postgres
 ```
 
-# follow
+# 4. Run following statements
 
 ```sh
 CREATE DATABASE velog
@@ -22,7 +22,7 @@ CREATE DATABASE velog
   ENCODING 'UTF8'
   TEMPLATE template0;
 
-CREATE USER velog WITH ENCRYPTED PASSWORD 'velogpw';
+CREATE USER velog WITH ENCRYPTED PASSWORD 'example';
 GRANT ALL PRIVILEGES ON DATABASE velog to velog;
 
 \c velog
