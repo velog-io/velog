@@ -57,7 +57,7 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
 
   pulumi:
-    # needs: build
+    needs: build
     runs-on: ubuntu-latest
     defaults:
       run:
