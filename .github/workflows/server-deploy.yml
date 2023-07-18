@@ -74,7 +74,7 @@ jobs:
         uses: pulumi/actions@v4.4.0
         with:
           command: up #
-          stack-name: /dev # or org-name/stack-name
+          stack-name: winverse/velog/dev # or org-name/stack-name
           diff: true
           upsert: true
         env:
