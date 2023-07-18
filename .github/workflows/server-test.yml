@@ -1,4 +1,4 @@
-name: Run Velog Server test
+name: Velog Server test workflow
 
 on:
   push:
