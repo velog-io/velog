@@ -2,11 +2,11 @@ name: Run Velog Server test
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "developement"]
     paths:
       - "packages/velog-server/**"
   pull_request:
-    branches: ["main"]
+    branches: ["main", "developement"]
     paths:
       - "packages/velog-server/**"
 
@@ -33,10 +33,8 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "./packages/velog-server/pnpm-lock.yaml"
 
-      - run: pnpm install
-
-      - name: Check tsc version
-        run: tsc --version
+      - name: Install Dependencies
+        run: pnpm install
 
       - name: Build
         run: pnpm build
