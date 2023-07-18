@@ -13,6 +13,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "./packages/velog-server"
 
     steps:
       - name: Checkout Code
@@ -29,6 +32,7 @@ jobs:
           node-version: 18.16
           cache: "pnpm"
           cache-dependency-path: "./packages/velog-server/pnpm-lock.yaml"
+
       - run: pnpm install
 
       - name: Check tsc version
