@@ -23,6 +23,11 @@ jobs:
         with:
           node-version: 18.16
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.6.2
+
       - name: Cache node modules
         uses: actions/cache@v3
         with:
@@ -34,6 +39,9 @@ jobs:
 
       - name: Install Dependencies
         run: cd packages/velog-server && pnpm install
+
+      - name: Version check
+        run: tsc --version
 
       - name: Build
         run: cd packages/velog-server && pnpm build

@@ -17,7 +17,7 @@
   "scripts": {
     "prisma": "dotenv -e ./env/.env.development npx prisma",
     "prisma:format": "tsx ./scripts/prismaFormatter.ts && pnpm prisma generate",
-    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "build": "npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
     "prod": "pnpm build && NODE_ENV=production node dist/src/main.js",
     "start": "node ./dist/main.js",
@@ -75,6 +75,6 @@
     "ts-jest-mock-import-meta": "^1.0.0",
     "ts-node": "^10.9.1",
     "ts-paths-esm-loader": "^1.4.3",
-    "typescript": "^5.1.3"
+    "typescript": "^5.1.6"
   }
 }
