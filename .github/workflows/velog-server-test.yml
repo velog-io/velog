@@ -1,0 +1,36 @@
+name: Run Tests on push to main
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/velog-server/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install pnpm
+        run: curl -f https://get.pnpm.io/v6.14.js | node - add --global pnpm
+
+      - name: Install Dependencies
+        run: cd packages/velog-server && pnpm install
+
+      - name: Run Tests
+        run: cd packages/velog-server && pnpm test
