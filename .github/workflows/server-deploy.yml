@@ -57,12 +57,16 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
 
   pulumi:
+    needs: build
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: "infrastructure"
+        working-directory: "./infrastructure"
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Install Dependencies
         run: npm install
 
