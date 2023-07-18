@@ -1,4 +1,4 @@
-export type Envrionment = 'development' | 'production' | 'test' | 'stage'
+export type Envrionment = 'development' | 'test' | 'stage' | 'production'
 export type EnvFiles = Record<Envrionment, string>
 export type EnvVars = {
   appEnv: Envrionment

@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    tty: true
+    stdin_open: true
+    ports:
+      - 5003:5003

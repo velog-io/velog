@@ -17,7 +17,6 @@ const userResolvers: Resolvers = {
     logout: async (_, __, ctx) => {
       const userService = container.resolve(UserService)
       await userService.logout(ctx.reply)
-      ctx.reply.status(204)
       return true
     },
   },

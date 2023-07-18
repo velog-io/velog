@@ -13,8 +13,8 @@ export function useInfiniteScroll(
       },
       {
         root: null,
-        rootMargin: '300px',
-        threshold: 1,
+        rootMargin: '500px',
+        threshold: 0.0,
       }
     )
 

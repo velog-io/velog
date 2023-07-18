@@ -6,6 +6,7 @@ import { readdirSync } from 'fs'
 import { JSONResolver, DateTimeISOResolver } from 'graphql-scalars'
 import { IResolvers, MercuriusContext } from 'mercurius'
 import { basename, dirname, resolve } from 'path'
+import { ENV } from '@env'
 import { fileURLToPath } from 'url'
 
 async function resolverLoader(): Promise<Resolvers[]> {
@@ -14,7 +15,8 @@ async function resolverLoader(): Promise<Resolvers[]> {
   const resolverFolderPath = resolve(__dirname, 'resolvers')
 
   const promises = readdirSync(resolverFolderPath).map(async (resolverPath) => {
-    const resolvername = basename(resolverPath, '.ts')
+    const suffix = ENV.appEnv === 'production' ? '.js' : '.ts'
+    const resolvername = basename(resolverPath, suffix)
     const resolver = await import(`./resolvers/${resolvername}.js`)
     return resolver.default
   })

@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import { Envrionment, EnvFiles, EnvVars } from './common/interfaces/env.js'
 import { container } from 'tsyringe'
 import { UtilsService } from '@lib/utils/UtilsService.js'
+import { existsSync } from 'fs'
 
 const envFiles: EnvFiles = {
   development: '.env.development',
@@ -10,11 +11,19 @@ const envFiles: EnvFiles = {
   stage: '.env.stage',
 }
 
-const appEnv = (process.env.APP_ENV as Envrionment) || 'development'
+const appEnv = (process.env.NODE_ENV as Envrionment) || 'development'
 
 const file = envFiles[appEnv]
 const utils = container.resolve(UtilsService)
-dotenv.config({ path: utils.resolveDir(`./env/${file}`) })
+const prefix = appEnv === 'production' ? '../env' : './env'
+
+const configPath = utils.resolveDir(`${prefix}/${file}`)
+
+if (!existsSync(configPath)) {
+  throw new Error('Not found environment file')
+}
+
+dotenv.config({ path: configPath })
 
 export const ENV = {
   appEnv,

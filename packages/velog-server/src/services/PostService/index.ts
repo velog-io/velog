@@ -7,8 +7,7 @@ import {
   TrendingPostsInput,
 } from '@graphql/generated.js'
 import { DbService } from '@lib/db/DbService.js'
-import { BadRequestError } from '@errors/BadRequestErrors.js'
-import { UnauthorizedError } from '@errors/UnauthorizedError.js'
+import { BadRequestError, UnauthorizedError } from '@errors/index.js'
 
 import { GetPostsByTypeParams, PostAllInclude, PostServiceInterface } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
