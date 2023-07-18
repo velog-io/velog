@@ -36,6 +36,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: Primsa generate
+        run: pnpm prisma generate
+
       - name: Build
         run: pnpm build
 
