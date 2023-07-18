@@ -18,22 +18,24 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18.16
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install Dependencies
-        run: cd packages/velog-server && pnpm install
+          cache: "pnpm"
+          cache-dependency-path: "./packages/velog-server/pnpm-lock.yaml"
+      - run: pnpm install
 
       - name: Check tsc version
         run: tsc --version
 
       - name: Build
-        run: cd packages/velog-server && pnpm build
+        run: pnpm build
 
       - name: Run Tests
-        run: cd packages/velog-server && pnpm test
+        run: pnpm test
