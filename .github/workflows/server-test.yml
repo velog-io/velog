@@ -2,11 +2,11 @@ name: Run Velog Server test
 
 on:
   push:
-    branches: ["main", "developement"]
+    branches: ["main", "development"]
     paths:
       - "packages/velog-server/**"
   pull_request:
-    branches: ["main", "developement"]
+    branches: ["main", "development"]
     paths:
       - "packages/velog-server/**"
 
