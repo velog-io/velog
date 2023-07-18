@@ -27,7 +27,7 @@ jobs:
           version: latest
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v3.7.0
         with:
           node-version: 18.16
           cache: "pnpm"
