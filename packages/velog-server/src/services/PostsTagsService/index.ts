@@ -6,14 +6,14 @@ interface Service {
 }
 
 @injectable()
-export class PostsTagsService implements Service {
-  public async getPostsByTag({
-    tagName,
-    cursor,
-    limit = 20,
-    userId,
-    userself,
-  }: GetPostsByTagParams): Promise<Post> {}
+export class PostsTagsService {
+  // public async getPostsByTag({
+  //   tagName,
+  //   cursor,
+  //   limit = 20,
+  //   userId,
+  //   userself,
+  // }: GetPostsByTagParams): Promise<Post> {}
 }
 
 type GetPostsByTagParams = {

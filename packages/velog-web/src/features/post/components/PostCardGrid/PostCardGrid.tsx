@@ -34,7 +34,7 @@ function PostCardGrid({
         )
       })}
       {loading &&
-        Array(12)
+        Array(Number(process.env.NEXT_PUBLIC_DEFAULT_POST_LIMIT) ?? 24)
           .fill(0)
           .map((_, i) => (
             <PostCardSkeleton key={i} forHome={forHome} forPost={forPost} />

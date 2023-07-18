@@ -17,13 +17,14 @@
   "scripts": {
     "prisma": "dotenv -e ./env/.env.development npx prisma",
     "prisma:format": "tsx ./scripts/prismaFormatter.ts && pnpm prisma generate",
-    "build": "tsc",
-    "dev": "dotenv -e ./env/.env.development | nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
+    "prod": "pnpm build && NODE_ENV=production node dist/src/main.js",
     "start": "node ./dist/main.js",
     "codegen": "graphql-codegen --config codegen.ts",
-    "test": "jest",
+    "test": "npx jest",
     "create-service": "tsx ./scripts/createService.ts",
-    "create-mock": "dotenv -e ./env/.env.development | tsx ./scripts/createMock.ts"
+    "create-mock": "tsx ./scripts/createMock.ts"
   },
   "dependencies": {
     "@fastify/autoload": "^5.7.1",
@@ -47,9 +48,9 @@
     "prisma": "^4.16.1",
     "reflect-metadata": "^0.1.13",
     "remove-markdown": "^0.5.0",
+    "tsc-alias": "^1.8.7",
     "tsx": "^3.12.7",
-    "tsyringe": "^4.7.0",
-    "utility-types": "^3.10.0"
+    "tsyringe": "^4.7.0"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^5.0.0",
@@ -64,16 +65,16 @@
     "@types/remove-markdown": "^0.3.1",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
+    "dotenv-cli": "^7.2.1",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-es": "^4.1.0",
-    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^29.5.0",
     "nodemon": "^2.0.22",
     "ts-jest": "^29.1.0",
+    "ts-jest-mock-import-meta": "^1.0.0",
     "ts-node": "^10.9.1",
     "ts-paths-esm-loader": "^1.4.3",
-    "typescript": "^5.1.3"
+    "typescript": "^5.1.6"
   }
 }

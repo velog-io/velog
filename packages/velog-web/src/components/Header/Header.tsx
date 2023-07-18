@@ -9,7 +9,7 @@ import HeaderSearchButton from '@/components/Header/HeaderSearchButton'
 import ThemeToggleButton from '@/components/Header/ThemeToggleButton'
 import { useModal } from '@/state/modal'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { memo, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import useToggle from '@/hooks/useToggle'
 import HeaderUserIcon from '@/components/Header/HeaderUserIcon'
 import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
@@ -83,4 +83,4 @@ function Header({ user }: Props) {
   )
 }
 
-export default memo(Header)
+export default Header

@@ -23,7 +23,7 @@ const tableAlias: Record<string, string> = {
   UserProfile: 'profile',
 }
 
-const getNewSchema = (schema: string, models: string[]) =>
+const writeSchema = (schema: string, models: string[]) =>
   lines(schema)
     .map((line) => {
       if (line.length === 0) return line
@@ -58,7 +58,7 @@ function main() {
   try {
     const schema = tryGetSchema()
     const models = getModels(schema)
-    const newSchema = getNewSchema(schema, models)
+    const newSchema = writeSchema(schema, models)
     tryWriteSchema(newSchema)
   } catch (error) {
     throw error
