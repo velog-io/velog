@@ -57,7 +57,7 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
 
   pulumi:
-    needs: build
+    # needs: build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -71,7 +71,7 @@ jobs:
         run: npm install
 
       - name: pulumi up
-        uses: pulumi/actions@v3
+        uses: pulumi/actions@v4.4.0
         with:
           command: up #
           stack-name: /dev # or org-name/stack-name
