@@ -1,12 +1,12 @@
-name: Run Velog Server test
+name: Velog Server test workflow
 
 on:
   push:
-    branches: ["main", "developement"]
+    branches: ["main", "development"]
     paths:
       - "packages/velog-server/**"
   pull_request:
-    branches: ["main", "developement"]
+    branches: ["main", "development"]
     paths:
       - "packages/velog-server/**"
 
@@ -35,6 +35,9 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm install
+
+      - name: Primsa generate
+        run: pnpm prisma generate
 
       - name: Build
         run: pnpm build
