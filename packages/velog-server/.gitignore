@@ -13,8 +13,9 @@
 
 #env
 /env/.env.*
-!/env/.gitkeep
 .env.*
 .env
+!/env/.gitkeep
+!/env/.env.test
 
 /dockers/docker/data
