@@ -37,7 +37,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -45,7 +45,7 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v1.6.2
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v4
@@ -56,6 +56,16 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
+  pulumi:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "infrastructure"
+
+    steps:
+      - name: Install Dependencies
+        run: npm install
+
       - name: pulumi up
         uses: pulumi/actions@v3
         with:
@@ -63,6 +73,5 @@ jobs:
           stack-name: /dev # or org-name/stack-name
           diff: true
           upsert: true
-          work-dir: ./infrastructure
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
