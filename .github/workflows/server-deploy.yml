@@ -1,17 +1,19 @@
-name: Dockerizing to Amazon ECR
+name: Velog Server deployment workflow
 
 on:
   push:
     branches: "release"
     paths:
       - "packages/velog-server/**"
+      - "infrastructure/**"
+      - "github/workflows/**"
 
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: velog-server
 
 jobs:
-  Deploy:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -22,7 +24,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Docker Buildx for Docker Cache
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v2.9.1
         with:
           install: true
 
@@ -35,7 +37,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -43,13 +45,57 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v1.6.2
 
       - name: Build and push Docker images
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
           context: ./packages/velog-server/
           push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
+
+  pulumi:
+    # needs: build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "./infrastructure"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.7.0
+        with:
+          node-version: 18.16
+          cache: "pnpm"
+          cache-dependency-path: "./infrastructure/pnpm-lock.yaml"
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: pulumi up
+        uses: pulumi/actions@v4.4.0
+        with:
+          command: up #
+          stack-name: winverse/velog/dev # or org-name/stack-name
+          diff: true
+          upsert: true
+          work-dir: "./infrastructure"
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
