@@ -1,5 +1,5 @@
 import { container } from 'tsyringe'
-import { PostService } from './index.js'
+import { PostService } from './index'
 
 describe('PostService', () => {
   const postService = container.resolve(PostService)

@@ -9,8 +9,7 @@ import { GraphQLContext } from '@interfaces/graphql'
 import { JwtService } from '@lib/jwt/JwtService.js'
 import { RefreshTokenData } from '@lib/jwt/Jwt.interface.js'
 import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from '@constants/timeConstants.js'
-import { UnauthorizedError } from '@errors/UnauthorizedError.js'
-import { NotFoundError } from '@errors/NotfoundError.js'
+import { UnauthorizedError, NotFoundError } from '@errors/index.js'
 import { UserToken } from '@graphql/generated'
 
 @injectable()

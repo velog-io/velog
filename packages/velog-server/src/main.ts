@@ -1,5 +1,4 @@
 import 'reflect-metadata'
-import 'module-alias/register.js'
 import app from './app.js'
 import { ENV } from './env.js'
 import { container } from 'tsyringe'

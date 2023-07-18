@@ -1,7 +1,7 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
 import { injectable, singleton } from 'tsyringe'
 import { ONE_DAY_IN_MS } from '@constants/timeConstants.js'
-import { ENV } from 'src/env.js'
+import { ENV } from '@env'
 
 @injectable()
 @singleton()
