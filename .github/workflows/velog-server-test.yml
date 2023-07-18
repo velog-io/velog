@@ -29,6 +29,9 @@ jobs:
       - name: Install Dependencies
         run: cd packages/velog-server && pnpm install
 
+      - name: Check tsc version
+        run: tsc --version
+
       - name: Build
         run: cd packages/velog-server && pnpm build
 
