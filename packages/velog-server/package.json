@@ -22,7 +22,7 @@
     "prod": "pnpm build && NODE_ENV=production node dist/src/main.js",
     "start": "node ./dist/main.js",
     "codegen": "graphql-codegen --config codegen.ts",
-    "test": "jest",
+    "test": "npx jest",
     "create-service": "tsx ./scripts/createService.ts",
     "create-mock": "tsx ./scripts/createMock.ts"
   },
