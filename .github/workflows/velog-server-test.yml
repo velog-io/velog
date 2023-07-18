@@ -1,9 +1,13 @@
-name: Run Tests on push to main
+name: Run Velog Server test
 
 on:
   push:
     branches:
       - main
+    paths:
+      - "packages/velog-server/**"
+  pull_request:
+    branches: ["main"]
     paths:
       - "packages/velog-server/**"
 
