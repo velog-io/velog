@@ -15,7 +15,7 @@ const appEnv = (process.env.NODE_ENV as Envrionment) || 'development'
 
 const file = envFiles[appEnv]
 const utils = container.resolve(UtilsService)
-const prefix = appEnv === 'production' ? '../env' : '/env'
+const prefix = appEnv === 'production' ? '../env' : './env'
 
 const configPath = utils.resolveDir(`${prefix}/${file}`)
 
