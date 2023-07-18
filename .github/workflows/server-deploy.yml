@@ -5,6 +5,8 @@ on:
     branches: "release"
     paths:
       - "packages/velog-server/**"
+      - "infrastructure/**"
+      - "github/workflows/**"
 
 env:
   AWS_REGION: ap-northeast-2
@@ -57,7 +59,7 @@ jobs:
       - name: pulumi up
         uses: pulumi/actions@v3
         with:
-          command: up # 
+          command: up #
           stack-name: /dev # or org-name/stack-name
           diff: true
           upsert: true
