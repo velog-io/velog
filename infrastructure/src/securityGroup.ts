@@ -1,6 +1,7 @@
 import * as aws from "@pulumi/aws";
+import { prefix } from "../lib/prefix";
 
-export const elbSecurityGroup = new aws.ec2.SecurityGroup("velog-server-elb", {
+export const elbSecurityGroup = new aws.ec2.SecurityGroup(`${prefix}-elb-sg`, {
   description: "Allow traffic from the internet",
   ingress: [
     {
@@ -25,3 +26,26 @@ export const elbSecurityGroup = new aws.ec2.SecurityGroup("velog-server-elb", {
     },
   ],
 });
+
+export const taskSecurityGroup = new aws.ec2.SecurityGroup(
+  `${prefix}-task-sg`,
+  {
+    description: "Allow traffic from the load balancer",
+    ingress: [
+      {
+        fromPort: 8080,
+        toPort: 8080,
+        protocol: "tcp",
+        securityGroups: [elbSecurityGroup.id],
+      },
+    ],
+    egress: [
+      {
+        fromPort: 0,
+        toPort: 0,
+        protocol: "-1",
+        cidrBlocks: ["0.0.0.0/0"],
+      },
+    ],
+  }
+);

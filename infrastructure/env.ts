@@ -29,6 +29,6 @@ type EnvType = {
 
 export const ENV = {
   appEnv,
-  port: Number(process.env.PORT) || 3000,
+  port: Number(process.env.PORT) || 8080,
   ecrRepositoryName: process.env.ECR_REPOSITORY_NAME,
 } as EnvType;

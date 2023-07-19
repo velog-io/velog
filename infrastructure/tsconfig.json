@@ -1,5 +1,5 @@
 {
-    "compilerOptions": {
+     "compilerOptions": {
         "strict": true,
         "outDir": "bin",
         "target": "es2016",
@@ -13,6 +13,6 @@
         "forceConsistentCasingInFileNames": true
     },
     "files": [
-        "src/index.ts"
+        "index.ts"
     ]
 }

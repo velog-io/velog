@@ -1,4 +1,4 @@
-import { prefix } from "./../lib/prefix";
+import { prefix } from "../lib/prefix";
 import * as aws from "@pulumi/aws";
 
 const mainVpcName = `${prefix}-main`;
