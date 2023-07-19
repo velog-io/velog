@@ -14,6 +14,7 @@
     "velog"
   ],
   "scripts": {
+    "postinstall": "husky install",
     "dev": "next dev -p 3001 --turbo",
     "build": "next build",
     "start": "next start",
@@ -21,6 +22,11 @@
     "create-component": "tsx ./scripts/createComponent.ts",
     "create-svg-component": "tsx ./scripts/createSvgComponent.ts",
     "codegen": "dotenv -e .env graphql-codegen --config codegen.ts -r dotenv/config"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "prettier --cache --write . && eslint --cache ."
+    }
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.15",
@@ -59,6 +65,8 @@
     "encoding": "^0.1.13",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.6",
+    "husky": "^8.0.0",
+    "husky-init": "^8.0.0",
     "prettier": "^2.8.8",
     "typescript": "5.1.3",
     "typescript-plugin-css-modules": "^5.0.1"
