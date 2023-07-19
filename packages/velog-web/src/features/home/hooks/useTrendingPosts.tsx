@@ -28,16 +28,13 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
     }
   }, [initialOffset, timeframe])
 
-  const { data, isLoading, fetchNextPage, refetch, isFetching, isRefetching } =
+  const { data, isLoading, fetchNextPage, refetch, isFetching, isRefetching, hasNextPage } =
     useInfiniteQuery<TrendingPostsQuery>(
       ['trendingPosts'],
       ({ pageParam = fetchInput }) =>
-        fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
-          TrendingPostsDocument,
-          {
-            input: pageParam,
-          }
-        )(),
+        fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, {
+          input: pageParam,
+        })(),
       {
         retryDelay: 100,
         cacheTime: 1000 * 60 * 2,
@@ -46,9 +43,7 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
           const trendingPosts = pages.trendingPosts
           if (!trendingPosts) return false
           if (trendingPosts.length < limit) return false
-          const offset =
-            allPages.flatMap((pages) => pages.trendingPosts).length +
-            initialOffset
+          const offset = allPages.flatMap((pages) => pages.trendingPosts).length + initialOffset
 
           return {
             limit,
@@ -87,5 +82,6 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
     fetchNextPage,
     isFetching,
     isRefetching,
+    hasNextPage,
   }
 }

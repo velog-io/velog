@@ -11,10 +11,11 @@ type Props = {
 }
 
 function RecentPosts({ data }: Props) {
-  const { posts, isLoading, fetchNextPage, isFetching } = useRecentPosts(data)
+  const { posts, isLoading, fetchNextPage, isFetching, hasNextPage } = useRecentPosts(data)
   const ref = useRef<HTMLDivElement>(null)
 
   const getRecentPostsMore = () => {
+    if (!hasNextPage) return
     fetchNextPage()
   }
 
