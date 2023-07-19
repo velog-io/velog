@@ -1,0 +1,41 @@
+{
+  "name": "velog",
+  "version": "3.0.0",
+  "description": "Velog is a blog platform for developers.",
+  "private": true,
+  "scripts": {
+    "preinstall": "pnpm dlx only-allow pnpm",
+    "prepare": "husky install",
+    "format": "pnpm format --write .",
+    "precommit": "lint-staged"
+  },
+  "engines": {
+    "node": ">=18.16"
+  },
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "author": {
+    "name": "velopert",
+    "email": "public.velopert@gmail.com"
+  },
+  "keywords": [
+    "velog"
+  ],
+  "packageManager": "pnpm@8.6.5",
+  "devDependencies": {
+    "pnpm": "^8.6.5"
+  },
+  "dependencies": {
+    "@muravjev/configs-prettier": "^0.1.4",
+    "husky": "^8.0.0",
+    "prettier": "^2.8.8"
+  },
+  "lint-staged": {
+    "*.{md,yml,json}": "prettier --write",
+    "*.{js,ts}": [
+      "eslint --fix"
+    ]
+  }
+}

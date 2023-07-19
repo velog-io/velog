@@ -1,5 +1,5 @@
 {
-  "name": "velog-client",
+  "name": "velog-web",
   "version": "3.0.0",
   "private": true,
   "license": "MIT",
@@ -14,7 +14,6 @@
     "velog"
   ],
   "scripts": {
-    "postinstall": "husky install",
     "dev": "next dev -p 3001 --turbo",
     "build": "next build",
     "start": "next start",
