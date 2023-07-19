@@ -3,7 +3,6 @@ import '@/styles/global.css'
 import { cookies } from 'next/headers'
 import CoreProvider from '@/providers/CoreProvider'
 import { Metadata } from 'next'
-import { ENV } from '../env'
 
 export const metadata: Metadata = {
   title: 'velog',
@@ -50,7 +49,6 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const theme = cookies().get('theme')
-  console.log(ENV)
   return (
     <html lang="ko">
       <body className="body" data-theme={theme?.value ?? 'light'}>
