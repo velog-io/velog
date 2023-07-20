@@ -17,9 +17,9 @@ function resolveDir(dir: string) {
   return resolvedDir
 }
 const appEnv = (process.env.NODE_ENV as Envrionment) || 'development'
-const file = envFiles[appEnv]
+const envFile = envFiles[appEnv]
 
-dotenv.config({ path: resolveDir(`../env/${file}`) })
+dotenv.config({ path: resolveDir(`../env/${envFile}`) })
 
 const env = z.object({
   appEnv: environment,
@@ -50,5 +50,3 @@ export const ENV = env.parse({
   defaultPostLimit: Number(process.env.NEXT_PUBLIC_DEFAULT_POST_LIMIT),
   gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
 })
-
-console.log(ENV)
