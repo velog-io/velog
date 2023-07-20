@@ -17,16 +17,13 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
     }
   }, [initialPosts])
 
-  const { data, isLoading, fetchNextPage, isFetching, isRefetching } =
+  const { data, isLoading, fetchNextPage, isFetching, isRefetching, hasNextPage } =
     useInfiniteQuery<RecentPostsQuery>(
       ['recentPosts'],
       ({ pageParam = fetchInput }) =>
-        fetcher<RecentPostsQuery, RecentPostsQueryVariables>(
-          RecentPostsDocument,
-          {
-            input: pageParam,
-          }
-        )(),
+        fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, {
+          input: pageParam,
+        })(),
       {
         retryDelay: 100,
         cacheTime: 1000 * 60 * 2,
@@ -45,11 +42,8 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
 
   const posts = useMemo(() => {
     if (isLoading) return []
-    return [
-      ...initialPosts,
-      ...(data?.pages.flatMap((page) => page.recentPosts) || []),
-    ] as Posts[]
+    return [...initialPosts, ...(data?.pages.flatMap((page) => page.recentPosts) || [])] as Posts[]
   }, [data, initialPosts, isLoading])
 
-  return { posts, isLoading, fetchNextPage, isFetching, isRefetching }
+  return { posts, isLoading, fetchNextPage, isFetching, isRefetching, hasNextPage }
 }

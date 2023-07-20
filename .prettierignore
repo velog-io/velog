@@ -1,0 +1,11 @@
+# .prettierignore
+node_modules/
+pnpm-lock.yaml
+
+# Next ignore patterns
+.next/
+.build/
+.coverage/
+
+# Server
+dist

@@ -2,20 +2,20 @@ name: Velog Server test workflow
 
 on:
   push:
-    branches: ["main", "development"]
+    branches: ['main', 'development', 'hotfix']
     paths:
-      - "packages/velog-server/**"
+      - 'packages/velog-server/**'
   pull_request:
-    branches: ["main", "development"]
+    branches: ['main', 'development', 'hotfix']
     paths:
-      - "packages/velog-server/**"
+      - 'packages/velog-server/**'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: "./packages/velog-server"
+        working-directory: './packages/velog-server'
 
     steps:
       - name: Checkout Code
@@ -30,8 +30,8 @@ jobs:
         uses: actions/setup-node@v3.7.0
         with:
           node-version: 18.16
-          cache: "pnpm"
-          cache-dependency-path: "./packages/velog-server/pnpm-lock.yaml"
+          cache: 'pnpm'
+          cache-dependency-path: './packages/velog-server/pnpm-lock.yaml'
 
       - name: Install Dependencies
         run: pnpm install

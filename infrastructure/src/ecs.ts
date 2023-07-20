@@ -1,18 +1,17 @@
-import { subnets } from "./subnet";
-import * as aws from "@pulumi/aws";
-import * as awsx from "@pulumi/awsx";
+import { subnets } from './subnet'
+import * as aws from '@pulumi/aws'
+import * as awsx from '@pulumi/awsx'
 
-import { prefix } from "../lib/prefix";
-import { taskSecurityGroup } from "./securityGroup";
-import { ecsTaskExecutionRole } from "./iam";
-import { ENV } from "../env";
-import { lb } from "./loadBalancer";
+import { prefix } from '../lib/prefix'
+import { taskSecurityGroup } from './securityGroup'
+import { ecsTaskExecutionRole } from './iam'
+import { ENV } from '../env'
+import { lb } from './loadBalancer'
 
-export const getLatestImage = (repo: aws.ecr.GetRepositoryResult) =>
-  `${repo.repositoryUrl}:latest`;
+export const getLatestImage = (repo: aws.ecr.GetRepositoryResult) => `${repo.repositoryUrl}:latest`
 
 export const createECSfargateService = (ecrImageName: string) => {
-  const cluster = new aws.ecs.Cluster(`${prefix}-cluster`);
+  const cluster = new aws.ecs.Cluster(`${prefix}-cluster`)
   new awsx.ecs.FargateService(`${prefix}-service`, {
     cluster: cluster.arn,
     networkConfiguration: {
@@ -33,16 +32,16 @@ export const createECSfargateService = (ecrImageName: string) => {
         portMappings: [{ targetGroup: lb.defaultTargetGroup }],
         environment: [
           {
-            name: "PORT",
+            name: 'PORT',
             value: ENV.port.toString(),
           },
           {
-            name: "APP_ENV",
+            name: 'APP_ENV',
             value: ENV.appEnv,
           },
           {
-            name: "NODE_ENV",
-            value: ENV.appEnv === "production" ? "production" : "development",
+            name: 'NODE_ENV',
+            value: ENV.appEnv === 'production' ? 'production' : 'development',
           },
         ],
         // secrets: [
@@ -53,8 +52,8 @@ export const createECSfargateService = (ecrImageName: string) => {
         // ],
       },
     },
-  });
+  })
 
-  const url = lb.loadBalancer.dnsName;
-  return url;
-};
+  const url = lb.loadBalancer.dnsName
+  return url
+}

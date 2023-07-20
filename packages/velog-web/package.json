@@ -1,5 +1,5 @@
 {
-  "name": "velog-client",
+  "name": "velog-web",
   "version": "3.0.0",
   "private": true,
   "license": "MIT",
@@ -14,7 +14,7 @@
     "velog"
   ],
   "scripts": {
-    "dev": "next dev -p 3001 --turbo",
+    "dev": "next dev -p 3002 --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -27,6 +27,7 @@
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
+    "dotenv": "^16.3.1",
     "framer-motion": "^10.12.17",
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",
@@ -40,7 +41,8 @@
     "react-toastify": "^9.1.3",
     "sangte": "^0.1.26",
     "snakecase-keys": "^5.4.6",
-    "tsx": "^3.12.7"
+    "tsx": "^3.12.7",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^4.0.1",
@@ -56,9 +58,12 @@
     "@types/react": "^18.2.13",
     "@types/react-dom": "18.2.6",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^5.59.11",
     "encoding": "^0.1.13",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.6",
+    "husky": "^8.0.0",
+    "husky-init": "^8.0.0",
     "prettier": "^2.8.8",
     "typescript": "5.1.3",
     "typescript-plugin-css-modules": "^5.0.1"

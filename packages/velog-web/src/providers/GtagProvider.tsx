@@ -1,3 +1,4 @@
+import { ENV } from '@/env'
 import Script, { ScriptProps } from 'next/script'
 
 type Props = {
@@ -13,10 +14,9 @@ function GtagProvider({
   gaMeasurementId,
   strategy = 'afterInteractive', // next/script strategy option
   defaultConsent = 'granted', // Set the status of Google Analytics's tracking consent
-  nonce, // next/script nonce option, //TODO: Set nonce from headers 
+  nonce, // next/script nonce option, //TODO: Set nonce from headers
 }: Props) {
-  const _gaMeasurementId =
-    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? gaMeasurementId
+  const _gaMeasurementId = ENV.gaMeasurementId ?? gaMeasurementId
 
   if (!_gaMeasurementId) {
     return null
