@@ -1,25 +1,9 @@
-import dotenv from 'dotenv'
 import { z } from 'zod'
-import { resolve } from 'path'
 
 const environment = z.enum(['development', 'test', 'stage', 'production'])
 type Envrionment = z.infer<typeof environment>
 
-const envFiles: Record<Envrionment, string> = {
-  development: '.env.development',
-  test: '.env.test',
-  stage: '.env.stage',
-  production: '.env.production',
-}
-
-function resolveDir(dir: string) {
-  const resolvedDir = resolve(__dirname, dir)
-  return resolvedDir
-}
 const appEnv = (process.env.NODE_ENV as Envrionment) || 'development'
-const envFile = envFiles[appEnv]
-
-dotenv.config({ path: resolveDir(`../env/${envFile}`) })
 
 const env = z.object({
   appEnv: environment,
@@ -38,8 +22,8 @@ const env = z.object({
 
 export const ENV = env.parse({
   appEnv,
-  publicUrl: process.env.PUBLIC_URL,
-  clientHost: process.env.CLIENT_HOST,
+  publicUrl: process.env.NEXT_PUBLIC_PUBLIC_URL,
+  clientHost: process.env.NEXT_PUBLIC_CLIENT_HOST,
   clientV2Host: process.env.NEXT_PUBLIC_CLIENT_V2_HOST,
   clientV3Host: process.env.NEXT_PUBLIC_CLIENT_V3_HOST,
   apiV2Host: process.env.NEXT_PUBLIC_API_V2_HOST,

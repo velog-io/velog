@@ -13,9 +13,12 @@ export function fetcher<TData, TVariables>(query: string, variables?: TVariables
 
     const json = await res.json()
 
-    if (json.errors) {
-      const { message } = json.errors[0]
-      throw new Error(message)
+    if (!res.ok) {
+      const errors = await res.json()
+      if (errors) {
+        console.error(errors[0]?.extensions?.description)
+      }
+      throw new Error(res.statusText)
     }
 
     return json.data

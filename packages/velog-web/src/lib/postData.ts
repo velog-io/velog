@@ -1,3 +1,5 @@
+import { ENV } from '@/env'
+
 type Parameter = {
   url?: string
   body?: Record<string, any>
@@ -6,7 +8,7 @@ type Parameter = {
 }
 
 export default async function postData({
-  url = `${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql`,
+  url = `${ENV.graphqlHost}/graphql`,
   body,
   headers,
   ...init
