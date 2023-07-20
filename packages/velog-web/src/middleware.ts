@@ -1,6 +1,6 @@
 import { RestoreTokenDocument, UserToken } from '@/graphql/generated'
-import postData from '@/lib/postData'
 import { NextResponse, type NextRequest } from 'next/server'
+import postData from '@/lib/postData'
 
 export default async function middleware(req: NextRequest) {
   const accessToken = req.cookies.get('access_token')?.value
@@ -24,7 +24,6 @@ export default async function middleware(req: NextRequest) {
 
       const domains = ['.velog.io', undefined]
 
-      
       domains.forEach((domain) => {
         response.cookies.set({
           name: 'access_token',
