@@ -1,8 +1,9 @@
+import { ENV } from '@/env'
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: `${process.env.NEXT_PUBLIC_GRAPHQL_HOST}/graphql`,
+  schema: `${ENV.graphqlHost}/graphql`,
   documents: 'src/graphql/*.gql',
   hooks: {
     afterOneFileWrite: ['prettier --write'],

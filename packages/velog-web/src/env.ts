@@ -22,6 +22,7 @@ const file = envFiles[appEnv]
 dotenv.config({ path: resolveDir(`../env/${file}`) })
 
 const env = z.object({
+  appEnv: environment,
   publicUrl: z.string(),
   clientHost: z.string(),
   clientV2Host: z.string(),
@@ -36,6 +37,7 @@ const env = z.object({
 })
 
 export const ENV = env.parse({
+  appEnv,
   publicUrl: process.env.PUBLIC_URL,
   clientHost: process.env.CLIENT_HOST,
   clientV2Host: process.env.NEXT_PUBLIC_CLIENT_V2_HOST,
