@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import app from './app.js'
-import { ENV } from './env.js'
+import { ENV } from '@env'
 import { container } from 'tsyringe'
 import { startClosing } from '@plugins/global/keepAlivePlugin.js'
 import { DbService } from '@lib/db/DbService.js'

@@ -2,7 +2,7 @@ import autoload from '@fastify/autoload'
 import Fastify from 'fastify'
 import formbody from '@fastify/formbody'
 import cookie from '@fastify/cookie'
-import { ENV } from './env.js'
+import { ENV } from '@env'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { container } from 'tsyringe'
 

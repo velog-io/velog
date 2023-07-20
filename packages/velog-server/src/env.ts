@@ -80,6 +80,8 @@ const env = z.object({
   databaseUrl: z.string(),
 })
 
+export type EnvVars = z.infer<typeof env>
+
 export const ENV = env.parse({
   appEnv,
   port: Number(process.env.PORT),
@@ -132,5 +134,3 @@ export const ENV = env.parse({
   },
   databaseUrl: process.env.DATABASE_URL,
 })
-
-export type EnvVars = z.infer<typeof env>
