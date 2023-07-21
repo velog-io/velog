@@ -31,7 +31,7 @@ function TrendingPosts({ data }: Props) {
         forPost={false}
         loading={isFetching}
       />
-      <div style={{ background: 'red', marginTop: 'auto', height: '20px' }} ref={ref} />
+      <div ref={ref} />
     </>
   )
 }

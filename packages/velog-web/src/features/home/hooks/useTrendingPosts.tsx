@@ -1,5 +1,3 @@
-'use client'
-
 import { ENV } from '@/env'
 import { Timeframe, useTimeframe } from '@/features/home/state/timeframe'
 import { fetcher } from '@/graphql/fetcher'
@@ -13,15 +11,15 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 
-export default function useTrendingPosts(initialData: Posts[] = []) {
+export default function useTrendingPosts(initialPost: Posts[] = []) {
   const searchParams = useSearchParams()
   const timeframe = (searchParams.get('timeframe') ?? 'week') as Timeframe
-  const prevTimeFrame = useRef<Timeframe>(timeframe)
+  const prevTimeframe = useRef<Timeframe>(timeframe)
   const { actions } = useTimeframe()
-  const hasCheckedRef = useRef(false)
+  const hasCheckedRef = useRef<boolean>(false)
 
   const limit = ENV.defaultPostLimit
-  const initialOffset = initialData.length
+  const initialOffset = initialPost.length
   const fetchInput = useMemo(() => {
     return {
       limit,
@@ -30,7 +28,7 @@ export default function useTrendingPosts(initialData: Posts[] = []) {
     }
   }, [initialOffset, timeframe, limit])
 
-  const { data, isLoading, fetchNextPage, refetch, isFetching, isRefetching, hasNextPage } =
+  const { data, isLoading, fetchNextPage, refetch, isFetching, hasNextPage } =
     useInfiniteQuery<TrendingPostsQuery>(
       ['trendingPosts', { input: fetchInput }],
       ({ pageParam = fetchInput }) =>
@@ -63,12 +61,12 @@ export default function useTrendingPosts(initialData: Posts[] = []) {
     if (hasCheckedRef.current) return
     hasCheckedRef.current = true
     try {
-      const jsonString = localStorage.getItem(`trendingPosts/${timeframe}`)
-      if (!jsonString) return
-      const parsed = JSON.parse(jsonString)
+      const stringPosts = localStorage.getItem(`trendingPosts/${timeframe}`)
+      if (!stringPosts) return
+      const parsed = JSON.parse(stringPosts)
       queryClient.setQueryData(['trendingPosts', { input: fetchInput }], parsed)
     } catch (_) {}
-  }, [queryClient, fetchInput, data, timeframe, isLoading])
+  }, [queryClient, fetchInput, timeframe])
 
   useEffect(() => {
     const scrolly = Number(localStorage.getItem('scrollPosition'))
@@ -82,11 +80,12 @@ export default function useTrendingPosts(initialData: Posts[] = []) {
   // TODO: remove END
 
   useEffect(() => {
-    if (prevTimeFrame.current === timeframe) return
+    if (prevTimeframe.current === timeframe) return
     refetch()
-    prevTimeFrame.current = timeframe as Timeframe
+    prevTimeframe.current = timeframe as Timeframe
   }, [timeframe, refetch, data])
 
+  // InActive select timeframe, if isFetching is true
   useEffect(() => {
     if (isFetching) {
       actions.setIsFetching(true)
@@ -97,17 +96,16 @@ export default function useTrendingPosts(initialData: Posts[] = []) {
 
   const posts = useMemo(() => {
     return [
-      ...initialData,
+      ...initialPost,
       ...(data?.pages?.flatMap((page) => page.trendingPosts) || []),
     ] as Posts[]
-  }, [data, initialData])
+  }, [data, initialPost])
 
   return {
     posts,
     isLoading,
     fetchNextPage,
     isFetching,
-    isRefetching,
     hasNextPage,
     originData: data,
   }

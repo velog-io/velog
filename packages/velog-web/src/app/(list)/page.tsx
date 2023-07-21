@@ -1,4 +1,5 @@
 import getTrendingPosts from '@/actions/getTrendingPost'
+import { ENV } from '@/env'
 import TrendingPosts from '@/features/home/components/TrendingPosts'
 import { Metadata } from 'next'
 
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function Home({ searchParams }: Props) {
   const { timeframe = 'week' } = searchParams
-  const data = await getTrendingPosts({ timeframe, limit: 20 })
+  const data = await getTrendingPosts({ timeframe, limit: ENV.defaultPostLimit })
 
   return (
     <>

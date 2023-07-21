@@ -1,4 +1,4 @@
-import '@/styles/reset.css'
+import '@/styles/reset.module.css'
 import '@/styles/global.module.css'
 import styles from '@/styles/global.module.css'
 import { cookies } from 'next/headers'

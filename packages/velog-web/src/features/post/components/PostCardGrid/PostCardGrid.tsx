@@ -9,13 +9,13 @@ import { ENV } from '@/env'
 import { Timeframe } from '@/features/home/state/timeframe'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { InfiniteData } from '@tanstack/react-query'
-import { TrendingPostsQuery } from '@/graphql/generated'
+import { RecentPostsQuery, TrendingPostsQuery } from '@/graphql/generated'
 
 const cx = bindClassNames(styles)
 
 type Props = {
   posts: Posts[]
-  originData: InfiniteData<TrendingPostsQuery> | undefined
+  originData: InfiniteData<TrendingPostsQuery | RecentPostsQuery> | undefined
   forHome: boolean
   forPost: boolean
   loading?: boolean
