@@ -1,3 +1,4 @@
+import { ENV } from '@/env'
 import { fetcher } from '@/graphql/fetcher'
 import {
   RecentPostsDocument,
@@ -9,13 +10,13 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
 export default function useRecentPosts(initialPosts: Posts[] = []) {
-  const limit = 12
+  const limit = ENV.defaultPostLimit
   const fetchInput = useMemo(() => {
     return {
       limit,
       cursor: initialPosts[initialPosts.length - 1]?.id,
     }
-  }, [initialPosts])
+  }, [initialPosts, limit])
 
   const { data, isLoading, fetchNextPage, isFetching, isRefetching, hasNextPage } =
     useInfiniteQuery<RecentPostsQuery>(

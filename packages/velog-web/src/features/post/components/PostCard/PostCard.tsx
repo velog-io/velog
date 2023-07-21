@@ -28,8 +28,12 @@ function PostCard({ post, forHome = false, forPost = false }: Props) {
     setTime(timeFormat(post.released_at))
   }, [post.released_at, timeFormat])
 
+  const onClick = () => {
+    localStorage.setItem('scrollPosition', window.scrollY.toString())
+  }
+
   return (
-    <div className={cx('block', { isNotHomeAndPost: !forHome && !forPost })}>
+    <div className={cx('block', { isNotHomeAndPost: !forHome && !forPost })} onClick={onClick}>
       {post.thumbnail && (
         <VLink href={url} className={cx('styleLink')}>
           <RatioImage

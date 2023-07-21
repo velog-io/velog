@@ -19,8 +19,8 @@ type Props = {
 function PostCardGrid({ posts = [], forHome = false, forPost = false, loading = false }: Props) {
   return (
     <div className={cx('block')}>
-      {posts.map((post, i) => {
-        return <PostCard key={`${post}-${i}`} post={post} forHome={forHome} forPost={forPost} />
+      {posts.map((post) => {
+        return <PostCard key={`${post.id}`} post={post} forHome={forHome} forPost={forPost} />
       })}
       {loading &&
         Array(ENV.defaultPostLimit)

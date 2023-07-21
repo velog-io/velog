@@ -9,6 +9,7 @@ export function fetcher<TData, TVariables>(query: string, variables?: TVariables
         'Content-Type': 'application/json',
       },
       credentials: 'include',
+      next: { revalidate: 60 },
     })
 
     const json = await res.json()
