@@ -13,8 +13,7 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 
-export default function useTrendingPosts(initialPosts: Posts[] = []) {
-  const queryClient = useQueryClient()
+export default function useTrendingPosts(initialData: Posts[] = []) {
   const searchParams = useSearchParams()
   const timeframe = (searchParams.get('timeframe') ?? 'week') as Timeframe
   const prevTimeFrame = useRef<Timeframe>(timeframe)
@@ -22,7 +21,7 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
   const hasCheckedRef = useRef(false)
 
   const limit = ENV.defaultPostLimit
-  const initialOffset = initialPosts.length
+  const initialOffset = initialData.length
   const fetchInput = useMemo(() => {
     return {
       limit,
@@ -33,7 +32,7 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
 
   const { data, isLoading, fetchNextPage, refetch, isFetching, isRefetching, hasNextPage } =
     useInfiniteQuery<TrendingPostsQuery>(
-      ['trendingPosts', timeframe],
+      ['trendingPosts', { input: fetchInput }],
       ({ pageParam = fetchInput }) =>
         fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, {
           input: pageParam,
@@ -47,6 +46,7 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
           const trendingPosts = pages.trendingPosts
           if (!trendingPosts) return false
           if (trendingPosts.length < limit) return false
+
           const offset = allPages.flatMap((pages) => pages.trendingPosts).length + initialOffset
           return {
             limit,
@@ -57,27 +57,29 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
       }
     )
 
-  useEffect(() => {
-    if (!data) return
-    const serialized = JSON.stringify(data)
-    localStorage.setItem(`trendingPosts/${timeframe}`, serialized)
-  }, [data, queryClient, timeframe])
-
+  // TODO: remove Start
+  const queryClient = useQueryClient()
   useEffect(() => {
     if (hasCheckedRef.current) return
     hasCheckedRef.current = true
+    try {
+      const jsonString = localStorage.getItem(`trendingPosts/${timeframe}`)
+      if (!jsonString) return
+      const parsed = JSON.parse(jsonString)
+      queryClient.setQueryData(['trendingPosts', { input: fetchInput }], parsed)
+    } catch (_) {}
+  }, [queryClient, fetchInput, data, timeframe, isLoading])
 
-    const shouldRestore = window.scrollY > 100
-
-    if (shouldRestore) {
-      try {
-        const jsonString = localStorage.getItem(`trendingPosts/${timeframe}`)
-        if (!jsonString) return
-        const parsed = JSON.parse(jsonString)
-        queryClient.setQueryData(['trendingPosts', timeframe], parsed)
-      } catch (e) {}
-    }
-  }, [queryClient, timeframe])
+  useEffect(() => {
+    const scrolly = Number(localStorage.getItem('scrollPosition'))
+    if (!scrolly || isLoading) return
+    window.scrollTo({
+      top: Number(scrolly),
+    })
+    localStorage.removeItem(`trendingPosts/${timeframe}`)
+    localStorage.removeItem('scrollPosition')
+  }, [isLoading, timeframe])
+  // TODO: remove END
 
   useEffect(() => {
     if (prevTimeFrame.current === timeframe) return
@@ -94,26 +96,11 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
   }, [isFetching, actions])
 
   const posts = useMemo(() => {
-    if (isLoading) return initialPosts
     return [
-      ...initialPosts,
-      ...(data?.pages.flatMap((page) => page.trendingPosts) || []),
+      ...initialData,
+      ...(data?.pages?.flatMap((page) => page.trendingPosts) || []),
     ] as Posts[]
-  }, [data, initialPosts, isLoading])
-
-  useEffect(() => {
-    const scrolly = Number(localStorage.getItem('scrollPosition'))
-    const scrollHight = document.documentElement.scrollHeight
-
-    if (!scrolly) return
-    if (scrollHight < scrolly || scrollY < 100) return
-
-    window.scrollTo({
-      top: Number(scrolly),
-    })
-
-    localStorage.removeItem('scrollPosition')
-  }, [posts.length])
+  }, [data, initialData])
 
   return {
     posts,
@@ -122,5 +109,6 @@ export default function useTrendingPosts(initialPosts: Posts[] = []) {
     isFetching,
     isRefetching,
     hasNextPage,
+    originData: data,
   }
 }

@@ -9,8 +9,6 @@ export function useInfiniteScroll(ref: React.RefObject<HTMLElement>, fetchNext: 
         fetchNext()
       },
       {
-        root: null,
-        rootMargin: '300px',
         threshold: 0.1,
       }
     )

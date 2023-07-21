@@ -17,9 +17,10 @@ type Props = {
   post: Posts
   forHome: boolean
   forPost: boolean
+  onClick: () => void
 }
 
-function PostCard({ post, forHome = false, forPost = false }: Props) {
+function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
   const url = `/@${post.user.username}/${post.url_slug}`
   const { timeFormat } = useTimeformat()
   const [time, setTime] = useState<string | null>(null)
@@ -27,10 +28,6 @@ function PostCard({ post, forHome = false, forPost = false }: Props) {
   useEffect(() => {
     setTime(timeFormat(post.released_at))
   }, [post.released_at, timeFormat])
-
-  const onClick = () => {
-    localStorage.setItem('scrollPosition', window.scrollY.toString())
-  }
 
   return (
     <div className={cx('block', { isNotHomeAndPost: !forHome && !forPost })} onClick={onClick}>

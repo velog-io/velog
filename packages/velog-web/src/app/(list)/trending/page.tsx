@@ -1,5 +1,4 @@
-import getTrendingPosts from '@/actions/getTrendingPost'
-import TrendingPosts from '@/features/home/components/TrendingPosts'
+import Home from '@/app/(list)/page'
 import { Metadata } from 'next'
 
 type Props = {
@@ -11,12 +10,5 @@ export const metadata: Metadata = {
 }
 
 export default async function Trending({ searchParams }: Props) {
-  const { timeframe = 'week' } = searchParams
-  const data = await getTrendingPosts({ timeframe })
-
-  return (
-    <>
-      <TrendingPosts data={data} />
-    </>
-  )
+  return <Home searchParams={searchParams} />
 }
