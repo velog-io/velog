@@ -1,3 +1,4 @@
+import { ENV } from '@/env'
 import { fetcher } from '@/graphql/fetcher'
 import {
   RecentPostsDocument,
@@ -5,21 +6,23 @@ import {
   RecentPostsQueryVariables,
 } from '@/graphql/generated'
 import { Posts } from '@/types/post'
-import { useInfiniteQuery } from '@tanstack/react-query'
-import { useMemo } from 'react'
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useMemo, useRef } from 'react'
 
 export default function useRecentPosts(initialPosts: Posts[] = []) {
-  const limit = 12
+  const hasCheckedRef = useRef<boolean>(false)
+
+  const limit = ENV.defaultPostLimit
   const fetchInput = useMemo(() => {
     return {
       limit,
       cursor: initialPosts[initialPosts.length - 1]?.id,
     }
-  }, [initialPosts])
+  }, [initialPosts, limit])
 
-  const { data, isLoading, fetchNextPage, isFetching, isRefetching, hasNextPage } =
+  const { data, isLoading, fetchNextPage, isFetching, hasNextPage } =
     useInfiniteQuery<RecentPostsQuery>(
-      ['recentPosts'],
+      ['recentPosts', { input: fetchInput }],
       ({ pageParam = fetchInput }) =>
         fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, {
           input: pageParam,
@@ -28,6 +31,7 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
         retryDelay: 100,
         cacheTime: 1000 * 60 * 2,
         staleTime: 1000 * 60 * 5,
+        enabled: hasCheckedRef.current,
         getNextPageParam: (page) => {
           const recentPosts = page.recentPosts
           if (!recentPosts) return false
@@ -40,10 +44,40 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
       }
     )
 
-  const posts = useMemo(() => {
-    if (isLoading) return []
-    return [...initialPosts, ...(data?.pages.flatMap((page) => page.recentPosts) || [])] as Posts[]
-  }, [data, initialPosts, isLoading])
+  // TODO: remove Start
+  const queryClient = useQueryClient()
+  useEffect(() => {
+    if (hasCheckedRef.current) return
+    hasCheckedRef.current = true
 
-  return { posts, isLoading, fetchNextPage, isFetching, isRefetching, hasNextPage }
+    try {
+      const stringPosts = localStorage.getItem('recentPosts')
+      if (!stringPosts) return
+      const parsed = JSON.parse(stringPosts)
+      queryClient.setQueriesData(['recentPosts', { input: fetchInput }], parsed)
+    } catch (_) {}
+  }, [queryClient, fetchInput])
+
+  useEffect(() => {
+    const scrolly = Number(localStorage.getItem('scrollPosition'))
+    if (!scrolly || isLoading) return
+    window.scrollTo({
+      top: Number(scrolly),
+    })
+    localStorage.removeItem('recentPosts')
+    localStorage.removeItem('scrollPosition')
+  }, [isLoading])
+  // TODO: remove End
+
+  const posts = useMemo(() => {
+    return [...initialPosts, ...(data?.pages?.flatMap((page) => page.recentPosts) || [])] as Posts[]
+  }, [data, initialPosts])
+
+  return {
+    posts,
+    fetchNextPage,
+    isFetching,
+    hasNextPage,
+    originData: data,
+  }
 }

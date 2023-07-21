@@ -17,9 +17,10 @@ type Props = {
   post: Posts
   forHome: boolean
   forPost: boolean
+  onClick: () => void
 }
 
-function PostCard({ post, forHome = false, forPost = false }: Props) {
+function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
   const url = `/@${post.user.username}/${post.url_slug}`
   const { timeFormat } = useTimeformat()
   const [time, setTime] = useState<string | null>(null)
@@ -29,7 +30,7 @@ function PostCard({ post, forHome = false, forPost = false }: Props) {
   }, [post.released_at, timeFormat])
 
   return (
-    <div className={cx('block', { isNotHomeAndPost: !forHome && !forPost })}>
+    <div className={cx('block', { isNotHomeAndPost: !forHome && !forPost })} onClick={onClick}>
       {post.thumbnail && (
         <VLink href={url} className={cx('styleLink')}>
           <RatioImage

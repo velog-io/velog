@@ -1,8 +1,12 @@
-import '@/styles/reset.css'
-import '@/styles/global.css'
+import '@/styles/reset.module.css'
+import '@/styles/global.module.css'
+import styles from '@/styles/global.module.css'
 import { cookies } from 'next/headers'
 import CoreProvider from '@/providers/CoreProvider'
 import { Metadata } from 'next'
+import { bindClassNames } from '@/lib/styles/bindClassNames'
+
+const cx = bindClassNames(styles)
 
 export const metadata: Metadata = {
   title: 'velog',
@@ -47,11 +51,15 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+type Props = {
+  children: React.ReactNode
+}
+
+export default async function RootLayout({ children }: Props) {
   const theme = cookies().get('theme')
   return (
     <html lang="ko">
-      <body className="body" data-theme={theme?.value ?? 'light'}>
+      <body className={cx('body')} data-theme={theme?.value ?? 'light'}>
         <CoreProvider>{children}</CoreProvider>
       </body>
     </html>

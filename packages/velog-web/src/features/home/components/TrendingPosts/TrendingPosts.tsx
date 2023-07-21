@@ -11,11 +11,12 @@ type Props = {
 }
 
 function TrendingPosts({ data }: Props) {
-  const { posts, isLoading, fetchNextPage, isFetching, hasNextPage } = useTrendingPosts(data)
+  const { posts, fetchNextPage, isFetching, hasNextPage, originData } = useTrendingPosts(data)
   const ref = useRef<HTMLDivElement>(null)
 
   const getTreningPostsMore = () => {
-    if (!hasNextPage) return
+    if (isFetching) return
+    if (hasNextPage === false) return
     fetchNextPage()
   }
 
@@ -25,9 +26,10 @@ function TrendingPosts({ data }: Props) {
     <>
       <PostCardGrid
         posts={posts}
+        originData={originData}
         forHome={true}
         forPost={false}
-        loading={isLoading || isFetching}
+        loading={isFetching}
       />
       <div ref={ref} />
     </>

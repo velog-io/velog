@@ -2,9 +2,8 @@ import styleUtils from './utils.module.css'
 import styleKeyframes from './keyframes.module.css'
 
 type Styles = { [key: string]: string }
-
 export function bindClassNames<T extends Styles>(styles: T) {
-  type BooleanMap = Partial<{ [key in keyof T]: boolean }>
+  type BooleanMap = Partial<Record<keyof T, boolean> & { [key: string]: boolean }>
   type ClassNames = keyof T | false | null | undefined | BooleanMap
   type ExtraClassName = ClassNames | Omit<string, keyof T>
 

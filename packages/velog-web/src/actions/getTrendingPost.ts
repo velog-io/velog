@@ -7,7 +7,7 @@ export default async function getTrendingPosts({
   limit = ENV.defaultPostLimit,
   timeframe = ENV.defaultPostTimeFrame,
   offset = 0,
-}: Partial<TrendingPostsInput> = {}) {
+}: TrendingPostsInput) {
   try {
     const body = {
       operationName: 'trendingPosts',

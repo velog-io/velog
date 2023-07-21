@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from 'fastify'
-import { ENV } from 'src/env.js'
+import { ENV } from '@env'
 import cors from '@fastify/cors'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
 

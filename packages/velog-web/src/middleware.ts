@@ -1,13 +1,13 @@
 import { RestoreTokenDocument, UserToken } from '@/graphql/generated'
-import postData from '@/lib/postData'
 import { NextResponse, type NextRequest } from 'next/server'
+import postData from '@/lib/postData'
 
 export default async function middleware(req: NextRequest) {
   const accessToken = req.cookies.get('access_token')?.value
   const originRefreshToken = req.cookies.get('refresh_token')?.value
 
+  const response = NextResponse.next()
   if (!accessToken && originRefreshToken) {
-    const response = NextResponse.next()
     try {
       const query = RestoreTokenDocument || ''
 
@@ -24,7 +24,6 @@ export default async function middleware(req: NextRequest) {
 
       const domains = ['.velog.io', undefined]
 
-      
       domains.forEach((domain) => {
         response.cookies.set({
           name: 'access_token',
@@ -42,15 +41,13 @@ export default async function middleware(req: NextRequest) {
           maxAge: 1000 * 60 * 60 * 24 * 30, // 30days
         })
       })
-
-      return response
     } catch (e) {
       console.log(e)
       response.cookies.delete('access_token')
       response.cookies.delete('refresh_token')
-      return response
     }
   }
+  return response
 }
 
 export const config = {
