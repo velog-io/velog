@@ -3,9 +3,9 @@ node_modules/
 pnpm-lock.yaml
 
 # Next ignore patterns
-.next/
-.build/
-.coverage/
+**/.next/
+**/.build/
+**/.coverage/
 
 # Server
-dist
+**/dist
