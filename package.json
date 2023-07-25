@@ -6,7 +6,8 @@
   "scripts": {
     "prepare": "husky install",
     "format": "pnpm format --write .",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "dev": "pnpm -r dev"
   },
   "engines": {
     "node": ">=18.16",
@@ -25,7 +26,6 @@
   "keywords": [
     "velog"
   ],
-  "packageManager": "pnpm@8.6.5",
   "devDependencies": {
     "@muravjev/configs-prettier": "^0.1.4",
     "husky": "^8.0.0",
