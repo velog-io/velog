@@ -13,15 +13,12 @@ import { useEffect, useRef } from 'react'
 import useToggle from '@/hooks/useToggle'
 import HeaderUserIcon from '@/components/Header/HeaderUserIcon'
 import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
-import { CurrentUser } from '@/types/user'
+import HeaderSkeleton from '@/components/Header/HeaderSkeleton'
+import { useCurrentUserQuery } from '@/graphql/generated'
 
 const cx = bindClassNames(styles)
 
-type Props = {
-  user: CurrentUser | null
-}
-
-function Header({ user }: Props) {
+function Header() {
   const {
     value: { systemTheme },
   } = useTheme()
@@ -34,9 +31,12 @@ function Header({ user }: Props) {
 
   const themeReady = systemTheme !== 'not-ready'
 
+  const { isLoading, data } = useCurrentUserQuery()
+  const user = data?.currentUser || null
+
   useEffect(() => {
     update(user)
-  }, [user, update])
+  }, [update, user])
 
   // const urlForSearch = customHeader.custom ? `/search?username=${customHeader.username}` : '/search'
   const urlForSearch = '/search'
@@ -46,35 +46,34 @@ function Header({ user }: Props) {
       <div className={cx('innerBlock')}>
         <HeaderLogo />
         <div className={cx('right')}>
-          {themeReady && <ThemeToggleButton />}
-          <HeaderSearchButton to={urlForSearch} />
-          {user ? (
-            <>
-              <Button
-                color="darkGray"
-                border={true}
-                style={{ marginRight: '1.25rem' }}
-                to="/write"
-                className={cx('writeButton')}
-              >
-                새 글 작성
-              </Button>
-              <div ref={ref}>
-                <HeaderUserIcon user={user} onClick={toggleUserMenu} />
-              </div>
-              <HeaderUserMenu onClose={toggleUserMenu} isVisible={userMenu} />
-            </>
+          {isLoading ? (
+            <HeaderSkeleton />
           ) : (
             <>
-              <Button
-                color="darkGray"
-                border={false}
-                onClick={() => {
-                  actions.showModal('login')
-                }}
-              >
-                로그인
-              </Button>
+              {themeReady && <ThemeToggleButton />}
+              <HeaderSearchButton to={urlForSearch} />
+              {user && (
+                <>
+                  <Button color="darkGray" border={true} to="/write" className={cx('writeButton')}>
+                    새 글 작성
+                  </Button>
+                  <div ref={ref}>
+                    <HeaderUserIcon user={user} onClick={toggleUserMenu} />
+                  </div>
+                  <HeaderUserMenu onClose={toggleUserMenu} isVisible={userMenu} />
+                </>
+              )}
+              {!user && (
+                <Button
+                  color="darkGray"
+                  border={false}
+                  onClick={() => {
+                    actions.showModal('login')
+                  }}
+                >
+                  로그인
+                </Button>
+              )}
             </>
           )}
         </div>

@@ -4,13 +4,10 @@ import { useEffect } from 'react'
 
 export function useThemeEffect() {
   const { actions, value } = useTheme()
-  const theme = value.theme
+  const { theme } = value
 
   useEffect(() => {
-    const systemPrefersDark = window.matchMedia(
-      '(prefers-color-scheme: dark)'
-    ).matches
-
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
     actions.setSystemTheme(systemPrefersDark ? 'dark' : 'light')
   }, [actions])
 

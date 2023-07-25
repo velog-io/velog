@@ -1,0 +1,28 @@
+.block {
+  padding-right: 24px;
+  .button {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg-element4);
+    cursor: default;
+
+    & + .button {
+      margin-left: 20px;
+    }
+  }
+
+  .writeButton {
+    width: 97px;
+    height: 32px;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-size: 16px;
+    border-radius: 16px;
+
+    @media screen and (max-width: 1024px) {
+      display: none;
+    }
+  }
+}

@@ -1,11 +1,10 @@
 .block {
-  height: 64px;
   width: 100%;
-  flex-shrink: 0;
+  margin-top: 12px;
+  margin-bottom: 12px;
 
   .innerBlock {
     display: flex;
-    height: 100%;
     align-items: center;
     justify-content: space-between;
   }
@@ -14,9 +13,11 @@
     display: flex;
     align-items: center;
     position: relative;
+    height: 40px;
 
     .writeButton {
       user-select: none;
+      margin-right: 20px;
       @media screen and (max-width: 1024px) {
         display: none;
       }
