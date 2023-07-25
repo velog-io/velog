@@ -37,8 +37,8 @@ export default function useTrendingPosts(initialPost: Posts[] = []) {
         })(),
       {
         retryDelay: 100,
-        cacheTime: 1000 * 60 * 2,
-        staleTime: 1000 * 60 * 2,
+        cacheTime: 1000 * 60 * 3,
+        staleTime: 1000 * 60 * 3,
         enabled: hasCheckedRef.current,
         getNextPageParam: (pages, allPages) => {
           const trendingPosts = pages.trendingPosts
