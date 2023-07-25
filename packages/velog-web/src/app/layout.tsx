@@ -1,15 +1,15 @@
 import '@/styles/reset.css'
 import '@/styles/global.css'
-import { cookies } from 'next/headers'
+
 import CoreProvider from '@/providers/CoreProvider'
 import { Metadata } from 'next'
+import getTheme from '@/actions/getTheme'
 
 export const runtime = 'edge'
 
 export const metadata: Metadata = {
   title: 'velog',
-  description:
-    '개발자들을 위한 블로그 서비스. 어디서 글 쓸지 고민하지 말고 벨로그에서 시작하세요.',
+  description: '개발자들을 위한 블로그 서비스. 어디서 글 쓸지 고민하지 말고 벨로그에서 시작하세요.',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
     { media: '(prefers-color-scheme: dark)', color: '#1e1e1e' },
@@ -50,15 +50,17 @@ export const metadata: Metadata = {
   },
 }
 
+export const revalidate = 0
+
 type Props = {
   children: React.ReactNode
 }
 
 export default async function RootLayout({ children }: Props) {
-  const theme = cookies().get('theme')
+  const theme = getTheme()
   return (
     <html lang="ko">
-      <body className="body" data-theme={theme?.value ?? 'light'}>
+      <body className="body" data-theme={theme}>
         <CoreProvider>{children}</CoreProvider>
       </body>
     </html>

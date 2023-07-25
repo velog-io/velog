@@ -10,9 +10,5 @@ export const metadata: Metadata = {
 
 export default async function Recent() {
   const data = await getRecentPost({ limit: ENV.defaultPostLimit })
-  return (
-    <>
-      <RecentPosts data={data} />
-    </>
-  )
+  return <RecentPosts data={data} />
 }

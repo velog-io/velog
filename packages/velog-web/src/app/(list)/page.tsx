@@ -15,9 +15,5 @@ export default async function Home({ searchParams }: Props) {
   const { timeframe = 'week' } = searchParams
   const data = await getTrendingPosts({ timeframe, limit: ENV.defaultPostLimit })
 
-  return (
-    <>
-      <TrendingPosts data={data} />
-    </>
-  )
+  return <TrendingPosts data={data} />
 }
