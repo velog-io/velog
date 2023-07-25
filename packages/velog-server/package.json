@@ -38,7 +38,7 @@
     "@prisma/client": "5.0.0",
     "dotenv": "^16.1.4",
     "fastify": "^4.18.0",
-    "graphql": "^16.6.0",
+    "graphql": "^16.7.1",
     "graphql-scalars": "^1.22.2",
     "inquirer": "^9.2.7",
     "jsonwebtoken": "^9.0.0",
@@ -77,5 +77,8 @@
     "ts-node": "^10.9.1",
     "ts-paths-esm-loader": "^1.4.3",
     "typescript": "^5.1.6"
+  },
+  "resolutions": {
+    "graphql": "^16.7.1"
   }
 }
