@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
+import type { FastifyRequest, FastifyReply } from 'fastify'
 
 export type GraphQLContext = {
   request: FastifyRequest
