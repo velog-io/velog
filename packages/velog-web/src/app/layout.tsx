@@ -1,11 +1,7 @@
 import '@/styles/reset.css'
 import '@/styles/global.css'
-
 import CoreProvider from '@/providers/CoreProvider'
 import { Metadata } from 'next'
-import getTheme from '@/actions/getTheme'
-
-export const runtime = 'edge'
 
 export const metadata: Metadata = {
   title: 'velog',
@@ -50,17 +46,14 @@ export const metadata: Metadata = {
   },
 }
 
-export const revalidate = 0
-
 type Props = {
   children: React.ReactNode
 }
 
 export default async function RootLayout({ children }: Props) {
-  const theme = getTheme()
   return (
     <html lang="ko">
-      <body className="body" data-theme={theme}>
+      <body className="body" suppressHydrationWarning={true}>
         <CoreProvider>{children}</CoreProvider>
       </body>
     </html>

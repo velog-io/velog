@@ -3,8 +3,7 @@ import { useTheme } from '@/state/theme'
 import { useEffect } from 'react'
 
 export function useThemeEffect() {
-  const { actions, value } = useTheme()
-  const { theme } = value
+  const { actions } = useTheme()
 
   useEffect(() => {
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -22,7 +21,7 @@ export function useThemeEffect() {
   }, [actions, currentTheme])
 
   useEffect(() => {
-    if (!theme) return
-    document.body.dataset.theme = theme
-  }, [theme])
+    if (!currentTheme) return
+    document.body.dataset.theme = currentTheme
+  }, [currentTheme])
 }
