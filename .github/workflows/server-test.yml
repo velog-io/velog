@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: 18.16
           cache: 'pnpm'
-          cache-dependency-path: './packages/velog-server/pnpm-lock.yaml'
+          cache-dependency-path: './pnpm-lock.yaml'
 
       - name: Install Dependencies
         run: pnpm install
