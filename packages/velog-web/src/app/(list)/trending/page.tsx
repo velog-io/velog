@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://velog.io/' },
 }
 
+export const dynamic = 'force-static'
+
 export default async function Trending({ searchParams }: Props) {
   return <Home searchParams={searchParams} />
 }

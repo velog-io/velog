@@ -1,21 +1,21 @@
-name: Velog Server test workflow
+name: Velog Web build workdflow
 
 on:
   push:
     branches: ['main', 'development', 'hotfix']
     paths:
-      - 'packages/velog-server/**'
+      - 'packages/velog-web/**'
   pull_request:
     branches: ['main', 'development', 'hotfix']
     paths:
-      - 'packages/velog-server/**'
+      - 'packages/velog-web/**'
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: './packages/velog-server'
+        working-directory: './packages/velog-web'
 
     steps:
       - name: Checkout Code
@@ -36,11 +36,5 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Primsa generate
-        run: pnpm prisma generate
-
       - name: Build
         run: pnpm build
-
-      - name: Run Tests
-        run: pnpm test

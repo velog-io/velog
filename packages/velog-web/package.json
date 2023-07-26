@@ -23,7 +23,7 @@
     "codegen": "dotenv -e .env graphql-codegen --config codegen.ts -r dotenv/config"
   },
   "dependencies": {
-    "@tanstack/react-query": "^4.29.15",
+    "@tanstack/react-query": "^4.32.0",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",

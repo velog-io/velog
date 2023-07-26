@@ -1,4 +1,4 @@
-import { ENV } from '@/env'
+import { ENV } from './src/env'
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
@@ -23,6 +23,11 @@ const config: CodegenConfig = {
           inputValue: false,
           object: true,
           defaultValue: true,
+        },
+        scalars: {
+          Date: 'Date',
+          JSON: 'JSON',
+          ID: 'string',
         },
       },
       plugins: [
