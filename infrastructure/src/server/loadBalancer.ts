@@ -1,8 +1,8 @@
 import * as aws from '@pulumi/aws'
 import * as awsx from '@pulumi/awsx'
-import { prefix } from '../lib/prefix'
-import { elbSecurityGroup } from './securityGroup'
-import { ENV } from '../env'
+import { prefix } from '../../lib/prefix'
+import { elbSecurityGroup } from '../securityGroup'
+import { ENV } from '../../env'
 
 export const lb = new awsx.lb.ApplicationLoadBalancer(`${prefix}-lb`, {
   securityGroups: [elbSecurityGroup.id],

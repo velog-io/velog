@@ -2,10 +2,10 @@ import { subnets } from './subnet'
 import * as aws from '@pulumi/aws'
 import * as awsx from '@pulumi/awsx'
 
-import { prefix } from '../lib/prefix'
-import { taskSecurityGroup } from './securityGroup'
-import { ecsTaskExecutionRole } from './iam'
-import { ENV } from '../env'
+import { prefix } from '../../lib/prefix'
+import { taskSecurityGroup } from '../securityGroup'
+import { ecsTaskExecutionRole } from '../iam'
+import { ENV } from '../../env'
 import { lb } from './loadBalancer'
 
 export const getLatestImage = (repo: aws.ecr.GetRepositoryResult) => `${repo.repositoryUrl}:latest`
