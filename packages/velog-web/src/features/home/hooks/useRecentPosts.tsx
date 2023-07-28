@@ -12,6 +12,7 @@ import { useEffect, useMemo, useRef } from 'react'
 export default function useRecentPosts(initialPosts: Posts[] = []) {
   const hasCheckedRef = useRef<boolean>(false)
 
+  // query
   const limit = ENV.defaultPostLimit
   const fetchInput = useMemo(() => {
     return {

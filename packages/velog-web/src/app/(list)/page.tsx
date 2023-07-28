@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://velog.io/' },
 }
 
-export const revalidate = 2
+export const revalidate = 120
 
 export default async function Home({ params }: Props) {
   const { timeframe = 'week' } = params

@@ -36,7 +36,7 @@ function HomeTab() {
       <div className={cx('left')}>
         <div className={cx('block')}>
           <ActiveLink
-            href="/?timeframe=week"
+            href="/trending/week"
             className={cx({
               active: pathname === '/' || pathname.includes('/trending'),
             })}

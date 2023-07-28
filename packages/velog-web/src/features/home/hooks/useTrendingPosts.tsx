@@ -18,6 +18,7 @@ export default function useTrendingPosts(initialPost: Posts[] = []) {
   const { actions } = useTimeframe()
   const hasCheckedRef = useRef<boolean>(false)
 
+  // query
   const limit = ENV.defaultPostLimit
   const initialOffset = initialPost.length
   const fetchInput = useMemo(() => {
@@ -85,7 +86,7 @@ export default function useTrendingPosts(initialPost: Posts[] = []) {
     prevTimeframe.current = timeframe as Timeframe
   }, [timeframe, refetch, data])
 
-  // InActive select timeframe, if isFetching is true
+  // InActive timeframe picker, if isFetching is true
   useEffect(() => {
     if (isFetching) {
       actions.setIsFetching(true)
