@@ -7,7 +7,7 @@ import {
   TrendingPostsQueryVariables,
 } from '@/graphql/generated'
 import { Posts } from '@/types/post'
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 
@@ -55,30 +55,6 @@ export default function useTrendingPosts(initialPost: Posts[] = []) {
         },
       }
     )
-
-  // TODO: remove Start
-  const queryClient = useQueryClient()
-  useEffect(() => {
-    if (hasCheckedRef.current) return
-    hasCheckedRef.current = true
-    try {
-      const stringPosts = localStorage.getItem(`trendingPosts/${timeframe}`)
-      if (!stringPosts) return
-      const parsed = JSON.parse(stringPosts)
-      queryClient.setQueryData(['trendingPosts', { input: fetchInput }], parsed)
-    } catch (_) {}
-  }, [queryClient, fetchInput, timeframe])
-
-  useEffect(() => {
-    const scrolly = Number(localStorage.getItem('scrollPosition'))
-    if (!scrolly || isLoading) return
-    window.scrollTo({
-      top: Number(scrolly),
-    })
-    localStorage.removeItem(`trendingPosts/${timeframe}`)
-    localStorage.removeItem('scrollPosition')
-  }, [isLoading, timeframe])
-  // TODO: remove END
 
   useEffect(() => {
     if (prevTimeframe.current === timeframe) return

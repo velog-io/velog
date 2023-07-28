@@ -35,9 +35,9 @@ function AuthSocialButton({ provider, tabIndex, currentPath }: Props) {
   const info = useMemo(() => providerMap[provider], [provider])
   const { icon: Icon, color, border } = info
 
-  const host = ENV.appEnv === 'production' ? ENV.apiV2Host : 'http://localhost:5002/'
+  const host = ENV.appEnv === 'production' ? ENV.apiV2Host : 'http://localhost:5002'
 
-  const redirectTo = `${host}api/v2/auth/social/redirect/${provider}?next=${currentPath}&isIntegrate=0`
+  const redirectTo = `${host}/api/v2/auth/social/redirect/${provider}?next=${currentPath}&isIntegrate=0`
 
   return (
     <a
