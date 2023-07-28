@@ -6,7 +6,7 @@ import { timeframes } from '@/features/home/utils/timeframeMap'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 
 const cx = bindClassNames(styles)
 
@@ -16,7 +16,7 @@ type Props = {
 }
 
 function TimeframePicker({ isVisible, onClose }: Props) {
-  const searchParams = useSearchParams()
+  const params = useParams()
   const {
     value: { timeframe },
     actions,
@@ -25,9 +25,9 @@ function TimeframePicker({ isVisible, onClose }: Props) {
   const { ref } = useOutsideClick<HTMLDivElement>(onClose)
 
   useEffect(() => {
-    const query = searchParams.get('timeframe') ?? 'week'
+    const query = params.timeframe ?? 'week'
     actions.choose(query as Timeframe)
-  }, [actions, searchParams])
+  }, [actions, params])
 
   return (
     <AnimatePresence>
@@ -49,10 +49,7 @@ function TimeframePicker({ isVisible, onClose }: Props) {
                     onClose()
                   }}
                 >
-                  <Link
-                    className={cx({ active: value === timeframe })}
-                    href={`/?timeframe=${value}`}
-                  >
+                  <Link className={cx({ active: value === timeframe })} href={`/trending/${value}`}>
                     {text}
                   </Link>
                 </li>

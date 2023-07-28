@@ -9,7 +9,7 @@
     cursor: default;
 
     & + .button {
-      margin-left: 20px;
+      margin-left: 15px;
     }
   }
 

@@ -8,12 +8,12 @@ import {
 } from '@/graphql/generated'
 import { Posts } from '@/types/post'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
-import { useSearchParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 
 export default function useTrendingPosts(initialPost: Posts[] = []) {
-  const searchParams = useSearchParams()
-  const timeframe = (searchParams.get('timeframe') ?? 'week') as Timeframe
+  const params = useParams()
+  const timeframe = (params.timeframe ?? 'week') as Timeframe
   const prevTimeframe = useRef<Timeframe>(timeframe)
   const { actions } = useTimeframe()
   const hasCheckedRef = useRef<boolean>(false)
