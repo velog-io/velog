@@ -70,14 +70,15 @@ export default function useTrendingPosts(initialPost: Posts[] = []) {
   }, [queryClient, fetchInput, timeframe])
 
   useEffect(() => {
-    const scrolly = Number(localStorage.getItem('scrollPosition'))
+    const storageKey = `trendingPosts/${timeframe}`
+    const scrolly = Number(localStorage.getItem(`${storageKey}/scrollPosition`))
     if (!scrolly || isLoading) return
     window.scrollTo({
       top: Number(scrolly),
     })
-    localStorage.removeItem(`trendingPosts/${timeframe}`)
-    localStorage.removeItem('scrollPosition')
-  }, [isLoading, timeframe])
+    localStorage.removeItem(storageKey)
+    localStorage.removeItem(`${storageKey}/scrollPosition`)
+  }, [timeframe, isLoading])
   // TODO: remove END
 
   useEffect(() => {

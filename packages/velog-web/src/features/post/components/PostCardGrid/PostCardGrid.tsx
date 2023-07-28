@@ -35,11 +35,11 @@ function PostCardGrid({
   // TODO: remove
   const onPostCardClick = () => {
     const isRecent = pathname === '/recent'
-    const postsName = isRecent ? 'recentPosts' : `trendingPosts/${timeframe}`
+    const prefix = isRecent ? 'recentPosts' : `trendingPosts/${timeframe}`
 
     const serialized = JSON.stringify(originData)
-    localStorage.setItem(postsName, serialized)
-    localStorage.setItem('scrollPosition', window.scrollY.toString())
+    localStorage.setItem(prefix, serialized)
+    localStorage.setItem(`${prefix}/scrollPosition`, window.scrollY.toString())
   }
 
   return (
