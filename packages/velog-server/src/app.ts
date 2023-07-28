@@ -26,20 +26,4 @@ app.register(autoload, {
   forceESM: true,
 })
 
-app.setErrorHandler((error, request, reply) => {
-  if (error?.statusCode) {
-    reply.status(error.statusCode)
-  } else {
-    reply.status(500)
-  }
-  reply.send({
-    message: error.message || 'Unknown Error',
-    name: error.name || 'Error',
-    stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
-  })
-  if (process.env.NODE_ENV === 'development') {
-    console.log(error)
-  }
-})
-
 export default app
