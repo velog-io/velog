@@ -4,7 +4,7 @@ import * as awsx from '@pulumi/awsx'
 
 import { prefix } from '../../lib/prefix'
 import { taskSecurityGroup } from '../securityGroup'
-import { ecsTaskExecutionRole } from '../iam'
+import { ecsTaskExecutionRole } from './iam'
 import { ENV } from '../../env'
 import { lb } from './loadBalancer'
 
@@ -33,7 +33,7 @@ export const createECSfargateService = (ecrImageName: string) => {
         environment: [
           {
             name: 'PORT',
-            value: ENV.port.toString(),
+            value: String(ENV.port),
           },
           {
             name: 'APP_ENV',

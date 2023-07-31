@@ -1,13 +1,15 @@
-name: Velog Server deployment workflow
+name: Velog Deployment workflow
 
 on:
   push:
     branches: 'release'
     paths:
       - 'packages/velog-server/**'
+      - 'packages/velog-web/**'
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: velog-server
+  ECR_WEB_REPOSITORY: velog-web
+  ECR_SERVER_REPOSITORY: velog-server
 
 jobs:
   ECR-build:
@@ -44,12 +46,21 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1.6.2
 
-      - name: Build and push Docker images
+      - name: Server Build and push Docker images
         uses: docker/build-push-action@v4
         with:
           context: ./packages/velog-server/
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_SERVER_REPOSITORY }}:${{ github.sha }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Web Build and push Docker images
+        uses: docker/build-push-action@v4
+        with:
+          context: ./packages/velog-web/
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_WEB_REPOSITORY }}:${{ github.sha }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
@@ -74,7 +85,7 @@ jobs:
         with:
           node-version: 18.16
           cache: 'pnpm'
-          cache-dependency-path: './infrastructure/pnpm-lock.yaml'
+          cache-dependency-path: '**/pnpm-lock.yaml --frozen-lockfile'
 
       - name: Install Dependencies
         run: pnpm install
@@ -90,7 +101,7 @@ jobs:
         uses: pulumi/actions@v4.4.0
         with:
           command: up #
-          stack-name: winverse/velog/dev # or org-name/stack-name
+          stack-name: /velog/prod # or org-name/stack-name
           diff: true
           upsert: true
           work-dir: './infrastructure'

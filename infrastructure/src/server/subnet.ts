@@ -8,7 +8,7 @@ const publicSubnet = new aws.ec2.Subnet(publicSubnetName, {
   cidrBlock: '10.0.1.0/24',
   mapPublicIpOnLaunch: true, // subnet should be assigned a public IP address
   tags: {
-    name: 'main public subnet',
+    name: 'main server public subnet',
   },
 })
 

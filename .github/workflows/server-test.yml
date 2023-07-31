@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: 18.16
           cache: 'pnpm'
-          cache-dependency-path: './pnpm-lock.yaml'
+          cache-dependency-path: '**/pnpm-lock.yaml --frozen-lockfile'
 
       - name: Install Dependencies
         run: pnpm install

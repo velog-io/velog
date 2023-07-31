@@ -17,8 +17,7 @@ new aws.lb.Listener(`${prefix}-https-listener`, {
   loadBalancerArn: lb.loadBalancer.arn,
   protocol: 'HTTPS',
   port: 443,
-  certificateArn:
-    'arn:aws:acm:us-east-1:598253313783:certificate/e80c20e7-4ae8-4dba-8ba7-82633103be4d',
+  certificateArn: ENV.sslCertificateArn,
   sslPolicy: 'ELBSecurityPolicy-2016-08',
   defaultActions: [
     {
