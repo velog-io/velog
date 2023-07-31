@@ -12,8 +12,7 @@
 /dist
 
 #env
-/env/.env.*
-.env.*
+/env/*
 .env
 !/env/.gitkeep
 !/env/.env.test
