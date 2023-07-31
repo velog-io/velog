@@ -25,9 +25,11 @@
     "test": "npx jest",
     "create-service": "tsx ./scripts/createService.ts",
     "create-mock": "tsx ./scripts/createMock.ts",
-    "load-env": "tsx ./scripts/loadParameter.ts"
+    "get-parameter": "tsx ./scripts/loadParameter.ts",
+    "put-parameter": "tsx ./scripts/putParameter.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-ecr": "^3.379.1",
     "@aws-sdk/client-ssm": "^3.379.1",
     "@fastify/autoload": "^5.7.1",
     "@fastify/cookie": "^8.3.0",

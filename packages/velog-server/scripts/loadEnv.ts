@@ -35,15 +35,15 @@ const main = async () => {
       name: 'stack',
       message: 'Please choose a stack: [Use arrows to move, type to filter]',
       choices: ['development', 'stage', 'production'],
-      default: 'production',
+      default: 'development',
     },
   ])
 
-  const name = `/velog-v3/${stack}/`
+  const pathPrefix = `/velog-v3/${stack}/`
   const client = new SSMClient({ region: 'ap-northeast-2' })
 
   const input: GetParametersByPathCommandInput = {
-    Path: name,
+    Path: pathPrefix,
     WithDecryption: true,
   }
 
@@ -57,7 +57,7 @@ const main = async () => {
   const fromSSM = response
     .Parameters!.filter(({ Name }) => !!Name)
     .map(({ Name, Value }) => ({
-      name: uppperSnakeCase(Name!.replace(name, '')),
+      name: uppperSnakeCase(Name!.replace(pathPrefix, '')),
       value: Value,
     }))
     .map(({ name, value }) => `${name}=${value}`)

@@ -21,8 +21,8 @@ function resolveDir(dir: string) {
 
 const envFiles: Record<Envrionment, string> = {
   development: '.env.development',
-  production: '.env.production',
   stage: '.env.stage',
+  production: '.env.production',
 }
 
 const file = envFiles[appEnv]
@@ -32,15 +32,15 @@ dotenv.config({ path: resolveDir(`./env/${file}`) })
 const env = z.object({
   appEnv: z.string(),
   port: z.number(),
-  ecrServerRepositoryName: z.string(),
   ecrWebRepositoryName: z.string(),
+  ecrServerRepositoryName: z.string(),
   sslCertificateArn: z.string(),
 })
 
 export const ENV = env.parse({
   appEnv,
   port: Number(process.env.PORT),
-  ecrServerRepositoryName: process.env.ECR_SERVER_REPOSITORY_NAME,
   ecrWebRepositoryName: process.env.ECR_WEB_REPOSITORY_NAME,
+  ecrServerRepositoryName: process.env.ECR_SERVER_REPOSITORY_NAME,
   sslCertificateArn: process.env.SSL_CERTIFICATE_ARN,
 })
