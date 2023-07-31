@@ -64,46 +64,46 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
-  pulumi:
-    needs: ECR-build
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: './infrastructure'
+  # pulumi:
+  #   needs: ECR-build
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: './infrastructure'
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: latest
+  #     - name: Install pnpm
+  #       uses: pnpm/action-setup@v2
+  #       with:
+  #         version: latest
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3.7.0
-        with:
-          node-version: 18.16
-          cache: 'pnpm'
-          cache-dependency-path: '**/pnpm-lock.yaml --frozen-lockfile'
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3.7.0
+  #       with:
+  #         node-version: 18.16
+  #         cache: 'pnpm'
+  #         cache-dependency-path: '**/pnpm-lock.yaml --frozen-lockfile'
 
-      - name: Install Dependencies
-        run: pnpm install
+  #     - name: Install Dependencies
+  #       run: pnpm install
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v2
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ env.AWS_REGION }}
 
-      - name: pulumi up
-        uses: pulumi/actions@v4.4.0
-        with:
-          command: up #
-          stack-name: /velog/prod # or org-name/stack-name
-          diff: true
-          upsert: true
-          work-dir: './infrastructure'
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+  #     - name: pulumi up
+  #       uses: pulumi/actions@v4.4.0
+  #       with:
+  #         command: up #
+  #         stack-name: /velog/prod # or org-name/stack-name
+  #         diff: true
+  #         upsert: true
+  #         work-dir: './infrastructure'
+  #       env:
+  #         PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
