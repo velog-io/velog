@@ -41,7 +41,7 @@ class ParameterService {
       const command = new PutParameterCommand(input)
       const response = await this.client.send(command)
 
-      console.info(`Upload parameter is Success! path: ${name}, version: ${response.Version}`)
+      console.info(`Parameter upload successful! path: ${name}, version: ${response.Version}`)
     } catch (_) {}
   }
   private readEnv = (): string => {
@@ -72,7 +72,7 @@ class ParameterService {
       const env = JSON.parse(value)
       this.writeEnv(env)
       console.info(
-        `Download parameter is Success! path: ${name}, version: ${response.Parameter?.Version}`
+        `Parameter download successful! path: ${name}, version: ${response.Parameter?.Version}`
       )
     } catch (error) {
       console.log(error)

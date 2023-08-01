@@ -27,15 +27,7 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": [
-    "./src",
-    ".eslintrc.cjs",
-    "jest.*",
-    "codegen.ts",
-    "./scripts/*",
-    "test/**/*.ts",
-    "scripts/handleSSMParameter/index.ts"
-  ],
+  "include": ["./src", ".eslintrc.cjs", "jest.*", "codegen.ts", "./scripts/*", "test/**/*.ts"],
   "exclude": [],
   "ts-node": {
     "transpileOnly": true
