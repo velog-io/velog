@@ -25,8 +25,9 @@
     "test": "npx jest",
     "create-service": "tsx ./scripts/createService.ts",
     "create-mock": "tsx ./scripts/createMock.ts",
-    "get-parameter": "tsx ./scripts/loadParameter.ts",
-    "put-parameter": "tsx ./scripts/putParameter.ts"
+    "handle-parameter": "tsx ./scripts/handleSSMParameter/index.ts",
+    "download-parameter": "pnpm handle-parameter -t download",
+    "upload-parameter": "pnpm handle-parameter -t upload"
   },
   "dependencies": {
     "@aws-sdk/client-ecr": "^3.379.1",
