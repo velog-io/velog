@@ -32,9 +32,8 @@
     ".eslintrc.cjs",
     "jest.*",
     "codegen.ts",
-    "./scripts/*.ts",
-    "test/**/*.ts",
-    "./env/**/*.ts"
+    "./scripts/**/*.ts",
+    "test/**/*.ts"
   ],
   "exclude": [],
   "ts-node": {

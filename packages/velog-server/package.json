@@ -25,7 +25,7 @@
     "test": "npx jest",
     "create-service": "tsx ./scripts/createService.ts",
     "create-mock": "tsx ./scripts/createMock.ts",
-    "handle-parameter": "tsx ./env/handleSSMParameter/index.ts"
+    "handle-parameter": "tsx ./scripts/handleSSMParameter/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-ecr": "^3.379.1",
