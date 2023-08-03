@@ -7,9 +7,6 @@ export = async () => {
     name: ENV.ecrServerRepositoryName,
   })
 
-  console.log(repository)
-  console.log('process', process.env)
-  console.log('AWS_ACCESS_KEY_ID', process.env.AWS_ACCESS_KEY_ID)
-  // const ecrImageName = getLatestImage(repository)
-  // createECSfargateService(ecrImageName)
+  const ecrImageName = getLatestImage(repository)
+  createECSfargateService(ecrImageName)
 }

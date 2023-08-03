@@ -89,10 +89,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Install Dependencies
+        run: pnpm parameter:pull -e production
+        working-directory: ./infrastructure
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
       - name: pulumi actions
         uses: pulumi/actions@v4.4.0
         with:
-          stack-name: winverse/velog/production # or org-name/stack-name
+          command: up
+          stack-name: /production # or org-name/stack-name
           diff: true
           upsert: true
           work-dir: './infrastructure'

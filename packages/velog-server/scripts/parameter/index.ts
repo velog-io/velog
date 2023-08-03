@@ -11,20 +11,20 @@ import {
 } from '@aws-sdk/client-ssm'
 
 type OperationType = 'upload' | 'download'
-type StackType = 'development' | 'stage' | 'production' | 'test'
+type Environment = 'development' | 'stage' | 'production' | 'test'
 
 class ParameterService {
-  constructor(stack: StackType) {
-    this.stack = stack
+  constructor(environment: Environment) {
+    this.environment = environment
   }
 
-  private stack: StackType
+  private environment: Environment
   private client = new SSMClient({ region: 'ap-northeast-2' })
   private __filename = fileURLToPath(import.meta.url)
   private __dirname = path.dirname(this.__filename)
 
   private get name() {
-    return `/velog-v3/server/${this.stack}`
+    return `/velog-v3/server/${this.environment}`
   }
 
   public async uploadParameter() {
@@ -44,15 +44,15 @@ class ParameterService {
     } catch (_) {}
   }
   private readEnv = (): string => {
-    const envPath = path.resolve(this.__dirname, `../../env/.env.${this.stack}`)
+    const envPath = path.resolve(this.__dirname, `../../env/.env.${this.environment}`)
     if (!fs.existsSync(envPath)) {
-      console.log(`Not found .env.${this.stack} file`)
+      console.log(`Not found .env.${this.environment} file`)
       process.exit(1)
     }
     return fs.readFileSync(envPath, 'utf8')
   }
   private writeEnv(env: string) {
-    const envPath = path.resolve(this.__dirname, `../../env/.env.${this.stack}`)
+    const envPath = path.resolve(this.__dirname, `../../env/.env.${this.environment}`)
     fs.writeFileSync(envPath, env, { encoding: 'utf-8' })
   }
   public async downloadParameter() {
@@ -87,22 +87,22 @@ const getFlag = () => {
   const args = process.argv.slice(2)
 
   const tFlagIndex = args.indexOf('-t')
-  const sFlagIndex = args.indexOf('-s')
+  const sFlagIndex = args.indexOf('-e')
 
-  const flag = { type: '', stack: '' }
+  const flag = { type: '', environment: '' }
   if (tFlagIndex !== -1) {
     const type = args[tFlagIndex + 1]
     Object.assign(flag, { type })
   }
   if (sFlagIndex !== -1) {
-    const stack = args[sFlagIndex + 1]
-    Object.assign(flag, { stack })
+    const environment = args[sFlagIndex + 1]
+    Object.assign(flag, { environment })
   }
 
   return flag
 }
 
-type ChoicesKey = 'stack' | 'type'
+type ChoicesKey = 'environment' | 'type'
 type Choices = Record<ChoicesKey, string[]>
 
 const validate = (choices: Choices, type: ChoicesKey, input: string): boolean => {
@@ -113,11 +113,11 @@ const main = async () => {
   const flag = getFlag()
 
   let type = flag.type
-  let stack = flag.stack
+  let environment = flag.environment
 
   const choices: Choices = {
     type: ['upload', 'download'],
-    stack: ['development', 'stage', 'production', 'test'],
+    environment: ['development', 'stage', 'production', 'test'],
   }
 
   if (!type) {
@@ -133,17 +133,17 @@ const main = async () => {
     type = promptType
   }
 
-  if (!stack) {
-    const { promptStack } = await inquirer.prompt([
+  if (!environment) {
+    const { promptEnvironment } = await inquirer.prompt([
       {
         type: 'list',
-        name: 'promptStack',
+        name: 'promptEnvironment',
         message: 'Please choose a stack: [Use arrows to move, type to filter]',
-        choices: choices.stack,
+        choices: choices.environment,
         default: 'production',
       },
     ])
-    stack = promptStack
+    environment = promptEnvironment
   }
 
   if (!validate(choices, 'type', type)) {
@@ -151,16 +151,16 @@ const main = async () => {
     process.exit(1)
   }
 
-  if (!validate(choices, 'stack', stack)) {
-    console.error(`${stack} is not allowed stack`)
+  if (!validate(choices, 'environment', environment)) {
+    console.error(`${environment} is not allowed environment`)
     process.exit(1)
   }
 
   console.info('Selected Options:')
   console.info(`-t: ${type}`)
-  console.info(`-s: ${stack}`)
+  console.info(`-e: ${environment}`)
 
-  const parameterService = new ParameterService(stack as StackType)
+  const parameterService = new ParameterService(environment as Environment)
   const mapper = {
     upload: () => parameterService.uploadParameter(),
     download: () => parameterService.downloadParameter(),
