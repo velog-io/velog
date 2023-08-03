@@ -4,8 +4,12 @@ import { createECSfargateService, getLatestImage } from './src/server/ecs'
 
 export = async () => {
   const repository = await aws.ecr.getRepository({
-    name: ENV.serverEcrRepositoryName,
+    name: ENV.ecrServerRepositoryName,
   })
-  const ecrImageName = getLatestImage(repository)
-  createECSfargateService(ecrImageName)
+
+  console.log(repository)
+  console.log('process', process.env)
+  console.log('AWS_ACCESS_KEY_ID', process.env.AWS_ACCESS_KEY_ID)
+  // const ecrImageName = getLatestImage(repository)
+  // createECSfargateService(ecrImageName)
 }
