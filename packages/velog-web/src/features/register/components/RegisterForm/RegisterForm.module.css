@@ -1,0 +1,50 @@
+.block {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    .form-bottom {
+      margin-top: 6rem;
+    }
+    .error {
+      margin-bottom: 1rem;
+      font-size: 1.125rem;
+      line-height: 1.5;
+      color: var(--red5);
+      font-weight: bold;
+    }
+
+    .check-row {
+        display: flex;
+        align-items: center;
+        color: var(--text1);
+        gap: 0.5rem;
+        cursor: pointer;
+      
+        a {
+          color:var(--primary1);
+        }
+    }
+
+    .box {
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 1px solid var(--border2);
+        border-radius: 4px;
+      
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      
+        svg {
+          fill:white;
+          width: 1rem;
+          height: 1rem;
+        }
+
+        &.checked {
+          background:var(--primary1);
+          border: 1px solid var(--primary1);
+        }
+    }
+
+   
+}

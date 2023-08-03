@@ -1,0 +1,81 @@
+.block {
+    label,
+    input {
+      display: block;
+      line-height: 1.5;
+    }
+    label {
+      font-weight: bold;
+      font-size: 1.125rem;
+      color:var(--text1);
+      margin-bottom: 1rem;
+      transition: all 0.125s ease-in;
+
+      &.focus {
+        color: var(--primary1);
+      }
+    }
+
+  
+  
+    input {
+      background: transparent;
+      font-size: 1.5rem;
+      border: none;
+      outline: none;
+      @media screen and (max-width: 767px){
+        font-size: 1.125rem;
+
+      }
+
+      width: 100%;
+      color: var(--text2);
+      transition: all 0.125s ease-in;
+   
+      &::placeholder {
+        color: var(--text3);
+
+      }
+      &:disabled {
+        color: var(--text3)
+      }
+
+      &.focus {
+        color:var(--primary1);
+      }
+    }
+
+ 
+    .group {
+      display: inline-block;
+      max-width: 100%;
+    }
+    .input-wrapper {
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border2);
+      display: flex;
+      align-items: center;
+  
+      input {
+        width: 1;
+      }
+      svg {
+        font-size: 1.5rem;
+        color: var(--text3);
+      }
+
+      &.focus {
+        border-color: var(--primary1);
+      }
+    }
+
+  
+    .width-maker {
+      max-width: 100%;
+      display: inline-block;
+      visibility: hidden;
+      font-size: 1.5rem;
+      overflow: hidden;
+      line-height: 0;
+    }
+}

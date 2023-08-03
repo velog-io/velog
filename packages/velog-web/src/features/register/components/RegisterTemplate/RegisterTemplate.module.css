@@ -1,0 +1,29 @@
+.block {
+  width: 768px;
+  margin: 0 auto;
+  margin-top: 100px;
+  line-height: 1.5;
+  h1 {
+    font-size: 4rem;
+    color: var(--text1);
+    font-weight: bolder;
+    margin: 0;
+  }
+  .description {
+    font-size: 1.5rem;
+    color: var(--text1);
+  }
+
+  @media screen and (max-width: 767px){
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-top: 4rem;
+    h1 {
+      font-size: 3rem;
+    }
+    .description {
+      font-size: 1rem;
+    }
+  }
+}
