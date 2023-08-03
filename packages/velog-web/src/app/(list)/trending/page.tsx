@@ -2,15 +2,13 @@ import Home from '@/app/(list)/page'
 import { Metadata } from 'next'
 
 type Props = {
-  searchParams: { timeframe: string }
+  params: { timeframe: string }
 }
 
 export const metadata: Metadata = {
   alternates: { canonical: 'https://velog.io/' },
 }
 
-export const dynamic = 'force-static'
-
-export default async function Trending({ searchParams }: Props) {
-  return <Home searchParams={searchParams} />
+export default async function Trending({ params }: Props) {
+  return <Home params={params} />
 }

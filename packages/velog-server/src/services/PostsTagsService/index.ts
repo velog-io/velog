@@ -2,18 +2,20 @@ import { Post } from '@prisma/client'
 import { injectable } from 'tsyringe'
 
 interface Service {
-  getPostsByTag(params: GetPostsByTagParams): Promise<Post>
+  getPostsByTag(params: GetPostsByTagParams): Promise<Post[]>
 }
 
 @injectable()
-export class PostsTagsService {
-  // public async getPostsByTag({
-  //   tagName,
-  //   cursor,
-  //   limit = 20,
-  //   userId,
-  //   userself,
-  // }: GetPostsByTagParams): Promise<Post> {}
+export class PostsTagsService implements Service {
+  public async getPostsByTag({
+    tagName,
+    cursor,
+    limit = 20,
+    userId,
+    userself,
+  }: GetPostsByTagParams): Promise<Post[]> {
+    return []
+  }
 }
 
 type GetPostsByTagParams = {

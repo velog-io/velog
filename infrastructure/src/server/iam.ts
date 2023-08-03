@@ -1,5 +1,5 @@
 import * as aws from '@pulumi/aws'
-import { prefix } from '../lib/prefix'
+import { prefix } from '../../lib/prefix'
 
 export const ecsTaskExecutionRole = new aws.iam.Role(`${prefix}-te-role`, {
   assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({

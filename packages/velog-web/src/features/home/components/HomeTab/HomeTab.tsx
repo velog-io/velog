@@ -1,18 +1,13 @@
 'use client'
 
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useParams, usePathname } from 'next/navigation'
 import styles from './HomeTab.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import useToggle from '@/hooks/useToggle'
 import { useRef } from 'react'
 import { useTimeframeValue } from '@/features/home/state/timeframe'
 import ActiveLink from '@/components/ActiveLink/ActiveLink'
-import {
-  MdAccessTime,
-  MdArrowDropDown,
-  MdMoreVert,
-  MdTrendingUp,
-} from 'react-icons/md'
+import { MdAccessTime, MdArrowDropDown, MdMoreVert, MdTrendingUp } from 'react-icons/md'
 import { motion } from 'framer-motion'
 import { timeframes } from '@/features/home/utils/timeframeMap'
 import TimeframePicker from '@/features/home/components/TimeframePicker'
@@ -22,8 +17,8 @@ const cx = bindClassNames(styles)
 
 function HomeTab() {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const timeframe = searchParams.get('timeframe') || 'week'
+  const params = useParams()
+  const timeframe = params.timeframe ?? 'week'
 
   const [moreButton, toggleMoreButton] = useToggle(false)
   const [timeframePicker, toggleTimeframePicker] = useToggle(false)
@@ -41,7 +36,7 @@ function HomeTab() {
       <div className={cx('left')}>
         <div className={cx('block')}>
           <ActiveLink
-            href="/?timeframe=week"
+            href="/trending/week"
             className={cx({
               active: pathname === '/' || pathname.includes('/trending'),
             })}
@@ -49,10 +44,7 @@ function HomeTab() {
             <MdTrendingUp />
             <span>트렌딩</span>
           </ActiveLink>
-          <ActiveLink
-            href="/recent"
-            className={cx({ active: pathname.includes('/recent') })}
-          >
+          <ActiveLink href="/recent" className={cx({ active: pathname.includes('/recent') })}>
             <MdAccessTime />
             <span>최신</span>
           </ActiveLink>
@@ -64,20 +56,13 @@ function HomeTab() {
             className={cx('indicator')}
           />
         </div>
-        {['/', '/trending'].includes(pathname) && (
+        {(pathname === '/' || pathname.includes('/trending')) && (
           <>
-            <div
-              className={cx('selector')}
-              onClick={handleToggle}
-              ref={timeframeRef}
-            >
+            <div className={cx('selector')} onClick={handleToggle} ref={timeframeRef}>
               {timeframes.find((t) => t[0] === timeframe)![1]}
               <MdArrowDropDown />
             </div>
-            <TimeframePicker
-              isVisible={timeframePicker}
-              onClose={toggleTimeframePicker}
-            />
+            <TimeframePicker isVisible={timeframePicker} onClose={toggleTimeframePicker} />
           </>
         )}
       </div>

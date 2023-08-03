@@ -8,16 +8,17 @@ import {
 } from '@/graphql/generated'
 import { Posts } from '@/types/post'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
-import { useSearchParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 
 export default function useTrendingPosts(initialPost: Posts[] = []) {
-  const searchParams = useSearchParams()
-  const timeframe = (searchParams.get('timeframe') ?? 'week') as Timeframe
+  const params = useParams()
+  const timeframe = (params.timeframe ?? 'week') as Timeframe
   const prevTimeframe = useRef<Timeframe>(timeframe)
   const { actions } = useTimeframe()
   const hasCheckedRef = useRef<boolean>(false)
 
+  // query
   const limit = ENV.defaultPostLimit
   const initialOffset = initialPost.length
   const fetchInput = useMemo(() => {
@@ -69,14 +70,15 @@ export default function useTrendingPosts(initialPost: Posts[] = []) {
   }, [queryClient, fetchInput, timeframe])
 
   useEffect(() => {
-    const scrolly = Number(localStorage.getItem('scrollPosition'))
+    const storageKey = `trendingPosts/${timeframe}`
+    const scrolly = Number(localStorage.getItem(`${storageKey}/scrollPosition`))
     if (!scrolly || isLoading) return
     window.scrollTo({
       top: Number(scrolly),
     })
-    localStorage.removeItem(`trendingPosts/${timeframe}`)
-    localStorage.removeItem('scrollPosition')
-  }, [isLoading, timeframe])
+    localStorage.removeItem(storageKey)
+    localStorage.removeItem(`${storageKey}/scrollPosition`)
+  }, [timeframe, isLoading])
   // TODO: remove END
 
   useEffect(() => {
@@ -85,7 +87,7 @@ export default function useTrendingPosts(initialPost: Posts[] = []) {
     prevTimeframe.current = timeframe as Timeframe
   }, [timeframe, refetch, data])
 
-  // InActive select timeframe, if isFetching is true
+  // InActive timeframe picker, if isFetching is true
   useEffect(() => {
     if (isFetching) {
       actions.setIsFetching(true)

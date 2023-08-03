@@ -12,6 +12,7 @@ import { useEffect, useMemo, useRef } from 'react'
 export default function useRecentPosts(initialPosts: Posts[] = []) {
   const hasCheckedRef = useRef<boolean>(false)
 
+  // query
   const limit = ENV.defaultPostLimit
   const fetchInput = useMemo(() => {
     return {
@@ -59,13 +60,13 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
   }, [queryClient, fetchInput])
 
   useEffect(() => {
-    const scrolly = Number(localStorage.getItem('scrollPosition'))
+    const scrolly = Number(localStorage.getItem('recentPosts/scrollPosition'))
     if (!scrolly || isLoading) return
     window.scrollTo({
       top: Number(scrolly),
     })
     localStorage.removeItem('recentPosts')
-    localStorage.removeItem('scrollPosition')
+    localStorage.removeItem('recentPosts/scrollPosition')
   }, [isLoading])
   // TODO: remove End
 

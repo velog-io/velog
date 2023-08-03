@@ -12,10 +12,10 @@
 /dist
 
 #env
-/env/.env.*
-.env.*
+/env/*
 .env
 !/env/.gitkeep
 !/env/.env.test
+!/env/.env.example
 
 /dockers/docker/data
