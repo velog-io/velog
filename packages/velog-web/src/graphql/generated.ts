@@ -33,7 +33,7 @@ export type Scalars = {
   Int: { input: number; output: number }
   Float: { input: number; output: number }
   DateTimeISO: { input: any; output: any }
-  JSON: { input: any; output: any }
+  JSON: { input: JSON; output: JSON }
 }
 
 export type Comment = {
@@ -252,7 +252,7 @@ export type ReadPostQuery = {
         display_name: string
         thumbnail: string | null
         short_bio: string
-        profile_links: any
+        profile_links: JSON
       }
       velog_config: { title: string | null } | null
     } | null

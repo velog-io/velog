@@ -1,11 +1,15 @@
 import { DbService } from '@lib/db/DbService.js'
-import { LogParams, PostReadLogInterface } from './PostReadLogInterface'
 import { injectable, singleton } from 'tsyringe'
 import { PostReadLog } from '@prisma/client'
+import { LogParams } from './PostReadLogInterface'
+
+interface Service {
+  log(params: LogParams): Promise<PostReadLog>
+}
 
 @injectable()
 @singleton()
-export class PostReadLogService implements PostReadLogInterface {
+export class PostReadLogService implements Service {
   constructor(private readonly db: DbService) {}
   public async log(params: LogParams): Promise<PostReadLog> {
     const exists = await this.db.postReadLog.findFirst({

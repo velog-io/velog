@@ -3,6 +3,7 @@ import { FacebookIcon, GithubIcon, GoogleIcon } from '@/assets/icons/components'
 import { useMemo } from 'react'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { AuthProvider } from '@/types/auth'
+import { ENV } from '@/env'
 
 const cx = bindClassNames(styles)
 
@@ -34,12 +35,9 @@ function AuthSocialButton({ provider, tabIndex, currentPath }: Props) {
   const info = useMemo(() => providerMap[provider], [provider])
   const { icon: Icon, color, border } = info
 
-  const host =
-    process.env.NODE_ENV === 'production'
-      ? process.env.NEXT_PUBLIC_API_V2_HOST
-      : 'http://localhost:5002/'
+  const host = ENV.appEnv === 'production' ? ENV.apiV2Host : 'http://localhost:5002'
 
-  const redirectTo = `${host}api/v2/auth/social/redirect/${provider}?next=${currentPath}&isIntegrate=0`
+  const redirectTo = `${host}/api/v2/auth/social/redirect/${provider}?next=${currentPath}&isIntegrate=0`
 
   return (
     <a

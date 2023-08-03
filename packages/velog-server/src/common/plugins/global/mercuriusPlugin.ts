@@ -2,7 +2,7 @@ import mercurius from 'mercurius'
 import { schema, resolvers } from '@graphql/index.js'
 import type { FastifyPluginAsync } from 'fastify'
 import { GraphQLContext } from '@interfaces/graphql.js'
-import { ENV } from 'src/env.js'
+import { ENV } from '@env'
 import { isHttpError } from '@errors/HttpError.js'
 
 const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {

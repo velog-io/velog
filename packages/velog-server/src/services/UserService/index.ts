@@ -2,7 +2,6 @@ import { CurrentUser } from '@interfaces/user'
 import { CookieService } from '@lib/cookie/CookieService.js'
 import { DbService } from '@lib/db/DbService.js'
 import { User } from '@prisma/client'
-import { UserServiceInterface } from './UserServiceInterface'
 import { FastifyReply } from 'fastify/types/reply'
 import { injectable } from 'tsyringe'
 import { GraphQLContext } from '@interfaces/graphql'
@@ -12,8 +11,16 @@ import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from '@constants/timeConstants.js'
 import { UnauthorizedError, NotFoundError } from '@errors/index.js'
 import { UserToken } from '@graphql/generated'
 
+interface Service {
+  findById(userId: string): Promise<User | null>
+  findByUsername(username: string): Promise<User | null>
+  getCurrentUser(userId: string | undefined): Promise<CurrentUser | null>
+  restoreToken(ctx: GraphQLContext): Promise<UserToken>
+  logout(reply: FastifyReply, userId: string | undefined): Promise<void>
+}
+
 @injectable()
-export class UserService implements UserServiceInterface {
+export class UserService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly cookie: CookieService,

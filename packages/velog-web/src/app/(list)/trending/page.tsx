@@ -1,22 +1,14 @@
-import getTrendingPosts from '@/actions/getTrendingPost'
-import TrendingPosts from '@/features/home/components/TrendingPosts'
+import Home from '@/app/(list)/page'
 import { Metadata } from 'next'
 
 type Props = {
-  searchParams: { timeframe: string }
+  params: { timeframe: string }
 }
 
 export const metadata: Metadata = {
   alternates: { canonical: 'https://velog.io/' },
 }
 
-export default async function Trending({ searchParams }: Props) {
-  const { timeframe = 'week' } = searchParams
-  const data = await getTrendingPosts({ timeframe })
-
-  return (
-    <>
-      <TrendingPosts data={data} />
-    </>
-  )
+export default async function Trending({ params }: Props) {
+  return <Home params={params} />
 }

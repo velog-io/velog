@@ -11,13 +11,6 @@ query currentUser {
   }
 }
 
-query restoreToken {
-  restoreToken {
-    accessToken
-    refreshToken
-  }
-}
-
 mutation logout {
   logout
 }

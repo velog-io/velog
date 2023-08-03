@@ -1,12 +1,13 @@
+import { ENV } from '@/env'
 import { TrendingPostsDocument, TrendingPostsInput } from '@/graphql/generated'
 import postData from '@/lib/postData'
 import { Posts } from '@/types/post'
 
 export default async function getTrendingPosts({
-  limit = Number(process.env.NEXT_PUBLIC_DEFAULT_POST_LIMIT) ?? 24,
-  timeframe = process.env.NEXT_PUBLIC_DEFAULT_POST_TIMEFRAME || 'week',
+  limit = ENV.defaultPostLimit,
+  timeframe = ENV.defaultPostTimeFrame,
   offset = 0,
-}: Partial<TrendingPostsInput> = {}) {
+}: TrendingPostsInput) {
   try {
     const body = {
       operationName: 'trendingPosts',

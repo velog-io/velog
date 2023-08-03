@@ -1,10 +1,9 @@
+import { ENV } from '@/env'
 import { RecentPostsDocument, RecentPostsInput } from '@/graphql/generated'
 import postData from '@/lib/postData'
 import { Posts } from '@/types/post'
 
-export default async function getRecentPost({
-  limit = Number(process.env.NEXT_PUBLIC_DEFAULT_POST_LIMIT) ?? 24,
-}: RecentPostsInput = {}) {
+export default async function getRecentPost({ limit = ENV.defaultPostLimit }: RecentPostsInput) {
   try {
     const body = {
       operationName: 'recentPosts',

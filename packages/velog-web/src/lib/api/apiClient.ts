@@ -1,9 +1,9 @@
+import { ENV } from '@/env'
 import axios from 'axios'
 
-const host =
-  process.env.NODE_ENV === 'development'
-    ? process.env.NEXT_PUBLIC_API_V2_HOST
-    : process.env.NEXT_PUBLIC_API_V2_HOST || '/'
+const host = ENV.apiV2Host
+
+// ENV.appEnv === 'development' ? ENV.apiV2Host : ENV.apiV2Host || '/'
 
 const apiClient = axios.create({
   baseURL: host,

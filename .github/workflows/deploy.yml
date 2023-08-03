@@ -1,0 +1,108 @@
+name: Velog Deployment workflow
+
+on:
+  push:
+    branches: 'release'
+    paths:
+      - 'packages/velog-server/**'
+      - 'packages/velog-web/**'
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_WEB_REPOSITORY: velog-web
+  ECR_SERVER_REPOSITORY: velog-server
+
+jobs:
+  ecr-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx for Docker Cache
+        uses: docker/setup-buildx-action@v2.9.1
+        with:
+          install: true
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1.6.2
+
+      - name: Server Build and push Docker images
+        uses: docker/build-push-action@v4
+        with:
+          context: ./packages/velog-server/
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_SERVER_REPOSITORY }}:${{ github.sha }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Web Build and push Docker images
+        uses: docker/build-push-action@v4
+        with:
+          context: ./packages/velog-web/
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_WEB_REPOSITORY }}:${{ github.sha }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      # pulumi:
+      #   needs: ecr-push
+      #   runs-on: ubuntu-latest
+      #   defaults:
+      #     run:
+      #       working-directory: './infrastructure'
+
+      #   steps:
+      #     - name: Checkout code
+      #       uses: actions/checkout@v3
+
+      #     - name: Install pnpm
+      #       uses: pnpm/action-setup@v2
+      #       with:
+      #         version: latest
+
+      #     - name: Setup Node.js
+      #       uses: actions/setup-node@v3.7.0
+      #       with:
+      #         node-version: 18.16
+      #         cache: 'pnpm'
+      #         cache-dependency-path: '**/pnpm-lock.yaml --frozen-lockfile'
+
+      #     - name: Install Dependencies
+      #       run: pnpm install
+
+      #     - name: Configure AWS credentials
+      #       uses: aws-actions/configure-aws-credentials@v2
+      #       with:
+      #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #         aws-region: ${{ env.AWS_REGION }}
+
+      # - name: pulumi up
+      #   uses: pulumi/actions@v4.4.0
+      #   with:
+      #     command: up #
+      #     stack-name: /velog/prod # or org-name/stack-name
+      #     diff: true
+      #     upsert: true
+      #     work-dir: './infrastructure'
+      #   env:
+      #     PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

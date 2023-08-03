@@ -15,18 +15,21 @@
   "main": "main.ts",
   "type": "module",
   "scripts": {
-    "prisma": "dotenv -e ./env/.env.development npx prisma",
+    "prisma": "dotenv -e ./env/.env.development -- npx prisma",
     "prisma:format": "tsx ./scripts/prismaFormatter.ts && pnpm prisma generate",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
-    "prod": "pnpm build && NODE_ENV=production node dist/src/main.js",
+    "prod": "pnpm handle-parameter -t download -s production && pnpm build && NODE_ENV=production node dist/src/main.js",
     "start": "node ./dist/main.js",
     "codegen": "graphql-codegen --config codegen.ts",
     "test": "npx jest",
     "create-service": "tsx ./scripts/createService.ts",
-    "create-mock": "tsx ./scripts/createMock.ts"
+    "create-mock": "tsx ./scripts/createMock.ts",
+    "handle-parameter": "tsx ./scripts/handleSSMParameter/index.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-ecr": "^3.379.1",
+    "@aws-sdk/client-ssm": "^3.379.1",
     "@fastify/autoload": "^5.7.1",
     "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.3.0",
@@ -35,22 +38,23 @@
     "@graphql-tools/load": "^8.0.0",
     "@graphql-tools/merge": "^9.0.0",
     "@graphql-tools/schema": "^10.0.0",
-    "@prisma/client": "4.16.1",
+    "@prisma/client": "^5.1.0",
     "dotenv": "^16.1.4",
     "fastify": "^4.18.0",
-    "graphql": "^16.6.0",
+    "graphql": "^16.7.1",
     "graphql-scalars": "^1.22.2",
     "inquirer": "^9.2.7",
     "jsonwebtoken": "^9.0.0",
     "lru-cache": "^10.0.0",
     "mercurius": "^13.0.0",
     "pino-pretty": "^10.0.0",
-    "prisma": "^4.16.1",
+    "prisma": "^5.1.0",
     "reflect-metadata": "^0.1.13",
     "remove-markdown": "^0.5.0",
     "tsc-alias": "^1.8.7",
     "tsx": "^3.12.7",
-    "tsyringe": "^4.7.0"
+    "tsyringe": "^4.7.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^5.0.0",
@@ -76,5 +80,8 @@
     "ts-node": "^10.9.1",
     "ts-paths-esm-loader": "^1.4.3",
     "typescript": "^5.1.6"
+  },
+  "resolutions": {
+    "graphql": "^16.7.1"
   }
 }

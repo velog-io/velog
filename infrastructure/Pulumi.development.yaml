@@ -1,0 +1,3 @@
+config:
+  aws:region: ap-northeast-2
+  velog:APP_ENV: development

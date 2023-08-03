@@ -4,6 +4,8 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
     tty: true
     stdin_open: true
     ports:

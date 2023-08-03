@@ -8,15 +8,23 @@ import {
 } from '@graphql/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { BadRequestError, UnauthorizedError } from '@errors/index.js'
-
-import { GetPostsByTypeParams, PostAllInclude, PostServiceInterface } from './PostServiceInterface'
+import { GetPostsByTypeParams, PostAllInclude } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { PostReadLogService } from '@services/PostReadLogService/index.js'
 
+interface Service {
+  getReadingList(input: ReadingListInput, userId: string | undefined): Promise<Post[]>
+  // private getPostsByRead(input: GetPostsByTypeParams): Promise<Post[]>
+  // private getPostsByLiked(input: GetPostsByTypeParams): Promise<Post[]>
+  getRecentPosts(input: RecentPostsInput, userId: string | undefined): Promise<Post[]>
+  getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
+  getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>
+}
+
 @injectable()
 @singleton()
-export class PostService implements PostServiceInterface {
+export class PostService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly cache: CacheService,

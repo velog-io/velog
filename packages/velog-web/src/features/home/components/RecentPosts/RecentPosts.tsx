@@ -11,10 +11,12 @@ type Props = {
 }
 
 function RecentPosts({ data }: Props) {
-  const { posts, isLoading, fetchNextPage, isFetching } = useRecentPosts(data)
+  const { posts, fetchNextPage, isFetching, hasNextPage, originData } = useRecentPosts(data)
   const ref = useRef<HTMLDivElement>(null)
 
   const getRecentPostsMore = () => {
+    if (isFetching) return
+    if (hasNextPage === false) return
     fetchNextPage()
   }
 
@@ -24,9 +26,10 @@ function RecentPosts({ data }: Props) {
     <>
       <PostCardGrid
         posts={posts}
+        originData={originData}
         forHome={true}
         forPost={false}
-        loading={isLoading || isFetching}
+        loading={isFetching}
       />
       <div ref={ref} />
     </>
