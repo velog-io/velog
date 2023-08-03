@@ -21,8 +21,8 @@ function resolveDir(dir: string) {
 
 const envFiles: Record<Envrionment, string> = {
   development: '.env.development',
-  stage: '.env.stage',
   production: '.env.production',
+  stage: '.env.stage',
 }
 
 const file = envFiles[appEnv]

@@ -26,6 +26,9 @@ importers:
 
   infrastructure:
     dependencies:
+      '@aws-sdk/client-ssm':
+        specifier: ^3.379.1
+        version: 3.379.1
       '@pulumi/aws':
         specifier: ^5.42.0
         version: 5.42.0
@@ -38,6 +41,9 @@ importers:
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
+      tsx:
+        specifier: ^3.12.7
+        version: 3.12.7
       zod:
         specifier: ^3.21.4
         version: 3.21.4
