@@ -13,8 +13,8 @@ const parameterPrefix = (env: string) => `/velog-v3/infrastructure/${env}`
 const pull = async () => {
   const env = process.env.NODE_ENV
   const args = process.argv.slice(3)
-  const sFlagIndex = args.indexOf('-e')
-  const environment = args[sFlagIndex + 1] || env || 'development'
+  const eFlagIndex = args.indexOf('-e')
+  const environment = args[eFlagIndex + 1] || env || 'development'
 
   if (!['development', 'production', 'stage'].includes(environment)) {
     throw new Error('Not allow environment')
@@ -44,8 +44,8 @@ const pull = async () => {
 const push = async () => {
   const env = process.env.NODE_ENV
   const args = process.argv.slice(3)
-  const sFlagIndex = args.indexOf('-e')
-  const environment = args[sFlagIndex + 1] || env || 'development'
+  const eFlagIndex = args.indexOf('-e')
+  const environment = args[eFlagIndex + 1] || env || 'development'
 
   if (!['development', 'production', 'stage'].includes(environment)) {
     throw new Error('Not allow environment')
