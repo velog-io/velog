@@ -1,5 +1,6 @@
 import * as aws from '@pulumi/aws'
-import { prefix } from '../lib/prefix'
+import { prefix } from '../../lib/prefix'
+import { ENV } from '../../env'
 
 export const elbSecurityGroup = new aws.ec2.SecurityGroup(`${prefix}-elb-sg`, {
   description: 'Allow traffic from the internet',
@@ -31,8 +32,8 @@ export const taskSecurityGroup = new aws.ec2.SecurityGroup(`${prefix}-task-sg`, 
   description: 'Allow traffic from the load balancer',
   ingress: [
     {
-      fromPort: 8080,
-      toPort: 8080,
+      fromPort: ENV.port,
+      toPort: ENV.port,
       protocol: 'tcp',
       securityGroups: [elbSecurityGroup.id],
     },

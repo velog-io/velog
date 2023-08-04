@@ -1,9 +1,8 @@
-import { subnets } from './subnet'
 import * as aws from '@pulumi/aws'
 import * as awsx from '@pulumi/awsx'
 
 import { prefix } from '../../lib/prefix'
-import { taskSecurityGroup } from '../securityGroup'
+import { taskSecurityGroup } from './securityGroup'
 import { ecsTaskExecutionRole } from './iam'
 import { ENV } from '../../env'
 import { lb } from './loadBalancer'
@@ -15,11 +14,11 @@ export const createECSfargateService = (ecrImageName: string) => {
   new awsx.ecs.FargateService(`${prefix}-service`, {
     cluster: cluster.arn,
     networkConfiguration: {
-      assignPublicIp: true,
+      assignPublicIp: false,
       securityGroups: [taskSecurityGroup.id],
-      subnets,
+      subnets: [],
     },
-    desiredCount: 2,
+    desiredCount: 1,
     taskDefinitionArgs: {
       executionRole: {
         roleArn: ecsTaskExecutionRole.arn,
@@ -43,13 +42,15 @@ export const createECSfargateService = (ecrImageName: string) => {
             name: 'NODE_ENV',
             value: ENV.appEnv === 'production' ? 'production' : 'development',
           },
+          {
+            name: 'AWS_ACCESS_KEY_ID',
+            value: process.env.AWS_ACCESS_KEY_ID,
+          },
+          {
+            name: 'AWS_SECRET_ACCESS_KEY',
+            value: process.env.AWS_SECRET_ACCESS_KEY,
+          },
         ],
-        // secrets: [
-        //   {
-        //     valueFrom: databaseUrl.arn,
-        //     name: "DATABASE_URL",
-        //   },
-        // ],
       },
     },
   })

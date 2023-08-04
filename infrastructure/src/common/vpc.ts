@@ -1,0 +1,74 @@
+import { subnets } from './../web/subnet'
+import * as aws from '@pulumi/aws'
+import * as pulumi from '@pulumi/pulumi'
+import { prefix } from '../../lib/prefix'
+import { privateSubnet1Name } from '../server/subnet'
+
+export const vpcName = `${prefix}-vpc`
+new aws.ec2.Vpc(vpcName, {
+  cidrBlock: '172.32.0.0/16',
+  instanceTenancy: 'default', // or dedicated
+  tags: {
+    Name: 'velog-vpc',
+  },
+})
+
+const vpc = aws.ec2.getVpc({
+  default: false,
+  tags: {
+    Name: 'velog-vpc',
+  },
+})
+// Subnet
+const allSubnets = vpc.id.apply((id) => {
+  aws.ec2.getSubnet({
+    filters: [
+      {
+        name: 'vpc-id',
+        values: vpc.id.apply((id) => id),
+      },
+    ],
+  })
+})
+
+allSubnets.apply((s) => console.log(s))
+
+// DHCP
+const dhcpOptionName = `${prefix}-dhcp-option`
+export const dhcpOptionSet = new aws.ec2.VpcDhcpOptions(dhcpOptionName, {
+  domainName: 'ap-northeast-2.compute.internal',
+  domainNameServers: ['AmazonProvidedDNS'],
+})
+
+const dhcpName = `${prefix}-dhcp`
+export const dhcpAssociate = new aws.ec2.VpcDhcpOptionsAssociation(dhcpName, {
+  vpcId: vpc.id,
+  dhcpOptionsId: dhcpOptionSet.id,
+})
+
+// NACL
+const naclName = `${prefix}-nacl`
+new aws.ec2.NetworkAcl(naclName, {
+  vpcId: vpc.id,
+  subnetIds: allSubnets.ids,
+  egress: [
+    {
+      protocol: '-1',
+      action: 'allow',
+      ruleNo: 100,
+      cidrBlock: '0.0.0.0/0',
+      fromPort: 0,
+      toPort: 0,
+    },
+  ],
+  ingress: [
+    {
+      protocol: '-1',
+      action: 'allow',
+      ruleNo: 100,
+      cidrBlock: '0.0.0.0/0',
+      fromPort: 0,
+      toPort: 0,
+    },
+  ],
+})

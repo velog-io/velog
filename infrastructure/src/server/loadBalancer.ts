@@ -1,11 +1,13 @@
 import * as aws from '@pulumi/aws'
 import * as awsx from '@pulumi/awsx'
 import { prefix } from '../../lib/prefix'
-import { elbSecurityGroup } from '../securityGroup'
+import { elbSecurityGroup } from './securityGroup'
 import { ENV } from '../../env'
+import { serverSubnetIds } from './subnet'
 
 export const lb = new awsx.lb.ApplicationLoadBalancer(`${prefix}-lb`, {
   securityGroups: [elbSecurityGroup.id],
+  subnetIds: serverSubnetIds,
   defaultTargetGroup: {
     port: ENV.port,
     protocol: 'HTTP',
@@ -18,7 +20,7 @@ new aws.lb.Listener(`${prefix}-https-listener`, {
   protocol: 'HTTPS',
   port: 443,
   certificateArn: ENV.sslCertificateArn,
-  sslPolicy: 'ELBSecurityPolicy-2016-08',
+  sslPolicy: 'ELBSecurityPolicy-TLS13-1-2-2021-06',
   defaultActions: [
     {
       type: 'forward',
