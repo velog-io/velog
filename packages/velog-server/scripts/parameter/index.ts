@@ -10,7 +10,7 @@ import {
   SSMClient,
 } from '@aws-sdk/client-ssm'
 
-type OperationType = 'upload' | 'download'
+type OperationType = 'push' | 'pull'
 type Environment = 'development' | 'stage' | 'production' | 'test'
 
 class ParameterService {
@@ -26,23 +26,6 @@ class ParameterService {
   private get name() {
     return `/velog-v3/server/${this.environment}`
   }
-
-  public async uploadParameter() {
-    try {
-      const text = this.readEnv()
-      const name = this.name
-      const input: PutParameterCommandInput = {
-        Name: name,
-        Value: JSON.stringify(text),
-        Overwrite: true,
-        Type: 'SecureString',
-      }
-      const command = new PutParameterCommand(input)
-      const response = await this.client.send(command)
-
-      console.info(`Parameter upload successful! path: ${name}, version: ${response.Version}`)
-    } catch (_) {}
-  }
   private readEnv = (): string => {
     const envPath = path.resolve(this.__dirname, `../../env/.env.${this.environment}`)
     if (!fs.existsSync(envPath)) {
@@ -55,7 +38,7 @@ class ParameterService {
     const envPath = path.resolve(this.__dirname, `../../env/.env.${this.environment}`)
     fs.writeFileSync(envPath, env, { encoding: 'utf-8' })
   }
-  public async downloadParameter() {
+  public async pullParameter() {
     try {
       const name = this.name
       const input: GetParameterCommandInput = {
@@ -81,19 +64,30 @@ class ParameterService {
       console.log(error)
     }
   }
+  public async pushParameter() {
+    try {
+      const text = this.readEnv()
+      const name = this.name
+      const input: PutParameterCommandInput = {
+        Name: name,
+        Value: JSON.stringify(text),
+        Overwrite: true,
+        Type: 'SecureString',
+      }
+      const command = new PutParameterCommand(input)
+      const response = await this.client.send(command)
+
+      console.info(`Parameter upload successful! path: ${name}, version: ${response.Version}`)
+    } catch (_) {}
+  }
 }
 
 const getFlag = () => {
-  const args = process.argv.slice(2)
+  const args = process.argv.slice(3)
 
-  const tFlagIndex = args.indexOf('-t')
   const sFlagIndex = args.indexOf('-e')
 
-  const flag = { type: '', environment: '' }
-  if (tFlagIndex !== -1) {
-    const type = args[tFlagIndex + 1]
-    Object.assign(flag, { type })
-  }
+  const flag = { environment: '' }
   if (sFlagIndex !== -1) {
     const environment = args[sFlagIndex + 1]
     Object.assign(flag, { environment })
@@ -102,35 +96,31 @@ const getFlag = () => {
   return flag
 }
 
-type ChoicesKey = 'environment' | 'type'
+type ChoicesKey = 'command' | 'environment'
 type Choices = Record<ChoicesKey, string[]>
-
-const validate = (choices: Choices, type: ChoicesKey, input: string): boolean => {
-  return choices[type].includes(input)
-}
 
 const main = async () => {
   const flag = getFlag()
 
-  let type = flag.type
+  let command = process.argv[2]
   let environment = flag.environment
 
   const choices: Choices = {
-    type: ['upload', 'download'],
+    command: ['push', 'pull'],
     environment: ['development', 'stage', 'production', 'test'],
   }
 
-  if (!type) {
-    const { promptType } = await inquirer.prompt([
+  if (!command) {
+    const { promptCommand } = await inquirer.prompt([
       {
         type: 'list',
-        name: 'promptType',
+        name: 'promptCommand',
         message: 'Please choose the operation type: [Use arrows to move, type to filter]',
-        choices: choices.type,
+        choices: choices.command,
         default: 'production',
       },
     ])
-    type = promptType
+    command = promptCommand
   }
 
   if (!environment) {
@@ -146,26 +136,26 @@ const main = async () => {
     environment = promptEnvironment
   }
 
-  if (!validate(choices, 'type', type)) {
-    console.error(`${type} is not allowed operation type`)
+  if (!choices.command.includes(command)) {
+    console.error(`${command} is not allowed operation type`)
     process.exit(1)
   }
 
-  if (!validate(choices, 'environment', environment)) {
+  if (!choices.environment.includes(environment)) {
     console.error(`${environment} is not allowed environment`)
     process.exit(1)
   }
 
   console.info('Selected Options:')
-  console.info(`-t: ${type}`)
-  console.info(`-e: ${environment}`)
+  console.info(`command: ${command}`)
+  console.info(`environment: ${environment}`)
 
   const parameterService = new ParameterService(environment as Environment)
   const mapper = {
-    upload: () => parameterService.uploadParameter(),
-    download: () => parameterService.downloadParameter(),
+    push: () => parameterService.pushParameter(),
+    pull: () => parameterService.pullParameter(),
   }
-  await mapper[type as OperationType]()
+  await mapper[command as OperationType]()
 }
 
 main()

@@ -6,18 +6,18 @@ Before using this script, ensure that you have installed the [AWS CLI](https://d
 
 ## Usage
 
-Copy the `.env.example` file to `.env.{stack}` where `{stack}` is one of the following: `development`, `stage`, `test`, or `production`.
+Copy the `.env.example` file to `.env.{environment}` where `{environment}` is one of the following: `development`, `stage`, `test`, or `production`.
 
 ## Command Line Flags
 
 The following command line flags are available:
 
-1. `-t`: Specifies the type of parameter handling (optional)
+1. `command`: Specifies the type of parameter handling (optional)
 
-   - `upload`: Uploads the contents of `.env.{stack}` to the AWS Systems Manager (SSM) Parameter Store.
-   - `download`: Downloads the parameter value from the SSM Parameter Store and saves it to `.env.{stack}`.
+   - `push`: Uploads the contents of `.env.{environment}` to the AWS Systems Manager (SSM) Parameter Store.
+   - `pull`: Downloads the parameter value from the SSM Parameter Store and saves it to `.env.{environment}`.
 
-2. `-s`: Specifies the stack (environment) for parameter handling (optional)
+2. `-e`: Specifies the environment for parameter handling (optional)
    - `development`: Development environment.
    - `stage`: Test server environment.
    - `test`: Jest testing environment.
@@ -26,9 +26,9 @@ The following command line flags are available:
 ## Examples
 
 ```sh
-# Example 1: Download from SSM parameter and save to .env.development
-pnpm handle-parameter -t download -s development
+# Example 1: Pull from SSM parameter and save to .env.development
+pnpm parameter pull -e development
 
-# Example 2: Upload .env.production file to SSM parameter
-pnpm handle-parameter -t upload -s production
+# Example 2: Push .env.production file to SSM parameter
+pnpm parameter push -e production
 ```
