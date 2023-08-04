@@ -2,10 +2,10 @@ import { subnets } from './../web/subnet'
 import * as aws from '@pulumi/aws'
 import * as pulumi from '@pulumi/pulumi'
 import { prefix } from '../../lib/prefix'
-import { privateSubnet1Name } from '../server/subnet'
+// import { privateSubnet1Name } from '../server/subnet'
 
 export const vpcName = `${prefix}-vpc`
-new aws.ec2.Vpc(vpcName, {
+export const vpc = new aws.ec2.Vpc(vpcName, {
   cidrBlock: '172.32.0.0/16',
   instanceTenancy: 'default', // or dedicated
   tags: {
@@ -13,25 +13,20 @@ new aws.ec2.Vpc(vpcName, {
   },
 })
 
-const vpc = aws.ec2.getVpc({
-  default: false,
-  tags: {
-    Name: 'velog-vpc',
-  },
-})
-// Subnet
-const allSubnets = vpc.id.apply((id) => {
-  aws.ec2.getSubnet({
-    filters: [
-      {
-        name: 'vpc-id',
-        values: vpc.id.apply((id) => id),
-      },
-    ],
+const defaultVpc = vpc.id.apply((id) => {
+  const v = aws.ec2.getVpc({
+    default: false,
+    filters: [{ name: 'tag:Name', values: ['velog-vpc'] }],
   })
+  return v
 })
 
-allSubnets.apply((s) => console.log(s))
+const subnetIds = defaultVpc.apply((vpc) => {
+  const subnets = aws.ec2.getSubnets({
+    filters: [{ name: 'vpc-id', values: [vpc.id] }],
+  })
+  return subnets.then((subnets) => subnets.ids)
+})
 
 // DHCP
 const dhcpOptionName = `${prefix}-dhcp-option`
@@ -50,7 +45,7 @@ export const dhcpAssociate = new aws.ec2.VpcDhcpOptionsAssociation(dhcpName, {
 const naclName = `${prefix}-nacl`
 new aws.ec2.NetworkAcl(naclName, {
   vpcId: vpc.id,
-  subnetIds: allSubnets.ids,
+  subnetIds,
   egress: [
     {
       protocol: '-1',
