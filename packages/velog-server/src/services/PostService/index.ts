@@ -8,7 +8,7 @@ import {
 } from '@graphql/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { BadRequestError, UnauthorizedError } from '@errors/index.js'
-import { GetPostsByTypeParams, PostAllInclude } from './PostServiceInterface'
+import { GetPostsByTypeParams } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { PostReadLogService } from '@services/PostReadLogService/index.js'
@@ -292,7 +292,7 @@ export class PostService implements Service {
 
     const posts = await this.postsByIds(ids, { user: { include: { profile: true } } })
 
-    const normalized = this.utils.normalize<PostAllInclude>(posts)
+    const normalized = this.utils.normalize(posts)
     const ordered = ids.map((id) => normalized[id])
     return ordered
   }
