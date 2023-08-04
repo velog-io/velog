@@ -2,8 +2,7 @@
   "name": "velog",
   "main": "index.ts",
   "scripts": {
-    "parameter:push": "NODE_ENV=production tsx ./scripts/parameterPush.ts",
-    "parameter:pull": "NODE_ENV=production tsx ./scripts/parameterPull.ts"
+    "parameter": "NODE_ENV=production tsx ./scripts/parameter.ts"
   },
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.379.1",
