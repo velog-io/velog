@@ -14,7 +14,6 @@ env:
 jobs:
   ecr-push:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -43,28 +42,27 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1.6.2
 
-  # - name: Server Build and push Docker images
-  #   uses: docker/build-push-action@v4
-  #   with:
-  #     context: ./packages/velog-server/
-  #     push: true
-  #     tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_SERVER_REPOSITORY }}:${{ github.sha }}
-  #     cache-from: type=local,src=/tmp/.buildx-cache
-  #     cache-to: type=local,dest=/tmp/.buildx-cache
+      - name: Server Build and push Docker images
+        uses: docker/build-push-action@v4
+        with:
+          context: ./packages/velog-server/
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_SERVER_REPOSITORY }}:${{ github.sha }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
 
-  # - name: Web Build and push Docker images
-  #   uses: docker/build-push-action@v4
-  #   with:
-  #     context: ./packages/velog-web/
-  #     push: true
-  #     tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_WEB_REPOSITORY }}:${{ github.sha }}
-  #     cache-from: type=local,src=/tmp/.buildx-cache
-  #     cache-to: type=local,dest=/tmp/.buildx-cache
+      - name: Web Build and push Docker images
+        uses: docker/build-push-action@v4
+        with:
+          context: ./packages/velog-web/
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_WEB_REPOSITORY }}:${{ github.sha }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
 
   deploy:
-    needs: ecr-push
+    # needs: ecr-push
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -90,7 +88,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Install Dependencies
-        run: pnpm parameter:pull -e production
+        run: pnpm parameter pull -e stage
         working-directory: ./infrastructure
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
