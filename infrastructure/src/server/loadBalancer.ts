@@ -4,16 +4,21 @@ import { prefix } from '../../lib/prefix'
 import { elbSecurityGroup } from './securityGroup'
 import { ENV } from '../../env'
 import { serverSubnetIds } from '../common/vpc'
+import { subnet1, subnet2 } from './subnet'
 
-export const lb = new awsx.lb.ApplicationLoadBalancer(`${prefix}-lb`, {
-  securityGroups: [elbSecurityGroup.id],
-  subnetIds: serverSubnetIds,
-  defaultTargetGroup: {
-    port: ENV.port,
-    protocol: 'HTTP',
-    targetType: 'ip',
+export const lb = new awsx.lb.ApplicationLoadBalancer(
+  `${prefix}-lb`,
+  {
+    securityGroups: [elbSecurityGroup.id],
+    subnetIds: [subnet1.id, subnet2.id],
+    defaultTargetGroup: {
+      port: ENV.port,
+      protocol: 'HTTP',
+      targetType: 'ip',
+    },
   },
-})
+  { dependsOn: [subnet1, subnet2] }
+)
 
 new aws.lb.Listener(`${prefix}-https-listener`, {
   loadBalancerArn: lb.loadBalancer.arn,

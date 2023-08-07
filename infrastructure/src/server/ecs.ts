@@ -6,6 +6,7 @@ import { taskSecurityGroup } from './securityGroup'
 import { ecsTaskExecutionRole } from '../common/iam'
 import { ENV } from '../../env'
 import { lb } from './loadBalancer'
+import { serverSubnetIds } from '../common/vpc'
 
 export const getLatestImage = (repo: aws.ecr.GetRepositoryResult) => `${repo.repositoryUrl}:latest`
 
@@ -16,7 +17,7 @@ export const createECSfargateService = (ecrImageName: string) => {
     networkConfiguration: {
       assignPublicIp: false,
       securityGroups: [taskSecurityGroup.id],
-      subnets: [],
+      subnets: serverSubnetIds,
     },
     desiredCount: 1,
     taskDefinitionArgs: {

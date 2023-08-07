@@ -1,4 +1,4 @@
 import './subnet'
 import './securityGroup'
-// import './loadBalancer'
+import './loadBalancer'
 // import './ecs'
