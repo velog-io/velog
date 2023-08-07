@@ -1,8 +1,8 @@
 import { subnets } from './../web/subnet'
 import * as aws from '@pulumi/aws'
+import * as awsx from '@pulumi/awsx'
 import * as pulumi from '@pulumi/pulumi'
 import { prefix } from '../../lib/prefix'
-// import { privateSubnet1Name } from '../server/subnet'
 
 export const vpcName = `${prefix}-vpc`
 export const vpc = new aws.ec2.Vpc(vpcName, {
@@ -13,19 +13,12 @@ export const vpc = new aws.ec2.Vpc(vpcName, {
   },
 })
 
-const defaultVpc = vpc.id.apply((id) => {
-  const v = aws.ec2.getVpc({
-    default: false,
-    filters: [{ name: 'tag:Name', values: ['velog-vpc'] }],
+export const vpcId = vpc.id.apply((id) => id)
+export const subnetIds = vpc.id.apply(async (id) => {
+  const subnets = await aws.ec2.getSubnets({
+    filters: [{ name: 'vpc-id', values: [id] }],
   })
-  return v
-})
-
-const subnetIds = defaultVpc.apply((vpc) => {
-  const subnets = aws.ec2.getSubnets({
-    filters: [{ name: 'vpc-id', values: [vpc.id] }],
-  })
-  return subnets.then((subnets) => subnets.ids)
+  return subnets.ids
 })
 
 // DHCP
@@ -37,33 +30,55 @@ export const dhcpOptionSet = new aws.ec2.VpcDhcpOptions(dhcpOptionName, {
 
 const dhcpName = `${prefix}-dhcp`
 export const dhcpAssociate = new aws.ec2.VpcDhcpOptionsAssociation(dhcpName, {
-  vpcId: vpc.id,
+  vpcId,
   dhcpOptionsId: dhcpOptionSet.id,
 })
 
-// NACL
-const naclName = `${prefix}-nacl`
-new aws.ec2.NetworkAcl(naclName, {
-  vpcId: vpc.id,
-  subnetIds,
-  egress: [
-    {
-      protocol: '-1',
-      action: 'allow',
-      ruleNo: 100,
-      cidrBlock: '0.0.0.0/0',
-      fromPort: 0,
-      toPort: 0,
+const defaultNacl = vpc.id.apply((vpcId) =>
+  aws.ec2.getNetworkAcls({
+    vpcId: vpcId,
+    filters: [
+      {
+        name: 'vpc-id',
+        values: [vpcId],
+      },
+      {
+        name: 'default',
+        values: ['true'],
+      },
+    ],
+  })
+)
+
+const naclResourceName = `${prefix}-nacl-resource`
+const defaultNaclId = defaultNacl.apply((nacl) => nacl.ids[0])
+new aws.ec2.DefaultNetworkAcl(
+  naclResourceName,
+  {
+    defaultNetworkAclId: defaultNaclId,
+    egress: [
+      {
+        protocol: '-1',
+        action: 'allow',
+        ruleNo: 100,
+        cidrBlock: '0.0.0.0/0',
+        fromPort: 0,
+        toPort: 0,
+      },
+    ],
+    ingress: [
+      {
+        protocol: '-1',
+        action: 'allow',
+        ruleNo: 100,
+        cidrBlock: '0.0.0.0/0',
+        fromPort: 0,
+        toPort: 0,
+      },
+    ],
+    tags: {
+      Name: `${prefix}-nacl`,
     },
-  ],
-  ingress: [
-    {
-      protocol: '-1',
-      action: 'allow',
-      ruleNo: 100,
-      cidrBlock: '0.0.0.0/0',
-      fromPort: 0,
-      toPort: 0,
-    },
-  ],
-})
+  },
+  { dependsOn: vpc, id: defaultNaclId }
+)
