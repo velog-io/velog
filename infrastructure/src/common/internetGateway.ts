@@ -6,6 +6,6 @@ const internetGatewayName = `${prefix}-igw`
 export const internetGateway = new aws.ec2.InternetGateway(internetGatewayName, {
   vpcId,
   tags: {
-    Name: prefix,
+    Name: internetGatewayName,
   },
 })

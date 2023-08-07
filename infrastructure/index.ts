@@ -4,6 +4,7 @@ import * as aws from '@pulumi/aws'
 
 import './src/common/vpc'
 import './src/server/subnet'
+import './src/common/internetGateway'
 
 export = async () => {
   const velogServerRepository = await aws.ecr.getRepository({
