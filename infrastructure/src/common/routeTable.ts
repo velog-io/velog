@@ -16,7 +16,6 @@ export const routeTable = new aws.ec2.RouteTable(routeTableName, {
     },
   ],
   tags: {
-    Name: `${prefix}-routeTable`,
-    name: `${prefix}-routeTable22123`,
+    Name: routeTableName,
   },
 })
