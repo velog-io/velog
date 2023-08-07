@@ -1,19 +1,26 @@
 import * as aws from '@pulumi/aws'
 import { prefix } from '../../lib/prefix'
+import * as pulumi from '@pulumi/pulumi'
 
 export const vpcName = `${prefix}-vpc`
 export const vpc = new aws.ec2.Vpc(vpcName, {
   cidrBlock: '172.32.0.0/16',
   instanceTenancy: 'default', // or dedicated
   tags: {
-    Name: 'velog-vpc',
+    Name: vpcName,
   },
 })
 
+export const publicServerSubnet1Name = `${prefix}-server-public-subnet-1`
+export const publicServerSubnet2Name = `${prefix}-server-public-subnet-2`
+
 export const vpcId = vpc.id.apply((id) => id)
-export const subnetIds = vpc.id.apply(async (id) => {
+export const serverSubnetIds = vpc.id.apply(async (id) => {
   const subnets = await aws.ec2.getSubnets({
-    filters: [{ name: 'vpc-id', values: [id] }],
+    filters: [
+      { name: 'vpc-id', values: [id] },
+      { name: 'tag:Name', values: [publicServerSubnet1Name, publicServerSubnet2Name] },
+    ],
   })
   return subnets.ids
 })
