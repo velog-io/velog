@@ -20,3 +20,6 @@ export const subnet2 = new aws.ec2.Subnet(publicServerSubnet2Name, {
     Name: publicServerSubnet2Name,
   },
 })
+
+export const serverSubnetIds = [subnet1.id, subnet2.id]
+export const serverSubnet = [subnet1, subnet2]

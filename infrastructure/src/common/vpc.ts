@@ -1,6 +1,5 @@
 import * as aws from '@pulumi/aws'
 import { prefix } from '../../lib/prefix'
-import * as pulumi from '@pulumi/pulumi'
 
 export const vpcName = `${prefix}-vpc`
 export const vpc = new aws.ec2.Vpc(vpcName, {
@@ -15,15 +14,6 @@ export const publicServerSubnet1Name = `${prefix}-server-public-subnet-1`
 export const publicServerSubnet2Name = `${prefix}-server-public-subnet-2`
 
 export const vpcId = vpc.id.apply((id) => id)
-export const serverSubnetIds = vpc.id.apply(async (id) => {
-  const subnets = await aws.ec2.getSubnets({
-    filters: [
-      { name: 'vpc-id', values: [id] },
-      { name: 'tag:Name', values: [publicServerSubnet1Name, publicServerSubnet2Name] },
-    ],
-  })
-  return subnets.ids
-})
 
 // DHCP
 const dhcpOptionName = `${prefix}-dhcp-option`
