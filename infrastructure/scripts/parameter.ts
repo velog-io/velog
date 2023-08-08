@@ -10,16 +10,7 @@ import {
 
 const parameterPrefix = (env: string) => `/velog-v3/infrastructure/${env}`
 
-const pull = async () => {
-  const env = process.env.NODE_ENV
-  const args = process.argv.slice(3)
-  const eFlagIndex = args.indexOf('-e')
-  const environment = args[eFlagIndex + 1] || env || 'development'
-
-  if (!['development', 'production', 'stage'].includes(environment)) {
-    throw new Error('Not allow environment')
-  }
-
+const pull = async (environment: string) => {
   const client = new SSMClient({ region: 'ap-northeast-2' })
   const name = parameterPrefix(environment)
   const input: GetParameterCommandInput = {
@@ -41,16 +32,7 @@ const pull = async () => {
   fs.writeFileSync(envPath, text, { encoding: 'utf-8' })
 }
 
-const push = async () => {
-  const env = process.env.NODE_ENV
-  const args = process.argv.slice(3)
-  const eFlagIndex = args.indexOf('-e')
-  const environment = args[eFlagIndex + 1] || env || 'development'
-
-  if (!['development', 'production', 'stage'].includes(environment)) {
-    throw new Error('Not allow environment')
-  }
-
+const push = async (environment: string) => {
   const envPath = path.resolve(__dirname, `../env/.env.${environment}`)
 
   if (!fs.existsSync(envPath)) {
@@ -79,11 +61,20 @@ const main = () => {
     throw new Error(`${command} is Invalid command`)
   }
 
-  const mapper = {
-    push: () => push(),
-    pull: () => pull(),
+  const env = process.env.NODE_ENV
+  const args = process.argv.slice(3)
+  const eFlagIndex = args.indexOf('-e')
+  const environment = args[eFlagIndex + 1] || env || ''
+
+  if (!['development', 'production', 'stage'].includes(environment)) {
+    throw new Error('Not allow environment')
   }
-  mapper[command]()
+
+  const mapper = {
+    push: (environment: string) => push(environment),
+    pull: (environment: string) => pull(environment),
+  }
+  mapper[command](environment)
 
   console.log(`SSM ${command} success!`)
 }
