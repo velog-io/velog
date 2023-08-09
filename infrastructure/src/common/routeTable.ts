@@ -1,9 +1,9 @@
 import * as aws from '@pulumi/aws'
 import { vpcId } from './vpc'
 import { internetGateway } from './internetGateway'
-import { prefix } from '../../lib/prefix'
+import { withPrefix } from '../../lib/prefix'
 
-const routeTableName = `${prefix}-routeTable`
+const routeTableName = withPrefix('routeTable')
 export const routeTable = new aws.ec2.RouteTable(routeTableName, {
   vpcId,
   routes: [

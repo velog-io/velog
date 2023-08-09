@@ -1,15 +1,22 @@
 import { ENV } from './env'
 import * as aws from '@pulumi/aws'
-// import { createECSfargateService, getLatestImage } from './src/server/ecs'
+import { createECSfargateService, getECRImage } from './src/common/ecs'
+import { serverSubnetIds } from './src/server/subnet'
+import { serverTargetGroup } from './src/server/loadBalancer'
+import { serverTaskSecurityGroup } from './src/server/securityGroup'
 
-import './src/common'
-import './src/server'
+// import './src/common'
+// import './src/server'
 
 export = async () => {
-  const velogServerRepository = await aws.ecr.getRepository({
-    name: ENV.ecrServerRepositoryName,
+  // server
+  const serverImage = await getECRImage('server')
+  createECSfargateService({
+    image: serverImage,
+    port: ENV.serverPort,
+    subnetIds: serverSubnetIds,
+    targetGroup: serverTargetGroup,
+    taskSecurityGroup: serverTaskSecurityGroup,
+    type: 'server',
   })
-
-  // const serverImage = getLatestImage(velogServerRepository)
-  // createECSfargateService(serverImage)
 }

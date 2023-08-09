@@ -1,7 +1,7 @@
 import * as aws from '@pulumi/aws'
-import { prefix } from '../../lib/prefix'
+import { withPrefix } from '../../lib/prefix'
 
-export const vpcName = `${prefix}-vpc`
+export const vpcName = withPrefix('vpc')
 export const vpc = new aws.ec2.Vpc(vpcName, {
   cidrBlock: '172.32.0.0/16',
   instanceTenancy: 'default', // or dedicated
@@ -10,19 +10,19 @@ export const vpc = new aws.ec2.Vpc(vpcName, {
   },
 })
 
-export const publicServerSubnet1Name = `${prefix}-server-public-subnet-1`
-export const publicServerSubnet2Name = `${prefix}-server-public-subnet-2`
+export const publicServerSubnet1Name = withPrefix('server-public-subnet-1')
+export const publicServerSubnet2Name = withPrefix('server-public-subnet-2')
 
 export const vpcId = vpc.id.apply((id) => id)
 
 // DHCP
-const dhcpOptionName = `${prefix}-dhcp-option`
+const dhcpOptionName = withPrefix('dhcp-option')
 export const dhcpOptionSet = new aws.ec2.VpcDhcpOptions(dhcpOptionName, {
   domainName: 'ap-northeast-2.compute.internal',
   domainNameServers: ['AmazonProvidedDNS'],
 })
 
-const dhcpName = `${prefix}-dhcp`
+const dhcpName = withPrefix('dhcp')
 export const dhcpAssociate = new aws.ec2.VpcDhcpOptionsAssociation(dhcpName, {
   vpcId,
   dhcpOptionsId: dhcpOptionSet.id,
@@ -44,7 +44,7 @@ const defaultNacl = vpc.id.apply((vpcId) =>
   })
 )
 
-const naclResourceName = `${prefix}-nacl-resource`
+const naclResourceName = withPrefix('nacl-resource')
 const defaultNaclId = defaultNacl.apply((nacl) => nacl.ids[0])
 new aws.ec2.DefaultNetworkAcl(
   naclResourceName,
@@ -71,7 +71,7 @@ new aws.ec2.DefaultNetworkAcl(
       },
     ],
     tags: {
-      Name: `${prefix}-nacl`,
+      Name: withPrefix('nacl'),
     },
   },
   { dependsOn: vpc, id: defaultNaclId }

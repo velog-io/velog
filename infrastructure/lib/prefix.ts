@@ -6,4 +6,5 @@ const appEnv = config.require('APP_ENV')
 
 // velog-development
 // velog-production
-export const prefix = `${config.name}-${appEnv}`
+const prefix = `${config.name}-${appEnv}`
+export const withPrefix = (name: string) => `${prefix}-${name}`
