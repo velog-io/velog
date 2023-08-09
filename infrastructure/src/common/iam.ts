@@ -20,11 +20,6 @@ new aws.iam.RolePolicy(withPrefix('task-execution-role-policy'), {
       },
       {
         Effect: 'Allow',
-        Action: 'ecr:GetAuthorizationToken',
-        Resource: '*',
-      },
-      {
-        Effect: 'Allow',
         Action: ['logs:*', 'ecr:*'],
         Resource: '*',
       },

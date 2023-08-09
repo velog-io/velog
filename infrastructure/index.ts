@@ -5,8 +5,8 @@ import { serverSubnetIds } from './src/server/subnet'
 import { serverTargetGroup } from './src/server/loadBalancer'
 import { serverTaskSecurityGroup } from './src/server/securityGroup'
 
-// import './src/common'
-// import './src/server'
+import './src/common'
+import './src/server'
 
 export = async () => {
   // server

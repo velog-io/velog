@@ -7,19 +7,19 @@ import { ENV } from '../../env'
 import { SecurityGroup } from '@pulumi/aws/ec2'
 import { Output } from '@pulumi/pulumi'
 import { TargetGroup } from '@pulumi/aws/alb'
-import { Image } from '@pulumi/aws/imagebuilder'
+import path from 'path'
 
 export const getECRImage = async (type: 'web' | 'server') => {
   const options = {
     web: {
       ecrRepoName: ENV.ecrWebRepositoryName,
       imageName: 'web-image',
-      path: '../web',
+      path: '../packages/velog-web/',
     },
     server: {
       ecrRepoName: ENV.ecrServerRepositoryName,
       imageName: 'server-image',
-      path: '../server',
+      path: '../packages/velog-server/',
     },
   }
 
@@ -30,7 +30,7 @@ export const getECRImage = async (type: 'web' | 'server') => {
 
   return new awsx.ecr.Image(withPrefix(option.imageName), {
     repositoryUrl: repo.repositoryUrl,
-    path: option.path,
+    path: path.resolve(process.cwd(), option.path),
   })
 }
 
