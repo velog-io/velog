@@ -1,9 +1,18 @@
 import * as aws from '@pulumi/aws'
-import { withPrefix } from '../../lib/prefix'
+import { withPrefix } from '../lib/prefix'
 import { ENV } from '../../env'
 import { vpcId } from '../common/vpc'
 
-const elbSecurityGroupName = withPrefix('elb-sg')
+const defaultSecurityGroup = vpcId.apply((id) =>
+  aws.ec2.getSecurityGroup({
+    vpcId: id,
+    name: 'default',
+  })
+)
+
+export const defaultSecurityGroupId = defaultSecurityGroup.apply((sg) => sg.id)
+
+const elbSecurityGroupName = withPrefix('server-elb-sg')
 export const serverElbSecurityGroup = new aws.ec2.SecurityGroup(elbSecurityGroupName, {
   vpcId,
   description: 'Allow traffic from the internet',
@@ -34,10 +43,10 @@ export const serverElbSecurityGroup = new aws.ec2.SecurityGroup(elbSecurityGroup
   },
 })
 
-const taskSecurityGroupName = withPrefix('task-sg')
+const taskSecurityGroupName = withPrefix('server-task-sg')
 export const serverTaskSecurityGroup = new aws.ec2.SecurityGroup(taskSecurityGroupName, {
+  vpcId,
   description: 'Allow traffic from the load balancer',
-  vpcId: vpcId,
   ingress: [
     {
       fromPort: ENV.serverPort,

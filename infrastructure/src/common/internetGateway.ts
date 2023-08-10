@@ -1,5 +1,5 @@
 import { vpcId } from './vpc'
-import { withPrefix } from './../../lib/prefix'
+import { withPrefix } from '../lib/prefix'
 import * as aws from '@pulumi/aws'
 
 const internetGatewayName = withPrefix('igw')

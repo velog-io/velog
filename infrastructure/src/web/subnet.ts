@@ -1,6 +1,6 @@
-import { vpc, vpcId } from '../common/vpc'
-import { withPrefix } from '../../lib/prefix'
+import { vpcId } from '../common/vpc'
 import * as aws from '@pulumi/aws'
+import { withPrefix } from '../lib/prefix'
 
 const publicSubnetName = withPrefix('public-web-subnet')
 const publicSubnet = new aws.ec2.Subnet(publicSubnetName, {

@@ -1,41 +1,16 @@
 import * as aws from '@pulumi/aws'
 import * as awsx from '@pulumi/awsx'
+import * as pulumi from '@pulumi/pulumi'
 
-import { withPrefix } from '../../lib/prefix'
+import { withPrefix } from '../lib/prefix'
 import { ecsTaskExecutionRole } from './iam'
 import { ENV } from '../../env'
 import { SecurityGroup } from '@pulumi/aws/ec2'
-import { Output } from '@pulumi/pulumi'
 import { TargetGroup } from '@pulumi/aws/alb'
-import path from 'path'
-
-export const getECRImage = async (type: 'web' | 'server') => {
-  const options = {
-    web: {
-      ecrRepoName: ENV.ecrWebRepositoryName,
-      imageName: 'web-image',
-      path: '../packages/velog-web/',
-    },
-    server: {
-      ecrRepoName: ENV.ecrServerRepositoryName,
-      imageName: 'server-image',
-      path: '../packages/velog-server/',
-    },
-  }
-
-  const option = options[type]
-  const repo = await aws.ecr.getRepository({
-    name: option.ecrRepoName,
-  })
-
-  return new awsx.ecr.Image(withPrefix(option.imageName), {
-    repositoryUrl: repo.repositoryUrl,
-    path: path.resolve(process.cwd(), option.path),
-  })
-}
+import { defaultSecurityGroupId } from '../server/securityGroup'
 
 const serverEcsOption: EcsOption = {
-  desiredCount: 1,
+  desiredCount: ENV.isProduction ? 2 : 1,
   cpu: 256,
   memory: 512,
   maxCapacity: 1,
@@ -43,7 +18,7 @@ const serverEcsOption: EcsOption = {
 }
 
 const webEcsOption: EcsOption = {
-  desiredCount: 1,
+  desiredCount: ENV.isProduction ? 2 : 1,
   cpu: 256,
   memory: 512,
   maxCapacity: 1,
@@ -63,14 +38,15 @@ export const createECSfargateService = ({
   port,
   type,
 }: CreateECSFargateParams) => {
-  const cluster = new aws.ecs.Cluster(withPrefix('cluster'))
+  const cluster = new aws.ecs.Cluster(withPrefix(`${type}-cluster`))
   const option = ecsOption[type]
+
   const service = new awsx.ecs.FargateService(withPrefix('fargate-service'), {
     cluster: cluster.arn,
     desiredCount: option.desiredCount,
     networkConfiguration: {
-      assignPublicIp: true,
-      securityGroups: [taskSecurityGroup.id],
+      assignPublicIp: false,
+      securityGroups: [defaultSecurityGroupId, taskSecurityGroup.id],
       subnets: subnetIds,
     },
     taskDefinitionArgs: {
@@ -110,7 +86,7 @@ export const createECSfargateService = ({
   })
 
   const resourceId = service.service.id.apply((t) => t.split(':').at(-1)!)
-  const ecsTarget = new aws.appautoscaling.Target(withPrefix('ecs-target'), {
+  const ecsTarget = new aws.appautoscaling.Target(withPrefix(`${type}-ecs-target`), {
     maxCapacity: option.maxCapacity,
     minCapacity: option.minCapacity,
     resourceId: resourceId,
@@ -118,7 +94,7 @@ export const createECSfargateService = ({
     serviceNamespace: 'ecs',
   })
 
-  const ecsCPUPolicy = new aws.appautoscaling.Policy(withPrefix('ecs-cpu-policy'), {
+  const ecsCPUPolicy = new aws.appautoscaling.Policy(withPrefix(`${type}-ecs-cpu-policy`), {
     policyType: 'TargetTrackingScaling',
     resourceId: ecsTarget.resourceId,
     scalableDimension: ecsTarget.scalableDimension,
@@ -133,7 +109,7 @@ export const createECSfargateService = ({
     },
   })
 
-  const ecsMemoryPolicy = new aws.appautoscaling.Policy(withPrefix('ecs-memory-policy'), {
+  const ecsMemoryPolicy = new aws.appautoscaling.Policy(withPrefix(`${type}-ecs-memory-policy`), {
     policyType: 'TargetTrackingScaling',
     resourceId: ecsTarget.resourceId,
     scalableDimension: ecsTarget.scalableDimension,
@@ -148,9 +124,10 @@ export const createECSfargateService = ({
     },
   })
 }
+
 type CreateECSFargateParams = {
   image: awsx.ecr.Image
-  subnetIds: Output<string>[]
+  subnetIds: pulumi.Input<pulumi.Input<string>[]>
   taskSecurityGroup: SecurityGroup
   targetGroup: TargetGroup
   port: number

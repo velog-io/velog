@@ -1,11 +1,12 @@
+import { certificateArn } from './../common/certificate'
 import * as aws from '@pulumi/aws'
-import { withPrefix } from '../../lib/prefix'
+import { withPrefix } from '../lib/prefix'
 import { serverElbSecurityGroup } from './securityGroup'
 import { ENV } from '../../env'
-import { serverSubnetIds } from './subnet'
-import { vpcId } from '../common/vpc'
+import { serverSubnet, vpcId } from '../common/vpc'
 
-const loadBalancerName = withPrefix('lb')
+const serverSubnetIds = serverSubnet.apply((subnet) => subnet.map((s) => s.id))
+const loadBalancerName = withPrefix('server-lb')
 export const serverLoadBalancer = new aws.lb.LoadBalancer(loadBalancerName, {
   securityGroups: [serverElbSecurityGroup.id],
   subnets: serverSubnetIds,
@@ -15,20 +16,20 @@ export const serverLoadBalancer = new aws.lb.LoadBalancer(loadBalancerName, {
   },
 })
 
-const targetGroupName = withPrefix('target-group')
-export const serverTargetGroup = new aws.alb.TargetGroup(targetGroupName, {
+const targetGroupName = withPrefix('server-tg')
+export const serverTargetGroup = new aws.lb.TargetGroup(targetGroupName, {
   vpcId: vpcId,
   port: ENV.serverPort,
   protocol: 'HTTP',
   targetType: 'ip',
 })
 
-new aws.lb.Listener(withPrefix('lb-https-listener'), {
+new aws.lb.Listener(withPrefix('server-lb-https-listener'), {
   loadBalancerArn: serverLoadBalancer.arn,
   protocol: 'HTTPS',
   port: 443,
   sslPolicy: 'ELBSecurityPolicy-TLS13-1-2-2021-06',
-  certificateArn: ENV.sslCertificateArn,
+  certificateArn: certificateArn.then((arn) => arn),
   defaultActions: [
     {
       type: 'forward',
@@ -37,7 +38,7 @@ new aws.lb.Listener(withPrefix('lb-https-listener'), {
   ],
 })
 
-new aws.lb.Listener(withPrefix('lb-http-listener'), {
+new aws.lb.Listener(withPrefix('server-lb-http-listener'), {
   loadBalancerArn: serverLoadBalancer.arn,
   protocol: 'HTTP',
   port: 80,

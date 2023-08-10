@@ -35,7 +35,7 @@ const env = z.object({
   serverPort: z.number(),
   ecrWebRepositoryName: z.string(),
   ecrServerRepositoryName: z.string(),
-  sslCertificateArn: z.string(),
+  certificateDomain: z.string(),
   awsAccessKeyId: z.string(),
   awsSecretAccessKey: z.string(),
 })
@@ -47,7 +47,7 @@ export const ENV = env.parse({
   serverPort: Number(process.env.SERVER_PORT),
   ecrWebRepositoryName: process.env.ECR_WEB_REPOSITORY_NAME,
   ecrServerRepositoryName: process.env.ECR_SERVER_REPOSITORY_NAME,
-  sslCertificateArn: process.env.SSL_CERTIFICATE_ARN,
+  certificateDomain: process.env.CERTIFICATE_DOMAIN,
   awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
   awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 })
