@@ -3,9 +3,9 @@ import { withPrefix } from '../lib/prefix'
 import { ENV } from '../../env'
 import { Input } from '@pulumi/pulumi'
 
-export const serverSecurityGroup = (vpcId: Input<string>) => {
-  const elbSecurityGroupName = withPrefix('server-elb-sg')
-  const serverElbSecurityGroup = new aws.ec2.SecurityGroup(elbSecurityGroupName, {
+export const createSecurityGroup = (vpcId: Input<string>, type: 'web' | 'server') => {
+  const elbSecurityGroupName = withPrefix(`${type}-elb-sg`)
+  const elbSecurityGroup = new aws.ec2.SecurityGroup(elbSecurityGroupName, {
     vpcId,
     description: 'Allow traffic from the internet',
     ingress: [
@@ -35,16 +35,22 @@ export const serverSecurityGroup = (vpcId: Input<string>) => {
     },
   })
 
-  const taskSecurityGroupName = withPrefix('server-task-sg')
-  const serverTaskSecurityGroup = new aws.ec2.SecurityGroup(taskSecurityGroupName, {
+  const taskSecurityGroupName = withPrefix(`${type}-task-sg`)
+  const portMapper = {
+    web: ENV.webPort,
+    server: ENV.serverPort,
+  }
+
+  const port = portMapper[type]
+  const taskSecurityGroup = new aws.ec2.SecurityGroup(taskSecurityGroupName, {
     vpcId,
     description: 'Allow traffic from the load balancer',
     ingress: [
       {
-        fromPort: ENV.serverPort,
-        toPort: ENV.serverPort,
+        fromPort: port,
+        toPort: port,
         protocol: 'tcp',
-        securityGroups: [serverElbSecurityGroup.id],
+        securityGroups: [elbSecurityGroup.id],
       },
     ],
     egress: [
@@ -60,5 +66,5 @@ export const serverSecurityGroup = (vpcId: Input<string>) => {
     },
   })
 
-  return { serverElbSecurityGroup, serverTaskSecurityGroup }
+  return { elbSecurityGroup, taskSecurityGroup }
 }

@@ -35,12 +35,19 @@ export const createECSfargateService = ({
   taskSecurityGroup,
   defaultSecurityGroupId,
   targetGroup,
-  port,
   type,
 }: CreateECSFargateParams) => {
   const option = ecsOption[type]
   const cluster = new aws.ecs.Cluster(withPrefix(`${type}-cluster`))
-  const service = new awsx.ecs.FargateService(withPrefix('fargate-service'), {
+
+  const portMappper = {
+    web: ENV.webPort,
+    server: ENV.serverPort,
+  }
+
+  const port = portMappper[type]
+
+  const service = new awsx.ecs.FargateService(withPrefix(`${type}-fargate-service`), {
     cluster: cluster.arn,
     desiredCount: option.desiredCount,
     networkConfiguration: {

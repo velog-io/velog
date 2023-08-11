@@ -32,6 +32,7 @@ dotenv.config({ path: resolveDir(`./env/${file}`) })
 const env = z.object({
   appEnv: z.string(),
   isProduction: z.boolean(),
+  webPort: z.number(),
   serverPort: z.number(),
   ecrWebRepositoryName: z.string(),
   ecrServerRepositoryName: z.string(),

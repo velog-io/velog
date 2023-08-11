@@ -14,7 +14,7 @@ export const createVPC = () => {
   // })
 
   const vpc = aws.ec2.getVpc({ default: true })
-  const serverSubnet = aws.ec2.getSubnets()
+  const subnets = aws.ec2.getSubnets()
 
   // // server subnet
   // const serverSubnet = vpc.id.apply((vpcId) => {
@@ -107,5 +107,5 @@ export const createVPC = () => {
   //   },
   // })
 
-  return { serverSubnet, vpc }
+  return { subnets, vpc }
 }

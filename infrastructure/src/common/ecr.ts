@@ -5,7 +5,7 @@ import { ENV } from '../../env'
 
 export const getECRImage = (type: 'web' | 'server') => {
   const option = options[type]
-  const repo = new awsx.ecr.Repository(ENV.ecrServerRepositoryName, { forceDelete: true })
+  const repo = new awsx.ecr.Repository(option.ecrRepoName, { forceDelete: true })
   const image = new awsx.ecr.Image(withPrefix(option.imageName), {
     repositoryUrl: repo.url,
     path: option.path,
