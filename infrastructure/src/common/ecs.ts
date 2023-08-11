@@ -7,7 +7,6 @@ import { ecsTaskExecutionRole } from './iam'
 import { ENV } from '../../env'
 import { SecurityGroup } from '@pulumi/aws/ec2'
 import { TargetGroup } from '@pulumi/aws/alb'
-import { defaultSecurityGroupId } from '../server/securityGroup'
 
 const serverEcsOption: EcsOption = {
   desiredCount: ENV.isProduction ? 2 : 1,
@@ -34,18 +33,18 @@ export const createECSfargateService = ({
   image,
   subnetIds,
   taskSecurityGroup,
+  defaultSecurityGroupId,
   targetGroup,
   port,
   type,
 }: CreateECSFargateParams) => {
-  const cluster = new aws.ecs.Cluster(withPrefix(`${type}-cluster`))
   const option = ecsOption[type]
-
+  const cluster = new aws.ecs.Cluster(withPrefix(`${type}-cluster`))
   const service = new awsx.ecs.FargateService(withPrefix('fargate-service'), {
     cluster: cluster.arn,
     desiredCount: option.desiredCount,
     networkConfiguration: {
-      assignPublicIp: false,
+      assignPublicIp: true,
       securityGroups: [defaultSecurityGroupId, taskSecurityGroup.id],
       subnets: subnetIds,
     },
@@ -54,15 +53,15 @@ export const createECSfargateService = ({
         roleArn: ecsTaskExecutionRole.arn,
       },
       container: {
+        image: image.imageUri,
         cpu: option.cpu,
         memory: option.memory,
-        image: image.imageUri,
         essential: true,
         portMappings: [{ targetGroup: targetGroup }],
         environment: [
           {
             name: 'PORT',
-            value: String(port),
+            value: port.toString(),
           },
           {
             name: 'APP_ENV',
@@ -129,6 +128,7 @@ type CreateECSFargateParams = {
   image: awsx.ecr.Image
   subnetIds: pulumi.Input<pulumi.Input<string>[]>
   taskSecurityGroup: SecurityGroup
+  defaultSecurityGroupId: Promise<string>
   targetGroup: TargetGroup
   port: number
   type: 'web' | 'server'

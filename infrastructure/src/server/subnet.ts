@@ -3,7 +3,6 @@ import { withPrefix } from '../lib/prefix'
 import { Input } from '@pulumi/pulumi'
 
 export const createServerSubnet = (vpcId: Input<string>) => {
-  console.log('voc', vpcId)
   const publicServerSubnet1Name = withPrefix('server-public-subnet-1')
   const subnet1 = new aws.ec2.Subnet(publicServerSubnet1Name, {
     vpcId,

@@ -14,5 +14,5 @@
     "esModuleInterop": true
   },
   "include": ["scripts/parameterPush.ts"],
-  "files": ["index.back.ts"]
+  "files": ["index.ts"]
 }

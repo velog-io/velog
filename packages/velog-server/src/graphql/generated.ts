@@ -5,7 +5,7 @@ import {
   UserProfile as UserProfileModel,
   Post as PostModel,
 } from '@prisma/client'
-import { GraphQLContext } from './../common/interfaces/graphql'
+import { GraphQLContext } from '../common/interfaces/graphql'
 export type Maybe<T> = T | undefined | null
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
