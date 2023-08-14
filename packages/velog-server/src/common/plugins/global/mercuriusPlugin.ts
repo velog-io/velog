@@ -9,7 +9,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.register(mercurius, {
     schema,
     resolvers: resolvers,
-    graphiql: ENV.appEnv === 'development',
+    graphiql: ENV.appEnv !== 'production',
     context: (request, reply): GraphQLContext => {
       return {
         request,
