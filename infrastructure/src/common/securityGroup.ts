@@ -2,9 +2,15 @@ import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
 import { ENV } from '../../env'
 import { Input } from '@pulumi/pulumi'
+import { PackageType } from '../type.d'
 
-export const createSecurityGroup = (vpcId: Input<string>, type: 'web' | 'server') => {
-  const elbSecurityGroupName = withPrefix(`${type}-elb-sg`)
+type CreateSecurityGroupParameter = {
+  vpcId: Promise<string>
+  packageType: PackageType
+}
+
+export const createSecurityGroup = ({ vpcId, packageType }: CreateSecurityGroupParameter) => {
+  const elbSecurityGroupName = withPrefix(`${packageType}-elb-sg`)
   const elbSecurityGroup = new aws.ec2.SecurityGroup(elbSecurityGroupName, {
     vpcId,
     description: 'Allow traffic from the internet',
@@ -35,13 +41,13 @@ export const createSecurityGroup = (vpcId: Input<string>, type: 'web' | 'server'
     },
   })
 
-  const taskSecurityGroupName = withPrefix(`${type}-task-sg`)
+  const taskSecurityGroupName = withPrefix(`${packageType}-task-sg`)
   const portMapper = {
     web: ENV.webPort,
     server: ENV.serverPort,
   }
 
-  const port = portMapper[type]
+  const port = portMapper[packageType]
   const taskSecurityGroup = new aws.ec2.SecurityGroup(taskSecurityGroupName, {
     vpcId,
     description: 'Allow traffic from the load balancer',

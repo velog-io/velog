@@ -1,17 +1,25 @@
-import { Input } from '@pulumi/pulumi'
+import { PackageType } from './../type.d'
 import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
 import { ENV } from '../../env'
 import { SecurityGroup } from '@pulumi/aws/ec2'
 
-export const createLoadBalancer = (
-  subnetIds: Input<Input<string>[]>,
-  elbSecurityGroup: SecurityGroup,
-  vpcId: Input<string>,
-  certificateArn: Promise<string>,
-  type: 'web' | 'server'
-) => {
-  const loadBalancerName = withPrefix(`${type}-lb`)
+type CreateLoadBalancerParameter = {
+  vpcId: Promise<string>
+  subnetIds: Promise<string[]>
+  certificateArn: Promise<string>
+  elbSecurityGroup: SecurityGroup
+  packageType: PackageType
+}
+
+export const createLoadBalancer = ({
+  subnetIds,
+  elbSecurityGroup,
+  vpcId,
+  certificateArn,
+  packageType,
+}: CreateLoadBalancerParameter) => {
+  const loadBalancerName = withPrefix(`${packageType}-lb`)
   const loadBalancer = new aws.lb.LoadBalancer(loadBalancerName, {
     loadBalancerType: 'application',
     securityGroups: [elbSecurityGroup.id],
@@ -25,9 +33,9 @@ export const createLoadBalancer = (
     web: ENV.webPort,
     server: ENV.serverPort,
   }
-  const port = portMapper[type]
+  const port = portMapper[packageType]
 
-  const targetGroupName = withPrefix(`${type}-tg`)
+  const targetGroupName = withPrefix(`${packageType}-tg`)
   const targetGroup = new aws.lb.TargetGroup(targetGroupName, {
     port,
     protocol: 'HTTP',
@@ -35,12 +43,11 @@ export const createLoadBalancer = (
     vpcId: vpcId,
   })
 
-  new aws.lb.Listener(withPrefix(`${type}-lb-https-listener`), {
+  new aws.lb.Listener(withPrefix(`${packageType}-lb-https-listener`), {
     loadBalancerArn: loadBalancer.arn,
     protocol: 'HTTPS',
     port: 443,
     sslPolicy: 'ELBSecurityPolicy-TLS13-1-2-2021-06',
-    // sslPolicy: 'ELBSecurityPolicy-2016-08',
     certificateArn: certificateArn.then((arn) => arn),
     defaultActions: [
       {
@@ -50,7 +57,7 @@ export const createLoadBalancer = (
     ],
   })
 
-  new aws.lb.Listener(withPrefix(`${type}-lb-http-listener`), {
+  new aws.lb.Listener(withPrefix(`${packageType}-lb-http-listener`), {
     loadBalancerArn: loadBalancer.arn,
     port: 80,
     defaultActions: [

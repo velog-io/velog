@@ -8,8 +8,6 @@ on:
       - 'packages/velog-web/**'
 env:
   AWS_REGION: ap-northeast-2
-  ECR_WEB_REPOSITORY: velog-web
-  ECR_SERVER_REPOSITORY: velog-server
 
 jobs:
   deploy:
@@ -39,7 +37,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Install Dependencies
-        run: pnpm parameter pull -e ${{ secrets.ENVIRONMENT }}
+        run: pnpm parameter pull -e prodcution
         working-directory: ./infrastructure
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -49,7 +47,7 @@ jobs:
         uses: pulumi/actions@v4.4.0
         with:
           command: up
-          stack-name: /${{ secrets.ENVIRONMENT }} # or org-name/stack-name
+          stack-name: ${{ secrets.STACK_NAME }} # or org-name/stack-name
           diff: true
           upsert: true
           work-dir: './infrastructure'
