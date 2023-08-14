@@ -18,17 +18,26 @@ The following command line flags are available:
    - `pull`: Downloads the parameter value from the SSM Parameter Store and saves it to `.env.{environment}`.
 
 2. `-e`: Specifies the environment for parameter handling (optional)
+
    - `development`: Development environment.
    - `stage`: Test server environment.
    - `test`: Jest testing environment.
    - `production`: Production environment.
 
+3. `-v`: Specifies the version of the parameter to retrieve from the SSM Parameter Store (optional).
+   - When used with the `pull` command, it fetches the parameter value corresponding to the provided version.
+   - If not specified, the latest version of the parameter will be retrieved.
+   - If a non-existent version is specified, a 400 error will be returned, indicating the version does not exist.
+
 ## Examples
 
 ```sh
-# Example 1: Pull from SSM parameter and save to .env.development
-pnpm parameter pull -e development
+# Example 1: Pull from SSM parameter of a specific version and save to .env.development
+pnpm parameter pull -e development -v 2
 
-# Example 2: Push .env.production file to SSM parameter
+# Example 2: Pull the latest version of SSM parameter and save to .env.production
+pnpm parameter pull -e production
+
+# Example 3: Push .env.production file to SSM parameter
 pnpm parameter push -e production
 ```

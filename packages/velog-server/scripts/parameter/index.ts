@@ -13,18 +13,29 @@ import {
 type OperationType = 'push' | 'pull'
 type Environment = 'development' | 'stage' | 'production' | 'test'
 
+type Option = {
+  environment: Environment
+  version: number
+}
+
 class ParameterService {
-  constructor(environment: Environment) {
+  constructor({ environment, version = 0 }: Option) {
     this.environment = environment
+    this.version = version
   }
 
   private environment: Environment
+  private version: number
   private client = new SSMClient({ region: 'ap-northeast-2' })
   private __filename = fileURLToPath(import.meta.url)
   private __dirname = path.dirname(this.__filename)
 
   private get name() {
-    return `/velog-v3/server/${this.environment}`
+    let name = `/velog-v3/server/${this.environment}`
+    if (this.version > 0) {
+      name = `${name}:${this.version}`
+    }
+    return name
   }
   private readEnv = (): string => {
     const envPath = path.resolve(this.__dirname, `../../env/.env.${this.environment}`)
@@ -38,7 +49,7 @@ class ParameterService {
     const envPath = path.resolve(this.__dirname, `../../env/.env.${this.environment}`)
     fs.writeFileSync(envPath, env, { encoding: 'utf-8' })
   }
-  public async pullParameter() {
+  public async pull() {
     try {
       const name = this.name
       const input: GetParameterCommandInput = {
@@ -64,7 +75,7 @@ class ParameterService {
       console.log(error)
     }
   }
-  public async pushParameter() {
+  public async push() {
     try {
       const text = this.readEnv()
       const name = this.name
@@ -85,14 +96,22 @@ class ParameterService {
 const getFlag = () => {
   const args = process.argv.slice(3)
 
-  const sFlagIndex = args.indexOf('-e')
+  const eFlagIndex = args.indexOf('-e')
+  const vFlagIndex = args.indexOf('-v')
 
-  const flag = { environment: '' }
-  if (sFlagIndex !== -1) {
-    const environment = args[sFlagIndex + 1]
+  const flag = { environment: '', version: 0 }
+  if (eFlagIndex !== -1) {
+    const environment = args[eFlagIndex + 1]
     Object.assign(flag, { environment })
   }
 
+  if (vFlagIndex !== -1) {
+    const version = args[vFlagIndex + 1]
+    if (!Number(version)) {
+      throw new Error('Invalid version format. The version must be a numeric value')
+    }
+    Object.assign(flag, { version: Number(version) })
+  }
   return flag
 }
 
@@ -104,6 +123,7 @@ const main = async () => {
 
   let command = process.argv[2]
   let environment = flag.environment
+  const version = flag.version
 
   const choices: Choices = {
     command: ['push', 'pull'],
@@ -150,10 +170,13 @@ const main = async () => {
   console.info(`command: ${command}`)
   console.info(`environment: ${environment}`)
 
-  const parameterService = new ParameterService(environment as Environment)
+  const parameterService = new ParameterService({
+    environment: environment as Environment,
+    version,
+  })
   const mapper = {
-    push: () => parameterService.pushParameter(),
-    pull: () => parameterService.pullParameter(),
+    push: () => parameterService.push(),
+    pull: () => parameterService.pull(),
   }
   await mapper[command as OperationType]()
 }
