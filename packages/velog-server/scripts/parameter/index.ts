@@ -37,17 +37,19 @@ class ParameterService {
     }
     return name
   }
-  private readEnv = (): string => {
+  private get envPath() {
     const envPath = path.resolve(this.__dirname, `../../env/.env.${this.environment}`)
     if (!fs.existsSync(envPath)) {
       console.log(`Not found .env.${this.environment} file`)
       process.exit(1)
     }
-    return fs.readFileSync(envPath, 'utf8')
+    return envPath
   }
-  private writeEnv(env: string) {
-    const envPath = path.resolve(this.__dirname, `../../env/.env.${this.environment}`)
-    fs.writeFileSync(envPath, env, { encoding: 'utf-8' })
+  private readEnv = (): string => {
+    return fs.readFileSync(this.envPath, 'utf8')
+  }
+  private writeEnv(env: string): void {
+    fs.writeFileSync(this.envPath, env, { encoding: 'utf-8' })
   }
   public async pull() {
     try {
@@ -87,7 +89,6 @@ class ParameterService {
       }
       const command = new PutParameterCommand(input)
       const response = await this.client.send(command)
-
       console.info(`Parameter upload successful! path: ${name}, version: ${response.Version}`)
     } catch (_) {}
   }
@@ -169,6 +170,9 @@ const main = async () => {
   console.info('Selected Options:')
   console.info(`command: ${command}`)
   console.info(`environment: ${environment}`)
+  if (version > 0) {
+    console.info(`version: ${version}`)
+  }
 
   const parameterService = new ParameterService({
     environment: environment as Environment,
