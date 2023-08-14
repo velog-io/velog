@@ -1,14 +1,16 @@
-import { SocialService } from '@services/SocialService/index.js'
+import googleCallback from '@routes/auth/v3/social/hooks/googleCallback.js'
 import { FastifyPluginCallback } from 'fastify'
-import { container } from 'tsyringe'
 
 const socialRoute: FastifyPluginCallback = (fastify, opts, done) => {
-  const socialService = container.resolve(SocialService)
-  fastify.get<{ Querystring: { code: string } }>('/callback/google', (request, reply) => {
-    const code = request.query.code
-    const profile = socialService.getSocialDataFromGithub(code)
-    reply.send(profile)
-  })
+  fastify.decorateRequest('socialProfile', null)
+  fastify.get<{ Querystring: { code: string } }>(
+    '/callback/google',
+    { preHandler: googleCallback },
+    (request, reply) => {
+      console.log(request.socialProfile)
+      reply.send('hello')
+    }
+  )
   fastify.get<{ Querystring: { code: string } }>('/callback/facebook', (request, reply) => {})
   fastify.get<{ Querystring: { code: string } }>('/callback/github', (request, reply) => {})
   done()

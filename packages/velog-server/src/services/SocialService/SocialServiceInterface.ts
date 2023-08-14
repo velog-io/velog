@@ -6,7 +6,7 @@ export type GetSocialAccountParams = {
   provider: SocialProvider
 }
 
-export type SocialProfile = {
+export type GetProfileFromSocial = {
   uid: number | string
   thumbnail: string | null
   email: string | null
@@ -14,9 +14,9 @@ export type SocialProfile = {
   username?: string
 }
 
-export type GetProfileFromSocial = {
-  profile: SocialProfile
-  socialAccount: SocialAccount
+export type SocialProfile = {
+  profile: GetProfileFromSocial
+  socialAccount: SocialAccount | null
   accessToken: string
   provider: SocialProvider
 }

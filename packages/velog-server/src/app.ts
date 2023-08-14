@@ -21,6 +21,6 @@ app.register(autoload, {
   forceESM: true,
 })
 
-app.register(routes, { prefix: '/api' })
+app.register(routes)
 
 export default app

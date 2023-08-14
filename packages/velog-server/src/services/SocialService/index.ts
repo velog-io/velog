@@ -18,20 +18,20 @@ import {
 
 interface Service {
   getSocialAccount({ uid, provider }: GetSocialAccountParams): Promise<SocialAccount | null>
-  getSocialDataFromGoogle(code: string): Promise<GetProfileFromSocial>
-  getSocialDataFromFacebook(code: string): Promise<GetProfileFromSocial>
-  getSocialDataFromGithub(code: string): Promise<GetProfileFromSocial>
+  getSocialDataFromGoogle(code: string): Promise<SocialProfile>
+  getSocialDataFromFacebook(code: string): Promise<SocialProfile>
+  getSocialDataFromGithub(code: string): Promise<SocialProfile>
 }
 
 @injectable()
 @singleton()
 export class SocialService implements Service {
   constructor(private readonly db: DbService) {}
-  private redirectUri() {
-    const redirectPath = `/api/v3/auth/social/callback`
+  private get redirectUri() {
+    const redirectPath = `/api/auth/v3/social/callback`
     const redirectUri =
       ENV.appEnv === 'development'
-        ? `http://localhost:5002${redirectPath}`
+        ? `http://localhost:5003${redirectPath}`
         : `https://${ENV.apiHost}${redirectPath}`
     return redirectUri
   }
@@ -47,22 +47,22 @@ export class SocialService implements Service {
     })
     return socialAccount
   }
-  public async getSocialDataFromGoogle(code: string): Promise<GetProfileFromSocial> {
+  public async getSocialDataFromGoogle(code: string): Promise<SocialProfile> {
     const accessToken = await this.getGoogleAccessToken({
       code,
-      clientId: ENV.googleId,
+      clientId: ENV.googleClientId,
       clientSecret: ENV.googleSecret,
       redirectUri: `${this.redirectUri}/google`,
     })
+
+    console.log('accessToken', accessToken)
     const profile = await this.getGoogleProfile(accessToken)
+
+    console.log('profile', profile)
     const socialAccount = await this.getSocialAccount({
       uid: profile.uid,
       provider: 'google',
     })
-
-    if (!socialAccount) {
-      throw new Error('Not found Social Account')
-    }
 
     return {
       profile,
@@ -90,7 +90,7 @@ export class SocialService implements Service {
       personFields: 'names,emailAddresses,photos',
     })
     const { data } = profile
-    const socialProfile: SocialProfile = {
+    const socialProfile: GetProfileFromSocial = {
       email: data.emailAddresses![0].value || null,
       name: data.names![0].displayName || 'emptyname',
       thumbnail: data.photos![0].url || null,
@@ -98,10 +98,10 @@ export class SocialService implements Service {
     }
     return socialProfile
   }
-  public async getSocialDataFromFacebook(code: string): Promise<GetProfileFromSocial> {
+  public async getSocialDataFromFacebook(code: string): Promise<SocialProfile> {
     const accessToken = await this.getFacebookAccessToken({
       code,
-      clientId: ENV.facebookId,
+      clientId: ENV.facebookClientId,
       clientSecret: ENV.facebookSecret,
       redirectUri: `${this.redirectUri}/facebook`,
     })
@@ -110,10 +110,6 @@ export class SocialService implements Service {
       uid: profile.uid,
       provider: 'facebook',
     })
-
-    if (!socialAccount) {
-      throw new Error('Not found Social Account')
-    }
 
     return {
       profile,
@@ -139,7 +135,7 @@ export class SocialService implements Service {
     )
     return response.data.access_token
   }
-  private async getFacebookProfile(token: string): Promise<SocialProfile> {
+  private async getFacebookProfile(token: string): Promise<GetProfileFromSocial> {
     const response = await axios.get<FacebookProfile>(
       'https://graph.facebook.com/v4.0/me?fields=id,name,email,picture',
       {
@@ -149,7 +145,7 @@ export class SocialService implements Service {
       }
     )
     const facebookProfile = response.data
-    const profile: SocialProfile = {
+    const profile: GetProfileFromSocial = {
       uid: facebookProfile.id,
       name: facebookProfile.name,
       username: '',
@@ -159,10 +155,10 @@ export class SocialService implements Service {
 
     return profile
   }
-  public async getSocialDataFromGithub(code: string): Promise<GetProfileFromSocial> {
+  public async getSocialDataFromGithub(code: string): Promise<SocialProfile> {
     const accessToken = await this.getGithubAccessToken({
       code,
-      clientId: ENV.githubId,
+      clientId: ENV.githubClientId,
       clientSecret: ENV.githubSecret,
     })
     const profile = await this.getGithubProfile(accessToken)
@@ -170,10 +166,6 @@ export class SocialService implements Service {
       uid: profile.uid,
       provider: 'github',
     })
-
-    if (!socialAccount) {
-      throw new Error('Not found Social Account')
-    }
 
     return {
       profile,
@@ -202,12 +194,12 @@ export class SocialService implements Service {
     )
     return response.data.access_token
   }
-  private async getGithubProfile(token: string): Promise<SocialProfile> {
+  private async getGithubProfile(token: string): Promise<GetProfileFromSocial> {
     const octokit = new Octokit({
       auth: `Bearer ${token}`,
     })
     const { data } = await octokit.users.getAuthenticated()
-    const profile: SocialProfile = {
+    const profile: GetProfileFromSocial = {
       uid: data.id,
       email: data.email,
       name: data.name,

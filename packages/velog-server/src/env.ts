@@ -35,11 +35,11 @@ const env = z.object({
   cookieSecretKey: z.string(),
   jwtSecretKey: z.string(),
   databaseUrl: z.string(),
-  githubId: z.string(),
+  githubClientId: z.string(),
   githubSecret: z.string(),
-  facebookId: z.string(),
+  facebookClientId: z.string(),
   facebookSecret: z.string(),
-  googleId: z.string(),
+  googleClientId: z.string(),
   googleSecret: z.string(),
 })
 
@@ -51,10 +51,10 @@ export const ENV = env.parse({
   jwtSecretKey: process.env.JWT_SECRET_KEY,
   cookieSecretKey: process.env.COOKIE_SECRET_KEY,
   databaseUrl: process.env.DATABASE_URL,
-  githubId: process.env.GITHUB_CLIENT_ID,
+  githubClientId: process.env.GITHUB_CLIENT_ID,
   githubSecret: process.env.GITHUB_SECRET,
-  facebookId: process.env.FACEBOOK_CLIENT_ID,
+  facebookClientId: process.env.FACEBOOK_CLIENT_ID,
   facebookSecret: process.env.FACEBOOK_SECRET,
-  googleId: process.env.GOOGLE_CLIENT_ID,
+  googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleSecret: process.env.GOOGLE_SECRET,
 })
