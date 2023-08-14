@@ -31,7 +31,7 @@ export class UtilsService {
     if (replaced === '') return true
     return false
   }
-  public normalize<T extends Partial<T> & { id: string | number }>(
+  public normalize<T extends Partial<T> & { id: string }>(
     array: T[],
     selector: (item: T) => string | number = (item: T) => item.id
   ) {

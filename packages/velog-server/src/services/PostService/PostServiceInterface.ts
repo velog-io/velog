@@ -1,27 +1,7 @@
-import { Prisma } from '@prisma/client'
+import { Comment, Post, User } from '@prisma/client'
 
-export type PostAllInclude = Prisma.PostGetPayload<{
-  include: {
-    user?: {
-      select: {
-        profile: true
-      }
-    }
-    feed?: true
-    postCategory?: true
-    postHistory?: true
-    postImage?: true
-    postLike?: true
-    postRead?: true
-    postReadLog?: true
-    postScore?: true
-    postTagLegacy?: true
-    seriesPost?: true
-    urlSlugHistory?: true
-    postTags?: true
-    comment?: true
-  }
-}>
+export type PostIncludeUser = Post & { user?: User }
+export type PostIncludeComment = Post & { comment?: Comment[] }
 
 export type GetPostsByTypeParams = {
   cursor: string | undefined

@@ -2,20 +2,21 @@ import { Resolvers } from '@graphql/generated'
 import { container } from 'tsyringe'
 import { PostService } from '@services/PostService/index.js'
 import { UserService } from '@services/UserService/index.js'
-import { PostAllInclude } from '@services/PostService/PostServiceInterface.js'
+import { PostIncludeComment, PostIncludeUser } from '@services/PostService/PostServiceInterface.js'
 import removeMd from 'remove-markdown'
 import { CommentService } from '@services/CommentService/index.js'
+import { Post } from '@prisma/client'
 
 const postResolvers: Resolvers = {
   Post: {
-    user: async (parent: PostAllInclude) => {
+    user: async (parent: PostIncludeUser) => {
       if (!parent.user) {
         const userService = container.resolve(UserService)
         return await userService.getCurrentUser(parent.fk_user_id)
       }
-      return parent.user
+      return parent?.user
     },
-    short_description: (parent: PostAllInclude) => {
+    short_description: (parent: Post) => {
       if (!parent.body) return ''
       if ((parent.meta as any)?.short_description) {
         return (parent.meta as any).short_description
@@ -28,7 +29,7 @@ const postResolvers: Resolvers = {
       )
       return removed.slice(0, 200) + (removed.length > 200 ? '...' : '')
     },
-    comments_count: async (parent: PostAllInclude) => {
+    comments_count: async (parent: PostIncludeComment) => {
       if (parent?.comment) return parent.comment.length
       const commentService = container.resolve(CommentService)
       const count = await commentService.count(parent.id)

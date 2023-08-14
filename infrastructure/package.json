@@ -1,11 +1,16 @@
 {
   "name": "velog",
   "main": "index.ts",
+  "scripts": {
+    "parameter": "tsx ./scripts/parameter.ts"
+  },
   "dependencies": {
+    "@aws-sdk/client-ssm": "^3.379.1",
     "@pulumi/aws": "^5.42.0",
     "@pulumi/awsx": "^1.0.2",
     "@pulumi/pulumi": "^3.75.0",
     "dotenv": "^16.3.1",
+    "tsx": "^3.12.7",
     "zod": "^3.21.4"
   },
   "devDependencies": {

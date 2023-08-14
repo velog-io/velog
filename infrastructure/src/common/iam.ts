@@ -1,16 +1,14 @@
 import * as aws from '@pulumi/aws'
-import { prefix } from '../../lib/prefix'
+import { withPrefix } from '../lib/prefix'
 
-export const ecsTaskExecutionRole = new aws.iam.Role(`${prefix}-te-role`, {
+export const ecsTaskExecutionRole = new aws.iam.Role(withPrefix('ecs-te-role'), {
   assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({
     Service: 'ecs-tasks.amazonaws.com',
   }),
 })
 
-// add iam policy
-new aws.iam.RolePolicy(`${prefix}-task-execution-role-policy`, {
+new aws.iam.RolePolicy(withPrefix('task-execution-role-policy'), {
   role: ecsTaskExecutionRole.id,
-  // allow access to ssm parameter
   policy: {
     Version: '2012-10-17',
     Statement: [
@@ -24,12 +22,11 @@ new aws.iam.RolePolicy(`${prefix}-task-execution-role-policy`, {
         Action: 'ecr:GetAuthorizationToken',
         Resource: '*',
       },
+      {
+        Effect: 'Allow',
+        Action: ['logs:*', 'ecr:*'],
+        Resource: '*',
+      },
     ],
   },
-})
-
-// attach policy
-new aws.iam.RolePolicyAttachment(`${prefix}-ecs-task-execution-role-policy-attachment`, {
-  role: ecsTaskExecutionRole,
-  policyArn: 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy',
 })
