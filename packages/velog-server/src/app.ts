@@ -5,6 +5,7 @@ import cookie from '@fastify/cookie'
 import { ENV } from '@env'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { container } from 'tsyringe'
+import routes from '@routes/index.js'
 
 const app = Fastify({
   logger: true,
@@ -20,10 +21,6 @@ app.register(autoload, {
   forceESM: true,
 })
 
-app.register(autoload, {
-  dir: utils.resolveDir('./src/routes'),
-  options: Object.assign({ prefix: '/api' }),
-  forceESM: true,
-})
+app.register(routes, { prefix: '/api' })
 
 export default app

@@ -1,9 +1,9 @@
-import socialRoute from '@routes/auth/v3/social'
+import socialRoute from '@routes/auth/v3/social/index.js'
 import { FastifyPluginCallback } from 'fastify'
 
-const auth: FastifyPluginCallback = (fastify, opts, done) => {
+const v3: FastifyPluginCallback = (fastify, opts, done) => {
   fastify.register(socialRoute, { prefix: '/social' })
   done()
 }
 
-export default auth
+export default v3

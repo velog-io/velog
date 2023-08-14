@@ -1,5 +1,5 @@
 import { ENV } from '@env'
-import { DbService } from '@lib/db/DbService'
+import { DbService } from '@lib/db/DbService.js'
 import { injectable, singleton } from 'tsyringe'
 import { google } from 'googleapis'
 import qs from 'qs'

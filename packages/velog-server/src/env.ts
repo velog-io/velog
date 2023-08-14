@@ -51,10 +51,10 @@ export const ENV = env.parse({
   jwtSecretKey: process.env.JWT_SECRET_KEY,
   cookieSecretKey: process.env.COOKIE_SECRET_KEY,
   databaseUrl: process.env.DATABASE_URL,
-  githubId: process.env.GITHUB_ID,
+  githubId: process.env.GITHUB_CLIENT_ID,
   githubSecret: process.env.GITHUB_SECRET,
-  facebookId: process.env.FACEBOOK_ID,
+  facebookId: process.env.FACEBOOK_CLIENT_ID,
   facebookSecret: process.env.FACEBOOK_SECRET,
-  googleId: process.env.GOOGLE_ID,
+  googleId: process.env.GOOGLE_CLIENT_ID,
   googleSecret: process.env.GOOGLE_SECRET,
 })
