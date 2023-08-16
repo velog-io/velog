@@ -67,6 +67,12 @@ importers:
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
+      dotenv-cli:
+        specifier: ^7.2.1
+        version: 7.2.1
+      inquirer:
+        specifier: ^9.2.7
+        version: 9.2.7
       tsx:
         specifier: ^3.12.7
         version: 3.12.7
@@ -128,9 +134,6 @@ importers:
       '@graphql-tools/schema':
         specifier: ^10.0.0
         version: 10.0.0(graphql@16.7.1)
-      '@prisma/client':
-        specifier: ^5.1.1
-        version: 5.1.1(prisma@5.1.1)
       dotenv:
         specifier: ^16.1.4
         version: 16.3.1
@@ -6827,6 +6830,21 @@ packages:
     dependencies:
       no-case: 3.0.4
       tslib: 2.6.1
+
+  /dotenv-cli@7.2.1:
+    resolution: {integrity: sha512-ODHbGTskqRtXAzZapDPvgNuDVQApu4oKX8lZW7Y0+9hKA6le1ZJlyRS687oU9FXjOVEDU/VFV6zI125HzhM1UQ==}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
+      dotenv: 16.3.1
+      dotenv-expand: 10.0.0
+      minimist: 1.2.8
+    dev: false
+
+  /dotenv-expand@10.0.0:
+    resolution: {integrity: sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==}
+    engines: {node: '>=12'}
+    dev: false
 
   /dotenv@16.3.1:
     resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
