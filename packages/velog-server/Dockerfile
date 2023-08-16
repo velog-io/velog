@@ -9,9 +9,10 @@ COPY package.json .
 RUN npm install -g pnpm
 RUN pnpm install
 
-RUN npm install -g dotenv-cli
 
+RUN pnpm prisma:copy
 COPY . .
+RUN pnpm prisma:rm
 
 RUN pnpm prisma generate
 
