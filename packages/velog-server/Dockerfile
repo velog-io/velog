@@ -9,12 +9,9 @@ COPY package.json .
 RUN npm install -g pnpm
 RUN pnpm install
 
-
-RUN pnpm prisma:copy
 COPY . .
-RUN pnpm prisma:rm
 
-RUN pnpm prisma generate
+RUN npx prisma generate
 
 EXPOSE 5003
 
