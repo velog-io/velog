@@ -15,19 +15,29 @@
     "node": ">=18.16"
   },
   "main": "main.ts",
+  "type": "module",
   "scripts": {
+    "prisma": "dotenv -e ./env/.env.development -- npx prisma",
+    "prisma:format": "tsx ./scripts/prismaFormatter.ts && pnpm prisma generate",
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
+    "create-service": "tsx ./scripts/createService.ts",
     "ssm": "tsx ./scripts/ssm/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.379.1",
     "@prisma/client": "^5.1.0",
+    "dotenv": "^16.3.1",
+    "fastify": "^4.18.0",
     "inquirer": "^9.2.7",
+    "pino-pretty": "^10.0.0",
     "prisma": "^5.1.0",
+    "reflect-metadata": "^0.1.13",
     "tsx": "^3.12.7",
-    "tsyringe": "^4.7.0"
+    "tsyringe": "^4.7.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.2",
     "@types/node": "^20.5.0",
     "eslint": "^8.47.0",
     "eslint-config-prettier": "^8.8.0",
