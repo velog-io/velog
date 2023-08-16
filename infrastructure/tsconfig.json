@@ -13,6 +13,6 @@
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true
   },
-  "include": ["scripts/parameterPush.ts"],
+  "include": ["scripts/**.ts", "src/**/*.ts"],
   "files": ["index.ts"]
 }

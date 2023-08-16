@@ -2,8 +2,11 @@ import * as awsx from '@pulumi/awsx'
 
 import { withPrefix } from '../lib/prefix'
 import { ENV } from '../../env'
+import { execCommand } from '../lib/execCommand'
 
 export const getECRImage = (type: 'web' | 'server') => {
+  execCommand('pnpm -r prisma:copy')
+
   const option = options[type]
   const repo = new awsx.ecr.Repository(option.ecrRepoName, { forceDelete: true })
   const image = new awsx.ecr.Image(withPrefix(option.imageName), {
@@ -13,6 +16,8 @@ export const getECRImage = (type: 'web' | 'server') => {
   })
 
   const repoUrl = repo.url
+
+  execCommand('pnpm -r prisma:rm')
 
   return { image, repoUrl }
 }
