@@ -17,7 +17,15 @@
   "main": "main.ts",
   "scripts": {
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
-    "parameter": "tsx ./scripts/parameter/index.ts"
+    "ssm": "tsx ./scripts/ssm/index.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.379.1",
+    "@prisma/client": "^5.1.0",
+    "inquirer": "^9.2.7",
+    "prisma": "^5.1.0",
+    "tsx": "^3.12.7",
+    "tsyringe": "^4.7.0"
   },
   "devDependencies": {
     "@types/node": "^20.5.0",
@@ -27,13 +35,5 @@
     "nodemon": "^2.0.22",
     "ts-paths-esm-loader": "^1.4.3",
     "typescript": "^5.1.6"
-  },
-  "dependencies": {
-    "@aws-sdk/client-ssm": "^3.379.1",
-    "@prisma/client": "^5.1.0",
-    "inquirer": "^9.2.7",
-    "prisma": "^5.1.0",
-    "tsx": "^3.12.7",
-    "tsyringe": "^4.7.0"
   }
 }

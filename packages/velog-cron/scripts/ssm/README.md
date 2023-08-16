@@ -32,12 +32,12 @@ The following command line flags are available:
 ## Examples
 
 ```sh
-# Example 1: Pull from SSM parameter of a specific version and save to .env.development
-pnpm parameter pull -e development -v 2
+# Example 1: Pull the latest version of SSM parameter and save to .env.production
+pnpm ssm pull -e production
 
-# Example 2: Pull the latest version of SSM parameter and save to .env.production
-pnpm parameter pull -e production
+# Example 2: Pull from SSM parameter of a specific version and save to .env.development
+pnpm ssm pull -e development -v 2
 
 # Example 3: Push .env.production file to SSM parameter
-pnpm parameter push -e production
+pnpm ssm push -e production
 ```
