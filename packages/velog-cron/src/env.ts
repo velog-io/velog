@@ -11,7 +11,7 @@ const envFiles: EnvFiles = {
   development: '.env.development',
   production: '.env.production',
   test: '.env.test',
-  stage: '.env.stage'
+  stage: '.env.stage',
 }
 
 const appEnv = (process.env.NODE_ENV as Envrionment) || 'development'
@@ -30,7 +30,7 @@ dotenv.config({ path: configPath })
 const env = z.object({
   appEnv: z.string(),
   port: z.number(),
-  databaseUrl: z.string()
+  databaseUrl: z.string(),
 })
 
 export type EnvVars = z.infer<typeof env>
@@ -38,5 +38,5 @@ export type EnvVars = z.infer<typeof env>
 export const ENV = env.parse({
   appEnv,
   port: Number(process.env.PORT),
-  databaseUrl: process.env.DATABASE_URL
+  databaseUrl: process.env.DATABASE_URL,
 })
