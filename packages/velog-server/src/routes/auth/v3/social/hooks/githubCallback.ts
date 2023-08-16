@@ -14,7 +14,6 @@ export default async function githubCallback(
     reply.status(400).send('Code is required')
     return
   }
-
   const profile = await socialService.getSocialDataFromGithub(code)
   request.socialProfile = profile
 }
