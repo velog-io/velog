@@ -18,4 +18,8 @@
 !/env/.env.test
 !/env/.env.example
 
+# docker
 /dockers/docker/data
+
+# prisma
+prisma

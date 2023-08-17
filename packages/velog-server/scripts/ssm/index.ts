@@ -39,14 +39,15 @@ class ParameterService {
   }
   private get envPath() {
     const envPath = path.resolve(this.__dirname, `../../env/.env.${this.environment}`)
+    return envPath
+  }
+  private readEnv = (): string => {
+    const envPath = this.envPath
     if (!fs.existsSync(envPath)) {
       console.log(`Not found .env.${this.environment} file`)
       process.exit(1)
     }
-    return envPath
-  }
-  private readEnv = (): string => {
-    return fs.readFileSync(this.envPath, 'utf8')
+    return fs.readFileSync(envPath, 'utf8')
   }
   private writeEnv(env: string): void {
     fs.writeFileSync(this.envPath, env, { encoding: 'utf-8' })
@@ -149,7 +150,7 @@ const main = async () => {
       {
         type: 'list',
         name: 'promptEnvironment',
-        message: 'Please choose a stack: [Use arrows to move, type to filter]',
+        message: 'Please choose a environment: [Use arrows to move, type to filter]',
         choices: choices.environment,
         default: 'production',
       },
