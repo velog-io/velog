@@ -8,15 +8,15 @@ import { utcToZonedTime } from 'date-fns-tz'
 @injectable()
 export class PostScoreJob {
   constructor(private readonly postService: PostService, private readonly db: DbService) {}
-  private isRunning = false
-  public get isRun() {
-    return this.isRunning
+  private jobInProgress = false
+  public get isJobProgressing() {
+    return this.jobInProgress
   }
   public startPostScoreJob() {
-    this.isRunning = true
+    this.jobInProgress = true
   }
   public stopPostScoreJob() {
-    this.isRunning = false
+    this.jobInProgress = false
   }
   public async scoreCalculation() {
     const utcTime = new Date()
@@ -47,7 +47,7 @@ export class PostScoreJob {
     let tick: string[] = []
     const tickSize = 200
 
-    for (let post of posts) {
+    for (const post of posts) {
       tick.push(post.id)
       if (tick.length === tickSize) {
         queue.push(tick)
@@ -57,7 +57,7 @@ export class PostScoreJob {
 
     for (let i = 0; i < queue.length; i++) {
       const postIds = queue[i]
-      for (let postId of postIds) {
+      for (const postId of postIds) {
         await this.postService.scoreCarculator(postId)
       }
     }

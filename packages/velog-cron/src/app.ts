@@ -13,10 +13,9 @@ app.register(fastifyCron, {
   jobs: [
     {
       cronTime: '*/5 * * * *',
-      onTick: async (fastfiy) => {
-        if (postScoreJob.isRun) return
+      onTick: async () => {
+        if (postScoreJob.isJobProgressing) return
         postScoreJob.startPostScoreJob()
-
         await postScoreJob.scoreCalculation()
         postScoreJob.stopPostScoreJob()
       },
