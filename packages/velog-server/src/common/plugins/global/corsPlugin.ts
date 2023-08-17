@@ -14,6 +14,7 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
 
   if (ENV.appEnv === 'development') {
     corsWhitelist.push(/^http:\/\/localhost/)
+    corsWhitelist.push(/^https:\/\/velog.pro$/)
   }
 
   fastify.register(cors, {
