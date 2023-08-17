@@ -7,7 +7,7 @@ import {
   GetParameterCommandInput,
   PutParameterCommand,
   PutParameterCommandInput,
-  SSMClient
+  SSMClient,
 } from '@aws-sdk/client-ssm'
 
 type OperationType = 'push' | 'pull'
@@ -39,14 +39,15 @@ class ParameterService {
   }
   private get envPath() {
     const envPath = path.resolve(this.__dirname, `../../env/.env.${this.environment}`)
+    return envPath
+  }
+  private readEnv = (): string => {
+    const envPath = this.envPath
     if (!fs.existsSync(envPath)) {
       console.log(`Not found .env.${this.environment} file`)
       process.exit(1)
     }
-    return envPath
-  }
-  private readEnv = (): string => {
-    return fs.readFileSync(this.envPath, 'utf8')
+    return fs.readFileSync(envPath, 'utf8')
   }
   private writeEnv(env: string): void {
     fs.writeFileSync(this.envPath, env, { encoding: 'utf-8' })
@@ -56,7 +57,7 @@ class ParameterService {
       const name = this.name
       const input: GetParameterCommandInput = {
         Name: name,
-        WithDecryption: true
+        WithDecryption: true,
       }
 
       const command = new GetParameterCommand(input)
@@ -85,7 +86,7 @@ class ParameterService {
         Name: name,
         Value: JSON.stringify(text),
         Overwrite: true,
-        Type: 'SecureString'
+        Type: 'SecureString',
       }
       const command = new PutParameterCommand(input)
       const response = await this.client.send(command)
@@ -128,7 +129,7 @@ const main = async () => {
 
   const choices: Choices = {
     command: ['push', 'pull'],
-    environment: ['development', 'stage', 'production', 'test']
+    environment: ['development', 'stage', 'production', 'test'],
   }
 
   if (!command) {
@@ -138,8 +139,8 @@ const main = async () => {
         name: 'promptCommand',
         message: 'Please choose the operation type: [Use arrows to move, type to filter]',
         choices: choices.command,
-        default: 'production'
-      }
+        default: 'production',
+      },
     ])
     command = promptCommand
   }
@@ -151,8 +152,8 @@ const main = async () => {
         name: 'promptEnvironment',
         message: 'Please choose a stack: [Use arrows to move, type to filter]',
         choices: choices.environment,
-        default: 'production'
-      }
+        default: 'production',
+      },
     ])
     environment = promptEnvironment
   }
@@ -176,11 +177,11 @@ const main = async () => {
 
   const parameterService = new ParameterService({
     environment: environment as Environment,
-    version
+    version,
   })
   const mapper = {
     push: () => parameterService.push(),
-    pull: () => parameterService.pull()
+    pull: () => parameterService.pull(),
   }
   await mapper[command as OperationType]()
 }

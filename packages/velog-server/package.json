@@ -15,7 +15,6 @@
   "main": "main.ts",
   "type": "module",
   "scripts": {
-    "prisma:format": "tsx ./scripts/prismaFormatter.ts && pnpm prisma generate",
     "prisma:copy": "cp -R ../velog-prisma/prisma ./prisma",
     "prisma:rm": "rm -rf ./prisma",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
@@ -78,8 +77,5 @@
     "ts-node": "^10.9.1",
     "ts-paths-esm-loader": "^1.4.3",
     "typescript": "^5.1.6"
-  },
-  "resolutions": {
-    "graphql": "^16.7.1"
   }
 }
