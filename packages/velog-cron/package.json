@@ -14,11 +14,11 @@
   "engines": {
     "node": ">=18.16"
   },
-  "main": "main.ts",
+  "main": "/src/main.ts",
   "type": "module",
   "scripts": {
-    "prisma": "dotenv -e ./env/.env.development -- npx prisma",
-    "prisma:format": "tsx ./scripts/prismaFormatter.ts && pnpm prisma generate",
+    "prisma:copy": "cp -R ../velog-prisma/prisma ./prisma",
+    "prisma:rm": "rm -rf ./prisma",
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
     "create-service": "tsx ./scripts/createService.ts",
     "ssm": "tsx ./scripts/ssm/index.ts"
@@ -39,10 +39,13 @@
   "devDependencies": {
     "@types/jest": "^29.5.2",
     "@types/node": "^20.5.0",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@typescript-eslint/parser": "^5.59.11",
     "eslint": "^8.47.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "nodemon": "^2.0.22",
+    "prettier": "^2.8.8",
     "ts-paths-esm-loader": "^1.4.3",
     "typescript": "^5.1.6"
   }

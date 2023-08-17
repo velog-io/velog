@@ -21,7 +21,7 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["./src", ".eslintrc.cjs", "jest.*", "./scripts/**/*.ts", "test/**/*.ts"],
+  "include": ["./src", ".eslintrc.cjs", "./scripts/**/*.ts", "test/**/*.ts"],
   "exclude": [],
   "ts-node": {
     "transpileOnly": true
