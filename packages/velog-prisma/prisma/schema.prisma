@@ -1,10 +1,12 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [uuidOssp(map: "uuid-ossp")]
 }
 
 model AdminUser {
@@ -265,6 +267,7 @@ model Post {
   likes             Int?                     @default(0)
   meta              Json?                    @default("{}")
   views             Int?                     @default(0)
+  score             Float                    @default(0)
   created_at        DateTime                 @default(now()) @db.Timestamptz(6)
   updated_at        DateTime                 @default(now()) @db.Timestamptz(6)
   is_private        Boolean                  @default(false)

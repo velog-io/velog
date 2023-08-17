@@ -17,10 +17,10 @@
   "main": "main.ts",
   "type": "module",
   "scripts": {
-    "prisma": "tsx ./script/prisma-runner",
+    "env:copy": "tsx ./scripts/env.ts",
     "prisma:format": "tsx ./scripts/formatter.ts && pnpm prisma generate",
-    "prisma-migrate:dev": "prisma migrate dev --schema=./prisma/schema.prisma",
-    "prisma-migrate:deploy": "prisma migrate deploy --schema=./prisma/schema.prisma"
+    "prisma-migrate:dev": "pnpm env:copy && pnpm prisma migrate dev --schema=./prisma/schema.prisma",
+    "prisma-migrate:deploy": "pnpm env:copy && pnpm prisma migrate deploy --schema=./prisma/schema.prisma"
   },
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.391.0",
