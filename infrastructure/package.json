@@ -2,7 +2,7 @@
   "name": "velog",
   "main": "index.ts",
   "scripts": {
-    "parameter": "tsx ./scripts/parameter.ts"
+    "ssm": "tsx ./scripts/ssm.ts"
   },
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.379.1",
@@ -14,6 +14,6 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@types/node": "20.4.2"
+    "@types/node": "^20.5.0"
   }
 }

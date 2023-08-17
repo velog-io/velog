@@ -74,9 +74,10 @@ const main = () => {
     push: (environment: string) => push(environment),
     pull: (environment: string) => pull(environment),
   }
-  mapper[command](environment)
-
+  mapper[command as Command](environment)
   console.log(`SSM ${command} success!`)
 }
 
 main()
+
+type Command = 'push' | 'pull'

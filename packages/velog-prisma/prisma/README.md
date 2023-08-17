@@ -1,6 +1,6 @@
 # formatter
 
 ```
-# run
+# WARN: Not working
 pnpm prisma:format
 ```

@@ -1,0 +1,42 @@
+{
+  "name": "velog-prisma",
+  "version": "1.0.0",
+  "author": {
+    "name": "velopert",
+    "email": "public.velopert@gmail.com"
+  },
+  "description": "velog-prisma",
+  "keywords": [
+    "velog",
+    "cron"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.16"
+  },
+  "main": "main.ts",
+  "type": "module",
+  "scripts": {
+    "env:copy": "tsx ./scripts/env.ts",
+    "prisma:format": "tsx ./scripts/formatter.ts && pnpm prisma generate",
+    "prisma-migrate:dev": "pnpm env:copy && pnpm prisma migrate dev --schema=./prisma/schema.prisma",
+    "prisma-migrate:deploy": "pnpm env:copy && pnpm prisma migrate deploy --schema=./prisma/schema.prisma"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.391.0",
+    "dotenv": "^16.3.1",
+    "dotenv-cli": "^7.2.1",
+    "inquirer": "^9.2.7",
+    "tsx": "^3.12.7",
+    "zod": "^3.22.1"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.3",
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.5.0",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "typescript": "^5.1.6"
+  }
+}

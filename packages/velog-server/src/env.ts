@@ -22,6 +22,7 @@ const prefix = appEnv === 'production' ? '../env' : './env'
 const configPath = utils.resolveDir(`${prefix}/${envFile}`)
 
 if (!existsSync(configPath)) {
+  console.log(`Read target: ${configPath}`)
   throw new Error('Not found environment file')
 }
 
