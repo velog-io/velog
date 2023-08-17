@@ -22,8 +22,8 @@ export class PostScoreJob {
     const utcTime = new Date()
     const timezone = 'Asia/Seoul'
     const tz = utcToZonedTime(utcTime, timezone)
-    const start = startOfDay(tz) // 오늘 날짜의 시작 시간 (KST)
-    const end = endOfDay(tz) // 오늘 날짜의 끝 시간 (KST)
+    const startOfToday = startOfDay(tz) // 오늘 날짜의 시작 시간 (KST)
+    const endOfToday = endOfDay(tz) // 오늘 날짜의 끝 시간 (KST)
 
     const posts = await this.db.post.findMany({
       where: {
@@ -33,8 +33,8 @@ export class PostScoreJob {
         },
         score: 10,
         released_at: {
-          gte: start,
-          lte: end,
+          gte: startOfToday,
+          lte: endOfToday,
         },
       },
       select: {
