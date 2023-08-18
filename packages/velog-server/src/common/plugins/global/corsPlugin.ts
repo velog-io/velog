@@ -10,6 +10,7 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
     /^https:\/\/prod.velog.io$/,
     /https:\/\/(.*)--velog.netlify.com/,
     /https:\/\/velog.graphcdn.app/,
+    /^https:\/\/velog.pro$/, // stage
   ]
 
   if (ENV.appEnv === 'development') {

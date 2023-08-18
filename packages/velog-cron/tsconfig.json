@@ -10,9 +10,11 @@
     "paths": {
       "@test/*": ["src/test/*"],
       "@lib/*": ["src/lib/*"],
+      "@jobs/*": ["src/jobs/*"],
       "@routes/*": ["src/routes/*"],
       "@services/*": ["src/services/*"],
-      "@env": ["src/env.ts"]
+      "@env": ["src/env.ts"],
+      "@errors/*": ["src/common/errors/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "outDir": "./dist",

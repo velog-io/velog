@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import { ENV } from '@env'
 import cors from '@fastify/cors'
-import { ForbiddenError } from '../errors/ForbiddenError.js'
+import { ForbiddenError } from '@errors/ForbiddenError.js'
 
 const corsPlugin: FastifyPluginAsync = async (fastify) => {
   const corsWhitelist: RegExp[] = [
@@ -10,15 +10,17 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
     /^https:\/\/prod.velog.io$/,
     /https:\/\/(.*)--velog.netlify.com/,
     /https:\/\/velog.graphcdn.app/,
+    /^https:\/\/velog.pro$/, // stage
   ]
 
   if (ENV.appEnv === 'development') {
     corsWhitelist.push(/^http:\/\/localhost/)
-    corsWhitelist.push(/^https:\/\/velog.pro$/)
   }
 
   fastify.register(cors, {
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    optionsSuccessStatus: 204,
     origin: (origin, callback) => {
       if (!origin || corsWhitelist.some((re) => re.test(origin))) {
         callback(null, true)
