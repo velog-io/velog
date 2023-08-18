@@ -12,7 +12,7 @@ const app = Fastify({
 
 const utils = container.resolve(UtilsService)
 app.register(autoload, {
-  dir: utils.resolveDir('./src/common/plugins'),
+  dir: utils.resolveDir('./src/common/plugins/globals'),
   encapsulate: false,
   forceESM: true,
 })
