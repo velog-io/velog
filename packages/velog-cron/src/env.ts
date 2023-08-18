@@ -10,8 +10,8 @@ export type EnvFiles = Record<Envrionment, string>
 const envFiles: EnvFiles = {
   development: '.env.development',
   production: '.env.production',
-  test: '.env.test',
   stage: '.env.stage',
+  test: '.env.test',
 }
 
 const appEnv = (process.env.NODE_ENV as Envrionment) || 'development'
@@ -28,7 +28,7 @@ if (!existsSync(configPath)) {
 dotenv.config({ path: configPath })
 
 const env = z.object({
-  appEnv: z.string(),
+  appEnv: z.enum(['development', 'production', 'stage', 'test']),
   port: z.number(),
   databaseUrl: z.string(),
 })

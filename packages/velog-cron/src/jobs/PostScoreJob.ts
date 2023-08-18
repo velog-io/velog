@@ -45,7 +45,6 @@ export class PostScoreJob {
     })
 
     const queue: string[][] = []
-
     let tick: string[] = []
     const tickSize = 200
 
