@@ -4,7 +4,7 @@ import { FastifyPluginAsync } from 'fastify'
 import { container } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
 import { CookieService } from '@lib/cookie/CookieService.js'
-import { ONE_MINUTE_IN_MS } from '@constants/timeConstants.js'
+import { Time } from '@constants/TimeConstants'
 
 const authPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('user', null)
@@ -28,7 +28,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
 
       const diff = accessTokenData.exp * 1000 - new Date().getTime()
       // refresh token when life < 30mins
-      if (diff < ONE_MINUTE_IN_MS * 30 && refreshToken) {
+      if (diff < Time.ONE_MINUTE_IN_MS * 30 && refreshToken) {
         const userService = container.resolve(UserService)
         await userService.restoreToken({ request, reply })
       }
