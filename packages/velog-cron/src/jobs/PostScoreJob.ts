@@ -19,6 +19,8 @@ export class PostScoreJob {
     this.jobInProgress = false
   }
   public async scoreCalculation() {
+    console.log('Posts score calculation started...')
+    console.time('scoreCalculation')
     const utcTime = new Date()
     const timezone = 'Asia/Seoul'
     const tz = utcToZonedTime(utcTime, timezone)
@@ -61,5 +63,7 @@ export class PostScoreJob {
         await this.postService.scoreCarculator(postId)
       }
     }
+    console.timeEnd('scoreCalculation')
+    console.log('Posts score calculation completed')
   }
 }
