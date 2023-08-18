@@ -1,16 +1,26 @@
 import { DbService } from '@lib/db/DbService.js'
+import { Post } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
+
+interface Service {
+  findById(postId: string): Promise<Post | null>
+  scoreCarculator(postId: string): Promise<void>
+}
 
 @singleton()
 @injectable()
-export default class PostService {
+export default class PostService implements Service {
   constructor(private readonly db: DbService) {}
-  public async scoreCarculator(postId: string) {
+  public async findById(postId: string): Promise<Post | null> {
     const post = await this.db.post.findUnique({
       where: {
         id: postId,
       },
     })
+    return post
+  }
+  public async scoreCarculator(postId: string): Promise<void> {
+    const post = await this.findById(postId)
 
     if (!post) {
       throw new Error('Not found Post')

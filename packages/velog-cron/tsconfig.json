@@ -15,7 +15,8 @@
       "@services/*": ["src/services/*"],
       "@env": ["src/env.ts"],
       "@errors/*": ["src/common/errors/*"],
-      "@plugins/*": ["src/common/plugins/*"]
+      "@plugins/*": ["src/common/plugins/*"],
+      "@constants/*": ["src/common/constants/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "outDir": "./dist",
