@@ -38,6 +38,7 @@
     "@graphql-tools/load": "^8.0.0",
     "@graphql-tools/merge": "^9.0.0",
     "@graphql-tools/schema": "^10.0.0",
+    "dataloader": "^2.2.2",
     "dotenv": "^16.1.4",
     "fastify": "^4.18.0",
     "graphql": "^16.7.1",

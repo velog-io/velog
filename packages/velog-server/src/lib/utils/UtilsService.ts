@@ -61,4 +61,18 @@ export class UtilsService {
     }
     return array
   }
+  public groupById<T>(order: string[], data: T[], idResolver: (row: T) => string) {
+    const map: {
+      [key: string]: T[]
+    } = {}
+    // creates array for every key
+    order.forEach((id) => {
+      map[id] = []
+    })
+    data.forEach((row) => {
+      map[idResolver(row)].push(row)
+    })
+    const ordered = order.map((id) => map[id])
+    return ordered
+  }
 }
