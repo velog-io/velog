@@ -4,8 +4,12 @@ import { injectable, singleton } from 'tsyringe'
 import { Client } from '@elastic/elasticsearch'
 import { ENV } from '@env'
 import { PostService } from '@services/PostService/index.js'
+import { WriteResponseBase } from '@elastic/elasticsearch/lib/api/types'
 
-interface Service {}
+interface Service {
+  get esClient(): Client
+  get searchSync(): SearchSyncType
+}
 
 @injectable()
 @singleton()
@@ -15,10 +19,10 @@ export class SearchService implements Service {
     private readonly postsTagsService: PostsTagsService,
     private readonly postService: PostService
   ) {}
-  public get esClient() {
+  public get esClient(): Client {
     return new Client({ node: ENV.esHost })
   }
-  public get searchSync() {
+  public get searchSync(): SearchSyncType {
     return {
       update: async (postId: string) => await this.searchSyncUpdate(postId),
       remove: async (postId: string) => await this.searchSyncRemove(postId),
@@ -51,6 +55,7 @@ export class SearchService implements Service {
     const postWithTags = Object.assign(post, { tags })
     const serialized = this.postService.serializePost(postWithTags)
 
+    if (ENV.appEnv === 'development') return
     return this.esClient.index({
       id: postId,
       index: 'posts',
@@ -58,9 +63,15 @@ export class SearchService implements Service {
     })
   }
   private async searchSyncRemove(postId: string) {
+    if (ENV.appEnv === 'development') return
     return this.esClient.delete({
       id: postId,
       index: 'posts',
     })
   }
+}
+
+type SearchSyncType = {
+  update: (postId: string) => Promise<WriteResponseBase | undefined>
+  remove: (postId: string) => Promise<WriteResponseBase | undefined>
 }

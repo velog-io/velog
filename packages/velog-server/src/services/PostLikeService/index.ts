@@ -6,6 +6,8 @@ import { SearchService } from '@lib/search/SearchService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Post } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
+import axios from 'axios'
+import { ENV } from '@env'
 
 interface Service {
   likePost(postId?: string, userId?: string): Promise<Post>
@@ -73,7 +75,15 @@ export class PostLikeService implements Service {
 
     const unscored = this.utils.checkUnscore(post.body!.concat(post.title || ''))
     if (!unscored) {
-      // Cron API 호출
+      await axios.patch(
+        `${ENV.cronHost}/api/posts/v1/score/${postId}`,
+        {},
+        {
+          headers: {
+            'Cron-Api-Key': ENV.cronApiKey,
+          },
+        }
+      )
     }
 
     setTimeout(() => {

@@ -32,12 +32,15 @@ const env = z.object({
   appEnv: z.string(),
   port: z.number(),
   clientHost: z.string(),
+  apiHost: z.string(),
+  cronHost: z.string(),
   cookieSecretKey: z.string(),
   jwtSecretKey: z.string(),
   databaseUrl: z.string(),
   esHost: z.string(),
   unscoredCategory: z.string(),
   unscoredWords: z.string(),
+  cronApiKey: z.string(),
 })
 
 export type EnvVars = z.infer<typeof env>
@@ -46,10 +49,13 @@ export const ENV = env.parse({
   appEnv,
   port: Number(process.env.PORT),
   clientHost: process.env.CLIENT_HOST,
+  apiHost: process.env.API_HOST,
+  cronHost: process.env.CRON_HOST,
   jwtSecretKey: process.env.JWT_SECRET_KEY,
   cookieSecretKey: process.env.COOKIE_SECRET_KEY,
   databaseUrl: process.env.DATABASE_URL,
   esHost: process.env.ES_HOST,
   unscoredCategory: process.env.UNSCORED_CATEGORY,
   unscoredWords: process.env.UNSCORED_WORDS,
+  cronApiKey: process.env.CRON_API_KEY,
 })
