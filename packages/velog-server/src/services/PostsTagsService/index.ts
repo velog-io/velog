@@ -1,27 +1,28 @@
 import DataLoader from 'dataloader'
-import { Post, PostTag, Prisma, Tag } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import { injectable } from 'tsyringe'
-import { DbService } from '@lib/db/DbService'
-import { UtilsService } from '@lib/utils/UtilsService'
+import { DbService } from '@lib/db/DbService.js'
+import { UtilsService } from '@lib/utils/UtilsService.js'
 
 interface Service {
-  getPostsByTag(params: GetPostsByTagParams): Promise<Post[]>
+  // getPostsByTag(params: GetPostsByTagParams): Promise<Post[]>
+  createTagsLoader(): DataLoader<string, any>
 }
 
 @injectable()
 export class PostsTagsService implements Service {
   constructor(private readonly db: DbService, private readonly utils: UtilsService) {}
-  public async getPostsByTag({
-    tagName,
-    cursor,
-    limit = 20,
-    userId,
-    userself,
-  }: GetPostsByTagParams): Promise<Post[]> {
-    return []
-  }
+  // public async getPostsByTag({
+  //   tagName,
+  //   cursor,
+  //   limit = 20,
+  //   userId,
+  //   userself,
+  // }: GetPostsByTagParams): Promise<Post[]> {
+  //   return []
+  // }
 
-  public createTagsLoader() {
+  public createTagsLoader(): DataLoader<string, any> {
     return new DataLoader(async (postIds: readonly string[]) => {
       const postsTags = await this.db.postTag.findMany({
         where: {
@@ -52,10 +53,10 @@ export class PostsTagsService implements Service {
   }
 }
 
-type GetPostsByTagParams = {
-  tagName: string
-  cursor?: string
-  limit?: number
-  userId?: string
-  userself: boolean
-}
+// type GetPostsByTagParams = {
+//   tagName: string
+//   cursor?: string
+//   limit?: number
+//   userId?: string
+//   userself: boolean
+// }

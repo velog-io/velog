@@ -1,10 +1,10 @@
 import { JwtService } from '@lib/jwt/JwtService.js'
-import { AccessTokenData } from '@lib/jwt/Jwt.interface'
+import { AccessTokenData } from '@lib/jwt/Jwt.interface.js'
 import { FastifyPluginAsync } from 'fastify'
 import { container } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
 import { CookieService } from '@lib/cookie/CookieService.js'
-import { Time } from '@constants/TimeConstants'
+import { Time } from '@constants/TimeConstants.js'
 
 const authPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('user', null)

@@ -1,4 +1,4 @@
-import { Post, Prisma } from '@prisma/client'
+import { Post, Prisma, Tag } from '@prisma/client'
 import { container, injectable, singleton } from 'tsyringe'
 import {
   ReadPostInput,
@@ -12,14 +12,18 @@ import { GetPostsByTypeParams } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { PostReadLogService } from '@services/PostReadLogService/index.js'
+import { pick } from 'rambda'
+import { JsonValue } from '@prisma/client/runtime/library'
 
 interface Service {
+  postsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
   getReadingList(input: ReadingListInput, userId: string | undefined): Promise<Post[]>
   // private getPostsByRead(input: GetPostsByTypeParams): Promise<Post[]>
   // private getPostsByLiked(input: GetPostsByTypeParams): Promise<Post[]>
   getRecentPosts(input: RecentPostsInput, userId: string | undefined): Promise<Post[]>
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
   getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>
+  serializePost(post: SerializedPostParam): SerializedPost
 }
 
 @injectable()
@@ -376,4 +380,90 @@ export class PostService implements Service {
 
     return post
   }
+  public serializePost(post: SerializedPostParam): SerializedPost {
+    const picked = pick(
+      [
+        'id',
+        'title',
+        'body',
+        'thumbnail',
+        'user',
+        'is_private',
+        'released_at',
+        'likes',
+        'views',
+        'meta',
+        'url_slug',
+        'tags',
+      ],
+      post
+    )
+    return {
+      ...picked,
+      // _id: picked.id,
+      // objectID: picked.id,
+      body: picked.body!.slice(0, 8000),
+      user: {
+        id: picked.user.id,
+        username: picked.user.username,
+        profile: {
+          id: picked.user.profile!.id,
+          display_name: picked.user.profile!.display_name!,
+          thumbnail: picked.user.profile!.thumbnail!,
+        },
+      },
+      tags: picked.tags.map((tag) => tag.name || '').filter(Boolean),
+    }
+  }
+}
+
+type SerializedPostParam = Prisma.PostGetPayload<{
+  include: {
+    id: true
+    title: true
+    body: true
+    thumbnail: true
+    is_private: true
+    released_at: true
+    likes: true
+    views: true
+    meta: true
+    url_slug: true
+    user: {
+      select: {
+        id: true
+        username: true
+        profile: {
+          select: {
+            id: true
+            display_name: true
+            thumbnail: true
+          }
+        }
+      }
+    }
+  }
+}> & { tags: Tag[] }
+
+export type SerializedPost = {
+  id: string
+  title: string | null
+  body: string | null
+  thumbnail: string | null
+  is_private: boolean
+  released_at: Date | null
+  views: number | null
+  likes: number | null
+  meta: JsonValue | null
+  url_slug: string | null
+  user: {
+    id: string
+    username: string
+    profile: {
+      id: string
+      display_name: string
+      thumbnail: string
+    }
+  }
+  tags: string[]
 }
