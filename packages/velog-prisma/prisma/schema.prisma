@@ -600,7 +600,3 @@ model ExternalIntegrationHistory {
   @@index([app_identifier])
   @@map("external_integration_histories")
 }
-
-model some {
-  id String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-}
