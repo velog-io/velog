@@ -1,5 +1,5 @@
 import * as aws from '@pulumi/aws'
-import { withPrefix } from '../lib/prefix'
+import { withPrefix } from '../../lib/prefix'
 import { Input } from '@pulumi/pulumi'
 
 export const createServerSubnet = (vpcId: Input<string>) => {

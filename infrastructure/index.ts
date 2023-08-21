@@ -1,5 +1,5 @@
-import { createWebInfra } from './src/web/index'
-import { createServerInfra } from './src/server/index'
+import { createWebInfra } from './src/packages/web/index'
+import { createServerInfra } from './src/packages/server/index'
 import { ENV } from './env'
 import * as aws from '@pulumi/aws'
 
@@ -19,24 +19,16 @@ const defaultSecurityGroup = vpcId.then((id) =>
 )
 export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
 
-// Certificate
-const certificate = aws.acm.getCertificate({
-  domain: ENV.certificateDomain,
-})
-export const certificateArn = certificate.then((certificate) => certificate.arn)
-
 // Create Sever Infra
-export const { repoUrl: serverRepoUrl } = createServerInfra({
+export const { repoUrl: serverRepoUrl, certificateArn: serverCertificateArn } = createServerInfra({
   vpcId,
   subnetIds,
-  certificateArn,
   defaultSecurityGroupId,
 })
 
 // Create WEB Infra
-export const { repoUrl: webRepoUrl } = createWebInfra({
+export const { repoUrl: webRepoUrl, certificateArn: webCertificateArn } = createWebInfra({
   vpcId,
   subnetIds,
-  certificateArn,
   defaultSecurityGroupId,
 })
