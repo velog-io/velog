@@ -1,7 +1,7 @@
 import { HttpError } from './HttpError.js'
 
 export class NotFoundError extends HttpError {
-  constructor(description = 'NOT_FOUND') {
-    super(description, 404)
+  constructor(message = 'NOT_FOUND') {
+    super(message, 404, 'NotFound')
   }
 }

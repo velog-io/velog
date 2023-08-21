@@ -1,4 +1,4 @@
-import { FastifyPluginAsync, FastifyPluginCallback } from 'fastify'
+import { FastifyPluginCallback } from 'fastify'
 import fp from 'fastify-plugin'
 
 let isClosing = false
@@ -8,7 +8,7 @@ export function disableKeepAlive() {
 }
 
 const pluginFn: FastifyPluginCallback = async (fastify, opts, done) => {
-  fastify.addHook('onResponse', async (request, reply) => {
+  fastify.addHook('onResponse', async (request, reply, done) => {
     if (isClosing) {
       reply.header('Connection', 'close')
     }

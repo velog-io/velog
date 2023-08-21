@@ -31,6 +31,7 @@ const env = z.object({
   appEnv: z.enum(['development', 'production', 'stage', 'test']),
   port: z.number(),
   databaseUrl: z.string(),
+  cronApiKey: z.string(),
 })
 
 export type EnvVars = z.infer<typeof env>
@@ -39,4 +40,5 @@ export const ENV = env.parse({
   appEnv,
   port: Number(process.env.PORT),
   databaseUrl: process.env.DATABASE_URL,
+  cronApiKey: process.env.CRON_API_KEY,
 })

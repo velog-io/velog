@@ -10,7 +10,7 @@ const corsPlugin: FastifyPluginCallback = (fastify, opts, done) => {
     /^https:\/\/prod.velog.io$/,
     /https:\/\/(.*)--velog.netlify.com/,
     /https:\/\/velog.graphcdn.app/,
-    /^https:\/\/velog.pro$/, // stage
+    /^https:\/\/api.velog.pro$/, // stage
   ]
 
   if (ENV.appEnv === 'development') {

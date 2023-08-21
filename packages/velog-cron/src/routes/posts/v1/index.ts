@@ -36,6 +36,7 @@ const v1: FastifyPluginCallback = (fastify, opts, done) => {
   )
 
   fastify.patch('/score', async (request, reply) => {
+    console.log('hello')
     if (ENV.appEnv !== 'development') {
       throw new BadRequestError('This operation is only allowed in development environment.')
     }
