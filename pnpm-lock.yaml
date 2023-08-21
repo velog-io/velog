@@ -201,6 +201,9 @@ importers:
       '@aws-sdk/client-ssm':
         specifier: ^3.379.1
         version: 3.379.1
+      '@elastic/elasticsearch':
+        specifier: ^8.9.0
+        version: 8.9.0
       '@fastify/autoload':
         specifier: ^5.7.1
         version: 5.7.1
@@ -255,6 +258,9 @@ importers:
       pino-pretty:
         specifier: ^10.0.0
         version: 10.0.0
+      rambda:
+        specifier: ^8.3.0
+        version: 8.3.0
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.13
@@ -2349,6 +2355,30 @@ packages:
       postcss-selector-parser: ^6.0.10
     dependencies:
       postcss-selector-parser: 6.0.13
+    dev: false
+
+  /@elastic/elasticsearch@8.9.0:
+    resolution: {integrity: sha512-UyolnzjOYTRL2966TYS3IoJP4tQbvak/pmYmbP3JdphD53RjkyVDdxMpTBv+2LcNBRrvYPTzxQbpRW/nGSXA9g==}
+    engines: {node: '>=14'}
+    dependencies:
+      '@elastic/transport': 8.3.3
+      tslib: 2.6.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@elastic/transport@8.3.3:
+    resolution: {integrity: sha512-g5nc//dq/RQUTMkJUB8Ui8KJa/WflWmUa7yLl4SRZd67PPxIp3cn+OvGMNIhpiLRcfz1upanzgZHb/7Po2eEdQ==}
+    engines: {node: '>=14'}
+    dependencies:
+      debug: 4.3.4
+      hpagent: 1.2.0
+      ms: 2.1.3
+      secure-json-parse: 2.7.0
+      tslib: 2.6.1
+      undici: 5.22.1
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /@emotion/is-prop-valid@0.8.8:
@@ -8423,6 +8453,11 @@ packages:
       lru-cache: 6.0.0
     dev: false
 
+  /hpagent@1.2.0:
+    resolution: {integrity: sha512-A91dYTeIB6NoXG+PxTQpCCDDnfHsW9kc06Lvpu1TEe9gnd6ZFeiBoRO9JvzEv6xK7EX97/dUE8g/vBMTqTS3CA==}
+    engines: {node: '>=14'}
+    dev: false
+
   /html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
     dev: true
@@ -11201,6 +11236,10 @@ packages:
 
   /quick-format-unescaped@4.0.4:
     resolution: {integrity: sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==}
+    dev: false
+
+  /rambda@8.3.0:
+    resolution: {integrity: sha512-XN5B8zIB6efO9Y9SrzdLQyk6XX3U7OyWESIvNYnm7AH8KCbXBtzsUVFaJYpUcIx5VahmvNV7fNjevR/ohc90jw==}
     dev: false
 
   /rc@1.2.8:
