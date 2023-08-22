@@ -14,7 +14,7 @@ import {
   GetSocialAccountParams,
   GithubOAuthResult,
   SocialProfile,
-} from '@services/SocialService/SocialServiceInterface'
+} from '@services/SocialService/SocialServiceInterface.js'
 
 interface Service {
   getSocialAccount({ uid, provider }: GetSocialAccountParams): Promise<SocialAccount | null>
