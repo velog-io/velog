@@ -18,8 +18,6 @@ import { JsonValue } from '@prisma/client/runtime/library'
 interface Service {
   postsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
   getReadingList(input: ReadingListInput, userId: string | undefined): Promise<Post[]>
-  // private getPostsByRead(input: GetPostsByTypeParams): Promise<Post[]>
-  // private getPostsByLiked(input: GetPostsByTypeParams): Promise<Post[]>
   getRecentPosts(input: RecentPostsInput, userId: string | undefined): Promise<Post[]>
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
   getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>

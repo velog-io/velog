@@ -1,4 +1,4 @@
-# AWS Parameter Store Handler
+# AWS SSM Parameter Store Handler
 
 ## Prerequisites
 
@@ -33,11 +33,11 @@ The following command line flags are available:
 
 ```sh
 # Example 1: Pull from SSM parameter of a specific version and save to .env.development
-pnpm parameter pull -e development -v 2
+pnpm ssm pull -e development -v 2
 
 # Example 2: Pull the latest version of SSM parameter and save to .env.production
-pnpm parameter pull -e production
+pnpm ssm pull -e production
 
 # Example 3: Push .env.production file to SSM parameter
-pnpm parameter push -e production
+pnpm ssm push -e production
 ```

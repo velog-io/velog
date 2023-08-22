@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import { DbService } from '@lib/db/DbService'
 import { UtilsService } from '@lib/utils/UtilsService'
 import { Post, Prisma, User } from '@prisma/client'
-import { ENV, EnvVars } from '@env'
+import { ENV } from '@env'
 import { mockComment } from 'test/mock/mockComment'
 import { MockPostsType, mockPosts } from 'test/mock/mockPost'
 import { mockUserWithProfile, MockUserWithProfileType } from 'test/mock/mockUser'
@@ -83,18 +83,18 @@ async function main() {
   }
 }
 
-function checkAppEnv(env: EnvVars) {
-  if (env.appEnv !== 'development') {
+function checkAppEnv() {
+  if (ENV.appEnv !== 'development') {
     throw Error('Only Allow development environment')
   }
 }
 
-function checkDatabaseUrl(env: EnvVars) {
-  if (env.databaseUrl.indexOf('localhost') < 0) {
+function checkDatabaseUrl() {
+  if (ENV.databaseUrl.indexOf('localhost') < 0) {
     throw new Error('Database host must be localhost')
   }
 }
 
-checkAppEnv(ENV)
-checkDatabaseUrl(ENV)
+checkAppEnv()
+checkDatabaseUrl()
 main()

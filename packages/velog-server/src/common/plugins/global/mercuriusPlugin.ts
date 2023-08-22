@@ -9,7 +9,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.register(mercurius, {
     schema,
     resolvers: resolvers,
-    graphiql: ENV.appEnv === 'development',
+    graphiql: ENV.appEnv !== 'production',
     context: (request, reply): GraphQLContext => {
       return {
         request,
@@ -21,23 +21,25 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
     errorFormatter: (result) => {
       const e = result.errors?.[0]?.originalError
 
-      if (isHttpError(e)) {
-        const errors = result.errors?.map((error) =>
-          Object.assign(error, {
-            extensions: {
-              name: e.name,
-              description: e.description,
-            },
-          })
-        )
-        return {
-          statusCode: e.statusCode,
-          response: {
-            errors,
-          },
-        }
+      if (!isHttpError(e)) {
+        return { statusCode: 400, response: result }
       }
-      return { statusCode: 400, response: result }
+
+      const errors = result.errors?.map((error) =>
+        Object.assign(error, {
+          extensions: {
+            name: e.name,
+            description: e.description,
+          },
+        })
+      )
+
+      return {
+        statusCode: e.statusCode,
+        response: {
+          errors,
+        },
+      }
     },
   })
 }
