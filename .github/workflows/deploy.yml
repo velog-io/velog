@@ -47,7 +47,7 @@ jobs:
         uses: pulumi/actions@v4.4.0
         with:
           command: up
-          stack-name: ${{ secrets.STACK_NAME }} # or org-name/stack-name
+          stack-name: /${{ secrets.STACK_NAME }} # or org-name/stack-name
           diff: true
           upsert: true
           work-dir: './infrastructure'
