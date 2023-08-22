@@ -29,21 +29,33 @@ if (!existsSync(configPath)) {
 dotenv.config({ path: configPath })
 
 const env = z.object({
-  appEnv: z.string(),
+  appEnv: z.enum(['development', 'test', 'stage', 'production']),
   port: z.number(),
   clientHost: z.string(),
+  apiHost: z.string(),
   cookieSecretKey: z.string(),
   jwtSecretKey: z.string(),
   databaseUrl: z.string(),
+  githubClientId: z.string(),
+  githubSecret: z.string(),
+  facebookClientId: z.string(),
+  facebookSecret: z.string(),
+  googleClientId: z.string(),
+  googleSecret: z.string(),
 })
-
-export type EnvVars = z.infer<typeof env>
 
 export const ENV = env.parse({
   appEnv,
   port: Number(process.env.PORT),
   clientHost: process.env.CLIENT_HOST,
+  apiHost: process.env.API_HOST,
   jwtSecretKey: process.env.JWT_SECRET_KEY,
   cookieSecretKey: process.env.COOKIE_SECRET_KEY,
   databaseUrl: process.env.DATABASE_URL,
+  githubClientId: process.env.GITHUB_CLIENT_ID,
+  githubSecret: process.env.GITHUB_SECRET,
+  facebookClientId: process.env.FACEBOOK_CLIENT_ID,
+  facebookSecret: process.env.FACEBOOK_SECRET,
+  googleClientId: process.env.GOOGLE_CLIENT_ID,
+  googleSecret: process.env.GOOGLE_SECRET,
 })
