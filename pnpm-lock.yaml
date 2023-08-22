@@ -103,6 +103,9 @@ importers:
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.13
+      tsc-alias:
+        specifier: ^1.8.7
+        version: 1.8.7
       tsx:
         specifier: ^3.12.7
         version: 3.12.7

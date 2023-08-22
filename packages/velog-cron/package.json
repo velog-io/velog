@@ -19,7 +19,9 @@
   "scripts": {
     "prisma:copy": "cp -R ../velog-prisma/prisma ./prisma",
     "prisma:rm": "rm -rf ./prisma",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
+    "prod": "pnpm ssm pull -e production && pnpm build && NODE_ENV=production node dist/src/main.js",
     "create-service": "tsx ./scripts/createService.ts",
     "ssm": "tsx ./scripts/ssm/index.ts"
   },
@@ -38,6 +40,7 @@
     "pino-pretty": "^10.0.0",
     "prisma": "^5.1.0",
     "reflect-metadata": "^0.1.13",
+    "tsc-alias": "^1.8.7",
     "tsx": "^3.12.7",
     "tsyringe": "^4.7.0",
     "zod": "^3.21.4"

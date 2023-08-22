@@ -9,4 +9,4 @@ services:
     tty: true
     stdin_open: true
     ports:
-      - 5003:5003
+      - 5004:5004

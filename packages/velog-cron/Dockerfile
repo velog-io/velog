@@ -13,6 +13,6 @@ COPY --from=builder /app/ /app/
 COPY . .
 RUN pnpm prisma generate
 
-EXPOSE 5003
+EXPOSE 5004
 
 CMD ["pnpm", "prod"]

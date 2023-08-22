@@ -6,8 +6,6 @@ import { execCommand } from '../lib/execCommand'
 import { PackageType } from '../type'
 
 export const getECRImage = (type: PackageType) => {
-  execCommand('pnpm -r prisma:copy')
-
   const option = options[type]
   const repo = new awsx.ecr.Repository(option.ecrRepoName, { forceDelete: true })
   const image = new awsx.ecr.Image(withPrefix(option.imageName), {
@@ -17,8 +15,6 @@ export const getECRImage = (type: PackageType) => {
   })
 
   const repoUrl = repo.url
-
-  execCommand('pnpm -r prisma:rm')
 
   return { image, repoUrl }
 }

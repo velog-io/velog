@@ -19,7 +19,7 @@
     "prisma:rm": "rm -rf ./prisma",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
-    "prod": "pnpm parameter pull -e production && pnpm build && NODE_ENV=production node dist/src/main.js",
+    "prod": "pnpm ssm pull -e production && pnpm build && NODE_ENV=production node dist/src/main.js",
     "start": "node ./dist/main.js",
     "codegen": "graphql-codegen --config codegen.ts",
     "test": "npx jest",
