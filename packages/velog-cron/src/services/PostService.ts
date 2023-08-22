@@ -33,7 +33,7 @@ export default class PostService implements Service {
     })
 
     const ONE_HOUR = 1000 * 60 * 60
-    const itemHourAge = (Date.now() - post.created_at.getTime()) / ONE_HOUR
+    const itemHourAge = (Date.now() - post.released_at!.getTime()) / ONE_HOUR
     const gravity = 1.8
     const votes = postLikes * 3
 
