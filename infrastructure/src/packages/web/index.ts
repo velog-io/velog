@@ -1,5 +1,4 @@
 import { ENV } from '../../../env'
-import { getCertificate } from '../../common/certificate'
 import { CreateInfraParameter } from '../../type'
 import { getECRImage } from '../../common/ecr'
 import { createECSfargateService } from '../../common/ecs'
@@ -9,12 +8,11 @@ import { createSecurityGroup } from '../../common/securityGroup'
 export const createWebInfra = ({
   vpcId,
   subnetIds,
+  certificateArn,
   defaultSecurityGroupId,
 }: CreateInfraParameter) => {
   const { image, repoUrl } = getECRImage('web')
   const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({ vpcId, packageType: 'web' })
-
-  const certificateArn = getCertificate(ENV.certificateWebDomain)
 
   const { targetGroup } = createLoadBalancer({
     subnetIds,

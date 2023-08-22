@@ -3,8 +3,9 @@ import * as awsx from '@pulumi/awsx'
 import { withPrefix } from '../lib/prefix'
 import { ENV } from '../../env'
 import { execCommand } from '../lib/execCommand'
+import { PackageType } from '../type'
 
-export const getECRImage = (type: 'web' | 'server') => {
+export const getECRImage = (type: PackageType) => {
   execCommand('pnpm -r prisma:copy')
 
   const option = options[type]
@@ -32,5 +33,10 @@ const options = {
     ecrRepoName: ENV.ecrServerRepositoryName,
     imageName: 'server-image',
     path: '../packages/velog-server/',
+  },
+  cron: {
+    ecrRepoName: ENV.ecrCronRepositoryName,
+    imageName: 'cron-image',
+    path: '../packages/velog-cron/',
   },
 }

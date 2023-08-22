@@ -1,4 +1,3 @@
-import { getCertificate } from '../../common/certificate'
 import { ENV } from '../../../env'
 import { CreateInfraParameter } from '../../type'
 import { getECRImage } from '../../common/ecr'
@@ -9,15 +8,14 @@ import { createSecurityGroup } from '../../common/securityGroup'
 export const createCronInfra = ({
   vpcId,
   subnetIds,
+  certificateArn,
   defaultSecurityGroupId,
 }: CreateInfraParameter) => {
-  const { image, repoUrl } = getECRImage('server')
+  const { image, repoUrl } = getECRImage('cron')
   const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({
     vpcId,
     packageType: 'cron',
   })
-
-  const certificateArn = getCertificate(ENV.certificateServerDomain)
 
   const { targetGroup } = createLoadBalancer({
     subnetIds,
@@ -36,5 +34,5 @@ export const createCronInfra = ({
     taskSecurityGroup,
   })
 
-  return { repoUrl, certificateArn }
+  return { repoUrl }
 }

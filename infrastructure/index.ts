@@ -4,6 +4,8 @@ import { ENV } from './env'
 import * as aws from '@pulumi/aws'
 
 import { createVPC } from './src/common/vpc'
+import { getCertificate } from './src/common/certificate'
+import { createCronInfra } from './src/packages/cron'
 
 // VPC, Subnet, DHCP, Intergate way, route Table
 const { subnets, vpc } = createVPC()
@@ -19,16 +21,28 @@ const defaultSecurityGroup = vpcId.then((id) =>
 )
 export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
 
+const certificateArn = getCertificate(ENV.certificateDomain)
+
 // Create Sever Infra
-export const { repoUrl: serverRepoUrl, certificateArn: serverCertificateArn } = createServerInfra({
+export const { repoUrl: serverRepoUrl } = createServerInfra({
   vpcId,
   subnetIds,
+  certificateArn,
   defaultSecurityGroupId,
 })
 
 // Create WEB Infra
-export const { repoUrl: webRepoUrl, certificateArn: webCertificateArn } = createWebInfra({
+export const { repoUrl: webRepoUrl } = createWebInfra({
   vpcId,
   subnetIds,
+  certificateArn,
+  defaultSecurityGroupId,
+})
+
+// Create CRON Infra
+export const { repoUrl: cronRepoUrl } = createCronInfra({
+  vpcId,
+  subnetIds,
+  certificateArn,
   defaultSecurityGroupId,
 })

@@ -37,9 +37,8 @@ const env = z.object({
   cronPort: z.number(),
   ecrWebRepositoryName: z.string(),
   ecrServerRepositoryName: z.string(),
-  certificateWebDomain: z.string(),
-  certificateServerDomain: z.string(),
-  certificateCronDomain: z.string(),
+  ecrCronRepositoryName: z.string(),
+  certificateDomain: z.string(),
   awsAccessKeyId: z.string(),
   awsSecretAccessKey: z.string(),
 })
@@ -52,9 +51,8 @@ export const ENV = env.parse({
   cronPort: Number(process.env.CRON_PORT),
   ecrWebRepositoryName: process.env.ECR_WEB_REPOSITORY_NAME,
   ecrServerRepositoryName: process.env.ECR_SERVER_REPOSITORY_NAME,
-  certificateWebDomain: process.env.CERTIFICATE_WEB_DOMAIN,
-  certificateServerDomain: process.env.CERTIFICATE_SERVER_DOMAIN,
-  certificateCronDomain: process.env.CERTIFICATE_CRON_DOMAIN,
+  ecrCronRepositoryName: process.env.ECR_CRON_REPOSITORY_NAME,
+  certificateDomain: process.env.CERTIFICATE_DOMAIN,
   awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
   awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 })
