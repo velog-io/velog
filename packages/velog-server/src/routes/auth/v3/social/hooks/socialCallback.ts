@@ -1,4 +1,4 @@
-import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from '@constants/timeConstants.js'
+import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from '@constants/imeConstants.js'
 import { ENV } from '@env'
 import { CookieService } from '@lib/cookie/CookieService.js'
 import { DbService } from '@lib/db/DbService.js'
