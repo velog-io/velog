@@ -29,7 +29,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         Object.assign(error, {
           extensions: {
             name: e.name,
-            description: e.description,
+            message: e.message,
           },
         })
       )

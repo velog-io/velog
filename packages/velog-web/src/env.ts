@@ -30,7 +30,5 @@ export const ENV = env.parse({
   apiV3Host: process.env.NEXT_PUBLIC_API_V3_HOST,
   graphqlHost: process.env.NEXT_PUBLIC_GRAPHQL_HOST,
   graphqlHostNoCDN: process.env.NEXT_PUBLIC_GRAPHQL_HOST_NOCDN,
-  defaultPostTimeFrame: process.env.NEXT_PUBLIC_DEFAULT_POST_TIMEFRAME,
-  defaultPostLimit: Number(process.env.NEXT_PUBLIC_DEFAULT_POST_LIMIT),
   gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
 })
