@@ -21,7 +21,7 @@
     "prisma:rm": "rm -rf ./prisma",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
-    "prod": "pnpm ssm pull -e production && pnpm build && NODE_ENV=production node dist/src/main.js",
+    "start": "pnpm ssm pull -e production && pnpm build && NODE_ENV=production node dist/src/main.js",
     "create-service": "tsx ./scripts/createService.ts",
     "ssm": "tsx ./scripts/ssm/index.ts"
   },

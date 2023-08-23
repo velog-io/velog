@@ -15,4 +15,4 @@ RUN pnpm prisma generate
 
 EXPOSE 5004
 
-CMD ["pnpm", "prod"]
+CMD ["pnpm", "start"]
