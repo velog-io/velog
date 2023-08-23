@@ -9,6 +9,7 @@ export default async function getTrendingPosts({
   offset = 0,
 }: TrendingPostsInput) {
   try {
+    console.log(limit, timeframe, offset)
     const body = {
       operationName: 'trendingPosts',
       query: TrendingPostsDocument,
