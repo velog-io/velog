@@ -37,3 +37,7 @@ next-env.d.ts
 
 # etc
 .DS_Store
+
+# env
+!.env.development
+!.env.production
