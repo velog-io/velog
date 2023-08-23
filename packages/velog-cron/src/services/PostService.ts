@@ -46,5 +46,7 @@ export default class PostService implements Service {
         score: newScore,
       },
     })
+
+    console.log('newScore', newScore)
   }
 }

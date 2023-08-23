@@ -62,7 +62,9 @@ export class PostScoreJob {
         await this.postService.scoreCarculator(postId)
       }
     }
+
     console.timeEnd('scoreCalculation')
     console.log('Posts score calculation completed')
+    console.log(`Recalculated number of posts: ${posts.length}`)
   }
 }

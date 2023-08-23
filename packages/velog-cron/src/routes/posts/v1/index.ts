@@ -73,6 +73,10 @@ const v1: FastifyPluginCallback = (fastify, opts, done) => {
       }
     }
 
+    if (tick.length > 0) {
+      queue.push(tick)
+    }
+
     for (let i = 0; i < queue.length; i++) {
       const postIds = queue[i]
       for (const postId of postIds) {
