@@ -1,0 +1,17 @@
+const ONE_MINUTE_IN_MS = 1000 * 60
+const ONE_HOUR_IN_MS = 60 * ONE_MINUTE_IN_MS
+const ONE_DAY_IN_MS = 24 * ONE_HOUR_IN_MS
+
+const ONE_MINUTE_S = 60
+const ONE_HOUR_S = 60 * ONE_MINUTE_S
+const ONE_DAY_S = 24 * ONE_HOUR_S
+
+export const Time = {
+  ONE_MINUTE_IN_MS,
+  ONE_HOUR_IN_MS,
+  ONE_DAY_IN_MS,
+
+  ONE_MINUTE_S,
+  ONE_HOUR_S,
+  ONE_DAY_S,
+}
