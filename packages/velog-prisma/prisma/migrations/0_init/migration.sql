@@ -462,13 +462,6 @@ CREATE TABLE "external_integration_histories" (
     CONSTRAINT "external_integration_histories_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "some" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
-
-    CONSTRAINT "some_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE INDEX "IDX_548ae43e47192962c941abbc4d" ON "admin_users"("fk_user_id");
 

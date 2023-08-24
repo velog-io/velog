@@ -15,15 +15,14 @@
   "main": "main.ts",
   "type": "module",
   "scripts": {
-    "prisma:format": "tsx ./scripts/prismaFormatter.ts && pnpm prisma generate",
     "prisma:copy": "cp -R ../velog-prisma/prisma ./prisma",
     "prisma:rm": "rm -rf ./prisma",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
-    "prod": "pnpm parameter pull -e production && pnpm build && NODE_ENV=production node dist/src/main.js",
-    "start": "node ./dist/main.js",
+    "start": "pnpm ssm pull -e production && pnpm build && pnpm prod",
+    "prod": "NODE_ENV=production node dist/src/main.js",
     "codegen": "graphql-codegen --config codegen.ts",
-    "test": "npx jest",
+    "test": "NODE_ENV=test jest",
     "create-service": "tsx ./scripts/createService.ts",
     "create-mock": "tsx ./scripts/createMock.ts",
     "ssm": "tsx ./scripts/ssm/index.ts"
@@ -31,6 +30,7 @@
   "dependencies": {
     "@aws-sdk/client-ecr": "^3.379.1",
     "@aws-sdk/client-ssm": "^3.379.1",
+    "@elastic/elasticsearch": "^8.9.0",
     "@fastify/autoload": "^5.7.1",
     "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.3.0",
@@ -40,9 +40,13 @@
     "@graphql-tools/merge": "^9.0.0",
     "@graphql-tools/schema": "^10.0.0",
     "@octokit/rest": "^20.0.1",
+    "@prisma/client": "^5.2.0",
     "axios": "^1.4.0",
+    "dataloader": "^2.2.2",
+    "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.0",
     "dotenv": "^16.1.4",
-    "fastify": "^4.21.0",
+    "fastify": "^4.18.0",
     "googleapis": "^124.0.0",
     "graphql": "^16.7.1",
     "graphql-scalars": "^1.22.2",
@@ -51,7 +55,9 @@
     "lru-cache": "^10.0.0",
     "mercurius": "^13.0.0",
     "pino-pretty": "^10.0.0",
+    "prisma": "^5.2.0",
     "qs": "^6.11.2",
+    "rambda": "^8.3.0",
     "reflect-metadata": "^0.1.13",
     "remove-markdown": "^0.5.0",
     "tsc-alias": "^1.8.7",
@@ -83,8 +89,5 @@
     "ts-node": "^10.9.1",
     "ts-paths-esm-loader": "^1.4.3",
     "typescript": "^5.1.6"
-  },
-  "resolutions": {
-    "graphql": "^16.7.1"
   }
 }

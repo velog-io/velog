@@ -8,3 +8,5 @@ export type GetPostsByTypeParams = {
   userId: string
   limit: number
 }
+
+export type Timeframe = 'day' | 'week' | 'month' | 'year'

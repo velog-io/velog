@@ -296,6 +296,7 @@ model Post {
   @@index([released_at(sort: Desc), id(sort: Desc)], map: "posts_released_at_idx")
   @@index([tsv], map: "posts_tsv", type: Gin)
   @@index([url_slug], map: "posts_url_slug")
+  @@index([score(sort: Desc)], map: "posts_score")
   @@map("posts")
 }
 
@@ -598,8 +599,4 @@ model ExternalIntegrationHistory {
   @@index([fk_user_id])
   @@index([app_identifier])
   @@map("external_integration_histories")
-}
-
-model some {
-  id String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
 }

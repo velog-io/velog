@@ -10,10 +10,12 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
     /^https:\/\/prod.velog.io$/,
     /https:\/\/(.*)--velog.netlify.com/,
     /https:\/\/velog.graphcdn.app/,
+    /^https:\/\/velog.pro$/, // stage
   ]
 
-  if (ENV.appEnv === 'development') {
+  if (ENV.appEnv !== 'production') {
     corsWhitelist.push(/^http:\/\/localhost/)
+    corsWhitelist.push(/^https:\/\/velog.pro$/)
   }
 
   fastify.register(cors, {

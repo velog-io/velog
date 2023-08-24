@@ -1,4 +1,4 @@
-import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from '@constants/timeConstants.js'
+import { Time } from '@constants/TimeConstants'
 import { ENV } from '@env'
 import { CookieService } from '@lib/cookie/CookieService.js'
 import { DbService } from '@lib/db/DbService.js'
@@ -36,10 +36,10 @@ export default async function socialCallback(
 
     const tokens = await jwtService.generateUserToken(user.id)
     cookie.setCookie(reply, 'access_token', tokens.accessToken, {
-      maxAge: ONE_HOUR_IN_MS,
+      maxAge: Time.ONE_HOUR_IN_MS,
     })
     cookie.setCookie(reply, 'refresh_token', tokens.refreshToken, {
-      maxAge: ONE_DAY_IN_MS * 30,
+      maxAge: Time.ONE_DAY_IN_MS * 30,
     })
 
     const redirectUrl = ENV.clientHost

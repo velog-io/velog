@@ -1,8 +1,8 @@
 import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
 import { ENV } from '../../env'
-import { Input } from '@pulumi/pulumi'
 import { PackageType } from '../type.d'
+import { portMapper } from '../lib/portMapper'
 
 type CreateSecurityGroupParameter = {
   vpcId: Promise<string>
@@ -42,10 +42,6 @@ export const createSecurityGroup = ({ vpcId, packageType }: CreateSecurityGroupP
   })
 
   const taskSecurityGroupName = withPrefix(`${packageType}-task-sg`)
-  const portMapper = {
-    web: ENV.webPort,
-    server: ENV.serverPort,
-  }
 
   const port = portMapper[packageType]
   const taskSecurityGroup = new aws.ec2.SecurityGroup(taskSecurityGroupName, {

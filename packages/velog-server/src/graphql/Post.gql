@@ -73,20 +73,20 @@ type Query {
   # getStats(post_id: ID!): Stats
 }
 
-# type Mutation {
-#   writePost(input: WritePostInput!): Post
-#   editPost(input: EditPostInput): Post
-#   createPostHistory(
-#     post_id: ID!
-#     title: String!
-#     body: String!
-#     is_markdown: Boolean!
-#   ): PostHistory
-#   # removePost(id: ID!): Boolean
-#   # likePost(id: ID!): Post
-#   # unlikePost(id: ID!): Post
-#   # postView(id: ID!): Boolean
-# }
+type Mutation {
+  # writePost(input: WritePostInput!): Post
+  # editPost(input: EditPostInput): Post
+  # createPostHistory(
+  #   post_id: ID!
+  #   title: String!
+  #   body: String!
+  #   is_markdown: Boolean!
+  # ): PostHistory
+  # removePost(id: ID!): Boolean
+  likePost(input: LikePostInput!): Post
+  # unlikePost(id: ID!): Post
+  # postView(id: ID!): Boolean
+}
 
 # input WritePostInput {
 #   title: String
@@ -136,4 +136,8 @@ input TrendingPostsInput {
   offset: Int
   limit: Int
   timeframe: String
+}
+
+input LikePostInput {
+  postId: ID
 }

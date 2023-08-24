@@ -1,6 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
 import { injectable, singleton } from 'tsyringe'
-import { ONE_DAY_IN_MS } from '@constants/timeConstants.js'
+import { Time } from '@constants/TimeConstants.js'
 import { ENV } from '@env'
 import { DbService } from '@lib/db/DbService.js'
 
@@ -77,7 +77,7 @@ export class JwtService {
     const now = new Date().getTime()
     const diff = refreshTokenExp * 1000 - now
     let refreshToken = originalRefreshToken
-    if (diff < ONE_DAY_IN_MS * 23) {
+    if (diff < Time.ONE_DAY_IN_MS * 23) {
       refreshToken = await this.generateToken(
         {
           user_id: userId,

@@ -1,10 +1,26 @@
+import { ENV } from '@env'
 import { dirname, join } from 'path'
 import { injectable, singleton } from 'tsyringe'
 import { fileURLToPath } from 'url'
+import { utcToZonedTime } from 'date-fns-tz'
+
+interface Service {
+  resolveDir(dir: string): string
+  escapeForUrl(text: string): string
+  checkEmpty(text: string): boolean
+  normalize<T extends Partial<T> & { id: string }>(
+    array: T[],
+    selector: (item: T) => string | number
+  ): {
+    [key: string]: T
+  }
+  shuffle<T>(array: T[]): T[]
+  groupById<T>(order: string[], data: T[], idResolver: (row: T) => string): T[][]
+}
 
 @injectable()
 @singleton()
-export class UtilsService {
+export class UtilsService implements Service {
   public resolveDir(dir: string): string {
     const __filename = fileURLToPath(import.meta.url)
     const splited = dirname(__filename).split('/src')
@@ -22,7 +38,7 @@ export class UtilsService {
       .replace(/--+/g, '-')
       .replace(/\.+$/, '')
   }
-  public checkEmpty(text: string) {
+  public checkEmpty(text: string): boolean {
     if (!text) return true
     const replaced = text
       .trim()
@@ -60,5 +76,33 @@ export class UtilsService {
       array[randomIndex] = temporaryValue
     }
     return array
+  }
+  public groupById<T>(order: string[], data: T[], idResolver: (row: T) => string): T[][] {
+    const map: {
+      [key: string]: T[]
+    } = {}
+    // creates array for every key
+    order.forEach((id) => {
+      map[id] = []
+    })
+    data.forEach((row) => {
+      map[idResolver(row)].push(row)
+    })
+    const ordered = order.map((id) => map[id])
+    return ordered
+  }
+  public checkUnscore(text: string): boolean {
+    const unscoredCategory = ENV.unscoredCategory.split(',')
+    const unscoredWords = ENV.unscoredWords.split(',')
+
+    const lowerText = text.toLowerCase().replace(/ /g, '')
+    const isUnscoredCategory = unscoredCategory.some((category) => lowerText.includes(category))
+    const hasUnscoredWords = unscoredWords.some((word) => lowerText.includes(word))
+    return isUnscoredCategory && hasUnscoredWords
+  }
+  public get now() {
+    const utcTime = new Date()
+    const timezone = 'Asia/Seoul'
+    return utcToZonedTime(utcTime, timezone)
   }
 }

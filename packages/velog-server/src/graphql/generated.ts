@@ -5,8 +5,8 @@ import {
   UserProfile as UserProfileModel,
   Post as PostModel,
 } from '@prisma/client'
-import { GraphQLContext } from '../common/interfaces/graphql'
-export type Maybe<T> = T | undefined | null
+import { GraphQLContext } from './../common/interfaces/graphql'
+export type Maybe<T> = T | null
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
@@ -43,13 +43,22 @@ export type Comment = {
   user?: Maybe<User>
 }
 
+export type LikePostInput = {
+  postId?: InputMaybe<Scalars['ID']['input']>
+}
+
 export type LinkedPosts = {
   next?: Maybe<Post>
   previous?: Maybe<Post>
 }
 
 export type Mutation = {
+  likePost?: Maybe<Post>
   logout: Scalars['Boolean']['output']
+}
+
+export type MutationLikePostArgs = {
+  input: LikePostInput
 }
 
 export type Post = {
@@ -313,6 +322,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
   Int: ResolverTypeWrapper<Scalars['Int']['output']>
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
+  LikePostInput: LikePostInput
   LinkedPosts: ResolverTypeWrapper<
     Omit<LinkedPosts, 'next' | 'previous'> & {
       next?: Maybe<ResolversTypes['Post']>
@@ -361,6 +371,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID']['output']
   Int: Scalars['Int']['output']
   JSON: Scalars['JSON']['output']
+  LikePostInput: LikePostInput
   LinkedPosts: Omit<LinkedPosts, 'next' | 'previous'> & {
     next?: Maybe<ResolversParentTypes['Post']>
     previous?: Maybe<ResolversParentTypes['Post']>
@@ -427,6 +438,12 @@ export type MutationResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
 > = {
+  likePost?: Resolver<
+    Maybe<ResolversTypes['Post']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationLikePostArgs, 'input'>
+  >
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
 }
 

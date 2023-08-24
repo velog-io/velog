@@ -6,6 +6,8 @@ import { PostIncludeComment, PostIncludeUser } from '@services/PostService/PostS
 import removeMd from 'remove-markdown'
 import { CommentService } from '@services/CommentService/index.js'
 import { Post } from '@prisma/client'
+import { PostLikeService } from '@services/PostLikeService/index.js'
+import { DbService } from '@lib/db/DbService.js'
 
 const postResolvers: Resolvers = {
   Post: {
@@ -35,6 +37,17 @@ const postResolvers: Resolvers = {
       const count = await commentService.count(parent.id)
       return count
     },
+    liked: async (parent: Post, args: any, ctx) => {
+      if (!ctx.user) return false
+      const db = container.resolve(DbService)
+      const liked = await db.postLike.findFirst({
+        where: {
+          fk_post_id: parent.id,
+          fk_user_id: ctx.user.id,
+        },
+      })
+      return !!liked
+    },
   },
   Query: {
     post: async (_, { input }, ctx) => {
@@ -52,6 +65,12 @@ const postResolvers: Resolvers = {
     readingList: async (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
       return await postService.getReadingList(input, ctx.user?.id)
+    },
+  },
+  Mutation: {
+    likePost: async (_, { input }, ctx): Promise<Post> => {
+      const postLikeService = container.resolve(PostLikeService)
+      return await postLikeService.likePost(input.postId, ctx.user?.id)
     },
   },
 }

@@ -1,8 +1,8 @@
 import { PackageType } from './../type.d'
 import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
-import { ENV } from '../../env'
 import { SecurityGroup } from '@pulumi/aws/ec2'
+import { portMapper } from '../lib/portMapper'
 
 type CreateLoadBalancerParameter = {
   vpcId: Promise<string>
@@ -29,10 +29,6 @@ export const createLoadBalancer = ({
     },
   })
 
-  const portMapper = {
-    web: ENV.webPort,
-    server: ENV.serverPort,
-  }
   const port = portMapper[packageType]
 
   const targetGroupName = withPrefix(`${packageType}-tg`)

@@ -1,0 +1,40 @@
+name: Velog Web build workdflow
+
+on:
+  push:
+    branches: ['main', 'development', 'hotfix']
+    paths:
+      - 'packages/velog-web/**'
+      - '.github/workflows/velog-web-build.yml'
+  pull_request:
+    branches: ['main', 'development', 'hotfix']
+    paths:
+      - 'packages/velog-web/**'
+      - '.github/workflows/velog-web-build.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.16]
+    defaults:
+      run:
+        working-directory: './packages/velog-web'
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.6.12
+      - name: Setup Node.js v${{ matrix.node-version }}
+        uses: actions/setup-node@v3.7.0
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build

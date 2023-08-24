@@ -1,4 +1,4 @@
-export type PackageType = 'web' | 'server'
+export type PackageType = 'web' | 'server' | 'cron'
 
 export type CreateInfraParameter = {
   vpcId: Promise<string>

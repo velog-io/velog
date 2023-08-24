@@ -1,4 +1,4 @@
-import { Post, Prisma } from '@prisma/client'
+import { Post, Prisma, Tag } from '@prisma/client'
 import { container, injectable, singleton } from 'tsyringe'
 import {
   ReadPostInput,
@@ -8,10 +8,13 @@ import {
 } from '@graphql/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { BadRequestError, UnauthorizedError } from '@errors/index.js'
-import { GetPostsByTypeParams } from './PostServiceInterface'
+import { GetPostsByTypeParams, Timeframe } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { PostReadLogService } from '@services/PostReadLogService/index.js'
+import { pick } from 'rambda'
+import { JsonValue } from '@prisma/client/runtime/library'
+import { subDays, subMonths, subYears } from 'date-fns'
 
 interface Service {
   postsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
@@ -19,6 +22,7 @@ interface Service {
   getRecentPosts(input: RecentPostsInput, userId: string | undefined): Promise<Post[]>
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
   getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>
+  serializePost(post: SerializedPostParam): SerializedPost
 }
 
 @injectable()
@@ -232,23 +236,12 @@ export class PostService implements Service {
     }
   }
   public async getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]> {
-    const { offset = 0, limit = 20, timeframe = 'month' } = input
+    const { offset = 0, limit = 20, timeframe = 'week' } = input
 
-    const timeframes: [string, number][] = [
-      ['day', 1],
-      ['week', 7],
-      ['month', 30],
-      ['year', 365],
-    ]
+    const timeframes: Timeframe[] = ['day', 'week', 'month', 'year']
 
-    const selectedTimeframe = timeframes.find(([text]) => text === timeframe)
-
-    if (!selectedTimeframe) {
+    if (!timeframes.includes(timeframe as Timeframe)) {
       throw new BadRequestError('Invalid timeframe')
-    }
-
-    if (timeframe === 'year') {
-      console.log('trendingPosts - year', { offset, limit, ip })
     }
 
     if (timeframe === 'year' && offset > 1000) {
@@ -260,39 +253,42 @@ export class PostService implements Service {
       throw new BadRequestError('Limit is too high')
     }
 
-    let ids: string[] = []
-    const cacheKey = this.cache.generateKey.trending(selectedTimeframe[0], offset, limit)
+    const cacheKey = this.cache.generateKey.trending(timeframe, offset, limit)
+    let postIds: string[] | undefined = this.cache.lruCache.get(cacheKey)
+    if (!postIds) {
+      const now = this.utils.now
 
-    const cachedIds = this.cache.lruCache.get(cacheKey)
-    if (cachedIds) {
-      ids = cachedIds
-    } else {
-      try {
-        const rows = (await this.db.$queryRaw(Prisma.sql`
-        select posts.id, posts.title, SUM(score) as score from post_scores
-        inner join posts on post_scores.fk_post_id = posts.id
-        where post_scores.created_at > now() - interval '1 day' * ${selectedTimeframe[1]}
-        and posts.released_at > now() - (interval '1 day' * ${
-          selectedTimeframe[1]
-        }) - (interval '1 hour' * ${selectedTimeframe[1] * 12})
-        group by posts.id
-        order by score desc, posts.id desc
-        offset ${offset}
-        limit ${limit}
-      `)) as { id: string; score: number }[]
-
-        ids = rows.map((row) => row.id)
-        this.cache.lruCache.set(cacheKey, ids)
-      } catch (error) {
-        console.log(error)
-        return []
+      const timeMapper: Record<Timeframe, Date> = {
+        day: subDays(now, 1),
+        week: subDays(now, 7),
+        month: subMonths(now, 1),
+        year: subYears(now, 1),
       }
+
+      const since = timeMapper[timeframe as Timeframe]
+      const posts = await this.db.post.findMany({
+        where: {
+          released_at: {
+            gte: since,
+          },
+        },
+        select: {
+          id: true,
+        },
+        orderBy: {
+          [timeframe === 'year' ? 'likes' : 'score']: 'desc',
+        },
+        take: limit,
+        skip: offset,
+      })
+
+      postIds = posts.map((post) => post.id)
+      this.cache.lruCache.set(cacheKey, postIds)
     }
 
-    const posts = await this.postsByIds(ids, { user: { include: { profile: true } } })
-
+    const posts = await this.postsByIds(postIds, { user: { include: { profile: true } } })
     const normalized = this.utils.normalize(posts)
-    const ordered = ids.map((id) => normalized[id])
+    const ordered = postIds.map((id) => normalized[id])
     return ordered
   }
   public async getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null> {
@@ -375,4 +371,90 @@ export class PostService implements Service {
 
     return post
   }
+  public serializePost(post: SerializedPostParam): SerializedPost {
+    const picked = pick(
+      [
+        'id',
+        'title',
+        'body',
+        'thumbnail',
+        'user',
+        'is_private',
+        'released_at',
+        'likes',
+        'views',
+        'meta',
+        'url_slug',
+        'tags',
+      ],
+      post
+    )
+    return {
+      ...picked,
+      // _id: picked.id,
+      // objectID: picked.id,
+      body: picked.body!.slice(0, 8000),
+      user: {
+        id: picked.user.id,
+        username: picked.user.username,
+        profile: {
+          id: picked.user.profile!.id,
+          display_name: picked.user.profile!.display_name!,
+          thumbnail: picked.user.profile!.thumbnail!,
+        },
+      },
+      tags: picked.tags.map((tag) => tag.name || '').filter(Boolean),
+    }
+  }
+}
+
+type SerializedPostParam = Prisma.PostGetPayload<{
+  include: {
+    id: true
+    title: true
+    body: true
+    thumbnail: true
+    is_private: true
+    released_at: true
+    likes: true
+    views: true
+    meta: true
+    url_slug: true
+    user: {
+      select: {
+        id: true
+        username: true
+        profile: {
+          select: {
+            id: true
+            display_name: true
+            thumbnail: true
+          }
+        }
+      }
+    }
+  }
+}> & { tags: Tag[] }
+
+export type SerializedPost = {
+  id: string
+  title: string | null
+  body: string | null
+  thumbnail: string | null
+  is_private: boolean
+  released_at: Date | null
+  views: number | null
+  likes: number | null
+  meta: JsonValue | null
+  url_slug: string | null
+  user: {
+    id: string
+    username: string
+    profile: {
+      id: string
+      display_name: string
+      thumbnail: string
+    }
+  }
+  tags: string[]
 }

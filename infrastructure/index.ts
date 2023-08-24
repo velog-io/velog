@@ -1,9 +1,14 @@
-import { createWebInfra } from './src/web/index'
-import { createServerInfra } from './src/server/index'
+import { createWebInfra } from './src/packages/web/index'
+import { createServerInfra } from './src/packages/server/index'
 import { ENV } from './env'
 import * as aws from '@pulumi/aws'
 
 import { createVPC } from './src/common/vpc'
+import { getCertificate } from './src/common/certificate'
+import { createCronInfra } from './src/packages/cron'
+import { execCommand } from './src/lib/execCommand'
+
+execCommand('pnpm -r prisma:copy')
 
 // VPC, Subnet, DHCP, Intergate way, route Table
 const { subnets, vpc } = createVPC()
@@ -19,13 +24,9 @@ const defaultSecurityGroup = vpcId.then((id) =>
 )
 export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
 
-// Certificate
-const certificate = aws.acm.getCertificate({
-  domain: ENV.certificateDomain,
-})
-export const certificateArn = certificate.then((certificate) => certificate.arn)
+const certificateArn = getCertificate(ENV.certificateDomain)
 
-// Create Sever Infra
+// Create SEVER Infra
 export const { repoUrl: serverRepoUrl } = createServerInfra({
   vpcId,
   subnetIds,
@@ -40,3 +41,13 @@ export const { repoUrl: webRepoUrl } = createWebInfra({
   certificateArn,
   defaultSecurityGroupId,
 })
+
+// Create CRON Infra
+export const { repoUrl: cronRepoUrl } = createCronInfra({
+  vpcId,
+  subnetIds,
+  certificateArn,
+  defaultSecurityGroupId,
+})
+
+execCommand('pnpm -r prisma:rm')

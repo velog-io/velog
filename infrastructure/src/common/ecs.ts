@@ -8,27 +8,8 @@ import { ENV } from '../../env'
 import { SecurityGroup } from '@pulumi/aws/ec2'
 import { TargetGroup } from '@pulumi/aws/alb'
 import { PackageType } from '../type'
-
-const serverEcsOption: EcsOption = {
-  desiredCount: ENV.isProduction ? 2 : 1,
-  cpu: 256,
-  memory: 512,
-  maxCapacity: 1,
-  minCapacity: ENV.isProduction ? 3 : 1,
-}
-
-const webEcsOption: EcsOption = {
-  desiredCount: ENV.isProduction ? 2 : 1,
-  cpu: 256,
-  memory: 512,
-  maxCapacity: 1,
-  minCapacity: ENV.isProduction ? 3 : 1,
-}
-
-const ecsOption = {
-  web: webEcsOption,
-  server: serverEcsOption,
-}
+import { portMapper } from '../lib/portMapper'
+import { ecsOption } from '../lib/ecsOptions'
 
 export const createECSfargateService = ({
   image,
@@ -41,12 +22,7 @@ export const createECSfargateService = ({
   const option = ecsOption[packageType]
   const cluster = new aws.ecs.Cluster(withPrefix(`${packageType}-cluster`))
 
-  const portMappper = {
-    web: ENV.webPort,
-    server: ENV.serverPort,
-  }
-
-  const port = portMappper[packageType]
+  const port = portMapper[packageType]
 
   const service = new awsx.ecs.FargateService(withPrefix(`${packageType}-fargate-service`), {
     cluster: cluster.arn,
@@ -143,12 +119,4 @@ type CreateECSFargateParams = {
   targetGroup: TargetGroup
   port: number
   packageType: PackageType
-}
-
-type EcsOption = {
-  desiredCount: number
-  cpu: number
-  memory: number
-  maxCapacity: number
-  minCapacity: number
 }
