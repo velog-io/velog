@@ -1,4 +1,3 @@
--- CreateExtension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- CreateTable
@@ -218,7 +217,7 @@ CREATE TABLE "posts" (
     "thumbnail" VARCHAR(500),
     "is_markdown" BOOLEAN,
     "is_temp" BOOLEAN,
-    "fk_user_id" UUID NOT NULL,
+    "fk_user_id" UUID,
     "original_post_id" UUID,
     "url_slug" VARCHAR(255),
     "likes" INTEGER DEFAULT 0,
@@ -419,7 +418,7 @@ CREATE TABLE "user_thumbnails" (
 -- CreateTable
 CREATE TABLE "users" (
     "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
-    "username" VARCHAR(255) NOT NULL,
+    "username" VARCHAR(255),
     "email" VARCHAR(255),
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -438,28 +437,6 @@ CREATE TABLE "velog_configs" (
     "fk_user_id" UUID NOT NULL,
 
     CONSTRAINT "PK_24f36353fb78d23293b7a3f15df" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "external_integrations" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
-    "code" VARCHAR(64) NOT NULL,
-    "is_consumed" BOOLEAN NOT NULL DEFAULT false,
-    "app_identifier" VARCHAR(64) NOT NULL,
-    "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "fk_user_id" UUID NOT NULL,
-
-    CONSTRAINT "external_integrations_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "external_integration_histories" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
-    "app_identifier" VARCHAR(64) NOT NULL,
-    "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "fk_user_id" UUID NOT NULL,
-
-    CONSTRAINT "external_integration_histories_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -658,9 +635,6 @@ CREATE INDEX "IDX_db3cf1ab4238e91d026b5a8977" ON "user_images_next"("created_at"
 CREATE INDEX "user_meta_fk_user_id" ON "user_meta"("fk_user_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_profiles_fk_user_id_key" ON "user_profiles"("fk_user_id");
-
--- CreateIndex
 CREATE INDEX "user_profiles_fk_user_id" ON "user_profiles"("fk_user_id");
 
 -- CreateIndex
@@ -677,24 +651,6 @@ CREATE INDEX "users_username" ON "users"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "REL_8b5be783e08f563452ec0c489e" ON "velog_configs"("fk_user_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "external_integrations_code_key" ON "external_integrations"("code");
-
--- CreateIndex
-CREATE INDEX "external_integrations_fk_user_id_idx" ON "external_integrations"("fk_user_id");
-
--- CreateIndex
-CREATE INDEX "external_integrations_app_identifier_idx" ON "external_integrations"("app_identifier");
-
--- CreateIndex
-CREATE INDEX "external_integration_histories_fk_user_id_idx" ON "external_integration_histories"("fk_user_id");
-
--- CreateIndex
-CREATE INDEX "external_integration_histories_app_identifier_idx" ON "external_integration_histories"("app_identifier");
-
--- CreateIndex
-CREATE UNIQUE INDEX "external_integration_histories_app_identifier_fk_user_id_key" ON "external_integration_histories"("app_identifier", "fk_user_id");
 
 -- AddForeignKey
 ALTER TABLE "admin_users" ADD CONSTRAINT "FK_548ae43e47192962c941abbc4d1" FOREIGN KEY ("fk_user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
@@ -830,10 +786,4 @@ ALTER TABLE "user_thumbnails" ADD CONSTRAINT "user_thumbnails_fk_user_id_fkey" F
 
 -- AddForeignKey
 ALTER TABLE "velog_configs" ADD CONSTRAINT "FK_8b5be783e08f563452ec0c489e1" FOREIGN KEY ("fk_user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "external_integrations" ADD CONSTRAINT "external_integrations_fk_user_id_fkey" FOREIGN KEY ("fk_user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "external_integration_histories" ADD CONSTRAINT "external_integration_histories_fk_user_id_fkey" FOREIGN KEY ("fk_user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 

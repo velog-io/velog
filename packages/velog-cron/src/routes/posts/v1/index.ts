@@ -79,6 +79,7 @@ const v1: FastifyPluginCallback = (fastify, opts, done) => {
 
     for (let i = 0; i < queue.length; i++) {
       const postIds = queue[i]
+      console.log(`${i} / ${queue.length}`)
       for (const postId of postIds) {
         await postService.scoreCarculator(postId)
       }
