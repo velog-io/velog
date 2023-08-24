@@ -12,19 +12,18 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.16]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
         with:
-          version: latest
-
-      - name: Setup Node.js
+          version: 8.6.12
+      - name: Setup Node.js v${{ matrix.node-version }}
         uses: actions/setup-node@v3.7.0
         with:
-          node-version: 18.16
+          node-version: ${{ matrix.node-version }}
 
       - name: Install Dependencies
         run: pnpm install
@@ -36,8 +35,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Install Dependencies
-        run: pnpm parameter pull -e prodcution
+      - name: Install .env.production
+        run: pnpm ssm pull -e prodcution
         working-directory: ./infrastructure
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
