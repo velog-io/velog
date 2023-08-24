@@ -11,13 +11,6 @@
 # build
 /dist
 
-#env
-/env/*
-.env
-!/env/.gitkeep
-!/env/.env.test
-!/env/.env.example
-
 # docker
 /dockers/docker/data
 

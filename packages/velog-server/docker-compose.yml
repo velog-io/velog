@@ -5,7 +5,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     env_file:
-      - .env
+      - ./env/.env.production
     tty: true
     stdin_open: true
     ports:
