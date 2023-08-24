@@ -1,8 +1,8 @@
 import dotenv from 'dotenv'
-import { container } from 'tsyringe'
-import { UtilsService } from '@lib/utils/UtilsService.js'
 import { existsSync } from 'fs'
 import { z } from 'zod'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 
 export type Envrionment = 'development' | 'test' | 'stage' | 'production'
 export type EnvFiles = Record<Envrionment, string>
@@ -16,10 +16,16 @@ const envFiles: EnvFiles = {
 
 const appEnv = (process.env.NODE_ENV as Envrionment) || 'development'
 const envFile = envFiles[appEnv]
-const utils = container.resolve(UtilsService)
 const prefix = appEnv === 'production' ? '../env' : './env'
 
-const configPath = utils.resolveDir(`${prefix}/${envFile}`)
+function resolveDir(dir: string): string {
+  const __filename = fileURLToPath(import.meta.url)
+  const splited = dirname(__filename).split('/src')
+  const cwd = splited.slice(0, -1).join('/src')
+  return join(cwd, dir)
+}
+
+const configPath = resolveDir(`${prefix}/${envFile}`)
 
 if (!existsSync(configPath)) {
   console.log(`Read target: ${configPath}`)
@@ -69,3 +75,5 @@ export const ENV = env.parse({
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleSecret: process.env.GOOGLE_SECRET,
 })
+
+export type EnvVars = z.infer<typeof env>
