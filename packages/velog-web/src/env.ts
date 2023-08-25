@@ -15,7 +15,7 @@ const env = z.object({
   apiV3Host: z.string(),
   graphqlHost: z.string(),
   graphqlHostNoCDN: z.string(),
-  defaultPostTimeFrame: z.string().default('week'),
+  defaultPostTimeFrame: z.string().default('month'),
   defaultPostLimit: z.number().default(24),
   gaMeasurementId: z.string(),
 })

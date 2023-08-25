@@ -1,13 +1,13 @@
 import { sangte, useSangteActions, useSangteValue } from 'sangte'
 
-export type Timeframe = 'day' | 'week' | 'month' | 'year'
+export type Timeframe = 'month'
 type TimeframeState = {
   timeframe: Timeframe
   isFetching: boolean
 }
 
 const initialState: TimeframeState = {
-  timeframe: 'week',
+  timeframe: 'month',
   isFetching: false,
 }
 

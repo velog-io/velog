@@ -22,7 +22,7 @@ type Props = {
 function HomeTab({ isFloatingHeader = false }: Props) {
   const pathname = usePathname()
   const params = useParams()
-  const timeframe = params.timeframe ?? 'week'
+  const timeframe = params.timeframe ?? 'month'
 
   const [moreButton, toggleMoreButton] = useToggle(false)
   const [timeframePicker, toggleTimeframePicker] = useToggle(false)
@@ -40,7 +40,7 @@ function HomeTab({ isFloatingHeader = false }: Props) {
       <div className={cx('left')}>
         <div className={cx('block')}>
           <ActiveLink
-            href="/trending/week"
+            href="/trending/month"
             className={cx({
               active: pathname === '/' || pathname.includes('/trending'),
             })}
@@ -61,13 +61,13 @@ function HomeTab({ isFloatingHeader = false }: Props) {
           />
         </div>
         {(pathname === '/' || pathname.includes('/trending')) && (
-          <>
+          <div className={cx('hide')}>
             <div className={cx('selector')} onClick={handleToggle} ref={timeframeRef}>
               {timeframes.find((t) => t[0] === timeframe)![1]}
               <MdArrowDropDown />
             </div>
             <TimeframePicker isVisible={timeframePicker} onClose={toggleTimeframePicker} />
-          </>
+          </div>
         )}
       </div>
       <MdMoreVert onClick={toggleMoreButton} className={cx('extra')} />
