@@ -32,7 +32,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - run: pnpm install
-      - run: pnpm prisma:copy && npx prisma generate
+      - run: pnpm prisma:copy
+      - run: pnpm prisma generate
 
       - run: pnpm ssm pull -e test
         env:
