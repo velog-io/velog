@@ -19,8 +19,9 @@ export class PostScoreJob {
     this.jobInProgress = false
   }
   public async scoreCalculation() {
-    console.log('Posts score calculation started...')
-    console.time('scoreCalculation')
+    console.log('Posts score calculation start...')
+
+    console.time('score calculation')
     const utcTime = new Date()
     const timezone = 'Asia/Seoul'
     const tz = utcToZonedTime(utcTime, timezone)
@@ -33,7 +34,9 @@ export class PostScoreJob {
         likes: {
           gte: 1,
         },
-        score: 10,
+        score: {
+          gte: 10,
+        },
         released_at: {
           gte: startOfToday,
           lte: endOfToday,
@@ -43,6 +46,8 @@ export class PostScoreJob {
         id: true,
       },
     })
+
+    console.log('target post count:', posts.length)
 
     const queue: string[][] = []
     let tick: string[] = []
@@ -56,14 +61,19 @@ export class PostScoreJob {
       }
     }
 
+    if (tick.length > 0) {
+      queue.push(tick)
+    }
+
     for (let i = 0; i < queue.length; i++) {
       const postIds = queue[i]
+      console.log(`${i} / ${queue.length}`)
       for (const postId of postIds) {
         await this.postService.scoreCarculator(postId)
       }
     }
 
-    console.timeEnd('scoreCalculation')
+    console.timeEnd('score calculation')
     console.log('Posts score calculation completed')
     console.log(`Recalculated number of posts: ${posts.length}`)
   }
