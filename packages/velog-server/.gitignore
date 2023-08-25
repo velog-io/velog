@@ -16,3 +16,7 @@
 
 # prisma
 prisma
+
+# test
+!test/**/*
+!test/*

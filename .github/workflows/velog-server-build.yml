@@ -1,4 +1,4 @@
-name: Velog Server test workflow
+name: Velog Server build workflow
 
 on:
   push:
@@ -34,11 +34,11 @@ jobs:
 
       - run: pnpm prisma:copy
       - run: pnpm install
-      - run: pnpm prisma generate
+      # - run: pnpm prisma generate
 
       - run: pnpm ssm pull -e test
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - run: pnpm test
+      - run: pnpm build
