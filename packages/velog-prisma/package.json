@@ -24,9 +24,11 @@
   },
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.391.0",
+    "@prisma/client": "^5.2.0",
     "dotenv": "^16.3.1",
     "dotenv-cli": "^7.2.1",
     "inquirer": "^9.2.7",
+    "prisma": "^5.2.0",
     "tsx": "^3.12.7",
     "zod": "^3.22.1"
   },

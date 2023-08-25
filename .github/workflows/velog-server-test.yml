@@ -11,11 +11,8 @@ on:
     paths:
       - 'packages/velog-server/**'
       - '.github/workflows/velog-server-test.yml'
-env:
-  PNPM_CACHE_FOLDER: .pnpm-store
-
 jobs:
-  test:
+  server-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -37,7 +34,9 @@ jobs:
       - run: pnpm prisma:copy && npx prisma generate
       - run: pnpm install
 
-      - run: pnpm test
+      - run: pnpm ssm pull -e test
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - run: pnpm test

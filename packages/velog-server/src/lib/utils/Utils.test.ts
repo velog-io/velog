@@ -5,7 +5,7 @@ describe('Utils', () => {
   container.reset()
   const utils = container.resolve(UtilsService)
   it('[resolveDir]', () => {
-    const path = '/env/.env.developent'
+    const path = '/env/.env.development'
     expect(utils.resolveDir(path)).toContain(path)
   })
   it('[escapeForUrl]', () => {

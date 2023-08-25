@@ -32,9 +32,5 @@
     "lint-staged": "^13.2.3",
     "pnpm": "^8.6.5",
     "prettier": "^2.8.8"
-  },
-  "dependencies": {
-    "@prisma/client": "^5.1.1",
-    "prisma": "^5.1.1"
   }
 }
