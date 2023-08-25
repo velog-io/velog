@@ -15,7 +15,11 @@ import HomeMoreButton from '@/features/home/components/HomeMoreButton'
 
 const cx = bindClassNames(styles)
 
-function HomeTab() {
+type Props = {
+  isFloatingHeader?: boolean
+}
+
+function HomeTab({ isFloatingHeader = false }: Props) {
   const pathname = usePathname()
   const params = useParams()
   const timeframe = params.timeframe ?? 'week'
@@ -32,7 +36,7 @@ function HomeTab() {
   }
 
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx('wrapper', { noMargin: isFloatingHeader })}>
       <div className={cx('left')}>
         <div className={cx('block')}>
           <ActiveLink

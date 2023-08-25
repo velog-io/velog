@@ -1,20 +1,12 @@
 .block {
   display: flex;
-  flex-flow: column nowrap;
-  width: 1728px;
-  margin: 0 auto;
-  height: 100%;
+  justify-content: center;
 
-  @media screen and (max-width: 1919px) {
-    width: 1376px;
-  }
-
-  @media screen and (max-width: 1440px) {
-    width: 1024px;
-  }
-
-  @media screen and (max-width: 1056px) {
-    width: calc(100% - 32px);
+  .innerBlock {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 0 auto;
+    height: 100%;
   }
 }
 
