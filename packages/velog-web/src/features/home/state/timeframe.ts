@@ -1,6 +1,6 @@
 import { sangte, useSangteActions, useSangteValue } from 'sangte'
 
-export type Timeframe = 'month'
+export type Timeframe = 'day' | 'week' | 'month' | 'year'
 type TimeframeState = {
   timeframe: Timeframe
   isFetching: boolean
