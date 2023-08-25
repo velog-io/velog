@@ -22,7 +22,7 @@
     "start": "pnpm ssm pull -e production && pnpm build && pnpm prod",
     "prod": "NODE_ENV=production node dist/src/main.js",
     "codegen": "graphql-codegen --config codegen.ts",
-    "test": "jest --detectOpenHandles",
+    "test": "pnpm ssm pull -e test && npx jest --detectOpenHandles",
     "create-service": "tsx ./scripts/createService.ts",
     "create-mock": "tsx ./scripts/createMock.ts",
     "ssm": "tsx ./scripts/ssm/index.ts"
