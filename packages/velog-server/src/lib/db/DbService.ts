@@ -1,3 +1,4 @@
+import { ENV } from '@env'
 import { PrismaClient } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 
