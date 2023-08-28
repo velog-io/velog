@@ -11,7 +11,10 @@ interface Service {
 
 @injectable()
 export class PostsTagsService implements Service {
-  constructor(private readonly db: DbService, private readonly utils: UtilsService) {}
+  constructor(
+    private readonly db: DbService,
+    private readonly utils: UtilsService,
+  ) {}
   // public async getPostsByTag({
   //   tagName,
   //   cursor,
@@ -46,7 +49,7 @@ export class PostsTagsService implements Service {
         .groupById<Prisma.PostTagGetPayload<{ include: { tag: true } }>>(
           postIds as string[],
           postsTags,
-          (pt) => pt.fk_post_id!
+          (pt) => pt.fk_post_id!,
         )
         .map((array) => array.map((pt) => pt.tag))
     })

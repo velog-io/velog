@@ -31,7 +31,7 @@ export class PostService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly cache: CacheService,
-    private readonly utils: UtilsService
+    private readonly utils: UtilsService,
   ) {
     console.log('this', this.db)
   }
@@ -51,7 +51,7 @@ export class PostService implements Service {
   }
   public async getReadingList(
     input: ReadingListInput,
-    userId: string | undefined
+    userId: string | undefined,
   ): Promise<Post[]> {
     const { cursor, limit = 20, type } = input
 
@@ -146,7 +146,7 @@ export class PostService implements Service {
   }
   public async getRecentPosts(
     input: RecentPostsInput,
-    userId: string | undefined
+    userId: string | undefined,
   ): Promise<Post[]> {
     const { cursor, limit = 20 } = input
 
@@ -389,7 +389,7 @@ export class PostService implements Service {
         'url_slug',
         'tags',
       ],
-      post
+      post,
     )
     return {
       ...picked,

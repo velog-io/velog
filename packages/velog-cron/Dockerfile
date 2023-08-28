@@ -11,7 +11,8 @@ RUN mkdir -p /app
 WORKDIR /app
 COPY --from=builder /app/ /app/
 COPY . .
-RUN pnpm prisma generate
+RUN pnpm prisma:copy
+RUN npx prisma generate
 
 EXPOSE 5004
 

@@ -7,7 +7,10 @@ import { utcToZonedTime } from 'date-fns-tz'
 @singleton()
 @injectable()
 export class PostScoreJob {
-  constructor(private readonly postService: PostService, private readonly db: DbService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly db: DbService,
+  ) {}
   private jobInProgress = false
   public get isJobProgressing() {
     return this.jobInProgress
