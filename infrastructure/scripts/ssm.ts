@@ -74,8 +74,13 @@ const main = () => {
     push: (environment: string) => push(environment),
     pull: (environment: string) => pull(environment),
   }
-  mapper[command as Command](environment)
-  console.log(`SSM ${command} success!`)
+
+  try {
+    mapper[command as Command](environment)
+    console.log(`SSM ${command} success!`)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 main()

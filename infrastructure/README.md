@@ -1,13 +1,43 @@
-## stack check
+# Pulumi User Guide
 
-`pulumi stack ls`
+## 1. Checking Available Stacks
 
-## stack select
+To view the list of your stacks, use the following command:
 
-`pulumi stack select development | stage | production`
+```bash
+pulumi stack ls
+```
 
-## pulumi resource check and deploy
+## 2. Selecting a Stack
 
-`pulumi up`
+To select a specific stack, choose from `development`, `stage`, or `production` as needed:
 
-## pulumi set config
+```bash
+pulumi stack select [development|stage|production]
+```
+
+## 3. Reviewing and Deploying Resources
+
+For checking the state of resources and proceeding with deployment, use:
+
+```bash
+pulumi up
+```
+
+## 4. Setting the Target Infrastructure
+
+If you wish to deploy a specific infrastructure, set your desired target: 'all', 'web', 'server', or 'cron'.
+
+Examples:
+
+- To target all infrastructures:
+
+```bash
+pulumi config set target all
+```
+
+- To target only the server infrastructure:
+
+```bash
+pulumi config set target server
+```

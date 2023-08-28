@@ -1,12 +1,24 @@
+import { CreateInfraParameter } from './type.d'
 import { createWebInfra } from './packages/web'
 import { createServerInfra } from './packages/server'
 import { ENV } from './env'
 import * as aws from '@pulumi/aws'
+import * as pulumi from '@pulumi/pulumi'
 
 import { createVPC } from './common/vpc'
 import { getCertificate } from './common/certificate'
 import { createCronInfra } from './packages/cron'
 import { execCommand } from './lib/execCommand'
+
+const config = new pulumi.Config()
+const target = config.get('target')
+
+type Target = 'web' | 'server' | 'cron'
+
+const validTargets = ['all', 'web', 'server', 'cron']
+if (!target || !validTargets.includes(target)) {
+  throw new Error('Invalid target name, See the Readme.md')
+}
 
 execCommand('pnpm -r prisma:copy')
 
@@ -26,28 +38,29 @@ export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
 
 const certificateArn = getCertificate(ENV.certificateDomain)
 
-// Create SEVER Infra
-export const { repoUrl: serverRepoUrl } = createServerInfra({
+const infraSettings = {
   vpcId,
   subnetIds,
   certificateArn,
   defaultSecurityGroupId,
-})
+}
 
-// Create WEB Infra
-export const { repoUrl: webRepoUrl } = createWebInfra({
-  vpcId,
-  subnetIds,
-  certificateArn,
-  defaultSecurityGroupId,
-})
+const createInfraMapper: Record<
+  Target,
+  (func: CreateInfraParameter) => {
+    repoUrl: pulumi.Output<string>
+  }
+> = {
+  web: createWebInfra,
+  server: createServerInfra,
+  cron: createCronInfra,
+}
 
-// Create CRON Infra
-export const { repoUrl: cronRepoUrl } = createCronInfra({
-  vpcId,
-  subnetIds,
-  certificateArn,
-  defaultSecurityGroupId,
-})
+export const repourls = Object.entries(createInfraMapper)
+  .filter(([key]) => target === 'all' || target === key)
+  .map(([_, func]) => {
+    const { repoUrl } = func(infraSettings)
+    return repoUrl
+  })
 
 execCommand('pnpm -r prisma:rm')
