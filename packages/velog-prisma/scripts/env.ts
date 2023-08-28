@@ -34,8 +34,8 @@ async function getEnvName() {
         name: 'promptEnv',
         message: 'Please choose a environment: [Use arrows to move, type to filter]',
         choices: environments,
-        default: 'development'
-      }
+        default: 'development',
+      },
     ])
     env = promptEnv
   }

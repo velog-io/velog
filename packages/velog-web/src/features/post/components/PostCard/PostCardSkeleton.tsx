@@ -47,12 +47,7 @@ export function PostCardSkeleton({
       </div>
       <div className={cx('footer')}>
         <div className={cx('userInfo')}>
-          <Skeleton
-            width="1.5rem"
-            height="1.5rem"
-            marginRight="0.5rem"
-            circle
-          />
+          <Skeleton width="1.5rem" height="1.5rem" marginRight="0.5rem" circle />
           <span>
             <Skeleton width="6rem" />
           </span>

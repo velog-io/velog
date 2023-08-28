@@ -1,12 +1,7 @@
 import * as React from 'react'
 import type { SVGProps } from 'react'
 const SvgEmptyThumbnail = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 180 180"
-    {...props}
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 180 180" {...props}>
     <path fill="#F1F3F5" d="M0 0h180v180H0z" />
     <path
       fill="#CED4DA"

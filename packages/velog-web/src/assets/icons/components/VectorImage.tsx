@@ -1,12 +1,7 @@
 import * as React from 'react'
 import type { SVGProps } from 'react'
 const SvgVectorImage = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 107 85"
-    {...props}
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 107 85" {...props}>
     <path
       fill="#868E96"
       d="M105.155 0H1.845A1.844 1.844 0 0 0 0 1.845v81.172c0 1.02.826 1.845 1.845 1.845h103.31A1.844 1.844 0 0 0 107 83.017V1.845C107 .825 106.174 0 105.155 0zm-1.845 81.172H3.69V3.69h99.62v77.482z"

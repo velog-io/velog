@@ -78,17 +78,8 @@ function AuthForm() {
         </section>
       </div>
       <div className={cx('foot')}>
-        <span>
-          {mode === 'login'
-            ? '아직 회원이 아니신가요?'
-            : '계정이 이미 있으신가요?'}
-        </span>
-        <div
-          className={cx('link')}
-          tabIndex={7}
-          onClick={onToggleMode}
-          data-testid="switchmode"
-        >
+        <span>{mode === 'login' ? '아직 회원이 아니신가요?' : '계정이 이미 있으신가요?'}</span>
+        <div className={cx('link')} tabIndex={7} onClick={onToggleMode} data-testid="switchmode">
           {mode === 'login' ? '회원가입' : '로그인'}
         </div>
       </div>

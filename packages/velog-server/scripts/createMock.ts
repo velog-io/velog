@@ -10,7 +10,10 @@ import { mockUserWithProfile, MockUserWithProfileType } from 'test/mock/mockUser
 const MAX_COMMENTS_PER_POST = 5
 
 class Seeder {
-  constructor(private readonly db: DbService, private readonly utils: UtilsService) {}
+  constructor(
+    private readonly db: DbService,
+    private readonly utils: UtilsService
+  ) {}
   public createUser(mockUser: MockUserWithProfileType[]) {
     return mockUser.map((user) => {
       const { profile, ...rest } = user

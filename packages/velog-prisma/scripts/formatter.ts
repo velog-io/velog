@@ -20,12 +20,12 @@ const tryGetSchema = (): string => {
 }
 
 const tableAlias: Record<string, string> = {
-  UserProfile: 'profile'
+  UserProfile: 'profile',
 }
 
 const writeSchema = (schema: string, models: string[]) =>
   lines(schema)
-    .map(line => {
+    .map((line) => {
       if (line.length === 0) return line
       if (line.startsWith('model')) return line
       if (line === '}') return line
@@ -51,8 +51,8 @@ const tryWriteSchema = (schema: string) => {
 
 const getModels = (schema: string): string[] =>
   lines(schema)
-    .filter(v => v.startsWith('model'))
-    .map(line => line.split(/\s/)[1])
+    .filter((v) => v.startsWith('model'))
+    .map((line) => line.split(/\s/)[1])
 
 function main() {
   try {

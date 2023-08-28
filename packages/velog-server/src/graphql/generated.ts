@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import {
   User as UserModel,
@@ -262,7 +261,7 @@ export interface SubscriptionSubscriberObject<
   TKey extends string,
   TParent,
   TContext,
-  TArgs
+  TArgs,
 > {
   subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>
   resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>
@@ -282,7 +281,7 @@ export type SubscriptionResolver<
   TKey extends string,
   TParent = {},
   TContext = {},
-  TArgs = {}
+  TArgs = {},
 > =
   | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>
@@ -402,7 +401,7 @@ export type ResolversParentTypes = {
 
 export type CommentResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']
+  ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment'],
 > = {
   created_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
   deleted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
@@ -427,7 +426,7 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 
 export type LinkedPostsResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['LinkedPosts'] = ResolversParentTypes['LinkedPosts']
+  ParentType extends ResolversParentTypes['LinkedPosts'] = ResolversParentTypes['LinkedPosts'],
 > = {
   next?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>
   previous?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>
@@ -436,7 +435,7 @@ export type LinkedPostsResolvers<
 
 export type MutationResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
+  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
   likePost?: Resolver<
     Maybe<ResolversTypes['Post']>,
@@ -449,7 +448,7 @@ export type MutationResolvers<
 
 export type PostResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']
+  ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post'],
 > = {
   body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   comments?: Resolver<Maybe<Array<Maybe<ResolversTypes['Comment']>>>, ParentType, ContextType>
@@ -482,7 +481,7 @@ export type PostResolvers<
 
 export type PostHistoryResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['PostHistory'] = ResolversParentTypes['PostHistory']
+  ParentType extends ResolversParentTypes['PostHistory'] = ResolversParentTypes['PostHistory'],
 > = {
   body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   created_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
@@ -495,7 +494,7 @@ export type PostHistoryResolvers<
 
 export type QueryResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
+  ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
   post?: Resolver<
@@ -527,7 +526,8 @@ export type QueryResolvers<
 
 export type ReadCountByDayResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['ReadCountByDay'] = ResolversParentTypes['ReadCountByDay']
+  ParentType extends
+    ResolversParentTypes['ReadCountByDay'] = ResolversParentTypes['ReadCountByDay'],
 > = {
   count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   day?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
@@ -536,7 +536,7 @@ export type ReadCountByDayResolvers<
 
 export type SearchResultResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['SearchResult'] = ResolversParentTypes['SearchResult']
+  ParentType extends ResolversParentTypes['SearchResult'] = ResolversParentTypes['SearchResult'],
 > = {
   count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
@@ -545,7 +545,7 @@ export type SearchResultResolvers<
 
 export type SeriesResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['Series'] = ResolversParentTypes['Series']
+  ParentType extends ResolversParentTypes['Series'] = ResolversParentTypes['Series'],
 > = {
   created_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
@@ -566,7 +566,7 @@ export type SeriesResolvers<
 
 export type SeriesPostResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['SeriesPost'] = ResolversParentTypes['SeriesPost']
+  ParentType extends ResolversParentTypes['SeriesPost'] = ResolversParentTypes['SeriesPost'],
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   index?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
@@ -576,7 +576,7 @@ export type SeriesPostResolvers<
 
 export type StatsResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['Stats'] = ResolversParentTypes['Stats']
+  ParentType extends ResolversParentTypes['Stats'] = ResolversParentTypes['Stats'],
 > = {
   count_by_day?: Resolver<
     Maybe<Array<Maybe<ResolversTypes['ReadCountByDay']>>>,
@@ -589,7 +589,7 @@ export type StatsResolvers<
 
 export type UserResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
+  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
@@ -606,7 +606,7 @@ export type UserResolvers<
 
 export type UserMetaResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['UserMeta'] = ResolversParentTypes['UserMeta']
+  ParentType extends ResolversParentTypes['UserMeta'] = ResolversParentTypes['UserMeta'],
 > = {
   email_notification?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   email_promotion?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
@@ -616,7 +616,7 @@ export type UserMetaResolvers<
 
 export type UserProfileResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['UserProfile'] = ResolversParentTypes['UserProfile']
+  ParentType extends ResolversParentTypes['UserProfile'] = ResolversParentTypes['UserProfile'],
 > = {
   about?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
@@ -631,7 +631,7 @@ export type UserProfileResolvers<
 
 export type UserTokenResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['UserToken'] = ResolversParentTypes['UserToken']
+  ParentType extends ResolversParentTypes['UserToken'] = ResolversParentTypes['UserToken'],
 > = {
   accessToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   refreshToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>
@@ -640,7 +640,7 @@ export type UserTokenResolvers<
 
 export type VelogConfigResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['VelogConfig'] = ResolversParentTypes['VelogConfig']
+  ParentType extends ResolversParentTypes['VelogConfig'] = ResolversParentTypes['VelogConfig'],
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   logo_image?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>

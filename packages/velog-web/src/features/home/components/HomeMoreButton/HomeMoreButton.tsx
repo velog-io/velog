@@ -19,9 +19,7 @@ function HomeMoreButton({ isVisible, onClose }: Props) {
     value: { theme },
   } = useTheme()
   const img =
-    theme === 'dark'
-      ? 'https://graphcdn.io/badge-light.svg'
-      : 'https://graphcdn.io/badge.svg'
+    theme === 'dark' ? 'https://graphcdn.io/badge-light.svg' : 'https://graphcdn.io/badge.svg'
 
   return (
     <AnimatePresence>
@@ -45,11 +43,7 @@ function HomeMoreButton({ isVisible, onClose }: Props) {
                 <Link href="/policy/terms">서비스 정책</Link>
               </li>
               <li>
-                <a
-                  href="https://bit.ly/velog-slack"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href="https://bit.ly/velog-slack" target="_blank" rel="noopener noreferrer">
                   Slack
                 </a>
               </li>

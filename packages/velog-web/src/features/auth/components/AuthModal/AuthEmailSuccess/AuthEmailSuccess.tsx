@@ -13,9 +13,7 @@ function AuthEmailSuccess({ registered }: Props) {
   return (
     <div className={cx('block')}>
       <MdCheck className={cx('icon')} />
-      <div className={cx('description')}>
-        {text} 링크가 이메일로 전송되었습니다.
-      </div>
+      <div className={cx('description')}>{text} 링크가 이메일로 전송되었습니다.</div>
     </div>
   )
 }

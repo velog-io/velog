@@ -1,20 +1,8 @@
 import * as React from 'react'
 import type { SVGProps } from 'react'
 const SvgFacebookIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 20 20"
-    {...props}
-  >
-    <mask
-      id="facebook-icon_svg__a"
-      width={12}
-      height={20}
-      x={4}
-      y={0}
-      maskUnits="userSpaceOnUse"
-    >
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" {...props}>
+    <mask id="facebook-icon_svg__a" width={12} height={20} x={4} y={0} maskUnits="userSpaceOnUse">
       <path
         fill="#fff"
         fillRule="evenodd"

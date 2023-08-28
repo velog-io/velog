@@ -1,14 +1,17 @@
 # 1. Run PostgreSQL Server with docker compose
+
 ```sh
 docker-compose up -d
 ```
 
 # 2. Run Bash
+
 ```sh
 docker exec -it velog_db bash
 ```
 
 # 3. login as postgres
+
 ```sh
 psql -U postgres
 ```
@@ -39,13 +42,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: 
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 
 --
--- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';

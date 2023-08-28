@@ -1,12 +1,7 @@
 import * as React from 'react'
 import type { SVGProps } from 'react'
 const SvgUndrawUpdate = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    data-name="Layer 1"
-    viewBox="0 0 1044 638.64"
-    {...props}
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 1044 638.64" {...props}>
     <defs>
       <linearGradient
         id="undraw_update_svg__a"
@@ -229,10 +224,7 @@ const SvgUndrawUpdate = (props: SVGProps<SVGSVGElement>) => (
       fill="#3f3d56"
       d="M509.83 614.7a23 23 0 0 1-27.26-25.08c2.62-23.16 10.77-60.47 33.06-116.48 25.84-64.94 16.52-80.63-11.17-127.2-8.94-15.05-19.08-32.1-30-54-28.16-56.26-17.46-99.62-3.56-126.01 14.78-28.09 35.92-42.8 38.28-44.39l21.82 36.1-2 2c-.05 0 1 0 2.52 2.77a87.21 87.21 0 0 0-20.67 26.47c-12.1 24.23-10.5 52 4.75 82.47 10.21 20.42 19.89 36.71 28.43 51.08 15.34 25.8 27.45 46.18 31.46 71.91 4.15 26.63-1 55.28-17.09 95.8-21.21 53.29-28 86.64-30.07 104.54a23.05 23.05 0 0 1-18.47 20Z"
     />
-    <path
-      fill="#20c997"
-      d="M409 92.55 501.55 0 595 92.55h-63.51v70.77h-58.98V93L409 92.55z"
-    />
+    <path fill="#20c997" d="M409 92.55 501.55 0 595 92.55h-63.51v70.77h-58.98V93L409 92.55z" />
     <ellipse cx={704} cy={606.38} opacity={0.1} rx={59} ry={7.87} />
     <path
       fill="#3f3d56"

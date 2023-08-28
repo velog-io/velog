@@ -10,7 +10,7 @@ interface Service {
   checkEmpty(text: string): boolean
   normalize<T extends Partial<T> & { id: string }>(
     array: T[],
-    selector: (item: T) => string | number,
+    selector: (item: T) => string | number
   ): {
     [key: string]: T
   }
@@ -31,7 +31,7 @@ export class UtilsService implements Service {
     return text
       .replace(
         /[^0-9a-zA-Zㄱ-힣.\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf -]/g,
-        '',
+        ''
       )
       .trim()
       .replace(/ /g, '-')
@@ -49,7 +49,7 @@ export class UtilsService implements Service {
   }
   public normalize<T extends Partial<T> & { id: string }>(
     array: T[],
-    selector: (item: T) => string | number = (item: T) => item.id,
+    selector: (item: T) => string | number = (item: T) => item.id
   ) {
     const object: {
       [key: string]: T

@@ -14,15 +14,14 @@ function Modal({ children, isVisible, onOverlayClick }: Props) {
   const [closed, setClosed] = useState(true)
   const backdropRef = useRef<HTMLDivElement>(null)
 
-  const handleClickBackdrop: React.MouseEventHandler<HTMLDivElement> =
-    useCallback(
-      (ev) => {
-        if (ev.target === backdropRef.current) {
-          onOverlayClick?.()
-        }
-      },
-      [onOverlayClick]
-    )
+  const handleClickBackdrop: React.MouseEventHandler<HTMLDivElement> = useCallback(
+    (ev) => {
+      if (ev.target === backdropRef.current) {
+        onOverlayClick?.()
+      }
+    },
+    [onOverlayClick]
+  )
   // TODO: Using React.Potal
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout> | null = null

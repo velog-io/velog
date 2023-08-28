@@ -9,12 +9,7 @@ function HeaderLogo() {
   return (
     <div className={cx('block')}>
       <Link href="/">
-        <VelogIcon
-          className={cx('velogLogo')}
-          data-testid="velog-logo"
-          width={71}
-          height={24}
-        />
+        <VelogIcon className={cx('velogLogo')} data-testid="velog-logo" width={71} height={24} />
       </Link>
     </div>
   )

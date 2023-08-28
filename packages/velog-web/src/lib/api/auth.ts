@@ -84,20 +84,15 @@ export interface SocialProfile {
 }
 
 export const getSocialProfile = async () => {
-  const response = await apiClient.get<SocialProfile>(
-    '/api/v2/auth/social/profile'
-  )
+  const response = await apiClient.get<SocialProfile>('/api/v2/auth/social/profile')
   return response.data
 }
 
 export const socialRegister = async (form: RegisterFormData) => {
-  const response = await apiClient.post<AuthResponse>(
-    '/api/v2/auth/social/register',
-    {
-      display_name: form.displayName,
-      short_bio: form.shortBio,
-      username: form.username,
-    }
-  )
+  const response = await apiClient.post<AuthResponse>('/api/v2/auth/social/register', {
+    display_name: form.displayName,
+    short_bio: form.shortBio,
+    username: form.username,
+  })
   return response.data
 }

@@ -26,14 +26,14 @@ async function main() {
       name: 'type',
       message: 'Do you want to save in lib directory or services directory?',
       choices: ['services', 'lib'],
-      default: 'services'
-    }
+      default: 'services',
+    },
   ])
 
   const templateDir = path.resolve(__dirname, `./templates/${type}`)
   const files = fs.readdirSync(templateDir)
 
-  files.forEach(file => {
+  files.forEach((file) => {
     const filePath = path.resolve(templateDir, file)
     const fileData = fs.readFileSync(filePath, 'utf8')
     filesData.set(file, fileData)
@@ -42,8 +42,8 @@ async function main() {
   const answer = await inquirer.prompt([
     {
       name: 'feature',
-      message: 'Enter service name'
-    }
+      message: 'Enter service name',
+    },
   ])
 
   const dirPath =
@@ -57,7 +57,7 @@ async function main() {
     type,
     dirPath,
     filename,
-    files
+    files,
   })
 }
 
@@ -71,7 +71,7 @@ function createService({ type, dirPath, filename, files }: CreateServiceParams) 
     fs.mkdirSync(serviceDir, { recursive: true })
   }
 
-  files.forEach(file => {
+  files.forEach((file) => {
     const fileData = filesData.get(file)
     if (fileData === undefined) return
     const code = replace(fileData, filename)

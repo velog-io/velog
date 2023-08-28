@@ -1,9 +1,4 @@
-import {
-  useQuery,
-  useMutation,
-  UseQueryOptions,
-  UseMutationOptions,
-} from '@tanstack/react-query'
+import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { fetcher } from './fetcher'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = T | undefined
@@ -16,10 +11,9 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>
 }
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T
-> = { [_ in K]?: never }
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+  [_ in K]?: never
+}
 export type Incremental<T> =
   | T
   | {
@@ -496,10 +490,7 @@ export const useRecentPostsQuery = <TData = RecentPostsQuery, TError = unknown>(
 ) =>
   useQuery<RecentPostsQuery, TError, TData>(
     ['recentPosts', variables],
-    fetcher<RecentPostsQuery, RecentPostsQueryVariables>(
-      RecentPostsDocument,
-      variables
-    ),
+    fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, variables),
     options
   )
 export const TrendingPostsDocument = `
@@ -526,19 +517,13 @@ export const TrendingPostsDocument = `
   }
 }
     `
-export const useTrendingPostsQuery = <
-  TData = TrendingPostsQuery,
-  TError = unknown
->(
+export const useTrendingPostsQuery = <TData = TrendingPostsQuery, TError = unknown>(
   variables: TrendingPostsQueryVariables,
   options?: UseQueryOptions<TrendingPostsQuery, TError, TData>
 ) =>
   useQuery<TrendingPostsQuery, TError, TData>(
     ['trendingPosts', variables],
-    fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
-      TrendingPostsDocument,
-      variables
-    ),
+    fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, variables),
     options
   )
 export const CurrentUserDocument = `
@@ -561,10 +546,7 @@ export const useCurrentUserQuery = <TData = CurrentUserQuery, TError = unknown>(
 ) =>
   useQuery<CurrentUserQuery, TError, TData>(
     variables === undefined ? ['currentUser'] : ['currentUser', variables],
-    fetcher<CurrentUserQuery, CurrentUserQueryVariables>(
-      CurrentUserDocument,
-      variables
-    ),
+    fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, variables),
     options
   )
 export const RestoreTokenDocument = `
@@ -575,19 +557,13 @@ export const RestoreTokenDocument = `
   }
 }
     `
-export const useRestoreTokenQuery = <
-  TData = RestoreTokenQuery,
-  TError = unknown
->(
+export const useRestoreTokenQuery = <TData = RestoreTokenQuery, TError = unknown>(
   variables?: RestoreTokenQueryVariables,
   options?: UseQueryOptions<RestoreTokenQuery, TError, TData>
 ) =>
   useQuery<RestoreTokenQuery, TError, TData>(
     variables === undefined ? ['restoreToken'] : ['restoreToken', variables],
-    fetcher<RestoreTokenQuery, RestoreTokenQueryVariables>(
-      RestoreTokenDocument,
-      variables
-    ),
+    fetcher<RestoreTokenQuery, RestoreTokenQueryVariables>(RestoreTokenDocument, variables),
     options
   )
 export const LogoutDocument = `
@@ -596,19 +572,11 @@ export const LogoutDocument = `
 }
     `
 export const useLogoutMutation = <TError = unknown, TContext = unknown>(
-  options?: UseMutationOptions<
-    LogoutMutation,
-    TError,
-    LogoutMutationVariables,
-    TContext
-  >
+  options?: UseMutationOptions<LogoutMutation, TError, LogoutMutationVariables, TContext>
 ) =>
   useMutation<LogoutMutation, TError, LogoutMutationVariables, TContext>(
     ['logout'],
     (variables?: LogoutMutationVariables) =>
-      fetcher<LogoutMutation, LogoutMutationVariables>(
-        LogoutDocument,
-        variables
-      )(),
+      fetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables)(),
     options
   )

@@ -20,12 +20,7 @@ function AuthModal() {
 
   return (
     <Modal isVisible={isVisible} onOverlayClick={() => actions.closeModal()}>
-      <div
-        className={cx(
-          'wrapper',
-          isVisible ? 'popInFromBottom' : 'popOutToBottom'
-        )}
-      >
+      <div className={cx('wrapper', isVisible ? 'popInFromBottom' : 'popOutToBottom')}>
         <div className={cx('gray-block')}>
           <div>
             <UndrawJoyrideHnno width={168} height={108} />

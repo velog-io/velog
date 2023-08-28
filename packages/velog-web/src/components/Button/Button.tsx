@@ -31,23 +31,13 @@ function Button({
 }: Props) {
   const ButtonComponent = (
     <button
-      className={cx(
-        'block',
-        size,
-        border ? 'border' : 'notBorder',
-        color,
-        className
-      )}
+      className={cx('block', size, border ? 'border' : 'notBorder', color, className)}
       {...rest}
     />
   )
 
   const WrapperComponent = to ? VLink : React.Fragment
-  return React.createElement(
-    WrapperComponent,
-    to ? { href: to } : null,
-    ButtonComponent
-  )
+  return React.createElement(WrapperComponent, to ? { href: to } : null, ButtonComponent)
 }
 
 export default Button

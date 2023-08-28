@@ -72,7 +72,7 @@ class ParameterService {
       const env = JSON.parse(value)
       this.writeEnv(env)
       console.info(
-        `Parameter download successful! path: ${name}, version: ${response.Parameter?.Version}`,
+        `Parameter download successful! path: ${name}, version: ${response.Parameter?.Version}`
       )
     } catch (error) {
       console.log(error)

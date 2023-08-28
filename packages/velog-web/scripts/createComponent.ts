@@ -29,10 +29,7 @@ function createComponent(directory: string, componentName: string) {
     const fileData = filesData.get(file)
     if (fileData === undefined) return
     const code = replaceMyComponent(fileData, componentName)
-    const newFilePath = path.resolve(
-      componentDir,
-      replaceMyComponent(file, componentName)
-    )
+    const newFilePath = path.resolve(componentDir, replaceMyComponent(file, componentName))
     fs.writeFileSync(newFilePath, code)
   })
 }
@@ -42,8 +39,7 @@ async function main() {
     {
       type: 'list',
       name: 'type',
-      message:
-        'Do you want to save in components directory or features directory?',
+      message: 'Do you want to save in components directory or features directory?',
       choices: ['features', 'components'],
       default: 'features',
     },
@@ -67,8 +63,7 @@ async function main() {
         : null,
       {
         name: 'names',
-        message:
-          'Enter component name \x1b[2m(Separate multiple names with space)\x1b[0m',
+        message: 'Enter component name \x1b[2m(Separate multiple names with space)\x1b[0m',
       },
     ].filter((q) => q !== null)
   )
@@ -86,11 +81,7 @@ async function main() {
   })
 
   if (type === 'features') {
-    fs.writeFileSync(
-      path.resolve(__dirname, './.cache'),
-      answers.feature,
-      'utf8'
-    )
+    fs.writeFileSync(path.resolve(__dirname, './.cache'), answers.feature, 'utf8')
   }
 }
 
