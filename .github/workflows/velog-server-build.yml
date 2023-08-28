@@ -12,7 +12,7 @@ on:
       - 'packages/velog-server/**'
       - '.github/workflows/velog-server-test.yml'
 jobs:
-  test-server:
+  server-build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -34,7 +34,7 @@ jobs:
 
       - run: pnpm prisma:copy
       - run: pnpm install
-      # - run: pnpm prisma generate
+      - run: npx prisma generate
 
       - run: pnpm ssm pull -e test
         env:
