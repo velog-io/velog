@@ -4,7 +4,7 @@ import * as pulumi from '@pulumi/pulumi'
 
 import { withPrefix } from '../lib/prefix'
 import { ecsTaskExecutionRole } from './iam'
-import { ENV } from '../../env'
+import { ENV } from '../env'
 import { SecurityGroup } from '@pulumi/aws/ec2'
 import { TargetGroup } from '@pulumi/aws/alb'
 import { PackageType } from '../type'

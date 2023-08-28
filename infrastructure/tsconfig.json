@@ -13,6 +13,11 @@
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true
   },
-  "include": ["scripts/**.ts", "src/**/*.ts"],
-  "files": ["index.ts"]
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "sourceType": "module",
+    "tsconfigRootDir": "__dirname"
+  },
+  "include": ["scripts/**.ts", "src/*", ".eslintrc"],
+  "files": ["src/index.ts"]
 }

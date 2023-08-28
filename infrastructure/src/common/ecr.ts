@@ -1,7 +1,7 @@
 import * as awsx from '@pulumi/awsx'
 
 import { withPrefix } from '../lib/prefix'
-import { ENV } from '../../env'
+import { ENV } from '../env'
 import { execCommand } from '../lib/execCommand'
 import { PackageType } from '../type'
 

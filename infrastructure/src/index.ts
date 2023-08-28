@@ -1,12 +1,12 @@
-import { createWebInfra } from './src/packages/web/index'
-import { createServerInfra } from './src/packages/server/index'
+import { createWebInfra } from './packages/web'
+import { createServerInfra } from './packages/server'
 import { ENV } from './env'
 import * as aws from '@pulumi/aws'
 
-import { createVPC } from './src/common/vpc'
-import { getCertificate } from './src/common/certificate'
-import { createCronInfra } from './src/packages/cron'
-import { execCommand } from './src/lib/execCommand'
+import { createVPC } from './common/vpc'
+import { getCertificate } from './common/certificate'
+import { createCronInfra } from './packages/cron'
+import { execCommand } from './lib/execCommand'
 
 execCommand('pnpm -r prisma:copy')
 

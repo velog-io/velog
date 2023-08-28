@@ -1,4 +1,4 @@
-import { ENV } from '../../env'
+import { ENV } from '../env'
 
 const serverEcsOption: EcsOption = {
   desiredCount: ENV.isProduction ? 2 : 1,

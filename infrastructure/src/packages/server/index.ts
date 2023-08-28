@@ -1,4 +1,4 @@
-import { ENV } from '../../../env'
+import { ENV } from '../../env'
 import { CreateInfraParameter } from '../../type'
 import { getECRImage } from '../../common/ecr'
 import { createECSfargateService } from '../../common/ecs'
