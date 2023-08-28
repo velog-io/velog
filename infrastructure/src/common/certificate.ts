@@ -1,4 +1,4 @@
-import aws from '@pulumi/aws'
+import * as aws from '@pulumi/aws'
 
 export const getCertificate = (domain: string) => {
   const certificate = aws.acm.getCertificate({

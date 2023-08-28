@@ -1,6 +1,6 @@
 {
   "name": "velog",
-  "main": "index.ts",
+  "main": "/src/index.ts",
   "scripts": {
     "ssm": "tsx ./scripts/ssm.ts"
   },

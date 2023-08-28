@@ -27,7 +27,7 @@ const envFiles: Record<Envrionment, string> = {
 
 const file = envFiles[appEnv]
 
-dotenv.config({ path: resolveDir(`./env/${file}`) })
+dotenv.config({ path: resolveDir(`../env/${file}`) })
 
 const env = z.object({
   appEnv: z.string(),

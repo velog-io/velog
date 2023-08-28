@@ -14,7 +14,14 @@ export const createVPC = () => {
   // })
 
   const vpc = aws.ec2.getVpc({ default: true })
-  const subnets = aws.ec2.getSubnets()
+  const subnets = aws.ec2.getSubnets({
+    filters: [
+      {
+        name: 'tag:Tag',
+        values: ['velog-v3'],
+      },
+    ],
+  })
 
   // // server subnet
   // const serverSubnet = vpc.id.apply((vpcId) => {

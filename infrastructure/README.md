@@ -4,7 +4,7 @@
 
 ## stack select
 
-`pulumi stack select dev | staging | prod`
+`pulumi stack select development | stage | production`
 
 ## pulumi resource check and deploy
 
