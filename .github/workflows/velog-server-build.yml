@@ -5,7 +5,7 @@ on:
     branches: ['main', 'development', 'hotfix']
     paths:
       - 'packages/velog-server/**'
-      - '.github/workflows/velog-server-test.yml'
+      - '.github/workflows/velog-server-build.yml'
   pull_request:
     branches: ['main', 'development', 'hotfix']
     paths:
