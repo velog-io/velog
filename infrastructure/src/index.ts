@@ -11,13 +11,13 @@ import { createCronInfra } from './packages/cron'
 import { execCommand } from './lib/execCommand'
 
 const config = new pulumi.Config()
-const infra = config.get('infra')
+const target = config.get('target')
 
-type Infra = 'web' | 'server' | 'cron'
+type Target = 'web' | 'server' | 'cron'
 
-const validInfras = ['all', 'web', 'server', 'cron']
-if (!infra || !validInfras.includes(infra)) {
-  throw new Error('Invalid infra name, See the README.md')
+const validTargets = ['all', 'web', 'server', 'cron']
+if (!target || !validTargets.includes(target)) {
+  throw new Error('Invalid target name, See the README.md')
 }
 
 execCommand('pnpm -r prisma:copy')
@@ -39,7 +39,7 @@ export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
 const certificateArn = getCertificate(ENV.certificateDomain)
 
 const createInfraMapper: Record<
-  Infra,
+  Target,
   (func: CreateInfraParameter) => {
     repoUrl: pulumi.Output<string>
   }
@@ -57,7 +57,7 @@ const infraSettings = {
 }
 
 export const repourls = Object.entries(createInfraMapper)
-  .filter(([key]) => infra === key || infra === 'all')
+  .filter(([key]) => target === key || target === 'all')
   .map(([_, func]) => {
     const { repoUrl } = func(infraSettings)
     return repoUrl
