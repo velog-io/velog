@@ -10,7 +10,7 @@ const serverEcsOption: EcsOption = {
 
 const webEcsOption: EcsOption = {
   desiredCount: ENV.isProduction ? 2 : 1,
-  cpu: 256,
+  cpu: 512,
   memory: 512,
   maxCapacity: 3,
   minCapacity: ENV.isProduction ? 3 : 1,
@@ -18,7 +18,7 @@ const webEcsOption: EcsOption = {
 
 const cronEcsOption: EcsOption = {
   desiredCount: ENV.isProduction ? 2 : 1,
-  cpu: 256,
+  cpu: 512,
   memory: 512,
   maxCapacity: 3,
   minCapacity: ENV.isProduction ? 3 : 1,

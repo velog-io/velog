@@ -12,6 +12,7 @@ WORKDIR /app
 COPY --from=builder /app/ /app/
 COPY . .
 RUN npx prisma generate
+RUN pnpm build
 
 EXPOSE 5004
 

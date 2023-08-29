@@ -10,3 +10,4 @@ services:
     stdin_open: true
     ports:
       - 5003:5003
+    mem_limit: '1g'

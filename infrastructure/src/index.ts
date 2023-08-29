@@ -62,5 +62,3 @@ export const repourls = Object.entries(createInfraMapper)
     const { repoUrl } = func(infraSettings)
     return repoUrl
   })
-
-execCommand('pnpm -r prisma:rm')

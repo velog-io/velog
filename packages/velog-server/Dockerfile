@@ -12,7 +12,7 @@ WORKDIR /app
 COPY --from=builder /app/ /app/
 COPY . .
 RUN pnpm prisma generate
-
+RUN pnpm build
 EXPOSE 5003
 
 CMD ["pnpm", "start"]
