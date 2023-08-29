@@ -24,6 +24,7 @@ export const createServerInfra = ({
     certificateArn,
     packageType: 'server',
   })
+
   createECSfargateService({
     packageType: 'server',
     image: image,

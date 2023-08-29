@@ -24,6 +24,7 @@ export const createCronInfra = ({
     certificateArn,
     packageType: 'cron',
   })
+
   createECSfargateService({
     packageType: 'cron',
     image: image,

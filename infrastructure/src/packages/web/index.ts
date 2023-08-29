@@ -21,6 +21,7 @@ export const createWebInfra = ({
     certificateArn,
     packageType: 'web',
   })
+
   createECSfargateService({
     packageType: 'web',
     image,
