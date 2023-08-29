@@ -32,9 +32,7 @@ export class PostService implements Service {
     private readonly db: DbService,
     private readonly cache: CacheService,
     private readonly utils: UtilsService
-  ) {
-    console.log('this', this.db)
-  }
+  ) {}
   public async postsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]> {
     const posts = await this.db.post.findMany({
       where: {
