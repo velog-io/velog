@@ -18,6 +18,7 @@ export const createECSfargateService = ({
   defaultSecurityGroupId,
   targetGroup,
   packageType,
+  protect,
 }: CreateECSFargateParams) => {
   const option = ecsOption[packageType]
   const cluster = new aws.ecs.Cluster(withPrefix(`${packageType}-cluster`))
@@ -119,4 +120,5 @@ type CreateECSFargateParams = {
   targetGroup: TargetGroup
   port: number
   packageType: PackageType
+  protect: boolean
 }

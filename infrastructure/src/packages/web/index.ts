@@ -10,9 +10,14 @@ export const createWebInfra = ({
   subnetIds,
   certificateArn,
   defaultSecurityGroupId,
+  protect,
 }: CreateInfraParameter) => {
   const { image, repoUrl } = getECRImage('web')
-  const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({ vpcId, packageType: 'web' })
+  const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({
+    vpcId,
+    packageType: 'web',
+    protect,
+  })
 
   const { targetGroup } = createLoadBalancer({
     subnetIds,
@@ -20,6 +25,7 @@ export const createWebInfra = ({
     vpcId,
     certificateArn,
     packageType: 'web',
+    protect,
   })
 
   createECSfargateService({
@@ -30,6 +36,7 @@ export const createWebInfra = ({
     targetGroup,
     defaultSecurityGroupId,
     taskSecurityGroup,
+    protect,
   })
 
   return { repoUrl }

@@ -10,11 +10,13 @@ export const createCronInfra = ({
   subnetIds,
   certificateArn,
   defaultSecurityGroupId,
+  protect,
 }: CreateInfraParameter) => {
   const { image, repoUrl } = getECRImage('cron')
   const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({
     vpcId,
     packageType: 'cron',
+    protect,
   })
 
   const { targetGroup } = createLoadBalancer({
@@ -23,6 +25,7 @@ export const createCronInfra = ({
     vpcId,
     certificateArn,
     packageType: 'cron',
+    protect,
   })
 
   createECSfargateService({
@@ -33,6 +36,7 @@ export const createCronInfra = ({
     targetGroup,
     defaultSecurityGroupId,
     taskSecurityGroup,
+    protect,
   })
 
   return { repoUrl }

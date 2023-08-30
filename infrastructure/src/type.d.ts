@@ -5,4 +5,5 @@ export type CreateInfraParameter = {
   subnetIds: Promise<string[]>
   certificateArn: Promise<string>
   defaultSecurityGroupId: Promise<string>
+  protect: boolean
 }

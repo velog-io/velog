@@ -6,7 +6,7 @@ import { startClosing } from '@plugins/global/keepAlivePlugin.js'
 import { DbService } from '@lib/db/DbService.js'
 
 async function main() {
-  app.listen({ port: ENV.port })
+  app.listen({ port: ENV.port, host: '::' })
   const dbService = container.resolve(DbService)
   await dbService.$connect()
   console.info(`INFO: Database connected to "${ENV.databaseUrl}"`)

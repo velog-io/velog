@@ -10,11 +10,13 @@ export const createServerInfra = ({
   subnetIds,
   certificateArn,
   defaultSecurityGroupId,
+  protect,
 }: CreateInfraParameter) => {
   const { image, repoUrl } = getECRImage('server')
   const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({
     vpcId,
     packageType: 'server',
+    protect,
   })
 
   const { targetGroup } = createLoadBalancer({
@@ -23,6 +25,7 @@ export const createServerInfra = ({
     vpcId,
     certificateArn,
     packageType: 'server',
+    protect,
   })
 
   createECSfargateService({
@@ -33,6 +36,7 @@ export const createServerInfra = ({
     targetGroup,
     defaultSecurityGroupId,
     taskSecurityGroup,
+    protect,
   })
 
   return { repoUrl }
