@@ -12,7 +12,7 @@ export const createServerInfra = ({
   defaultSecurityGroupId,
   protect,
 }: CreateInfraParameter) => {
-  const { image, repoUrl } = getECRImage('server')
+  const { image, repoUrl } = getECRImage({ type: 'server', protect })
   const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({
     vpcId,
     packageType: 'server',

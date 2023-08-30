@@ -25,73 +25,85 @@ export const createECSfargateService = ({
 
   const port = portMapper[packageType]
 
-  const service = new awsx.ecs.FargateService(withPrefix(`${packageType}-fargate-service`), {
-    cluster: cluster.arn,
-    desiredCount: option.desiredCount,
-    networkConfiguration: {
-      assignPublicIp: true,
-      securityGroups: [defaultSecurityGroupId, taskSecurityGroup.id],
-      subnets: subnetIds,
-    },
-    taskDefinitionArgs: {
-      executionRole: {
-        roleArn: ecsTaskExecutionRole.arn,
+  const service = new awsx.ecs.FargateService(
+    withPrefix(`${packageType}-fargate-service`),
+    {
+      cluster: cluster.arn,
+      desiredCount: option.desiredCount,
+      networkConfiguration: {
+        assignPublicIp: true,
+        securityGroups: [defaultSecurityGroupId, taskSecurityGroup.id],
+        subnets: subnetIds,
       },
-      container: {
-        image: image.imageUri,
-        cpu: option.cpu,
-        memory: option.memory,
-        essential: true,
-        portMappings: [{ targetGroup: targetGroup }],
-        environment: [
-          {
-            name: 'PORT',
-            value: port.toString(),
-          },
-          {
-            name: 'APP_ENV',
-            value: ENV.appEnv,
-          },
-          {
-            name: 'NODE_ENV',
-            value: ENV.isProduction ? 'production' : 'development',
-          },
-          {
-            name: 'AWS_ACCESS_KEY_ID',
-            value: ENV.awsAccessKeyId,
-          },
-          {
-            name: 'AWS_SECRET_ACCESS_KEY',
-            value: ENV.awsSecretAccessKey,
-          },
-        ],
+      taskDefinitionArgs: {
+        executionRole: {
+          roleArn: ecsTaskExecutionRole.arn,
+        },
+        container: {
+          image: image.imageUri,
+          cpu: option.cpu,
+          memory: option.memory,
+          essential: true,
+          portMappings: [{ targetGroup: targetGroup }],
+          environment: [
+            {
+              name: 'PORT',
+              value: port.toString(),
+            },
+            {
+              name: 'APP_ENV',
+              value: ENV.appEnv,
+            },
+            {
+              name: 'NODE_ENV',
+              value: ENV.isProduction ? 'production' : 'development',
+            },
+            {
+              name: 'AWS_ACCESS_KEY_ID',
+              value: ENV.awsAccessKeyId,
+            },
+            {
+              name: 'AWS_SECRET_ACCESS_KEY',
+              value: ENV.awsSecretAccessKey,
+            },
+          ],
+        },
       },
     },
-  })
+    { protect },
+  )
 
   const resourceId = service.service.id.apply((t) => t.split(':').at(-1)!)
-  const ecsTarget = new aws.appautoscaling.Target(withPrefix(`${packageType}-ecs-target`), {
-    maxCapacity: option.maxCapacity,
-    minCapacity: option.minCapacity,
-    resourceId: resourceId,
-    scalableDimension: 'ecs:service:DesiredCount',
-    serviceNamespace: 'ecs',
-  })
-
-  const ecsCPUPolicy = new aws.appautoscaling.Policy(withPrefix(`${packageType}-ecs-cpu-policy`), {
-    policyType: 'TargetTrackingScaling',
-    resourceId: ecsTarget.resourceId,
-    scalableDimension: ecsTarget.scalableDimension,
-    serviceNamespace: ecsTarget.serviceNamespace,
-    targetTrackingScalingPolicyConfiguration: {
-      predefinedMetricSpecification: {
-        predefinedMetricType: 'ECSServiceAverageCPUUtilization',
-      },
-      targetValue: 50,
-      scaleInCooldown: 60,
-      scaleOutCooldown: 60,
+  const ecsTarget = new aws.appautoscaling.Target(
+    withPrefix(`${packageType}-ecs-target`),
+    {
+      maxCapacity: option.maxCapacity,
+      minCapacity: option.minCapacity,
+      resourceId: resourceId,
+      scalableDimension: 'ecs:service:DesiredCount',
+      serviceNamespace: 'ecs',
     },
-  })
+    { protect },
+  )
+
+  const ecsCPUPolicy = new aws.appautoscaling.Policy(
+    withPrefix(`${packageType}-ecs-cpu-policy`),
+    {
+      policyType: 'TargetTrackingScaling',
+      resourceId: ecsTarget.resourceId,
+      scalableDimension: ecsTarget.scalableDimension,
+      serviceNamespace: ecsTarget.serviceNamespace,
+      targetTrackingScalingPolicyConfiguration: {
+        predefinedMetricSpecification: {
+          predefinedMetricType: 'ECSServiceAverageCPUUtilization',
+        },
+        targetValue: 50,
+        scaleInCooldown: 60,
+        scaleOutCooldown: 60,
+      },
+    },
+    { protect },
+  )
 
   const ecsMemoryPolicy = new aws.appautoscaling.Policy(
     withPrefix(`${packageType}-ecs-memory-policy`),
@@ -109,6 +121,7 @@ export const createECSfargateService = ({
         scaleOutCooldown: 60,
       },
     },
+    { protect },
   )
 }
 
@@ -121,4 +134,5 @@ type CreateECSFargateParams = {
   port: number
   packageType: PackageType
   protect: boolean
+  environment?: { name: string; value: string }[]
 }

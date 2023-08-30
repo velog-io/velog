@@ -12,7 +12,7 @@ export const createCronInfra = ({
   defaultSecurityGroupId,
   protect,
 }: CreateInfraParameter) => {
-  const { image, repoUrl } = getECRImage('cron')
+  const { image, repoUrl } = getECRImage({ type: 'cron', protect })
   const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({
     vpcId,
     packageType: 'cron',

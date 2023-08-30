@@ -1,18 +1,25 @@
 import * as awsx from '@pulumi/awsx'
-
 import { withPrefix } from '../lib/prefix'
 import { ENV } from '../env'
-import { execCommand } from '../lib/execCommand'
 import { PackageType } from '../type'
 
-export const getECRImage = (type: PackageType) => {
+type GetECRPrameter = {
+  type: PackageType
+  protect: boolean
+}
+
+export const getECRImage = ({ type, protect }: GetECRPrameter) => {
   const option = options[type]
   const repo = new awsx.ecr.Repository(option.ecrRepoName, { forceDelete: true })
-  const image = new awsx.ecr.Image(withPrefix(option.imageName), {
-    repositoryUrl: repo.url,
-    path: option.path,
-    extraOptions: ['--platform', 'linux/amd64'],
-  })
+  const image = new awsx.ecr.Image(
+    withPrefix(option.imageName),
+    {
+      repositoryUrl: repo.url,
+      path: option.path,
+      extraOptions: ['--platform', 'linux/amd64'],
+    },
+    { protect },
+  )
 
   const repoUrl = repo.url
 
