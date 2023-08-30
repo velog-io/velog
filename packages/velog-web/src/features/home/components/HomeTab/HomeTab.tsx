@@ -40,7 +40,7 @@ function HomeTab({ isFloatingHeader = false }: Props) {
       <div className={cx('left')}>
         <div className={cx('block')}>
           <ActiveLink
-            href="/trending/month"
+            href="/trending"
             className={cx({
               active: pathname === '/' || pathname.includes('/trending'),
             })}

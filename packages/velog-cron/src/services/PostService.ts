@@ -38,6 +38,7 @@ export default class PostService implements Service {
     const votes = postLikes
 
     const newScore = votes / Math.pow(itemHourAge + 2, gravity)
+
     await this.db.post.update({
       where: {
         id: post.id,

@@ -62,7 +62,7 @@ export class PostLikeService implements Service {
       return post
     }
 
-    await this.db.post.update({
+    const likesPost = await this.db.post.update({
       where: {
         id: postId,
       },
@@ -90,6 +90,6 @@ export class PostLikeService implements Service {
       this.search.searchSync.update(post.id)
     }, 0)
 
-    return post
+    return likesPost
   }
 }
