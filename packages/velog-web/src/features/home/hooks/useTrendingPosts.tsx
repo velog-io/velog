@@ -53,7 +53,7 @@ export default function useTrendingPosts(initialPost: Posts[] = []) {
             timeframe,
           }
         },
-      }
+      },
     )
 
   // TODO: remove Start

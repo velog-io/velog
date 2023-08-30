@@ -35,7 +35,7 @@ export const localEmailRegister = ({
 }) =>
   apiClient.post<AuthResponse>(
     '/api/v2/auth/register/local',
-    snakeCaseKeys({ registerToken, form })
+    snakeCaseKeys({ registerToken, form }),
   )
 type RegisterFormData = {
   displayName: string

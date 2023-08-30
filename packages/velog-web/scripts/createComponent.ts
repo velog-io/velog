@@ -65,7 +65,7 @@ async function main() {
         name: 'names',
         message: 'Enter component name \x1b[2m(Separate multiple names with space)\x1b[0m',
       },
-    ].filter((q) => q !== null)
+    ].filter((q) => q !== null),
   )
 
   const dir =

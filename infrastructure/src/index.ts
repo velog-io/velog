@@ -32,7 +32,7 @@ const defaultSecurityGroup = vpcId.then((id) =>
   aws.ec2.getSecurityGroup({
     vpcId: id,
     name: 'default',
-  })
+  }),
 )
 export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
 

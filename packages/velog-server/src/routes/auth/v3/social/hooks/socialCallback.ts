@@ -8,7 +8,7 @@ import { container } from 'tsyringe'
 
 export default async function socialCallback(
   request: FastifyRequest<{ Querystring: { state: string; next?: string } }>,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
   if (!request.socialProfile) {
     reply.status(404).send('Social profile data is missing')

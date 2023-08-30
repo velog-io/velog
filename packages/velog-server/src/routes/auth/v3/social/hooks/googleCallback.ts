@@ -4,7 +4,7 @@ import { container } from 'tsyringe'
 
 export default async function googleCallback(
   request: FastifyRequest<{ Querystring: { code: string } }>,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
   const socialService = container.resolve(SocialService)
 

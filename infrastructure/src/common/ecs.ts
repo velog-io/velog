@@ -107,7 +107,7 @@ export const createECSfargateService = ({
         scaleInCooldown: 60,
         scaleOutCooldown: 60,
       },
-    }
+    },
   )
 }
 

@@ -26,7 +26,7 @@ function AuthForm() {
     ({ pageParam = { email } }) => {
       return sendAuthEmail(pageParam.email)
     },
-    { enabled: false }
+    { enabled: false },
   )
 
   const onToggleMode = useCallback(() => {
@@ -46,7 +46,7 @@ function AuthForm() {
       refetch()
       setSendEmail(true)
     },
-    [refetch]
+    [refetch],
   )
 
   useEffect(() => {

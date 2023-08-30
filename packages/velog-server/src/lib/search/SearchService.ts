@@ -17,7 +17,7 @@ export class SearchService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly postsTagsService: PostsTagsService,
-    private readonly postService: PostService
+    private readonly postService: PostService,
   ) {}
   public get esClient(): Client {
     return new Client({ node: ENV.esHost })

@@ -24,7 +24,7 @@ export class UserService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly cookie: CookieService,
-    private readonly jwt: JwtService
+    private readonly jwt: JwtService,
   ) {}
   async findById(userId: string): Promise<User | null> {
     return await this.db.user.findUnique({ where: { id: userId } })
@@ -63,7 +63,7 @@ export class UserService implements Service {
       user!.id,
       decoded.token_id,
       decoded.exp,
-      refreshToken
+      refreshToken,
     )
 
     this.cookie.setCookie(ctx.reply, 'access_token', tokens.accessToken, {

@@ -9,7 +9,7 @@ import { utcToZonedTime } from 'date-fns-tz'
 export class PostScoreJob {
   constructor(
     private readonly postService: PostService,
-    private readonly db: DbService
+    private readonly db: DbService,
   ) {}
   private jobInProgress = false
   public get isJobProgressing() {

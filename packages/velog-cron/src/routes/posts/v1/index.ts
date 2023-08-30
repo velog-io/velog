@@ -32,7 +32,7 @@ const v1: FastifyPluginCallback = (fastify, opts, done) => {
       await postService.scoreCarculator(post.id)
 
       reply.status(HttpStatus.OK).send(HttpStatusMessage.Ok)
-    }
+    },
   )
 
   fastify.patch('/score', async (request, reply) => {

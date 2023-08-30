@@ -20,7 +20,7 @@ function Modal({ children, isVisible, onOverlayClick }: Props) {
         onOverlayClick?.()
       }
     },
-    [onOverlayClick]
+    [onOverlayClick],
   )
   // TODO: Using React.Potal
   useEffect(() => {

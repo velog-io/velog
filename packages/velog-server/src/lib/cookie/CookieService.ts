@@ -10,7 +10,7 @@ export class CookieService {
     reply: FastifyReply,
     name: string,
     value: string,
-    options?: CookieSerializeOptions
+    options?: CookieSerializeOptions,
   ): void {
     this.domains.forEach((domain) => {
       reply.cookie(name, value, {

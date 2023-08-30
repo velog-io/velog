@@ -50,7 +50,7 @@ export class JwtService {
       {
         subject: 'refresh_token',
         expiresIn: '30d',
-      }
+      },
     )
 
     const accessToken = await this.generateToken(
@@ -60,7 +60,7 @@ export class JwtService {
       {
         subject: 'access_token',
         expiresIn: '1h',
-      }
+      },
     )
 
     return {
@@ -72,7 +72,7 @@ export class JwtService {
     userId: string,
     tokenId: string,
     refreshTokenExp: number,
-    originalRefreshToken: string
+    originalRefreshToken: string,
   ) {
     const now = new Date().getTime()
     const diff = refreshTokenExp * 1000 - now
@@ -86,7 +86,7 @@ export class JwtService {
         {
           subject: 'refresh_token',
           expiresIn: '30d',
-        }
+        },
       )
     }
 
@@ -97,7 +97,7 @@ export class JwtService {
       {
         subject: 'access_token',
         expiresIn: '1h',
-      }
+      },
     )
 
     return { accessToken, refreshToken }

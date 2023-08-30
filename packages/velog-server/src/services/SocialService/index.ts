@@ -131,7 +131,7 @@ export class SocialService implements Service {
       redirect_uri: redirectUri,
     })
     const response = await axios.get<FacebookTokenResult>(
-      `https://graph.facebook.com/v4.0/oauth/access_token?${query}`
+      `https://graph.facebook.com/v4.0/oauth/access_token?${query}`,
     )
     return response.data.access_token
   }
@@ -142,7 +142,7 @@ export class SocialService implements Service {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     )
     const facebookProfile = response.data
     const profile: GetProfileFromSocial = {
@@ -190,7 +190,7 @@ export class SocialService implements Service {
         headers: {
           accept: 'application/json',
         },
-      }
+      },
     )
     return response.data.access_token
   }

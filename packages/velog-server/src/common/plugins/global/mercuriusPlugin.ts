@@ -31,7 +31,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
             name: e.name,
             message: e.message,
           },
-        })
+        }),
       )
 
       return {

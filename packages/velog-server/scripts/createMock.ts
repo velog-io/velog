@@ -12,7 +12,7 @@ const MAX_COMMENTS_PER_POST = 5
 class Seeder {
   constructor(
     private readonly db: DbService,
-    private readonly utils: UtilsService
+    private readonly utils: UtilsService,
   ) {}
   public createUser(mockUser: MockUserWithProfileType[]) {
     return mockUser.map((user) => {
@@ -45,14 +45,14 @@ class Seeder {
   public createComment(
     posts: Post[],
     comments: Prisma.CommentUncheckedCreateInput[],
-    users: User[]
+    users: User[],
   ) {
     return posts
       .map((post) =>
         this.utils
           .shuffle<Prisma.CommentUncheckedCreateInput>(comments)
           .slice(0, MAX_COMMENTS_PER_POST)
-          .map((comment) => ({ ...comment, fk_post_id: post.id }))
+          .map((comment) => ({ ...comment, fk_post_id: post.id })),
       )
       .flat()
       .map((comment) => {

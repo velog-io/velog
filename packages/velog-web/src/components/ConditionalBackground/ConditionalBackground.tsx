@@ -14,7 +14,7 @@ function ConditionalBackground({ children }: Props) {
 
   const isGray = useMemo(
     () => ['/', '/recent', '/lists', '/trending'].some((path) => path.includes(pathname)),
-    [pathname]
+    [pathname],
   )
 
   useEffect(() => {

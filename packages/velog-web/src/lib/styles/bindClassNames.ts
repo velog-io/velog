@@ -26,7 +26,7 @@ export function bindClassNames<T extends Styles>(styles: T) {
   if (originUtilsKeysLen !== resultStylesKeyLen) {
     throw new Error(
       'Detected duplicate keys while merging styles.\
-      Ensure unique class names across all style modules.'
+      Ensure unique class names across all style modules.',
     )
   }
 

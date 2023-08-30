@@ -21,7 +21,7 @@ function HeaderUserMenuItem({ children, to, onClick }: Props) {
   return React.createElement(
     WrapperComponent,
     to ? { href: to, className: `${cx('link')}` } : null,
-    jsx
+    jsx,
   )
 }
 

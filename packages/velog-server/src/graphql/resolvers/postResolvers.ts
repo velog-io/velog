@@ -27,7 +27,7 @@ const postResolvers: Resolvers = {
         parent.body
           .replace(/```([\s\S]*?)```/g, '')
           .replace(/~~~([\s\S]*?)~~~/g, '')
-          .slice(0, 500)
+          .slice(0, 500),
       )
       return removed.slice(0, 200) + (removed.length > 200 ? '...' : '')
     },

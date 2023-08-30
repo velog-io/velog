@@ -9,7 +9,7 @@ const socialRoute: FastifyPluginCallback = (fastify, opts, done) => {
     (request, reply) => {
       console.log(request.socialProfile)
       reply.send('hello')
-    }
+    },
   )
   fastify.get<{ Querystring: { code: string } }>('/callback/facebook', (request, reply) => {})
   fastify.get<{ Querystring: { code: string } }>('/callback/github', (request, reply) => {})

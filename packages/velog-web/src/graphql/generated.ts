@@ -453,12 +453,12 @@ export const ReadPostDocument = `
     `
 export const useReadPostQuery = <TData = ReadPostQuery, TError = unknown>(
   variables: ReadPostQueryVariables,
-  options?: UseQueryOptions<ReadPostQuery, TError, TData>
+  options?: UseQueryOptions<ReadPostQuery, TError, TData>,
 ) =>
   useQuery<ReadPostQuery, TError, TData>(
     ['readPost', variables],
     fetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables),
-    options
+    options,
   )
 export const RecentPostsDocument = `
     query recentPosts($input: RecentPostsInput!) {
@@ -486,12 +486,12 @@ export const RecentPostsDocument = `
     `
 export const useRecentPostsQuery = <TData = RecentPostsQuery, TError = unknown>(
   variables: RecentPostsQueryVariables,
-  options?: UseQueryOptions<RecentPostsQuery, TError, TData>
+  options?: UseQueryOptions<RecentPostsQuery, TError, TData>,
 ) =>
   useQuery<RecentPostsQuery, TError, TData>(
     ['recentPosts', variables],
     fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, variables),
-    options
+    options,
   )
 export const TrendingPostsDocument = `
     query trendingPosts($input: TrendingPostsInput!) {
@@ -519,12 +519,12 @@ export const TrendingPostsDocument = `
     `
 export const useTrendingPostsQuery = <TData = TrendingPostsQuery, TError = unknown>(
   variables: TrendingPostsQueryVariables,
-  options?: UseQueryOptions<TrendingPostsQuery, TError, TData>
+  options?: UseQueryOptions<TrendingPostsQuery, TError, TData>,
 ) =>
   useQuery<TrendingPostsQuery, TError, TData>(
     ['trendingPosts', variables],
     fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, variables),
-    options
+    options,
   )
 export const CurrentUserDocument = `
     query currentUser {
@@ -542,12 +542,12 @@ export const CurrentUserDocument = `
     `
 export const useCurrentUserQuery = <TData = CurrentUserQuery, TError = unknown>(
   variables?: CurrentUserQueryVariables,
-  options?: UseQueryOptions<CurrentUserQuery, TError, TData>
+  options?: UseQueryOptions<CurrentUserQuery, TError, TData>,
 ) =>
   useQuery<CurrentUserQuery, TError, TData>(
     variables === undefined ? ['currentUser'] : ['currentUser', variables],
     fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, variables),
-    options
+    options,
   )
 export const RestoreTokenDocument = `
     query restoreToken {
@@ -559,12 +559,12 @@ export const RestoreTokenDocument = `
     `
 export const useRestoreTokenQuery = <TData = RestoreTokenQuery, TError = unknown>(
   variables?: RestoreTokenQueryVariables,
-  options?: UseQueryOptions<RestoreTokenQuery, TError, TData>
+  options?: UseQueryOptions<RestoreTokenQuery, TError, TData>,
 ) =>
   useQuery<RestoreTokenQuery, TError, TData>(
     variables === undefined ? ['restoreToken'] : ['restoreToken', variables],
     fetcher<RestoreTokenQuery, RestoreTokenQueryVariables>(RestoreTokenDocument, variables),
-    options
+    options,
   )
 export const LogoutDocument = `
     mutation logout {
@@ -572,11 +572,11 @@ export const LogoutDocument = `
 }
     `
 export const useLogoutMutation = <TError = unknown, TContext = unknown>(
-  options?: UseMutationOptions<LogoutMutation, TError, LogoutMutationVariables, TContext>
+  options?: UseMutationOptions<LogoutMutation, TError, LogoutMutationVariables, TContext>,
 ) =>
   useMutation<LogoutMutation, TError, LogoutMutationVariables, TContext>(
     ['logout'],
     (variables?: LogoutMutationVariables) =>
       fetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables)(),
-    options
+    options,
   )

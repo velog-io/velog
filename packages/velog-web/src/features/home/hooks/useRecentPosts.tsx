@@ -42,7 +42,7 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
             cursor: recentPosts[recentPosts.length - 1]?.id,
           }
         },
-      }
+      },
     )
 
   // TODO: remove Start

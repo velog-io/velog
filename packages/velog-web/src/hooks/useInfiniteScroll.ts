@@ -10,7 +10,7 @@ export function useInfiniteScroll(ref: React.RefObject<HTMLElement>, fetchNext: 
       },
       {
         threshold: 0.1,
-      }
+      },
     )
 
     observer.observe(ref.current)

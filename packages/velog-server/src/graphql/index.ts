@@ -35,5 +35,5 @@ export const resolvers = mergeResolvers(
       JSON: JSONResolver,
       Date: DateTimeISOResolver,
     },
-  ])
+  ]),
 ) as IResolvers<any, MercuriusContext>

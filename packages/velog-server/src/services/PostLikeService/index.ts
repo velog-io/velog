@@ -19,7 +19,7 @@ export class PostLikeService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly utils: UtilsService,
-    private readonly search: SearchService
+    private readonly search: SearchService,
   ) {}
   async likePost(postId?: string, userId?: string): Promise<Post> {
     if (!postId) {
@@ -82,7 +82,7 @@ export class PostLikeService implements Service {
           headers: {
             'Cron-Api-Key': ENV.cronApiKey,
           },
-        }
+        },
       )
     }
 

@@ -6,7 +6,7 @@ describe('Modal', () => {
     render(
       <Modal isVisible={true} onOverlayClick={() => {}}>
         test
-      </Modal>
+      </Modal>,
     )
   })
 })
