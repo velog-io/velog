@@ -84,7 +84,7 @@ type Mutation {
   # ): PostHistory
   # removePost(id: ID!): Boolean
   likePost(input: LikePostInput!): Post
-  # unlikePost(id: ID!): Post
+  unlikePost(input: UnlikePostInput!): Post
   # postView(id: ID!): Boolean
 }
 
@@ -139,5 +139,9 @@ input TrendingPostsInput {
 }
 
 input LikePostInput {
+  postId: ID
+}
+
+input UnlikePostInput {
   postId: ID
 }

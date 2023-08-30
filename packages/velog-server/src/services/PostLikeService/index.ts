@@ -11,6 +11,7 @@ import { ENV } from '@env'
 
 interface Service {
   likePost(postId?: string, userId?: string): Promise<Post>
+  unlikePost(postId?: string, userId?: string): Promise<Post>
 }
 
 @injectable()
@@ -91,5 +92,72 @@ export class PostLikeService implements Service {
     }, 0)
 
     return likesPost
+  }
+  async unlikePost(postId?: string, userId?: string): Promise<Post> {
+    if (!postId) {
+      throw new BadRequestError('PostId is required')
+    }
+
+    if (!userId) {
+      throw new UnauthorizedError('Not Logged In')
+    }
+
+    const post = await this.db.post.findUnique({
+      where: {
+        id: postId,
+      },
+    })
+
+    if (!post) {
+      throw new NotFoundError('Post not found')
+    }
+
+    const postLike = await this.db.postLike.findFirst({
+      where: {
+        fk_post_id: postId,
+        fk_user_id: userId,
+      },
+    })
+
+    if (!postLike) {
+      return post
+    }
+
+    await this.db.postLike.delete({
+      where: {
+        id: postLike.id,
+      },
+    })
+
+    const likesCount = await this.db.postLike.count({
+      where: {
+        fk_post_id: postId,
+      },
+    })
+
+    const unlikesPost = await this.db.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        likes: likesCount,
+      },
+    })
+
+    await axios.patch(
+      `${ENV.cronHost}/api/posts/v1/score/${postId}`,
+      {},
+      {
+        headers: {
+          'Cron-Api-Key': ENV.cronApiKey,
+        },
+      },
+    )
+
+    setTimeout(() => {
+      this.search.searchSync.update(post.id)
+    }, 0)
+
+    return unlikesPost
   }
 }

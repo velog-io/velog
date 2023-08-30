@@ -54,10 +54,15 @@ export type LinkedPosts = {
 export type Mutation = {
   likePost?: Maybe<Post>
   logout: Scalars['Boolean']['output']
+  unlikePost?: Maybe<Post>
 }
 
 export type MutationLikePostArgs = {
   input: LikePostInput
+}
+
+export type MutationUnlikePostArgs = {
+  input: UnlikePostInput
 }
 
 export type Post = {
@@ -183,6 +188,10 @@ export type TrendingPostsInput = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
   timeframe?: InputMaybe<Scalars['String']['input']>
+}
+
+export type UnlikePostInput = {
+  postId?: InputMaybe<Scalars['ID']['input']>
 }
 
 export type User = {
@@ -352,6 +361,7 @@ export type ResolversTypes = {
   Stats: ResolverTypeWrapper<Stats>
   String: ResolverTypeWrapper<Scalars['String']['output']>
   TrendingPostsInput: TrendingPostsInput
+  UnlikePostInput: UnlikePostInput
   User: ResolverTypeWrapper<UserModel>
   UserMeta: ResolverTypeWrapper<UserMeta>
   UserProfile: ResolverTypeWrapper<UserProfileModel>
@@ -392,6 +402,7 @@ export type ResolversParentTypes = {
   Stats: Stats
   String: Scalars['String']['output']
   TrendingPostsInput: TrendingPostsInput
+  UnlikePostInput: UnlikePostInput
   User: UserModel
   UserMeta: UserMeta
   UserProfile: UserProfileModel
@@ -444,6 +455,12 @@ export type MutationResolvers<
     RequireFields<MutationLikePostArgs, 'input'>
   >
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  unlikePost?: Resolver<
+    Maybe<ResolversTypes['Post']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUnlikePostArgs, 'input'>
+  >
 }
 
 export type PostResolvers<

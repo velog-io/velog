@@ -72,6 +72,10 @@ const postResolvers: Resolvers = {
       const postLikeService = container.resolve(PostLikeService)
       return await postLikeService.likePost(input.postId, ctx.user?.id)
     },
+    unlikePost: async (_, { input }, ctx): Promise<Post> => {
+      const postLikeService = container.resolve(PostLikeService)
+      return await postLikeService.unlikePost(input.postId, ctx.user?.id)
+    },
   },
 }
 
