@@ -55,10 +55,8 @@ export class SocialService implements Service {
       redirectUri: `${this.redirectUri}/google`,
     })
 
-    console.log('accessToken', accessToken)
     const profile = await this.getGoogleProfile(accessToken)
 
-    console.log('profile', profile)
     const socialAccount = await this.getSocialAccount({
       uid: profile.uid,
       provider: 'google',
