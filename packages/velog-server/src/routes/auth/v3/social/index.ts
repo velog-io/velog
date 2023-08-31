@@ -3,26 +3,26 @@ import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 
 const socialRoute: FastifyPluginCallback = (fastify, opts, done) => {
-  const socialController = container.resolve(SocialController)
+  const controller = container.resolve(SocialController)
 
   /* LOGIN & REGISTER */
-  // fastify.post('/register', socialRegister)
+  fastify.post('/register', controller.socialRegister)
 
   fastify.decorateRequest('socialProfile', null)
   fastify.get<{ Querystring: SocialCallbackQuerystring }>(
     '/callback/google',
-    { preHandler: socialController.googleCallback },
-    socialController.socialCallback,
+    { preHandler: controller.googleCallback },
+    controller.socialCallback,
   )
   fastify.get<{ Querystring: SocialCallbackQuerystring }>(
     '/callback/facebook',
-    { preHandler: socialController.facebookCallback },
-    socialController.socialCallback,
+    { preHandler: controller.facebookCallback },
+    controller.socialCallback,
   )
   fastify.get<{ Querystring: SocialCallbackQuerystring }>(
     '/callback/github',
-    { preHandler: socialController.githubCallback },
-    socialController.socialCallback,
+    { preHandler: controller.githubCallback },
+    controller.socialCallback,
   )
 
   /* Login Token */

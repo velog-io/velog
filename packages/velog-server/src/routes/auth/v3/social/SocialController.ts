@@ -252,7 +252,7 @@ export class SocialController implements Controller {
 
       reply.status(HttpStatus.OK).send(result)
     } catch (error) {
-      console.log(e)
+      console.log(error)
     }
   }
   private async syncProfileImageWithB2(url: string, user: User): Promise<string> {
