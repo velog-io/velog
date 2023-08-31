@@ -53,6 +53,9 @@ const env = z.object({
   facebookSecret: z.string(),
   googleClientId: z.string(),
   googleSecret: z.string(),
+  b2KeyId: z.string(),
+  b2Key: z.string(),
+  b2BucketId: z.string(),
 })
 
 export const ENV = env.parse({
@@ -74,6 +77,9 @@ export const ENV = env.parse({
   facebookSecret: process.env.FACEBOOK_SECRET,
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleSecret: process.env.GOOGLE_SECRET,
+  b2KeyId: process.env.B2_KEY_ID,
+  b2Key: process.env.B2_KEY,
+  b2BucketId: process.env.B2_BUCKET_ID,
 })
 
 export type EnvVars = z.infer<typeof env>

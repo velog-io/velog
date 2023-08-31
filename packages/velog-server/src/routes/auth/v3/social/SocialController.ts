@@ -2,9 +2,12 @@ import { HttpStatus } from '@constants/HttpStatusConstants.js'
 import { HttpStatusMessage } from '@constants/HttpStatusMesageConstants.js'
 import { Time } from '@constants/TimeConstants.js'
 import { ENV } from '@env'
+import { B2ManagerService } from '@lib/b2Manager/B2ManagerService'
 import { CookieService } from '@lib/cookie/CookieService.js'
 import { DbService } from '@lib/db/DbService.js'
+import { FileService } from '@lib/file/FileService'
 import { JwtService } from '@lib/jwt/JwtService.js'
+import { User } from '@prisma/client'
 import {
   GetProfileFromSocial,
   SocialProvider,
@@ -42,6 +45,8 @@ export class SocialController implements Controller {
     private readonly db: DbService,
     private readonly jwt: JwtService,
     private readonly cookie: CookieService,
+    private readonly file: FileService,
+    private readonly b2Manager: B2ManagerService,
   ) {}
   async facebookCallback(
     request: FastifyRequest<{ Querystring: { code: string } }>,
@@ -204,7 +209,86 @@ export class SocialController implements Controller {
           },
         },
       })
-    } catch (error) {}
+
+      if (decoded?.profile.thumbnail) {
+        try {
+          const imageUrl = await this.syncProfileImageWithB2(decoded.profile.thumbnail, user)
+
+          await this.db.userProfile.update({
+            where: {
+              fk_user_id: user.id,
+            },
+            data: {
+              thumbnail: imageUrl,
+            },
+          })
+        } catch (e) {
+          console.log(e)
+        }
+      }
+
+      const tokens = await this.jwt.generateUserToken(user.id)
+      this.cookie.setCookie(reply, 'access_token', tokens.accessToken, {
+        maxAge: Time.ONE_HOUR_IN_MS,
+      })
+      this.cookie.setCookie(reply, 'refresh_token', tokens.refreshToken, {
+        maxAge: Time.ONE_DAY_IN_MS * 30,
+      })
+
+      const profile = await this.db.userProfile.findFirst({
+        where: {
+          fk_user_id: user.id,
+        },
+      })
+
+      const result = {
+        ...user,
+        profile,
+        tokens: {
+          access_token: tokens.accessToken,
+          refresh_token: tokens.refreshToken,
+        },
+      }
+
+      reply.status(HttpStatus.OK).send(result)
+    } catch (error) {
+      console.log(e)
+    }
+  }
+  private async syncProfileImageWithB2(url: string, user: User): Promise<string> {
+    const result = await this.file.downloadFile(url)
+
+    const filename = `social_profile.${result.extension}`
+
+    //convert readstream to buffer
+    const buffer = await new Promise<Buffer>((resolve, reject) => {
+      const buffers: Buffer[] = []
+      result.stream.on('data', (data: Buffer) => buffers.push(data))
+      result.stream.on('end', () => resolve(Buffer.concat(buffers)))
+      result.stream.on('error', reject)
+    })
+
+    const filesize = buffer.length
+
+    const userImage = await this.db.userImage.create({
+      data: {
+        fk_user_id: user.id,
+        type: 'profile',
+        filesize,
+      },
+    })
+
+    const uploadPath = this.file
+      .generateUploadPath({
+        id: userImage.id,
+        type: 'profile',
+        username: user.username,
+      })
+      .concat(`/${filename}`)
+
+    const uploadResult = await this.b2Manager.upload(buffer, uploadPath)
+
+    return uploadResult.url
   }
 }
 
