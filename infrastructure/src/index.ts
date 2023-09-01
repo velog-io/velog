@@ -13,7 +13,7 @@ import { execCommand } from './lib/execCommand'
 const config = new pulumi.Config()
 const target = config.get('target')
 
-type Target = 'server' | 'cron'
+type Target = 'web' | 'server' | 'cron'
 
 const validTargets = ['all', 'web', 'server', 'cron']
 if (!target || !validTargets.includes(target)) {
@@ -44,7 +44,7 @@ const createInfraMapper: Record<
     repoUrl: pulumi.Output<string>
   }
 > = {
-  // web: createWebInfra,
+  web: createWebInfra,
   server: createServerInfra,
   cron: createCronInfra,
 }
