@@ -13,8 +13,10 @@ import {
   SocialProvider,
 } from '@services/SocialService/SocialServiceInterface.js'
 import { SocialService } from '@services/SocialService/index.js'
+import { ExternalIntegrationService } from '@services/ExternalIntegrationService/index.js'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { injectable, singleton } from 'tsyringe'
+import { google } from 'googleapis'
 
 interface Controller {
   facebookCallback(
@@ -35,6 +37,7 @@ interface Controller {
     }>,
     reply: FastifyReply,
   ): Promise<void>
+  getSocialProfile(request: FastifyRequest, reply: FastifyReply): Promise<void>
 }
 
 @singleton()
@@ -47,8 +50,12 @@ export class SocialController implements Controller {
     private readonly cookie: CookieService,
     private readonly file: FileService,
     private readonly b2Manager: B2ManagerService,
+    private readonly externalInterationService: ExternalIntegrationService,
   ) {}
-  async facebookCallback(
+  private get redirectUri(): string {
+    return `${ENV.apiHost}/api/v2/auth/social/callback`
+  }
+  public async facebookCallback(
     request: FastifyRequest<{ Querystring: { code: string } }>,
     reply: FastifyReply,
   ): Promise<void> {
@@ -61,7 +68,7 @@ export class SocialController implements Controller {
     const profile = await this.socialService.getSocialDataFromFacebook(code)
     request.socialProfile = profile
   }
-  async githubCallback(
+  public async githubCallback(
     request: FastifyRequest<{ Querystring: { code: string } }>,
     reply: FastifyReply,
   ): Promise<void> {
@@ -75,7 +82,7 @@ export class SocialController implements Controller {
     const profile = await this.socialService.getSocialDataFromGithub(code)
     request.socialProfile = profile
   }
-  async googleCallback(
+  public async googleCallback(
     request: FastifyRequest<{ Querystring: { code: string } }>,
     reply: FastifyReply,
   ): Promise<void> {
@@ -88,7 +95,7 @@ export class SocialController implements Controller {
     const profile = await this.socialService.getSocialDataFromGoogle(code)
     request.socialProfile = profile
   }
-  async socialCallback(
+  public async socialCallback(
     request: FastifyRequest<{ Querystring: { state?: string; next?: string } }>,
     reply: FastifyReply,
   ): Promise<void> {
@@ -126,19 +133,21 @@ export class SocialController implements Controller {
         : null
       const next = request.query.next || state?.next || '/'
 
-      // if (next.includes('user-integrate') && state) {
-      //   const isIntegrated = await externalInterationService.checkIntegrated(user.id)
-      //   if (isIntegrated) {
-      //     const code = await externalInterationService.createIntegrationCode(user.id)
-      //     ctx.redirect(`${process.env.CODENARY_CALLBACK}?code=${code}&state=${state.integrateState}`)
-      //     return
-      //   }
-      // }
+      if (next.includes('user-integrate') && state) {
+        const isIntegrated = await this.externalInterationService.checkIntegrated(user.id)
+        if (isIntegrated) {
+          const code = await this.externalInterationService.createIntegrationCode(user.id)
+          reply.redirect(
+            `${process.env.CODENARY_CALLBACK}?code=${code}&state=${state.integrateState}`,
+          )
+          return
+        }
+      }
 
       reply.redirect(decodeURI(redirectUrl.concat(next)))
     }
   }
-  async socialRegister(
+  public async socialRegister(
     request: FastifyRequest<{
       Body: { display_name: string; username: string; short_bio: string }
     }>,
@@ -162,7 +171,6 @@ export class SocialController implements Controller {
     }
 
     const email = decoded.profile.email
-
     try {
       const exists = await this.db.user.findFirst({
         where: {
@@ -269,7 +277,6 @@ export class SocialController implements Controller {
     })
 
     const filesize = buffer.length
-
     const userImage = await this.db.userImage.create({
       data: {
         fk_user_id: user.id,
@@ -290,10 +297,84 @@ export class SocialController implements Controller {
 
     return uploadResult.url
   }
+  public async getSocialProfile(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+    const registerToken = this.cookie.getCookie(reply, 'register_token')
+    if (!registerToken) {
+      reply.status(HttpStatus.UNAUTHORIZED).send(HttpStatusMessage.UNAUTHORIZED)
+      return
+    }
+
+    try {
+      const decoded = await this.jwt.decodeToken<SocialRegisterToken>(registerToken)
+      reply.status(HttpStatus.OK).send(decoded.profile)
+    } catch (e) {
+      reply.status(HttpStatus.BAD_REQUEST).send(HttpStatusMessage.BAD_REQUEST)
+    }
+  }
+  public async socialRedirect(
+    request: FastifyRequest<{
+      Params: { provider: SocialProvider }
+      Querystring: { next: string; isIntegrate: string; integrateState: string }
+    }>,
+    reply: FastifyReply,
+  ) {
+    const { next, isIntegrate, integrateState } = request.query
+    const { provider } = request.params
+    const loginUrl = this.generateSocialLoginLink(provider, {
+      isIntegrate: isIntegrate === '1',
+      next,
+      integrateState,
+    })
+    reply.redirect(loginUrl)
+  }
+  private generateSocialLoginLink(
+    provider: SocialProvider,
+    { next = '/', isIntegrate = false, integrateState }: Options,
+  ) {
+    const generator = this.socialLoginLiknGenerator[provider]
+    return generator({
+      next: encodeURI(next),
+      isIntegrate,
+      integrateState,
+    })
+  }
+  private get socialLoginLiknGenerator() {
+    return {
+      github: ({ next, isIntegrate, integrateState }: Options) => {
+        const redirectUriWithOptions = `${this.redirectUri}/github?next=${next}&isIntegrate=${
+          isIntegrate ? 1 : 0
+        }&integrateState=${integrateState ?? ''}`
+        return `https://github.com/login/oauth/authorize?scope=user:email&client_id=${ENV.githubClientId}&redirect_uri=${redirectUriWithOptions}`
+      },
+      facebook: ({ next, isIntegrate, integrateState }: Options) => {
+        const state = JSON.stringify({ next, isIntegrate: isIntegrate ? 1 : 0, integrateState })
+        const callbackUri = `${this.redirectUri}/facebook`
+        return `https://www.facebook.com/v4.0/dialog/oauth?client_id=${ENV.facebookClientId}&redirect_uri=${callbackUri}&state=${state}&scope=email,public_profile`
+      },
+      google: ({ next, isIntegrate, integrateState }: Options) => {
+        const callback = `${this.redirectUri}/google`
+        const oauth2Client = new google.auth.OAuth2(ENV.googleClientId, ENV.googleSecret, callback)
+        const url = oauth2Client.generateAuthUrl({
+          scope: [
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile',
+          ],
+          state: JSON.stringify({ next, isIntegrate: isIntegrate ? 1 : 0, integrateState }),
+        })
+        return url
+      },
+    }
+  }
 }
 
 type SocialRegisterToken = {
   profile: GetProfileFromSocial
   provider: SocialProvider
   accessToken: string
+}
+
+type Options = {
+  next: string
+  isIntegrate?: boolean
+  integrateState?: string
 }

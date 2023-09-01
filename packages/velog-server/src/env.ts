@@ -56,6 +56,9 @@ const env = z.object({
   b2KeyId: z.string(),
   b2Key: z.string(),
   b2BucketId: z.string(),
+  codenaryWebhook: z.string(),
+  codenaryApiKey: z.string(),
+  codenaryCallback: z.string(),
 })
 
 export const ENV = env.parse({
@@ -80,6 +83,9 @@ export const ENV = env.parse({
   b2KeyId: process.env.B2_KEY_ID,
   b2Key: process.env.B2_KEY,
   b2BucketId: process.env.B2_BUCKET_ID,
+  codenaryWebhook: process.env.CODENARY_WEBHOOK,
+  codenaryApiKey: process.env.CODENARY_API_KEY,
+  codenaryCallback: process.env.CODENARY_CALLBACK,
 })
 
 export type EnvVars = z.infer<typeof env>

@@ -26,8 +26,8 @@ const socialRoute: FastifyPluginCallback = (fastify, opts, done) => {
   )
 
   /* Login Token */
-  // social.get('/profile', getSocialProfile)
-  // social.get('/redirect/:provider', socialRedirect)
+  fastify.get('/profile', controller.getSocialProfile)
+  fastify.get('/redirect/:provider', controller.socialRedirect)
 
   done()
 }
