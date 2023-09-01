@@ -33,7 +33,8 @@
     "jest.*",
     "codegen.ts",
     "./scripts/**/*.ts",
-    "test/**/*.ts"
+    "test/**/*.ts",
+    "../velog-prisma/scripts/createMock.ts"
   ],
   "exclude": [],
   "ts-node": {
