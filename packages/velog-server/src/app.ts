@@ -9,6 +9,7 @@ import routes from '@routes/index.js'
 
 const app = Fastify({
   logger: true,
+  trustProxy: true,
 })
 
 app.register(cookie, { secret: ENV.cookieSecretKey })
