@@ -4,6 +4,8 @@ import { getECRImage } from '../../common/ecr'
 import { createECSfargateService } from '../../common/ecs'
 import { createLoadBalancer } from '../../common/loadBalancer'
 import { createSecurityGroup } from '../../common/securityGroup'
+import { withPrefix } from '../../lib/prefix'
+import aws from '@pulumi/aws'
 
 export const createWebInfra = ({
   vpcId,
@@ -27,6 +29,18 @@ export const createWebInfra = ({
     packageType: 'web',
     protect,
   })
+
+  const targetGroupName = withPrefix('web-tg2')
+  const targetGroup2 = new aws.lb.TargetGroup(
+    targetGroupName,
+    {
+      port: ENV.webPort,
+      protocol: 'HTTP',
+      targetType: 'ip',
+      vpcId: vpcId,
+    },
+    { protect },
+  )
 
   createECSfargateService({
     packageType: 'web',
