@@ -61,6 +61,7 @@ export const repourls = Object.entries(createInfraMapper).map(([key, func]) => {
   if (target === key || target === 'all') {
     Object.assign(infraSettings, { protect: false })
   }
+
   const { repoUrl } = func(infraSettings)
   return repoUrl
 })
