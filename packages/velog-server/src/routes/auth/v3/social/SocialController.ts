@@ -7,7 +7,7 @@ import { CookieService } from '@lib/cookie/CookieService.js'
 import { DbService } from '@lib/db/DbService.js'
 import { FileService } from '@lib/file/FileService.js'
 import { JwtService } from '@lib/jwt/JwtService.js'
-import { User } from '@prisma/client'
+import { User, UserProfile } from '@prisma/client'
 import {
   GetProfileFromSocial,
   SocialProvider,
@@ -17,6 +17,11 @@ import { ExternalIntegrationService } from '@services/ExternalIntegrationService
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { injectable, singleton } from 'tsyringe'
 import { google } from 'googleapis'
+import { UnauthorizedError } from '@errors/UnauthorizedError.js'
+import { ConfilctError } from '@errors/ConfilctError.js'
+import { BadRequestError } from '@errors/BadRequestErrors'
+import { NotFoundError } from '@errors/NotfoundError'
+import { ForbiddenError } from '@errors/ForbiddenError'
 
 interface Controller {
   facebookCallback(
@@ -36,8 +41,8 @@ interface Controller {
       Body: { display_name: string; username: string; short_bio: string }
     }>,
     reply: FastifyReply,
-  ): Promise<void>
-  getSocialProfile(request: FastifyRequest, reply: FastifyReply): Promise<void>
+  ): Promise<SocialRegisterResult>
+  getSocialProfile(request: FastifyRequest, reply: FastifyReply): Promise<GetProfileFromSocial>
 }
 
 @singleton()
@@ -62,9 +67,9 @@ export class SocialController implements Controller {
     const { code } = request.query
 
     if (!code) {
-      reply.status(HttpStatus.BAD_REQUEST).send('Code is required')
-      return
+      throw new BadRequestError('Code is required')
     }
+
     const profile = await this.socialService.getSocialDataFromFacebook(code)
     request.socialProfile = profile
   }
@@ -75,8 +80,7 @@ export class SocialController implements Controller {
     const { code } = request.query
 
     if (!code) {
-      reply.status(HttpStatus.BAD_REQUEST).send('Code is required')
-      return
+      throw new BadRequestError('Code is required')
     }
 
     const profile = await this.socialService.getSocialDataFromGithub(code)
@@ -89,9 +93,9 @@ export class SocialController implements Controller {
     const { code } = request.query
 
     if (!code) {
-      reply.status(HttpStatus.BAD_REQUEST).send('Code is required')
-      return
+      throw new BadRequestError('Code is required')
     }
+
     const profile = await this.socialService.getSocialDataFromGoogle(code)
     request.socialProfile = profile
   }
@@ -100,13 +104,18 @@ export class SocialController implements Controller {
     reply: FastifyReply,
   ): Promise<void> {
     if (!request.socialProfile) {
-      reply.status(HttpStatus.NOT_FOUND).send('Social profile data is missing')
-      return
+      throw new NotFoundError('Social profile data is missing')
     }
 
     const { profile, socialAccount, accessToken, provider } = request.socialProfile
 
-    if (!profile || !accessToken) return
+    if (!profile) {
+      throw new NotFoundError('Not found social profile')
+    }
+
+    if (!accessToken) {
+      throw new NotFoundError('Not found social access token')
+    }
 
     if (socialAccount) {
       const user = await this.db.user.findUnique({
@@ -137,9 +146,7 @@ export class SocialController implements Controller {
         const isIntegrated = await this.externalInterationService.checkIntegrated(user.id)
         if (isIntegrated) {
           const code = await this.externalInterationService.createIntegrationCode(user.id)
-          reply.redirect(
-            `${process.env.CODENARY_CALLBACK}?code=${code}&state=${state.integrateState}`,
-          )
+          reply.redirect(`${ENV.codenaryCallback}?code=${code}&state=${state.integrateState}`)
           return
         }
       }
@@ -152,12 +159,11 @@ export class SocialController implements Controller {
       Body: { display_name: string; username: string; short_bio: string }
     }>,
     reply: FastifyReply,
-  ) {
+  ): Promise<SocialRegisterResult> {
     // check token existancy
     const registerToken = this.cookie.getCookie(reply, 'register_token')
     if (!registerToken) {
-      reply.status(HttpStatus.UNAUTHORIZED).send(HttpStatusMessage.UNAUTHORIZED)
-      return
+      throw new UnauthorizedError()
     }
 
     const { display_name, username, short_bio } = request.body
@@ -165,103 +171,93 @@ export class SocialController implements Controller {
     try {
       decoded = await this.jwt.decodeToken<SocialRegisterToken>(registerToken)
     } catch (e) {
-      // failed to decode token
-      reply.status(HttpStatus.UNAUTHORIZED).send(HttpStatusMessage.UNAUTHORIZED)
-      return
+      throw new UnauthorizedError()
     }
 
     const email = decoded.profile.email
-    try {
-      const exists = await this.db.user.findFirst({
-        where: {
-          OR: [
-            { username: username },
-            {
-              email: {
-                equals: email,
-                not: null,
-              },
-            },
-          ],
-        },
-      })
 
-      if (exists) {
-        reply.status(HttpStatus.CONFLICT).send('ALREADY_EXISTS')
-        return
-      }
+    const exists = await this.db.user.findFirst({
+      where: {
+        OR: [
+          { username: username },
+          {
+            email: {
+              equals: email,
+              not: null,
+            },
+          },
+        ],
+      },
+    })
 
-      const user = await this.db.user.create({
-        data: {
-          username,
-          email,
-          is_certified: true,
-          profile: {
-            create: {
-              display_name,
-              short_bio,
-            },
-          },
-          socialAccount: {
-            create: {
-              access_token: decoded.accessToken,
-              provider: decoded.provider,
-              social_id: decoded.profile.uid.toString(),
-            },
-          },
-          velogConfig: {
-            create: {},
-          },
-          userMeta: {
-            create: {},
+    if (exists) {
+      throw new ConfilctError('ALREADY_EXISTS')
+    }
+
+    const user = await this.db.user.create({
+      data: {
+        username,
+        email,
+        is_certified: true,
+        profile: {
+          create: {
+            display_name,
+            short_bio,
           },
         },
-      })
+        socialAccount: {
+          create: {
+            access_token: decoded.accessToken,
+            provider: decoded.provider,
+            social_id: decoded.profile.uid.toString(),
+          },
+        },
+        velogConfig: {
+          create: {},
+        },
+        userMeta: {
+          create: {},
+        },
+      },
+    })
 
-      if (decoded?.profile.thumbnail) {
-        try {
-          const imageUrl = await this.syncProfileImageWithB2(decoded.profile.thumbnail, user)
+    if (decoded?.profile.thumbnail) {
+      const imageUrl = await this.syncProfileImageWithB2(decoded.profile.thumbnail, user)
 
-          await this.db.userProfile.update({
-            where: {
-              fk_user_id: user.id,
-            },
-            data: {
-              thumbnail: imageUrl,
-            },
-          })
-        } catch (e) {
-          console.log(e)
-        }
-      }
-
-      const tokens = await this.jwt.generateUserToken(user.id)
-      this.cookie.setCookie(reply, 'access_token', tokens.accessToken, {
-        maxAge: Time.ONE_HOUR_IN_MS,
-      })
-      this.cookie.setCookie(reply, 'refresh_token', tokens.refreshToken, {
-        maxAge: Time.ONE_DAY_IN_MS * 30,
-      })
-
-      const profile = await this.db.userProfile.findFirst({
+      await this.db.userProfile.update({
         where: {
           fk_user_id: user.id,
         },
-      })
-
-      const result = {
-        ...user,
-        profile,
-        tokens: {
-          access_token: tokens.accessToken,
-          refresh_token: tokens.refreshToken,
+        data: {
+          thumbnail: imageUrl,
         },
-      }
-
-      reply.status(HttpStatus.OK).send(result)
-    } catch (error) {
-      console.log(error)
+      })
     }
+
+    const tokens = await this.jwt.generateUserToken(user.id)
+    this.cookie.setCookie(reply, 'access_token', tokens.accessToken, {
+      maxAge: Time.ONE_HOUR_IN_MS,
+    })
+    this.cookie.setCookie(reply, 'refresh_token', tokens.refreshToken, {
+      maxAge: Time.ONE_DAY_IN_MS * 30,
+    })
+
+    const profile = await this.db.userProfile.findFirst({
+      where: {
+        fk_user_id: user.id,
+      },
+    })
+
+    const result = {
+      ...user,
+      profile: profile!,
+      tokens: {
+        access_token: tokens.accessToken,
+        refresh_token: tokens.refreshToken,
+      },
+    }
+
+    return result
   }
   private async syncProfileImageWithB2(url: string, user: User): Promise<string> {
     const result = await this.file.downloadFile(url)
@@ -297,18 +293,21 @@ export class SocialController implements Controller {
 
     return uploadResult.url
   }
-  public async getSocialProfile(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+  public async getSocialProfile(
+    request: FastifyRequest,
+    reply: FastifyReply,
+  ): Promise<GetProfileFromSocial> {
     const registerToken = this.cookie.getCookie(reply, 'register_token')
     if (!registerToken) {
-      reply.status(HttpStatus.UNAUTHORIZED).send(HttpStatusMessage.UNAUTHORIZED)
-      return
+      throw new UnauthorizedError()
     }
 
     try {
       const decoded = await this.jwt.decodeToken<SocialRegisterToken>(registerToken)
-      reply.status(HttpStatus.OK).send(decoded.profile)
+
+      return decoded.profile
     } catch (e) {
-      reply.status(HttpStatus.BAD_REQUEST).send(HttpStatusMessage.BAD_REQUEST)
+      throw new BadRequestError()
     }
   }
   public async socialRedirect(
@@ -372,6 +371,14 @@ type SocialRegisterToken = {
   provider: SocialProvider
   accessToken: string
 }
+
+type SocialRegisterResult = {
+  profile: UserProfile
+  tokens: {
+    access_token: string
+    refresh_token: string
+  }
+} & User
 
 type Options = {
   next: string
