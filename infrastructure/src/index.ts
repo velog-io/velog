@@ -10,16 +10,6 @@ import { getCertificate } from './common/certificate'
 import { createCronInfra } from './packages/cron'
 import { execCommand } from './lib/execCommand'
 
-const config = new pulumi.Config()
-const target = config.get('target')
-
-type Target = 'web' | 'server' | 'cron'
-
-const validTargets = ['all', 'web', 'server', 'cron']
-if (!target || !validTargets.includes(target)) {
-  throw new Error('Invalid target name, See the README.md')
-}
-
 execCommand('pnpm -r prisma:copy')
 
 // VPC, Subnet, DHCP, Intergate way, route Table
@@ -38,6 +28,7 @@ export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
 
 const certificateArn = getCertificate(ENV.certificateDomain)
 
+type Target = 'web' | 'server' | 'cron'
 const createInfraMapper: Record<
   Target,
   (func: CreateInfraParameter) => {
@@ -49,7 +40,7 @@ const createInfraMapper: Record<
   cron: createCronInfra,
 }
 
-export const repourls = Object.entries(createInfraMapper).map(([key, func]) => {
+export const repourls = Object.entries(createInfraMapper).map(([key, createInfra]) => {
   const infraSettings = {
     vpcId,
     subnetIds,
@@ -58,9 +49,6 @@ export const repourls = Object.entries(createInfraMapper).map(([key, func]) => {
     protect: true,
   }
 
-  if (target === key || target === 'all') {
-    Object.assign(infraSettings, { protect: false })
-  }
-  const { repoUrl } = func(infraSettings)
+  const { repoUrl } = createInfra(infraSettings)
   return repoUrl
 })

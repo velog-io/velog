@@ -5,7 +5,7 @@ import { createECSfargateService } from '../../common/ecs'
 import { createLoadBalancer } from '../../common/loadBalancer'
 import { createSecurityGroup } from '../../common/securityGroup'
 import { withPrefix } from '../../lib/prefix'
-import aws from '@pulumi/aws'
+import * as aws from '@pulumi/aws'
 
 export const createWebInfra = ({
   vpcId,

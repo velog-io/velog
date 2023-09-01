@@ -77,7 +77,6 @@
     "@types/node": "^20.3.1",
     "@types/qs": "^6.9.7",
     "@types/remove-markdown": "^0.3.1",
-    "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",

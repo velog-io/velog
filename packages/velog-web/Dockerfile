@@ -18,6 +18,6 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN pnpm build
-EXPOSE 3000
+EXPOSE 3001
 
 CMD ["pnpm", "start"]

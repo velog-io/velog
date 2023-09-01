@@ -10,7 +10,7 @@ type GetECRPrameter = {
 
 export const getECRImage = ({ type, protect }: GetECRPrameter) => {
   const option = options[type]
-  const repo = new awsx.ecr.Repository(option.ecrRepoName, { forceDelete: true })
+  const repo = new awsx.ecr.Repository(option.ecrRepoName, { forceDelete: true }, { protect })
   const image = new awsx.ecr.Image(
     withPrefix(option.imageName),
     {
