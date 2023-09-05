@@ -1,9 +1,8 @@
-import { DbService } from '@lib/db/DbService'
-import { MailService } from '@lib/mail/MailService'
-import { FastifyReply, FastifyRequest } from 'fastify'
+import { DbService } from '@lib/db/DbService.js'
+import { MailService } from '@lib/mail/MailService.js'
 import { injectable, singleton } from 'tsyringe'
 import { nanoid } from 'nanoid'
-import { createAuthEmail } from '@template/createAuthEmail'
+import { createAuthEmail } from '@template/createAuthEmail.js'
 import { ENV } from '@env'
 import { SendMailInput } from '@graphql/generated'
 

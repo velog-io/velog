@@ -1,24 +1,16 @@
-import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
+import { useMutation, useQuery, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
 import { fetcher } from './fetcher'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = T | undefined
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K]
-}
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>
-}
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>
-}
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
   [_ in K]?: never
 }
 export type Incremental<T> =
   | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never
-    }
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string }
@@ -43,13 +35,32 @@ export type Comment = {
   user: Maybe<User>
 }
 
+export type LikePostInput = {
+  postId?: InputMaybe<Scalars['ID']['input']>
+}
+
 export type LinkedPosts = {
   next: Maybe<Post>
   previous: Maybe<Post>
 }
 
 export type Mutation = {
+  likePost: Maybe<Post>
   logout: Scalars['Boolean']['output']
+  sendMail: Maybe<SendMailResponse>
+  unlikePost: Maybe<Post>
+}
+
+export type MutationLikePostArgs = {
+  input: LikePostInput
+}
+
+export type MutationSendMailArgs = {
+  input: SendMailInput
+}
+
+export type MutationUnlikePostArgs = {
+  input: UnlikePostInput
 }
 
 export type Post = {
@@ -147,6 +158,14 @@ export type SearchResult = {
   posts: Array<Post>
 }
 
+export type SendMailInput = {
+  email: Scalars['String']['input']
+}
+
+export type SendMailResponse = {
+  registered: Maybe<Scalars['Boolean']['output']>
+}
+
 export type Series = {
   created_at: Maybe<Scalars['DateTimeISO']['output']>
   description: Maybe<Scalars['String']['output']>
@@ -175,6 +194,10 @@ export type TrendingPostsInput = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
   timeframe?: InputMaybe<Scalars['String']['input']>
+}
+
+export type UnlikePostInput = {
+  postId?: InputMaybe<Scalars['ID']['input']>
 }
 
 export type User = {
@@ -217,6 +240,12 @@ export type VelogConfig = {
   logo_image: Maybe<Scalars['String']['output']>
   title: Maybe<Scalars['String']['output']>
 }
+
+export type SendMailMutationVariables = Exact<{
+  input: SendMailInput
+}>
+
+export type SendMailMutation = { sendMail: { registered: boolean | null } | null }
 
 export type ReadPostQueryVariables = Exact<{
   input: ReadPostInput
@@ -310,11 +339,7 @@ export type RecentPostsQuery = {
     is_private: boolean
     likes: number | null
     comments_count: number | null
-    user: {
-      id: string
-      username: string
-      profile: { id: string; thumbnail: string | null }
-    } | null
+    user: { id: string; username: string; profile: { id: string; thumbnail: string | null } } | null
   } | null> | null
 }
 
@@ -334,11 +359,7 @@ export type TrendingPostsQuery = {
     updated_at: any
     is_private: boolean
     comments_count: number | null
-    user: {
-      id: string
-      username: string
-      profile: { id: string; thumbnail: string | null }
-    } | null
+    user: { id: string; username: string; profile: { id: string; thumbnail: string | null } } | null
   } | null> | null
 }
 
@@ -353,16 +374,26 @@ export type CurrentUserQuery = {
   } | null
 }
 
-export type RestoreTokenQueryVariables = Exact<{ [key: string]: never }>
-
-export type RestoreTokenQuery = {
-  restoreToken: { accessToken: string; refreshToken: string } | null
-}
-
 export type LogoutMutationVariables = Exact<{ [key: string]: never }>
 
 export type LogoutMutation = { logout: boolean }
 
+export const SendMailDocument = `
+    mutation sendMail($input: SendMailInput!) {
+  sendMail(input: $input) {
+    registered
+  }
+}
+    `
+export const useSendMailMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<SendMailMutation, TError, SendMailMutationVariables, TContext>,
+) =>
+  useMutation<SendMailMutation, TError, SendMailMutationVariables, TContext>(
+    ['sendMail'],
+    (variables?: SendMailMutationVariables) =>
+      fetcher<SendMailMutation, SendMailMutationVariables>(SendMailDocument, variables)(),
+    options,
+  )
 export const ReadPostDocument = `
     query readPost($input: ReadPostInput!) {
   post(input: $input) {
@@ -547,23 +578,6 @@ export const useCurrentUserQuery = <TData = CurrentUserQuery, TError = unknown>(
   useQuery<CurrentUserQuery, TError, TData>(
     variables === undefined ? ['currentUser'] : ['currentUser', variables],
     fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, variables),
-    options,
-  )
-export const RestoreTokenDocument = `
-    query restoreToken {
-  restoreToken {
-    accessToken
-    refreshToken
-  }
-}
-    `
-export const useRestoreTokenQuery = <TData = RestoreTokenQuery, TError = unknown>(
-  variables?: RestoreTokenQueryVariables,
-  options?: UseQueryOptions<RestoreTokenQuery, TError, TData>,
-) =>
-  useQuery<RestoreTokenQuery, TError, TData>(
-    variables === undefined ? ['restoreToken'] : ['restoreToken', variables],
-    fetcher<RestoreTokenQuery, RestoreTokenQueryVariables>(RestoreTokenDocument, variables),
     options,
   )
 export const LogoutDocument = `

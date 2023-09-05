@@ -1,5 +1,3 @@
-import { HttpStatus } from '@constants/HttpStatusConstants.js'
-import { HttpStatusMessage } from '@constants/HttpStatusMesageConstants.js'
 import { Time } from '@constants/TimeConstants.js'
 import { ENV } from '@env'
 import { B2ManagerService } from '@lib/b2Manager/B2ManagerService.js'
@@ -19,9 +17,8 @@ import { injectable, singleton } from 'tsyringe'
 import { google } from 'googleapis'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { ConfilctError } from '@errors/ConfilctError.js'
-import { BadRequestError } from '@errors/BadRequestErrors'
-import { NotFoundError } from '@errors/NotfoundError'
-import { ForbiddenError } from '@errors/ForbiddenError'
+import { BadRequestError } from '@errors/BadRequestErrors.js'
+import { NotFoundError } from '@errors/NotfoundError.js'
 
 interface Controller {
   facebookCallback(

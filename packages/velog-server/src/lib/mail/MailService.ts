@@ -1,5 +1,5 @@
 import { SendEmailCommand, __MetadataBearer } from '@aws-sdk/client-ses'
-import { AwsService } from '@lib/aws/AwsService'
+import { AwsService } from '@lib/aws/AwsService.js'
 import { injectable, singleton } from 'tsyringe'
 import sanitizeHtml from 'sanitize-html'
 
