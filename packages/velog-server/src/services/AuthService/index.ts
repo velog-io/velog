@@ -36,8 +36,18 @@ export class AuthService implements Service {
 
     if (ENV.appEnv === 'development') {
       console.log(
-        `Login URL: ${ENV.clientHost}/${user ? 'email-login' : 'register'}?code=${emailAuth.code}`,
+        `Login URL: ${ENV.clientV2Host}/${user ? 'email-login' : 'register'}?code=${
+          emailAuth.code
+        }`,
       )
+
+      await this.mail.sendMail({
+        to: email,
+        from: 'verify@velog.io',
+        ...template,
+      })
+
+      console.log('send!')
     } else {
       await this.mail.sendMail({
         to: email,

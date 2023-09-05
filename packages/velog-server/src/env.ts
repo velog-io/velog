@@ -37,7 +37,8 @@ dotenv.config({ path: configPath })
 const env = z.object({
   appEnv: z.enum(['development', 'test', 'stage', 'production']),
   port: z.number(),
-  clientHost: z.string(),
+  clientV2Host: z.string(),
+  clientV3Host: z.string(),
   apiHost: z.string(),
   cronHost: z.string(),
   cookieSecretKey: z.string(),
@@ -64,7 +65,8 @@ const env = z.object({
 export const ENV = env.parse({
   appEnv,
   port: Number(process.env.PORT),
-  clientHost: process.env.CLIENT_HOST,
+  clientV2Host: process.env.CLIENT_V2_HOST,
+  clientV3Host: process.env.CLIENT_V2_HOST,
   apiHost: process.env.API_HOST,
   cronHost: process.env.CRON_HOST,
   jwtSecretKey: process.env.JWT_SECRET_KEY,

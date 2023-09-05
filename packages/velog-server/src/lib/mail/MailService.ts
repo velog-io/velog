@@ -28,7 +28,14 @@ export class MailService {
           },
           Text: {
             Charset: 'UTF-8',
-            Data: sanitizeHtml(body, { allowedTags: [] }),
+            Data: sanitizeHtml(body, {
+              allowedAttributes: { a: ['style'] },
+              allowedStyles: {
+                a: {
+                  width: [/^\d+(?:px|em|%)$/],
+                },
+              },
+            }),
           },
         },
         Subject: {
