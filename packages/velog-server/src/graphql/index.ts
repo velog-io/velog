@@ -9,7 +9,7 @@ import { basename, dirname, resolve } from 'path'
 import { ENV } from '@env'
 import { fileURLToPath } from 'url'
 
-async function resolverLoader(): Promise<Resolvers[]> {
+async function resolverAutoLoader(): Promise<Resolvers[]> {
   const __filename = fileURLToPath(import.meta.url)
   const __dirname = dirname(__filename)
   const resolverFolderPath = resolve(__dirname, 'resolvers')
@@ -27,7 +27,7 @@ export const schema = loadSchemaSync(resolve(process.cwd(), 'src/graphql/*.gql')
   loaders: [new GraphQLFileLoader()],
 })
 
-const loadedResolver = await resolverLoader()
+const loadedResolver = await resolverAutoLoader()
 
 export const resolvers = mergeResolvers(
   loadedResolver.concat([

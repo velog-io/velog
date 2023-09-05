@@ -6,7 +6,7 @@ import apiClient from './apiClient'
  * @param email
  */
 export const sendAuthEmail = (email: string) =>
-  apiClient.post<SendAuthEmailResponse>('/api/v2/auth/sendmail', {
+  apiClient.post<SendAuthEmailResponse>('/api/auth/v3/sendmail', {
     email,
   })
 
