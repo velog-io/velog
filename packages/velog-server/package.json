@@ -53,6 +53,7 @@
     "inquirer": "^9.2.7",
     "jsonwebtoken": "^9.0.0",
     "lru-cache": "^10.0.0",
+    "marked": "^8.0.0",
     "mercurius": "^13.0.0",
     "mime-types": "^2.1.35",
     "nanoid": "^4.0.2",
