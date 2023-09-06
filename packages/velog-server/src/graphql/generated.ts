@@ -54,11 +54,16 @@ export type LinkedPosts = {
 export type Mutation = {
   likePost?: Maybe<Post>
   logout: Scalars['Boolean']['output']
+  sendMail?: Maybe<SendMailResponse>
   unlikePost?: Maybe<Post>
 }
 
 export type MutationLikePostArgs = {
   input: LikePostInput
+}
+
+export type MutationSendMailArgs = {
+  input: SendMailInput
 }
 
 export type MutationUnlikePostArgs = {
@@ -158,6 +163,14 @@ export type RecentPostsInput = {
 export type SearchResult = {
   count?: Maybe<Scalars['Int']['output']>
   posts: Array<Post>
+}
+
+export type SendMailInput = {
+  email: Scalars['String']['input']
+}
+
+export type SendMailResponse = {
+  registered?: Maybe<Scalars['Boolean']['output']>
 }
 
 export type Series = {
@@ -349,6 +362,8 @@ export type ResolversTypes = {
   SearchResult: ResolverTypeWrapper<
     Omit<SearchResult, 'posts'> & { posts: Array<ResolversTypes['Post']> }
   >
+  SendMailInput: SendMailInput
+  SendMailResponse: ResolverTypeWrapper<SendMailResponse>
   Series: ResolverTypeWrapper<
     Omit<Series, 'series_posts' | 'user'> & {
       series_posts?: Maybe<Array<Maybe<ResolversTypes['SeriesPost']>>>
@@ -394,6 +409,8 @@ export type ResolversParentTypes = {
   ReadingListInput: ReadingListInput
   RecentPostsInput: RecentPostsInput
   SearchResult: Omit<SearchResult, 'posts'> & { posts: Array<ResolversParentTypes['Post']> }
+  SendMailInput: SendMailInput
+  SendMailResponse: SendMailResponse
   Series: Omit<Series, 'series_posts' | 'user'> & {
     series_posts?: Maybe<Array<Maybe<ResolversParentTypes['SeriesPost']>>>
     user?: Maybe<ResolversParentTypes['User']>
@@ -455,6 +472,12 @@ export type MutationResolvers<
     RequireFields<MutationLikePostArgs, 'input'>
   >
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  sendMail?: Resolver<
+    Maybe<ResolversTypes['SendMailResponse']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationSendMailArgs, 'input'>
+  >
   unlikePost?: Resolver<
     Maybe<ResolversTypes['Post']>,
     ParentType,
@@ -557,6 +580,15 @@ export type SearchResultResolvers<
 > = {
   count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
+export type SendMailResponseResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['SendMailResponse'] = ResolversParentTypes['SendMailResponse'],
+> = {
+  registered?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -676,6 +708,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Query?: QueryResolvers<ContextType>
   ReadCountByDay?: ReadCountByDayResolvers<ContextType>
   SearchResult?: SearchResultResolvers<ContextType>
+  SendMailResponse?: SendMailResponseResolvers<ContextType>
   Series?: SeriesResolvers<ContextType>
   SeriesPost?: SeriesPostResolvers<ContextType>
   Stats?: StatsResolvers<ContextType>

@@ -6,6 +6,9 @@ import { injectable, singleton } from 'tsyringe'
 @singleton()
 export class CookieService {
   private domains: (string | undefined)[] = ['.velog.io', undefined, 'localhost']
+  public getCookie(reply: FastifyReply, name: string) {
+    return reply.cookies[name]
+  }
   public setCookie(
     reply: FastifyReply,
     name: string,
@@ -16,6 +19,7 @@ export class CookieService {
       reply.cookie(name, value, {
         httpOnly: true,
         domain,
+        path: '/',
         ...options,
       })
     })

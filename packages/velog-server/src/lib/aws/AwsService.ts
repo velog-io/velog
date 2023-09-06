@@ -1,7 +1,10 @@
 import { injectable, singleton } from 'tsyringe'
-
-interface Service {}
+import { SESClient } from '@aws-sdk/client-ses'
 
 @injectable()
 @singleton()
-export class AwsService implements Service {}
+export class AwsService {
+  get ses() {
+    return new SESClient({ region: 'us-east-1' })
+  }
+}

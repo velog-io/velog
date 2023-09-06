@@ -20,7 +20,7 @@
     "lint": "next lint",
     "create-component": "tsx ./scripts/createComponent.ts",
     "create-svg-component": "tsx ./scripts/createSvgComponent.ts",
-    "codegen": "dotenv -e .env graphql-codegen --config codegen.ts -r dotenv/config"
+    "codegen": "dotenv -e .env.development graphql-codegen --config codegen.ts -r dotenv/config"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.32.0",
@@ -41,7 +41,6 @@
     "react-toastify": "^9.1.3",
     "sangte": "^0.1.26",
     "sharp": "^0.32.4",
-    "snakecase-keys": "^5.4.6",
     "tsx": "^3.12.7",
     "zod": "^3.21.4"
   },

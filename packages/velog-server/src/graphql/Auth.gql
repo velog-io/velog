@@ -1,0 +1,11 @@
+type Mutation {
+  sendMail(input: SendMailInput!): SendMailResponse
+}
+
+input SendMailInput {
+  email: String!
+}
+
+type SendMailResponse {
+  registered: Boolean
+}

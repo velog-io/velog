@@ -1,6 +1,5 @@
 import { useModal } from '@/state/modal'
 import styles from './AuthForm.module.css'
-import { sendAuthEmail } from '@/lib/api/auth'
 import { useCallback, useEffect, useState } from 'react'
 import AuthEmailSuccess from '@/features/auth/components/AuthModal/AuthEmailSuccess'
 import AuthEmailForm from '@/features/auth/components/AuthModal/AuthEmailForm'
@@ -9,7 +8,7 @@ import { validateEmail } from '@/lib/validate'
 import { toast } from 'react-toastify'
 import AuthSocialButtonGroup from '@/features/auth/components/AuthModal/AuthSocialButtonGroup'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { useQuery } from '@tanstack/react-query'
+import { useSendMailMutation } from '@/graphql/generated'
 
 const cx = bindClassNames(styles)
 
@@ -21,20 +20,14 @@ function AuthForm() {
   const [email, onChangeEmail] = useInput('')
   const [isSendEmail, setSendEmail] = useState(false)
 
-  const { refetch, isFetching, data } = useQuery(
-    ['authEmail'],
-    ({ pageParam = { email } }) => {
-      return sendAuthEmail(pageParam.email)
-    },
-    { enabled: false },
-  )
+  const { mutate, data, isLoading } = useSendMailMutation({})
 
   const onToggleMode = useCallback(() => {
     const nextMode = mode === 'register' ? 'login' : 'register'
     actions.changeMode(nextMode)
   }, [actions, mode])
 
-  const registered = (data && data.data.registered) || false
+  const registered = (data && data.sendMail?.registered) || false
   const modeText = mode === 'register' ? '회원가입' : '로그인'
 
   const onSendAuthEmail = useCallback(
@@ -43,10 +36,10 @@ function AuthForm() {
         toast.error('잘못된 이메일 형식입니다.')
         return
       }
-      refetch()
+      mutate({ input: { email } })
       setSendEmail(true)
     },
-    [refetch],
+    [mutate],
   )
 
   useEffect(() => {
@@ -68,7 +61,7 @@ function AuthForm() {
               value={email}
               onChange={onChangeEmail}
               onSubmit={onSendAuthEmail}
-              disabled={isFetching}
+              disabled={isLoading}
             />
           )}
         </section>

@@ -105,4 +105,8 @@ export class UtilsService implements Service {
     const timezone = 'Asia/Seoul'
     return utcToZonedTime(utcTime, timezone)
   }
+  public optimizeImage(url: string, width: number) {
+    if (!url.includes('https://images.velog.io')) return url
+    return url.replace('://images', '://img').concat(`?w=${width}`)
+  }
 }

@@ -3,6 +3,7 @@ import { FastifyPluginCallback } from 'fastify'
 
 const v3: FastifyPluginCallback = (fastify, opts, done) => {
   fastify.register(socialRoute, { prefix: '/social' })
+
   done()
 }
 

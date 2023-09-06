@@ -37,7 +37,8 @@ dotenv.config({ path: configPath })
 const env = z.object({
   appEnv: z.enum(['development', 'test', 'stage', 'production']),
   port: z.number(),
-  clientHost: z.string(),
+  clientV2Host: z.string(),
+  clientV3Host: z.string(),
   apiHost: z.string(),
   cronHost: z.string(),
   cookieSecretKey: z.string(),
@@ -53,12 +54,19 @@ const env = z.object({
   facebookSecret: z.string(),
   googleClientId: z.string(),
   googleSecret: z.string(),
+  b2KeyId: z.string(),
+  b2Key: z.string(),
+  b2BucketId: z.string(),
+  codenaryWebhook: z.string(),
+  codenaryApiKey: z.string(),
+  codenaryCallback: z.string(),
 })
 
 export const ENV = env.parse({
   appEnv,
   port: Number(process.env.PORT),
-  clientHost: process.env.CLIENT_HOST,
+  clientV2Host: process.env.CLIENT_V2_HOST,
+  clientV3Host: process.env.CLIENT_V3_HOST,
   apiHost: process.env.API_HOST,
   cronHost: process.env.CRON_HOST,
   jwtSecretKey: process.env.JWT_SECRET_KEY,
@@ -74,6 +82,12 @@ export const ENV = env.parse({
   facebookSecret: process.env.FACEBOOK_SECRET,
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleSecret: process.env.GOOGLE_SECRET,
+  b2KeyId: process.env.B2_KEY_ID,
+  b2Key: process.env.B2_KEY,
+  b2BucketId: process.env.B2_BUCKET_ID,
+  codenaryWebhook: process.env.CODENARY_WEBHOOK,
+  codenaryApiKey: process.env.CODENARY_API_KEY,
+  codenaryCallback: process.env.CODENARY_CALLBACK,
 })
 
 export type EnvVars = z.infer<typeof env>

@@ -37,7 +37,7 @@ const postResolvers: Resolvers = {
       const count = await commentService.count(parent.id)
       return count
     },
-    liked: async (parent: Post, args: any, ctx) => {
+    liked: async (parent: Post, _, ctx) => {
       if (!ctx.user) return false
       const db = container.resolve(DbService)
       const liked = await db.postLike.findFirst({
