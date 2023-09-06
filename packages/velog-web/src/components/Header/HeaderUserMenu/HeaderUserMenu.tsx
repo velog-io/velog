@@ -19,13 +19,13 @@ function HeaderUserMenu({ isVisible, onClose }: Props) {
     actions: { update },
   } = useAuth()
   const { ref } = useOutsideClick<HTMLDivElement>(onClose)
-  const { mutateAsync } = useLogoutMutation()
+  const { mutate } = useLogoutMutation()
 
-  const onLogout = useCallback(async () => {
-    await mutateAsync({})
+  const onLogout = useCallback(() => {
+    mutate({})
     update(null)
-    location.href = location.href
-  }, [mutateAsync, update])
+    location.href = '/'
+  }, [mutate, update])
 
   if (!isVisible) return null
   return (
