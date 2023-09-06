@@ -8,6 +8,7 @@ import { JwtService } from '@lib/jwt/JwtService.js'
 import { User, UserProfile } from '@prisma/client'
 import {
   GetProfileFromSocial,
+  SocialProfile,
   SocialProvider,
 } from '@services/SocialService/SocialServiceInterface.js'
 import { SocialService } from '@services/SocialService/index.js'
@@ -24,24 +25,15 @@ interface Controller {
   googleCallback(request: FastifyRequest<{ Querystring: { code: string } }>): Promise<void>
   facebookCallback(request: FastifyRequest<{ Querystring: { code: string } }>): Promise<void>
   githubCallback(request: FastifyRequest<{ Querystring: { code: string } }>): Promise<void>
-  socialCallback(
-    request: FastifyRequest<{ Querystring: { state?: string; next?: string } }>,
-    reply: FastifyReply,
-  ): Promise<void>
+  socialCallback(params: SocialCallbackParams): Promise<void>
   socialRegister(
     request: FastifyRequest<{
       Body: { display_name: string; username: string; short_bio: string }
     }>,
     reply: FastifyReply,
   ): Promise<SocialRegisterResult>
-  getSocialProfile(request: FastifyRequest, reply: FastifyReply): Promise<GetProfileFromSocial>
-  socialRedirect(
-    request: FastifyRequest<{
-      Params: { provider: SocialProvider }
-      Querystring: { next: string; isIntegrate: string; integrateState: string }
-    }>,
-    reply: FastifyReply,
-  ): Promise<void>
+  getSocialProfile(reply: FastifyReply): Promise<GetProfileFromSocial>
+  socialRedirect(params: SocialRedirectParams): Promise<void>
 }
 
 @singleton()
@@ -95,15 +87,17 @@ export class SocialController implements Controller {
     const profile = await this.socialService.getSocialDataFromGoogle(code)
     request.socialProfile = profile
   }
-  public async socialCallback(
-    request: FastifyRequest<{ Querystring: { state?: string; next?: string } }>,
-    reply: FastifyReply,
-  ): Promise<void> {
-    if (!request.socialProfile) {
+  public async socialCallback({
+    socialProfile,
+    queryState,
+    queryNext,
+    reply,
+  }: SocialCallbackParams): Promise<void> {
+    if (!socialProfile) {
       throw new NotFoundError('Social profile data is missing')
     }
 
-    const { profile, socialAccount, accessToken, provider } = request.socialProfile
+    const { profile, socialAccount, accessToken, provider } = socialProfile
 
     if (!profile) {
       throw new NotFoundError('Not found social profile')
@@ -144,10 +138,10 @@ export class SocialController implements Controller {
         })
 
         const redirectUrl = ENV.clientV3Host
-        const state = request.query.state
-          ? (JSON.parse(request.query.state) as { next: string; integrateState?: string })
+        const state = queryState
+          ? (JSON.parse(queryState) as { next: string; integrateState?: string })
           : null
-        const next = request.query.next || state?.next || '/'
+        const next = queryNext || state?.next || '/'
 
         if (next.includes('user-integrate') && state) {
           const isIntegrated = await this.externalInterationService.checkIntegrated(user.id)
@@ -314,13 +308,9 @@ export class SocialController implements Controller {
       .concat(`/${filename}`)
 
     const uploadResult = await this.b2Manager.upload(buffer, uploadPath)
-
     return uploadResult.url
   }
-  public async getSocialProfile(
-    request: FastifyRequest,
-    reply: FastifyReply,
-  ): Promise<GetProfileFromSocial> {
+  public async getSocialProfile(reply: FastifyReply): Promise<GetProfileFromSocial> {
     const registerToken = this.cookie.getCookie(reply, 'register_token')
     if (!registerToken) {
       throw new UnauthorizedError()
@@ -334,16 +324,13 @@ export class SocialController implements Controller {
       throw new BadRequestError()
     }
   }
-  public async socialRedirect(
-    request: FastifyRequest<{
-      Params: { provider: SocialProvider }
-      Querystring: { next: string; isIntegrate: string; integrateState: string }
-    }>,
-    reply: FastifyReply,
-  ) {
-    const { next, isIntegrate, integrateState } = request.query
-    const { provider } = request.params
-
+  public async socialRedirect({
+    next,
+    isIntegrate,
+    integrateState,
+    provider,
+    reply,
+  }: SocialRedirectParams) {
     const loginUrl = this.generateSocialLoginLink(provider, {
       isIntegrate: isIntegrate === '1',
       next,
@@ -410,4 +397,19 @@ type Options = {
   next: string
   isIntegrate?: boolean
   integrateState?: string
+}
+
+type SocialRedirectParams = {
+  next: string
+  isIntegrate: string
+  integrateState: string
+  reply: FastifyReply
+  provider: SocialProvider
+}
+
+type SocialCallbackParams = {
+  socialProfile: SocialProfile | null
+  queryState?: string
+  queryNext?: string
+  reply: FastifyReply
 }

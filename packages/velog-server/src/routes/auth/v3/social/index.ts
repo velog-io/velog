@@ -7,7 +7,15 @@ const socialRoute: FastifyPluginCallback = (fastify, opts, done) => {
   const controller = container.resolve(SocialController)
 
   /* LOGIN & REGISTER */
-  fastify.post('/register', controller.socialRegister)
+  fastify.post(
+    '/register',
+    (
+      request: FastifyRequest<{
+        Body: { display_name: string; username: string; short_bio: string }
+      }>,
+      reply: FastifyReply,
+    ) => controller.socialRegister(request, reply),
+  )
 
   fastify.decorateRequest('socialProfile', null)
   fastify.get<{ Querystring: SocialCallbackQuerystring }>(
@@ -15,21 +23,45 @@ const socialRoute: FastifyPluginCallback = (fastify, opts, done) => {
     {
       preHandler: (request) => controller.googleCallback(request),
     },
-    (request, reply) => controller.socialCallback(request, reply),
+    (request, reply) => {
+      const { state, next } = request.query
+      return controller.socialCallback({
+        socialProfile: request.socialProfile,
+        queryNext: next,
+        queryState: state,
+        reply,
+      })
+    },
   )
   fastify.get<{ Querystring: SocialCallbackQuerystring }>(
     '/callback/facebook',
     { preHandler: (request) => controller.facebookCallback(request) },
-    (request, reply) => controller.socialCallback(request, reply),
+    (request, reply) => {
+      const { state, next } = request.query
+      return controller.socialCallback({
+        socialProfile: request.socialProfile,
+        queryNext: next,
+        queryState: state,
+        reply,
+      })
+    },
   )
   fastify.get<{ Querystring: SocialCallbackQuerystring }>(
     '/callback/github',
     { preHandler: (request) => controller.githubCallback(request) },
-    (request, reply) => controller.socialCallback(request, reply),
+    (request, reply) => {
+      const { state, next } = request.query
+      return controller.socialCallback({
+        socialProfile: request.socialProfile,
+        queryNext: next,
+        queryState: state,
+        reply,
+      })
+    },
   )
 
   /* Login Token */
-  fastify.get('/profile', controller.getSocialProfile)
+  fastify.get('/profile', (_, reply: FastifyReply) => controller.getSocialProfile(reply))
   fastify.get(
     '/redirect/:provider',
     (
@@ -38,7 +70,11 @@ const socialRoute: FastifyPluginCallback = (fastify, opts, done) => {
         Querystring: { next: string; isIntegrate: string; integrateState: string }
       }>,
       reply: FastifyReply,
-    ) => controller.socialRedirect(request, reply),
+    ) => {
+      const { next, isIntegrate, integrateState } = request.query
+      const { provider } = request.params
+      return controller.socialRedirect({ next, isIntegrate, integrateState, provider, reply })
+    },
   )
 
   done()
