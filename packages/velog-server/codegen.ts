@@ -9,15 +9,7 @@ const config: CodegenConfig = {
   },
   generates: {
     'src/graphql/generated.ts': {
-      plugins: [
-        'typescript',
-        'typescript-resolvers',
-        {
-          add: {
-            content: '/* eslint-disable @typescript-eslint/ban-types */',
-          },
-        },
-      ],
+      plugins: ['typescript', 'typescript-resolvers'],
       config: {
         skipTypename: true,
         contextType: './../common/interfaces/graphql#GraphQLContext',

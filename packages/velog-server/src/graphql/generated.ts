@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import {
   User as UserModel,

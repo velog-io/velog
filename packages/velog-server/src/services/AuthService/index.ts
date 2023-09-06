@@ -40,14 +40,6 @@ export class AuthService implements Service {
           emailAuth.code
         }`,
       )
-
-      await this.mail.sendMail({
-        to: email,
-        from: 'verify@velog.io',
-        ...template,
-      })
-
-      console.log('send!')
     } else {
       await this.mail.sendMail({
         to: email,
@@ -58,8 +50,4 @@ export class AuthService implements Service {
 
     return { registered: !!user }
   }
-}
-
-type SendMailBody = {
-  email: string
 }

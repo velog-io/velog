@@ -37,7 +37,7 @@ function AuthSocialButton({ provider, tabIndex, currentPath }: Props) {
 
   const host = ENV.apiV3Host
 
-  const redirectTo = `${host}/api/v2/auth/social/redirect/${provider}?next=${currentPath}&isIntegrate=0`
+  const redirectTo = `${host}/api/auth/v3/social/redirect/${provider}?next=${currentPath}&isIntegrate=0`
 
   return (
     <a

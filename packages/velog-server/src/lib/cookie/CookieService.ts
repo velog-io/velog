@@ -19,6 +19,7 @@ export class CookieService {
       reply.cookie(name, value, {
         httpOnly: true,
         domain,
+        path: '/',
         ...options,
       })
     })

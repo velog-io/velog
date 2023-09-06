@@ -11,8 +11,8 @@ export const createAuthEmail = (registered: boolean, code: string) => {
 
   const subject = `Velog ${keywords.text}`
   const body = `
-  <div style="display: flex; justify-content: center;">
-    <div style="width: 400px;">
+  <div>
+    <div style="width: 400px; margin: 0 auto;">
       <a href="https://velog.io">
         <img src="https://images.velog.io/email-logo.png" style="display: block; width: 128px; margin: 0 auto;"/>
       </a>

@@ -21,14 +21,9 @@ import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 
 interface Controller {
-  facebookCallback(
-    request: FastifyRequest<{ Querystring: { code: string } }>,
-    reply: FastifyReply,
-  ): Promise<void>
-  githubCallback(
-    request: FastifyRequest<{ Querystring: { code: string } }>,
-    reply: FastifyReply,
-  ): Promise<void>
+  googleCallback(request: FastifyRequest<{ Querystring: { code: string } }>): Promise<void>
+  facebookCallback(request: FastifyRequest<{ Querystring: { code: string } }>): Promise<void>
+  githubCallback(request: FastifyRequest<{ Querystring: { code: string } }>): Promise<void>
   socialCallback(
     request: FastifyRequest<{ Querystring: { state?: string; next?: string } }>,
     reply: FastifyReply,
@@ -40,6 +35,13 @@ interface Controller {
     reply: FastifyReply,
   ): Promise<SocialRegisterResult>
   getSocialProfile(request: FastifyRequest, reply: FastifyReply): Promise<GetProfileFromSocial>
+  socialRedirect(
+    request: FastifyRequest<{
+      Params: { provider: SocialProvider }
+      Querystring: { next: string; isIntegrate: string; integrateState: string }
+    }>,
+    reply: FastifyReply,
+  ): Promise<void>
 }
 
 @singleton()
@@ -55,11 +57,10 @@ export class SocialController implements Controller {
     private readonly externalInterationService: ExternalIntegrationService,
   ) {}
   private get redirectUri(): string {
-    return `${ENV.apiHost}/api/v2/auth/social/callback`
+    return `${ENV.apiHost}/api/auth/v3/social/callback`
   }
   public async facebookCallback(
     request: FastifyRequest<{ Querystring: { code: string } }>,
-    reply: FastifyReply,
   ): Promise<void> {
     const { code } = request.query
 
@@ -72,7 +73,6 @@ export class SocialController implements Controller {
   }
   public async githubCallback(
     request: FastifyRequest<{ Querystring: { code: string } }>,
-    reply: FastifyReply,
   ): Promise<void> {
     const { code } = request.query
 
@@ -85,7 +85,6 @@ export class SocialController implements Controller {
   }
   public async googleCallback(
     request: FastifyRequest<{ Querystring: { code: string } }>,
-    reply: FastifyReply,
   ): Promise<void> {
     const { code } = request.query
 
@@ -114,42 +113,70 @@ export class SocialController implements Controller {
       throw new NotFoundError('Not found social access token')
     }
 
-    if (socialAccount) {
-      const user = await this.db.user.findUnique({
-        where: {
-          id: socialAccount.fk_user_id!,
-        },
-      })
-
-      if (!user) {
-        throw new Error('User is missing')
+    if (socialAccount || profile.email) {
+      const whereQuery = {
+        OR: [] as any,
       }
 
-      const tokens = await this.jwt.generateUserToken(user.id)
-      this.cookie.setCookie(reply, 'access_token', tokens.accessToken, {
-        maxAge: Time.ONE_HOUR_IN_MS,
-      })
-      this.cookie.setCookie(reply, 'refresh_token', tokens.refreshToken, {
-        maxAge: Time.ONE_DAY_IN_MS * 30,
+      if (socialAccount) {
+        whereQuery.OR.push({ id: socialAccount.fk_user_id! })
+      }
+
+      if (profile.email) {
+        whereQuery.OR.push({ email: profile.email })
+      }
+
+      const user = await this.db.user.findFirst({
+        where: whereQuery,
       })
 
-      const redirectUrl = ENV.clientHost
-      const state = request.query.state
-        ? (JSON.parse(request.query.state) as { next: string; integrateState?: string })
-        : null
-      const next = request.query.next || state?.next || '/'
+      if (socialAccount && !user) {
+        throw new NotFoundError('User is missing')
+      }
 
-      if (next.includes('user-integrate') && state) {
-        const isIntegrated = await this.externalInterationService.checkIntegrated(user.id)
-        if (isIntegrated) {
-          const code = await this.externalInterationService.createIntegrationCode(user.id)
-          reply.redirect(`${ENV.codenaryCallback}?code=${code}&state=${state.integrateState}`)
-          return
+      if (user) {
+        const tokens = await this.jwt.generateUserToken(user.id)
+        this.cookie.setCookie(reply, 'access_token', tokens.accessToken, {
+          maxAge: Time.ONE_HOUR_IN_MS,
+        })
+        this.cookie.setCookie(reply, 'refresh_token', tokens.refreshToken, {
+          maxAge: Time.ONE_DAY_IN_MS * 30,
+        })
+
+        const redirectUrl = ENV.clientV3Host
+        const state = request.query.state
+          ? (JSON.parse(request.query.state) as { next: string; integrateState?: string })
+          : null
+        const next = request.query.next || state?.next || '/'
+
+        if (next.includes('user-integrate') && state) {
+          const isIntegrated = await this.externalInterationService.checkIntegrated(user.id)
+          if (isIntegrated) {
+            const code = await this.externalInterationService.createIntegrationCode(user.id)
+            reply.redirect(`${ENV.codenaryCallback}?code=${code}&state=${state.integrateState}`)
+            return
+          }
         }
-      }
 
-      reply.redirect(decodeURI(redirectUrl.concat(next)))
+        reply.redirect(decodeURI(redirectUrl.concat(next)))
+        return
+      }
     }
+
+    // Register new social account
+    const registerTokenInfo = {
+      profile,
+      accessToken,
+      provider,
+    }
+    const registerToken = await this.jwt.generateToken(registerTokenInfo, {
+      expiresIn: '1h',
+    })
+    this.cookie.setCookie(reply, 'register_token', registerToken, {
+      maxAge: Time.ONE_HOUR_IN_MS,
+    })
+    const redirectUrl = `${ENV.clientV2Host}/register?social=1`
+    reply.redirect(encodeURI(redirectUrl))
   }
   public async socialRegister(
     request: FastifyRequest<{
@@ -316,11 +343,13 @@ export class SocialController implements Controller {
   ) {
     const { next, isIntegrate, integrateState } = request.query
     const { provider } = request.params
+
     const loginUrl = this.generateSocialLoginLink(provider, {
       isIntegrate: isIntegrate === '1',
       next,
       integrateState,
     })
+
     reply.redirect(loginUrl)
   }
   private generateSocialLoginLink(

@@ -66,7 +66,7 @@ export const ENV = env.parse({
   appEnv,
   port: Number(process.env.PORT),
   clientV2Host: process.env.CLIENT_V2_HOST,
-  clientV3Host: process.env.CLIENT_V2_HOST,
+  clientV3Host: process.env.CLIENT_V3_HOST,
   apiHost: process.env.API_HOST,
   cronHost: process.env.CRON_HOST,
   jwtSecretKey: process.env.JWT_SECRET_KEY,

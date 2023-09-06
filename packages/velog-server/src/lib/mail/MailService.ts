@@ -29,9 +29,10 @@ export class MailService {
           Text: {
             Charset: 'UTF-8',
             Data: sanitizeHtml(body, {
-              allowedAttributes: { a: ['style'] },
+              allowedAttributes: { '*': ['style'] },
               allowedStyles: {
-                a: {
+                '*': {
+                  'justify-content': [/^left$/, /^right$/, /^center$/],
                   width: [/^\d+(?:px|em|%)$/],
                 },
               },
