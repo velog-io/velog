@@ -56,8 +56,19 @@ type Mutation {
   # update_social_info(profile_links: JSON!): UserProfile
   # update_email_rules(notification: Boolean!, promotion: Boolean!): UserMeta
   # unregister(token: String!): Boolean
-  logout: Boolean!
+  logout: Void
   # acceptIntegration: String!
   # initiateChangeEmail(email: String!): Boolean
   # confirmChangeEmail(code: String!): Boolean
+
+  follow(input: FollowInput!): Void
+  unfollow(input: UnfollowInput!): Void
+}
+
+input FollowInput {
+  followUserId: ID
+}
+
+input UnfollowInput {
+  followUserId: ID
 }

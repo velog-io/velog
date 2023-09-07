@@ -51,7 +51,7 @@ export class FollowService implements Service {
       },
     })
   }
-  async unfllow(userId: string, followUserId: string): Promise<void> {
+  async unfllow(userId?: string, followUserId?: string): Promise<void> {
     if (!followUserId) {
       throw new BadRequestError('followUesrId is required')
     }

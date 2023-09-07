@@ -43,6 +43,10 @@ export type Comment = {
   user?: Maybe<User>
 }
 
+export type FollowInput = {
+  followUserId?: InputMaybe<Scalars['ID']['input']>
+}
+
 export type LikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
@@ -53,10 +57,16 @@ export type LinkedPosts = {
 }
 
 export type Mutation = {
+  follow?: Maybe<Scalars['Void']['output']>
   likePost?: Maybe<Post>
-  logout: Scalars['Boolean']['output']
+  logout?: Maybe<Scalars['Void']['output']>
   sendMail?: Maybe<SendMailResponse>
+  unfollow?: Maybe<Scalars['Void']['output']>
   unlikePost?: Maybe<Post>
+}
+
+export type MutationFollowArgs = {
+  input: FollowInput
 }
 
 export type MutationLikePostArgs = {
@@ -65,6 +75,10 @@ export type MutationLikePostArgs = {
 
 export type MutationSendMailArgs = {
   input: SendMailInput
+}
+
+export type MutationUnfollowArgs = {
+  input: UnfollowInput
 }
 
 export type MutationUnlikePostArgs = {
@@ -204,6 +218,10 @@ export type TrendingPostsInput = {
   timeframe?: InputMaybe<Scalars['String']['input']>
 }
 
+export type UnfollowInput = {
+  followUserId?: InputMaybe<Scalars['ID']['input']>
+}
+
 export type UnlikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
@@ -341,6 +359,7 @@ export type ResolversTypes = {
     }
   >
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
+  FollowInput: FollowInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
   Int: ResolverTypeWrapper<Scalars['Int']['output']>
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
@@ -377,6 +396,7 @@ export type ResolversTypes = {
   Stats: ResolverTypeWrapper<Stats>
   String: ResolverTypeWrapper<Scalars['String']['output']>
   TrendingPostsInput: TrendingPostsInput
+  UnfollowInput: UnfollowInput
   UnlikePostInput: UnlikePostInput
   User: ResolverTypeWrapper<UserModel>
   UserMeta: ResolverTypeWrapper<UserMeta>
@@ -394,6 +414,7 @@ export type ResolversParentTypes = {
     user?: Maybe<ResolversParentTypes['User']>
   }
   Date: Scalars['Date']['output']
+  FollowInput: FollowInput
   ID: Scalars['ID']['output']
   Int: Scalars['Int']['output']
   JSON: Scalars['JSON']['output']
@@ -421,6 +442,7 @@ export type ResolversParentTypes = {
   Stats: Stats
   String: Scalars['String']['output']
   TrendingPostsInput: TrendingPostsInput
+  UnfollowInput: UnfollowInput
   UnlikePostInput: UnlikePostInput
   User: UserModel
   UserMeta: UserMeta
@@ -468,18 +490,30 @@ export type MutationResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
+  follow?: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationFollowArgs, 'input'>
+  >
   likePost?: Resolver<
     Maybe<ResolversTypes['Post']>,
     ParentType,
     ContextType,
     RequireFields<MutationLikePostArgs, 'input'>
   >
-  logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  logout?: Resolver<Maybe<ResolversTypes['Void']>, ParentType, ContextType>
   sendMail?: Resolver<
     Maybe<ResolversTypes['SendMailResponse']>,
     ParentType,
     ContextType,
     RequireFields<MutationSendMailArgs, 'input'>
+  >
+  unfollow?: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUnfollowArgs, 'input'>
   >
   unlikePost?: Resolver<
     Maybe<ResolversTypes['Post']>,
