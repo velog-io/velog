@@ -27,6 +27,7 @@ export type Scalars = {
   Float: { input: number; output: number }
   Date: { input: Date; output: Date }
   JSON: { input: JSON; output: JSON }
+  Void: { input: Void; output: Void }
 }
 
 export type Comment = {
@@ -382,6 +383,7 @@ export type ResolversTypes = {
   UserProfile: ResolverTypeWrapper<UserProfileModel>
   UserToken: ResolverTypeWrapper<UserToken>
   VelogConfig: ResolverTypeWrapper<VelogConfig>
+  Void: ResolverTypeWrapper<Scalars['Void']['output']>
 }
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -425,6 +427,7 @@ export type ResolversParentTypes = {
   UserProfile: UserProfileModel
   UserToken: UserToken
   VelogConfig: VelogConfig
+  Void: Scalars['Void']['output']
 }
 
 export type CommentResolvers<
@@ -697,6 +700,10 @@ export type VelogConfigResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
+export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Void'], any> {
+  name: 'Void'
+}
+
 export type Resolvers<ContextType = GraphQLContext> = {
   Comment?: CommentResolvers<ContextType>
   Date?: GraphQLScalarType
@@ -717,4 +724,5 @@ export type Resolvers<ContextType = GraphQLContext> = {
   UserProfile?: UserProfileResolvers<ContextType>
   UserToken?: UserTokenResolvers<ContextType>
   VelogConfig?: VelogConfigResolvers<ContextType>
+  Void?: GraphQLScalarType
 }

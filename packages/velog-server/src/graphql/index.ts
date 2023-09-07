@@ -3,7 +3,7 @@ import { loadSchemaSync } from '@graphql-tools/load'
 import { mergeResolvers } from '@graphql-tools/merge'
 import { Resolvers } from '@graphql/generated'
 import { readdirSync } from 'fs'
-import { JSONResolver, DateTimeISOResolver } from 'graphql-scalars'
+import { JSONResolver, DateTimeISOResolver, VoidResolver } from 'graphql-scalars'
 import { IResolvers, MercuriusContext } from 'mercurius'
 import { basename, dirname, resolve } from 'path'
 import { ENV } from '@env'
@@ -34,6 +34,7 @@ export const resolvers = mergeResolvers(
     {
       JSON: JSONResolver,
       Date: DateTimeISOResolver,
+      Void: VoidResolver,
     },
   ]),
 ) as IResolvers<any, MercuriusContext>
