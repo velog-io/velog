@@ -124,19 +124,6 @@ model FollowTag {
   @@map("follow_tag")
 }
 
-model FollowUser {
-  id                                         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  fk_user_id                                 String?  @db.Uuid
-  fk_follow_user_id                          String?  @db.Uuid
-  score                                      Int?
-  created_at                                 DateTime @default(now()) @db.Timestamptz(6)
-  updated_at                                 DateTime @default(now()) @db.Timestamptz(6)
-  users_follow_user_fk_follow_user_idTousers User?    @relation("follow_user_fk_follow_user_idTousers", fields: [fk_follow_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  users_follow_user_fk_user_idTousers        User?    @relation("follow_user_fk_user_idTousers", fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-
-  @@map("follow_user")
-}
-
 model Migrations {
   id        Int    @id(map: "PK_8c82d7f526340ab734260ea46be") @default(autoincrement())
   timestamp BigInt
@@ -523,39 +510,39 @@ model UserThumbnail {
 }
 
 model User {
-  id                                               String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  username                                         String                       @unique @db.VarChar(255)
-  email                                            String?                      @unique @db.VarChar(255)
-  created_at                                       DateTime                     @default(now()) @db.Timestamptz(6)
-  updated_at                                       DateTime                     @default(now()) @db.Timestamptz(6)
-  is_certified                                     Boolean?                     @default(false)
-  adminUser                                        AdminUser[]
-  authToken                                        AuthToken[]
-  category                                         Category[]
-  comment                                          Comment[]
-  emailCert                                        EmailCert[]
-  externalIntegrationHistory                       ExternalIntegrationHistory[]
-  externalIntegration                              ExternalIntegration[]
-  feed                                             Feed[]
-  followTag                                        FollowTag[]
-  follow_user_follow_user_fk_follow_user_idTousers FollowUser[]                 @relation("follow_user_fk_follow_user_idTousers")
-  follow_user_follow_user_fk_user_idTousers        FollowUser[]                 @relation("follow_user_fk_user_idTousers")
-  postImage                                        PostImage[]
-  postLike                                         PostLike[]
-  postReadLog                                      PostReadLog[]
-  postRead                                         PostRead[]
-  postScore                                        PostScore[]
-  post                                             Post[]
-  series                                           Series[]
-  socialAccount                                    SocialAccount[]
-  urlSlugHistory                                   UrlSlugHistory[]
-  userImage                                        UserImage[]
-  userImageCloudflare                              UserImageCloudflare[]
-  userImageNext                                    UserImageNext[]
-  userMeta                                         UserMeta[]
-  profile                                          UserProfile?
-  userThumbnail                                    UserThumbnail[]
-  velogConfig                                      VelogConfig?
+  id                         String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  username                   String                       @unique @db.VarChar(255)
+  email                      String?                      @unique @db.VarChar(255)
+  created_at                 DateTime                     @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime                     @default(now()) @db.Timestamptz(6)
+  is_certified               Boolean?                     @default(false)
+  adminUser                  AdminUser[]
+  authToken                  AuthToken[]
+  category                   Category[]
+  comment                    Comment[]
+  emailCert                  EmailCert[]
+  externalIntegrationHistory ExternalIntegrationHistory[]
+  externalIntegration        ExternalIntegration[]
+  feed                       Feed[]
+  followTag                  FollowTag[]
+  followers                  FollowUsers[]                @relation("follower_relation")
+  following                  FollowUsers[]                @relation("following_relation")
+  postImage                  PostImage[]
+  postLike                   PostLike[]
+  postReadLog                PostReadLog[]
+  postRead                   PostRead[]
+  postScore                  PostScore[]
+  post                       Post[]
+  series                     Series[]
+  socialAccount              SocialAccount[]
+  urlSlugHistory             UrlSlugHistory[]
+  userImage                  UserImage[]
+  userImageCloudflare        UserImageCloudflare[]
+  userImageNext              UserImageNext[]
+  userMeta                   UserMeta[]
+  profile                    UserProfile?
+  userThumbnail              UserThumbnail[]
+  velogConfig                VelogConfig?
 
   @@index([email], map: "users_email")
   @@index([username], map: "users_username")
@@ -599,4 +586,19 @@ model ExternalIntegrationHistory {
   @@index([fk_user_id])
   @@index([app_identifier])
   @@map("external_integration_histories")
+}
+
+model FollowUsers {
+  id                String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  fk_uesr_id        String   @db.Uuid
+  fk_follow_user_id String   @db.Uuid
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime @default(now()) @db.Timestamptz(6)
+
+  follower  User @relation("follower_relation", fields: [fk_uesr_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  following User @relation("following_relation", fields: [fk_follow_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+
+  @@index([fk_uesr_id])
+  @@index([fk_follow_user_id])
+  @@map("follow_users")
 }
