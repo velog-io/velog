@@ -47,7 +47,7 @@ importers:
         version: 20.5.0
       '@typescript-eslint/parser':
         specifier: ^5.59.11
-        version: 5.59.11(eslint@8.48.0)(typescript@5.1.6)
+        version: 5.59.11(eslint@8.48.0)(typescript@5.2.2)
       eslint:
         specifier: ^8.48.0
         version: 8.48.0
@@ -625,7 +625,7 @@ packages:
       '@aws-crypto/sha256-js': 3.0.0
       '@aws-crypto/supports-web-crypto': 3.0.0
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.398.0
+      '@aws-sdk/types': 3.408.0
       '@aws-sdk/util-locate-window': 3.310.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
@@ -635,7 +635,7 @@ packages:
     resolution: {integrity: sha512-PnNN7os0+yd1XvXAy23CFOmTbMaDxgxXtTKHybrJ39Y8kGzBATgBFibWJKH6BhytLI/Zyszs87xCOBNyBig6vQ==}
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.398.0
+      '@aws-sdk/types': 3.408.0
       tslib: 1.14.1
     dev: false
 
@@ -1646,6 +1646,14 @@ packages:
 
   /@aws-sdk/types@3.398.0:
     resolution: {integrity: sha512-r44fkS+vsEgKCuEuTV+TIk0t0m5ZlXHNjSDYEUvzLStbbfUFiNus/YG4UCa0wOk9R7VuQI67badsvvPeVPCGDQ==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@smithy/types': 2.2.2
+      tslib: 2.6.1
+    dev: false
+
+  /@aws-sdk/types@3.408.0:
+    resolution: {integrity: sha512-sIsR5224xWQTW7O6h4V0S7DMWs4bK4DCunwOo7Avpq7ZVmH2YyLTs0n4NGL186j8xTosycF1ACQgpM48SLIvaA==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@smithy/types': 2.2.2
@@ -6172,7 +6180,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/parser@5.59.11(eslint@8.48.0)(typescript@5.1.6):
+  /@typescript-eslint/parser@5.59.11(eslint@8.48.0)(typescript@5.2.2):
     resolution: {integrity: sha512-s9ZF3M+Nym6CAZEkJJeO2TFHHDsKAM3ecNkLuH4i4s8/RCPnF5JRip2GyviYkeEAcwGMJxkqG9h2dAsnA1nZpA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -6184,10 +6192,10 @@ packages:
     dependencies:
       '@typescript-eslint/scope-manager': 5.59.11
       '@typescript-eslint/types': 5.59.11
-      '@typescript-eslint/typescript-estree': 5.59.11(typescript@5.1.6)
+      '@typescript-eslint/typescript-estree': 5.59.11(typescript@5.2.2)
       debug: 4.3.4
       eslint: 8.48.0
-      typescript: 5.1.6
+      typescript: 5.2.2
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -6314,7 +6322,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/typescript-estree@5.59.11(typescript@5.1.6):
+  /@typescript-eslint/typescript-estree@5.59.11(typescript@5.2.2):
     resolution: {integrity: sha512-YupOpot5hJO0maupJXixi6l5ETdrITxeo5eBOeuV7RSKgYdU3G5cxO49/9WRnJq9EMrB7AuTSLH/bqOsXi7wPA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -6329,8 +6337,8 @@ packages:
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.5.4
-      tsutils: 3.21.0(typescript@5.1.6)
-      typescript: 5.1.6
+      tsutils: 3.21.0(typescript@5.2.2)
+      typescript: 5.2.2
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -13319,14 +13327,14 @@ packages:
       typescript: 5.1.3
     dev: true
 
-  /tsutils@3.21.0(typescript@5.1.6):
+  /tsutils@3.21.0(typescript@5.2.2):
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
     engines: {node: '>= 6'}
     peerDependencies:
       typescript: '>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta'
     dependencies:
       tslib: 1.14.1
-      typescript: 5.1.6
+      typescript: 5.2.2
     dev: true
 
   /tsx@3.12.7:
@@ -13449,6 +13457,12 @@ packages:
 
   /typescript@5.1.6:
     resolution: {integrity: sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: true
+
+  /typescript@5.2.2:
+    resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true
