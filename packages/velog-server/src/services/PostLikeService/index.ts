@@ -52,16 +52,12 @@ export class PostLikeService implements Service {
       return post
     }
 
-    try {
-      await this.db.postLike.create({
-        data: {
-          fk_post_id: postId,
-          fk_user_id: userId,
-        },
-      })
-    } catch (_) {
-      return post
-    }
+    await this.db.postLike.create({
+      data: {
+        fk_post_id: postId,
+        fk_user_id: userId,
+      },
+    })
 
     const likesPost = await this.db.post.update({
       where: {
