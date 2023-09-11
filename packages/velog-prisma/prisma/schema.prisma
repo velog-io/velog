@@ -482,16 +482,18 @@ model UserMeta {
 }
 
 model UserProfile {
-  id            String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  display_name  String?  @db.VarChar(255)
-  short_bio     String?  @db.VarChar(255)
-  thumbnail     String?  @db.VarChar(255)
-  created_at    DateTime @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime @default(now()) @db.Timestamptz(6)
-  fk_user_id    String?  @unique @db.Uuid
-  profile_links Json     @default("{}")
-  about         String   @default("")
-  user          User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade)
+  id               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  display_name     String?   @db.VarChar(255)
+  short_bio        String?   @db.VarChar(255)
+  thumbnail        String?   @db.VarChar(255)
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime  @default(now()) @db.Timestamptz(6)
+  fk_user_id       String?   @unique @db.Uuid
+  profile_links    Json      @default("{}")
+  about            String    @default("")
+  last_accessed_at DateTime? @db.Timestamptz(6)
+
+  user User? @relation(fields: [fk_user_id], references: [id], onDelete: Cascade)
 
   @@index([fk_user_id], map: "user_profiles_fk_user_id")
   @@map("user_profiles")

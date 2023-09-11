@@ -16,6 +16,9 @@ interface Service {
   }
   shuffle<T>(array: T[]): T[]
   groupById<T>(order: string[], data: T[], idResolver: (row: T) => string): T[][]
+  checkUnscore(text: string): boolean
+  now: Date
+  optimizeImage(url: string, width: number): string
 }
 
 @injectable()
@@ -105,7 +108,7 @@ export class UtilsService implements Service {
     const timezone = 'Asia/Seoul'
     return utcToZonedTime(utcTime, timezone)
   }
-  public optimizeImage(url: string, width: number) {
+  public optimizeImage(url: string, width: number): string {
     if (!url.includes('https://images.velog.io')) return url
     return url.replace('://images', '://img').concat(`?w=${width}`)
   }
