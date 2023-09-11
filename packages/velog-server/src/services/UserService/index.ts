@@ -10,6 +10,7 @@ import { RefreshTokenData } from '@lib/jwt/Jwt.interface.js'
 import { Time } from '@constants/TimeConstants.js'
 import { UnauthorizedError, NotFoundError } from '@errors/index.js'
 import { UserToken } from '@graphql/generated'
+import { UtilsService } from '@lib/utils/UtilsService.js'
 
 interface Service {
   findById(userId: string): Promise<User | null>
@@ -25,6 +26,7 @@ export class UserService implements Service {
     private readonly db: DbService,
     private readonly cookie: CookieService,
     private readonly jwt: JwtService,
+    private readonly utils: UtilsService,
   ) {}
   async findById(userId: string): Promise<User | null> {
     return await this.db.user.findUnique({ where: { id: userId } })
@@ -43,6 +45,15 @@ export class UserService implements Service {
       },
     })
     if (!user) return null
+
+    await this.db.userProfile.update({
+      where: {
+        fk_user_id: user.id,
+      },
+      data: {
+        last_accessed_at: this.utils.now,
+      },
+    })
 
     return user
   }
