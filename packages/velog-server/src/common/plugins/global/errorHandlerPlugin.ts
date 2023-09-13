@@ -2,6 +2,7 @@ import { FastifyPluginAsync } from 'fastify'
 
 const errorHandlerPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.setErrorHandler((error, _, reply) => {
+    console.log('error', error)
     if (error?.statusCode) {
       reply.status(error.statusCode)
     } else {

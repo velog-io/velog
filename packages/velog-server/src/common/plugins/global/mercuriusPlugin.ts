@@ -21,6 +21,9 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
     errorFormatter: (result) => {
       const e = result.errors?.[0]?.originalError
 
+      // TO-DO Add error logs
+      console.log(result.errors[0].originalError)
+
       if (!isHttpError(e)) {
         return { statusCode: 400, response: result }
       }
