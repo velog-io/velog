@@ -527,8 +527,8 @@ model User {
   externalIntegration        ExternalIntegration[]
   feed                       Feed[]
   followTag                  FollowTag[]
-  followers                  FollowUsers[]                @relation("follower_relation")
-  following                  FollowUsers[]                @relation("following_relation")
+  followers                  FollowUser[]                 @relation("follower_relation")
+  following                  FollowUser[]                 @relation("following_relation")
   postImage                  PostImage[]
   postLike                   PostLike[]
   postReadLog                PostReadLog[]
@@ -590,7 +590,7 @@ model ExternalIntegrationHistory {
   @@map("external_integration_histories")
 }
 
-model FollowUsers {
+model FollowUser {
   id                String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   fk_user_id        String   @db.Uuid
   fk_follow_user_id String   @db.Uuid
