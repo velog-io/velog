@@ -91,6 +91,7 @@ export type Post = {
   comments_count?: Maybe<Scalars['Int']['output']>
   created_at: Scalars['Date']['output']
   fk_user_id: Scalars['String']['output']
+  followed?: Maybe<Scalars['Boolean']['output']>
   id: Scalars['ID']['output']
   is_markdown?: Maybe<Scalars['Boolean']['output']>
   is_private: Scalars['Boolean']['output']
@@ -532,6 +533,7 @@ export type PostResolvers<
   comments_count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  followed?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_markdown?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   is_private?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
