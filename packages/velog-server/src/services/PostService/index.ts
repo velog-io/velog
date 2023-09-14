@@ -1,3 +1,4 @@
+import removeMd from 'remove-markdown'
 import { Post, Prisma, Tag } from '@prisma/client'
 import { container, injectable, singleton } from 'tsyringe'
 import {
@@ -23,6 +24,7 @@ interface Service {
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
   getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>
   serializePost(post: SerializedPostParam): SerializedPost
+  shortDescription(post: Post): string
 }
 
 @injectable()
@@ -404,11 +406,29 @@ export class PostService implements Service {
         },
       },
       tags: picked.tags.map((tag) => tag.name || '').filter(Boolean),
+      fk_user_id: post.fk_user_id,
+      url_slug: post.url_slug,
+      likes: post.likes,
+      shortDescription: this.shortDescription(post),
     }
+  }
+  public shortDescription(post: Post): string {
+    if (post.short_description) return post.short_description
+    if ((post.meta as any)?.short_description) {
+      return (post.meta as any).short_description
+    }
+    if (!post.body) return ''
+    const removed = removeMd(
+      post.body
+        .replace(/```([\s\S]*?)```/g, '')
+        .replace(/~~~([\s\S]*?)~~~/g, '')
+        .slice(0, 500),
+    )
+    return removed.slice(0, 200) + (removed.length > 200 ? '...' : '')
   }
 }
 
-type SerializedPostParam = Prisma.PostGetPayload<{
+export type SerializedPostParam = Prisma.PostGetPayload<{
   include: {
     id: true
     title: true
@@ -457,4 +477,6 @@ export type SerializedPost = {
     }
   }
   tags: string[]
+  fk_user_id: string
+  shortDescription: string
 }

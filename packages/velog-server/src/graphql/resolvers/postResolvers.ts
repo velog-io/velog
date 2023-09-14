@@ -19,17 +19,8 @@ const postResolvers: Resolvers = {
       return parent?.user
     },
     short_description: (parent: Post) => {
-      if (!parent.body) return ''
-      if ((parent.meta as any)?.short_description) {
-        return (parent.meta as any).short_description
-      }
-      const removed = removeMd(
-        parent.body
-          .replace(/```([\s\S]*?)```/g, '')
-          .replace(/~~~([\s\S]*?)~~~/g, '')
-          .slice(0, 500),
-      )
-      return removed.slice(0, 200) + (removed.length > 200 ? '...' : '')
+      const postService = container.resolve(PostService)
+      return postService.shortDescription(parent)
     },
     comments_count: async (parent: PostIncludeComment) => {
       if (parent?.comment) return parent.comment.length
