@@ -61,8 +61,8 @@ type Mutation {
   # initiateChangeEmail(email: String!): Boolean
   # confirmChangeEmail(code: String!): Boolean
 
-  follow(input: FollowInput!): Void
-  unfollow(input: UnfollowInput!): Void
+  follow(input: FollowInput!): Boolean
+  unfollow(input: UnfollowInput!): Boolean
 }
 
 input FollowInput {

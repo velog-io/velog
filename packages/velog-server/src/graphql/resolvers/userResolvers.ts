@@ -22,10 +22,12 @@ const userResolvers: Resolvers = {
     follow: async (_, { input }, ctx) => {
       const followService = container.resolve(FollowService)
       await followService.follow(ctx.user?.id, input.followUserId)
+      return true
     },
     unfollow: async (_, { input }, ctx) => {
       const followService = container.resolve(FollowService)
       await followService.unfllow(ctx.user?.id, input.followUserId)
+      return true
     },
   },
 }

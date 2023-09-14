@@ -57,11 +57,11 @@ export type LinkedPosts = {
 }
 
 export type Mutation = {
-  follow?: Maybe<Scalars['Void']['output']>
+  follow?: Maybe<Scalars['Boolean']['output']>
   likePost?: Maybe<Post>
   logout?: Maybe<Scalars['Void']['output']>
   sendMail?: Maybe<SendMailResponse>
-  unfollow?: Maybe<Scalars['Void']['output']>
+  unfollow?: Maybe<Scalars['Boolean']['output']>
   unlikePost?: Maybe<Post>
 }
 
@@ -491,7 +491,7 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
   follow?: Resolver<
-    Maybe<ResolversTypes['Void']>,
+    Maybe<ResolversTypes['Boolean']>,
     ParentType,
     ContextType,
     RequireFields<MutationFollowArgs, 'input'>
@@ -510,7 +510,7 @@ export type MutationResolvers<
     RequireFields<MutationSendMailArgs, 'input'>
   >
   unfollow?: Resolver<
-    Maybe<ResolversTypes['Void']>,
+    Maybe<ResolversTypes['Boolean']>,
     ParentType,
     ContextType,
     RequireFields<MutationUnfollowArgs, 'input'>
