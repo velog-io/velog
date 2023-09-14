@@ -13,9 +13,8 @@ import { GetPostsByTypeParams, Timeframe } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { PostReadLogService } from '@services/PostReadLogService/index.js'
-import { pick } from 'rambda'
-import { JsonValue } from '@prisma/client/runtime/library'
 import { subDays, subMonths, subYears } from 'date-fns'
+import { ENV } from '@env'
 
 interface Service {
   postsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
@@ -23,7 +22,6 @@ interface Service {
   getRecentPosts(input: RecentPostsInput, userId: string | undefined): Promise<Post[]>
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
   getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>
-  serializePost(post: SerializedPostParam): SerializedPost
   shortDescription(post: Post): string
 }
 
@@ -62,6 +60,7 @@ export class PostService implements Service {
     if (!userId) {
       throw new UnauthorizedError('Not Logged In')
     }
+
     const postGetter = {
       LIKED: this.getPostsByLiked,
       READ: this.getPostsByRead,
@@ -373,43 +372,20 @@ export class PostService implements Service {
 
     return post
   }
-  public serializePost(post: SerializedPostParam): SerializedPost {
-    const picked = pick(
-      [
-        'id',
-        'title',
-        'body',
-        'thumbnail',
-        'user',
-        'is_private',
-        'released_at',
-        'likes',
-        'views',
-        'meta',
-        'url_slug',
-        'tags',
-      ],
-      post,
-    )
+  private serialize(post: SerializeParam): SerializedPost {
     return {
-      ...picked,
-      // _id: picked.id,
-      // objectID: picked.id,
-      body: picked.body!.slice(0, 8000),
-      user: {
-        id: picked.user.id,
-        username: picked.user.username,
-        profile: {
-          id: picked.user.profile!.id,
-          display_name: picked.user.profile!.display_name!,
-          thumbnail: picked.user.profile!.thumbnail!,
-        },
-      },
-      tags: picked.tags.map((tag) => tag.name || '').filter(Boolean),
+      id: post.id,
+      url: `${ENV.apiHost}/@${post.user.username}/${encodeURI(post.url_slug ?? '')}`,
+      title: post.title,
+      thumbnail: post.thumbnail,
+      released_at: post.released_at,
+      updated_at: post.updated_at,
+      shortDescription: this.shortDescription(post),
+      body: post.body,
+      tags: post.tags.map((tag) => tag.name || '').filter(Boolean),
       fk_user_id: post.fk_user_id,
       url_slug: post.url_slug,
       likes: post.likes,
-      shortDescription: this.shortDescription(post),
     }
   }
   public shortDescription(post: Post): string {
@@ -428,7 +404,7 @@ export class PostService implements Service {
   }
 }
 
-export type SerializedPostParam = Prisma.PostGetPayload<{
+export type SerializeParam = Prisma.PostGetPayload<{
   include: {
     id: true
     title: true
@@ -440,19 +416,7 @@ export type SerializedPostParam = Prisma.PostGetPayload<{
     views: true
     meta: true
     url_slug: true
-    user: {
-      select: {
-        id: true
-        username: true
-        profile: {
-          select: {
-            id: true
-            display_name: true
-            thumbnail: true
-          }
-        }
-      }
-    }
+    user: true
   }
 }> & { tags: Tag[] }
 
@@ -460,23 +424,13 @@ export type SerializedPost = {
   id: string
   title: string | null
   body: string | null
+  url: string
   thumbnail: string | null
-  is_private: boolean
   released_at: Date | null
-  views: number | null
   likes: number | null
-  meta: JsonValue | null
   url_slug: string | null
-  user: {
-    id: string
-    username: string
-    profile: {
-      id: string
-      display_name: string
-      thumbnail: string
-    }
-  }
   tags: string[]
   fk_user_id: string
   shortDescription: string
+  updated_at: Date
 }
