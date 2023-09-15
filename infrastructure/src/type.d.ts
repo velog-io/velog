@@ -1,3 +1,5 @@
+import { Image } from '@pulumi/awsx/ecr'
+
 export type PackageType = 'web' | 'server' | 'cron'
 
 export type CreateInfraParameter = {
@@ -5,5 +7,5 @@ export type CreateInfraParameter = {
   subnetIds: Promise<string[]>
   certificateArn: Promise<string>
   defaultSecurityGroupId: Promise<string>
-  protect: boolean
+  imageUri: string
 }

@@ -1,4 +1,4 @@
-import { CreateInfraParameter } from './type.d'
+import { CreateInfraParameter, PackageType } from './type.d'
 import { createWebInfra } from './packages/web'
 import { createServerInfra } from './packages/server'
 import { ENV } from './env'
@@ -9,8 +9,17 @@ import { createVPC } from './common/vpc'
 import { getCertificate } from './common/certificate'
 import { createCronInfra } from './packages/cron'
 import { execCommand } from './lib/execCommand'
+import { createECRImage, getECRImageURI } from './common/ecr'
 
 execCommand('pnpm -r prisma:copy')
+
+const config = new pulumi.Config()
+const target = config.get('target') as PackageType
+
+const validTargets = ['all', 'web', 'server', 'cron']
+if (!target || !validTargets.includes(target)) {
+  throw new Error('Invalid target name, See the README.md')
+}
 
 // VPC, Subnet, DHCP, Intergate way, route Table
 const { subnets, vpc } = createVPC()
@@ -28,27 +37,25 @@ export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
 
 const certificateArn = getCertificate(ENV.certificateDomain)
 
-type Target = 'web' | 'server' | 'cron'
-const createInfraMapper: Record<
-  Target,
-  (func: CreateInfraParameter) => {
-    repoUrl: pulumi.Output<string>
-  }
-> = {
+const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => void> = {
   web: createWebInfra,
   server: createServerInfra,
   cron: createCronInfra,
 }
 
-export const repourls = Object.entries(createInfraMapper).map(([key, createInfra]) => {
-  const infraSettings = {
-    vpcId,
-    subnetIds,
-    certificateArn,
-    defaultSecurityGroupId,
-    protect: true,
-  }
+Object.entries(createInfraMapper)
+  .slice(0, 1)
+  .map(async ([key, func]) => {
+    const image2 = await getECRImageURI({ type: 'cron' })
+    const { repoUrl, imageUri } = createECRImage({ type: 'server' })
 
-  const { repoUrl } = createInfra(infraSettings)
-  return repoUrl
-})
+    const infraSettings = {
+      vpcId,
+      subnetIds,
+      certificateArn,
+      defaultSecurityGroupId,
+      imageUri,
+    }
+    // need bug fix
+    // func(infraSettings)
+  })

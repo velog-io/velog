@@ -7,14 +7,9 @@ import { portMapper } from '../lib/portMapper'
 type CreateSecurityGroupParameter = {
   vpcId: Promise<string>
   packageType: PackageType
-  protect: boolean
 }
 
-export const createSecurityGroup = ({
-  vpcId,
-  packageType,
-  protect,
-}: CreateSecurityGroupParameter) => {
+export const createSecurityGroup = ({ vpcId, packageType }: CreateSecurityGroupParameter) => {
   const elbSecurityGroupName = withPrefix(`${packageType}-elb-sg`)
   const elbSecurityGroup = new aws.ec2.SecurityGroup(
     elbSecurityGroupName,
@@ -47,7 +42,7 @@ export const createSecurityGroup = ({
         Name: elbSecurityGroupName,
       },
     },
-    { protect },
+    {},
   )
 
   const taskSecurityGroupName = withPrefix(`${packageType}-task-sg`)
@@ -78,7 +73,7 @@ export const createSecurityGroup = ({
         Name: taskSecurityGroupName,
       },
     },
-    { protect },
+    {},
   )
 
   return { elbSecurityGroup, taskSecurityGroup }
