@@ -27,7 +27,7 @@ export type Scalars = {
   Float: { input: number; output: number }
   Date: { input: Date; output: Date }
   JSON: { input: JSON; output: JSON }
-  Void: { input: Void; output: Void }
+  Void: { input: void; output: void }
 }
 
 export type Comment = {

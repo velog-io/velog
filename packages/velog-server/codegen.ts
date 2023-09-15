@@ -23,7 +23,7 @@ const config: CodegenConfig = {
           Date: 'Date',
           JSON: 'JSON',
           ID: 'string | undefined',
-          Void: 'Void',
+          Void: 'void',
         },
       },
     },
