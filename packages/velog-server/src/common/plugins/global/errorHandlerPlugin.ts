@@ -2,7 +2,9 @@ import { FastifyPluginAsync } from 'fastify'
 
 const errorHandlerPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.setErrorHandler((error, _, reply) => {
-    console.log('error', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('fastify error:', error)
+    }
     if (error?.statusCode) {
       reply.status(error.statusCode)
     } else {
@@ -13,9 +15,6 @@ const errorHandlerPlugin: FastifyPluginAsync = async (fastify) => {
       name: error.name || 'Error',
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
     })
-    if (process.env.NODE_ENV === 'development') {
-      console.log(error)
-    }
   })
 }
 

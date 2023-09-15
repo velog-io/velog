@@ -7,7 +7,7 @@ import { CommentService } from '@services/CommentService/index.js'
 import { Post } from '@prisma/client'
 import { PostLikeService } from '@services/PostLikeService/index.js'
 import { DbService } from '@lib/db/DbService.js'
-import { UserFollowService } from '@services/UserFollowService'
+import { UserFollowService } from '@services/UserFollowService/index.js'
 
 const postResolvers: Resolvers = {
   Post: {

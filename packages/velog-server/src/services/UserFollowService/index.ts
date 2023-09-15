@@ -10,7 +10,7 @@ interface Service {
   findFollowRelationship(userId: string, followUserId: string): Promise<FollowUser | null>
   isFollowed(userId: string, followUserId: string): Promise<boolean>
   follow(userId: string, followUserId: string): Promise<void>
-  unfllow(userId: string, followUserId: string): Promise<void>
+  unfollow(userId: string, followUserId: string): Promise<void>
 }
 
 @injectable()
@@ -65,7 +65,7 @@ export class UserFollowService implements Service {
       },
     })
   }
-  async unfllow(userId?: string, followUserId?: string): Promise<void> {
+  async unfollow(userId?: string, followUserId?: string): Promise<void> {
     if (!followUserId) {
       throw new BadRequestError('followUesrId is required')
     }
