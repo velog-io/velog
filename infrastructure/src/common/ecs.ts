@@ -82,7 +82,7 @@ export const createECSfargateService = ({
       scalableDimension: 'ecs:service:DesiredCount',
       serviceNamespace: 'ecs',
     },
-    {},
+    { replaceOnChanges: ['resourceId'] },
   )
 
   const ecsCPUPolicy = new aws.appautoscaling.Policy(
@@ -101,7 +101,7 @@ export const createECSfargateService = ({
         scaleOutCooldown: 60,
       },
     },
-    {},
+    { replaceOnChanges: ['resourceId'] },
   )
 
   const ecsMemoryPolicy = new aws.appautoscaling.Policy(
@@ -120,11 +120,12 @@ export const createECSfargateService = ({
         scaleOutCooldown: 60,
       },
     },
+    { replaceOnChanges: ['resourceId'] },
   )
 }
 
 type CreateECSFargateParams = {
-  imageUri: string
+  imageUri: pulumi.Output<string> | string
   subnetIds: pulumi.Input<pulumi.Input<string>[]>
   taskSecurityGroup: SecurityGroup
   defaultSecurityGroupId: Promise<string>

@@ -12,7 +12,9 @@ type ECRPrameter = {
 
 export const createECRImage = ({ type }: ECRPrameter) => {
   const option = options[type]
-  const repo = new awsx.ecr.Repository(withPrefix(option.ecrRepoName), { forceDelete: true }, {})
+  const repo = new awsx.ecr.Repository(withPrefix(option.ecrRepoName), {
+    forceDelete: true,
+  })
   const image = new awsx.ecr.Image(
     withPrefix(option.imageName),
     {
@@ -20,20 +22,18 @@ export const createECRImage = ({ type }: ECRPrameter) => {
       path: option.path,
       extraOptions: ['--platform', 'linux/amd64'],
     },
-    {},
+    { protect: true },
   )
 
-  const repoUrl = repo.url
-
-  return { imageUri: image.imageUri, repoUrl }
+  return repo.url
 }
 
-export const getECRImageURI = async ({ type }: ECRPrameter) => {
+export const getECRImageURI = async ({ type }: { type: PackageType }) => {
   const client = new AWS.ECR({ region: 'ap-northeast-2' })
   const option = options[type]
   const repository = await client.describeRepositories({})
   const repositoryName = repository.repositories
-    ?.map((f) => f.repositoryName)
+    ?.map((repo) => repo.repositoryName)
     .find((v) => v?.includes(option.ecrRepoName))
 
   if (!repositoryName) {
@@ -41,7 +41,6 @@ export const getECRImageURI = async ({ type }: ECRPrameter) => {
   }
 
   const repo = await aws.ecr.getRepository({ name: repositoryName })
-
   return repo.repositoryUrl
 }
 

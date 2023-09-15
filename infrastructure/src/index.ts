@@ -14,7 +14,7 @@ import { createECRImage, getECRImageURI } from './common/ecr'
 execCommand('pnpm -r prisma:copy')
 
 const config = new pulumi.Config()
-const target = config.get('target') as PackageType
+const target = config.get('target') as PackageType | 'all'
 
 const validTargets = ['all', 'web', 'server', 'cron']
 if (!target || !validTargets.includes(target)) {
@@ -38,24 +38,43 @@ export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
 const certificateArn = getCertificate(ENV.certificateDomain)
 
 const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => void> = {
-  web: createWebInfra,
+  // web: createWebInfra,
   server: createServerInfra,
   cron: createCronInfra,
 }
 
-Object.entries(createInfraMapper)
-  .slice(0, 1)
-  .map(async ([key, func]) => {
-    const image2 = await getECRImageURI({ type: 'cron' })
-    const { repoUrl, imageUri } = createECRImage({ type: 'server' })
+export const imageUris = Object.entries(createInfraMapper).map(async ([type, func]) => {
+  let imageUri = null
 
-    const infraSettings = {
-      vpcId,
-      subnetIds,
-      certificateArn,
-      defaultSecurityGroupId,
-      imageUri,
-    }
-    // need bug fix
-    // func(infraSettings)
-  })
+  if (type === target || target === 'all') {
+    imageUri = createECRImage({ type: type as PackageType })
+  } else {
+    imageUri = await getECRImageURI({ type: type as PackageType })
+  }
+
+  if (!imageUri) {
+    throw new Error('Not allow nullable image uri')
+  }
+
+  const infraSettings = {
+    vpcId,
+    subnetIds,
+    certificateArn,
+    defaultSecurityGroupId,
+    imageUri: '',
+  }
+
+  if (typeof imageUri !== 'string') {
+    imageUri.apply((uri) => {
+      Object.assign(infraSettings, { imageUri: uri })
+      console.log(infraSettings)
+      func(infraSettings)
+    })
+  } else {
+    Object.assign(infraSettings, { imageUri })
+    console.log(infraSettings)
+    func(infraSettings)
+  }
+
+  return imageUri
+})
