@@ -527,8 +527,8 @@ model User {
   externalIntegration        ExternalIntegration[]
   feed                       Feed[]
   followTag                  FollowTag[]
-  followers                  FollowUsers[]                @relation("follower_relation")
-  following                  FollowUsers[]                @relation("following_relation")
+  followers                  FollowUser[]                 @relation("follower_relation")
+  following                  FollowUser[]                 @relation("following_relation")
   postImage                  PostImage[]
   postLike                   PostLike[]
   postReadLog                PostReadLog[]
@@ -590,17 +590,17 @@ model ExternalIntegrationHistory {
   @@map("external_integration_histories")
 }
 
-model FollowUsers {
+model FollowUser {
   id                String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  fk_uesr_id        String   @db.Uuid
+  fk_user_id        String   @db.Uuid
   fk_follow_user_id String   @db.Uuid
   created_at        DateTime @default(now()) @db.Timestamptz(6)
   updated_at        DateTime @default(now()) @db.Timestamptz(6)
 
-  follower  User @relation("follower_relation", fields: [fk_uesr_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  follower  User @relation("follower_relation", fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   following User @relation("following_relation", fields: [fk_follow_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
-  @@index([fk_uesr_id])
+  @@index([fk_user_id])
   @@index([fk_follow_user_id])
   @@map("follow_users")
 }
