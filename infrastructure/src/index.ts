@@ -66,6 +66,7 @@ export const imageUrls = Object.entries(createInfraMapper).map(async ([pack, fun
     repositoryUrl: '',
   }
 
+  //TODO: 최신 image 값 가져오기
   if (typeof repoUrl !== 'string') {
     repoUrl.apply((url) => {
       Object.assign(infraSettings, { repositoryUrl: `${url}:latest` })
