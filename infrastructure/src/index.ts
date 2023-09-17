@@ -9,7 +9,7 @@ import { createVPC } from './common/vpc'
 import { getCertificate } from './common/certificate'
 import { createCronInfra } from './packages/cron'
 import { execCommand } from './lib/execCommand'
-import { createECRImage, getECRImageURI } from './common/ecr'
+import { createECRImage, getECRRepositoryUrl } from './common/ecr'
 
 execCommand('pnpm -r prisma:copy')
 
@@ -43,16 +43,18 @@ const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => voi
   cron: createCronInfra,
 }
 
-export const imageUris = Object.entries(createInfraMapper).map(async ([type, func]) => {
-  let imageUri = null
+export const imageUrls = Object.entries(createInfraMapper).map(async ([pack, func]) => {
+  let type = pack as PackageType
 
+  let repoUrl: string | pulumi.Output<string> | null = null
   if (type === target || target === 'all') {
-    imageUri = createECRImage({ type: type as PackageType })
+    const existsUrl = await getECRRepositoryUrl(type)
+    repoUrl = createECRImage(type, existsUrl)
   } else {
-    imageUri = await getECRImageURI({ type: type as PackageType })
+    repoUrl = await getECRRepositoryUrl(type)
   }
 
-  if (!imageUri) {
+  if (!repoUrl) {
     throw new Error('Not allow nullable image uri')
   }
 
@@ -61,20 +63,18 @@ export const imageUris = Object.entries(createInfraMapper).map(async ([type, fun
     subnetIds,
     certificateArn,
     defaultSecurityGroupId,
-    imageUri: '',
+    repositoryUrl: '',
   }
 
-  if (typeof imageUri !== 'string') {
-    imageUri.apply((uri) => {
-      Object.assign(infraSettings, { imageUri: uri })
-      console.log(infraSettings)
+  if (typeof repoUrl !== 'string') {
+    repoUrl.apply((url) => {
+      Object.assign(infraSettings, { repositoryUrl: `${url}:latest` })
       func(infraSettings)
     })
   } else {
-    Object.assign(infraSettings, { imageUri })
-    console.log(infraSettings)
+    Object.assign(infraSettings, { repositoryUrl: `${repoUrl}:latest` })
     func(infraSettings)
   }
 
-  return imageUri
+  return `${repoUrl}:latest`
 })

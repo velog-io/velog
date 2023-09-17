@@ -5,14 +5,12 @@ import * as pulumi from '@pulumi/pulumi'
 import { withPrefix } from '../lib/prefix'
 import { ecsTaskExecutionRole } from './iam'
 import { ENV } from '../env'
-import { SecurityGroup } from '@pulumi/aws/ec2'
-import { TargetGroup } from '@pulumi/aws/alb'
-import { PackageType } from '../type'
+import { CreateECSFargateParams, PackageType } from '../type'
 import { portMapper } from '../lib/portMapper'
 import { ecsOption } from '../lib/ecsOptions'
 
 export const createECSfargateService = ({
-  imageUri,
+  repositoryUrl,
   subnetIds,
   taskSecurityGroup,
   defaultSecurityGroupId,
@@ -39,7 +37,7 @@ export const createECSfargateService = ({
           roleArn: ecsTaskExecutionRole.arn,
         },
         container: {
-          image: imageUri,
+          image: repositoryUrl,
           cpu: option.cpu,
           memory: option.memory,
           essential: true,
@@ -122,15 +120,4 @@ export const createECSfargateService = ({
     },
     { replaceOnChanges: ['resourceId'] },
   )
-}
-
-type CreateECSFargateParams = {
-  imageUri: pulumi.Output<string> | string
-  subnetIds: pulumi.Input<pulumi.Input<string>[]>
-  taskSecurityGroup: SecurityGroup
-  defaultSecurityGroupId: Promise<string>
-  targetGroup: TargetGroup
-  port: number
-  packageType: PackageType
-  environment?: { name: string; value: string }[]
 }

@@ -1,35 +1,36 @@
+import { PackageType } from './../type.d'
 import * as AWS from '@aws-sdk/client-ecr'
 import * as awsx from '@pulumi/awsx'
 import * as aws from '@pulumi/aws'
-import * as pulumi from '@pulumi/pulumi'
 import { withPrefix } from '../lib/prefix'
 import { ENV } from '../env'
-import { PackageType } from '../type'
+import { Output } from '@pulumi/pulumi'
 
-type ECRPrameter = {
-  type: PackageType
-}
+const client = new AWS.ECR({ region: 'ap-northeast-2' })
 
-export const createECRImage = ({ type }: ECRPrameter) => {
+export const createECRImage = (type: PackageType, repoUrl: Output<string> | string | null) => {
   const option = options[type]
-  const repo = new awsx.ecr.Repository(withPrefix(option.ecrRepoName), {
-    forceDelete: true,
-  })
-  const image = new awsx.ecr.Image(
-    withPrefix(option.imageName),
-    {
-      repositoryUrl: repo.url,
-      path: option.path,
-      extraOptions: ['--platform', 'linux/amd64'],
-    },
-    { protect: true },
-  )
+  if (!repoUrl) {
+    const repo = new awsx.ecr.Repository(
+      withPrefix(option.ecrRepoName),
+      {
+        forceDelete: false,
+      },
+      { retainOnDelete: true },
+    )
+    repoUrl = repo.url
+  }
 
-  return repo.url
+  const image = new awsx.ecr.Image(withPrefix(option.imageName), {
+    repositoryUrl: repoUrl,
+    path: option.path,
+    extraOptions: ['--platform', 'linux/amd64'],
+  })
+
+  return repoUrl
 }
 
-export const getECRImageURI = async ({ type }: { type: PackageType }) => {
-  const client = new AWS.ECR({ region: 'ap-northeast-2' })
+export const getECRRepositoryUrl = async (type: PackageType): Promise<string | null> => {
   const option = options[type]
   const repository = await client.describeRepositories({})
   const repositoryName = repository.repositories
@@ -37,10 +38,13 @@ export const getECRImageURI = async ({ type }: { type: PackageType }) => {
     .find((v) => v?.includes(option.ecrRepoName))
 
   if (!repositoryName) {
-    throw new Error('Not found repository name')
+    return null
   }
 
-  const repo = await aws.ecr.getRepository({ name: repositoryName })
+  const repo = await aws.ecr.getRepository({
+    name: repositoryName,
+    tags: {},
+  })
   return repo.repositoryUrl
 }
 

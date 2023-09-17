@@ -9,7 +9,7 @@ export const createCronInfra = ({
   subnetIds,
   certificateArn,
   defaultSecurityGroupId,
-  imageUri,
+  repositoryUrl,
 }: CreateInfraParameter) => {
   const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({
     vpcId,
@@ -26,7 +26,7 @@ export const createCronInfra = ({
 
   createECSfargateService({
     packageType: 'cron',
-    imageUri: imageUri,
+    repositoryUrl: repositoryUrl,
     port: ENV.serverPort,
     subnetIds: subnetIds,
     targetGroup,
