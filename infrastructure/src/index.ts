@@ -9,7 +9,7 @@ import { createVPC } from './common/vpc'
 import { getCertificate } from './common/certificate'
 import { createCronInfra } from './packages/cron'
 import { execCommand } from './lib/execCommand'
-import { imageHandler, createECRRepository, getECRRepository } from './common/ecr'
+import { createECRImage, createECRRepository, getECRImage, getECRRepository } from './common/ecr'
 import { Image } from '@pulumi/awsx/ecr/image'
 
 execCommand('pnpm -r prisma:copy')
@@ -47,27 +47,27 @@ const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => voi
 export const imageUrls = Object.entries(createInfraMapper).map(async ([pack, func]) => {
   let type = pack as PackageType
 
-  let image: pulumi.Output<Image> | null = null
+  let imageUrl: pulumi.Output<string> | string = ''
   if (target === type || target === 'all') {
     const newRepo = createECRRepository(type)
-    image = imageHandler(type, newRepo)
+    imageUrl = createECRImage(type, newRepo)
   } else {
     const repo = await getECRRepository(type)
-    // TODO: 이미지를 새로 안만들거나, 원래 있던 imageUrl 경로를 불러오는 방법이 빠르겠다.
-    image = imageHandler(type, repo)
+    const image = getECRImage(type, repo)
+    image.apply((img) => {
+      console.log('img', img)
+      imageUrl = `${img.registryId}.dkr.ecr.ap-northeast-2.amazonaws.com/${img.repositoryName}:${img.imageTags[0]}`
+    })
   }
 
-  return image.apply((img) => {
-    const infraSettings = {
-      vpcId,
-      subnetIds,
-      certificateArn,
-      defaultSecurityGroupId,
-      imageUri: img.imageUri,
-    }
-
-    // func(infraSettings)
-
-    return infraSettings
-  })
+  return imageUrl
+  // const infraSettings = {
+  //   vpcId,
+  //   subnetIds,
+  //   certificateArn,
+  //   defaultSecurityGroupId,
+  //   imageUri: img.imageUri,
+  // }
+  // func(infraSettings)
+  // return infraSettings
 })

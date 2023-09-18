@@ -5,18 +5,17 @@ import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
 import { ENV } from '../env'
 import { Repository } from '@pulumi/aws/ecr'
-import { Image } from '@pulumi/awsx/ecr'
 import { customAlphabet } from 'nanoid'
-import { Output } from '@pulumi/pulumi'
+import * as pulumi from '@pulumi/pulumi'
+import { Image } from '@pulumi/awsx/ecr'
+
 const nanoid = customAlphabet('1234567890abcdefghijk', 10)
 
 const client = new AWS.ECR({ region: 'ap-northeast-2' })
 
 export const createECRRepository = (type: PackageType): Repository => {
   const option = options[type]
-  const repo = new aws.ecr.Repository(withPrefix(option.ecrRepoName), {
-    forceDelete: true,
-  })
+  const repo = new aws.ecr.Repository(withPrefix(option.ecrRepoName), { forceDelete: true })
   return repo
 }
 
@@ -44,23 +43,28 @@ export const getECRRepository = async (type: PackageType): Promise<Repository> =
   )
 }
 
-export const imageHandler = (type: PackageType, repo: Repository): Output<Image> => {
+export const createECRImage = (type: PackageType, repo: Repository): pulumi.Output<string> => {
   const option = options[type]
-  return repo.registryId.apply((arn) => {
-    console.log('arn', arn)
-    const image = new awsx.ecr.Image(
-      withPrefix(option.imageName),
-      {
-        repositoryUrl: repo.repositoryUrl,
-        path: option.path,
-        extraOptions: ['--platform', 'linux/amd64'],
-      },
-      {
-        replaceOnChanges: ['repositoryUrl'],
-      },
-    )
-    return image
+  const image = new awsx.ecr.Image(
+    withPrefix(option.imageName),
+    {
+      repositoryUrl: repo.repositoryUrl,
+      path: option.path,
+      extraOptions: ['--platform', 'linux/amd64'],
+    },
+    {
+      replaceOnChanges: ['repo.repositoryUrl'],
+    },
+  )
+  return image.imageUri
+}
+
+export const getECRImage = (type: PackageType, repo: Repository) => {
+  const image = aws.ecr.getImageOutput({
+    repositoryName: repo.name,
+    mostRecent: true,
   })
+  return image
 }
 
 const options = {

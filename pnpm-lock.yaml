@@ -30,10 +30,10 @@ importers:
         specifier: ^5.42.0
         version: 5.42.0
       '@pulumi/awsx':
-        specifier: ^1.0.2
+        specifier: ^1.0.4
         version: 1.0.4
       '@pulumi/pulumi':
-        specifier: ^3.75.0
+        specifier: ^3.78.0
         version: 3.78.0
       dotenv:
         specifier: ^16.3.1
