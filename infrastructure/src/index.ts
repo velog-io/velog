@@ -1,5 +1,5 @@
 import { CreateInfraParameter, PackageType } from './type.d'
-import { createWebInfra } from './packages/web'
+// import { createWebInfra } from './packages/web'
 import { createServerInfra } from './packages/server'
 import { ENV } from './env'
 import * as aws from '@pulumi/aws'
@@ -9,7 +9,8 @@ import { createVPC } from './common/vpc'
 import { getCertificate } from './common/certificate'
 import { createCronInfra } from './packages/cron'
 import { execCommand } from './lib/execCommand'
-import { createECRImage, getECRRepositoryUrl } from './common/ecr'
+import { imageHandler, createECRRepository, getECRRepository } from './common/ecr'
+import { Image } from '@pulumi/awsx/ecr/image'
 
 execCommand('pnpm -r prisma:copy')
 
@@ -46,36 +47,27 @@ const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => voi
 export const imageUrls = Object.entries(createInfraMapper).map(async ([pack, func]) => {
   let type = pack as PackageType
 
-  let repoUrl: string | pulumi.Output<string> | null = null
-  if (type === target || target === 'all') {
-    const existsUrl = await getECRRepositoryUrl(type)
-    repoUrl = createECRImage(type, existsUrl)
+  let image: pulumi.Output<Image> | null = null
+  if (target === type || target === 'all') {
+    const newRepo = createECRRepository(type)
+    image = imageHandler(type, newRepo)
   } else {
-    repoUrl = await getECRRepositoryUrl(type)
+    const repo = await getECRRepository(type)
+    // TODO: 이미지를 새로 안만들거나, 원래 있던 imageUrl 경로를 불러오는 방법이 빠르겠다.
+    image = imageHandler(type, repo)
   }
 
-  if (!repoUrl) {
-    throw new Error('Not allow nullable image uri')
-  }
+  return image.apply((img) => {
+    const infraSettings = {
+      vpcId,
+      subnetIds,
+      certificateArn,
+      defaultSecurityGroupId,
+      imageUri: img.imageUri,
+    }
 
-  const infraSettings = {
-    vpcId,
-    subnetIds,
-    certificateArn,
-    defaultSecurityGroupId,
-    repositoryUrl: '',
-  }
+    // func(infraSettings)
 
-  //TODO: 최신 image 값 가져오기
-  if (typeof repoUrl !== 'string') {
-    repoUrl.apply((url) => {
-      Object.assign(infraSettings, { repositoryUrl: `${url}:latest` })
-      func(infraSettings)
-    })
-  } else {
-    Object.assign(infraSettings, { repositoryUrl: `${repoUrl}:latest` })
-    func(infraSettings)
-  }
-
-  return `${repoUrl}:latest`
+    return infraSettings
+  })
 })

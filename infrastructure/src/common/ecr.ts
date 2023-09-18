@@ -4,48 +4,63 @@ import * as awsx from '@pulumi/awsx'
 import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
 import { ENV } from '../env'
+import { Repository } from '@pulumi/aws/ecr'
+import { Image } from '@pulumi/awsx/ecr'
+import { customAlphabet } from 'nanoid'
 import { Output } from '@pulumi/pulumi'
+const nanoid = customAlphabet('1234567890abcdefghijk', 10)
 
 const client = new AWS.ECR({ region: 'ap-northeast-2' })
 
-export const createECRImage = (type: PackageType, repoUrl: Output<string> | string | null) => {
+export const createECRRepository = (type: PackageType): Repository => {
   const option = options[type]
-  if (!repoUrl) {
-    const repo = new awsx.ecr.Repository(
-      withPrefix(option.ecrRepoName),
-      {
-        forceDelete: false,
-      },
-      { retainOnDelete: true },
-    )
-    repoUrl = repo.url
-  }
-
-  const image = new awsx.ecr.Image(withPrefix(option.imageName), {
-    repositoryUrl: repoUrl,
-    path: option.path,
-    extraOptions: ['--platform', 'linux/amd64'],
+  const repo = new aws.ecr.Repository(withPrefix(option.ecrRepoName), {
+    forceDelete: true,
   })
-
-  return repoUrl
+  return repo
 }
 
-export const getECRRepositoryUrl = async (type: PackageType): Promise<string | null> => {
+export const getECRRepository = async (type: PackageType): Promise<Repository> => {
   const option = options[type]
   const repository = await client.describeRepositories({})
-  const repositoryName = repository.repositories
-    ?.map((repo) => repo.repositoryName)
-    .find((v) => v?.includes(option.ecrRepoName))
+  const repo = repository.repositories
+    ?.map((repo) => ({
+      repositoryName: repo.repositoryName,
+      repositoryId: repo.registryId,
+      repoUri: `${repo.registryId}.dkr.ecr.ap-northeast-2.amazonaws.com/${repo.repositoryName}`,
+    }))
+    .find(
+      (v) => v.repositoryName?.includes('velog') && v.repositoryName?.includes(option.ecrRepoName),
+    )
 
-  if (!repositoryName) {
-    return null
+  if (!repo) {
+    throw new Error('Not found repository')
   }
 
-  const repo = await aws.ecr.getRepository({
-    name: repositoryName,
-    tags: {},
+  return new aws.ecr.Repository(
+    withPrefix(option.ecrRepoName),
+    { forceDelete: true },
+    { import: repo.repositoryName },
+  )
+}
+
+export const imageHandler = (type: PackageType, repo: Repository): Output<Image> => {
+  const option = options[type]
+  return repo.registryId.apply((arn) => {
+    console.log('arn', arn)
+    const image = new awsx.ecr.Image(
+      withPrefix(option.imageName),
+      {
+        repositoryUrl: repo.repositoryUrl,
+        path: option.path,
+        extraOptions: ['--platform', 'linux/amd64'],
+      },
+      {
+        replaceOnChanges: ['repositoryUrl'],
+      },
+    )
+    return image
   })
-  return repo.repositoryUrl
 }
 
 const options = {

@@ -10,7 +10,7 @@ import { portMapper } from '../lib/portMapper'
 import { ecsOption } from '../lib/ecsOptions'
 
 export const createECSfargateService = ({
-  repositoryUrl,
+  imageUri,
   subnetIds,
   taskSecurityGroup,
   defaultSecurityGroupId,
@@ -37,7 +37,7 @@ export const createECSfargateService = ({
           roleArn: ecsTaskExecutionRole.arn,
         },
         container: {
-          image: repositoryUrl,
+          image: imageUri,
           cpu: option.cpu,
           memory: option.memory,
           essential: true,

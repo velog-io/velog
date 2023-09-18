@@ -9,7 +9,7 @@ export const createServerInfra = ({
   subnetIds,
   certificateArn,
   defaultSecurityGroupId,
-  repositoryUrl,
+  imageUri,
 }: CreateInfraParameter) => {
   const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({
     vpcId,
@@ -26,7 +26,7 @@ export const createServerInfra = ({
 
   createECSfargateService({
     packageType: 'server',
-    repositoryUrl: repositoryUrl,
+    imageUri,
     port: ENV.serverPort,
     subnetIds: subnetIds,
     targetGroup,

@@ -9,11 +9,10 @@ export type CreateInfraParameter = {
   subnetIds: Promise<string[]>
   certificateArn: Promise<string>
   defaultSecurityGroupId: Promise<string>
-  repositoryUrl: string | Output<string>
+  imageUri: string | Output<string>
 }
 
 export type CreateECSFargateParams = {
-  repositoryUrl: pulumi.Output<string> | string
   subnetIds: pulumi.Input<pulumi.Input<string>[]>
   taskSecurityGroup: SecurityGroup
   defaultSecurityGroupId: Promise<string>
@@ -21,4 +20,5 @@ export type CreateECSFargateParams = {
   port: number
   packageType: PackageType
   environment?: { name: string; value: string }[]
+  imageUri: pulumi.Output<string> | string
 }
