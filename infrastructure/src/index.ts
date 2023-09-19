@@ -4,6 +4,7 @@ import { createServerInfra } from './packages/server'
 import { ENV } from './env'
 import * as aws from '@pulumi/aws'
 import * as pulumi from '@pulumi/pulumi'
+import * as AWS from '@aws-sdk/client-ecr'
 
 import { createVPC } from './common/vpc'
 import { getCertificate } from './common/certificate'
@@ -11,6 +12,7 @@ import { createCronInfra } from './packages/cron'
 import { execCommand } from './lib/execCommand'
 import { createECRImage, createECRRepository, getECRImage, getECRRepository } from './common/ecr'
 import { Image } from '@pulumi/awsx/ecr/image'
+import { DescribeImagesCommand } from '@aws-sdk/client-ecr'
 
 execCommand('pnpm -r prisma:copy')
 
@@ -47,17 +49,13 @@ const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => voi
 export const imageUrls = Object.entries(createInfraMapper).map(async ([pack, func]) => {
   let type = pack as PackageType
 
-  let imageUrl: pulumi.Output<string> | string = ''
+  let imageUrl: pulumi.Output<string>
   if (target === type || target === 'all') {
     const newRepo = createECRRepository(type)
     imageUrl = createECRImage(type, newRepo)
   } else {
     const repo = await getECRRepository(type)
-    const image = getECRImage(type, repo)
-    image.apply((img) => {
-      console.log('img', img)
-      imageUrl = `${img.registryId}.dkr.ecr.ap-northeast-2.amazonaws.com/${img.repositoryName}:${img.imageTags[0]}`
-    })
+    imageUrl = getECRImage(repo)
   }
 
   return imageUrl

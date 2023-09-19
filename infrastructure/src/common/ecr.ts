@@ -15,7 +15,9 @@ const client = new AWS.ECR({ region: 'ap-northeast-2' })
 
 export const createECRRepository = (type: PackageType): Repository => {
   const option = options[type]
-  const repo = new aws.ecr.Repository(withPrefix(option.ecrRepoName), { forceDelete: true })
+  const repo = new aws.ecr.Repository(withPrefix(option.ecrRepoName), {
+    forceDelete: true,
+  })
   return repo
 }
 
@@ -45,26 +47,23 @@ export const getECRRepository = async (type: PackageType): Promise<Repository> =
 
 export const createECRImage = (type: PackageType, repo: Repository): pulumi.Output<string> => {
   const option = options[type]
-  const image = new awsx.ecr.Image(
-    withPrefix(option.imageName),
-    {
-      repositoryUrl: repo.repositoryUrl,
-      path: option.path,
-      extraOptions: ['--platform', 'linux/amd64'],
-    },
-    {
-      replaceOnChanges: ['repo.repositoryUrl'],
-    },
-  )
+  const image = new awsx.ecr.Image(withPrefix(option.imageName), {
+    repositoryUrl: repo.repositoryUrl,
+    path: option.path,
+    extraOptions: ['--platform', 'linux/amd64'],
+  })
   return image.imageUri
 }
 
-export const getECRImage = (type: PackageType, repo: Repository) => {
+export const getECRImage = (repo: Repository): pulumi.Output<string> => {
   const image = aws.ecr.getImageOutput({
     repositoryName: repo.name,
     mostRecent: true,
   })
-  return image
+  return image.apply((img) => {
+    const imageUri = `${img.registryId}.dkr.ecr.ap-northeast-2.amazonaws.com/${img.imageTags[1]}:latest`
+    return imageUri
+  })
 }
 
 const options = {
