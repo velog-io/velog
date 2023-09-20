@@ -1,5 +1,5 @@
 import { DbService } from '@lib/db/DbService.js'
-import PostService from '@services/PostService.js'
+import PostService from '@services/PostService/index.js'
 import { injectable, singleton } from 'tsyringe'
 import { startOfDay, endOfDay } from 'date-fns'
 import { utcToZonedTime } from 'date-fns-tz'

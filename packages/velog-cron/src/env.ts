@@ -32,6 +32,7 @@ const env = z.object({
   port: z.number(),
   databaseUrl: z.string(),
   cronApiKey: z.string(),
+  redisHost: z.string(),
 })
 
 export type EnvVars = z.infer<typeof env>
@@ -41,4 +42,5 @@ export const ENV = env.parse({
   port: Number(process.env.PORT),
   databaseUrl: process.env.DATABASE_URL,
   cronApiKey: process.env.CRON_API_KEY,
+  redisHost: process.env.REDIS_HOST,
 })
