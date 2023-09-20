@@ -1,11 +1,12 @@
 import { ENV } from '@env'
-import { BadRequestError } from '@errors/BadRequestErrors'
-import { NotFoundError } from '@errors/NotfoundError'
-import { DbService } from '@lib/db/DbService'
-import PostService from '@services/PostService'
 import { startOfDay, subMonths } from 'date-fns'
 import { utcToZonedTime } from 'date-fns-tz'
 import { injectable, singleton } from 'tsyringe'
+import { BadRequestError } from '@errors/BadRequestErrors.js'
+import { NotFoundError } from '@errors/NotfoundError.js'
+import { DbService } from '@lib/db/DbService.js'
+import { RedisService } from '@lib/redis/RedisService.js'
+import PostService from '@services/PostService/index.js'
 
 interface Controller {
   updateScoreByPostId(postId: string): Promise<void>
@@ -18,6 +19,7 @@ export class PostController implements Controller {
   constructor(
     private readonly postService: PostService,
     private readonly db: DbService,
+    private readonly redis: RedisService,
   ) {}
   async updateScoreByPostId(postId: string): Promise<void> {
     const post = await this.postService.findById(postId)
@@ -54,6 +56,27 @@ export class PostController implements Controller {
       },
     })
 
+    // for (let i = 0; i < 10000; i++) {
+    //   if (i % 1000 === 0) {
+    //     console.log(`${i} / 10000`)
+    //   }
+
+    //   const queueName = this.redis.getQueueName('feed')
+    //   const queueInfo = {
+    //     user_id: '6028c07a-f117-45a8-8168-f6c8aa43f9e0',
+    //     post_id: '7f02e7f2-747c-425d-96f8-2fbd66dc7cf4',
+    //   }
+    //   this.redis.lpush(queueName, JSON.stringify(queueInfo))
+    // }
+
+    const queueName = this.redis.getQueueName('feed')
+    const data = await this.redis.rpop(queueName)
+    const rest = await this.redis.llen(queueName)
+    if (data) {
+      console.log('data', data)
+      console.log('rest', rest)
+    }
+
     const queue: string[][] = []
     let tick: string[] = []
     const tickSize = 200
@@ -72,7 +95,7 @@ export class PostController implements Controller {
 
     for (let i = 0; i < queue.length; i++) {
       const postIds = queue[i]
-      console.log(`${i} / ${queue.length}`)
+      console.log(`${i + 1} / ${queue.length}`)
       for (const postId of postIds) {
         await this.postService.scoreCarculator(postId)
       }

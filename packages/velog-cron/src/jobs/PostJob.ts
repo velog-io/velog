@@ -3,23 +3,16 @@ import PostService from '@services/PostService/index.js'
 import { injectable, singleton } from 'tsyringe'
 import { startOfDay, endOfDay } from 'date-fns'
 import { utcToZonedTime } from 'date-fns-tz'
+import { JobProgressManager } from '@jobs/index.js'
 
 @singleton()
 @injectable()
-export class PostScoreJob {
+export class PostJob extends JobProgressManager {
   constructor(
     private readonly postService: PostService,
     private readonly db: DbService,
-  ) {}
-  private jobInProgress = false
-  public get isJobProgressing() {
-    return this.jobInProgress
-  }
-  public startPostScoreJob() {
-    this.jobInProgress = true
-  }
-  public stopPostScoreJob() {
-    this.jobInProgress = false
+  ) {
+    super()
   }
   public async scoreCalculation() {
     console.log('Posts score calculation start...')

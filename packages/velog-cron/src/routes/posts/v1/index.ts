@@ -3,7 +3,7 @@ import { container } from 'tsyringe'
 import { PutPostScoreOptions, PutPostScoreSchema } from '@routes/posts/v1/schema.js'
 import { HttpStatus } from '@constants/HttpStatusConstants.js'
 import { HttpStatusMessage } from '@constants/HttpStatusMessageConstants.js'
-import { PostController } from '@routes/posts/v1/PostController'
+import { PostController } from '@routes/posts/v1/PostController.js'
 
 const v1: FastifyPluginCallback = (fastify, opts, done) => {
   const controller = container.resolve(PostController)
