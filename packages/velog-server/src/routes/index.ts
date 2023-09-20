@@ -13,13 +13,11 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
   done()
 }
 
-let cnt = 0
-
 const routes: FastifyPluginCallback = (fastify, opts, done) => {
   fastify.get('/', async (request) => {
     const ip = request.ipaddr
     const user = request.user
-    return { user, ip, cnt: cnt++ }
+    return { user, ip }
   })
 
   fastify.register(api, {

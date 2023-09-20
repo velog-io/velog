@@ -13,7 +13,6 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
   done()
 }
 
-let cnt = 0
 const routes: FastifyPluginCallback = (fastify, opts, done) => {
   fastify.get('/', (_, reply) => {
     reply.status(200).send({ message: HttpStatusMessage.Ok })

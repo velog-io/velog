@@ -2,7 +2,7 @@ import pulumi, { Output } from '@pulumi/pulumi'
 import { SecurityGroup } from '@pulumi/aws/ec2'
 import { TargetGroup } from '@pulumi/aws/alb'
 
-export type PackageType = 'server' | 'cron'
+export type PackageType = 'web' | 'server' | 'cron'
 
 export type CreateInfraParameter = {
   vpcId: Promise<string>

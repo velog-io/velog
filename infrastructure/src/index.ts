@@ -1,18 +1,15 @@
 import { CreateInfraParameter, PackageType } from './type.d'
-// import { createWebInfra } from './packages/web'
+import { createWebInfra } from './packages/web'
 import { createServerInfra } from './packages/server'
 import { ENV } from './env'
 import * as aws from '@pulumi/aws'
 import * as pulumi from '@pulumi/pulumi'
-import * as AWS from '@aws-sdk/client-ecr'
 
 import { createVPC } from './common/vpc'
 import { getCertificate } from './common/certificate'
 import { createCronInfra } from './packages/cron'
 import { execCommand } from './lib/execCommand'
 import { createECRImage, createECRRepository, getECRImage, getECRRepository } from './common/ecr'
-import { Image } from '@pulumi/awsx/ecr/image'
-import { DescribeImagesCommand } from '@aws-sdk/client-ecr'
 
 execCommand('pnpm -r prisma:copy')
 
@@ -41,7 +38,7 @@ export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
 const certificateArn = getCertificate(ENV.certificateDomain)
 
 const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => void> = {
-  // web: createWebInfra,
+  web: createWebInfra,
   server: createServerInfra,
   cron: createCronInfra,
 }
