@@ -6,17 +6,13 @@ type Props = {
   children: React.ReactNode
 }
 
-const themeScript = `(function() {
-    ${setTheme.toString()}
-    setTheme();
+const themeScript = `
+  (function() {
+    const theme = window.localStorage.getItem('THEME')
+    const isString = typeof theme === 'string'
+    document.body.setAttribute('data-theme', isString ? theme : 'light')
   })()
-  `
-
-function setTheme() {
-  const theme = window.localStorage.getItem('THEME')
-  const isString = typeof theme === 'string'
-  document.body.setAttribute('data-theme', isString ? theme : 'light')
-}
+`
 
 function ThemeProvier({ children }: Props) {
   useThemeEffect()
