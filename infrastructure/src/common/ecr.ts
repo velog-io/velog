@@ -18,13 +18,15 @@ export const createECRRepository = (type: PackageType): Repository => {
   const repo = new aws.ecr.Repository(withPrefix(option.ecrRepoName), {
     forceDelete: true,
   })
+
+  createRepoLifecyclePolicy(type, repo)
   return repo
 }
 
 export const getECRRepository = async (type: PackageType): Promise<Repository> => {
   const option = options[type]
   const repository = await client.describeRepositories({})
-  const repo = repository.repositories
+  const existsRepo = repository.repositories
     ?.map((repo) => ({
       repositoryName: repo.repositoryName,
       repositoryId: repo.registryId,
@@ -34,24 +36,64 @@ export const getECRRepository = async (type: PackageType): Promise<Repository> =
       (v) => v.repositoryName?.includes('velog') && v.repositoryName?.includes(option.ecrRepoName),
     )
 
-  if (!repo) {
+  if (!existsRepo) {
     throw new Error('Not found repository')
   }
 
-  return new aws.ecr.Repository(
+  const repo = new aws.ecr.Repository(
     withPrefix(option.ecrRepoName),
     { forceDelete: true },
-    { import: repo.repositoryName },
+    { import: existsRepo.repositoryName },
+  )
+
+  createRepoLifecyclePolicy(type, repo)
+
+  return repo
+}
+
+const createRepoLifecyclePolicy = (type: PackageType, repo: Repository) => {
+  const option = options[type]
+  const maxImageCount = 2
+  new aws.ecr.LifecyclePolicy(
+    `${withPrefix(option.ecrRepoName)}-policy`,
+    {
+      repository: repo.name,
+      policy: JSON.stringify({
+        rules: [
+          {
+            rulePriority: 1,
+            description: 'Keep only the last 2 images',
+            selection: {
+              tagStatus: 'any',
+              countType: 'imageCountMoreThan',
+              countNumber: maxImageCount,
+            },
+            action: {
+              type: 'expire',
+            },
+          },
+        ],
+      }),
+    },
+    {
+      dependsOn: repo,
+    },
   )
 }
 
 export const createECRImage = (type: PackageType, repo: Repository): pulumi.Output<string> => {
   const option = options[type]
-  const image = new awsx.ecr.Image(withPrefix(option.imageName), {
-    repositoryUrl: repo.repositoryUrl,
-    path: option.path,
-    extraOptions: ['--platform', 'linux/amd64'],
-  })
+  const image = new awsx.ecr.Image(
+    withPrefix(option.imageName),
+    {
+      repositoryUrl: repo.repositoryUrl,
+      path: option.path,
+      extraOptions: ['--platform', 'linux/amd64'],
+    },
+    {
+      retainOnDelete: true,
+    },
+  )
   return image.imageUri
 }
 
@@ -61,7 +103,8 @@ export const getECRImage = (repo: Repository): pulumi.Output<string> => {
     mostRecent: true,
   })
   return image.apply((img) => {
-    const imageUri = `${img.registryId}.dkr.ecr.ap-northeast-2.amazonaws.com/${img.imageTags[1]}:latest`
+    const tag = img.imageTags.filter((str) => str !== 'latest')[0]
+    const imageUri = `${img.registryId}.dkr.ecr.ap-northeast-2.amazonaws.com/${img.repositoryName}:${tag}`
     return imageUri
   })
 }

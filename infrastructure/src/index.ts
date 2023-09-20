@@ -49,23 +49,24 @@ const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => voi
 export const imageUrls = Object.entries(createInfraMapper).map(async ([pack, func]) => {
   let type = pack as PackageType
 
-  let imageUrl: pulumi.Output<string>
+  let imageUri: pulumi.Output<string>
   if (target === type || target === 'all') {
     const newRepo = createECRRepository(type)
-    imageUrl = createECRImage(type, newRepo)
+    imageUri = createECRImage(type, newRepo)
   } else {
     const repo = await getECRRepository(type)
-    imageUrl = getECRImage(repo)
+    imageUri = getECRImage(repo)
   }
 
-  return imageUrl
-  // const infraSettings = {
-  //   vpcId,
-  //   subnetIds,
-  //   certificateArn,
-  //   defaultSecurityGroupId,
-  //   imageUri: img.imageUri,
-  // }
-  // func(infraSettings)
-  // return infraSettings
+  const infraSettings = {
+    vpcId,
+    subnetIds,
+    certificateArn,
+    defaultSecurityGroupId,
+    imageUri,
+  }
+
+  func(infraSettings)
+
+  return imageUri
 })
