@@ -2,7 +2,8 @@
   "name": "velog",
   "main": "/src/index.ts",
   "scripts": {
-    "ssm": "tsx ./scripts/ssm.ts"
+    "ssm": "tsx ./scripts/ssm.ts",
+    "build": "tsc"
   },
   "dependencies": {
     "@aws-sdk/client-ecr": "^3.413.0",
