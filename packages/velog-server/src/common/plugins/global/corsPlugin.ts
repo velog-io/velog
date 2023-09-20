@@ -6,8 +6,8 @@ import { ForbiddenError } from '@errors/ForbiddenError.js'
 const corsPlugin: FastifyPluginAsync = async (fastify) => {
   const corsWhitelist: RegExp[] = [
     /^https:\/\/velog.io$/,
-    /^https:\/\/alpha.velog.io$/,
-    /^https:\/\/prod.velog.io$/,
+    /^https:\/\/(.*).velog.io$/,
+    /^https:\/\/(.*)\.velog.io$/,
     /https:\/\/(.*)--velog.netlify.com/,
     /https:\/\/velog.graphcdn.app/,
   ]
