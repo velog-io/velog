@@ -27,7 +27,7 @@ export const createWebInfra = ({
   })
 
   // connecting for v2 client
-  const targetGroupName = withPrefix('web-v2-client-tg')
+  const targetGroupName = withPrefix('v2-tg')
   const targetGroup2 = new aws.lb.TargetGroup(
     targetGroupName,
     {
