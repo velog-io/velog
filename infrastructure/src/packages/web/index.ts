@@ -31,7 +31,7 @@ export const createWebInfra = ({
   const targetGroup2 = new aws.lb.TargetGroup(
     targetGroupName,
     {
-      port: ENV.webPort,
+      port: ENV.webV2Port,
       protocol: 'HTTP',
       targetType: 'ip',
       vpcId: vpcId,
@@ -42,7 +42,7 @@ export const createWebInfra = ({
   createECSfargateService({
     packageType: 'web',
     imageUri,
-    port: ENV.webPort,
+    port: ENV.webV3Port,
     subnetIds: subnetIds,
     targetGroup,
     defaultSecurityGroupId,

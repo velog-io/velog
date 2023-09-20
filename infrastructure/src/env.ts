@@ -32,7 +32,8 @@ dotenv.config({ path: resolveDir(`../env/${file}`) })
 const env = z.object({
   appEnv: z.string(),
   isProduction: z.boolean(),
-  webPort: z.number(),
+  webV2Port: z.number(),
+  webV3Port: z.number(),
   serverPort: z.number(),
   cronPort: z.number(),
   ecrWebRepositoryName: z.string(),
@@ -46,7 +47,8 @@ const env = z.object({
 export const ENV = env.parse({
   appEnv,
   isProduction: appEnv === 'production',
-  webPort: Number(process.env.WEB_PORT),
+  webV2Port: Number(process.env.WEB_V2_PORT),
+  webV3Port: Number(process.env.WEB_V3_PORT),
   serverPort: Number(process.env.SERVER_PORT),
   cronPort: Number(process.env.CRON_PORT),
   ecrWebRepositoryName: process.env.ECR_WEB_REPOSITORY_NAME,
