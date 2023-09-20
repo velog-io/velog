@@ -25,6 +25,12 @@ class Seeder {
               ...profile,
             },
           },
+          velogConfig: {
+            create: {},
+          },
+          userMeta: {
+            create: {},
+          },
         },
       })
     })
