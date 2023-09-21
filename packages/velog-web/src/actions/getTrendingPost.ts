@@ -21,8 +21,10 @@ export default async function getTrendingPosts({
       },
     }
 
+    const TEN_MINUTE = 60 * 10
     const { trendingPosts } = await postData({
       body,
+      next: { revalidate: TEN_MINUTE },
     })
 
     if (!trendingPosts) return []

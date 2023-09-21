@@ -5,12 +5,14 @@ type Parameter = {
   body?: Record<string, any>
   headers?: HeadersInit
   init?: Omit<RequestInit, 'body' | 'headers'>
+  next?: NextFetchRequestConfig
 }
 
 export default async function postData({
   url = `${ENV.graphqlHost}/graphql`,
   body,
   headers,
+  next,
   ...init
 }: Parameter) {
   const res = await fetch(url, {
@@ -18,6 +20,7 @@ export default async function postData({
     body: JSON.stringify(body),
     headers: new Headers({ 'Content-Type': 'application/json', ...headers }),
     credentials: 'include',
+    next,
     ...init,
   })
 
