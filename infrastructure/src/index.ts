@@ -14,7 +14,7 @@ import { createECRImage, createECRRepository, getECRImage, getECRRepository } fr
 execCommand('pnpm -r prisma:copy')
 
 const config = new pulumi.Config()
-const target = config.get('target') as PackageType | 'all'
+const target = config.get('target') as string
 
 const validTargets = ['all', 'web', 'server', 'cron']
 if (!target || !validTargets.includes(target)) {
@@ -47,7 +47,7 @@ export const imageUrls = Object.entries(createInfraMapper).map(async ([pack, fun
   let type = pack as PackageType
 
   let imageUri: pulumi.Output<string>
-  if (target === type || target === 'all') {
+  if (target.includes(type) || target === 'all') {
     const newRepo = createECRRepository(type)
     imageUri = createECRImage(type, newRepo)
   } else {
