@@ -7,7 +7,7 @@ import { container } from 'tsyringe'
 const v3: FastifyPluginCallback = (fastify, opts, done) => {
   const postService = container.resolve(PostService)
 
-  fastify.put<{ Params: { postId: string } }>('/score', async (request, reply) => {
+  fastify.patch<{ Params: { postId: string } }>('/score', async (request, reply) => {
     const { postId } = request.params
     await postService.updatePostScore(postId)
     reply.status(HttpStatus.OK).send(HttpStatusMessage.OK)
