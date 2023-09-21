@@ -19,18 +19,17 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
   })
 
   fastify.post('/feed', (_, reply) => {
-    for (let i = 0; i < 10000; i++) {
+    for (let i = 0; i < 1; i++) {
       if (i % 1000 === 0) {
         console.log(`${i} / 10000`)
       }
       const queueName = redis.getQueueName('feed')
       const queueInfo = {
-        user_id: '6028c07a-f117-45a8-8168-f6c8aa43f9e0',
+        writer_id: 'f99fb611-73a9-423d-bd66-16b41231a552',
         post_id: '7f02e7f2-747c-425d-96f8-2fbd66dc7cf4',
       }
       redis.lpush(queueName, JSON.stringify(queueInfo))
     }
-
     reply.status(HttpStatus.OK).send(HttpStatusMessage.Ok)
   })
 
