@@ -15,6 +15,8 @@ import { PostReadLogService } from '@services/PostReadLogService/index.js'
 import { pick } from 'rambda'
 import { JsonValue } from '@prisma/client/runtime/library'
 import { subDays, subMonths, subYears } from 'date-fns'
+import axios from 'axios'
+import { ENV } from '@env'
 
 interface Service {
   postsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
@@ -23,6 +25,7 @@ interface Service {
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
   getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>
   serializePost(post: SerializedPostParam): SerializedPost
+  updatePostScore(postId: string): Promise<void>
 }
 
 @injectable()
@@ -405,6 +408,17 @@ export class PostService implements Service {
       },
       tags: picked.tags.map((tag) => tag.name || '').filter(Boolean),
     }
+  }
+  async updatePostScore(postId: string) {
+    await axios.patch(
+      `${ENV.cronHost}/api/posts/v1/score/${postId}`,
+      {},
+      {
+        headers: {
+          'Cron-Api-Key': ENV.cronApiKey,
+        },
+      },
+    )
   }
 }
 

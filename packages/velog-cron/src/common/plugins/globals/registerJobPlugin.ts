@@ -1,4 +1,4 @@
-import { PostJob } from '@jobs/PostJob'
+import { PostJob } from '@jobs/PostJob.js'
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 
