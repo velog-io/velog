@@ -1,18 +1,16 @@
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
-import { PutPostScoreOptions, PutPostScoreSchema } from '@routes/posts/v1/schema.js'
-import PostService from '@services/PostService.js'
+import { PostScoreParams, PostScoreSchema } from '@routes/posts/v1/schema.js'
 import { HttpStatus } from '@constants/HttpStatusConstants.js'
 import { HttpStatusMessage } from '@constants/HttpStatusMessageConstants.js'
-import { DbService } from '@lib/db/DbService.js'
 import { PostController } from '@routes/posts/v1/PostController.js'
 
 const v1: FastifyPluginCallback = (fastify, opts, done) => {
   const postController = container.resolve(PostController)
-  fastify.patch<PutPostScoreOptions>(
+  fastify.patch<PostScoreParams>(
     '/score/:postId',
     {
-      schema: PutPostScoreSchema,
+      schema: PostScoreSchema,
     },
     async (request, reply) => {
       const { postId } = request.params

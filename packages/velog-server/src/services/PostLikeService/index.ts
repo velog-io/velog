@@ -6,9 +6,7 @@ import { SearchService } from '@lib/search/SearchService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Post } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
-import axios from 'axios'
-import { ENV } from '@env'
-import { PostService } from '@services/PostService'
+import { PostService } from '@services/PostService/index.js'
 
 interface Service {
   likePost(postId?: string, userId?: string): Promise<Post>
