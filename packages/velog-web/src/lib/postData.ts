@@ -6,6 +6,7 @@ type Parameter = {
   headers?: HeadersInit
   init?: Omit<RequestInit, 'body' | 'headers'>
   next?: NextFetchRequestConfig
+  cache?: RequestCache
 }
 
 export default async function postData({
@@ -13,6 +14,7 @@ export default async function postData({
   body,
   headers,
   next,
+  cache,
   ...init
 }: Parameter) {
   const res = await fetch(url, {
@@ -21,6 +23,7 @@ export default async function postData({
     headers: new Headers({ 'Content-Type': 'application/json', ...headers }),
     credentials: 'include',
     next,
+    cache,
     ...init,
   })
 

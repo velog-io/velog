@@ -10,6 +10,7 @@ import { getCertificate } from './common/certificate'
 import { createCronInfra } from './packages/cron'
 import { execCommand } from './lib/execCommand'
 import { createECRImage, createECRRepository, getECRImage, getECRRepository } from './common/ecr'
+import { withPrefix } from './lib/prefix'
 
 execCommand('pnpm -r prisma:copy')
 
@@ -43,6 +44,8 @@ const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => voi
   cron: createCronInfra,
 }
 
+const cluster = new aws.ecs.Cluster(withPrefix('cluster'))
+
 export const imageUrls = Object.entries(createInfraMapper).map(async ([pack, func]) => {
   let type = pack as PackageType
 
@@ -61,6 +64,7 @@ export const imageUrls = Object.entries(createInfraMapper).map(async ([pack, fun
     certificateArn,
     defaultSecurityGroupId,
     imageUri,
+    cluster,
   }
 
   func(infraSettings)

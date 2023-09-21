@@ -12,6 +12,7 @@ export const createWebInfra = ({
   certificateArn,
   defaultSecurityGroupId,
   imageUri,
+  cluster,
 }: CreateInfraParameter) => {
   const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({
     vpcId,
@@ -47,5 +48,6 @@ export const createWebInfra = ({
     targetGroup,
     defaultSecurityGroupId,
     taskSecurityGroup,
+    cluster,
   })
 }

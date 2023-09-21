@@ -9,11 +9,11 @@ const serverEcsOption: EcsOption = {
 }
 
 const webEcsOption: EcsOption = {
-  desiredCount: ENV.isProduction ? 1 : 1,
-  cpu: 512,
+  desiredCount: ENV.isProduction ? 2 : 1,
+  cpu: 1024,
   memory: 512,
   maxCapacity: 3,
-  minCapacity: ENV.isProduction ? 1 : 1,
+  minCapacity: ENV.isProduction ? 2 : 1,
 }
 
 const cronEcsOption: EcsOption = {

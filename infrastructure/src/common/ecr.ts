@@ -5,11 +5,7 @@ import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
 import { ENV } from '../env'
 import { Repository } from '@pulumi/aws/ecr'
-import { customAlphabet } from 'nanoid'
 import * as pulumi from '@pulumi/pulumi'
-import { Image } from '@pulumi/awsx/ecr'
-
-const nanoid = customAlphabet('1234567890abcdefghijk', 10)
 
 const client = new AWS.ECR({ region: 'ap-northeast-2' })
 
@@ -54,31 +50,25 @@ export const getECRRepository = async (type: PackageType): Promise<Repository> =
 const createRepoLifecyclePolicy = (type: PackageType, repo: Repository) => {
   const option = options[type]
   const maxImageCount = 2
-  new aws.ecr.LifecyclePolicy(
-    `${withPrefix(option.ecrRepoName)}-policy`,
-    {
-      repository: repo.name,
-      policy: JSON.stringify({
-        rules: [
-          {
-            rulePriority: 1,
-            description: 'Keep only the last 2 images',
-            selection: {
-              tagStatus: 'any',
-              countType: 'imageCountMoreThan',
-              countNumber: maxImageCount,
-            },
-            action: {
-              type: 'expire',
-            },
+  new aws.ecr.LifecyclePolicy(`${withPrefix(option.ecrRepoName)}-policy`, {
+    repository: repo.name,
+    policy: JSON.stringify({
+      rules: [
+        {
+          rulePriority: 1,
+          description: 'Keep only the last 2 images',
+          selection: {
+            tagStatus: 'any',
+            countType: 'imageCountMoreThan',
+            countNumber: maxImageCount,
           },
-        ],
-      }),
-    },
-    {
-      dependsOn: repo,
-    },
-  )
+          action: {
+            type: 'expire',
+          },
+        },
+      ],
+    }),
+  })
 }
 
 export const createECRImage = (type: PackageType, repo: Repository): pulumi.Output<string> => {

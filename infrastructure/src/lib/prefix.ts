@@ -15,4 +15,4 @@ const mapper: Record<Environment, string> = {
 }
 
 const prefix = `${config.name}-${mapper[appEnv]}`
-export const withPrefix = (name: string) => `${prefix}-${name}`
+export const withPrefix = (word: string) => `${prefix}-${word}`

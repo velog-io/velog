@@ -10,6 +10,7 @@ export const createCronInfra = ({
   certificateArn,
   defaultSecurityGroupId,
   imageUri,
+  cluster,
 }: CreateInfraParameter) => {
   const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({
     vpcId,
@@ -32,5 +33,6 @@ export const createCronInfra = ({
     targetGroup,
     defaultSecurityGroupId,
     taskSecurityGroup,
+    cluster,
   })
 }

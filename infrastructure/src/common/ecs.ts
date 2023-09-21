@@ -1,6 +1,5 @@
 import * as aws from '@pulumi/aws'
 import * as awsx from '@pulumi/awsx'
-import * as pulumi from '@pulumi/pulumi'
 
 import { withPrefix } from '../lib/prefix'
 import { ecsTaskExecutionRole } from './iam'
@@ -16,10 +15,9 @@ export const createECSfargateService = ({
   defaultSecurityGroupId,
   targetGroup,
   packageType,
+  cluster,
 }: CreateECSFargateParams) => {
   const option = ecsOption[packageType]
-  const cluster = new aws.ecs.Cluster(withPrefix(`${packageType}-cluster`))
-
   const port = portMapper[packageType]
 
   const service = new awsx.ecs.FargateService(
