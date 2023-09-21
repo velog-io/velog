@@ -4,7 +4,7 @@ import * as awsx from '@pulumi/awsx'
 import { withPrefix } from '../lib/prefix'
 import { ecsTaskExecutionRole } from './iam'
 import { ENV } from '../env'
-import { CreateECSFargateParams, PackageType } from '../type'
+import { CreateECSFargateParams } from '../type'
 import { portMapper } from '../lib/portMapper'
 import { ecsOption } from '../lib/ecsOptions'
 
