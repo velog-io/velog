@@ -1,4 +1,4 @@
-export class JobProgressManager {
+export class JobProgress {
   private jobInProgress = false
   public get isJobProgressing() {
     return this.jobInProgress

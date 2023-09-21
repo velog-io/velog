@@ -1,4 +1,4 @@
-import { JobProgressManager } from '@jobs/index.js'
+import { JobProgress } from '@jobs/JobProgress.js'
 import { DbService } from '@lib/db/DbService.js'
 import { RedisService } from '@lib/redis/RedisService.js'
 import { User } from '@prisma/client'
@@ -6,14 +6,14 @@ import { injectable, singleton } from 'tsyringe'
 
 @singleton()
 @injectable()
-export class FeedJob extends JobProgressManager {
+export class FeedJob extends JobProgress {
   constructor(
     private readonly redis: RedisService,
     private readonly db: DbService,
   ) {
     super()
   }
-  public async createFeedJob() {
+  public async handleFeed() {
     console.log('Create Feed Job start...')
 
     console.time('create Feed')

@@ -3,11 +3,11 @@ import PostService from '@services/PostService/index.js'
 import { injectable, singleton } from 'tsyringe'
 import { startOfDay, endOfDay } from 'date-fns'
 import { utcToZonedTime } from 'date-fns-tz'
-import { JobProgressManager } from '@jobs/index.js'
+import { JobProgress } from '@jobs/JobProgress.js'
 
 @singleton()
 @injectable()
-export class PostJob extends JobProgressManager {
+export class PostJob extends JobProgress {
   constructor(
     private readonly postService: PostService,
     private readonly db: DbService,
