@@ -2,7 +2,7 @@ import { PostJob } from '@jobs/PostJob.js'
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 
-const createJobPlugin: FastifyPluginCallback = (fastfiy, opts, done) => {
+const registerCronPlugin: FastifyPluginCallback = (fastfiy, opts, done) => {
   const postJob = container.resolve(PostJob)
 
   const scoreCalculateJobInFiveMin = fastfiy.cron.createJob({
@@ -32,4 +32,4 @@ const createJobPlugin: FastifyPluginCallback = (fastfiy, opts, done) => {
   done()
 }
 
-export default createJobPlugin
+export default registerCronPlugin
