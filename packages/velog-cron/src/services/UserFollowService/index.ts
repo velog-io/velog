@@ -13,7 +13,7 @@ export class UserFollowService implements Service {
   public async getFollowings(userId: string): Promise<User[]> {
     const followUser = await this.db.followUser.findMany({
       where: {
-        fk_follow_user_id: userId,
+        fk_follower_user_id: userId,
       },
       select: {
         following: true,

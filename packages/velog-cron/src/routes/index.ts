@@ -34,7 +34,7 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
   })
 
   fastify.get('/feed', async (_, reply) => {
-    await feedJob.handleFeed()
+    await feedJob.run()
     reply.status(HttpStatus.OK).send(HttpStatusMessage.Ok)
   })
 

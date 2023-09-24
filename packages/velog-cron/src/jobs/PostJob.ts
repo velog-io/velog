@@ -1,5 +1,5 @@
 import { DbService } from '@lib/db/DbService.js'
-import PostService from '@services/PostService/index.js'
+import { PostService } from '@services/PostService/index.js'
 import { injectable, singleton } from 'tsyringe'
 import { Job, JobProgress } from '@jobs/JobProgress.js'
 

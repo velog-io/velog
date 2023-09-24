@@ -15,6 +15,7 @@ export class FeedJob extends JobProgress implements Job {
   public async run() {
     console.log('Create Feed Job start...')
     console.time('create Feed')
+
     const queueName = this.redis.getQueueName('feed')
     let handledQueueCount = 0
     while (true) {
