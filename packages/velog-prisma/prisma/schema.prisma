@@ -511,7 +511,7 @@ model User {
   externalIntegrationHistory ExternalIntegrationHistory[]
   externalIntegration        ExternalIntegration[]
   followTag                  FollowTag[]
-  follower                   FollowUser[]                 @relation("follower_relation")
+  followers                  FollowUser[]                 @relation("follower_relation")
   following                  FollowUser[]                 @relation("following_relation")
   postImage                  PostImage[]
   postLike                   PostLike[]
@@ -582,8 +582,8 @@ model FollowUser {
   created_at        DateTime @default(now()) @db.Timestamptz(6)
   updated_at        DateTime @default(now()) @db.Timestamptz(6)
 
-  follower  User @relation("follower_relation", fields: [fk_follow_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  following User @relation("following_relation", fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  follower  User @relation("follower_relation", fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  following User @relation("following_relation", fields: [fk_follow_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   @@index([fk_user_id])
   @@index([fk_follow_user_id])

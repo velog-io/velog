@@ -10,7 +10,6 @@ type CreateLoadBalancerParameter = {
   certificateArn: Promise<string>
   elbSecurityGroup: SecurityGroup
   packageType: PackageType
-  protect: boolean
 }
 
 export const createLoadBalancer = ({
@@ -19,7 +18,6 @@ export const createLoadBalancer = ({
   vpcId,
   certificateArn,
   packageType,
-  protect,
 }: CreateLoadBalancerParameter) => {
   const loadBalancerName = withPrefix(`${packageType}-lb`)
   const loadBalancer = new aws.lb.LoadBalancer(
@@ -32,7 +30,7 @@ export const createLoadBalancer = ({
         Name: loadBalancerName,
       },
     },
-    { protect },
+    {},
   )
 
   const port = portMapper[packageType]
@@ -46,7 +44,7 @@ export const createLoadBalancer = ({
       targetType: 'ip',
       vpcId: vpcId,
     },
-    { protect },
+    {},
   )
 
   new aws.lb.Listener(
@@ -64,7 +62,7 @@ export const createLoadBalancer = ({
         },
       ],
     },
-    { protect },
+    {},
   )
 
   new aws.lb.Listener(
@@ -83,7 +81,7 @@ export const createLoadBalancer = ({
         },
       ],
     },
-    { protect },
+    {},
   )
 
   return { targetGroup }

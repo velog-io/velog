@@ -1,6 +1,5 @@
 import { ENV } from '../../env'
 import { CreateInfraParameter } from '../../type'
-import { getECRImage } from '../../common/ecr'
 import { createECSfargateService } from '../../common/ecs'
 import { createLoadBalancer } from '../../common/loadBalancer'
 import { createSecurityGroup } from '../../common/securityGroup'
@@ -10,13 +9,12 @@ export const createServerInfra = ({
   subnetIds,
   certificateArn,
   defaultSecurityGroupId,
-  protect,
+  imageUri,
+  cluster,
 }: CreateInfraParameter) => {
-  const { image, repoUrl } = getECRImage({ type: 'server', protect })
   const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({
     vpcId,
     packageType: 'server',
-    protect,
   })
 
   const { targetGroup } = createLoadBalancer({
@@ -25,19 +23,16 @@ export const createServerInfra = ({
     vpcId,
     certificateArn,
     packageType: 'server',
-    protect,
   })
 
   createECSfargateService({
     packageType: 'server',
-    image: image,
+    imageUri,
     port: ENV.serverPort,
     subnetIds: subnetIds,
     targetGroup,
     defaultSecurityGroupId,
     taskSecurityGroup,
-    protect,
+    cluster,
   })
-
-  return { repoUrl }
 }

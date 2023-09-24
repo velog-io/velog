@@ -1,6 +1,5 @@
 import { ENV } from '../../env'
 import { CreateInfraParameter } from '../../type'
-import { getECRImage } from '../../common/ecr'
 import { createECSfargateService } from '../../common/ecs'
 import { createLoadBalancer } from '../../common/loadBalancer'
 import { createSecurityGroup } from '../../common/securityGroup'
@@ -12,13 +11,12 @@ export const createWebInfra = ({
   subnetIds,
   certificateArn,
   defaultSecurityGroupId,
-  protect,
+  imageUri,
+  cluster,
 }: CreateInfraParameter) => {
-  const { image, repoUrl } = getECRImage({ type: 'web', protect })
   const { elbSecurityGroup, taskSecurityGroup } = createSecurityGroup({
     vpcId,
     packageType: 'web',
-    protect,
   })
 
   const { targetGroup } = createLoadBalancer({
@@ -27,31 +25,29 @@ export const createWebInfra = ({
     vpcId,
     certificateArn,
     packageType: 'web',
-    protect,
   })
 
-  const targetGroupName = withPrefix('web-tg2')
+  // connecting for v2 client
+  const targetGroupName = withPrefix('v2-tg')
   const targetGroup2 = new aws.lb.TargetGroup(
     targetGroupName,
     {
-      port: ENV.webPort,
+      port: ENV.webV2Port,
       protocol: 'HTTP',
       targetType: 'ip',
       vpcId: vpcId,
     },
-    { protect },
+    {},
   )
 
   createECSfargateService({
     packageType: 'web',
-    image,
-    port: ENV.webPort,
+    imageUri,
+    port: ENV.webV3Port,
     subnetIds: subnetIds,
     targetGroup,
     defaultSecurityGroupId,
     taskSecurityGroup,
-    protect,
+    cluster,
   })
-
-  return { repoUrl }
 }

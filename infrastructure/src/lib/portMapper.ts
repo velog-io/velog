@@ -1,7 +1,7 @@
 import { ENV } from '../env'
 
 export const portMapper = {
-  web: ENV.webPort,
+  web: ENV.webV3Port,
   server: ENV.serverPort,
   cron: ENV.cronPort,
 }

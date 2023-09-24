@@ -1,28 +1,23 @@
 import * as aws from '@pulumi/aws'
 import * as awsx from '@pulumi/awsx'
-import * as pulumi from '@pulumi/pulumi'
 
 import { withPrefix } from '../lib/prefix'
 import { ecsTaskExecutionRole } from './iam'
 import { ENV } from '../env'
-import { SecurityGroup } from '@pulumi/aws/ec2'
-import { TargetGroup } from '@pulumi/aws/alb'
-import { PackageType } from '../type'
+import { CreateECSFargateParams } from '../type'
 import { portMapper } from '../lib/portMapper'
 import { ecsOption } from '../lib/ecsOptions'
 
 export const createECSfargateService = ({
-  image,
+  imageUri,
   subnetIds,
   taskSecurityGroup,
   defaultSecurityGroupId,
   targetGroup,
   packageType,
-  protect,
+  cluster,
 }: CreateECSFargateParams) => {
   const option = ecsOption[packageType]
-  const cluster = new aws.ecs.Cluster(withPrefix(`${packageType}-cluster`))
-
   const port = portMapper[packageType]
 
   const service = new awsx.ecs.FargateService(
@@ -40,7 +35,7 @@ export const createECSfargateService = ({
           roleArn: ecsTaskExecutionRole.arn,
         },
         container: {
-          image: image.imageUri,
+          image: imageUri,
           cpu: option.cpu,
           memory: option.memory,
           essential: true,
@@ -70,7 +65,7 @@ export const createECSfargateService = ({
         },
       },
     },
-    { protect },
+    { replaceOnChanges: ['taskDefinitionArgs.container.image'] },
   )
 
   const resourceId = service.service.id.apply((t) => t.split(':').at(-1)!)
@@ -83,7 +78,7 @@ export const createECSfargateService = ({
       scalableDimension: 'ecs:service:DesiredCount',
       serviceNamespace: 'ecs',
     },
-    { protect },
+    { replaceOnChanges: ['resourceId'] },
   )
 
   const ecsCPUPolicy = new aws.appautoscaling.Policy(
@@ -102,7 +97,7 @@ export const createECSfargateService = ({
         scaleOutCooldown: 60,
       },
     },
-    { protect },
+    { replaceOnChanges: ['resourceId'] },
   )
 
   const ecsMemoryPolicy = new aws.appautoscaling.Policy(
@@ -121,18 +116,6 @@ export const createECSfargateService = ({
         scaleOutCooldown: 60,
       },
     },
-    { protect },
+    { replaceOnChanges: ['resourceId'] },
   )
-}
-
-type CreateECSFargateParams = {
-  image: awsx.ecr.Image
-  subnetIds: pulumi.Input<pulumi.Input<string>[]>
-  taskSecurityGroup: SecurityGroup
-  defaultSecurityGroupId: Promise<string>
-  targetGroup: TargetGroup
-  port: number
-  packageType: PackageType
-  protect: boolean
-  environment?: { name: string; value: string }[]
 }

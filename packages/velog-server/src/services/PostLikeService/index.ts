@@ -6,8 +6,7 @@ import { SearchService } from '@lib/search/SearchService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Post } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
-import axios from 'axios'
-import { ENV } from '@env'
+import { PostService } from '@services/PostService/index.js'
 
 interface Service {
   likePost(postId?: string, userId?: string): Promise<Post>
@@ -21,6 +20,7 @@ export class PostLikeService implements Service {
     private readonly db: DbService,
     private readonly utils: UtilsService,
     private readonly search: SearchService,
+    private readonly postService: PostService,
   ) {}
   async likePost(postId?: string, userId?: string): Promise<Post> {
     if (!postId) {
@@ -72,15 +72,7 @@ export class PostLikeService implements Service {
 
     const unscored = this.utils.checkUnscore(post.body!.concat(post.title || ''))
     if (!unscored) {
-      await axios.patch(
-        `${ENV.cronHost}/api/posts/v1/score/${postId}`,
-        {},
-        {
-          headers: {
-            'Cron-Api-Key': ENV.cronApiKey,
-          },
-        },
-      )
+      await this.postService.updatePostScore(postId)
     }
 
     setTimeout(() => {
@@ -140,15 +132,7 @@ export class PostLikeService implements Service {
       },
     })
 
-    await axios.patch(
-      `${ENV.cronHost}/api/posts/v1/score/${postId}`,
-      {},
-      {
-        headers: {
-          'Cron-Api-Key': ENV.cronApiKey,
-        },
-      },
-    )
+    await this.postService.updatePostScore(postId)
 
     setTimeout(() => {
       this.search.searchSync.update(post.id)

@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
     "strict": true,
-    "outDir": "bin",
-    "target": "es2016",
+    "outDir": "dist",
+    "target": "es2022",
     "module": "commonjs",
     "moduleResolution": "node",
-    "sourceMap": true,
     "experimentalDecorators": true,
     "pretty": true,
     "noFallthroughCasesInSwitch": true,

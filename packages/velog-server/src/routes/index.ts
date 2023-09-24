@@ -1,9 +1,11 @@
 import authRoute from '@routes/auth/index.js'
+import postsRoute from '@routes/posts/index.js'
 import { format } from 'date-fns'
 import { FastifyPluginCallback } from 'fastify'
 
 const api: FastifyPluginCallback = (fastify, opts, done) => {
   fastify.register(authRoute, { prefix: '/auth' })
+  fastify.register(postsRoute, { prefix: '/posts' })
 
   fastify.get('/ping', (request, reply) => {
     const now = new Date()

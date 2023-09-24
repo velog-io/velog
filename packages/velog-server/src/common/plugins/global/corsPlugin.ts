@@ -6,14 +6,10 @@ import { ENV } from '@env'
 const corsPlugin: FastifyPluginAsync = async (fastify) => {
   const corsWhitelist: RegExp[] = [
     /^https:\/\/velog.io$/,
-    /^https:\/\/api.velog.io$/,
-    /^https:\/\/alpha.velog.io$/,
-    /^https:\/\/prod.velog.io$/,
+    /^https:\/\/(.*).velog.io$/,
+    /^https:\/\/(.*)\.velog.io$/,
     /https:\/\/(.*)--velog.netlify.com/,
     /https:\/\/velog.graphcdn.app/,
-    // stage
-    /^https:\/\/stage.velog.io$/,
-    /^https:\/\/stage-api.velog.io$/,
   ]
 
   if (ENV.appEnv === 'development') {

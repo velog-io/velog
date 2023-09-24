@@ -43,7 +43,7 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
 
 const routes: FastifyPluginCallback = (fastify, opts, done) => {
   fastify.get('/', (_, reply) => {
-    reply.status(200).send(HttpStatusMessage.Ok)
+    reply.status(200).send({ message: HttpStatusMessage.Ok })
   })
 
   fastify.register(api, {

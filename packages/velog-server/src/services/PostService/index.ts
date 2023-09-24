@@ -14,6 +14,7 @@ import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { PostReadLogService } from '@services/PostReadLogService/index.js'
 import { subDays, subMonths, subYears } from 'date-fns'
+import axios from 'axios'
 import { ENV } from '@env'
 
 interface Service {
@@ -22,6 +23,8 @@ interface Service {
   getRecentPosts(input: RecentPostsInput, userId: string | undefined): Promise<Post[]>
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
   getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>
+  serializePost(post: SerializedPostParam): SerializedPost
+  updatePostScore(postId: string): Promise<void>
   shortDescription(post: Post): string
 }
 
@@ -387,6 +390,17 @@ export class PostService implements Service {
       url_slug: post.url_slug,
       likes: post.likes,
     }
+  }
+  async updatePostScore(postId: string) {
+    await axios.patch(
+      `${ENV.cronHost}/api/posts/v1/score/${postId}`,
+      {},
+      {
+        headers: {
+          'Cron-Api-Key': ENV.cronApiKey,
+        },
+      },
+    )
   }
   public shortDescription(post: Post): string {
     if (post.short_description) return post.short_description

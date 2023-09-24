@@ -35,16 +35,16 @@ export default class PostService implements Service {
     const ONE_HOUR = 1000 * 60 * 60
     const itemHourAge = (Date.now() - post.released_at!.getTime()) / ONE_HOUR
     const gravity = 0.35
-    const votes = postLikes
+    const votes = postLikes + (post.views ?? 0) * 0.04
 
-    const newScore = votes / Math.pow(itemHourAge + 2, gravity)
+    const score = votes / Math.pow(itemHourAge + 2, gravity)
 
     await this.db.post.update({
       where: {
         id: post.id,
       },
       data: {
-        score: newScore,
+        score,
       },
     })
   }
