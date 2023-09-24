@@ -235,7 +235,7 @@ model Post {
   is_temp           Boolean?
   fk_user_id        String                   @db.Uuid
   original_post_id  String?                  @db.Uuid
-  url_slug          String?                  @db.VarChar(255)
+  url_slug          String?                  @db.VarChar(55)
   likes             Int?                     @default(0)
   meta              Json?                    @default("{}")
   views             Int?                     @default(0)
@@ -512,7 +512,7 @@ model User {
   externalIntegration        ExternalIntegration[]
   followTag                  FollowTag[]
   followers                  FollowUser[]                 @relation("follower_relation")
-  following                  FollowUser[]                 @relation("following_relation")
+  followings                 FollowUser[]                 @relation("following_relation")
   postImage                  PostImage[]
   postLike                   PostLike[]
   postReadLog                PostReadLog[]
@@ -576,17 +576,17 @@ model ExternalIntegrationHistory {
 }
 
 model FollowUser {
-  id                String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  fk_user_id        String   @db.Uuid
-  fk_follow_user_id String   @db.Uuid
-  created_at        DateTime @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime @default(now()) @db.Timestamptz(6)
+  id                   String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  fk_following_user_id String   @db.Uuid
+  fk_follower_user_id  String   @db.Uuid
+  created_at           DateTime @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime @default(now()) @db.Timestamptz(6)
 
-  follower  User @relation("follower_relation", fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  following User @relation("following_relation", fields: [fk_follow_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  follower  User @relation("follower_relation", fields: [fk_following_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  following User @relation("following_relation", fields: [fk_follower_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
-  @@index([fk_user_id])
-  @@index([fk_follow_user_id])
+  @@index([fk_following_user_id])
+  @@index([fk_follower_user_id])
   @@map("follow_users")
 }
 

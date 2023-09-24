@@ -29,7 +29,7 @@ const main = async () => {
     process.exit(0)
   }
 
-  exec('pnpm prisma migrate deploy --schema=./prisma/schema.prisma', (error, stdout, _stderr) => {
+  exec('npx prisma migrate deploy --schema=./prisma/schema.prisma', (error, stdout, _stderr) => {
     if (error) {
       console.log(_stderr)
     }
