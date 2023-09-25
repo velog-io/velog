@@ -9,7 +9,7 @@ async function main() {
   app.listen({ port: ENV.port, host: '::' })
   const dbService = container.resolve(DbService)
   await dbService.$connect()
-  console.info(`INFO: Database connected to "${ENV.databaseUrl}"`)
+  console.info(`INFO: Database connected to "${ENV.databaseUrl.split('@')[1]}"`)
 
   process.send?.('ready')
   process.on('SIGINT', function () {
