@@ -41,9 +41,3 @@ pulumi config set target all
 ```bash
 pulumi config set target server
 ```
-
-- To target for multiple infrastructures
-
-```bash
-pulumi config set target web,cron
-```

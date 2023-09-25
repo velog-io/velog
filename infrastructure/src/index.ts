@@ -15,7 +15,7 @@ import { withPrefix } from './lib/prefix'
 execCommand('pnpm -r prisma:copy')
 
 const config = new pulumi.Config()
-const target = config.get('target') as string
+const target = config.get('target') as PackageType | 'all'
 
 const validTargets = ['all', 'web', 'server', 'cron']
 if (!target || !validTargets.includes(target)) {
@@ -48,9 +48,8 @@ const cluster = new aws.ecs.Cluster(withPrefix('cluster'))
 
 export const imageUrls = Object.entries(createInfraMapper).map(async ([pack, func]) => {
   let type = pack as PackageType
-
   let imageUri: pulumi.Output<string>
-  if (target.includes(type) || target === 'all') {
+  if (target === type || target === 'all') {
     const newRepo = createECRRepository(type)
     imageUri = createECRImage(type, newRepo)
   } else {
