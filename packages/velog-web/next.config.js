@@ -5,6 +5,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: ['velog.velcdn.com', 'images.velog.io', 'media.vlpt.us'],
+    unoptimized: true,
   },
 }
 
