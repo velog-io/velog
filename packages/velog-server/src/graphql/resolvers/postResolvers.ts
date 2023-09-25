@@ -3,11 +3,11 @@ import { container } from 'tsyringe'
 import { PostService } from '@services/PostService/index.js'
 import { UserService } from '@services/UserService/index.js'
 import { PostIncludeComment, PostIncludeUser } from '@services/PostService/PostServiceInterface.js'
-import removeMd from 'remove-markdown'
 import { CommentService } from '@services/CommentService/index.js'
 import { Post } from '@prisma/client'
 import { PostLikeService } from '@services/PostLikeService/index.js'
 import { DbService } from '@lib/db/DbService.js'
+import { UserFollowService } from '@services/UserFollowService/index.js'
 
 const postResolvers: Resolvers = {
   Post: {
@@ -19,17 +19,8 @@ const postResolvers: Resolvers = {
       return parent?.user
     },
     short_description: (parent: Post) => {
-      if (!parent.body) return ''
-      if ((parent.meta as any)?.short_description) {
-        return (parent.meta as any).short_description
-      }
-      const removed = removeMd(
-        parent.body
-          .replace(/```([\s\S]*?)```/g, '')
-          .replace(/~~~([\s\S]*?)~~~/g, '')
-          .slice(0, 500),
-      )
-      return removed.slice(0, 200) + (removed.length > 200 ? '...' : '')
+      const postService = container.resolve(PostService)
+      return postService.shortDescription(parent)
     },
     comments_count: async (parent: PostIncludeComment) => {
       if (parent?.comment) return parent.comment.length
@@ -47,6 +38,11 @@ const postResolvers: Resolvers = {
         },
       })
       return !!liked
+    },
+    followed: async (parent: Post, _, ctx) => {
+      if (!ctx.user) return false
+      const userFollowService = container.resolve(UserFollowService)
+      return await userFollowService.isFollowed(ctx.user.id, parent.fk_user_id)
     },
   },
   Query: {

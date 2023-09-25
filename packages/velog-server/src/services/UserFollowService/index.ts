@@ -3,17 +3,31 @@ import { ConfilctError } from '@errors/ConfilctError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { DbService } from '@lib/db/DbService.js'
+import { FollowUser } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
+  findFollowRelationship(userId: string, followUserId: string): Promise<FollowUser | null>
+  isFollowed(userId: string, followUserId: string): Promise<boolean>
   follow(userId: string, followUserId: string): Promise<void>
-  unfllow(userId: string, followUserId: string): Promise<void>
+  unfollow(userId: string, followUserId: string): Promise<void>
 }
 
 @injectable()
 @singleton()
-export class FollowService implements Service {
+export class UserFollowService implements Service {
   constructor(private readonly db: DbService) {}
+  async findFollowRelationship(userId: string, followUserId: string): Promise<FollowUser | null> {
+    return await this.db.followUser.findFirst({
+      where: {
+        fk_user_id: userId,
+        fk_follow_user_id: followUserId,
+      },
+    })
+  }
+  async isFollowed(userId: string, followUserId: string): Promise<boolean> {
+    return !!(await this.findFollowRelationship(userId, followUserId))
+  }
   async follow(userId?: string, followUserId?: string): Promise<void> {
     if (!followUserId) {
       throw new BadRequestError('followUesrId is required')
@@ -51,7 +65,7 @@ export class FollowService implements Service {
       },
     })
   }
-  async unfllow(userId?: string, followUserId?: string): Promise<void> {
+  async unfollow(userId?: string, followUserId?: string): Promise<void> {
     if (!followUserId) {
       throw new BadRequestError('followUesrId is required')
     }

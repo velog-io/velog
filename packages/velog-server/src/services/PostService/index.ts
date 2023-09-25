@@ -1,3 +1,4 @@
+import removeMd from 'remove-markdown'
 import { Post, Prisma, Tag } from '@prisma/client'
 import { container, injectable, singleton } from 'tsyringe'
 import {
@@ -12,8 +13,6 @@ import { GetPostsByTypeParams, Timeframe } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { PostReadLogService } from '@services/PostReadLogService/index.js'
-import { pick } from 'rambda'
-import { JsonValue } from '@prisma/client/runtime/library'
 import { subDays, subMonths, subYears } from 'date-fns'
 import axios from 'axios'
 import { ENV } from '@env'
@@ -26,6 +25,7 @@ interface Service {
   getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>
   serializePost(post: SerializedPostParam): SerializedPost
   updatePostScore(postId: string): Promise<void>
+  shortDescription(post: Post): string
 }
 
 @injectable()
@@ -63,6 +63,7 @@ export class PostService implements Service {
     if (!userId) {
       throw new UnauthorizedError('Not Logged In')
     }
+
     const postGetter = {
       LIKED: this.getPostsByLiked,
       READ: this.getPostsByRead,
@@ -374,39 +375,20 @@ export class PostService implements Service {
 
     return post
   }
-  public serializePost(post: SerializedPostParam): SerializedPost {
-    const picked = pick(
-      [
-        'id',
-        'title',
-        'body',
-        'thumbnail',
-        'user',
-        'is_private',
-        'released_at',
-        'likes',
-        'views',
-        'meta',
-        'url_slug',
-        'tags',
-      ],
-      post,
-    )
+  private serialize(post: SerializeParam): SerializedPost {
     return {
-      ...picked,
-      // _id: picked.id,
-      // objectID: picked.id,
-      body: picked.body!.slice(0, 8000),
-      user: {
-        id: picked.user.id,
-        username: picked.user.username,
-        profile: {
-          id: picked.user.profile!.id,
-          display_name: picked.user.profile!.display_name!,
-          thumbnail: picked.user.profile!.thumbnail!,
-        },
-      },
-      tags: picked.tags.map((tag) => tag.name || '').filter(Boolean),
+      id: post.id,
+      url: `${ENV.apiHost}/@${post.user.username}/${encodeURI(post.url_slug ?? '')}`,
+      title: post.title,
+      thumbnail: post.thumbnail,
+      released_at: post.released_at,
+      updated_at: post.updated_at,
+      shortDescription: this.shortDescription(post),
+      body: post.body,
+      tags: post.tags.map((tag) => tag.name || '').filter(Boolean),
+      fk_user_id: post.fk_user_id,
+      url_slug: post.url_slug,
+      likes: post.likes,
     }
   }
   async updatePostScore(postId: string) {
@@ -420,9 +402,23 @@ export class PostService implements Service {
       },
     )
   }
+  public shortDescription(post: Post): string {
+    if (post.short_description) return post.short_description
+    if ((post.meta as any)?.short_description) {
+      return (post.meta as any).short_description
+    }
+    if (!post.body) return ''
+    const removed = removeMd(
+      post.body
+        .replace(/```([\s\S]*?)```/g, '')
+        .replace(/~~~([\s\S]*?)~~~/g, '')
+        .slice(0, 500),
+    )
+    return removed.slice(0, 200) + (removed.length > 200 ? '...' : '')
+  }
 }
 
-type SerializedPostParam = Prisma.PostGetPayload<{
+export type SerializeParam = Prisma.PostGetPayload<{
   include: {
     id: true
     title: true
@@ -434,19 +430,7 @@ type SerializedPostParam = Prisma.PostGetPayload<{
     views: true
     meta: true
     url_slug: true
-    user: {
-      select: {
-        id: true
-        username: true
-        profile: {
-          select: {
-            id: true
-            display_name: true
-            thumbnail: true
-          }
-        }
-      }
-    }
+    user: true
   }
 }> & { tags: Tag[] }
 
@@ -454,21 +438,13 @@ export type SerializedPost = {
   id: string
   title: string | null
   body: string | null
+  url: string
   thumbnail: string | null
-  is_private: boolean
   released_at: Date | null
-  views: number | null
   likes: number | null
-  meta: JsonValue | null
   url_slug: string | null
-  user: {
-    id: string
-    username: string
-    profile: {
-      id: string
-      display_name: string
-      thumbnail: string
-    }
-  }
   tags: string[]
+  fk_user_id: string
+  shortDescription: string
+  updated_at: Date
 }

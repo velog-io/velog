@@ -21,7 +21,7 @@
     "create-mock": "tsx ./scripts/createMock.ts",
     "prisma:format": "tsx ./scripts/formatter.ts && pnpm prisma generate",
     "prisma-migrate:dev": "pnpm env:copy && pnpm prisma migrate dev --schema=./prisma/schema.prisma --create-only",
-    "prisma-migrate:deploy": "pnpm env:copy && pnpm prisma migrate deploy --schema=./prisma/schema.prisma"
+    "prisma-migrate:deploy": "pnpm env:copy && tsx ./scripts/deploy"
   },
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.391.0",
@@ -37,6 +37,7 @@
     "@types/inquirer": "^9.0.3",
     "@types/jest": "^29.5.3",
     "@types/node": "^20.5.0",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.4.1",
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",

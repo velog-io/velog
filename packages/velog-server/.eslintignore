@@ -1,2 +1,3 @@
 dist
 node_moudles
+src/graphql/generated.ts

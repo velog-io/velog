@@ -11,7 +11,7 @@ const registerCronPlugin: FastifyPluginCallback = (fastfiy, opts, done) => {
     onTick: async () => {
       if (postJob.isJobProgressing) return
       postJob.start()
-      await postJob.calculateScore(0.5)
+      await postJob.run(0.5)
       postJob.stop()
     },
   })
@@ -22,7 +22,7 @@ const registerCronPlugin: FastifyPluginCallback = (fastfiy, opts, done) => {
     onTick: async () => {
       if (postJob.isJobProgressing) return
       postJob.start()
-      await postJob.calculateScore(0.1)
+      await postJob.run(0.1)
       postJob.stop()
     },
   })

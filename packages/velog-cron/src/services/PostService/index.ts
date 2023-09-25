@@ -9,7 +9,7 @@ interface Service {
 
 @singleton()
 @injectable()
-export default class PostService implements Service {
+export class PostService implements Service {
   constructor(private readonly db: DbService) {}
   public async findById(postId: string): Promise<Post | null> {
     const post = await this.db.post.findUnique({

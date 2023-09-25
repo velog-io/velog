@@ -1,5 +1,5 @@
 import { Resolvers } from '@graphql/generated'
-import { FollowService } from '@services/FollowService/index.js'
+import { UserFollowService } from '@services/UserFollowService/index.js'
 import { UserService } from '@services/UserService/index.js'
 import { container } from 'tsyringe'
 
@@ -20,12 +20,14 @@ const userResolvers: Resolvers = {
       await userService.logout(ctx.reply)
     },
     follow: async (_, { input }, ctx) => {
-      const followService = container.resolve(FollowService)
-      await followService.follow(ctx.user?.id, input.followUserId)
+      const userFollowService = container.resolve(UserFollowService)
+      await userFollowService.follow(ctx.user?.id, input.followUserId)
+      return true
     },
-    unfollow: async (_, { input }, ctx) => {
-      const followService = container.resolve(FollowService)
-      await followService.unfllow(ctx.user?.id, input.followUserId)
+    unFollow: async (_, { input }, ctx) => {
+      const userFollowService = container.resolve(UserFollowService)
+      await userFollowService.unfollow(ctx.user?.id, input.followUserId)
+      return true
     },
   },
 }

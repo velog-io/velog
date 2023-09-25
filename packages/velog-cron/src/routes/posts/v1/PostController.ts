@@ -1,7 +1,7 @@
 import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { DbService } from '@lib/db/DbService.js'
-import PostService from '@services/PostService.js'
+import { PostService } from '@services/PostService/index.js'
 import { injectable, singleton } from 'tsyringe'
 import { utcToZonedTime } from 'date-fns-tz'
 import { startOfDay, subMonths } from 'date-fns'
