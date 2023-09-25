@@ -18,21 +18,9 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         user: request.user,
       }
     },
-    errorHandler(error, request, reply) {
+    errorHandler(error, request) {
+      console.log('url', request.url)
       console.log('graphql error', error)
-      if (!isHttpError(error)) {
-        reply.status(400).send({ statusCode: 400, response: error })
-      }
-
-      const result = {
-        statusCode: error.statusCode || 500,
-        response: {
-          error,
-        },
-      }
-
-      const message = ENV.appEnv === 'development' ? error.message : 'INTERNAL SERVER ERROR'
-      reply.status(result.statusCode).send(message)
     },
     errorFormatter: (result) => {
       const e = result.errors?.[0]?.originalError

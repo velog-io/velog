@@ -1,7 +1,7 @@
-// import useCurrentPath from '@/hooks/useCurrentPath'
+'use client'
+
+import { redirect } from 'next/navigation'
 
 export default function NotFound() {
-  // const { currentPath } = useCurrentPath()
-
-  return <></>
+  redirect('/')
 }
