@@ -229,7 +229,7 @@ export type UnlikePostInput = {
 
 export type User = {
   created_at: Scalars['Date']['output']
-  email: Scalars['String']['output']
+  email?: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
@@ -680,7 +680,7 @@ export type UserResolvers<
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_certified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>

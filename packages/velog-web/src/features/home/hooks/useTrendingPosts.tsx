@@ -29,6 +29,7 @@ export default function useTrendingPosts(initialPost: Posts[] = []) {
     }
   }, [initialOffset, timeframe, limit])
 
+  console.log('fetchInput', fetchInput)
   const { data, isLoading, fetchNextPage, refetch, isFetching, hasNextPage } =
     useInfiniteQuery<TrendingPostsQuery>(
       ['trendingPosts', { input: fetchInput }],

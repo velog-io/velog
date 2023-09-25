@@ -1,7 +1,7 @@
 type User {
   id: ID!
   username: String!
-  email: String!
+  email: String
   created_at: Date!
   updated_at: Date!
   is_certified: Boolean!

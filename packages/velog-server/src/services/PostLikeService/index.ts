@@ -117,18 +117,14 @@ export class PostLikeService implements Service {
       },
     })
 
-    const likesCount = await this.db.postLike.count({
-      where: {
-        fk_post_id: postId,
-      },
-    })
-
     const unlikesPost = await this.db.post.update({
       where: {
         id: postId,
       },
       data: {
-        likes: likesCount,
+        likes: {
+          decrement: 1,
+        },
       },
     })
 
