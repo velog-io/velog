@@ -3,7 +3,7 @@ import { UserFollowService } from '@services/UserFollowService/index.js'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
-  createFeed(writer_user_id: string, post_id: string): Promise<void>
+  createFeed(fk_follower_id: string, post_id: string): Promise<void>
 }
 
 @injectable()
@@ -13,8 +13,8 @@ export class FeedService implements Service {
     private readonly db: DbService,
     private readonly userFollowService: UserFollowService,
   ) {}
-  public async createFeed(writer_user_id: string, post_id: string): Promise<void> {
-    const followings = await this.userFollowService.getFollowings(writer_user_id)
+  public async createFeed(fk_follower_id: string, post_id: string): Promise<void> {
+    const followings = await this.userFollowService.getFollowings(fk_follower_id)
     const followingIds = followings.map((user) => user.id)
     for (const userId of followingIds) {
       await this.db.feed.create({
