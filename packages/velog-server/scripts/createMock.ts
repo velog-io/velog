@@ -100,7 +100,7 @@ function checkAppEnv() {
 }
 
 function checkDatabaseUrl() {
-  if (ENV.databaseUrl.indexOf('localhost') < 0) {
+  if (!ENV.databaseUrl.includes('localhost') && !ENV.databaseUrl.includes('stage')) {
     throw new Error('Database host must be localhost')
   }
 }
