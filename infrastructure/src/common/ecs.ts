@@ -8,6 +8,15 @@ import { CreateECSFargateParams } from '../type'
 import { portMapper } from '../lib/portMapper'
 import { ecsOption } from '../lib/ecsOptions'
 
+export const getCluster = () => {
+  const cluster = new aws.ecs.Cluster(
+    withPrefix('cluster'),
+    {},
+    { import: 'arn:aws:ecs:ap-northeast-2:550209488018:cluster/velog-prod-cluster-2bd43f6' },
+  )
+  return cluster
+}
+
 export const createECSfargateService = ({
   imageUri,
   subnetIds,
