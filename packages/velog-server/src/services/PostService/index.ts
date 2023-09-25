@@ -23,7 +23,6 @@ interface Service {
   getRecentPosts(input: RecentPostsInput, userId: string | undefined): Promise<Post[]>
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
   getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>
-  serializePost(post: SerializedPostParam): SerializedPost
   updatePostScore(postId: string): Promise<void>
   shortDescription(post: Post): string
 }
