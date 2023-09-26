@@ -13,7 +13,7 @@ import { GetPostsByTypeParams, Timeframe } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { PostReadLogService } from '@services/PostReadLogService/index.js'
-import { subDays, subMonths, subYears } from 'date-fns'
+import { subDays, subYears } from 'date-fns'
 import axios from 'axios'
 import { ENV } from '@env'
 
@@ -239,7 +239,7 @@ export class PostService implements Service {
     }
   }
   public async getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]> {
-    const { offset = 0, limit = 20, timeframe = 'week' } = input
+    const { offset = 0, limit = 20, timeframe = 'month' } = input
 
     const timeframes: Timeframe[] = ['day', 'week', 'month', 'year']
 
@@ -262,15 +262,16 @@ export class PostService implements Service {
       const now = this.utils.now
 
       const timeMapper: Record<Timeframe, Date> = {
-        day: subDays(now, 1),
-        week: subDays(now, 7),
-        month: subMonths(now, 1),
+        day: subDays(now, 3),
+        week: subDays(now, 14),
+        month: subDays(now, 45),
         year: subYears(now, 1),
       }
 
       const since = timeMapper[timeframe as Timeframe]
       const posts = await this.db.post.findMany({
         where: {
+          is_private: false,
           released_at: {
             gte: since,
           },
