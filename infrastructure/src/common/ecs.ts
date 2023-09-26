@@ -7,13 +7,15 @@ import { ENV } from '../env'
 import { CreateECSFargateParams } from '../type'
 import { portMapper } from '../lib/portMapper'
 import { ecsOption } from '../lib/ecsOptions'
+import * as AWS from '@aws-sdk/client-ecs'
 
-export const getCluster = () => {
-  const cluster = new aws.ecs.Cluster(
-    withPrefix('cluster'),
-    {},
-    { import: 'arn:aws:ecs:ap-northeast-2:550209488018:cluster/velog-prod-cluster-2bd43f6' },
-  )
+const client = new AWS.ECS({ region: 'ap-northeast-2' })
+export const getCluster = async () => {
+  const clusterList = await client.listClusters({})
+  const arn = clusterList.clusterArns?.find((arn) => arn.includes(withPrefix('cluster')))
+
+  console.log('arn', arn)
+  const cluster = new aws.ecs.Cluster(withPrefix('cluster'), {}, { import: arn })
   return cluster
 }
 

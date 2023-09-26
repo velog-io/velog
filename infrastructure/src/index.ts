@@ -44,29 +44,29 @@ const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => voi
   cron: createCronInfra,
 }
 
-const cluster = getCluster()
+export const imageUrls = getCluster().then((cluster) =>
+  Object.entries(createInfraMapper).map(async ([pack, func]) => {
+    let type = pack as PackageType
+    let imageUri: pulumi.Output<string>
+    if (target === type || target === 'all') {
+      const newRepo = createECRRepository(type)
+      imageUri = createECRImage(type, newRepo)
+    } else {
+      const repo = await getECRRepository(type)
+      imageUri = getECRImage(repo)
+    }
 
-export const imageUrls = Object.entries(createInfraMapper).map(async ([pack, func]) => {
-  let type = pack as PackageType
-  let imageUri: pulumi.Output<string>
-  if (target === type || target === 'all') {
-    const newRepo = createECRRepository(type)
-    imageUri = createECRImage(type, newRepo)
-  } else {
-    const repo = await getECRRepository(type)
-    imageUri = getECRImage(repo)
-  }
+    const infraSettings = {
+      vpcId,
+      subnetIds,
+      certificateArn,
+      defaultSecurityGroupId,
+      imageUri,
+      cluster,
+    }
 
-  const infraSettings = {
-    vpcId,
-    subnetIds,
-    certificateArn,
-    defaultSecurityGroupId,
-    imageUri,
-    cluster,
-  }
+    func(infraSettings)
 
-  func(infraSettings)
-
-  return imageUri
-})
+    return imageUri
+  }),
+)
