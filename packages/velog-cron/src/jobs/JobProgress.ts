@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 export abstract class Job {
-  public async run(param?: any): Promise<void> {}
+  public async runner(param?: any): Promise<void> {}
 }
 
 export class JobProgress {
-  private jobInProgress = false
-  public get isJobProgressing() {
-    return this.jobInProgress
+  private isProgress = false
+  public get isProgressing() {
+    return this.isProgress
   }
   public start() {
-    this.jobInProgress = true
+    this.isProgress = true
   }
   public stop() {
-    this.jobInProgress = false
+    this.isProgress = false
   }
 }

@@ -12,7 +12,7 @@ export class PostJob extends JobProgress implements Job {
   ) {
     super()
   }
-  public async run(score: number) {
+  public async runner(score: number) {
     console.log('Posts score calculation start...')
     console.time('score calculation')
 

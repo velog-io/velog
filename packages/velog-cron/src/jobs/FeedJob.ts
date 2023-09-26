@@ -12,7 +12,7 @@ export class FeedJob extends JobProgress implements Job {
   ) {
     super()
   }
-  public async run() {
+  public async runner() {
     console.log('Create Feed Job start...')
     console.time('create Feed')
 
