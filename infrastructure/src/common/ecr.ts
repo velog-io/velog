@@ -14,7 +14,6 @@ export const createECRRepository = (type: PackageType): Repository => {
   const repo = new aws.ecr.Repository(withPrefix(option.ecrRepoName), {
     forceDelete: true,
   })
-
   createRepoLifecyclePolicy(type, repo)
   return repo
 }

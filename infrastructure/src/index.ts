@@ -15,10 +15,17 @@ import { getCluster } from './common/ecs'
 execCommand('pnpm -r prisma:copy')
 
 const config = new pulumi.Config()
-const target = config.get('target') as PackageType | 'all'
+const target = config.get('target')
 
-const validTargets = ['all', 'web', 'server', 'cron']
-if (!target || !validTargets.includes(target)) {
+if (!target) {
+  throw new Error('Target not specified')
+}
+
+const targets = target.split(',').map((v) => v.trim())
+const whiteList = ['all', 'web', 'server', 'cron']
+const validate = targets.every((t) => whiteList.includes(t))
+
+if (!validate) {
   throw new Error('Invalid target name, See the README.md')
 }
 
@@ -34,10 +41,9 @@ const defaultSecurityGroup = vpcId.then((id) =>
     name: 'default',
   }),
 )
+
 export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
-
 const certificateArn = getCertificate(ENV.certificateDomain)
-
 const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => void> = {
   web: createWebInfra,
   server: createServerInfra,
@@ -48,7 +54,7 @@ export const imageUrls = getCluster().then((cluster) =>
   Object.entries(createInfraMapper).map(async ([pack, func]) => {
     let type = pack as PackageType
     let imageUri: pulumi.Output<string>
-    if (target === type || target === 'all') {
+    if (targets.includes(type) || target === 'all') {
       const newRepo = createECRRepository(type)
       imageUri = createECRImage(type, newRepo)
     } else {
