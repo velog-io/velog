@@ -22,7 +22,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     },
     {
       name: 'generate feeds',
-      cronTime: '*/5 * * * *', // every 5 minutes
+      cronTime: '*/1 * * * *', // every 1 minutes
       jobService: feedJob,
       param: undefined,
     },
