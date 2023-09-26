@@ -20,7 +20,7 @@
     "env:copy": "tsx ./scripts/env.ts",
     "create-mock": "tsx ./scripts/createMock.ts",
     "prisma:format": "tsx ./scripts/formatter.ts && pnpm prisma generate",
-    "prisma-migrate:dev": "pnpm env:copy && pnpm prisma migrate dev --schema=./prisma/schema.prisma --create-only",
+    "prisma-migrate:dev": "pnpm env:copy --only-dev && pnpm prisma migrate dev --schema=./prisma/schema.prisma --create-only",
     "prisma-migrate:deploy": "pnpm env:copy && tsx ./scripts/deploy"
   },
   "dependencies": {
