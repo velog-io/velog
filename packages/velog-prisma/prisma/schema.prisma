@@ -235,7 +235,7 @@ model Post {
   is_temp           Boolean?
   fk_user_id        String                   @db.Uuid
   original_post_id  String?                  @db.Uuid
-  url_slug          String?                  @db.VarChar(55)
+  url_slug          String?                  @db.VarChar(255)
   likes             Int?                     @default(0)
   meta              Json?                    @default("{}")
   views             Int?                     @default(0)

@@ -45,8 +45,8 @@ function getMigrationFilenames() {
 }
 
 async function getAppliedMigrationNames(): Promise<string[]> {
-  return db.$queryRaw`select migration_name  from "_prisma_migrations"`.then((data: any) =>
-    data.map((row: Record<'migration_name', string>) => row['migration_name']),
+  return db.$queryRaw`select migration_name from _prisma_migrations where finished_at is not NULL`.then(
+    (data: any) => data.map((row: Record<'migration_name', string>) => row['migration_name']),
   )
 }
 
