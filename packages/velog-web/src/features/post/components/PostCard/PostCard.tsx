@@ -5,9 +5,9 @@ import styles from './PostCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import RatioImage from '@/components/RatioImage/RatioImage'
 import Image from 'next/image'
-import VLink from '@/components/VLink/VLink'
 import { LikeIcon } from '@/assets/icons/components'
 import { timeFormat } from '@/lib/timeformat'
+import Link from 'next/link'
 
 const cx = bindClassNames(styles)
 
@@ -19,12 +19,11 @@ type Props = {
 }
 
 function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
-  const url = `/@${post.user.username}/${post.url_slug}`
-
+  const url = encodeURI(`/@${post.user.username}/${post.url_slug}`)
   return (
     <div className={cx('block', { isNotHomeAndPost: !forHome && !forPost })} onClick={onClick}>
       {post.thumbnail && (
-        <VLink href={url} className={cx('styleLink')}>
+        <Link href={url} className={cx('styleLink')}>
           <RatioImage
             widthRatio={1.916}
             heightRatio={1}
@@ -33,10 +32,10 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
             width={320}
             height={167}
           />
-        </VLink>
+        </Link>
       )}
       <div className={cx('content')}>
-        <VLink href={url} className={cx('styleLink')}>
+        <Link href={url} className={cx('styleLink')}>
           <h4 className={cx('h4', 'ellipsis')}>{post.title}</h4>
           <div className={cx('descriptionWrapper')}>
             <p className={cx({ clamp: !!post.thumbnail })}>
@@ -44,7 +43,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
               {post.short_description.length === 150 && '...'}
             </p>
           </div>
-        </VLink>
+        </Link>
         <div className={cx('subInfo')}>
           <span suppressHydrationWarning={true}>{timeFormat(post.released_at)}</span>
           <span className={cx('separator')}>·</span>
@@ -52,7 +51,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
         </div>
       </div>
       <div className={cx('footer')}>
-        <VLink className={cx('userInfo')} href={`/@${post.user.username}`}>
+        <Link className={cx('userInfo')} href={`/@${post.user.username}`}>
           <Image
             src={post.user.profile?.thumbnail || '/images/user-thumbnail.png'}
             alt={`user thumbnail of ${post.user.username}`}
@@ -62,7 +61,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
           <span>
             by <b>{post.user.username}</b>
           </span>
-        </VLink>
+        </Link>
         <div className={cx('likes')}>
           <LikeIcon />
           {post.likes}
