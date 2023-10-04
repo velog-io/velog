@@ -4,10 +4,11 @@ import { PostService } from '@services/PostService/index.js'
 import { UserService } from '@services/UserService/index.js'
 import { PostIncludeComment, PostIncludeUser } from '@services/PostService/PostServiceInterface.js'
 import { CommentService } from '@services/CommentService/index.js'
-import { Post } from '@prisma/client'
+import { Post, Tag } from '@prisma/client'
 import { PostLikeService } from '@services/PostLikeService/index.js'
 import { DbService } from '@lib/db/DbService.js'
 import { UserFollowService } from '@services/UserFollowService/index.js'
+import { PostsTagsService } from '@services/PostsTagsService/index.js'
 
 const postResolvers: Resolvers = {
   Post: {
@@ -49,10 +50,14 @@ const postResolvers: Resolvers = {
       const userFollowService = container.resolve(UserFollowService)
       return await userFollowService.isFollowed(ctx.user.id, parent.fk_user_id)
     },
+    tags: async (parent: Post) => {
+      const postTagsService = container.resolve(PostsTagsService)
+      const tags = await postTagsService.createTagsLoader().load(parent.id)
+      return tags.map((tag: Tag) => tag.name)
+    },
   },
   Query: {
     post: async (_, { input }, ctx) => {
-      console.log('hello', input)
       const postService = container.resolve(PostService)
       return await postService.getPost(input, ctx.user?.id)
     },

@@ -1,5 +1,5 @@
 import DataLoader from 'dataloader'
-import { Prisma } from '@prisma/client'
+import { Prisma, Tag } from '@prisma/client'
 import { injectable } from 'tsyringe'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
@@ -51,7 +51,7 @@ export class PostsTagsService implements Service {
           postsTags,
           (pt) => pt.fk_post_id!,
         )
-        .map((array) => array.map((pt) => pt.tag))
+        .map((array) => array.map((pt) => pt.tag)) as Partial<Tag>[]
     })
   }
 }
