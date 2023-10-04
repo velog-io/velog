@@ -22,8 +22,13 @@ const postResolvers: Resolvers = {
       const postService = container.resolve(PostService)
       return postService.shortDescription(parent)
     },
+    comments: (parent: PostIncludeComment) => {
+      if (parent.comments) return parent.comments
+      const commentService = container.resolve(CommentService)
+      return commentService.createCommentsLoader().load(parent.id)
+    },
     comments_count: async (parent: PostIncludeComment) => {
-      if (parent?.comment) return parent.comment.length
+      if (parent?.comments) return parent.comments.length
       const commentService = container.resolve(CommentService)
       const count = await commentService.count(parent.id)
       return count
@@ -47,6 +52,7 @@ const postResolvers: Resolvers = {
   },
   Query: {
     post: async (_, { input }, ctx) => {
+      console.log('hello', input)
       const postService = container.resolve(PostService)
       return await postService.getPost(input, ctx.user?.id)
     },

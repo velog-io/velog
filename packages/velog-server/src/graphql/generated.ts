@@ -3,9 +3,10 @@ import {
   User as UserModel,
   UserProfile as UserProfileModel,
   Post as PostModel,
+  Comment as CommentModel,
 } from '@prisma/client'
 import { GraphQLContext } from './../common/interfaces/graphql'
-export type Maybe<T> = T | null
+export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
@@ -353,12 +354,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
-  Comment: ResolverTypeWrapper<
-    Omit<Comment, 'replies' | 'user'> & {
-      replies?: Maybe<Array<Maybe<ResolversTypes['Comment']>>>
-      user?: Maybe<ResolversTypes['User']>
-    }
-  >
+  Comment: ResolverTypeWrapper<CommentModel>
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
   FollowInput: FollowInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
@@ -410,10 +406,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output']
-  Comment: Omit<Comment, 'replies' | 'user'> & {
-    replies?: Maybe<Array<Maybe<ResolversParentTypes['Comment']>>>
-    user?: Maybe<ResolversParentTypes['User']>
-  }
+  Comment: CommentModel
   Date: Scalars['Date']['output']
   FollowInput: FollowInput
   ID: Scalars['ID']['output']

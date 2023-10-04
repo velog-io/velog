@@ -20,7 +20,7 @@ export default async function postData({
   const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(body),
-    headers: new Headers({ 'Content-Type': 'application/json', ...headers }),
+    headers: new Headers({ ...headers, 'Content-Type': 'application/json' }),
     credentials: 'include',
     next,
     cache,

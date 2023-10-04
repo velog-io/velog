@@ -17,8 +17,10 @@ const config: CodegenConfig = {
           User: '@prisma/client#User as UserModel',
           UserProfile: '@prisma/client#UserProfile as UserProfileModel',
           Post: '@prisma/client#Post as PostModel',
+          Comment: '@prisma/client#Comment as CommentModel',
         },
         inputMaybeValue: 'T | undefined',
+        maybeValue: 'T | null | undefined',
         scalars: {
           Date: 'Date',
           JSON: 'JSON',

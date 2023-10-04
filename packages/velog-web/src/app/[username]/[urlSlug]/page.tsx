@@ -1,3 +1,4 @@
+import getPostByUrlSlug from '@/actions/getPostByUrlSlug'
 import PostViewer from '@/features/post/components/PostViewer'
 
 interface Props {
@@ -7,5 +8,11 @@ interface Props {
 export default async function PostViewerPage({ params }: Props) {
   const encodedSymbol = encodeURIComponent('@')
   if (!params.username.includes(encodedSymbol)) return <></>
-  return <PostViewer />
+  const { username, urlSlug } = params
+  const post = await getPostByUrlSlug({
+    username: username.replace(encodedSymbol, ''),
+    url_slug: decodeURI(urlSlug),
+  })
+
+  return <PostViewer post={post} />
 }
