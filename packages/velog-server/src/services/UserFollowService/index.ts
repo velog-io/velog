@@ -61,6 +61,10 @@ export class UserFollowService implements Service {
       throw new ConfilctError('ALREADY_FOLLOWER')
     }
 
+    if (followingUserId === followerUserId) {
+      throw new ConfilctError('Users cannot follow themselves.')
+    }
+
     await this.db.followUser.create({
       data: {
         fk_following_user_id: followingUserId,
