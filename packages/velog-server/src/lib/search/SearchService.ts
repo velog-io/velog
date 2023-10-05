@@ -5,7 +5,7 @@ import { injectable, singleton } from 'tsyringe'
 import { Client } from '@elastic/elasticsearch'
 import { ENV } from '@env'
 import { PostService } from '@services/PostService/index.js'
-import { WriteResponseBase } from '@elastic/elasticsearch/lib/api/types'
+// import { WriteResponseBase } from '@elastic/elasticsearch/lib/api/types'
 import { Prisma, Tag } from '@prisma/client'
 
 interface Service {
@@ -110,8 +110,8 @@ export class SearchService implements Service {
 }
 
 type SearchSyncType = {
-  update: (postId: string) => Promise<WriteResponseBase | undefined>
-  remove: (postId: string) => Promise<WriteResponseBase | undefined>
+  update: (postId: string) => Promise<any | undefined>
+  remove: (postId: string) => Promise<any | undefined>
 }
 
 export type SerializedPostParam = Prisma.PostGetPayload<{

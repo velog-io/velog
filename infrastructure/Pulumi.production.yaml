@@ -1,5 +1,4 @@
 config:
   aws:region: ap-northeast-2
   velog:APP_ENV: production
-  velog:target: all
-
+  velog:target: server
