@@ -29,10 +29,7 @@ export class SocialService implements Service {
   constructor(private readonly db: DbService) {}
   private get redirectUri() {
     const redirectPath = `/api/auth/v3/social/callback`
-    const redirectUri =
-      ENV.appEnv === 'development'
-        ? `http://localhost:5003${redirectPath}`
-        : `https://${ENV.apiHost}${redirectPath}`
+    const redirectUri = `${ENV.apiHost}${redirectPath}`
     return redirectUri
   }
   public async getSocialAccount({
@@ -54,12 +51,21 @@ export class SocialService implements Service {
       clientSecret: ENV.googleSecret,
       redirectUri: `${this.redirectUri}/google`,
     })
+    console.log('google accessToken', { accessToken })
 
     const profile = await this.getGoogleProfile(accessToken)
+    console.log('google profile', { profile })
 
     const socialAccount = await this.getSocialAccount({
       uid: profile.uid,
       provider: 'google',
+    })
+
+    console.log('google info', {
+      code,
+      clientId: ENV.googleClientId,
+      clientSecret: ENV.googleSecret,
+      redirectUri: `${this.redirectUri}/google`,
     })
 
     return {
