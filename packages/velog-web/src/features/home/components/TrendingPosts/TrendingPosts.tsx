@@ -11,11 +11,12 @@ type Props = {
 }
 
 function TrendingPosts({ data }: Props) {
-  const { posts, fetchNextPage, isFetching, hasNextPage, originData } = useTrendingPosts(data)
+  const { posts, fetchNextPage, isFetching, hasNextPage, originData, isError } =
+    useTrendingPosts(data)
   const ref = useRef<HTMLDivElement>(null)
 
   const getTreningPostsMore = () => {
-    if (isFetching) return
+    if (isFetching || isError) return
     if (hasNextPage === false) return
     fetchNextPage()
   }

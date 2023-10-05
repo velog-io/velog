@@ -33,7 +33,7 @@ export default function useTrendingPosts(initialPost: Posts[] = []) {
     throw new Error('Notfound fetch input')
   }
 
-  const { data, isLoading, fetchNextPage, refetch, isFetching, hasNextPage } =
+  const { data, isLoading, fetchNextPage, refetch, isFetching, hasNextPage, isError } =
     useInfiniteQuery<TrendingPostsQuery>(
       ['trendingPosts', { input: fetchInput }],
       ({ pageParam = fetchInput }) =>
@@ -114,5 +114,6 @@ export default function useTrendingPosts(initialPost: Posts[] = []) {
     isFetching,
     hasNextPage,
     originData: data,
+    isError,
   }
 }

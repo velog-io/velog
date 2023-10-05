@@ -21,7 +21,7 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
     }
   }, [initialPosts, limit])
 
-  const { data, isLoading, fetchNextPage, isFetching, hasNextPage } =
+  const { data, isLoading, fetchNextPage, isFetching, hasNextPage, isError } =
     useInfiniteQuery<RecentPostsQuery>(
       ['recentPosts', { input: fetchInput }],
       ({ pageParam = fetchInput }) =>
@@ -80,5 +80,6 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
     isFetching,
     hasNextPage,
     originData: data,
+    isError,
   }
 }
