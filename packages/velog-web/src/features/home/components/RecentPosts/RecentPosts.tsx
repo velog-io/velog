@@ -21,7 +21,7 @@ function RecentPosts({ data }: Props) {
     fetchNextPage()
   }
 
-  useInfiniteScroll(ref, getRecentPostsMore)
+  useInfiniteScroll(ref, getRecentPostsMore, isError)
 
   return (
     <>

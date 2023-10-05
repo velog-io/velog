@@ -21,7 +21,7 @@ function TrendingPosts({ data }: Props) {
     fetchNextPage()
   }
 
-  useInfiniteScroll(ref, getTreningPostsMore)
+  useInfiniteScroll(ref, getTreningPostsMore, isError)
 
   return (
     <>
