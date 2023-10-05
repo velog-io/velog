@@ -344,14 +344,14 @@ export class SocialController implements Controller {
     provider: SocialProvider,
     { next = '/', isIntegrate = false, integrateState }: Options,
   ) {
-    const generator = this.socialLoginLiknGenerator[provider]
+    const generator = this.socialLoginLinkGenerator[provider]
     return generator({
       next: encodeURI(next),
       isIntegrate,
       integrateState,
     })
   }
-  private get socialLoginLiknGenerator() {
+  private get socialLoginLinkGenerator() {
     return {
       github: ({ next, isIntegrate, integrateState }: Options) => {
         const redirectUriWithOptions = `${this.redirectUri}/github?next=${next}&isIntegrate=${
