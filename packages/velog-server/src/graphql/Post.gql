@@ -37,14 +37,14 @@ type Post {
   is_private: Boolean!
   released_at: Date
   user: User
-  comments: [Comment]
-  tags: [String]
+  comments: [Comment!]!
+  tags: [String!]!
   comments_count: Int
   series: Series
   liked: Boolean
   linked_posts: LinkedPosts
   last_read_at: Date
-  recommended_posts: [Post]
+  recommended_posts: [Post!]!
   followed: Boolean
 }
 

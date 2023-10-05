@@ -8,7 +8,8 @@ import { Post, Tag } from '@prisma/client'
 import { PostLikeService } from '@services/PostLikeService/index.js'
 import { DbService } from '@lib/db/DbService.js'
 import { UserFollowService } from '@services/UserFollowService/index.js'
-import { PostsTagsService } from '@services/PostsTagsService/index.js'
+import { PostTagService } from '@services/PostTagService/index.js'
+import { SeriesService } from '@services/SeriesService/index.js'
 
 const postResolvers: Resolvers = {
   Post: {
@@ -34,6 +35,15 @@ const postResolvers: Resolvers = {
       const count = await commentService.count(parent.id)
       return count
     },
+    tags: async (parent: Post) => {
+      const postTagService = container.resolve(PostTagService)
+      const tags = await postTagService.createTagsLoader().load(parent.id)
+      return tags.map((tag: Tag) => tag.name)
+    },
+    series: async (parent: Post) => {
+      const seriesService = container.resolve(SeriesService)
+      return seriesService.getPostSeries(parent.id)
+    },
     liked: async (parent: Post, _, ctx) => {
       if (!ctx.user) return false
       const db = container.resolve(DbService)
@@ -45,15 +55,14 @@ const postResolvers: Resolvers = {
       })
       return !!liked
     },
+    recommended_posts: async (parent: Post) => {
+      const postService = container.resolve(PostService)
+      return await postService.recommendedPosts(parent)
+    },
     followed: async (parent: Post, _, ctx) => {
       if (!ctx.user) return false
       const userFollowService = container.resolve(UserFollowService)
       return await userFollowService.isFollowed(ctx.user.id, parent.fk_user_id)
-    },
-    tags: async (parent: Post) => {
-      const postTagsService = container.resolve(PostsTagsService)
-      const tags = await postTagsService.createTagsLoader().load(parent.id)
-      return tags.map((tag: Tag) => tag.name)
     },
   },
   Query: {

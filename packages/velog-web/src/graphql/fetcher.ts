@@ -3,7 +3,7 @@ import { ENV } from '@/env'
 export function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
     const res = await fetch(`${ENV.graphqlHost}/graphql`, {
-      method: 'POST',
+      method: 'GET',
       body: JSON.stringify({ query, variables }),
       headers: {
         'Content-Type': 'application/json',

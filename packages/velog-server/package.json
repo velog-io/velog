@@ -52,6 +52,7 @@
     "graphql": "^16.7.1",
     "graphql-scalars": "^1.22.2",
     "inquirer": "^9.2.7",
+    "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.0",
     "lru-cache": "^10.0.0",
     "marked": "^8.0.0",

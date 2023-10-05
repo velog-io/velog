@@ -1,7 +1,8 @@
-import { Comment, Post, User } from '@prisma/client'
+import { Comment, Post, Tag, User } from '@prisma/client'
 
 export type PostIncludeUser = Post & { user?: User }
 export type PostIncludeComment = Post & { comments?: Comment[] }
+export type PostIncludeTags = Post & { tags?: Tag[] }
 
 export type GetPostsByTypeParams = {
   cursor: string | undefined

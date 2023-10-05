@@ -60,6 +60,7 @@ const env = z.object({
   codenaryWebhook: z.string(),
   codenaryApiKey: z.string(),
   codenaryCallback: z.string(),
+  redisHost: z.string(),
 })
 
 export const ENV = env.parse({
@@ -88,6 +89,7 @@ export const ENV = env.parse({
   codenaryWebhook: process.env.CODENARY_WEBHOOK,
   codenaryApiKey: process.env.CODENARY_API_KEY,
   codenaryCallback: process.env.CODENARY_CALLBACK,
+  redisHost: process.env.REDIS_HOST,
 })
 
 export type EnvVars = z.infer<typeof env>

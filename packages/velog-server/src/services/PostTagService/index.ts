@@ -10,7 +10,7 @@ interface Service {
 }
 
 @injectable()
-export class PostsTagsService implements Service {
+export class PostTagService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly utils: UtilsService,

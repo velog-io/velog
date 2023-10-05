@@ -16,15 +16,20 @@ import { PostReadLogService } from '@services/PostReadLogService/index.js'
 import { subDays, subYears } from 'date-fns'
 import axios from 'axios'
 import { ENV } from '@env'
+import { RedisService } from '@lib/redis/RedisService.js'
+import { PostTagService } from '@services/PostTagService/index.js'
+import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
+import { Time } from '@constants/TimeConstants.js'
 
 interface Service {
-  postsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
+  getPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
   getReadingList(input: ReadingListInput, userId: string | undefined): Promise<Post[]>
   getRecentPosts(input: RecentPostsInput, userId: string | undefined): Promise<Post[]>
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
   getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>
   updatePostScore(postId: string): Promise<void>
   shortDescription(post: Post): string
+  recommendedPosts(post: Post): Promise<Post[]>
 }
 
 @injectable()
@@ -34,8 +39,11 @@ export class PostService implements Service {
     private readonly db: DbService,
     private readonly cache: CacheService,
     private readonly utils: UtilsService,
+    private readonly redis: RedisService,
+    private readonly elsaticSearch: ElasticSearchService,
+    private readonly postTagsService: PostTagService,
   ) {}
-  public async postsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]> {
+  public async getPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]> {
     const posts = await this.db.post.findMany({
       where: {
         id: {
@@ -290,7 +298,7 @@ export class PostService implements Service {
       this.cache.lruCache.set(cacheKey, postIds)
     }
 
-    const posts = await this.postsByIds(postIds, { user: { include: { profile: true } } })
+    const posts = await this.getPostsByIds(postIds, { user: { include: { profile: true } } })
     const normalized = this.utils.normalize(posts)
     const ordered = postIds.map((id) => normalized[id])
     return ordered
@@ -415,6 +423,51 @@ export class PostService implements Service {
         .slice(0, 500),
     )
     return removed.slice(0, 200) + (removed.length > 200 ? '...' : '')
+  }
+  public async recommendedPosts(post: Post): Promise<Post[]> {
+    const postId = post.id
+    const tags = await this.postTagsService.createTagsLoader().load(postId)
+    Object.assign(post, { tags })
+
+    const cacheKey = this.redis.generateKey.recommendedPostKey(postId)
+    let postIds: string[]
+    try {
+      const cachedPostIds = await this.redis.get(cacheKey)
+      if (cachedPostIds) {
+        postIds = cachedPostIds.split(',')
+      } else {
+        const recommendedPosts = await this.elsaticSearch.client.search({
+          index: 'posts',
+          body: {
+            query: this.elsaticSearch.buildQuery.recommendedPostsQuery(post),
+            size: 12,
+          },
+        })
+        postIds = recommendedPosts.hits.hits.map((hit) => hit._id)
+        const diff = 12 - postIds.length
+        if (diff > 0) {
+          const fallbackPosts = await this.elsaticSearch.client.search({
+            index: 'posts',
+            body: {
+              query: this.elsaticSearch.buildQuery.fallbackRecommendedPosts(),
+              size: 100,
+            },
+          })
+          const fallbackPostIds = fallbackPosts.hits.hits.map((hit) => hit._id)
+          const randomPostIds = this.utils.pickRandomItems(fallbackPostIds, diff)
+          postIds = [...postIds, ...randomPostIds]
+        }
+
+        this.redis.set(cacheKey, postIds.join(','), 'EX', Time.ONE_DAY_S)
+      }
+      const posts = await this.getPostsByIds(postIds)
+      const normalized = this.utils.normalize(posts)
+      const ordered = postIds.map((id) => normalized[id])
+      return ordered.filter((post) => post)
+    } catch (error) {
+      console.log('recommendedPosts error', error)
+      return []
+    }
   }
 }
 
