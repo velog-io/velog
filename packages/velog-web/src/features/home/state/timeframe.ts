@@ -7,7 +7,7 @@ type TimeframeState = {
 }
 
 const initialState: TimeframeState = {
-  timeframe: 'month',
+  timeframe: 'week',
   isFetching: false,
 }
 

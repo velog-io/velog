@@ -13,7 +13,6 @@ import { useEffect, useMemo, useRef } from 'react'
 
 export default function useTrendingPosts(initialPost: Posts[] = []) {
   const params = useParams()
-  console.log('params', params)
   const timeframe = (params.timeframe ?? 'week') as Timeframe
   const prevTimeframe = useRef<Timeframe>(timeframe)
   const { actions } = useTimeframe()
