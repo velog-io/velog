@@ -8,11 +8,8 @@ import { injectable, singleton } from 'tsyringe'
 export class CookieService {
   private get domains() {
     const isProduction = ENV.appEnv === 'production'
-    if (isProduction) {
-      return ['.velog.io']
-    } else {
-      return ['location', undefined]
-    }
+    if (isProduction) return ['.velog.io']
+    return ['location', undefined]
   }
   public getCookie(reply: FastifyReply, name: string) {
     return reply.cookies[name]
