@@ -47,7 +47,7 @@ function PostCardGrid({
       {posts.map((post) => {
         return (
           <PostCard
-            key={`${post.id}`}
+            key={post.id}
             post={post}
             forHome={forHome}
             forPost={forPost}

@@ -8,6 +8,7 @@ import Image from 'next/image'
 import VLink from '@/components/VLink/VLink'
 import { LikeIcon } from '@/assets/icons/components'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
+import { PostCardSkeleton } from '@/features/post/components/PostCard/PostCardSkeleton'
 
 const cx = bindClassNames(styles)
 
@@ -20,6 +21,9 @@ type Props = {
 
 function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
   const url = `/@${post.user.username}/${post.url_slug}`
+  const { time: releasedAt, loading } = useTimeFormat(post.released_at)
+
+  if (loading) return <PostCardSkeleton forHome={forHome} forPost={forPost} />
 
   return (
     <div className={cx('block', { isNotHomeAndPost: !forHome && !forPost })} onClick={onClick}>
@@ -46,7 +50,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
           </div>
         </VLink>
         <div className={cx('subInfo')}>
-          <span>{useTimeFormat(post.released_at)}</span>
+          <span>{releasedAt}</span>
           <span className={cx('separator')}>·</span>
           <span>{post.comments_count}개의 댓글</span>
         </div>
