@@ -13,30 +13,32 @@ type Props = {
   currentPath: string
 }
 
-const providerMap = {
-  github: {
-    color: '#272e33',
-    icon: GithubIcon,
-    border: false,
-  },
-  google: {
-    color: 'white',
-    icon: GoogleIcon,
-    border: true,
-  },
-  facebook: {
-    color: '#3b5998',
-    icon: FacebookIcon,
-    border: false,
-  },
+const providerMap = (currentPath: string) => {
+  return {
+    github: {
+      color: '#272e33',
+      icon: GithubIcon,
+      border: false,
+      redirectTo: `${ENV.apiV2Host}/api/v2/auth/social/redirect/github?next=${currentPath}&isIntegrate=0`,
+    },
+    google: {
+      color: 'white',
+      icon: GoogleIcon,
+      border: true,
+      redirectTo: `${ENV.apiV3Host}/api/auth/v3/social/redirect/google?next=${currentPath}&isIntegrate=0`,
+    },
+    facebook: {
+      color: '#3b5998',
+      icon: FacebookIcon,
+      border: false,
+      redirectTo: `${ENV.apiV3Host}/api/auth/v3/social/redirect/facebook?next=${currentPath}&isIntegrate=0`,
+    },
+  }
 }
 
 function AuthSocialButton({ provider, tabIndex, currentPath }: Props) {
-  const info = useMemo(() => providerMap[provider], [provider])
-  const { icon: Icon, color, border } = info
-
-  const host = ENV.apiV3Host
-  const redirectTo = `${host}/api/auth/v3/social/redirect/${provider}?next=${currentPath}&isIntegrate=0`
+  const info = useMemo(() => providerMap(currentPath)[provider], [provider, currentPath])
+  const { icon: Icon, color, border, redirectTo } = info
 
   return (
     <a

@@ -15,10 +15,9 @@ export default async function getRecentPost({ limit = ENV.defaultPostLimit }: Re
       },
     }
 
-    const TEN_SECOND = 10
     const { recentPosts } = await postData({
       body,
-      next: { revalidate: TEN_SECOND },
+      cache: 'no-cache',
     })
 
     return recentPosts as Posts[]
