@@ -1,9 +1,11 @@
+'use client'
+
 import distanceInWordsToNow from 'date-fns/formatDistanceToNow'
 import format from 'date-fns/format'
 import koLocale from 'date-fns/locale/ko'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
-export const timeFormat = (date: string) => {
+export function useTimeFormat(date: string) {
   const d = new Date(date)
   const now = zonedTimeToUtc(new Date(), 'Asia/Seoul')
   const diff = now.getTime() - d.getTime()

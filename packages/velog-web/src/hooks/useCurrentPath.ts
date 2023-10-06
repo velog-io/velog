@@ -1,3 +1,5 @@
+'use client'
+
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useMemo } from 'react'
 

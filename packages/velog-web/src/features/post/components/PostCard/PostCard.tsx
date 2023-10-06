@@ -7,7 +7,7 @@ import RatioImage from '@/components/RatioImage/RatioImage'
 import Image from 'next/image'
 import VLink from '@/components/VLink/VLink'
 import { LikeIcon } from '@/assets/icons/components'
-import { timeFormat } from '@/lib/timeformat'
+import { useTimeFormat } from '@/hooks/useTimeFormat'
 
 const cx = bindClassNames(styles)
 
@@ -46,7 +46,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
           </div>
         </VLink>
         <div className={cx('subInfo')}>
-          <span suppressHydrationWarning={true}>{timeFormat(post.released_at)}</span>
+          <span>{useTimeFormat(post.released_at)}</span>
           <span className={cx('separator')}>·</span>
           <span>{post.comments_count}개의 댓글</span>
         </div>
