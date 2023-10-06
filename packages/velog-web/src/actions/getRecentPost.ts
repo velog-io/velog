@@ -17,7 +17,7 @@ export default async function getRecentPost({ limit = ENV.defaultPostLimit }: Re
 
     const { recentPosts } = await postData({
       body,
-      cache: 'no-store',
+      cache: 'no-cache',
     })
 
     return recentPosts as Posts[]

@@ -10,6 +10,7 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
     const serverCurrentTime = format(new Date(), 'yyyy-MM-dd:HH:mm:ss')
     reply.status(200).send({ serverCurrentTime })
   })
+
   done()
 }
 

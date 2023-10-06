@@ -59,14 +59,18 @@ export class PostLikeService implements Service {
       },
     })
 
+    const likesCount = await this.db.postLike.count({
+      where: {
+        fk_post_id: postId,
+      },
+    })
+
     const likesPost = await this.db.post.update({
       where: {
         id: postId,
       },
       data: {
-        likes: {
-          increment: 1,
-        },
+        likes: likesCount,
       },
     })
 
@@ -76,7 +80,11 @@ export class PostLikeService implements Service {
     }
 
     setTimeout(() => {
-      this.search.searchSync.update(post.id)
+      try {
+        this.search.searchSync.update(post.id)
+      } catch (error) {
+        console.log('likePost searchSync update error', error)
+      }
     }, 0)
 
     return likesPost
@@ -133,9 +141,12 @@ export class PostLikeService implements Service {
     })
 
     await this.postService.updatePostScore(postId)
-
     setTimeout(() => {
-      this.search.searchSync.update(post.id)
+      try {
+        this.search.searchSync.update(post.id)
+      } catch (error) {
+        console.log('unlikePost searchSync update error', error)
+      }
     }, 0)
 
     return unlikesPost

@@ -45,6 +45,7 @@ type Post {
   linked_posts: LinkedPosts
   last_read_at: Date
   recommended_posts: [Post]
+  followed: Boolean
 }
 
 type SearchResult {

@@ -29,10 +29,7 @@ export class SocialService implements Service {
   constructor(private readonly db: DbService) {}
   private get redirectUri() {
     const redirectPath = `/api/auth/v3/social/callback`
-    const redirectUri =
-      ENV.appEnv === 'development'
-        ? `http://localhost:5003${redirectPath}`
-        : `https://${ENV.apiHost}${redirectPath}`
+    const redirectUri = `${ENV.apiHost}${redirectPath}`
     return redirectUri
   }
   public async getSocialAccount({

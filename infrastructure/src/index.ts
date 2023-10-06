@@ -10,15 +10,22 @@ import { getCertificate } from './common/certificate'
 import { createCronInfra } from './packages/cron'
 import { execCommand } from './lib/execCommand'
 import { createECRImage, createECRRepository, getECRImage, getECRRepository } from './common/ecr'
-import { withPrefix } from './lib/prefix'
+import { getCluster } from './common/ecs'
 
 execCommand('pnpm -r prisma:copy')
 
 const config = new pulumi.Config()
-const target = config.get('target') as string
+const target = config.get('target')
 
-const validTargets = ['all', 'web', 'server', 'cron']
-if (!target || !validTargets.includes(target)) {
+if (!target) {
+  throw new Error('Target not specified')
+}
+
+const targets = target.split(',').map((v) => v.trim())
+const whiteList = ['all', 'web', 'server', 'cron']
+const validate = targets.every((t) => whiteList.includes(t))
+
+if (!validate) {
   throw new Error('Invalid target name, See the README.md')
 }
 
@@ -34,40 +41,38 @@ const defaultSecurityGroup = vpcId.then((id) =>
     name: 'default',
   }),
 )
+
 export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
-
 const certificateArn = getCertificate(ENV.certificateDomain)
-
 const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => void> = {
   web: createWebInfra,
   server: createServerInfra,
   cron: createCronInfra,
 }
 
-const cluster = new aws.ecs.Cluster(withPrefix('cluster'))
+export const imageUrls = getCluster().then((cluster) =>
+  Object.entries(createInfraMapper).map(async ([pack, func]) => {
+    let type = pack as PackageType
+    let imageUri: pulumi.Output<string>
+    if (targets.includes(type) || target === 'all') {
+      const newRepo = createECRRepository(type)
+      imageUri = createECRImage(type, newRepo)
+    } else {
+      const repo = await getECRRepository(type)
+      imageUri = getECRImage(repo)
+    }
 
-export const imageUrls = Object.entries(createInfraMapper).map(async ([pack, func]) => {
-  let type = pack as PackageType
+    const infraSettings = {
+      vpcId,
+      subnetIds,
+      certificateArn,
+      defaultSecurityGroupId,
+      imageUri,
+      cluster,
+    }
 
-  let imageUri: pulumi.Output<string>
-  if (target.includes(type) || target === 'all') {
-    const newRepo = createECRRepository(type)
-    imageUri = createECRImage(type, newRepo)
-  } else {
-    const repo = await getECRRepository(type)
-    imageUri = getECRImage(repo)
-  }
+    func(infraSettings)
 
-  const infraSettings = {
-    vpcId,
-    subnetIds,
-    certificateArn,
-    defaultSecurityGroupId,
-    imageUri,
-    cluster,
-  }
-
-  func(infraSettings)
-
-  return imageUri
-})
+    return imageUri
+  }),
+)

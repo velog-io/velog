@@ -33,7 +33,7 @@
     @media screen and (max-width: 768px) {
       margin-top: 2rem;
     }
-    color: var(--primary1);
+
     text-align: right;
 
     span {
@@ -43,6 +43,7 @@
       display: inline-block;
       font-weight: bold;
       cursor: pointer;
+      color: var(--primary1);
       &:hover {
         text-decoration: underline;
       }

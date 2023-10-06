@@ -1,3 +1,5 @@
+'use client'
+
 import { isClientSide } from '@/lib/isClientSide'
 import { useTheme } from '@/state/theme'
 import { useEffect } from 'react'

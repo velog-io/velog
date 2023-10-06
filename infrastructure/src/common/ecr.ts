@@ -1,5 +1,5 @@
 import { PackageType } from './../type.d'
-import * as AWS from '@aws-sdk/client-ecr'
+import * as clientEcr from '@aws-sdk/client-ecr'
 import * as awsx from '@pulumi/awsx'
 import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
@@ -7,21 +7,20 @@ import { ENV } from '../env'
 import { Repository } from '@pulumi/aws/ecr'
 import * as pulumi from '@pulumi/pulumi'
 
-const client = new AWS.ECR({ region: 'ap-northeast-2' })
+const ecrClient = new clientEcr.ECR({ region: 'ap-northeast-2' })
 
 export const createECRRepository = (type: PackageType): Repository => {
   const option = options[type]
   const repo = new aws.ecr.Repository(withPrefix(option.ecrRepoName), {
     forceDelete: true,
   })
-
   createRepoLifecyclePolicy(type, repo)
   return repo
 }
 
 export const getECRRepository = async (type: PackageType): Promise<Repository> => {
   const option = options[type]
-  const repository = await client.describeRepositories({})
+  const repository = await ecrClient.describeRepositories({})
   const existsRepo = repository.repositories
     ?.map((repo) => ({
       repositoryName: repo.repositoryName,
@@ -43,7 +42,6 @@ export const getECRRepository = async (type: PackageType): Promise<Repository> =
   )
 
   createRepoLifecyclePolicy(type, repo)
-
   return repo
 }
 

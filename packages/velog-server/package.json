@@ -30,7 +30,7 @@
   "dependencies": {
     "@aws-sdk/client-ses": "^3.405.0",
     "@aws-sdk/client-ssm": "^3.379.1",
-    "@elastic/elasticsearch": "^8.9.0",
+    "@elastic/elasticsearch": "7.3.0",
     "@fastify/autoload": "^5.7.1",
     "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.3.0",
@@ -87,6 +87,7 @@
     "@types/remove-markdown": "^0.3.1",
     "@types/sanitize-html": "^2.9.0",
     "@types/tmp": "^0.2.3",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.4.1",
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",

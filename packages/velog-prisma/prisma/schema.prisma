@@ -96,21 +96,6 @@ model EmailCert {
   @@map("email_cert")
 }
 
-model Feed {
-  id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  fk_post_id String?  @db.Uuid
-  fk_user_id String?  @db.Uuid
-  reason     Json?
-  score      Int?     @default(1)
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @db.Timestamptz(6)
-  post       Post?    @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  user       User?    @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-
-  @@index([created_at], map: "feeds_created_at")
-  @@map("feeds")
-}
-
 model FollowTag {
   id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   fk_user_id String?  @db.Uuid
@@ -261,7 +246,6 @@ model Post {
   released_at       DateTime?                @default(now()) @db.Timestamptz(6)
   tsv               Unsupported("tsvector")?
   comment           Comment[]
-  feed              Feed[]
   postHistory       PostHistory[]
   postImage         PostImage[]
   postLike          PostLike[]
@@ -274,6 +258,7 @@ model Post {
   postTags          PostTag[]
   seriesPost        SeriesPost[]
   urlSlugHistory    UrlSlugHistory[]
+  feed              Feed[]
 
   @@index([created_at], map: "posts_created_at")
   @@index([fk_user_id], map: "posts_fk_user_id")
@@ -525,10 +510,9 @@ model User {
   emailCert                  EmailCert[]
   externalIntegrationHistory ExternalIntegrationHistory[]
   externalIntegration        ExternalIntegration[]
-  feed                       Feed[]
   followTag                  FollowTag[]
   followers                  FollowUser[]                 @relation("follower_relation")
-  following                  FollowUser[]                 @relation("following_relation")
+  followings                 FollowUser[]                 @relation("following_relation")
   postImage                  PostImage[]
   postLike                   PostLike[]
   postReadLog                PostReadLog[]
@@ -545,6 +529,7 @@ model User {
   profile                    UserProfile?
   userThumbnail              UserThumbnail[]
   velogConfig                VelogConfig?
+  feed                       Feed[]
 
   @@index([email], map: "users_email")
   @@index([username], map: "users_username")
@@ -591,16 +576,29 @@ model ExternalIntegrationHistory {
 }
 
 model FollowUser {
-  id                String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  fk_user_id        String   @db.Uuid
-  fk_follow_user_id String   @db.Uuid
-  created_at        DateTime @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime @default(now()) @db.Timestamptz(6)
+  id                   String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  fk_following_user_id String   @db.Uuid
+  fk_follower_user_id  String   @db.Uuid
+  created_at           DateTime @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime @default(now()) @db.Timestamptz(6)
 
-  follower  User @relation("follower_relation", fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  following User @relation("following_relation", fields: [fk_follow_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  following User @relation("following_relation", fields: [fk_following_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  follower  User @relation("follower_relation", fields: [fk_follower_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
-  @@index([fk_user_id])
-  @@index([fk_follow_user_id])
+  @@index([fk_following_user_id])
+  @@index([fk_follower_user_id])
   @@map("follow_users")
+}
+
+model Feed {
+  id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  fk_post_id String   @db.Uuid
+  fk_user_id String   @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+  post       Post     @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  user       User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+
+  @@index([created_at], map: "feeds_created_at")
+  @@map("feeds")
 }

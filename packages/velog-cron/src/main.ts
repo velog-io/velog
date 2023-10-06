@@ -12,7 +12,7 @@ async function main() {
   const dbService = container.resolve(DbService)
   await dbService.$connect()
 
-  console.info(`INFO: Database connected to "${ENV.databaseUrl}"`)
+  console.info(`INFO: Database connected to "${ENV.databaseUrl.split('@')[1]}"`)
   process.on('SIGINT', async () => {
     disableKeepAlive()
     process.exit(0)

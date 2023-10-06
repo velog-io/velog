@@ -1,11 +1,18 @@
+'use client'
+
 import { useEffect } from 'react'
 
-export function useInfiniteScroll(ref: React.RefObject<HTMLElement>, fetchNext: () => void) {
+export function useInfiniteScroll(
+  ref: React.RefObject<HTMLElement>,
+  fetchNext: () => void,
+  isError: boolean,
+) {
   useEffect(() => {
     if (!ref.current) return
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return
+        if (isError) return
         fetchNext()
       },
       {
@@ -17,5 +24,5 @@ export function useInfiniteScroll(ref: React.RefObject<HTMLElement>, fetchNext: 
     return () => {
       observer.disconnect()
     }
-  }, [ref, fetchNext])
+  }, [ref, fetchNext, isError])
 }

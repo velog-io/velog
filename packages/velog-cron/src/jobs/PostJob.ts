@@ -1,21 +1,21 @@
 import { DbService } from '@lib/db/DbService.js'
-import PostService from '@services/PostService.js'
+import { PostService } from '@services/PostService/index.js'
 import { injectable, singleton } from 'tsyringe'
-import { JobProgress } from '@jobs/JobProgress.js'
+import { Job, JobProgress } from '@jobs/JobProgress.js'
 
 @singleton()
 @injectable()
-export class PostJob extends JobProgress {
+export class PostJob extends JobProgress implements Job {
   constructor(
     private readonly postService: PostService,
     private readonly db: DbService,
   ) {
     super()
   }
-  public async calculateScore(score: number) {
+  public async runner(score: number) {
     console.log('Posts score calculation start...')
-
     console.time('score calculation')
+
     const posts = await this.db.post.findMany({
       where: {
         is_private: false,

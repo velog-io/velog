@@ -1,3 +1,4 @@
+import { ENV } from '@env'
 import type { CookieSerializeOptions } from '@fastify/cookie'
 import { FastifyReply } from 'fastify'
 import { injectable, singleton } from 'tsyringe'
@@ -5,7 +6,11 @@ import { injectable, singleton } from 'tsyringe'
 @injectable()
 @singleton()
 export class CookieService {
-  private domains: (string | undefined)[] = ['.velog.io', undefined, 'localhost']
+  private get domains() {
+    const isProduction = ENV.appEnv === 'production'
+    if (isProduction) return ['.velog.io']
+    return ['location', undefined]
+  }
   public getCookie(reply: FastifyReply, name: string) {
     return reply.cookies[name]
   }

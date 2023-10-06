@@ -57,11 +57,11 @@ export type LinkedPosts = {
 }
 
 export type Mutation = {
-  follow?: Maybe<Scalars['Void']['output']>
+  follow?: Maybe<Scalars['Boolean']['output']>
   likePost?: Maybe<Post>
   logout?: Maybe<Scalars['Void']['output']>
   sendMail?: Maybe<SendMailResponse>
-  unfollow?: Maybe<Scalars['Void']['output']>
+  unfollow?: Maybe<Scalars['Boolean']['output']>
   unlikePost?: Maybe<Post>
 }
 
@@ -91,6 +91,7 @@ export type Post = {
   comments_count?: Maybe<Scalars['Int']['output']>
   created_at: Scalars['Date']['output']
   fk_user_id: Scalars['String']['output']
+  followed?: Maybe<Scalars['Boolean']['output']>
   id: Scalars['ID']['output']
   is_markdown?: Maybe<Scalars['Boolean']['output']>
   is_private: Scalars['Boolean']['output']
@@ -228,7 +229,7 @@ export type UnlikePostInput = {
 
 export type User = {
   created_at: Scalars['Date']['output']
-  email: Scalars['String']['output']
+  email?: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
@@ -491,7 +492,7 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
   follow?: Resolver<
-    Maybe<ResolversTypes['Void']>,
+    Maybe<ResolversTypes['Boolean']>,
     ParentType,
     ContextType,
     RequireFields<MutationFollowArgs, 'input'>
@@ -510,7 +511,7 @@ export type MutationResolvers<
     RequireFields<MutationSendMailArgs, 'input'>
   >
   unfollow?: Resolver<
-    Maybe<ResolversTypes['Void']>,
+    Maybe<ResolversTypes['Boolean']>,
     ParentType,
     ContextType,
     RequireFields<MutationUnfollowArgs, 'input'>
@@ -532,6 +533,7 @@ export type PostResolvers<
   comments_count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  followed?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_markdown?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   is_private?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
@@ -678,7 +680,7 @@ export type UserResolvers<
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_certified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>

@@ -25,6 +25,12 @@ class Seeder {
               ...profile,
             },
           },
+          velogConfig: {
+            create: {},
+          },
+          userMeta: {
+            create: {},
+          },
         },
       })
     })
@@ -38,6 +44,7 @@ class Seeder {
           data: {
             ...mockPost,
             url_slug: `${mockPost.url_slug}${i * 11}`,
+            released_at: this.utils.now,
           },
         })
       })
@@ -93,7 +100,7 @@ function checkAppEnv() {
 }
 
 function checkDatabaseUrl() {
-  if (ENV.databaseUrl.indexOf('localhost') < 0) {
+  if (!ENV.databaseUrl.includes('localhost') && !ENV.databaseUrl.includes('stage')) {
     throw new Error('Database host must be localhost')
   }
 }

@@ -141,6 +141,7 @@ export class SocialController implements Controller {
         const state = queryState
           ? (JSON.parse(queryState) as { next: string; integrateState?: string })
           : null
+
         const next = queryNext || state?.next || '/'
 
         if (next.includes('user-integrate') && state) {
@@ -170,7 +171,7 @@ export class SocialController implements Controller {
       maxAge: Time.ONE_HOUR_IN_MS,
     })
     const redirectUrl = `${ENV.clientV2Host}/register?social=1`
-    reply.redirect(encodeURI(redirectUrl))
+    reply.redirect(redirectUrl)
   }
   public async socialRegister(
     request: FastifyRequest<{
@@ -343,14 +344,14 @@ export class SocialController implements Controller {
     provider: SocialProvider,
     { next = '/', isIntegrate = false, integrateState }: Options,
   ) {
-    const generator = this.socialLoginLiknGenerator[provider]
+    const generator = this.socialLoginLinkGenerator[provider]
     return generator({
       next: encodeURI(next),
       isIntegrate,
       integrateState,
     })
   }
-  private get socialLoginLiknGenerator() {
+  private get socialLoginLinkGenerator() {
     return {
       github: ({ next, isIntegrate, integrateState }: Options) => {
         const redirectUriWithOptions = `${this.redirectUri}/github?next=${next}&isIntegrate=${

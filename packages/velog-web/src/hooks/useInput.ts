@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useCallback } from 'react'
 
 export default function useInput(defaultValue: string) {

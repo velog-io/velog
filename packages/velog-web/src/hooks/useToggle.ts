@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useCallback } from 'react'
 
 export default function useToggle(defaultValue: boolean) {

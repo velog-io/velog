@@ -1,7 +1,7 @@
 type User {
   id: ID!
   username: String!
-  email: String!
+  email: String
   created_at: Date!
   updated_at: Date!
   is_certified: Boolean!
@@ -61,8 +61,8 @@ type Mutation {
   # initiateChangeEmail(email: String!): Boolean
   # confirmChangeEmail(code: String!): Boolean
 
-  follow(input: FollowInput!): Void
-  unfollow(input: UnfollowInput!): Void
+  follow(input: FollowInput!): Boolean
+  unfollow(input: UnfollowInput!): Boolean
 }
 
 input FollowInput {

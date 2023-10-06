@@ -18,9 +18,12 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         user: request.user,
       }
     },
+    errorHandler(error, request) {
+      console.log('url', request.url)
+      console.log('graphql error', error)
+    },
     errorFormatter: (result) => {
       const e = result.errors?.[0]?.originalError
-
       if (!isHttpError(e)) {
         return { statusCode: 400, response: result }
       }

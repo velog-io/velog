@@ -3,7 +3,7 @@ import path from 'path'
 import inquirer from 'inquirer'
 import fs from 'fs'
 
-const environments = ['development', 'stage', 'production', 'test']
+const choices = ['development', 'stage', 'production', 'test', 'cancel']
 
 type Environment = 'development' | 'stage' | 'production' | 'test'
 
@@ -11,38 +11,36 @@ async function main() {
   try {
     const filename = await getEnvName()
     createEnv(filename)
-  } catch (error) {
-    throw error
+  } catch (error: any) {
+    console.log(error.message)
+    process.exit(130) // The value is the same as the Prisma migration error code.
   }
 }
 
 main()
 
 async function getEnvName() {
-  const args = process.argv.slice(2)
-  const eFlagIndex = args.indexOf('-e')
+  const isOnlyDev = process.argv.find((arg) => arg === '--only-dev')
 
-  let env: string | null = null
-  if (eFlagIndex !== -1) {
-    env = args[eFlagIndex + 1]
+  const { promptEnv } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'promptEnv',
+      message: 'Please choose a environment: [Use arrows to move, type to filter]',
+      choices: isOnlyDev
+        ? choices.filter((env) => ['development', 'cancel'].includes(env))
+        : choices,
+      default: 'development',
+    },
+  ])
+  const env = promptEnv
+
+  if (env === 'cancel') {
+    throw new Error('Canceled by user.')
   }
 
-  if (!env) {
-    const { promptEnv } = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'promptEnv',
-        message: 'Please choose a environment: [Use arrows to move, type to filter]',
-        choices: environments,
-        default: 'development',
-      },
-    ])
-    env = promptEnv
-  }
-
-  if (!environments.includes(env ?? '')) {
-    console.error(`${env} is not allowed environment`)
-    process.exit(1)
+  if (!choices.includes(env ?? '')) {
+    throw new Error(`${env} is not allowed environment`)
   }
   return env as Environment
 }
