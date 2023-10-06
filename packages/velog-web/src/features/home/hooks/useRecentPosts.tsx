@@ -21,6 +21,10 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
     }
   }, [initialPosts, limit])
 
+  if (!fetchInput) {
+    throw new Error('Notfound fetch input')
+  }
+
   const { data, isLoading, fetchNextPage, isFetching, hasNextPage, isError } =
     useInfiniteQuery<RecentPostsQuery>(
       ['recentPosts', { input: fetchInput }],
