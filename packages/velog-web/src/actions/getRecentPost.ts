@@ -23,6 +23,6 @@ export default async function getRecentPost({ limit = ENV.defaultPostLimit }: Re
     return recentPosts as Posts[]
   } catch (error) {
     console.log('getRecentPosts error', error)
-    throw new Error('getRecentPosts error')
+    return []
   }
 }

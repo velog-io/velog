@@ -32,6 +32,6 @@ export default async function getTrendingPosts({
     return trendingPosts as Posts[]
   } catch (error) {
     console.log('getTrendingPosts error', error)
-    throw new Error('getTrendingPosts error')
+    return []
   }
 }
