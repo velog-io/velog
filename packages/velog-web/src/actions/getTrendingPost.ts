@@ -5,7 +5,7 @@ import { Posts } from '@/types/post'
 
 export default async function getTrendingPosts({
   limit = ENV.defaultPostLimit,
-  timeframe = 'month',
+  timeframe = 'week',
   offset = 0,
 }: TrendingPostsInput) {
   try {

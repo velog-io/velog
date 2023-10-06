@@ -30,7 +30,7 @@ function PostCardGrid({
 }: Props) {
   const params = useParams()
   const pathname = usePathname()
-  const timeframe = (params.timeframe ?? 'month') as Timeframe
+  const timeframe = (params.timeframe ?? 'week') as Timeframe
 
   // TODO: remove
   const onPostCardClick = () => {

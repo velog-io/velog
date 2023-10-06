@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 }
 
 export default async function Home({ params }: Props) {
-  const { timeframe = 'month' } = params
+  const { timeframe = 'week' } = params
   const data = await getTrendingPosts({ timeframe, limit: ENV.defaultPostLimit })
   return <TrendingPosts data={data} />
 }

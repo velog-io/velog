@@ -239,7 +239,7 @@ export class PostService implements Service {
     }
   }
   public async getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]> {
-    const { offset = 0, limit = 20, timeframe = 'month' } = input
+    const { offset = 0, limit = 20, timeframe = 'week' } = input
 
     const timeframes: Timeframe[] = ['day', 'week', 'month', 'year']
 
