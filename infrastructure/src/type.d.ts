@@ -1,7 +1,7 @@
-import pulumi, { Output } from '@pulumi/pulumi'
+import pulumi, { Output, Input } from '@pulumi/pulumi'
 import { SecurityGroup } from '@pulumi/aws/ec2'
-import { TargetGroup } from '@pulumi/aws/alb'
 import { Cluster } from '@pulumi/aws/ecs'
+import * as awsx from '@pulumi/awsx'
 
 export type PackageType = 'web' | 'server' | 'cron'
 
@@ -18,10 +18,10 @@ export type CreateECSFargateParams = {
   subnetIds: pulumi.Input<pulumi.Input<string>[]>
   taskSecurityGroup: SecurityGroup
   defaultSecurityGroupId: Promise<string>
-  targetGroup: TargetGroup
   port: number
   packageType: PackageType
   environment?: { name: string; value: string }[]
   imageUri: pulumi.Output<string> | string
   cluster: Cluster
+  portMappings: Input<Input<awsx.types.input.ecs.TaskDefinitionPortMappingArgs>[]> | undefined
 }

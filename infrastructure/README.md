@@ -26,7 +26,7 @@ pulumi up
 
 ## 4. Setting the Target Infrastructure
 
-If you wish to deploy a specific infrastructure, set your desired target: 'all', 'web', 'server', or 'cron'.
+If you wish to deploy a specific infrastructure, set your desired target: 'all', 'web', 'server', or 'cron' or 'nothing'.
 
 Examples:
 
@@ -46,4 +46,10 @@ pulumi config set target server
 
 ```bash
 pulumi config set target web,cron
+```
+
+- To target infra setup
+
+```bash
+pulumi config set target nothing
 ```

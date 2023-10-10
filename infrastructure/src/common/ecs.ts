@@ -22,7 +22,7 @@ export const createECSfargateService = ({
   subnetIds,
   taskSecurityGroup,
   defaultSecurityGroupId,
-  targetGroup,
+  portMappings,
   packageType,
   cluster,
 }: CreateECSFargateParams) => {
@@ -48,7 +48,7 @@ export const createECSfargateService = ({
           cpu: option.cpu,
           memory: option.memory,
           essential: true,
-          portMappings: [{ targetGroup: targetGroup }],
+          portMappings,
           environment: [
             {
               name: 'PORT',
