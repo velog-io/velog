@@ -1,11 +1,6 @@
 name: Velog Server build workflow
 
 on:
-  push:
-    branches: ['main', 'development', 'hotfix']
-    paths:
-      - 'packages/velog-server/**'
-      - '.github/workflows/velog-server-build.yml'
   pull_request:
     branches: ['main', 'development', 'hotfix']
     paths:
