@@ -9,12 +9,14 @@ type CreateLoadBalancerParameter = {
   subnetIds: Promise<string[]>
   certificateArn: Promise<string>
   elbSecurityGroup: SecurityGroup
+  defaultSecurityGroupId: Promise<string>
   packageType: PackageType
 }
 
 export const createLoadBalancer = ({
   subnetIds,
   elbSecurityGroup,
+  defaultSecurityGroupId,
   vpcId,
   certificateArn,
   packageType,
@@ -24,7 +26,7 @@ export const createLoadBalancer = ({
     loadBalancerName,
     {
       loadBalancerType: 'application',
-      securityGroups: [elbSecurityGroup.id],
+      securityGroups: [defaultSecurityGroupId, elbSecurityGroup.id],
       subnets: subnetIds,
       tags: {
         Name: loadBalancerName,

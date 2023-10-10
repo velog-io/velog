@@ -22,6 +22,7 @@ export const createWebInfra = ({
   const { targetGroup } = createLoadBalancer({
     subnetIds,
     elbSecurityGroup,
+    defaultSecurityGroupId,
     vpcId,
     certificateArn,
     packageType: 'web',
