@@ -12,7 +12,7 @@ export function useThemeEffect() {
     actions.setSystemTheme(systemPrefersDark ? 'dark' : 'light')
   }, [actions])
 
-  const currentTheme = isClientSide && localStorage.getItem('THEME')
+  const currentTheme = isClientSide && localStorage.getItem('theme')
   useEffect(() => {
     if (currentTheme === 'dark') {
       actions.enableDarkMode()

@@ -13,12 +13,12 @@ const initialState: ThemeState = {
 
 const themeState = sangte(initialState, (prev) => ({
   enableLightMode() {
-    localStorage.setItem('THEME', 'light')
+    localStorage.setItem('theme', 'light')
     prev.theme = 'light'
     setMetaThemeColor('#ffffff')
   },
   enableDarkMode() {
-    localStorage.setItem('THEME', 'dark')
+    localStorage.setItem('theme', 'dark')
     prev.theme = 'dark'
     setMetaThemeColor('#1e1e1e')
   },
