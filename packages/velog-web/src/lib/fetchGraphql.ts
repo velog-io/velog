@@ -12,11 +12,11 @@ type Parameter = {
 
 export default async function fetchGraphql<T>({
   url = `${ENV.graphqlHost}/graphql`,
+  method = 'POST',
   body,
   headers,
   next,
   cache,
-  method = 'POST',
   ...init
 }: Parameter): Promise<T> {
   const res = await fetch(url, {

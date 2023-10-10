@@ -44,8 +44,8 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
           <h4 className={cx('h4', 'ellipsis')}>{post.title}</h4>
           <div className={cx('descriptionWrapper')}>
             <p className={cx({ clamp: !!post.thumbnail })}>
-              {post?.short_description!.replace(/&#x3A;/g, ':')}
-              {post?.short_description!.length === 150 && '...'}
+              {post?.short_description?.replace(/&#x3A;/g, ':')}
+              {post?.short_description?.length === 150 && '...'}
             </p>
           </div>
         </VLink>
