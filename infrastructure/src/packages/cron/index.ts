@@ -20,6 +20,7 @@ export const createCronInfra = ({
   const { targetGroup } = createLoadBalancer({
     subnetIds,
     elbSecurityGroup,
+    defaultSecurityGroupId,
     vpcId,
     certificateArn,
     packageType: 'cron',
