@@ -3,11 +3,11 @@
 import PostCardGrid from '@/features/post/components/PostCardGrid'
 import useRecentPosts from '@/features/home/hooks/useRecentPosts'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
-import type { Posts } from '@/types/post'
 import { useRef } from 'react'
+import { Post } from '@/graphql/generated'
 
 type Props = {
-  data: Posts[]
+  data: Post[]
 }
 
 function RecentPosts({ data }: Props) {

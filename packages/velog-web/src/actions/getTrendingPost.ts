@@ -1,11 +1,10 @@
 import { ENV } from '@/env'
-import { TrendingPostsDocument, TrendingPostsInput } from '@/graphql/generated'
-import postData from '@/lib/postData'
-import { Posts } from '@/types/post'
+import { Post, TrendingPostsDocument, TrendingPostsInput } from '@/graphql/generated'
+import fetchGraphql from '@/lib/fetchGraphql'
 
 export default async function getTrendingPosts({
   limit = ENV.defaultPostLimit,
-  timeframe = 'month',
+  timeframe = 'week',
   offset = 0,
 }: TrendingPostsInput) {
   try {
@@ -22,14 +21,14 @@ export default async function getTrendingPosts({
     }
 
     const FIVE_MINUTE = 60 * 5
-    const { trendingPosts } = await postData({
+    const { trendingPosts } = await fetchGraphql<{ trendingPosts: Post[] }>({
       body,
       next: { revalidate: FIVE_MINUTE },
     })
 
     if (!trendingPosts) return []
 
-    return trendingPosts as Posts[]
+    return trendingPosts
   } catch (error) {
     console.log('getTrendingPosts error', error)
     return []

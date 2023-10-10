@@ -37,7 +37,6 @@ export class PostJob extends JobProgress implements Job {
     }
 
     console.timeEnd('score calculation')
-    console.log('Posts score calculation completed')
-    console.log(`Recalculated number of posts: ${posts.length}`)
+    console.log(`Completed, recalculated number of posts: ${posts.length}`)
   }
 }

@@ -1,7 +1,6 @@
 import { ENV } from '@/env'
-import { RecentPostsDocument, RecentPostsInput } from '@/graphql/generated'
-import postData from '@/lib/postData'
-import { Posts } from '@/types/post'
+import { Post, RecentPostsDocument, RecentPostsInput } from '@/graphql/generated'
+import fetchGraphql from '@/lib/fetchGraphql'
 
 export default async function getRecentPost({ limit = ENV.defaultPostLimit }: RecentPostsInput) {
   try {
@@ -15,12 +14,12 @@ export default async function getRecentPost({ limit = ENV.defaultPostLimit }: Re
       },
     }
 
-    const { recentPosts } = await postData({
+    const { recentPosts } = await fetchGraphql<{ recentPosts: Post[] }>({
       body,
       cache: 'no-cache',
     })
 
-    return recentPosts as Posts[]
+    return recentPosts
   } catch (error) {
     console.log('getRecentPosts error', error)
     return []

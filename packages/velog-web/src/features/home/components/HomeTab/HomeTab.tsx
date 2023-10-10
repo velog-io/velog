@@ -22,7 +22,7 @@ type Props = {
 function HomeTab({ isFloatingHeader = false }: Props) {
   const pathname = usePathname()
   const params = useParams()
-  const timeframe = params.timeframe ?? 'month'
+  const timeframe = params.timeframe ?? 'week'
 
   const [moreButton, toggleMoreButton] = useToggle(false)
   const [timeframePicker, toggleTimeframePicker] = useToggle(false)
@@ -40,7 +40,7 @@ function HomeTab({ isFloatingHeader = false }: Props) {
       <div className={cx('left')}>
         <div className={cx('block')}>
           <ActiveLink
-            href="/trending/month"
+            href="/trending/week"
             className={cx({
               active: pathname === '/' || pathname.includes('/trending'),
             })}

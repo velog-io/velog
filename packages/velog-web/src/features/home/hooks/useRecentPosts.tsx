@@ -1,15 +1,15 @@
 import { ENV } from '@/env'
 import { fetcher } from '@/graphql/fetcher'
 import {
+  Post,
   RecentPostsDocument,
   RecentPostsQuery,
   RecentPostsQueryVariables,
 } from '@/graphql/generated'
-import { Posts } from '@/types/post'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useRef } from 'react'
 
-export default function useRecentPosts(initialPosts: Posts[] = []) {
+export default function useRecentPosts(initialPosts: Post[] = []) {
   const hasCheckedRef = useRef<boolean>(false)
 
   // query
@@ -71,7 +71,7 @@ export default function useRecentPosts(initialPosts: Posts[] = []) {
   // TODO: remove End
 
   const posts = useMemo(() => {
-    return [...initialPosts, ...(data?.pages?.flatMap((page) => page.recentPosts) || [])] as Posts[]
+    return [...initialPosts, ...(data?.pages?.flatMap((page) => page.recentPosts) || [])] as Post[]
   }, [data, initialPosts])
 
   return {

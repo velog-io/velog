@@ -7,18 +7,20 @@ type Parameter = {
   init?: Omit<RequestInit, 'body' | 'headers'>
   next?: NextFetchRequestConfig
   cache?: RequestCache
+  method?: string
 }
 
-export default async function postData({
+export default async function fetchGraphql<T>({
   url = `${ENV.graphqlHost}/graphql`,
+  method = 'POST',
   body,
   headers,
   next,
   cache,
   ...init
-}: Parameter) {
+}: Parameter): Promise<T> {
   const res = await fetch(url, {
-    method: 'POST',
+    method,
     body: JSON.stringify(body),
     headers: new Headers({ 'Content-Type': 'application/json', ...headers }),
     credentials: 'include',
@@ -37,5 +39,5 @@ export default async function postData({
 
   const json = await res.json()
 
-  return json.data
+  return json.data as T
 }

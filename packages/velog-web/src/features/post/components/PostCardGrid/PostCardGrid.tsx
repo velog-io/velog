@@ -1,6 +1,5 @@
 'use client'
 
-import { Posts } from '@/types/post'
 import styles from './PostCardGrid.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import PostCard from '@/features/post/components/PostCard/PostCard'
@@ -9,12 +8,12 @@ import { ENV } from '@/env'
 import { Timeframe } from '@/features/home/state/timeframe'
 import { useParams, usePathname } from 'next/navigation'
 import { InfiniteData } from '@tanstack/react-query'
-import { RecentPostsQuery, TrendingPostsQuery } from '@/graphql/generated'
+import { Post, RecentPostsQuery, TrendingPostsQuery } from '@/graphql/generated'
 
 const cx = bindClassNames(styles)
 
 type Props = {
-  posts: Posts[]
+  posts: Post[]
   forHome: boolean
   forPost: boolean
   originData?: InfiniteData<TrendingPostsQuery | RecentPostsQuery>
@@ -30,7 +29,7 @@ function PostCardGrid({
 }: Props) {
   const params = useParams()
   const pathname = usePathname()
-  const timeframe = (params.timeframe ?? 'month') as Timeframe
+  const timeframe = (params.timeframe ?? 'week') as Timeframe
 
   // TODO: remove
   const onPostCardClick = () => {
