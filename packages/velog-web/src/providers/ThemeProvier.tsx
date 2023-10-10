@@ -15,6 +15,7 @@ const themeScript = `
 `
 
 function ThemeProvier({ children }: Props) {
+  // setDefault theme
   useThemeEffect()
   return (
     <>

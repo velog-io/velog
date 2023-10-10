@@ -6,10 +6,6 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'velog',
   description: '개발자들을 위한 블로그 서비스. 어디서 글 쓸지 고민하지 말고 벨로그에서 시작하세요.',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#1e1e1e' },
-  ],
   icons: {
     icon: [
       {

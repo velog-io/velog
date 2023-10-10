@@ -14,13 +14,13 @@ const initialState: ThemeState = {
 const themeState = sangte(initialState, (prev) => ({
   enableLightMode() {
     localStorage.setItem('THEME', 'light')
-    document.cookie = `theme=light; path=/;`
     prev.theme = 'light'
+    setMetaThemeColor('#ffffff')
   },
   enableDarkMode() {
     localStorage.setItem('THEME', 'dark')
-    document.cookie = `theme=dark; path=/;`
     prev.theme = 'dark'
+    setMetaThemeColor('#1e1e1e')
   },
   setSystemTheme(theme: Theme) {
     prev.systemTheme = theme
@@ -38,4 +38,14 @@ export function useTheme() {
   })()
 
   return { value, actions, theme }
+}
+
+function setMetaThemeColor(color: string) {
+  let metaThemeColor = document.querySelector('meta[name="theme-color"]')
+  if (!metaThemeColor) {
+    metaThemeColor = document.createElement('meta')
+    metaThemeColor.setAttribute('name', 'theme-color')
+    document.head.appendChild(metaThemeColor)
+  }
+  metaThemeColor.setAttribute('content', color)
 }
