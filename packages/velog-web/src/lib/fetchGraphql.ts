@@ -16,7 +16,7 @@ export default async function fetchGraphql<T>({
   headers,
   next,
   cache,
-  method,
+  method = 'POST',
   ...init
 }: Parameter): Promise<T> {
   const res = await fetch(url, {
