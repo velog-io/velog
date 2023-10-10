@@ -22,7 +22,7 @@ if (!target) {
 }
 
 const targets = target.split(',').map((v) => v.trim())
-const whiteList = ['all', 'web', 'server', 'cron', 'nothing']
+const whiteList = ['all', 'web', 'server', 'cron', 'infra']
 const validate = targets.every((t) => whiteList.includes(t))
 
 if (!validate) {

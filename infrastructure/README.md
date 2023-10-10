@@ -48,8 +48,8 @@ pulumi config set target server
 pulumi config set target web,cron
 ```
 
-- To target infra setup
+- To target only infrastructure envrionment
 
 ```bash
-pulumi config set target nothing
+pulumi config set target infra
 ```
