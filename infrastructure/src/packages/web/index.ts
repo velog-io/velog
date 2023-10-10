@@ -45,7 +45,7 @@ export const createWebInfra = ({
     imageUri,
     port: ENV.webV3Port,
     subnetIds: subnetIds,
-    portMappings: [{ targetGroup }, { targetGroup: targetGroup2 }],
+    targetGroup,
     defaultSecurityGroupId,
     taskSecurityGroup,
     cluster,

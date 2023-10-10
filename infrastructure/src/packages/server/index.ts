@@ -30,7 +30,7 @@ export const createServerInfra = ({
     imageUri,
     port: ENV.serverPort,
     subnetIds: subnetIds,
-    portMappings: [{ targetGroup }],
+    targetGroup,
     defaultSecurityGroupId,
     taskSecurityGroup,
     cluster,
