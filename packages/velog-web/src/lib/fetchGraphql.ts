@@ -1,15 +1,5 @@
 import { ENV } from '@/env'
 
-type Parameter = {
-  url?: string
-  body?: Record<string, any>
-  headers?: HeadersInit
-  init?: Omit<RequestInit, 'body' | 'headers'>
-  next?: NextFetchRequestConfig
-  cache?: RequestCache
-  method?: string
-}
-
 export default async function fetchGraphql<T>({
   url = `${ENV.graphqlHost}/graphql`,
   method = 'POST',
@@ -19,15 +9,27 @@ export default async function fetchGraphql<T>({
   cache,
   ...init
 }: Parameter): Promise<T> {
-  const res = await fetch(url, {
+  let finalUrl = url
+
+  const options: RequestInit = {
     method,
-    body: JSON.stringify(body),
     headers: new Headers({ 'Content-Type': 'application/json', ...headers }),
     credentials: 'include',
     next,
     cache,
     ...init,
-  })
+  }
+
+  if (method === 'GET' && body) {
+    const queryString = Object.keys(body)
+      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(body[key])}`)
+      .join('&')
+    finalUrl = `${url}?${queryString}`
+  } else {
+    Object.assign(options, { body: JSON.stringify(body) })
+  }
+
+  const res = await fetch(finalUrl, options)
 
   if (!res.ok) {
     const errors = await res.json()
@@ -40,4 +42,14 @@ export default async function fetchGraphql<T>({
   const json = await res.json()
 
   return json.data as T
+}
+
+type Parameter = {
+  url?: string
+  body?: Record<string, any>
+  headers?: HeadersInit
+  init?: Omit<RequestInit, 'body' | 'headers'>
+  next?: NextFetchRequestConfig
+  cache?: RequestCache
+  method?: string
 }
