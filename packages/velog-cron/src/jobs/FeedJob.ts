@@ -13,7 +13,7 @@ export class FeedJob extends JobProgress implements Job {
     super()
   }
   public async runner() {
-    console.log('Create Feed Job start...')
+    console.log('Feed cron job start...')
     console.time('create Feed')
 
     const queueName = this.redis.getQueueName('feed')
@@ -28,7 +28,7 @@ export class FeedJob extends JobProgress implements Job {
       handledQueueCount++
     }
     console.timeEnd('create Feed')
-    console.log(`Create Feed Count: ${handledQueueCount}`)
+    console.log(`Created Feed Count: ${handledQueueCount}`)
   }
 }
 
