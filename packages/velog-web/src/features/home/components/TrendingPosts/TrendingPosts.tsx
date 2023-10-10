@@ -2,12 +2,12 @@
 
 import PostCardGrid from '@/features/post/components/PostCardGrid'
 import { useRef } from 'react'
-import type { Posts } from '@/types/post'
 import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import { Post } from '@/graphql/generated'
 
 type Props = {
-  data: Posts[]
+  data: Post[]
 }
 
 function TrendingPosts({ data }: Props) {

@@ -2,16 +2,16 @@ import { ENV } from '@/env'
 import { Timeframe, useTimeframe } from '@/features/home/state/timeframe'
 import { fetcher } from '@/graphql/fetcher'
 import {
+  Post,
   TrendingPostsDocument,
   TrendingPostsQuery,
   TrendingPostsQueryVariables,
 } from '@/graphql/generated'
-import { Posts } from '@/types/post'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 
-export default function useTrendingPosts(initialPost: Posts[] = []) {
+export default function useTrendingPosts(initialPost: Post[] = []) {
   const params = useParams()
   const timeframe = (params.timeframe ?? 'week') as Timeframe
   const prevTimeframe = useRef<Timeframe>(timeframe)
@@ -97,10 +97,7 @@ export default function useTrendingPosts(initialPost: Posts[] = []) {
   }, [isFetching, actions])
 
   const posts = useMemo(() => {
-    return [
-      ...initialPost,
-      ...(data?.pages?.flatMap((page) => page.trendingPosts) || []),
-    ] as Posts[]
+    return [...initialPost, ...(data?.pages?.flatMap((page) => page.trendingPosts) || [])] as Post[]
   }, [data, initialPost])
 
   return {
