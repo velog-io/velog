@@ -8,8 +8,11 @@ export function useToggleTheme() {
     if (!theme) return
     if (theme === 'dark') {
       actions.enableLightMode()
-    } else {
+      localStorage.setItem('theme', 'light')
+    }
+    if (theme === 'light') {
       actions.enableDarkMode()
+      localStorage.setItem('theme', 'dark')
     }
   }, [theme, actions])
 
