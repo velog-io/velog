@@ -2,6 +2,7 @@ import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { ConfilctError } from '@errors/ConfilctError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
+import { User } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { FollowUser } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
@@ -11,13 +12,19 @@ interface Service {
   isFollowed(follwingUserId: string, followUserId: string): Promise<boolean>
   follow(userId: string, followUserId: string): Promise<void>
   unfollow(userId: string, followUserId: string): Promise<void>
+  getFollowing(userId: string): Promise<User[]>
+  getFollower(userId: string): Promise<User[]>
+  recommendedFollowers(): Promise<User[]>
 }
 
 @injectable()
 @singleton()
 export class UserFollowService implements Service {
   constructor(private readonly db: DbService) {}
-  async findFollowRelationship(
+  public async isFollowed(followingUserId: string, followerUserId: string): Promise<boolean> {
+    return !!(await this.findFollowRelationship(followingUserId, followerUserId))
+  }
+  public async findFollowRelationship(
     followingUserId: string,
     followUserId: string,
   ): Promise<FollowUser | null> {
@@ -28,10 +35,7 @@ export class UserFollowService implements Service {
       },
     })
   }
-  async isFollowed(followingUserId: string, followerUserId: string): Promise<boolean> {
-    return !!(await this.findFollowRelationship(followingUserId, followerUserId))
-  }
-  async follow(followingUserId?: string, followerUserId?: string): Promise<void> {
+  public async follow(followingUserId?: string, followerUserId?: string): Promise<void> {
     if (!followerUserId) {
       throw new BadRequestError('followUesrId is required')
     }
@@ -72,7 +76,7 @@ export class UserFollowService implements Service {
       },
     })
   }
-  async unfollow(followingUserId?: string, followerUserId?: string): Promise<void> {
+  public async unfollow(followingUserId?: string, followerUserId?: string): Promise<void> {
     if (!followerUserId) {
       throw new BadRequestError('followUesrId is required')
     }
@@ -107,4 +111,7 @@ export class UserFollowService implements Service {
       },
     })
   }
+  public async getFollower(userId: string): Promise<User[]> {}
+  public async getFollowing(userId: string): Promise<User[]> {}
+  public async recommendedFollowers(): Promise<User[]> {}
 }
