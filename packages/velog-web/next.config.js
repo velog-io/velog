@@ -1,3 +1,5 @@
+const isProd = process.env.NODE_ENV === 'production'
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -6,6 +8,7 @@ const nextConfig = {
     domains: ['velog.velcdn.com', 'images.velog.io', 'media.vlpt.us'],
     unoptimized: true,
   },
+  assetPrefix: isProd ? 'https://assets.velcdn.com' : undefined,
 }
 
 module.exports = nextConfig
