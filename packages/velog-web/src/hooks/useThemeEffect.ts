@@ -16,9 +16,11 @@ export function useThemeEffect() {
   useEffect(() => {
     if (currentTheme === 'dark') {
       actions.enableDarkMode()
+      localStorage.setItem('theme', 'dark')
     }
     if (currentTheme === 'light') {
       actions.enableLightMode()
+      localStorage.setItem('theme', 'light')
     }
   }, [actions, currentTheme])
 
