@@ -1,31 +1,31 @@
 'use client'
 
-import { isClientSide } from '@/lib/isClientSide'
+import { saveThemeToStorage, setMetaThemeColor } from '@/lib/themeHelpers'
 import { useTheme } from '@/state/theme'
 import { useEffect } from 'react'
 
 export function useThemeEffect() {
-  const { actions } = useTheme()
+  const { actions, theme: currentTheme } = useTheme()
 
   useEffect(() => {
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
     actions.setSystemTheme(systemPrefersDark ? 'dark' : 'light')
   }, [actions])
 
-  const currentTheme = isClientSide && localStorage.getItem('theme')
   useEffect(() => {
-    if (currentTheme === 'dark') {
+    const theme = localStorage.getItem('theme')
+    if (theme === 'dark') {
       actions.enableDarkMode()
-      localStorage.setItem('theme', 'dark')
     }
-    if (currentTheme === 'light') {
+    if (theme === 'light') {
       actions.enableLightMode()
-      localStorage.setItem('theme', 'light')
     }
-  }, [actions, currentTheme])
+  }, [actions])
 
   useEffect(() => {
     if (!currentTheme) return
     document.body.dataset.theme = currentTheme
-  }, [currentTheme])
+    saveThemeToStorage(currentTheme)
+    setMetaThemeColor(currentTheme)
+  }, [actions, currentTheme])
 }
