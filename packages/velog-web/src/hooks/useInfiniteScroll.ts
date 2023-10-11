@@ -8,11 +8,10 @@ export function useInfiniteScroll(
   isError: boolean,
 ) {
   useEffect(() => {
-    if (!ref.current) return
+    if (!ref.current || isError) return
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return
-        if (isError) return
         fetchNext()
       },
       {

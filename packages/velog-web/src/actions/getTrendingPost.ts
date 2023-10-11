@@ -1,6 +1,6 @@
 import { ENV } from '@/env'
 import { Post, TrendingPostsDocument, TrendingPostsInput } from '@/graphql/generated'
-import fetchGraphql from '@/lib/fetchGraphql'
+import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getTrendingPosts({
   limit = ENV.defaultPostLimit,
@@ -8,7 +8,7 @@ export default async function getTrendingPosts({
   offset = 0,
 }: TrendingPostsInput) {
   try {
-    const body = {
+    const body: GraphqlRequestBody = {
       operationName: 'trendingPosts',
       query: TrendingPostsDocument,
       variables: {
@@ -21,7 +21,8 @@ export default async function getTrendingPosts({
     }
 
     const FIVE_MINUTE = 60 * 5
-    const { trendingPosts } = await fetchGraphql<{ trendingPosts: Post[] }>({
+    const { trendingPosts } = await graphqlFetch<{ trendingPosts: Post[] }>({
+      method: 'GET',
       body,
       next: { revalidate: FIVE_MINUTE },
     })
