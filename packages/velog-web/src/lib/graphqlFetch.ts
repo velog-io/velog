@@ -1,6 +1,6 @@
 import { ENV } from '@/env'
 
-export default async function graphqlFetcher<T>({
+export default async function graphqlFetch<T>({
   url = `${ENV.graphqlHost}/graphql`,
   method = 'POST',
   body,
@@ -36,7 +36,7 @@ export default async function graphqlFetcher<T>({
   return json.data as T
 }
 
-function convertToQueryString(body: GraphQLRequestBody): string {
+function convertToQueryString(body: GraphqlRequestBody): string {
   if (!body.query) {
     throw new Error('The query field is required!')
   }
@@ -56,7 +56,7 @@ function convertToQueryString(body: GraphQLRequestBody): string {
 
 type Parameter = {
   url?: string
-  body?: GraphQLRequestBody
+  body?: GraphqlRequestBody
   headers?: HeadersInit
   init?: Omit<RequestInit, 'body' | 'headers'>
   next?: NextFetchRequestConfig
@@ -64,7 +64,7 @@ type Parameter = {
   method?: 'GET' | 'POST'
 }
 
-export type GraphQLRequestBody = {
+export type GraphqlRequestBody = {
   operationName?: string
   query: string
   variables?: Record<any, any>
