@@ -9,14 +9,13 @@ export default async function graphqlFetcher<T>({
   cache,
   ...init
 }: Parameter): Promise<T> {
-  let finalUrl = url
-
+  let targetUrl = url
   if (method === 'GET' && body) {
     const queryString = convertToQueryString(body)
-    finalUrl = `${url}?${queryString}`
+    targetUrl = `${url}?${queryString}`
   }
 
-  const res = await fetch(finalUrl, {
+  const res = await fetch(targetUrl, {
     method,
     body: method.toUpperCase() === 'POST' ? JSON.stringify(body) : undefined,
     headers: new Headers({ 'Content-Type': 'application/json', ...headers }),
