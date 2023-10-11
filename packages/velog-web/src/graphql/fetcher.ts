@@ -1,7 +1,10 @@
 import { ENV } from '@/env'
-import fetchGraphql from '@/lib/fetchGraphql'
+import fetchGraphql from '@/lib/graphqlFetcher'
 
-export function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
+export function fetcher<TData, TVariables extends Record<string, any>>(
+  query: string,
+  variables?: TVariables,
+) {
   return async (): Promise<TData> => {
     const data = await fetchGraphql<TData>({
       url: `${ENV.graphqlHost}/graphql`,

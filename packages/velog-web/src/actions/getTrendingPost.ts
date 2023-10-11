@@ -1,6 +1,6 @@
 import { ENV } from '@/env'
 import { Post, TrendingPostsDocument, TrendingPostsInput } from '@/graphql/generated'
-import fetchGraphql from '@/lib/fetchGraphql'
+import fetchGraphql, { GraphQLRequestBody } from '@/lib/graphqlFetcher'
 
 export default async function getTrendingPosts({
   limit = ENV.defaultPostLimit,
@@ -8,7 +8,7 @@ export default async function getTrendingPosts({
   offset = 0,
 }: TrendingPostsInput) {
   try {
-    const body = {
+    const body: GraphQLRequestBody = {
       operationName: 'trendingPosts',
       query: TrendingPostsDocument,
       variables: {
