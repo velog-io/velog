@@ -9,7 +9,7 @@ import { injectable, singleton } from 'tsyringe'
 
 interface Service {
   findFollowRelationship(userId: string, followUserId: string): Promise<FollowUser | null>
-  isFollowed(follwingUserId: string, followUserId: string): Promise<boolean>
+  isFollowed(follwingUserId: string, followerUserId: string): Promise<boolean>
   follow(userId: string, followUserId: string): Promise<void>
   unfollow(userId: string, followUserId: string): Promise<void>
   getFollowing(userId: string): Promise<User[]>
@@ -26,12 +26,12 @@ export class UserFollowService implements Service {
   }
   public async findFollowRelationship(
     followingUserId: string,
-    followUserId: string,
+    followerUserId: string,
   ): Promise<FollowUser | null> {
     return await this.db.followUser.findFirst({
       where: {
         fk_following_user_id: followingUserId,
-        fk_follower_user_id: followUserId,
+        fk_follower_user_id: followerUserId,
       },
     })
   }
