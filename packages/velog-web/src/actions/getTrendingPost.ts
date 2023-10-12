@@ -23,6 +23,7 @@ export default async function getTrendingPosts({
     const { trendingPosts } = await graphqlFetch<{ trendingPosts: Post[] }>({
       method: 'GET',
       body,
+      cache: 'no-cache',
     })
 
     if (!trendingPosts) return []
