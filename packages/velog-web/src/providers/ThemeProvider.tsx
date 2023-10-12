@@ -10,9 +10,11 @@ const themeScript = `
   (function() {
     // set data-theme attirubute in body tag
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const currentTheme = window.localStorage.getItem('theme')
-    const isTheme = currentTheme === 'light' || currentTheme === 'dark'
+    const storageTheme = window.localStorage.getItem('theme') || ''
+    const isTheme = storageTheme.includes('light') || storageTheme.includes('dark') // leagcy velog save theme data using JSON.stringify 
+    const currentTheme = storageTheme.includes('light') ? 'light' : 'dark'
     const theme = isTheme ? currentTheme : systemPrefersDark ? 'dark' : 'light'
+
     if (!isTheme) {
       window.localStorage.removeItem('theme')
     }
@@ -37,8 +39,7 @@ const themeScript = `
   })()
 `
 
-function ThemeProvier({ children }: Props) {
-  // setDefault theme
+function ThemeProvider({ children }: Props) {
   useThemeEffect()
   return (
     <>
@@ -53,4 +54,4 @@ function ThemeProvier({ children }: Props) {
   )
 }
 
-export default ThemeProvier
+export default ThemeProvider

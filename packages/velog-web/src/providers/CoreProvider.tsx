@@ -3,7 +3,7 @@ import GtagProvider from '@/providers/GtagProvider'
 import InteractiveViewProvider from '@/providers/InteractiveViewProvider'
 import ReactQueryProvider from '@/providers/ReactQueryProvider'
 import SangteContextProvider from '@/providers/SangteContextProvider'
-import ThemeProvier from '@/providers/ThemeProvier'
+import ThemeProvider from '@/providers/ThemeProvider'
 
 type Props = {
   children: React.ReactNode
@@ -18,9 +18,9 @@ function CoreProvider({ children }: Props) {
       <ConditionalBackgroundProvider>
         <ReactQueryProvider>
           <SangteContextProvider>
-            <ThemeProvier>
+            <ThemeProvider>
               <InteractiveViewProvider>{children}</InteractiveViewProvider>
-            </ThemeProvier>
+            </ThemeProvider>
           </SangteContextProvider>
         </ReactQueryProvider>
       </ConditionalBackgroundProvider>
