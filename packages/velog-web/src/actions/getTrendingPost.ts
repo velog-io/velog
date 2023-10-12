@@ -20,11 +20,9 @@ export default async function getTrendingPosts({
       },
     }
 
-    const FIVE_MINUTE = 60 * 5
     const { trendingPosts } = await graphqlFetch<{ trendingPosts: Post[] }>({
       method: 'GET',
       body,
-      next: { revalidate: FIVE_MINUTE },
     })
 
     if (!trendingPosts) return []
