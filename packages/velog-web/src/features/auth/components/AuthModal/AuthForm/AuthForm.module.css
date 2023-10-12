@@ -33,9 +33,8 @@
     @media screen and (max-width: 768px) {
       margin-top: 2rem;
     }
-
     text-align: right;
-
+    color: var(--primary1);
     span {
       margin-right: 0.25rem;
     }
@@ -43,7 +42,6 @@
       display: inline-block;
       font-weight: bold;
       cursor: pointer;
-      color: var(--primary1);
       &:hover {
         text-decoration: underline;
       }
