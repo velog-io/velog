@@ -21,7 +21,7 @@ const themeScript = `
 
     document.body.setAttribute('data-theme', isTheme ? theme : 'light')
 
-    // set meta tag
+    // set data-theme
     const colorMap = {
       light: '#ffffff',
       dark: '#1e1e1e',
@@ -29,13 +29,22 @@ const themeScript = `
     const color = colorMap[theme]
 
     if (!color) return
-    let metaThemeColor = document.querySelector('meta[name="theme-color"]')
-    if (!metaThemeColor) {
-      metaThemeColor = document.createElement('meta')
-      metaThemeColor.setAttribute('name', 'theme-color')
-      document.head.appendChild(metaThemeColor)
+    let themeMetaTag = document.querySelector('meta[name="theme-color"]')
+    if (!themeMetaTag) {
+      themeMetaTag = document.createElement('meta')
+      themeMetaTag.setAttribute('name', 'theme-color')
+      document.head.appendChild(themeMetaTag)
     }
-    metaThemeColor.setAttribute('content', color)
+    themeMetaTag.setAttribute('content', color)
+
+    // set scorll-scheme
+    let scrollSchemeMetaTag = document.querySelector('meta[name="color-scheme"]')
+    if (!scrollSchemeMetaTag) {
+      scrollSchemeMetaTag = document.createElement('meta')
+      scrollSchemeMetaTag.setAttribute('name', 'color-scheme')
+      document.head.appendChild(scrollSchemeMetaTag)
+    }
+    scrollSchemeMetaTag.setAttribute('content', theme)
   })()
 `
 

@@ -5,7 +5,7 @@ export const saveThemeToStorage = (theme: Theme) => {
   document.cookie = `theme=${theme}; path=/;` // FOR Legacy velog
 }
 
-export const setMetaThemeColor = (theme: Theme) => {
+export const setThemeColor = (theme: Theme) => {
   const colorMap = {
     light: '#ffffff',
     dark: '#1e1e1e',
@@ -19,4 +19,14 @@ export const setMetaThemeColor = (theme: Theme) => {
     document.head.appendChild(metaThemeColor)
   }
   metaThemeColor.setAttribute('content', color)
+}
+
+export const setScrollSchemeColor = (theme: Theme) => {
+  let scrollSchemeMetaTag = document.querySelector('meta[name="color-scheme"]')
+  if (!scrollSchemeMetaTag) {
+    scrollSchemeMetaTag = document.createElement('meta')
+    scrollSchemeMetaTag.setAttribute('name', 'color-scheme')
+    document.head.appendChild(scrollSchemeMetaTag)
+  }
+  scrollSchemeMetaTag.setAttribute('content', theme)
 }
