@@ -44,10 +44,16 @@ const defaultSecurityGroup = vpcId.then((id) =>
 
 export const defaultSecurityGroupId = defaultSecurityGroup.then((sg) => sg.id)
 const certificateArn = getCertificate(ENV.certificateDomain)
-const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => void> = {
+let createInfraMapper: Partial<Record<PackageType, (func: CreateInfraParameter) => void>> = {
   web: createWebInfra,
   server: createServerInfra,
   cron: createCronInfra,
+}
+
+if (!ENV.isProduction) {
+  // exclude cron server
+  const { cron, ...rest } = createInfraMapper
+  createInfraMapper = rest
 }
 
 export const imageUrls = getCluster().then((cluster) =>

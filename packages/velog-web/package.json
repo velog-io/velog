@@ -16,7 +16,8 @@
   "scripts": {
     "dev": "next dev -p 3001 --turbo",
     "build": "next build",
-    "start": "next start -H 0.0.0.0 -p 3001",
+    "stage": "NODE_ENV=stage next start -H 0.0.0.0 -p 3001",
+    "start": "NODE_ENV=production next start -H 0.0.0.0 -p 3001",
     "lint": "next lint",
     "create-component": "tsx ./scripts/createComponent.ts",
     "create-svg-component": "tsx ./scripts/createSvgComponent.ts",

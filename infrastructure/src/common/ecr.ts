@@ -76,6 +76,7 @@ export const createECRImage = (type: PackageType, repo: Repository): pulumi.Outp
     {
       repositoryUrl: repo.repositoryUrl,
       path: option.path,
+      target: `Dockerfile.${ENV.appEnv}`,
       extraOptions: ['--platform', 'linux/amd64'],
     },
     {

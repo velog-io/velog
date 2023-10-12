@@ -1,4 +1,6 @@
 const isProd = process.env.NODE_ENV === 'production'
+// const isStage = process.env.NODE_ENV === 'stage'
+// https://assets-stage.velcdn.com/
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

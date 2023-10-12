@@ -3,7 +3,7 @@ services:
   server:
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.production
     env_file:
       - ../../.env
     tty: true

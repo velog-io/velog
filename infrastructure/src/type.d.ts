@@ -3,6 +3,10 @@ import { SecurityGroup } from '@pulumi/aws/ec2'
 import { TargetGroup } from '@pulumi/aws/alb'
 import { Cluster } from '@pulumi/aws/ecs'
 
+type OptionalKeys<T> = {
+  [K in keyof T]?: T[K]
+}
+
 export type PackageType = 'web' | 'server' | 'cron'
 
 export type CreateInfraParameter = {
