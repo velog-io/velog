@@ -6,9 +6,9 @@ type User {
   updated_at: Date!
   is_certified: Boolean!
   profile: UserProfile!
-  velogConfig: VelogConfig
-  userMeta: UserMeta
-  seriesList: [Series]
+  velog_config: VelogConfig
+  series_list: [Series]!
+  user_meta: UserMeta
 }
 
 type UserProfile {
@@ -46,6 +46,9 @@ type Query {
   restoreToken: UserToken
   # unregister_token: String
   # emailExists(email: String!): boolean
+
+  followers: [User!]!
+  followings: [User!]!
 }
 
 type Mutation {

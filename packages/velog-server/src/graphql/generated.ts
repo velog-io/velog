@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import {
   User as UserModel,
@@ -126,6 +127,8 @@ export type PostHistory = {
 
 export type Query = {
   currentUser?: Maybe<User>
+  followers: Array<User>
+  followings: Array<User>
   post?: Maybe<Post>
   readingList?: Maybe<Array<Maybe<Post>>>
   recentPosts?: Maybe<Array<Maybe<Post>>>
@@ -233,7 +236,7 @@ export type User = {
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
-  series_list?: Maybe<Array<Maybe<Series>>>
+  series_list: Array<Maybe<Series>>
   updated_at: Scalars['Date']['output']
   user_meta?: Maybe<UserMeta>
   username: Scalars['String']['output']
@@ -576,6 +579,8 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
+  followers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
+  followings?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
   post?: Resolver<
     Maybe<ResolversTypes['Post']>,
     ParentType,
@@ -684,7 +689,7 @@ export type UserResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_certified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>
-  series_list?: Resolver<Maybe<Array<Maybe<ResolversTypes['Series']>>>, ParentType, ContextType>
+  series_list?: Resolver<Array<Maybe<ResolversTypes['Series']>>, ParentType, ContextType>
   updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   user_meta?: Resolver<Maybe<ResolversTypes['UserMeta']>, ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>

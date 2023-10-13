@@ -1,12 +1,12 @@
-import { UnauthorizedError } from '@errors/UnauthorizedError'
-import { DbService } from '@lib/db/DbService'
-import { UtilsService } from '@lib/utils/UtilsService'
+import { UnauthorizedError } from '@errors/UnauthorizedError.js'
+import { DbService } from '@lib/db/DbService.js'
+import { UtilsService } from '@lib/utils/UtilsService.js'
 import { UserProfile } from '@prisma/client'
 import DataLoader from 'dataloader'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
-  getProfile(userId?: string): Promise<UserProfile>
+  userProfileLoader(userId?: string): DataLoader<string, UserProfile>
 }
 
 @injectable()
@@ -16,14 +16,13 @@ export class UserProfileService implements Service {
     private readonly db: DbService,
     private readonly utils: UtilsService,
   ) {}
-  public async getProfile(userId?: string): Promise<UserProfile> {
+  public userProfileLoader(userId?: string) {
     if (!userId) {
-      throw new UnauthorizedError('Not logged in')
+      throw new UnauthorizedError('Not Logged In')
     }
-    const profileLoader = this.createUserProfileLoader()
-    return profileLoader.load(userId)
+    return this.createUserProfileLoader()
   }
-  private createUserProfileLoader(): DataLoader<string, any> {
+  private createUserProfileLoader(): DataLoader<string, UserProfile> {
     return new DataLoader(async (userIds: readonly string[]) => {
       const profiles = await this.db.userProfile.findMany({
         where: {

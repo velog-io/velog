@@ -6,7 +6,7 @@ import { createAuthEmail } from '@template/createAuthEmail.js'
 import { ENV } from '@env'
 import { SendMailInput } from '@graphql/generated'
 import { FastifyReply } from 'fastify'
-import { CookieService } from '@lib/cookie/CookieService'
+import { CookieService } from '@lib/cookie/CookieService.js'
 
 interface Service {
   logout(reply: FastifyReply): Promise<void>

@@ -16,6 +16,7 @@ interface Service {
   findByUsername(username: string): Promise<User | null>
   getCurrentUser(userId: string | undefined): Promise<CurrentUser | null>
   restoreToken(ctx: GraphQLContext): Promise<UserToken>
+  emailGuard(user: User, loggedUserId: string | undefined): void
 }
 
 @injectable()
@@ -59,7 +60,7 @@ export class UserService implements Service {
   async restoreToken(ctx: Pick<GraphQLContext, 'request' | 'reply'>): Promise<UserToken> {
     const refreshToken: string | undefined = ctx.request.cookies['refresh_token']
     if (!refreshToken) {
-      throw new UnauthorizedError('Not logged in')
+      throw new UnauthorizedError('Not Logged In')
     }
 
     const decoded = await this.jwt.decodeToken<RefreshTokenData>(refreshToken)
@@ -84,5 +85,10 @@ export class UserService implements Service {
     })
 
     return tokens
+  }
+  public emailGuard(user: User, loggedUserId: string | undefined) {
+    if (user.id !== loggedUserId) {
+      throw new UnauthorizedError('No permission to read email address')
+    }
   }
 }
