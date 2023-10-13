@@ -7,7 +7,7 @@ import { CommentService } from '@services/CommentService/index.js'
 import { Post } from '@prisma/client'
 import { PostLikeService } from '@services/PostLikeService/index.js'
 import { DbService } from '@lib/db/DbService.js'
-import { UserFollowService } from '@services/UserFollowService/index.js'
+import { FollowUserService } from '@services/FollowUserService/index.js'
 
 const postResolvers: Resolvers = {
   Post: {
@@ -41,8 +41,8 @@ const postResolvers: Resolvers = {
     },
     followed: async (parent: Post, _, ctx) => {
       if (!ctx.user) return false
-      const userFollowService = container.resolve(UserFollowService)
-      return await userFollowService.isFollowed(ctx.user.id, parent.fk_user_id)
+      const followUserService = container.resolve(FollowUserService)
+      return await followUserService.isFollowed(ctx.user.id, parent.fk_user_id)
     },
   },
   Query: {

@@ -2,9 +2,8 @@ import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { ConfilctError } from '@errors/ConfilctError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
-import { User } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
-import { FollowUser } from '@prisma/client'
+import { FollowUser, User } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
@@ -14,12 +13,11 @@ interface Service {
   unfollow(userId: string, followUserId: string): Promise<void>
   getFollowing(userId: string): Promise<User[]>
   getFollower(userId: string): Promise<User[]>
-  recommendedFollowers(): Promise<User[]>
 }
 
 @injectable()
 @singleton()
-export class UserFollowService implements Service {
+export class FollowUserService implements Service {
   constructor(private readonly db: DbService) {}
   public async isFollowed(followingUserId: string, followerUserId: string): Promise<boolean> {
     return !!(await this.findFollowRelationship(followingUserId, followerUserId))
@@ -111,7 +109,42 @@ export class UserFollowService implements Service {
       },
     })
   }
-  public async getFollower(userId: string): Promise<User[]> {}
-  public async getFollowing(userId: string): Promise<User[]> {}
-  public async recommendedFollowers(): Promise<User[]> {}
+  public async getFollower(userId?: string): Promise<User[]> {
+    if (!userId) {
+      throw new UnauthorizedError('Not logged in')
+    }
+
+    const followers = await this.db.followUser.findMany({
+      where: {
+        fk_following_user_id: userId,
+      },
+      include: {
+        follower: {
+          include: {
+            profile: true,
+          },
+        },
+      },
+    })
+    return followers.map((relationship) => relationship.follower)
+  }
+  public async getFollowing(userId?: string): Promise<User[]> {
+    if (!userId) {
+      throw new UnauthorizedError('Not logged in')
+    }
+
+    const followings = await this.db.followUser.findMany({
+      where: {
+        fk_follower_user_id: userId,
+      },
+      include: {
+        following: {
+          include: {
+            profile: true,
+          },
+        },
+      },
+    })
+    return followings.map((relationship) => relationship.following)
+  }
 }

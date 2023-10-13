@@ -1,5 +1,5 @@
 import { DbService } from '@lib/db/DbService.js'
-import { UserFollowService } from '@services/UserFollowService/index.js'
+import { FollowUserService } from '@services/FollowUserService/index.js'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
@@ -11,10 +11,10 @@ interface Service {
 export class FeedService implements Service {
   constructor(
     private readonly db: DbService,
-    private readonly userFollowService: UserFollowService,
+    private readonly followUserService: FollowUserService,
   ) {}
   public async createFeed(fk_follower_id: string, post_id: string): Promise<void> {
-    const followings = await this.userFollowService.getFollowings(fk_follower_id)
+    const followings = await this.followUserService.getFollowings(fk_follower_id)
     const followingIds = followings.map((user) => user.id)
     for (const userId of followingIds) {
       await this.db.feed.create({

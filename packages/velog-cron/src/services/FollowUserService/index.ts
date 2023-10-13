@@ -8,7 +8,7 @@ interface Service {
 
 @injectable()
 @singleton()
-export class UserFollowService implements Service {
+export class FollowUserService implements Service {
   constructor(private readonly db: DbService) {}
   public async getFollowings(fk_follower_id: string): Promise<User[]> {
     const followUser = await this.db.followUser.findMany({

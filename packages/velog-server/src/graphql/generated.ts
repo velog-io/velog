@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import {
   User as UserModel,
@@ -126,6 +127,8 @@ export type PostHistory = {
 
 export type Query = {
   currentUser?: Maybe<User>
+  followers: Array<User>
+  followings: Array<User>
   post?: Maybe<Post>
   readingList?: Maybe<Array<Maybe<Post>>>
   recentPosts?: Maybe<Array<Maybe<Post>>>
@@ -576,6 +579,8 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
+  followers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
+  followings?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
   post?: Resolver<
     Maybe<ResolversTypes['Post']>,
     ParentType,
