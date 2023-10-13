@@ -37,10 +37,10 @@ function PostCardGrid({
     const prefix = isRecent ? 'recentPosts' : `trendingPosts/${timeframe}`
 
     const serialized = JSON.stringify(originData)
+    const scrollHeight = window.scrollY.toString()
+    if (scrollHeight === '0' || scrollHeight === 'undefined') return
     localStorage.setItem(prefix, serialized)
-    const value = window.scrollY.toString()
-    if (value === '0' || value === 'undefined') return
-    localStorage.setItem(`${prefix}/scrollPosition`, value)
+    localStorage.setItem(`${prefix}/scrollPosition`, scrollHeight)
   }
 
   return (
