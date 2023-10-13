@@ -1,6 +1,6 @@
 import DataLoader from 'dataloader'
 import { Prisma } from '@prisma/client'
-import { injectable } from 'tsyringe'
+import { injectable, singleton } from 'tsyringe'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 
@@ -10,6 +10,7 @@ interface Service {
 }
 
 @injectable()
+@singleton()
 export class PostsTagsService implements Service {
   constructor(
     private readonly db: DbService,

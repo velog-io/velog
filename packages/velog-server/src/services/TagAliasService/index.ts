@@ -2,13 +2,14 @@ import { DbService } from '@lib/db/DbService'
 import { UtilsService } from '@lib/utils/UtilsService'
 import { Tag, TagAlias } from '@prisma/client'
 import { TagService } from '@services/TagService'
-import { container, injectable } from 'tsyringe'
+import { container, injectable, singleton } from 'tsyringe'
 
 interface Service {
   findByTagId(tagId: string): Promise<TagAlias | null>
 }
 
 @injectable()
+@singleton()
 export class TagAliasService implements Service {
   constructor(private readonly db: DbService) {}
   static async getOriginTag(name: string): Promise<Tag | null> {

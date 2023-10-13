@@ -20,6 +20,7 @@ export type Scalars = {
   Float: { input: number; output: number }
   DateTimeISO: { input: any; output: any }
   JSON: { input: JSON; output: JSON }
+  Void: { input: any; output: any }
 }
 
 export type Comment = {
@@ -35,6 +36,10 @@ export type Comment = {
   user: Maybe<User>
 }
 
+export type FollowInput = {
+  followUserId?: InputMaybe<Scalars['ID']['input']>
+}
+
 export type LikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
@@ -45,10 +50,16 @@ export type LinkedPosts = {
 }
 
 export type Mutation = {
+  follow: Maybe<Scalars['Boolean']['output']>
   likePost: Maybe<Post>
-  logout: Scalars['Boolean']['output']
+  logout: Maybe<Scalars['Void']['output']>
   sendMail: Maybe<SendMailResponse>
+  unfollow: Maybe<Scalars['Boolean']['output']>
   unlikePost: Maybe<Post>
+}
+
+export type MutationFollowArgs = {
+  input: FollowInput
 }
 
 export type MutationLikePostArgs = {
@@ -57,6 +68,10 @@ export type MutationLikePostArgs = {
 
 export type MutationSendMailArgs = {
   input: SendMailInput
+}
+
+export type MutationUnfollowArgs = {
+  input: UnfollowInput
 }
 
 export type MutationUnlikePostArgs = {
@@ -69,6 +84,7 @@ export type Post = {
   comments_count: Maybe<Scalars['Int']['output']>
   created_at: Scalars['DateTimeISO']['output']
   fk_user_id: Scalars['String']['output']
+  followed: Maybe<Scalars['Boolean']['output']>
   id: Scalars['ID']['output']
   is_markdown: Maybe<Scalars['Boolean']['output']>
   is_private: Scalars['Boolean']['output']
@@ -103,6 +119,8 @@ export type PostHistory = {
 
 export type Query = {
   currentUser: Maybe<User>
+  followers: Array<User>
+  followings: Array<User>
   post: Maybe<Post>
   readingList: Maybe<Array<Maybe<Post>>>
   recentPosts: Maybe<Array<Maybe<Post>>>
@@ -196,17 +214,21 @@ export type TrendingPostsInput = {
   timeframe?: InputMaybe<Scalars['String']['input']>
 }
 
+export type UnfollowInput = {
+  followUserId?: InputMaybe<Scalars['ID']['input']>
+}
+
 export type UnlikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
 
 export type User = {
   created_at: Scalars['DateTimeISO']['output']
-  email: Scalars['String']['output']
+  email: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
-  series_list: Maybe<Array<Maybe<Series>>>
+  series_list: Array<Maybe<Series>>
   updated_at: Scalars['DateTimeISO']['output']
   user_meta: Maybe<UserMeta>
   username: Scalars['String']['output']
@@ -369,14 +391,14 @@ export type CurrentUserQuery = {
   currentUser: {
     id: string
     username: string
-    email: string
+    email: string | null
     profile: { id: string; thumbnail: string | null; display_name: string }
   } | null
 }
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never }>
 
-export type LogoutMutation = { logout: boolean }
+export type LogoutMutation = { logout: any | null }
 
 export const SendMailDocument = `
     mutation sendMail($input: SendMailInput!) {
