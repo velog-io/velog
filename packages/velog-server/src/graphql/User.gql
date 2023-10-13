@@ -6,9 +6,9 @@ type User {
   updated_at: Date!
   is_certified: Boolean!
   profile: UserProfile!
-  velog_config: VelogConfig
-  series_list: [Series]
-  user_meta: UserMeta
+  velogConfig: VelogConfig
+  userMeta: UserMeta
+  seriesList: [Series]
 }
 
 type UserProfile {

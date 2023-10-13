@@ -2,8 +2,7 @@ import { CurrentUser } from '@interfaces/user'
 import { CookieService } from '@lib/cookie/CookieService.js'
 import { DbService } from '@lib/db/DbService.js'
 import { User } from '@prisma/client'
-import { FastifyReply } from 'fastify/types/reply'
-import { injectable } from 'tsyringe'
+import { injectable, singleton } from 'tsyringe'
 import { GraphQLContext } from '@interfaces/graphql'
 import { JwtService } from '@lib/jwt/JwtService.js'
 import { RefreshTokenData } from '@lib/jwt/Jwt.interface.js'
@@ -17,10 +16,10 @@ interface Service {
   findByUsername(username: string): Promise<User | null>
   getCurrentUser(userId: string | undefined): Promise<CurrentUser | null>
   restoreToken(ctx: GraphQLContext): Promise<UserToken>
-  logout(reply: FastifyReply, userId: string | undefined): Promise<void>
 }
 
 @injectable()
+@singleton()
 export class UserService implements Service {
   constructor(
     private readonly db: DbService,
@@ -85,9 +84,5 @@ export class UserService implements Service {
     })
 
     return tokens
-  }
-  async logout(reply: FastifyReply): Promise<void> {
-    this.cookie.clearCookie(reply, 'access_token')
-    this.cookie.clearCookie(reply, 'refresh_token')
   }
 }

@@ -5,8 +5,11 @@ import { nanoid } from 'nanoid'
 import { createAuthEmail } from '@template/createAuthEmail.js'
 import { ENV } from '@env'
 import { SendMailInput } from '@graphql/generated'
+import { FastifyReply } from 'fastify'
+import { CookieService } from '@lib/cookie/CookieService'
 
 interface Service {
+  logout(reply: FastifyReply): Promise<void>
   sendMail(input: SendMailInput): Promise<{ registered: boolean }>
 }
 
@@ -16,7 +19,12 @@ export class AuthService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly mail: MailService,
+    private readonly cookie: CookieService,
   ) {}
+  async logout(reply: FastifyReply): Promise<void> {
+    this.cookie.clearCookie(reply, 'access_token')
+    this.cookie.clearCookie(reply, 'refresh_token')
+  }
   async sendMail(input: SendMailInput): Promise<{ registered: boolean }> {
     const { email } = input
     const user = await this.db.user.findUnique({

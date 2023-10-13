@@ -1,6 +1,6 @@
 import { DbService } from '@lib/db/DbService'
 import { Tag } from '@prisma/client'
-import { injectable } from 'tsyringe'
+import { injectable, singleton } from 'tsyringe'
 
 interface Service {
   findByNameFiltered(name: string): Promise<Tag | null>
@@ -8,6 +8,7 @@ interface Service {
 }
 
 @injectable()
+@singleton()
 export class TagService implements Service {
   constructor(private readonly db: DbService) {}
   public async findByNameFiltered(name: string): Promise<Tag | null> {
