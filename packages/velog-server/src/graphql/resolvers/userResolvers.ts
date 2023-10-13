@@ -1,11 +1,11 @@
 import { Resolvers } from '@graphql/generated'
 import { AuthService } from '@services/AuthService/index.js'
-import { SeriesService } from '@services/SeriesService'
+import { SeriesService } from '@services/SeriesService/index.js'
 import { UserFollowService } from '@services/UserFollowService/index.js'
-import { UserMetaService } from '@services/UserMetaService'
+import { UserMetaService } from '@services/UserMetaService/index.js'
 import { UserProfileService } from '@services/UserProfileService/index.js'
 import { UserService } from '@services/UserService/index.js'
-import { VelogConfigService } from '@services/VelogConfigService'
+import { VelogConfigService } from '@services/VelogConfigService/index.js'
 import { container } from 'tsyringe'
 
 const userResolvers: Resolvers = {

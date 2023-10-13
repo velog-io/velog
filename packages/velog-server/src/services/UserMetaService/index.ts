@@ -1,5 +1,5 @@
-import { UnauthorizedError } from '@errors/UnauthorizedError'
-import { DbService } from '@lib/db/DbService'
+import { UnauthorizedError } from '@errors/UnauthorizedError.js'
+import { DbService } from '@lib/db/DbService.js'
 import { User, UserMeta } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 
