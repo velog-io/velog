@@ -1,7 +1,6 @@
 import { injectable, singleton } from 'tsyringe'
 import Redis from 'ioredis'
 import { ENV } from '@env'
-import { RedisQueueName } from '@lib/redis/RedisInterface'
 
 @injectable()
 @singleton()
@@ -18,10 +17,19 @@ export class RedisService extends Redis {
     })
   }
 
-  getQueueName(name: RedisQueueName) {
-    const mapper = {
+  get generateKey(): GenerateRedisKey {
+    return {
+      recommendedFollowerKey: () => `velog:follower:recommend`,
+    }
+  }
+
+  get queueName() {
+    return {
       feed: 'feedQueue',
     }
-    return mapper[name]
   }
+}
+
+type GenerateRedisKey = {
+  recommendedFollowerKey: () => string
 }

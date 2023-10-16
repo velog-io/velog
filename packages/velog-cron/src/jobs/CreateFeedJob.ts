@@ -16,15 +16,15 @@ export class CreateFeedJob extends JobProgress implements Job {
     console.log('Feed cron job start...')
     console.time('create Feed')
 
-    const queueName = this.redis.getQueueName('feed')
+    const feedQueueName = this.redis.queueName.feed
     let handledQueueCount = 0
     while (true) {
-      const item = await this.redis.lindex(queueName, 0)
+      const item = await this.redis.lindex(feedQueueName, 0)
       if (!item) break
       const data: FeedQueueData = JSON.parse(item)
       const { fk_follower_id, fk_post_id } = data
       await this.feedService.createFeed(fk_follower_id, fk_post_id)
-      await this.redis.lpop(queueName)
+      await this.redis.lpop(feedQueueName)
       handledQueueCount++
     }
     console.timeEnd('create Feed')

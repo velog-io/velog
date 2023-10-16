@@ -1,5 +1,5 @@
 import { DbService } from '@lib/db/DbService.js'
-import { UtilsService } from '@lib/utils/UtilsService'
+import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Post, Prisma, User } from '@prisma/client'
 import { subMonths } from 'date-fns'
 import { injectable, singleton } from 'tsyringe'
@@ -33,7 +33,7 @@ export class FollowUserService implements Service {
       where: {
         created_at: { gte: threeMonthAgo },
       },
-      include: {
+      select: {
         post: {
           select: {
             id: true,
@@ -46,8 +46,6 @@ export class FollowUserService implements Service {
           select: {
             id: true,
             username: true,
-          },
-          include: {
             profile: {
               select: {
                 display_name: true,
@@ -60,12 +58,19 @@ export class FollowUserService implements Service {
     })
 
     const map = likes.reduceRight<RecommendFollowerMap>(this.sumLikes, new Map())
-    return Array.from(map).sort(([, a], [, b]) => b.totalLikes - a.totalLikes)
+    return Array.from(map)
+      .sort(([, a], [, b]) => b.totalLikes - a.totalLikes)
+      .map(([, a]) => ({
+        user: a.user,
+        posts: a.posts,
+      }))
   }
 
   private sumLikes(map: RecommendFollowerMap, likes: Likes) {
     const post = likes!.post!
     const user = likes!.user!
+
+    if (!user) return map
 
     const postId = post!.id
     const exists = map.get(postId)
@@ -86,9 +91,12 @@ export class FollowUserService implements Service {
   }
 }
 
-type RecommendFollowerMap = Map<string, { user: User; posts: Partial<Post>[]; totalLikes: number }>
+type RecommendFollowerMap = Map<
+  string,
+  { user: Partial<User>; posts: Partial<Post>[]; totalLikes: number }
+>
 type Likes = Prisma.PostLikeGetPayload<{
-  include: {
+  select: {
     post: {
       select: {
         id: true
@@ -101,8 +109,6 @@ type Likes = Prisma.PostLikeGetPayload<{
       select: {
         id: true
         username: true
-      }
-      include: {
         profile: {
           select: {
             display_name: true

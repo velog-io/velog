@@ -1,10 +1,9 @@
 import Redis from 'ioredis'
 import { injectable, singleton } from 'tsyringe'
-import { GenerateCacheKey } from './RedisInterface.js'
 import { ENV } from '@env'
 
 interface Service {
-  get generateKey(): GenerateCacheKey
+  get generateKey(): GenerateRedisKey
 }
 
 @injectable()
@@ -13,7 +12,7 @@ export class RedisService extends Redis implements Service {
   constructor() {
     super({ port: 6379, host: ENV.redisHost })
   }
-  get generateKey(): GenerateCacheKey {
+  get generateKey(): GenerateRedisKey {
     return {
       recommendedPostKey: (postId: string) => `${postId}:recommend`,
       postCacheKey: (username: string, postUrlSlug: string) => `ssr:/@${username}/${postUrlSlug}`,
@@ -23,4 +22,12 @@ export class RedisService extends Redis implements Service {
       changeEmailKey: (code: string) => `changeEmailCode:${code}`,
     }
   }
+}
+
+type GenerateRedisKey = {
+  recommendedPostKey: (postId: string) => string
+  postCacheKey: (username: string, postUrlSlug: string) => string
+  userCacheKey: (username: string) => string
+  postSeriesKey: (username: string, seriesUrlSlug: string) => string
+  changeEmailKey: (code: string) => string
 }
