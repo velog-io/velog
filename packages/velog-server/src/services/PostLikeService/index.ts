@@ -2,11 +2,11 @@ import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { DbService } from '@lib/db/DbService.js'
-import { SearchService } from '@lib/search/SearchService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Post } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { PostService } from '@services/PostService/index.js'
+import { SearchService } from '@services/SearchService/index.js'
 
 interface Service {
   likePost(postId?: string, userId?: string): Promise<Post>
@@ -19,7 +19,7 @@ export class PostLikeService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly utils: UtilsService,
-    private readonly search: SearchService,
+    private readonly searchService: SearchService,
     private readonly postService: PostService,
   ) {}
   async likePost(postId?: string, userId?: string): Promise<Post> {
@@ -81,7 +81,7 @@ export class PostLikeService implements Service {
 
     setTimeout(() => {
       try {
-        this.search.searchSync.update(post.id)
+        this.searchService.searchSync.update(post.id)
       } catch (error) {
         console.log('likePost searchSync update error', error)
       }
@@ -143,7 +143,7 @@ export class PostLikeService implements Service {
     await this.postService.updatePostScore(postId)
     setTimeout(() => {
       try {
-        this.search.searchSync.update(post.id)
+        this.searchService.searchSync.update(post.id)
       } catch (error) {
         console.log('unlikePost searchSync update error', error)
       }

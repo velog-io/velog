@@ -1,4 +1,4 @@
-import getRecentPost from '@/actions/getRecentPost'
+import getRecentPosts from '@/actions/getRecentPosts'
 import { ENV } from '@/env'
 import RecentPosts from '@/features/home/components/RecentPosts'
 import { Metadata } from 'next'
@@ -9,6 +9,6 @@ export const metadata: Metadata = {
 }
 
 export default async function Recent() {
-  const data = await getRecentPost({ limit: ENV.defaultPostLimit })
+  const data = await getRecentPosts({ limit: ENV.defaultPostLimit })
   return <RecentPosts data={data} />
 }

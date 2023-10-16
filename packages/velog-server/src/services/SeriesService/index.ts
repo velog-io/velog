@@ -22,4 +22,18 @@ export class SeriesService implements Service {
     })
     return seriesList
   }
+
+  async getPostSeries(postId: string): Promise<Series | null> {
+    const seriesPost = await this.db.seriesPost.findFirst({
+      where: {
+        fk_post_id: postId,
+      },
+      include: {
+        series: true,
+      },
+    })
+
+    if (!seriesPost) return null
+    return seriesPost?.series
+  }
 }

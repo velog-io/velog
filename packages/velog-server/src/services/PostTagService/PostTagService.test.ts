@@ -1,7 +1,7 @@
-import { PostsTagsService } from './index.js'
+import { PostTagService } from './index.js'
 
 describe('postsTagsService', () => {
   it('postsTagsService is defined', () => {
-    expect(PostsTagsService).toBeDefined()
+    expect(PostTagService).toBeDefined()
   })
 })

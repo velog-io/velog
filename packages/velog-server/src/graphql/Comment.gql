@@ -6,7 +6,7 @@ type Comment {
   has_replies: Boolean
   deleted: Boolean
   user: User
-  replies: [Comment]
+  replies: [Comment!]!
   created_at: Date
   replies_count: Int
 }

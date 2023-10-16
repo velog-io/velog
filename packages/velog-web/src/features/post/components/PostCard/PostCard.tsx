@@ -4,11 +4,11 @@ import styles from './PostCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import RatioImage from '@/components/RatioImage/RatioImage'
 import Image from 'next/image'
-import VLink from '@/components/VLink/VLink'
 import { LikeIcon } from '@/assets/icons/components'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
 import { PostCardSkeleton } from '@/features/post/components/PostCard/PostCardSkeleton'
 import { Post } from '@/graphql/generated'
+import VLink from '@/components/VLink'
 
 const cx = bindClassNames(styles)
 

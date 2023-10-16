@@ -1,15 +1,13 @@
 import { pick } from 'rambda'
 import { DbService } from '@lib/db/DbService.js'
-import { PostsTagsService } from '@services/PostsTagsService/index.js'
+import { PostTagService } from '@services/PostTagService/index.js'
 import { injectable, singleton } from 'tsyringe'
-import { Client } from '@elastic/elasticsearch'
 import { ENV } from '@env'
-import { PostService } from '@services/PostService/index.js'
-// import { WriteResponseBase } from '@elastic/elasticsearch/lib/api/types'
 import { Prisma, Tag } from '@prisma/client'
+import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
+import { ApiResponse } from '@elastic/elasticsearch'
 
 interface Service {
-  get esClient(): Client
   get searchSync(): SearchSyncType
 }
 
@@ -18,12 +16,9 @@ interface Service {
 export class SearchService implements Service {
   constructor(
     private readonly db: DbService,
-    private readonly postsTagsService: PostsTagsService,
-    private readonly postService: PostService,
+    private readonly elasticSearch: ElasticSearchService,
+    private readonly postTagService: PostTagService,
   ) {}
-  public get esClient(): Client {
-    return new Client({ node: ENV.esHost })
-  }
   public get searchSync(): SearchSyncType {
     return {
       update: async (postId: string) => await this.searchSyncUpdate(postId),
@@ -51,14 +46,14 @@ export class SearchService implements Service {
 
     if (!post) return
 
-    const tagsLoader = this.postsTagsService.createTagsLoader()
+    const tagsLoader = this.postTagService.createTagsLoader()
     const tags = await tagsLoader.load(post.id)
 
     const postWithTags = Object.assign(post, { tags })
     const serialized = this.serializePost(postWithTags)
 
     if (ENV.appEnv === 'development') return
-    return this.esClient.index({
+    return this.elasticSearch.client.index({
       id: postId,
       index: 'posts',
       body: serialized,
@@ -66,7 +61,7 @@ export class SearchService implements Service {
   }
   private async searchSyncRemove(postId: string) {
     if (ENV.appEnv === 'development') return
-    return this.esClient.delete({
+    return this.elasticSearch.client.delete({
       id: postId,
       index: 'posts',
     })
@@ -110,8 +105,8 @@ export class SearchService implements Service {
 }
 
 type SearchSyncType = {
-  update: (postId: string) => Promise<any | undefined>
-  remove: (postId: string) => Promise<any | undefined>
+  update: (postId: string) => Promise<ApiResponse<any, any> | undefined>
+  remove: (postId: string) => Promise<ApiResponse<any, any> | undefined>
 }
 
 export type SerializedPostParam = Prisma.PostGetPayload<{

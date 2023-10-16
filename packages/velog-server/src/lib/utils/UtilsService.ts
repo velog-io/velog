@@ -112,4 +112,15 @@ export class UtilsService implements Service {
     if (!url.includes('https://images.velog.io')) return url
     return url.replace('://images', '://img').concat(`?w=${width}`)
   }
+  public shuffleArray<T>(array: T[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[array[i], array[j]] = [array[j], array[i]]
+    }
+    return array
+  }
+  public pickRandomItems<T>(array: T[], count: number) {
+    const shuffled = this.shuffleArray(array)
+    return shuffled.slice(0, count)
+  }
 }

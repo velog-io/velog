@@ -27,7 +27,6 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
       if (!isHttpError(e)) {
         return { statusCode: 400, response: result }
       }
-
       const errors = result.errors?.map((error) =>
         Object.assign(error, {
           extensions: {

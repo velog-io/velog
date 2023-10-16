@@ -4,10 +4,12 @@ import { PostService } from '@services/PostService/index.js'
 import { UserService } from '@services/UserService/index.js'
 import { PostIncludeComment, PostIncludeUser } from '@services/PostService/PostServiceInterface.js'
 import { CommentService } from '@services/CommentService/index.js'
-import { Post } from '@prisma/client'
+import { Post, Tag } from '@prisma/client'
 import { PostLikeService } from '@services/PostLikeService/index.js'
 import { DbService } from '@lib/db/DbService.js'
 import { FollowUserService } from '@services/FollowUserService/index.js'
+import { SeriesService } from '@services/SeriesService/index.js'
+import { PostTagService } from '@services/PostTagService/index.js'
 
 const postResolvers: Resolvers = {
   Post: {
@@ -22,11 +24,25 @@ const postResolvers: Resolvers = {
       const postService = container.resolve(PostService)
       return postService.shortDescription(parent)
     },
+    comments: (parent: PostIncludeComment) => {
+      if (parent.comments) return parent.comments
+      const commentService = container.resolve(CommentService)
+      return commentService.createCommentsLoader().load(parent.id)
+    },
     comments_count: async (parent: PostIncludeComment) => {
-      if (parent?.comment) return parent.comment.length
+      if (parent?.comments) return parent.comments.length
       const commentService = container.resolve(CommentService)
       const count = await commentService.count(parent.id)
       return count
+    },
+    tags: async (parent: Post) => {
+      const postTagService = container.resolve(PostTagService)
+      const tags = await postTagService.createTagsLoader().load(parent.id)
+      return tags.map((tag: Tag) => tag.name)
+    },
+    series: async (parent: Post) => {
+      const seriesService = container.resolve(SeriesService)
+      return seriesService.getPostSeries(parent.id)
     },
     liked: async (parent: Post, _, ctx) => {
       if (!ctx.user) return false
@@ -38,6 +54,10 @@ const postResolvers: Resolvers = {
         },
       })
       return !!liked
+    },
+    recommended_posts: async (parent: Post) => {
+      const postService = container.resolve(PostService)
+      return await postService.recommendedPosts(parent)
     },
     followed: async (parent: Post, _, ctx) => {
       if (!ctx.user) return false

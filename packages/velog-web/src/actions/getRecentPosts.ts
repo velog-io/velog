@@ -2,7 +2,7 @@ import { ENV } from '@/env'
 import { Post, RecentPostsDocument, RecentPostsInput } from '@/graphql/generated'
 import graphqlFetch from '@/lib/graphqlFetch'
 
-export default async function getRecentPost({ limit = ENV.defaultPostLimit }: RecentPostsInput) {
+export default async function getRecentPosts({ limit = ENV.defaultPostLimit }: RecentPostsInput) {
   try {
     const body = {
       operationName: 'recentPosts',
