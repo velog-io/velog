@@ -32,7 +32,7 @@ const config: CodegenConfig = {
         scalars: {
           Date: 'Date',
           JSON: 'JSON',
-          ID: 'string | undefined',
+          ID: 'string',
           Void: 'void',
         },
       },

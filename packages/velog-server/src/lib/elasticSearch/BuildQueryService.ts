@@ -1,6 +1,5 @@
 import { injectable, singleton } from 'tsyringe'
 import { PostIncludeTags } from '@services/PostService/PostServiceInterface'
-import { QueryDslQueryContainer } from '@elastic/elasticsearch/lib/api/types'
 
 @injectable()
 @singleton()
@@ -14,7 +13,7 @@ export class BuildQueryService {
         tags: tag.name as string,
       },
     }))
-    const query: QueryDslQueryContainer = {
+    const query = {
       bool: {
         must_not: {
           term: {
@@ -64,7 +63,7 @@ export class BuildQueryService {
     return query
   }
   buildFallbackRecommendedPosts() {
-    const query: QueryDslQueryContainer = {
+    const query = {
       bool: {
         should: [
           {

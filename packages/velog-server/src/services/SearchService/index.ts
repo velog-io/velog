@@ -1,11 +1,11 @@
 import { pick } from 'rambda'
 import { DbService } from '@lib/db/DbService.js'
-import { PostTagService } from '@services/PostTagService/index.js'
 import { injectable, singleton } from 'tsyringe'
 import { ENV } from '@env'
 import { Prisma, Tag } from '@prisma/client'
 import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 import { ApiResponse } from '@elastic/elasticsearch'
+import { TagService } from '@services/TagService'
 
 interface Service {
   get searchSync(): SearchSyncType
@@ -17,7 +17,7 @@ export class SearchService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly elasticSearch: ElasticSearchService,
-    private readonly postTagService: PostTagService,
+    private readonly tagService: TagService,
   ) {}
   public get searchSync(): SearchSyncType {
     return {
@@ -46,8 +46,8 @@ export class SearchService implements Service {
 
     if (!post) return
 
-    const tagsLoader = this.postTagService.createTagsLoader()
-    const tags = await tagsLoader.load(post.id)
+    const tagLoader = this.tagService.postTagLoader()
+    const tags = await tagLoader.load(post.id)
 
     const postWithTags = Object.assign(post, { tags })
     const serialized = this.serializePost(postWithTags)

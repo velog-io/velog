@@ -1,4 +1,3 @@
-import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { VelogConfig } from '@prisma/client'
@@ -6,7 +5,7 @@ import DataLoader from 'dataloader'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
-  velogConfigLoader(userId?: string): DataLoader<string, VelogConfig>
+  velogConfigLoader(): DataLoader<string, VelogConfig>
 }
 
 @injectable()
@@ -16,10 +15,7 @@ export class VelogConfigService implements Service {
     private readonly db: DbService,
     private readonly utils: UtilsService,
   ) {}
-  public velogConfigLoader(userId?: string) {
-    if (!userId) {
-      throw new UnauthorizedError('Not Logged In')
-    }
+  public velogConfigLoader() {
     return this.createVelogConfigLoader()
   }
   private createVelogConfigLoader(): DataLoader<string, any> {

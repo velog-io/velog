@@ -9,7 +9,7 @@ import { PostLikeService } from '@services/PostLikeService/index.js'
 import { DbService } from '@lib/db/DbService.js'
 import { FollowUserService } from '@services/FollowUserService/index.js'
 import { SeriesService } from '@services/SeriesService/index.js'
-import { PostTagService } from '@services/PostTagService/index.js'
+import { TagService } from '@services/TagService'
 
 const postResolvers: Resolvers = {
   Post: {
@@ -20,7 +20,7 @@ const postResolvers: Resolvers = {
       }
       return parent?.user
     },
-    short_description: (parent: Post) => {
+    short_description: (parent) => {
       const postService = container.resolve(PostService)
       return postService.shortDescription(parent)
     },
@@ -36,13 +36,14 @@ const postResolvers: Resolvers = {
       return count
     },
     tags: async (parent: Post) => {
-      const postTagService = container.resolve(PostTagService)
-      const tags = await postTagService.createTagsLoader().load(parent.id)
-      return tags.map((tag: Tag) => tag.name)
+      const tagService = container.resolve(TagService)
+      const tagLoader = tagService.tagLoader()
+      const tags = await tagLoader.load(parent.id)
+      return tags.map((tag: Tag) => tag.name!)
     },
-    series: async (parent: Post) => {
+    series: async (parent) => {
       const seriesService = container.resolve(SeriesService)
-      return seriesService.getPostSeries(parent.id)
+      return await seriesService.getSeriesByPostId(parent.id)
     },
     liked: async (parent: Post, _, ctx) => {
       if (!ctx.user) return false

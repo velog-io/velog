@@ -22,7 +22,7 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string | undefined; output: string | undefined }
+  ID: { input: string; output: string }
   String: { input: string; output: string }
   Boolean: { input: boolean; output: boolean }
   Int: { input: number; output: number }
@@ -39,7 +39,7 @@ export type Comment = {
   id: Scalars['ID']['output']
   level?: Maybe<Scalars['Int']['output']>
   likes?: Maybe<Scalars['Int']['output']>
-  replies?: Maybe<Array<Maybe<Comment>>>
+  replies: Array<Comment>
   replies_count?: Maybe<Scalars['Int']['output']>
   text?: Maybe<Scalars['String']['output']>
   user?: Maybe<User>
@@ -89,7 +89,7 @@ export type MutationUnlikePostArgs = {
 
 export type Post = {
   body?: Maybe<Scalars['String']['output']>
-  comments?: Maybe<Array<Maybe<Comment>>>
+  comments: Array<Comment>
   comments_count?: Maybe<Scalars['Int']['output']>
   created_at: Scalars['Date']['output']
   fk_user_id: Scalars['String']['output']
@@ -104,11 +104,11 @@ export type Post = {
   linked_posts?: Maybe<LinkedPosts>
   meta?: Maybe<Scalars['JSON']['output']>
   original_post_id?: Maybe<Scalars['ID']['output']>
-  recommended_posts?: Maybe<Array<Maybe<Post>>>
+  recommended_posts: Array<Post>
   released_at?: Maybe<Scalars['Date']['output']>
   series?: Maybe<Series>
   short_description?: Maybe<Scalars['String']['output']>
-  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>
+  tags: Array<Scalars['String']['output']>
   thumbnail?: Maybe<Scalars['String']['output']>
   title?: Maybe<Scalars['String']['output']>
   updated_at: Scalars['Date']['output']
@@ -131,10 +131,10 @@ export type Query = {
   followers: Array<User>
   followings: Array<User>
   post?: Maybe<Post>
-  readingList?: Maybe<Array<Maybe<Post>>>
-  recentPosts?: Maybe<Array<Maybe<Post>>>
+  readingList: Array<Post>
+  recentPosts: Array<Post>
   restoreToken?: Maybe<UserToken>
-  trendingPosts?: Maybe<Array<Maybe<Post>>>
+  trendingPosts: Array<Post>
 }
 
 export type QueryPostArgs = {
@@ -196,6 +196,7 @@ export type SendMailResponse = {
 export type Series = {
   created_at?: Maybe<Scalars['Date']['output']>
   description?: Maybe<Scalars['String']['output']>
+  fk_user_id?: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
   name?: Maybe<Scalars['String']['output']>
   posts_count?: Maybe<Scalars['Int']['output']>
@@ -237,7 +238,7 @@ export type User = {
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
-  series_list: Array<Maybe<Series>>
+  series_list?: Maybe<Array<Maybe<Series>>>
   updated_at: Scalars['Date']['output']
   user_meta?: Maybe<UserMeta>
   username: Scalars['String']['output']
@@ -459,7 +460,7 @@ export type CommentResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   level?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   likes?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
-  replies?: Resolver<Maybe<Array<Maybe<ResolversTypes['Comment']>>>, ParentType, ContextType>
+  replies?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>
   replies_count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
@@ -525,7 +526,7 @@ export type PostResolvers<
   ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post'],
 > = {
   body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  comments?: Resolver<Maybe<Array<Maybe<ResolversTypes['Comment']>>>, ParentType, ContextType>
+  comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>
   comments_count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
@@ -540,11 +541,11 @@ export type PostResolvers<
   linked_posts?: Resolver<Maybe<ResolversTypes['LinkedPosts']>, ParentType, ContextType>
   meta?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>
   original_post_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
-  recommended_posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>
+  recommended_posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
   released_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
   series?: Resolver<Maybe<ResolversTypes['Series']>, ParentType, ContextType>
   short_description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>
+  tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>
   thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
@@ -581,20 +582,20 @@ export type QueryResolvers<
     RequireFields<QueryPostArgs, 'input'>
   >
   readingList?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['Post']>>>,
+    Array<ResolversTypes['Post']>,
     ParentType,
     ContextType,
     RequireFields<QueryReadingListArgs, 'input'>
   >
   recentPosts?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['Post']>>>,
+    Array<ResolversTypes['Post']>,
     ParentType,
     ContextType,
     RequireFields<QueryRecentPostsArgs, 'input'>
   >
   restoreToken?: Resolver<Maybe<ResolversTypes['UserToken']>, ParentType, ContextType>
   trendingPosts?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['Post']>>>,
+    Array<ResolversTypes['Post']>,
     ParentType,
     ContextType,
     RequireFields<QueryTrendingPostsArgs, 'input'>
@@ -635,6 +636,7 @@ export type SeriesResolvers<
 > = {
   created_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  fk_user_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   posts_count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
@@ -682,7 +684,7 @@ export type UserResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_certified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>
-  series_list?: Resolver<Array<Maybe<ResolversTypes['Series']>>, ParentType, ContextType>
+  series_list?: Resolver<Maybe<Array<Maybe<ResolversTypes['Series']>>>, ParentType, ContextType>
   updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   user_meta?: Resolver<Maybe<ResolversTypes['UserMeta']>, ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>

@@ -17,9 +17,10 @@ import { subDays, subYears } from 'date-fns'
 import axios from 'axios'
 import { ENV } from '@env'
 import { RedisService } from '@lib/redis/RedisService.js'
-import { PostTagService } from '@services/PostTagService/index.js'
+
 import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 import { Time } from '@constants/TimeConstants.js'
+import { TagService } from '@services/TagService'
 
 interface Service {
   getPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
@@ -41,7 +42,7 @@ export class PostService implements Service {
     private readonly utils: UtilsService,
     private readonly redis: RedisService,
     private readonly elsaticSearch: ElasticSearchService,
-    private readonly postTagsService: PostTagService,
+    private readonly tagService: TagService,
   ) {}
   public async getPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]> {
     const posts = await this.db.post.findMany({
@@ -426,7 +427,8 @@ export class PostService implements Service {
   }
   public async recommendedPosts(post: Post): Promise<Post[]> {
     const postId = post.id
-    const tags = await this.postTagsService.createTagsLoader().load(postId)
+    const tagLoader = this.tagService.postTagLoader()
+    const tags = await tagLoader.load(postId)
     Object.assign(post, { tags })
 
     const cacheKey = this.redis.generateKey.recommendedPostKey(postId)
@@ -443,7 +445,7 @@ export class PostService implements Service {
             size: 12,
           },
         })
-        postIds = recommendedPosts.hits.hits.map((hit) => hit._id)
+        postIds = recommendedPosts.body.hits.hits.map((hit: any) => hit._id as string)
         const diff = 12 - postIds.length
         if (diff > 0) {
           const fallbackPosts = await this.elsaticSearch.client.search({
@@ -453,7 +455,7 @@ export class PostService implements Service {
               size: 100,
             },
           })
-          const fallbackPostIds = fallbackPosts.hits.hits.map((hit) => hit._id)
+          const fallbackPostIds: string[] = fallbackPosts.body.hits.hits.map((hit: any) => hit._id)
           const randomPostIds = this.utils.pickRandomItems(fallbackPostIds, diff)
           postIds = [...postIds, ...randomPostIds]
         }
