@@ -9,7 +9,7 @@ import { PostLikeService } from '@services/PostLikeService/index.js'
 import { DbService } from '@lib/db/DbService.js'
 import { FollowUserService } from '@services/FollowUserService/index.js'
 import { SeriesService } from '@services/SeriesService/index.js'
-import { TagService } from '@services/TagService'
+import { TagService } from '@services/TagService/index.js'
 
 const postResolvers: Resolvers = {
   Post: {

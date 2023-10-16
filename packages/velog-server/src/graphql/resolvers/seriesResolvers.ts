@@ -1,6 +1,6 @@
 import { Resolvers } from '@graphql/generated'
-import { SeriesService } from '@services/SeriesService'
-import { UserService } from '@services/UserService'
+import { SeriesService } from '@services/SeriesService/index.js'
+import { UserService } from '@services/UserService/index.js'
 import { container } from 'tsyringe'
 
 const seriesResolvers: Resolvers = {

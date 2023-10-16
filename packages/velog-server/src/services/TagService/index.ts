@@ -1,5 +1,5 @@
 import DataLoader from 'dataloader'
-import { DbService } from '@lib/db/DbService'
+import { DbService } from '@lib/db/DbService.js'
 import { Prisma, Tag } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { UtilsService } from '@lib/utils/UtilsService.js'

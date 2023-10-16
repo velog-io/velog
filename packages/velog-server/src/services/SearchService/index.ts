@@ -5,7 +5,7 @@ import { ENV } from '@env'
 import { Prisma, Tag } from '@prisma/client'
 import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 import { ApiResponse } from '@elastic/elasticsearch'
-import { TagService } from '@services/TagService'
+import { TagService } from '@services/TagService/index.js'
 
 interface Service {
   get searchSync(): SearchSyncType

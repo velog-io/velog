@@ -17,10 +17,9 @@ import { subDays, subYears } from 'date-fns'
 import axios from 'axios'
 import { ENV } from '@env'
 import { RedisService } from '@lib/redis/RedisService.js'
-
 import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 import { Time } from '@constants/TimeConstants.js'
-import { TagService } from '@services/TagService'
+import { TagService } from '@services/TagService/index.js'
 
 interface Service {
   getPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
