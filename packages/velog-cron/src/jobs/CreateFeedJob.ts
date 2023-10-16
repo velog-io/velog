@@ -5,7 +5,7 @@ import { injectable, singleton } from 'tsyringe'
 
 @singleton()
 @injectable()
-export class FeedJob extends JobProgress implements Job {
+export class CreateFeedJob extends JobProgress implements Job {
   constructor(
     private readonly redis: RedisService,
     private readonly feedService: FeedService,

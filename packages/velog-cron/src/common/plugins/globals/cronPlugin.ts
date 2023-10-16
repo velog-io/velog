@@ -1,29 +1,29 @@
-import { FeedJob } from '@jobs/FeedJob.js'
-import { PostJob } from '@jobs/PostJob.js'
+import { CreateFeedJob } from '@jobs/CreateFeedJob.js'
+import { CalcPostScoreJob } from '@jobs/CalcPostScoreJob.js'
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 
 const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
-  const postJob = container.resolve(PostJob)
-  const feedJob = container.resolve(FeedJob)
+  const calcPostScoreJob = container.resolve(CalcPostScoreJob)
+  const createFeedJob = container.resolve(CreateFeedJob)
 
   const jobInfo: JobInfo[] = [
     {
       name: 'posts score calculation in every 5 minutes',
       cronTime: '*/5 * * * *', // every 5 minutes
-      jobService: postJob,
+      jobService: calcPostScoreJob,
       param: 0.5,
     },
     {
       name: 'posts score calculation in every day',
       cronTime: '0 6 * * *', // every day at 06:00 (6:00 AM)
-      jobService: postJob,
+      jobService: calcPostScoreJob,
       param: 0.1,
     },
     {
       name: 'generate feeds',
       cronTime: '*/1 * * * *', // every 1 minutes
-      jobService: feedJob,
+      jobService: createFeedJob,
       param: undefined,
     },
   ]
@@ -58,11 +58,11 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
 export default cronPlugin
 
 function isPostJob(arg: any): arg is PostJobInfo {
-  return arg.jobService instanceof PostJob
+  return arg.jobService instanceof CalcPostScoreJob
 }
 
 function isFeedJob(arg: any): arg is FeedJobInfo {
-  return arg.jobService instanceof FeedJob
+  return arg.jobService instanceof CreateFeedJob
 }
 
 type JobInfo = PostJobInfo | FeedJobInfo
@@ -70,13 +70,13 @@ type JobInfo = PostJobInfo | FeedJobInfo
 type PostJobInfo = {
   name: string
   cronTime: string
-  jobService: PostJob
+  jobService: CalcPostScoreJob
   param: number
 }
 
 type FeedJobInfo = {
   name: string
   cronTime: string
-  jobService: FeedJob
+  jobService: CreateFeedJob
   param: undefined
 }
