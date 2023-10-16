@@ -11,6 +11,7 @@ interface Service {
   getSeriesByPostId(postId: string): Promise<Series | null>
   getPostCount(series: string): Promise<number>
   seriesPostLoader(): DataLoader<string, SeriesPost[]>
+  getThumbnail(seriesId: string): Promise<string | null>
 }
 
 @injectable()
@@ -36,7 +37,7 @@ export class SeriesService implements Service {
     return seriesList
   }
 
-  async getSeriesByPostId(postId: string): Promise<Series | null> {
+  public async getSeriesByPostId(postId: string): Promise<Series | null> {
     const seriesPost = await this.db.seriesPost.findFirst({
       where: {
         fk_post_id: postId,
@@ -49,7 +50,7 @@ export class SeriesService implements Service {
     if (!seriesPost) return null
     return seriesPost?.series
   }
-  async getPostCount(seriesId: string): Promise<number> {
+  public async getPostCount(seriesId: string): Promise<number> {
     const count = await this.db.seriesPost.count({
       where: {
         fk_series_id: seriesId,
@@ -88,5 +89,19 @@ export class SeriesService implements Service {
       const ordered = seriesIds.map((seriesId) => postsMap[seriesId])
       return ordered
     })
+  }
+  async getThumbnail(seriesId: string): Promise<string | null> {
+    const seriesPost = await this.db.seriesPost.findFirst({
+      where: {
+        index: 1,
+        fk_series_id: seriesId,
+      },
+      include: {
+        post: true,
+      },
+    })
+
+    if (!seriesPost) return null
+    return seriesPost.post!.thumbnail
   }
 }

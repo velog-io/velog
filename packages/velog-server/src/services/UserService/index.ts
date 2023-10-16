@@ -10,6 +10,7 @@ import { Time } from '@constants/TimeConstants.js'
 import { UnauthorizedError, NotFoundError } from '@errors/index.js'
 import { UserToken } from '@graphql/generated'
 import { UtilsService } from '@lib/utils/UtilsService.js'
+import DataLoader from 'dataloader'
 
 interface Service {
   findById(userId: string): Promise<User | null>
@@ -17,6 +18,7 @@ interface Service {
   getCurrentUser(userId: string | undefined): Promise<CurrentUser | null>
   restoreToken(ctx: GraphQLContext): Promise<UserToken>
   emailGuard(user: User, loggedUserId: string | undefined): void
+  userLoader(): DataLoader<string, User>
 }
 
 @injectable()
@@ -90,5 +92,21 @@ export class UserService implements Service {
     if (user.id !== loggedUserId) {
       throw new UnauthorizedError('No permission to read email address')
     }
+  }
+  public userLoader() {
+    return this.createUserLoader()
+  }
+  private createUserLoader(): DataLoader<string, User> {
+    return new DataLoader(async (userIds) => {
+      const users = await this.db.user.findMany({
+        where: {
+          id: {
+            in: userIds as string[],
+          },
+        },
+      })
+      const nomalized = this.utils.normalize(users, (user) => user.id)
+      return userIds.map((userId) => nomalized[userId])
+    })
   }
 }
