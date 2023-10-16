@@ -14,7 +14,7 @@ export default async function getPostByUrlSlug({ username, url_slug }: ReadPostI
       },
     }
 
-    const { post } = await graphqlFetch<{ post: Post[] }>({
+    const { post } = await graphqlFetch<{ post: Post }>({
       body,
     })
 

@@ -24,10 +24,11 @@ const postResolvers: Resolvers = {
       const postService = container.resolve(PostService)
       return postService.shortDescription(parent)
     },
-    comments: (parent: PostIncludeComment) => {
+    comments: async (parent: PostIncludeComment) => {
       if (parent.comments) return parent.comments
       const commentService = container.resolve(CommentService)
-      return commentService.createCommentsLoader().load(parent.id)
+      const commentsLoader = commentService.commentsLoader()
+      return await commentsLoader.load(parent.id)
     },
     comments_count: async (parent: PostIncludeComment) => {
       if (parent?.comments) return parent.comments.length

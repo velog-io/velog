@@ -2,11 +2,11 @@ import { DbService } from '@lib/db/DbService.js'
 import { injectable, singleton } from 'tsyringe'
 import DataLoader from 'dataloader'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { Comment, Post } from '@prisma/client'
+import { Comment, Prisma } from '@prisma/client'
 
 interface Service {
   count(postId: string): Promise<number>
-  createCommentsLoader(): DataLoader<string, any>
+  commentsLoader(): DataLoader<string, Comment[]>
 }
 
 @injectable()
@@ -25,8 +25,11 @@ export class CommentService implements Service {
     })
     return commentCount
   }
-  public createCommentsLoader() {
-    return new DataLoader(async (postIds: readonly string[]) => {
+  public commentsLoader() {
+    return this.createCommentsLoader()
+  }
+  private createCommentsLoader(): DataLoader<string, Comment[]> {
+    return new DataLoader(async (postIds) => {
       const posts = await this.db.post.findMany({
         where: {
           id: {
@@ -49,7 +52,13 @@ export class CommentService implements Service {
         },
       })
 
-      const normalized = this.utils.normalize<Post & { comment: Comment[] }>(posts)
+      const normalized = this.utils.normalize<
+        Prisma.PostGetPayload<{
+          include: {
+            comment: true
+          }
+        }>
+      >(posts)
       const commentsGroups = postIds.map((id) => (normalized[id] ? normalized[id].comment : []))
       return commentsGroups
     })

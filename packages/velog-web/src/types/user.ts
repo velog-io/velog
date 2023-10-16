@@ -38,5 +38,5 @@ export type CurrentUser = {
     thumbnail: string | null
     display_name: string | null
   }
-  email: string
+  email: string | null
 }
