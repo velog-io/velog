@@ -46,7 +46,7 @@ export class SearchService implements Service {
 
     if (!post) return
 
-    const tagLoader = this.tagService.postTagLoader()
+    const tagLoader = this.tagService.tagLoader()
     const tags = await tagLoader.load(post.id)
 
     const postWithTags = Object.assign(post, { tags })

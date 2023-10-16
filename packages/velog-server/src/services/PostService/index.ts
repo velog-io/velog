@@ -427,7 +427,7 @@ export class PostService implements Service {
   }
   public async recommendedPosts(post: Post): Promise<Post[]> {
     const postId = post.id
-    const tagLoader = this.tagService.postTagLoader()
+    const tagLoader = this.tagService.tagLoader()
     const tags = await tagLoader.load(postId)
     Object.assign(post, { tags })
 
