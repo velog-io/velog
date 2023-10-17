@@ -7,6 +7,7 @@ import { injectable, singleton } from 'tsyringe'
 
 interface Service {
   getFollowings(fk_follower_id: string): Promise<User[]>
+  createRecommendFollower(): Promise<RecommedFollowerResult[]>
 }
 
 @injectable()
@@ -41,7 +42,7 @@ export class FollowUserService implements Service {
     const followings = followUser.map((follow) => follow.following!)
     return followings
   }
-  public async createRecommendFollower() {
+  public async createRecommendFollower(): Promise<RecommedFollowerResult[]> {
     const threeMonthAgo = subMonths(this.utils.now, 3)
     const postLikes = await this.db.postLike.findMany({
       where: {
@@ -102,7 +103,22 @@ export class FollowUserService implements Service {
     }
     return map
   }
-  private async getTrendingPostsByUserId(user: User) {}
+  private async getTrendingPostsByUserId(user: User): Promise<RecommedFollowerResult> {
+    const posts = await this.postService.findByUserId({
+      userId: user.id,
+      args: {
+        where: {
+          is_private: false,
+          is_temp: false,
+        },
+        orderBy: {
+          likes: 'desc',
+        },
+        take: 3,
+      },
+    })
+    return { id: user.id, user, posts }
+  }
 }
 
 type PostLikePaylaod = Prisma.PostLikeGetPayload<{
@@ -159,3 +175,4 @@ type Post = Prisma.PostGetPayload<{
 type PostLikesMapBase = { user: User; posts: Post[] }
 type PostLikesMapData = PostLikesMapBase & { totalLikes: number }
 type PostLikesMap = Map<string, PostLikesMapData>
+type RecommedFollowerResult = { id: string; user: User; posts: Post[] }

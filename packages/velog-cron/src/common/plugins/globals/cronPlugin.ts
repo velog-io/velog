@@ -9,7 +9,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   const createFeedJob = container.resolve(CreateFeedJob)
   const recommendFollowerJob = container.resolve(RecommendFollowerJob)
 
-  const jobInfo: JobInfo[] = [
+  const jobDescription: JobDescription[] = [
     {
       name: 'posts score calculation in every 5 minutes',
       cronTime: '*/5 * * * *', // every 5 minutes
@@ -37,8 +37,8 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     },
   ]
 
-  const createJob = (info: JobInfo) => {
-    const { name, cronTime, jobService } = info
+  const createJob = (description: JobDescription) => {
+    const { name, cronTime, jobService } = description
     return fastfiy.cron.createJob({
       name,
       cronTime,
@@ -46,11 +46,11 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
         if (jobService.isProgressing) return
         jobService.start()
 
-        if (isNeedParams(info)) {
-          await info.jobService.runner(info.param)
+        if (isNeedParams(description)) {
+          await description.jobService.runner(description.param)
         }
-        if (isFeedJob(info)) {
-          await info.jobService.runner()
+        if (isFeedJob(description)) {
+          await description.jobService.runner()
         }
 
         jobService.stop()
@@ -58,7 +58,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     })
   }
 
-  const crons = jobInfo.map(createJob)
+  const crons = jobDescription.map(createJob)
   await Promise.all(crons.map((cron) => cron.start()))
 
   done()
@@ -66,24 +66,24 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
 
 export default cronPlugin
 
-function isNeedParams(arg: any): arg is NeedParamJobInfo {
+function isNeedParams(arg: any): arg is NeedParamJobService {
   return arg.jobService instanceof CalcPostScoreJob
 }
 
-function isFeedJob(arg: any): arg is NotNeedParamJobInfo {
+function isFeedJob(arg: any): arg is NotNeedParamJobService {
   return arg.jobService instanceof CreateFeedJob || arg.jobService instanceof RecommendFollowerJob
 }
 
-type JobInfo = NeedParamJobInfo | NotNeedParamJobInfo
+type JobDescription = NeedParamJobService | NotNeedParamJobService
 
-type NeedParamJobInfo = {
+type NeedParamJobService = {
   name: string
   cronTime: string
   jobService: CalcPostScoreJob
   param: number
 }
 
-type NotNeedParamJobInfo = {
+type NotNeedParamJobService = {
   name: string
   cronTime: string
   jobService: CreateFeedJob | RecommendFollowerJob

@@ -23,8 +23,8 @@ export class PostService implements Service {
     const { where, ...queries } = args
     const posts = await this.db.post.findMany({
       where: {
-        fk_user_id: userId,
         ...where,
+        fk_user_id: userId,
       },
       ...queries,
     })
