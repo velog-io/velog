@@ -48,7 +48,6 @@ export class FollowUserService implements Service {
       where: {
         created_at: { gte: threeMonthAgo },
       },
-      take: 20,
       select: {
         post: {
           select: {
