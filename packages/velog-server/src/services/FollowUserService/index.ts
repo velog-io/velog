@@ -11,8 +11,8 @@ interface Service {
   isFollowed(follwingUserId: string, followerUserId: string): Promise<boolean>
   follow(userId: string, followUserId: string): Promise<void>
   unfollow(userId: string, followUserId: string): Promise<void>
-  getFollowing(userId: string): Promise<User[]>
-  getFollower(userId: string): Promise<User[]>
+  getFollowers(userId: string): Promise<User[]>
+  getFollowings(userId: string): Promise<User[]>
 }
 
 @injectable()
@@ -109,7 +109,7 @@ export class FollowUserService implements Service {
       },
     })
   }
-  public async getFollower(userId?: string): Promise<User[]> {
+  public async getFollowers(userId?: string): Promise<User[]> {
     if (!userId) {
       throw new UnauthorizedError('Not logged in')
     }
@@ -128,11 +128,10 @@ export class FollowUserService implements Service {
     })
     return followers.map((relationship) => relationship.follower)
   }
-  public async getFollowing(userId?: string): Promise<User[]> {
+  public async getFollowings(userId?: string): Promise<User[]> {
     if (!userId) {
       throw new UnauthorizedError('Not logged in')
     }
-
     const followings = await this.db.followUser.findMany({
       where: {
         fk_follower_user_id: userId,

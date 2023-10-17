@@ -43,9 +43,15 @@ const userResolvers: Resolvers = {
       const userService = container.resolve(UserService)
       return await userService.restoreToken(ctx)
     },
-    followers: async (_, __, ctx) => {
+    followers: async (_, { input }) => {
+      const { userId } = input
       const followUserService = container.resolve(FollowUserService)
-      return followUserService.getFollower(ctx.user?.id)
+      return followUserService.getFollowers(userId)
+    },
+    followings: async (_, { input }) => {
+      const { userId } = input
+      const followUserService = container.resolve(FollowUserService)
+      return followUserService.getFollowings(userId)
     },
   },
   Mutation: {

@@ -49,6 +49,14 @@ export type FollowInput = {
   followUserId?: InputMaybe<Scalars['ID']['input']>
 }
 
+export type FollowersInput = {
+  userId?: InputMaybe<Scalars['ID']['input']>
+}
+
+export type FollowingsInput = {
+  userId?: InputMaybe<Scalars['ID']['input']>
+}
+
 export type LikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
@@ -135,6 +143,14 @@ export type Query = {
   recentPosts: Array<Post>
   restoreToken?: Maybe<UserToken>
   trendingPosts: Array<Post>
+}
+
+export type QueryFollowersArgs = {
+  input: FollowersInput
+}
+
+export type QueryFollowingsArgs = {
+  input: FollowingsInput
 }
 
 export type QueryPostArgs = {
@@ -361,6 +377,8 @@ export type ResolversTypes = {
   Comment: ResolverTypeWrapper<CommentModel>
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
   FollowInput: FollowInput
+  FollowersInput: FollowersInput
+  FollowingsInput: FollowingsInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
   Int: ResolverTypeWrapper<Scalars['Int']['output']>
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
@@ -413,6 +431,8 @@ export type ResolversParentTypes = {
   Comment: CommentModel
   Date: Scalars['Date']['output']
   FollowInput: FollowInput
+  FollowersInput: FollowersInput
+  FollowingsInput: FollowingsInput
   ID: Scalars['ID']['output']
   Int: Scalars['Int']['output']
   JSON: Scalars['JSON']['output']
@@ -573,8 +593,18 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
-  followers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
-  followings?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
+  followers?: Resolver<
+    Array<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryFollowersArgs, 'input'>
+  >
+  followings?: Resolver<
+    Array<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryFollowingsArgs, 'input'>
+  >
   post?: Resolver<
     Maybe<ResolversTypes['Post']>,
     ParentType,
