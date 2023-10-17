@@ -1,5 +1,5 @@
 import { DbService } from '@lib/db/DbService.js'
-import { Post } from '@prisma/client'
+import { Post, Prisma } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
@@ -18,6 +18,17 @@ export class PostService implements Service {
       },
     })
     return post
+  }
+  public async findByUserId({ userId, args }: FindByUserIdParams): Promise<Post[]> {
+    const { where, ...queries } = args
+    const posts = await this.db.post.findMany({
+      where: {
+        fk_user_id: userId,
+        ...where,
+      },
+      ...queries,
+    })
+    return posts
   }
   public async scoreCarculator(postId: string): Promise<void> {
     const post = await this.findById(postId)
@@ -48,4 +59,9 @@ export class PostService implements Service {
       },
     })
   }
+}
+
+type FindByUserIdParams = {
+  userId: string
+  args: Prisma.PostFindManyArgs
 }
