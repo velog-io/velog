@@ -1,7 +1,7 @@
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Prisma } from '@prisma/client'
-import { PostService } from '@services/PostService'
+import { PostService } from '@services/PostService/index.js'
 import { subMonths } from 'date-fns'
 import { injectable, singleton } from 'tsyringe'
 
@@ -48,6 +48,7 @@ export class FollowUserService implements Service {
       where: {
         created_at: { gte: threeMonthAgo },
       },
+      take: 20,
       select: {
         post: {
           select: {
@@ -56,17 +57,17 @@ export class FollowUserService implements Service {
             url_slug: true,
             thumbnail: true,
             likes: true,
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            username: true,
-            profile: {
+            user: {
               select: {
-                display_name: true,
-                short_bio: true,
-                thumbnail: true,
+                id: true,
+                username: true,
+                profile: {
+                  select: {
+                    display_name: true,
+                    short_bio: true,
+                    thumbnail: true,
+                  },
+                },
               },
             },
           },
@@ -74,31 +75,31 @@ export class FollowUserService implements Service {
       },
     })
 
-    const postLikesMap = postLikes.reduceRight<PostLikesMap>(this.sumLikes, new Map())
+    const postLikesMap = postLikes.reduceRight<PostLikesMap>(this.calculateTotalLikes, new Map())
     const promises = Array.from(postLikesMap)
       .sort(([, a], [, b]) => b.totalLikes - a.totalLikes)
       .map(([, a]) => a.user)
-      .map(this.getTrendingPostsByUserId)
+      .map((user) => this.getTrendingPostsByUserId(user))
 
     return await Promise.all(promises)
   }
-  private sumLikes(map: PostLikesMap, postLike: PostLikePaylaod) {
-    const { post, user } = postLike
+  private calculateTotalLikes(map: PostLikesMap, postLike: PostLikePaylaod) {
+    const { post } = postLike
 
-    if (!user || !post) return map
+    if (!post) return map
 
     const postId = post.id
     const exists = map.get(postId)
 
     if (exists) {
       const data: PostLikesMapData = {
-        user: user!,
+        user: post.user,
         posts: exists.posts.concat(post),
         totalLikes: exists.totalLikes + post.likes!,
       }
       map.set(postId, data)
     } else {
-      const data = { user, posts: [post], totalLikes: post.likes! }
+      const data = { user: post.user, posts: [post], totalLikes: post.likes! }
       map.set(postId, data)
     }
     return map
@@ -106,16 +107,14 @@ export class FollowUserService implements Service {
   private async getTrendingPostsByUserId(user: User): Promise<RecommedFollowerResult> {
     const posts = await this.postService.findByUserId({
       userId: user.id,
-      args: {
-        where: {
-          is_private: false,
-          is_temp: false,
-        },
-        orderBy: {
-          likes: 'desc',
-        },
-        take: 3,
+      where: {
+        is_private: false,
+        is_temp: false,
       },
+      orderBy: {
+        score: 'desc',
+      },
+      take: 3,
     })
     return { id: user.id, user, posts }
   }
@@ -126,21 +125,21 @@ type PostLikePaylaod = Prisma.PostLikeGetPayload<{
     post: {
       select: {
         id: true
+        title: true
         url_slug: true
         thumbnail: true
-        title: true
         likes: true
-      }
-    }
-    user: {
-      select: {
-        id: true
-        username: true
-        profile: {
+        user: {
           select: {
-            display_name: true
-            short_bio: true
-            thumbnail: true
+            id: true
+            username: true
+            profile: {
+              select: {
+                display_name: true
+                short_bio: true
+                thumbnail: true
+              }
+            }
           }
         }
       }
@@ -165,9 +164,9 @@ type User = Prisma.UserGetPayload<{
 type Post = Prisma.PostGetPayload<{
   select: {
     id: true
+    title: true
     url_slug: true
     thumbnail: true
-    title: true
     likes: true
   }
 }>

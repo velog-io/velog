@@ -19,14 +19,14 @@ export class PostService implements Service {
     })
     return post
   }
-  public async findByUserId({ userId, args }: FindByUserIdParams): Promise<Post[]> {
-    const { where, ...queries } = args
+  public async findByUserId({ userId, ...queries }: FindByUserIdParams): Promise<Post[]> {
+    const { where, ...query } = queries
     const posts = await this.db.post.findMany({
       where: {
         ...where,
         fk_user_id: userId,
       },
-      ...queries,
+      ...query,
     })
     return posts
   }
@@ -63,5 +63,4 @@ export class PostService implements Service {
 
 type FindByUserIdParams = {
   userId: string
-  args: Prisma.PostFindManyArgs
-}
+} & Prisma.PostFindManyArgs

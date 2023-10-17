@@ -30,8 +30,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     },
     {
       name: 'generate recommend followers',
-      // cronTime: '0 5 * * *', // every day at 06:00 (5:00 AM)
-      cronTime: '*/1 * * * *', // every 1 minutes
+      cronTime: '0 5 * * *', // every day at 06:00 (5:00 AM)
       jobService: recommendFollowerJob,
       param: undefined,
     },
