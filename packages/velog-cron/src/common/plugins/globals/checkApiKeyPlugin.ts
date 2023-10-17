@@ -1,4 +1,3 @@
-import { HttpStatusMessage } from '@constants/HttpStatusMessageConstants.js'
 import { ENV } from '@env'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { FastifyPluginCallback } from 'fastify'
