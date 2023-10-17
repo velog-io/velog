@@ -19,7 +19,7 @@ export class RedisService extends Redis {
 
   get generateKey(): GenerateRedisKey {
     return {
-      recommendedFollowerKey: () => `velog:follower:recommend`,
+      recommendedFollowerKey: () => `recommended:followers`,
     }
   }
 

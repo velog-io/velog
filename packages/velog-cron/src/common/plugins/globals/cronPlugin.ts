@@ -46,10 +46,11 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
         if (jobService.isProgressing) return
         jobService.start()
 
-        if (isNeedParams(description)) {
+        if (isNeedParamJobService(description)) {
           await description.jobService.runner(description.param)
         }
-        if (isFeedJob(description)) {
+
+        if (isNotNeedParamJobService(description)) {
           await description.jobService.runner()
         }
 
@@ -66,11 +67,11 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
 
 export default cronPlugin
 
-function isNeedParams(arg: any): arg is NeedParamJobService {
+function isNeedParamJobService(arg: any): arg is NeedParamJobService {
   return arg.jobService instanceof CalcPostScoreJob
 }
 
-function isFeedJob(arg: any): arg is NotNeedParamJobService {
+function isNotNeedParamJobService(arg: any): arg is NotNeedParamJobService {
   return arg.jobService instanceof CreateFeedJob || arg.jobService instanceof RecommendFollowerJob
 }
 
