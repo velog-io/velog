@@ -114,6 +114,12 @@ export class FollowUserService implements Service {
         score: 'desc',
       },
       take: 3,
+      select: {
+        id: true,
+        url_slug: true,
+        title: true,
+        thumbnail: true,
+      },
     })
     return { id: user.id, user, posts }
   }
