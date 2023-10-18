@@ -19,7 +19,7 @@ export class RedisService extends Redis {
 
   get generateKey(): GenerateRedisKey {
     return {
-      recommendedFollowerKey: () => `recommended:followers`,
+      recommendedFollowersKey: () => `recommended:followers`,
     }
   }
 
@@ -31,5 +31,5 @@ export class RedisService extends Redis {
 }
 
 type GenerateRedisKey = {
-  recommendedFollowerKey: () => string
+  recommendedFollowersKey: () => string
 }

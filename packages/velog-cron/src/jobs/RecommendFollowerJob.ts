@@ -19,7 +19,7 @@ export class RecommendFollowerJob extends JobProgress implements Job {
     const followers = await this.followUserService.createRecommendFollower()
 
     const json = JSON.stringify(followers)
-    const redisKey = this.redis.generateKey.recommendedFollowerKey()
+    const redisKey = this.redis.generateKey.recommendedFollowersKey()
     this.redis.set(redisKey, json)
 
     console.timeEnd('recommend Followers')

@@ -20,6 +20,7 @@ export class RedisService extends Redis implements Service {
       postSeriesKey: (username: string, seriesUrlSlug: string) =>
         `ssr:/@${username}/series/${seriesUrlSlug}`,
       changeEmailKey: (code: string) => `changeEmailCode:${code}`,
+      recommendedFollowersKey: () => `recommended:followers`,
     }
   }
 }
@@ -30,4 +31,5 @@ type GenerateRedisKey = {
   userCacheKey: (username: string) => string
   postSeriesKey: (username: string, seriesUrlSlug: string) => string
   changeEmailKey: (code: string) => string
+  recommendedFollowersKey: () => string
 }

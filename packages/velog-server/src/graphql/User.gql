@@ -46,17 +46,6 @@ type Query {
   restoreToken: UserToken
   # unregister_token: String
   # emailExists(email: String!): boolean
-
-  followers(input: FollowersInput!): [User!]!
-  followings(input: FollowingsInput!): [User!]!
-}
-
-input FollowersInput {
-  userId: ID
-}
-
-input FollowingsInput {
-  userId: ID
 }
 
 type Mutation {

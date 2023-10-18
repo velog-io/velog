@@ -172,7 +172,6 @@ type Post = Prisma.PostGetPayload<{
     title: true
     url_slug: true
     thumbnail: true
-    likes: true
   }
 }>
 

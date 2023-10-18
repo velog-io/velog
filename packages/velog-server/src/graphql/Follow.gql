@@ -1,0 +1,38 @@
+type RecommedFollowersPosts {
+  id: ID
+  title: String
+  url_slug: String
+  thumbnail: String
+}
+
+type RecommendFollowersUser {
+  id: ID
+  username: String
+  profile: RecommendFollowersUserProfile
+}
+
+type RecommendFollowersUserProfile {
+  display_name: String
+  short_bio: String
+  thumbnail: String
+}
+
+type RecommendFollowers {
+  id: ID!
+  user: RecommendFollowersUser!
+  posts: [RecommedFollowersPosts!]!
+}
+
+type Query {
+  followers(input: FollowersInput!): [User!]!
+  followings(input: FollowingsInput!): [User!]!
+  recommendFollowers: [RecommendFollowers!]!
+}
+
+input FollowersInput {
+  userId: ID
+}
+
+input FollowingsInput {
+  userId: ID
+}

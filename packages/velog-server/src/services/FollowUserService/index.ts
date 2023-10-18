@@ -2,7 +2,9 @@ import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { ConfilctError } from '@errors/ConfilctError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
+import { RecommendFollowers } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
+import { RedisService } from '@lib/redis/RedisService'
 import { FollowUser, User } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 
@@ -13,12 +15,16 @@ interface Service {
   unfollow(userId: string, followUserId: string): Promise<void>
   getFollowers(userId: string): Promise<User[]>
   getFollowings(userId: string): Promise<User[]>
+  getRecommededFollowers(): Promise<RecommendFollowers[]>
 }
 
 @injectable()
 @singleton()
 export class FollowUserService implements Service {
-  constructor(private readonly db: DbService) {}
+  constructor(
+    private readonly db: DbService,
+    private readonly redis: RedisService,
+  ) {}
   public async isFollowed(followingUserId: string, followerUserId: string): Promise<boolean> {
     return !!(await this.findFollowRelationship(followingUserId, followerUserId))
   }
@@ -145,5 +151,14 @@ export class FollowUserService implements Service {
       },
     })
     return followings.map((relationship) => relationship.following)
+  }
+  async getRecommededFollowers(): Promise<RecommendFollowers[]> {
+    const getFollowersKey = this.redis.generateKey.recommendedFollowersKey()
+    const followers = await this.redis.get(getFollowersKey)
+
+    if (!followers) return []
+
+    const recommededFollowers: RecommendFollowers[] = JSON.parse(followers)
+    return recommededFollowers
   }
 }
