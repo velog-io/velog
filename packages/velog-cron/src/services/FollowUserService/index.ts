@@ -118,19 +118,18 @@ export class FollowUserService implements Service {
 
     if (!post) return map
 
-    const postId = post.id
-    const exists = map.get(postId)
+    const userId = post.user.id
+    const exists = map.get(userId)
 
     if (exists) {
       const data: PostLikesMapData = {
         user: post.user,
-        posts: exists.posts.concat(post),
         totalLikes: exists.totalLikes + post.likes!,
       }
-      map.set(postId, data)
+      map.set(userId, data)
     } else {
-      const data = { user: post.user, posts: [post], totalLikes: post.likes! }
-      map.set(postId, data)
+      const data = { user: post.user, totalLikes: post.likes! }
+      map.set(userId, data)
     }
     return map
   }
@@ -186,7 +185,6 @@ type Post = Prisma.PostGetPayload<{
   }
 }>
 
-type PostLikesMapBase = { user: User; posts: Post[] }
-type PostLikesMapData = PostLikesMapBase & { totalLikes: number }
+type PostLikesMapData = { user: User; totalLikes: number }
 type PostLikesMap = Map<string, PostLikesMapData>
 type RecommedFollowerResult = { id: string; user: User; posts: Post[] }
