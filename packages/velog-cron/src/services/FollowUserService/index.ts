@@ -44,9 +44,14 @@ export class FollowUserService implements Service {
   }
   public async createRecommendFollower(): Promise<RecommedFollowerResult[]> {
     const threeMonthAgo = subMonths(this.utils.now, 3)
+    const sixMonthAgo = subMonths(this.utils.now, 6)
+
     const postLikes = await this.db.postLike.findMany({
       where: {
         created_at: { gte: threeMonthAgo },
+        post: {
+          released_at: { gte: sixMonthAgo },
+        },
       },
       select: {
         post: {
@@ -75,12 +80,38 @@ export class FollowUserService implements Service {
     })
 
     const postLikesMap = postLikes.reduceRight<PostLikesMap>(this.calculateTotalLikes, new Map())
-    const promises = Array.from(postLikesMap)
+    const sortedUsers = Array.from(postLikesMap)
       .sort(([, a], [, b]) => b.totalLikes - a.totalLikes)
       .map(([, a]) => a.user)
-      .map((user) => this.getTrendingPostsByUserId(user))
 
-    return await Promise.all(promises)
+    const result: RecommedFollowerResult[] = []
+    for (let i = 0; i < sortedUsers.length; i++) {
+      const user = sortedUsers[i]
+      const posts = await this.postService.findByUserId({
+        userId: user.id,
+        where: {
+          created_at: {
+            gte: threeMonthAgo,
+          },
+          is_private: false,
+          is_temp: false,
+        },
+        orderBy: {
+          likes: 'desc',
+        },
+        take: 3,
+        select: {
+          id: true,
+          url_slug: true,
+          title: true,
+          thumbnail: true,
+        },
+      })
+      const data = { id: user.id, user, posts }
+      result.push(data)
+    }
+
+    return result
   }
   private calculateTotalLikes(map: PostLikesMap, postLike: PostLikePaylaod) {
     const { post } = postLike
@@ -102,26 +133,6 @@ export class FollowUserService implements Service {
       map.set(postId, data)
     }
     return map
-  }
-  private async getTrendingPostsByUserId(user: User): Promise<RecommedFollowerResult> {
-    const posts = await this.postService.findByUserId({
-      userId: user.id,
-      where: {
-        is_private: false,
-        is_temp: false,
-      },
-      orderBy: {
-        score: 'desc',
-      },
-      take: 3,
-      select: {
-        id: true,
-        url_slug: true,
-        title: true,
-        thumbnail: true,
-      },
-    })
-    return { id: user.id, user, posts }
   }
 }
 
