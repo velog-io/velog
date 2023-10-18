@@ -1,5 +1,5 @@
 import { Resolvers } from '@graphql/generated'
-import { FollowUserService } from '@services/FollowUserService'
+import { FollowUserService } from '@services/FollowUserService/index.js'
 import { container } from 'tsyringe'
 
 const followerResolvers: Resolvers = {
