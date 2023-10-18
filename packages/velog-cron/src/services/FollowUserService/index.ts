@@ -51,6 +51,8 @@ export class FollowUserService implements Service {
         created_at: { gte: threeMonthAgo },
         post: {
           released_at: { gte: sixMonthAgo },
+          is_temp: false,
+          is_private: false,
         },
       },
       select: {
@@ -80,56 +82,31 @@ export class FollowUserService implements Service {
     })
 
     const postLikesMap = postLikes.reduceRight<PostLikesMap>(this.calculateTotalLikes, new Map())
-    const sortedUsers = Array.from(postLikesMap)
+    return Array.from(postLikesMap)
       .sort(([, a], [, b]) => b.totalLikes - a.totalLikes)
-      .map(([, a]) => a.user)
-
-    const result: RecommedFollowerResult[] = []
-    for (let i = 0; i < sortedUsers.length; i++) {
-      const user = sortedUsers[i]
-      const posts = await this.postService.findByUserId({
-        userId: user.id,
-        where: {
-          created_at: {
-            gte: threeMonthAgo,
-          },
-          is_private: false,
-          is_temp: false,
-        },
-        orderBy: {
-          likes: 'desc',
-        },
-        take: 3,
-        select: {
-          id: true,
-          url_slug: true,
-          title: true,
-          thumbnail: true,
-        },
-      })
-      const data = { id: user.id, user, posts }
-      result.push(data)
-    }
-
-    return result
+      .map(([id, { user, posts }]) => ({ id, user, posts }))
   }
   private calculateTotalLikes(map: PostLikesMap, postLike: PostLikePaylaod) {
-    const { post } = postLike
+    const { user, ...post } = postLike.post!
 
-    if (!post) return map
+    if (!user || !post) return map
 
-    const userId = post.user.id
-    const exists = map.get(userId)
+    const id = user.id
+    const exists = map.get(id)
 
     if (exists) {
       const data: PostLikesMapData = {
-        user: post.user,
+        user,
+        posts: exists.posts
+          .concat(post)
+          .sort((a, b) => b.likes! - a.likes!)
+          .slice(0, 3),
         totalLikes: exists.totalLikes + post.likes!,
       }
-      map.set(userId, data)
+      map.set(id, data)
     } else {
-      const data = { user: post.user, totalLikes: post.likes! }
-      map.set(userId, data)
+      const data = { user: user, posts: [post], totalLikes: post.likes! }
+      map.set(id, data)
     }
     return map
   }
@@ -182,9 +159,11 @@ type Post = Prisma.PostGetPayload<{
     title: true
     url_slug: true
     thumbnail: true
+    likes: true
   }
 }>
 
-type PostLikesMapData = { user: User; totalLikes: number }
+type PostLikesMapBase = { user: User; posts: Post[] }
+type PostLikesMapData = PostLikesMapBase & { totalLikes: number }
 type PostLikesMap = Map<string, PostLikesMapData>
 type RecommedFollowerResult = { id: string; user: User; posts: Post[] }
