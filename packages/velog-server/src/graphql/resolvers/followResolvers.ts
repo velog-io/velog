@@ -14,9 +14,10 @@ const followerResolvers: Resolvers = {
       const followUserService = container.resolve(FollowUserService)
       return followUserService.getFollowings(userId)
     },
-    recommendFollowers: async () => {
+    recommendFollowers: async (_, { input }) => {
+      const { page, take } = input
       const followUserService = container.resolve(FollowUserService)
-      return followUserService.getRecommededFollowers()
+      return followUserService.getRecommededFollowers(page, take)
     },
   },
 }

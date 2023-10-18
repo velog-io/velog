@@ -13,6 +13,7 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, opts, done) => {
       name: error.name || 'Error',
       stack: ENV.appEnv === 'development' ? error.stack : undefined,
     })
+
     if (ENV.appEnv === 'development') {
       console.log(error)
     }

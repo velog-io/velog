@@ -34,6 +34,7 @@ const config: CodegenConfig = {
           JSON: 'JSON',
           ID: 'string',
           Void: 'void',
+          PositiveInt: 'number',
         },
       },
     },

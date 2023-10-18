@@ -29,6 +29,7 @@ export type Scalars = {
   Float: { input: number; output: number }
   Date: { input: Date; output: Date }
   JSON: { input: JSON; output: JSON }
+  PositiveInt: { input: number; output: number }
   Void: { input: void; output: void }
 }
 
@@ -166,6 +167,10 @@ export type QueryRecentPostsArgs = {
   input: RecentPostsInput
 }
 
+export type QueryRecommendFollowersArgs = {
+  input: RecommendFollowersInput
+}
+
 export type QueryTrendingPostsArgs = {
   input: TrendingPostsInput
 }
@@ -208,6 +213,11 @@ export type RecommendFollowers = {
   id: Scalars['ID']['output']
   posts: Array<RecommedFollowersPosts>
   user: RecommendFollowersUser
+}
+
+export type RecommendFollowersInput = {
+  page?: InputMaybe<Scalars['PositiveInt']['input']>
+  take?: InputMaybe<Scalars['PositiveInt']['input']>
 }
 
 export type RecommendFollowersUser = {
@@ -416,6 +426,7 @@ export type ResolversTypes = {
     }
   >
   Mutation: ResolverTypeWrapper<{}>
+  PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Post: ResolverTypeWrapper<PostModel>
   PostHistory: ResolverTypeWrapper<PostHistory>
   Query: ResolverTypeWrapper<{}>
@@ -426,6 +437,7 @@ export type ResolversTypes = {
   RecentPostsInput: RecentPostsInput
   RecommedFollowersPosts: ResolverTypeWrapper<RecommedFollowersPosts>
   RecommendFollowers: ResolverTypeWrapper<RecommendFollowers>
+  RecommendFollowersInput: RecommendFollowersInput
   RecommendFollowersUser: ResolverTypeWrapper<RecommendFollowersUser>
   RecommendFollowersUserProfile: ResolverTypeWrapper<RecommendFollowersUserProfile>
   SearchResult: ResolverTypeWrapper<
@@ -472,6 +484,7 @@ export type ResolversParentTypes = {
     previous?: Maybe<ResolversParentTypes['Post']>
   }
   Mutation: {}
+  PositiveInt: Scalars['PositiveInt']['output']
   Post: PostModel
   PostHistory: PostHistory
   Query: {}
@@ -481,6 +494,7 @@ export type ResolversParentTypes = {
   RecentPostsInput: RecentPostsInput
   RecommedFollowersPosts: RecommedFollowersPosts
   RecommendFollowers: RecommendFollowers
+  RecommendFollowersInput: RecommendFollowersInput
   RecommendFollowersUser: RecommendFollowersUser
   RecommendFollowersUserProfile: RecommendFollowersUserProfile
   SearchResult: Omit<SearchResult, 'posts'> & { posts: Array<ResolversParentTypes['Post']> }
@@ -575,6 +589,11 @@ export type MutationResolvers<
   >
 }
 
+export interface PositiveIntScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['PositiveInt'], any> {
+  name: 'PositiveInt'
+}
+
 export type PostResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post'],
@@ -660,7 +679,8 @@ export type QueryResolvers<
   recommendFollowers?: Resolver<
     Array<ResolversTypes['RecommendFollowers']>,
     ParentType,
-    ContextType
+    ContextType,
+    RequireFields<QueryRecommendFollowersArgs, 'input'>
   >
   restoreToken?: Resolver<Maybe<ResolversTypes['UserToken']>, ParentType, ContextType>
   trendingPosts?: Resolver<
@@ -864,6 +884,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   JSON?: GraphQLScalarType
   LinkedPosts?: LinkedPostsResolvers<ContextType>
   Mutation?: MutationResolvers<ContextType>
+  PositiveInt?: GraphQLScalarType
   Post?: PostResolvers<ContextType>
   PostHistory?: PostHistoryResolvers<ContextType>
   Query?: QueryResolvers<ContextType>

@@ -26,7 +26,7 @@ type RecommendFollowers {
 type Query {
   followers(input: FollowersInput!): [User!]!
   followings(input: FollowingsInput!): [User!]!
-  recommendFollowers: [RecommendFollowers!]!
+  recommendFollowers(input: RecommendFollowersInput!): [RecommendFollowers!]!
 }
 
 input FollowersInput {
@@ -35,4 +35,9 @@ input FollowersInput {
 
 input FollowingsInput {
   userId: ID
+}
+
+input RecommendFollowersInput {
+  page: PositiveInt
+  take: PositiveInt
 }

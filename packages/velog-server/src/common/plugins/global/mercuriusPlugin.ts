@@ -18,16 +18,24 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         user: request.user,
       }
     },
-    errorHandler(error, request) {
-      console.log('url', request.url)
-      console.log('graphql error', error)
-    },
-    errorFormatter: (result) => {
-      const e = result.errors?.[0]?.originalError
-      if (!isHttpError(e)) {
-        return { statusCode: 400, response: result }
+    errorHandler(error) {
+      const { name, message, code, stack, errors, statusCode } = error
+      const result = {
+        name,
+        message,
+        code,
+        statusCode,
+        stack,
+        errors: errors?.map((error) => ({ name: error.name, message: error.message })),
       }
-      const errors = result.errors?.map((error) =>
+      console.log(result)
+    },
+    errorFormatter: (execution) => {
+      const e = execution.errors?.[0]?.originalError
+      if (!isHttpError(e)) {
+        return { statusCode: 400, response: execution }
+      }
+      const errors = execution.errors?.map((error) =>
         Object.assign(error, {
           extensions: {
             name: e.name,

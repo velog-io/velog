@@ -1,3 +1,4 @@
 scalar Date
 scalar JSON
 scalar Void
+scalar PositiveInt

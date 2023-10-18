@@ -117,7 +117,7 @@ export class FollowUserService implements Service {
   }
   public async getFollowers(userId?: string): Promise<User[]> {
     if (!userId) {
-      throw new UnauthorizedError('Not logged in')
+      throw new BadRequestError('UserId is required')
     }
 
     const followers = await this.db.followUser.findMany({
@@ -136,8 +136,9 @@ export class FollowUserService implements Service {
   }
   public async getFollowings(userId?: string): Promise<User[]> {
     if (!userId) {
-      throw new UnauthorizedError('Not logged in')
+      throw new BadRequestError('UserId is required')
     }
+
     const followings = await this.db.followUser.findMany({
       where: {
         fk_follower_user_id: userId,
@@ -152,13 +153,27 @@ export class FollowUserService implements Service {
     })
     return followings.map((relationship) => relationship.following)
   }
-  async getRecommededFollowers(): Promise<RecommendFollowers[]> {
+  async getRecommededFollowers(page?: number, take?: number): Promise<RecommendFollowers[]> {
+    if (!page || !take) {
+      throw new BadRequestError()
+    }
+
+    if (take > 100) {
+      throw new BadRequestError('Max take is 100')
+    }
+
+    if (page < 0 || take < 0) {
+      throw new BadRequestError('Invalid input, input must be a non-negative number')
+    }
+
     const getFollowersKey = this.redis.generateKey.recommendedFollowersKey()
     const followers = await this.redis.get(getFollowersKey)
 
     if (!followers) return []
 
     const recommededFollowers: RecommendFollowers[] = JSON.parse(followers)
-    return recommededFollowers
+
+    const offset = (page - 1) * take
+    return recommededFollowers.slice(offset, offset + take)
   }
 }
