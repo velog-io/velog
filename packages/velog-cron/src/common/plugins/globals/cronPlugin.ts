@@ -1,11 +1,11 @@
 import { CreateFeedJob } from '@jobs/CreateFeedJob.js'
-import { CalcPostScoreJob } from '@jobs/CalcPostScoreJob.js'
+import { CalculatePostScoreJob } from '@jobs/CalculatePostScoreJob.js'
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 import { RecommendFollowerJob } from '@jobs/RecommendFollowerJob.js'
 
 const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
-  const calcPostScoreJob = container.resolve(CalcPostScoreJob)
+  const calculatePostScoreJob = container.resolve(CalculatePostScoreJob)
   const createFeedJob = container.resolve(CreateFeedJob)
   const recommendFollowerJob = container.resolve(RecommendFollowerJob)
 
@@ -13,13 +13,13 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     {
       name: 'posts score calculation in every 5 minutes',
       cronTime: '*/5 * * * *', // every 5 minutes
-      jobService: calcPostScoreJob,
+      jobService: calculatePostScoreJob,
       param: 0.5,
     },
     {
       name: 'posts score calculation in every day',
       cronTime: '0 6 * * *', // every day at 06:00 (6:00 AM)
-      jobService: calcPostScoreJob,
+      jobService: calculatePostScoreJob,
       param: 0.1,
     },
     {
@@ -67,7 +67,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
 export default cronPlugin
 
 function isNeedParamJobService(arg: any): arg is NeedParamJobService {
-  return arg.jobService instanceof CalcPostScoreJob
+  return arg.jobService instanceof CalculatePostScoreJob
 }
 
 function isNotNeedParamJobService(arg: any): arg is NotNeedParamJobService {
@@ -79,7 +79,7 @@ type JobDescription = NeedParamJobService | NotNeedParamJobService
 type NeedParamJobService = {
   name: string
   cronTime: string
-  jobService: CalcPostScoreJob
+  jobService: CalculatePostScoreJob
   param: number
 }
 

@@ -5,7 +5,7 @@ import { Job, JobProgress } from '@jobs/JobProgress.js'
 
 @singleton()
 @injectable()
-export class CalcPostScoreJob extends JobProgress implements Job {
+export class CalculatePostScoreJob extends JobProgress implements Job {
   constructor(
     private readonly postService: PostService,
     private readonly db: DbService,
