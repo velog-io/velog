@@ -26,7 +26,7 @@ export class PostController implements Controller {
       throw new NotFoundError('Not found Post')
     }
 
-    await this.postService.scoreCarculator(post.id)
+    await this.postService.scoreCalculator(post.id)
   }
   async calculateRecentPostScore(): Promise<number> {
     if (ENV.appEnv !== 'development') {

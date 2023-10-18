@@ -4,7 +4,7 @@ import { injectable, singleton } from 'tsyringe'
 
 interface Service {
   findById(postId: string): Promise<Post | null>
-  scoreCarculator(postId: string): Promise<void>
+  scoreCalculator(postId: string): Promise<void>
 }
 
 @singleton()
@@ -30,7 +30,7 @@ export class PostService implements Service {
     })
     return posts
   }
-  public async scoreCarculator(postId: string): Promise<void> {
+  public async scoreCalculator(postId: string): Promise<void> {
     const post = await this.findById(postId)
 
     if (!post) {

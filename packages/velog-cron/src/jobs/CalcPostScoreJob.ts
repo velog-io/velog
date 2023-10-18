@@ -31,7 +31,7 @@ export class CalcPostScoreJob extends JobProgress implements Job {
     for (let i = 0; i < posts.length; i++) {
       const postId = posts[i].id
       console.log(`${i} / ${posts.length}`)
-      await this.postService.scoreCarculator(postId)
+      await this.postService.scoreCalculator(postId)
     }
 
     console.log(`Completed, target post count: ${posts.length}`)
