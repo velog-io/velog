@@ -81,34 +81,51 @@ export class FollowUserService implements Service {
       },
     })
 
-    const postLikesMap = postLikes.reduceRight<PostLikesMap>(this.calculateTotalLikes, new Map())
-    return Array.from(postLikesMap)
+    const calcuatedTotalLikes = postLikes.reduce<CalculatedTotalLikes>(this.calculateTotalLikes, {
+      postMap: new Map(),
+      countedPostIds: new Set(),
+    })
+
+    return Array.from(calcuatedTotalLikes.postMap)
+      .filter(([, post]) => post.totalLikes > 4)
       .sort(([, a], [, b]) => b.totalLikes - a.totalLikes)
-      .map(([id, { user, posts }]) => ({ id, user, posts }))
+      .map(([id, { user, posts, totalLikes }]) => ({ id, user, posts, totalLikes }))
   }
-  private calculateTotalLikes(map: PostLikesMap, postLike: PostLikePaylaod) {
+  private calculateTotalLikes(result: CalculatedTotalLikes, postLike: PostLikePaylaod) {
     const { user, ...post } = postLike.post!
 
-    if (!user || !post) return map
+    if (!user || !post) return result
 
     const id = user.id
-    const exists = map.get(id)
+    const exists = result.postMap.get(id)
+
+    const isCounted = result.countedPostIds.has(post.id)
+
+    if (!isCounted) {
+      result.countedPostIds.add(post.id)
+    }
 
     if (exists) {
-      const data: PostLikesMapData = {
+      const set = new Set<string>()
+      const posts = exists.posts
+        .concat(post)
+        .filter((post) => (!set.has(post.id) ? (set.add(post.id), true) : false))
+        .sort((a, b) => b.likes! - a.likes!)
+        .slice(0, 3)
+
+      const data: PostMap = {
         user,
-        posts: exists.posts
-          .concat(post)
-          .sort((a, b) => b.likes! - a.likes!)
-          .slice(0, 3),
-        totalLikes: exists.totalLikes + post.likes!,
+        posts,
+        totalLikes: exists.totalLikes + (isCounted ? 0 : post.likes!),
       }
-      map.set(id, data)
+
+      result.postMap.set(id, data)
     } else {
       const data = { user: user, posts: [post], totalLikes: post.likes! }
-      map.set(id, data)
+      result.postMap.set(id, data)
     }
-    return map
+
+    return result
   }
 }
 
@@ -163,7 +180,7 @@ type Post = Prisma.PostGetPayload<{
   }
 }>
 
-type PostLikesMapBase = { user: User; posts: Post[] }
-type PostLikesMapData = PostLikesMapBase & { totalLikes: number }
-type PostLikesMap = Map<string, PostLikesMapData>
+type PostMapBase = { user: User; posts: Post[] }
+type PostMap = PostMapBase & { totalLikes: number }
+type CalculatedTotalLikes = { postMap: Map<string, PostMap>; countedPostIds: Set<string> }
 type RecommedFollowerResult = { id: string; user: User; posts: Post[] }
