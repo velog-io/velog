@@ -14,15 +14,18 @@
     "velog"
   ],
   "scripts": {
-    "dev": "next dev -p 3001 --turbo",
+    "dev": "pnpm env:copy -e developement && next dev -p 3001 --turbo",
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p 3001",
     "lint": "next lint",
+    "env:copy": "tsx ./scripts/copyEnv.ts",
     "create-component": "tsx ./scripts/createComponent.ts",
     "create-svg-component": "tsx ./scripts/createSvgComponent.ts",
-    "codegen": "dotenv -e .env.development graphql-codegen --config codegen.ts -r dotenv/config"
+    "codegen": "dotenv -e .env.development graphql-codegen --config codegen.ts -r dotenv/config",
+    "ssm": "tsx ./scripts/ssm/index.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-ssm": "^3.431.0",
     "@tanstack/react-query": "^4.32.0",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
