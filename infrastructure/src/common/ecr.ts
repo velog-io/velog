@@ -32,7 +32,10 @@ export const getECRRepository = async (type: PackageType): Promise<Repository> =
     )
 
   if (!existsRepo) {
-    throw new Error('Not found repository')
+    console.info('Not found repository, so create new Repository')
+    const repo = new aws.ecr.Repository(withPrefix(option.ecrRepoName), { forceDelete: true })
+    createRepoLifecyclePolicy(type, repo)
+    return repo
   }
 
   const repo = new aws.ecr.Repository(
@@ -71,6 +74,11 @@ const createRepoLifecyclePolicy = (type: PackageType, repo: Repository) => {
 
 export const createECRImage = (type: PackageType, repo: Repository): pulumi.Output<string> => {
   const option = options[type]
+  const extraOptions = ['--platform', 'linux/amd64']
+
+  extraOptions.push('--build-arg')
+  extraOptions.push(`DOCKER_ENV=${ENV.appEnv}`)
+
   const image = new awsx.ecr.Image(
     withPrefix(option.imageName),
     {

@@ -10,8 +10,8 @@ const serverEcsOption: EcsOption = {
 
 const webEcsOption: EcsOption = {
   desiredCount: ENV.isProduction ? 2 : 1,
-  cpu: 1024,
-  memory: 2048,
+  cpu: ENV.isProduction ? 1024 : 512,
+  memory: ENV.isProduction ? 2048 : 1024,
   maxCapacity: 12,
   minCapacity: ENV.isProduction ? 2 : 1,
 }
