@@ -4,6 +4,8 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+      args:
+        DOCKER_ENV: 'stage'
     env_file:
       - ../../.env
     tty: true

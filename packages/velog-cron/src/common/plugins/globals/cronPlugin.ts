@@ -3,6 +3,7 @@ import { CalculatePostScoreJob } from '@jobs/CalculatePostScoreJob.js'
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 import { RecommendFollowerJob } from '@jobs/RecommendFollowerJob.js'
+import { ENV } from '@env'
 
 const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   const calculatePostScoreJob = container.resolve(CalculatePostScoreJob)
@@ -58,8 +59,10 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     })
   }
 
-  const crons = jobDescription.map(createJob)
-  await Promise.all(crons.map((cron) => cron.start()))
+  if (ENV.appEnv === 'production') {
+    const crons = jobDescription.map(createJob)
+    await Promise.all(crons.map((cron) => cron.start()))
+  }
 
   done()
 }

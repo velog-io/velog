@@ -7,7 +7,7 @@ import { injectable, singleton } from 'tsyringe'
 @singleton()
 export class CookieService {
   private get domains() {
-    const isProduction = ENV.appEnv === 'production'
+    const isProduction = ENV.appEnv !== 'development'
     if (isProduction) return ['.velog.io']
     return ['location', undefined]
   }

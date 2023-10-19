@@ -20,7 +20,7 @@ async function resolverAutoLoader(): Promise<Resolvers[]> {
   const resolverFolderPath = resolve(__dirname, 'resolvers')
 
   const promises = readdirSync(resolverFolderPath).map(async (resolverPath) => {
-    const suffix = ENV.appEnv === 'production' ? '.js' : '.ts'
+    const suffix = ENV.appEnv === 'development' ? '.ts' : '.js'
     const resolvername = basename(resolverPath, suffix)
     const resolver = await import(`./resolvers/${resolvername}.js`)
     return resolver.default
