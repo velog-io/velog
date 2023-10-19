@@ -57,7 +57,7 @@ export class PostController implements Controller {
     for (let i = 0; i < posts.length; i++) {
       console.log(`${i} / ${posts.length}`)
       const postId = posts[i].id
-      await this.postService.scoreCarculator(postId)
+      await this.postService.scoreCalculator(postId)
     }
 
     return posts.length
