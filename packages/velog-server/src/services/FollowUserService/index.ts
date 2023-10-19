@@ -3,7 +3,7 @@ import { ConfilctError } from '@errors/ConfilctError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { RedisService } from '@lib/redis/RedisService.js'
-import { RecommendFollowers } from '@graphql/generated'
+import { RecommedFollwersResult, RecommendFollowers } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { FollowUser, User } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
@@ -15,7 +15,7 @@ interface Service {
   unfollow(userId: string, followUserId: string): Promise<void>
   getFollowers(userId: string): Promise<User[]>
   getFollowings(userId: string): Promise<User[]>
-  getRecommededFollowers(): Promise<RecommendFollowers[]>
+  getRecommededFollowers(page?: number, take?: number): Promise<RecommedFollwersResult>
 }
 
 @injectable()
@@ -153,7 +153,7 @@ export class FollowUserService implements Service {
     })
     return followings.map((relationship) => relationship.following)
   }
-  async getRecommededFollowers(page?: number, take?: number): Promise<RecommendFollowers[]> {
+  async getRecommededFollowers(page?: number, take?: number): Promise<RecommedFollwersResult> {
     if (!page || !take) {
       throw new BadRequestError()
     }
@@ -169,11 +169,23 @@ export class FollowUserService implements Service {
     const getFollowersKey = this.redis.generateKey.recommendedFollowersKey()
     const followers = await this.redis.get(getFollowersKey)
 
-    if (!followers) return []
+    if (!followers) {
+      return {
+        totalPage: 0,
+        followers: [],
+      }
+    }
 
     const recommededFollowers: RecommendFollowers[] = JSON.parse(followers)
 
     const offset = (page - 1) * take
-    return recommededFollowers.slice(offset, offset + take)
+    const totalPage = Math.ceil(recommededFollowers.length / take)
+
+    const result = {
+      totalPage,
+      followers: recommededFollowers.slice(offset, offset + take),
+    }
+
+    return result
   }
 }

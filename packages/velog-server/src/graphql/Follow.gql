@@ -23,10 +23,15 @@ type RecommendFollowers {
   posts: [RecommedFollowersPosts!]!
 }
 
+type RecommedFollwersResult {
+  totalPage: Int
+  followers: [RecommendFollowers!]!
+}
+
 type Query {
   followers(input: FollowersInput!): [User!]!
   followings(input: FollowingsInput!): [User!]!
-  recommendFollowers(input: RecommendFollowersInput!): [RecommendFollowers!]!
+  recommendFollowers(input: RecommendFollowersInput!): RecommedFollwersResult!
 }
 
 input FollowersInput {

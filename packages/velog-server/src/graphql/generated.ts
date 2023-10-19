@@ -142,7 +142,7 @@ export type Query = {
   post?: Maybe<Post>
   readingList: Array<Post>
   recentPosts: Array<Post>
-  recommendFollowers: Array<RecommendFollowers>
+  recommendFollowers: RecommedFollwersResult
   restoreToken?: Maybe<UserToken>
   trendingPosts: Array<Post>
 }
@@ -207,6 +207,11 @@ export type RecommedFollowersPosts = {
   thumbnail?: Maybe<Scalars['String']['output']>
   title?: Maybe<Scalars['String']['output']>
   url_slug?: Maybe<Scalars['String']['output']>
+}
+
+export type RecommedFollwersResult = {
+  followers: Array<RecommendFollowers>
+  totalPage?: Maybe<Scalars['Int']['output']>
 }
 
 export type RecommendFollowers = {
@@ -436,6 +441,7 @@ export type ResolversTypes = {
   ReadingListOption: ReadingListOption
   RecentPostsInput: RecentPostsInput
   RecommedFollowersPosts: ResolverTypeWrapper<RecommedFollowersPosts>
+  RecommedFollwersResult: ResolverTypeWrapper<RecommedFollwersResult>
   RecommendFollowers: ResolverTypeWrapper<RecommendFollowers>
   RecommendFollowersInput: RecommendFollowersInput
   RecommendFollowersUser: ResolverTypeWrapper<RecommendFollowersUser>
@@ -493,6 +499,7 @@ export type ResolversParentTypes = {
   ReadingListInput: ReadingListInput
   RecentPostsInput: RecentPostsInput
   RecommedFollowersPosts: RecommedFollowersPosts
+  RecommedFollwersResult: RecommedFollwersResult
   RecommendFollowers: RecommendFollowers
   RecommendFollowersInput: RecommendFollowersInput
   RecommendFollowersUser: RecommendFollowersUser
@@ -677,7 +684,7 @@ export type QueryResolvers<
     RequireFields<QueryRecentPostsArgs, 'input'>
   >
   recommendFollowers?: Resolver<
-    Array<ResolversTypes['RecommendFollowers']>,
+    ResolversTypes['RecommedFollwersResult'],
     ParentType,
     ContextType,
     RequireFields<QueryRecommendFollowersArgs, 'input'>
@@ -710,6 +717,16 @@ export type RecommedFollowersPostsResolvers<
   thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   url_slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
+export type RecommedFollwersResultResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['RecommedFollwersResult'] = ResolversParentTypes['RecommedFollwersResult'],
+> = {
+  followers?: Resolver<Array<ResolversTypes['RecommendFollowers']>, ParentType, ContextType>
+  totalPage?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -890,6 +907,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Query?: QueryResolvers<ContextType>
   ReadCountByDay?: ReadCountByDayResolvers<ContextType>
   RecommedFollowersPosts?: RecommedFollowersPostsResolvers<ContextType>
+  RecommedFollwersResult?: RecommedFollwersResultResolvers<ContextType>
   RecommendFollowers?: RecommendFollowersResolvers<ContextType>
   RecommendFollowersUser?: RecommendFollowersUserResolvers<ContextType>
   RecommendFollowersUserProfile?: RecommendFollowersUserProfileResolvers<ContextType>
