@@ -17,13 +17,13 @@
   "main": "/src/main.ts",
   "type": "module",
   "scripts": {
-    "prisma:copy": "tsx ./scripts/copyPrisma.ts",
-    "prisma:rm": "rm -rf ./prisma",
-    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
     "stage": "pnpm ssm pull -e stage && NODE_ENV=stage pnpm start",
     "prod": "pnpm ssm pull -e production && NODE_ENV=production pnpm start",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "start": "node dist/src/main.js",
+    "prisma:copy": "tsx ./scripts/copyPrisma.ts",
+    "prisma:rm": "rm -rf ./prisma",
     "create-service": "tsx ./scripts/createService.ts",
     "ssm": "tsx ./scripts/ssm/index.ts"
   },

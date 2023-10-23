@@ -14,7 +14,9 @@
     "velog"
   ],
   "scripts": {
-    "dev": "pnpm env:copy -e developement && next dev -p 3001 --turbo",
+    "dev": "next dev -p 3001 --turbo",
+    "stage": "pnpm ssm pull -e stage && pnpm env:copy -e stage && APP_ENV=stage pnpm start",
+    "prod": "pnpm ssm pull -e production && pnpm env:copy -e production && APP_ENV=production pnpm start",
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p 3001",
     "lint": "next lint",

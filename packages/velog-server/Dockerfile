@@ -19,7 +19,8 @@ RUN pnpm prisma generate
 RUN pnpm build
 
 ARG DOCKER_ENV
-ENV NODE_ENV=${DOCKER_ENV}
+RUN echo "DOCKER_ENV value is: ${DOCKER_ENV}"
+
 EXPOSE 5003
 
 CMD ["/scripts/entrypoint.sh"]

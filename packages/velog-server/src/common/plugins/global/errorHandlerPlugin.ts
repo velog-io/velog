@@ -1,8 +1,9 @@
+import { ENV } from '@env'
 import { FastifyPluginAsync } from 'fastify'
 
 const errorHandlerPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.setErrorHandler((error, _, reply) => {
-    if (process.env.NODE_ENV === 'development') {
+    if (ENV.appEnv === 'development') {
       console.log('fastify error:', error)
     }
     if (error?.statusCode) {
@@ -13,7 +14,7 @@ const errorHandlerPlugin: FastifyPluginAsync = async (fastify) => {
     reply.send({
       message: error.message || 'Unknown Error',
       name: error.name || 'Error',
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+      stack: ENV.appEnv === 'development' ? error.stack : undefined,
     })
   })
 }

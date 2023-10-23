@@ -17,7 +17,14 @@ COPY . .
 # # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
 
+COPY /scripts/entrypoint.sh /scripts/entrypoint.sh
+RUN chmod +x /scripts/entrypoint.sh
+
 RUN pnpm build
+
+ARG DOCKER_ENV
+RUN echo "DOCKER_ENV value is: ${DOCKER_ENV}"
+
 EXPOSE 3001
 
-CMD ["pnpm", "start"]
+CMD ["/scripts/entrypoint.sh"]

@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
-const environment = z.enum(['development', 'test', 'stage', 'production'])
+// allowed standard env names,  https://nextjs.org/docs/messages/non-standard-node-env
+const environment = z.enum(['development', 'test', 'production'])
 type Envrionment = z.infer<typeof environment>
 
 const appEnv = (process.env.NODE_ENV as Envrionment) || 'development'

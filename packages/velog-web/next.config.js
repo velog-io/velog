@@ -1,4 +1,5 @@
-const isProd = process.env.NODE_ENV === 'production'
+const isStageContainer = process.env.DOCKER_ENV === 'stage'
+const isProductionContainer = process.env.DOCKER_ENV === 'production'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -8,7 +9,11 @@ const nextConfig = {
     domains: ['velog.velcdn.com', 'images.velog.io', 'media.vlpt.us'],
     unoptimized: true,
   },
-  assetPrefix: isProd ? 'https://assets.velcdn.com' : undefined,
+  assetPrefix: isProductionContainer
+    ? 'https://assets.velcdn.com'
+    : isStageContainer
+    ? 'https://assets-stage.velcdn.com'
+    : undefined,
 }
 
 module.exports = nextConfig
