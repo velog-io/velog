@@ -23,6 +23,7 @@ RUN chmod +x /scripts/entrypoint.sh
 RUN pnpm build
 
 ARG DOCKER_ENV
+ENV DOCKER_ENV=${DOCKER_ENV}
 RUN echo "DOCKER_ENV value is: ${DOCKER_ENV}"
 
 EXPOSE 3001

@@ -59,7 +59,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     })
   }
 
-  if (ENV.dockerEnv === 'production') {
+  if (ENV.appEnv === 'development' || ENV.dockerEnv === 'production') {
     const crons = jobDescription.map(createJob)
     await Promise.all(crons.map((cron) => cron.start()))
   }

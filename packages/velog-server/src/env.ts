@@ -4,17 +4,18 @@ import { z } from 'zod'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 
-export type Envrionment = 'development' | 'test' | 'stage' | 'production'
-export type EnvFiles = Record<Envrionment, string>
+type DockerEnvrionment = 'development' | 'stage' | 'production'
+type AppEnvironment = 'development' | 'production'
+type EnvFiles = Record<DockerEnvrionment, string>
 
 const envFiles: EnvFiles = {
   development: '.env.development',
   production: '.env.production',
-  test: '.env.test',
   stage: '.env.stage',
 }
 
-const appEnv = (process.env.NODE_ENV as Envrionment) || 'development'
+const dockerEnv = (process.env.DOCKER_ENV as DockerEnvrionment) || 'development'
+const appEnv = (process.env.APP_ENV as AppEnvironment) || 'development'
 const envFile = envFiles[appEnv]
 const prefix = appEnv === 'development' ? './env' : '../env'
 
@@ -35,7 +36,8 @@ if (!existsSync(configPath)) {
 dotenv.config({ path: configPath })
 
 const env = z.object({
-  appEnv: z.enum(['development', 'test', 'stage', 'production']),
+  dockerEnv: z.enum(['development', 'production', 'stage']),
+  appEnv: z.enum(['development', 'production']),
   port: z.number(),
   clientV2Host: z.string(),
   clientV3Host: z.string(),
@@ -64,6 +66,7 @@ const env = z.object({
 })
 
 export const ENV = env.parse({
+  dockerEnv,
   appEnv,
   port: Number(process.env.PORT),
   clientV2Host: process.env.CLIENT_V2_HOST,

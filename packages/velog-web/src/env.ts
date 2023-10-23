@@ -1,13 +1,13 @@
 import { z } from 'zod'
 
 // allowed standard env names,  https://nextjs.org/docs/messages/non-standard-node-env
-const environment = z.enum(['development', 'test', 'production'])
-type Envrionment = z.infer<typeof environment>
 
-const appEnv = (process.env.NODE_ENV as Envrionment) || 'development'
+const dockerEnv = process.env.DOCKER_ENV || 'development'
+const appEnv = process.env.APP_ENV || 'development'
 
 const env = z.object({
-  appEnv: environment,
+  dockerEnv: z.enum(['development', 'production', 'stage']),
+  appEnv: z.enum(['development', 'production']),
   publicUrl: z.string(),
   clientHost: z.string(),
   clientV2Host: z.string(),
@@ -20,6 +20,7 @@ const env = z.object({
 })
 
 export const ENV = env.parse({
+  dockerEnv,
   appEnv,
   publicUrl: process.env.NEXT_PUBLIC_PUBLIC_URL,
   clientHost: process.env.NEXT_PUBLIC_CLIENT_HOST,
