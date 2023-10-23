@@ -15,6 +15,7 @@ const envFiles: EnvFiles = {
 }
 
 const appEnv = (process.env.NODE_ENV as Envrionment) || 'development'
+const dockerEnv = process.env.DOCKER_ENV || 'development'
 const envFile = envFiles[appEnv]
 const utils = container.resolve(UtilsService)
 const prefix = appEnv === 'development' ? './env' : '../env'
@@ -28,6 +29,7 @@ if (!existsSync(configPath)) {
 dotenv.config({ path: configPath })
 
 const env = z.object({
+  dockerEnv: z.enum(['development', 'production', 'stage']),
   appEnv: z.enum(['development', 'production', 'stage', 'test']),
   port: z.number(),
   databaseUrl: z.string(),
@@ -38,6 +40,7 @@ const env = z.object({
 export type EnvVars = z.infer<typeof env>
 
 export const ENV = env.parse({
+  dockerEnv,
   appEnv,
   port: Number(process.env.PORT),
   databaseUrl: process.env.DATABASE_URL,

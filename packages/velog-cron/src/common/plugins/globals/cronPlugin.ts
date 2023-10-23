@@ -59,7 +59,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     })
   }
 
-  if (ENV.appEnv === 'production') {
+  if (ENV.dockerEnv === 'production') {
     const crons = jobDescription.map(createJob)
     await Promise.all(crons.map((cron) => cron.start()))
   }
@@ -84,6 +84,7 @@ type NeedParamJobService = {
   cronTime: string
   jobService: CalculatePostScoreJob
   param: number
+  isOnlyStage?: boolean
 }
 
 type NotNeedParamJobService = {
@@ -91,4 +92,5 @@ type NotNeedParamJobService = {
   cronTime: string
   jobService: CreateFeedJob | RecommendFollowerJob
   param: undefined
+  isOnlyStage?: boolean
 }
