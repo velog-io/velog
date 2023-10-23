@@ -27,9 +27,7 @@ export const getECRRepository = async (type: PackageType): Promise<Repository> =
       repositoryId: repo.registryId,
       repoUri: `${repo.registryId}.dkr.ecr.ap-northeast-2.amazonaws.com/${repo.repositoryName}`,
     }))
-    .find(
-      (v) => v.repositoryName?.includes('velog') && v.repositoryName?.includes(option.ecrRepoName),
-    )
+    .find((v) => v.repositoryName?.includes(`velog-${ENV.dockerEnv}-${option.ecrRepoName}`))
 
   if (!existsRepo) {
     console.info('Not found repository, so create new Repository')
@@ -76,15 +74,12 @@ export const createECRImage = (type: PackageType, repo: Repository): pulumi.Outp
   const option = options[type]
   const extraOptions = ['--platform', 'linux/amd64']
 
-  extraOptions.push('--build-arg')
-  extraOptions.push(`DOCKER_ENV=${ENV.appEnv}`)
-
   const image = new awsx.ecr.Image(
     withPrefix(option.imageName),
     {
       repositoryUrl: repo.repositoryUrl,
       path: option.path,
-      extraOptions: ['--platform', 'linux/amd64'],
+      extraOptions,
     },
     {
       retainOnDelete: true,

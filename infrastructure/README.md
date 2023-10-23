@@ -10,10 +10,10 @@ pulumi stack ls
 
 ## 2. Selecting a Stack
 
-To select a specific stack, choose from `development`, `stage`, or `production` as needed:
+To select a specific stack, choose from `stage`, or `production` as needed:
 
 ```bash
-pulumi stack select [development|stage|production]
+pulumi stack select [stage|production]
 ```
 
 ## 3. Reviewing and Deploying Resources

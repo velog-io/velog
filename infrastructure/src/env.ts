@@ -4,9 +4,9 @@ import { z } from 'zod'
 
 const config = new pulumi.Config()
 
-const appEnv = config.require('APP_ENV') as Envrionment
+const dockerEnv = config.require('DOCKER_ENV') as Envrionment
 
-if (!['development', 'stage', 'production'].includes(appEnv)) {
+if (!['development', 'stage', 'production'].includes(dockerEnv)) {
   throw new Error('Not allowed environment')
 }
 
@@ -25,12 +25,12 @@ const envFiles: Record<Envrionment, string> = {
   stage: '.env.stage',
 }
 
-const file = envFiles[appEnv]
+const file = envFiles[dockerEnv]
 
 dotenv.config({ path: resolveDir(`../env/${file}`) })
 
 const env = z.object({
-  appEnv: z.string(),
+  dockerEnv: z.string(),
   isProduction: z.boolean(),
   webV2Port: z.number(),
   webV3Port: z.number(),
@@ -45,8 +45,8 @@ const env = z.object({
 })
 
 export const ENV = env.parse({
-  appEnv,
-  isProduction: appEnv === 'production',
+  dockerEnv,
+  isProduction: dockerEnv === 'production',
   webV2Port: Number(process.env.WEB_V2_PORT),
   webV3Port: Number(process.env.WEB_V3_PORT),
   serverPort: Number(process.env.SERVER_PORT),

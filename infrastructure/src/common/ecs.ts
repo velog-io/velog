@@ -55,12 +55,8 @@ export const createECSfargateService = ({
               value: port.toString(),
             },
             {
-              name: 'APP_ENV',
-              value: ENV.appEnv,
-            },
-            {
-              name: 'NODE_ENV',
-              value: ENV.isProduction ? 'production' : 'development',
+              name: 'DOCKER_ENV',
+              value: ENV.dockerEnv,
             },
             {
               name: 'AWS_ACCESS_KEY_ID',
