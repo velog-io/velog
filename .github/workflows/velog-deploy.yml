@@ -2,7 +2,7 @@ name: Velog Deployment workflow
 
 on:
   push:
-    branches: 'release'
+    branches: 'release-test'
     paths:
       - 'packages/velog-server/**'
       - 'packages/velog-web/**'
