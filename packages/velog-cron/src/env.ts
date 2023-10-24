@@ -4,9 +4,9 @@ import { UtilsService } from '@lib/utils/UtilsService.js'
 import { existsSync } from 'fs'
 import { z } from 'zod'
 
-type DockerEnvrionment = 'development' | 'stage' | 'production'
+type DockerEnv = 'development' | 'stage' | 'production'
 type AppEnvironment = 'development' | 'production'
-export type EnvFiles = Record<DockerEnvrionment, string>
+export type EnvFiles = Record<DockerEnv, string>
 
 const envFiles: EnvFiles = {
   development: '.env.development',
@@ -14,7 +14,7 @@ const envFiles: EnvFiles = {
   production: '.env.production',
 }
 
-const dockerEnv = (process.env.DOCKER_ENV as DockerEnvrionment) || 'development'
+const dockerEnv = (process.env.DOCKER_ENV as DockerEnv) || 'development'
 const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
   ? 'production'
   : 'development'

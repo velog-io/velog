@@ -4,9 +4,9 @@ import { z } from 'zod'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { container } from 'tsyringe'
 
-type DockerEnvrionment = 'development' | 'stage' | 'production'
+type DockerEnv = 'development' | 'stage' | 'production'
 type AppEnvironment = 'development' | 'production'
-type EnvFiles = Record<DockerEnvrionment, string>
+type EnvFiles = Record<DockerEnv, string>
 
 const envFiles: EnvFiles = {
   development: '.env.development',
@@ -14,7 +14,7 @@ const envFiles: EnvFiles = {
   stage: '.env.stage',
 }
 
-const dockerEnv = (process.env.DOCKER_ENV as DockerEnvrionment) || 'development'
+const dockerEnv = (process.env.DOCKER_ENV as DockerEnv) || 'development'
 const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
   ? 'production'
   : 'development'

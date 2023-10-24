@@ -1,31 +1,36 @@
 import * as dotenv from 'dotenv'
 import * as pulumi from '@pulumi/pulumi'
+import { resolve } from 'path'
+import { existsSync } from 'fs'
 import { z } from 'zod'
 
 const config = new pulumi.Config()
 
-const dockerEnv = config.require('DOCKER_ENV') as Envrionment
+const dockerEnv = config.require('DOCKER_ENV') as DockerEnv
 
 if (!['development', 'stage', 'production'].includes(dockerEnv)) {
   throw new Error('Not allowed environment')
 }
 
-import { resolve } from 'path'
+const envFiles: Record<DockerEnv, string> = {
+  development: '.env.development',
+  stage: '.env.stage',
+  production: '.env.production',
+}
 
-type Envrionment = 'development' | 'production' | 'stage'
+const file = envFiles[dockerEnv]
 
 function resolveDir(dir: string) {
   const resolvedDir = resolve(__dirname, dir)
   return resolvedDir
 }
 
-const envFiles: Record<Envrionment, string> = {
-  development: '.env.development',
-  production: '.env.production',
-  stage: '.env.stage',
-}
+const configPath = resolveDir(`../env/${file}`)
 
-const file = envFiles[dockerEnv]
+if (!existsSync(configPath)) {
+  console.log(`Read target: ${configPath}`)
+  throw new Error('Not found environment file')
+}
 
 dotenv.config({ path: resolveDir(`../env/${file}`) })
 
@@ -58,3 +63,5 @@ export const ENV = env.parse({
   awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
   awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 })
+
+type DockerEnv = 'development' | 'production' | 'stage'

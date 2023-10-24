@@ -72,7 +72,7 @@ const createRepoLifecyclePolicy = (type: PackageType, repo: Repository) => {
 
 export const createECRImage = (type: PackageType, repo: Repository): pulumi.Output<string> => {
   const option = options[type]
-  const extraOptions = ['--platform', 'linux/amd64']
+  const extraOptions = ['--platform', 'linux/amd64', '--build-arg', `DOCKER_ENV=${ENV.dockerEnv}`]
 
   const image = new awsx.ecr.Image(
     withPrefix(option.imageName),

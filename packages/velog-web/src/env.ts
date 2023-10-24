@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
-type DockerEnvrionment = 'development' | 'stage' | 'production'
+type DockerEnv = 'development' | 'stage' | 'production'
 type AppEnvironment = 'development' | 'production'
 
-const dockerEnv = (process.env.DOCKER_ENV as DockerEnvrionment) || 'development'
+const dockerEnv = (process.env.DOCKER_ENV as DockerEnv) || 'development'
 const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
   ? 'production'
   : 'development'
