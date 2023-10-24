@@ -1,9 +1,12 @@
 import { z } from 'zod'
 
-// allowed standard env names,  https://nextjs.org/docs/messages/non-standard-node-env
+type DockerEnvrionment = 'development' | 'stage' | 'production'
+type AppEnvironment = 'development' | 'production'
 
-const dockerEnv = process.env.DOCKER_ENV || 'development'
-const appEnv = process.env.APP_ENV || 'development'
+const dockerEnv = (process.env.DOCKER_ENV as DockerEnvrionment) || 'development'
+const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
+  ? 'production'
+  : 'development'
 
 const env = z.object({
   dockerEnv: z.enum(['development', 'production', 'stage']),
@@ -21,6 +24,7 @@ const env = z.object({
 
 export const ENV = env.parse({
   dockerEnv,
+  // allowed standard env names,  https://nextjs.org/docs/messages/non-standard-node-env
   appEnv,
   publicUrl: process.env.NEXT_PUBLIC_PUBLIC_URL,
   clientHost: process.env.NEXT_PUBLIC_CLIENT_HOST,

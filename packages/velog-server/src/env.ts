@@ -1,8 +1,8 @@
 import dotenv from 'dotenv'
 import { existsSync } from 'fs'
 import { z } from 'zod'
-import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
+import { UtilsService } from '@lib/utils/UtilsService.js'
+import { container } from 'tsyringe'
 
 type DockerEnvrionment = 'development' | 'stage' | 'production'
 type AppEnvironment = 'development' | 'production'
@@ -15,18 +15,15 @@ const envFiles: EnvFiles = {
 }
 
 const dockerEnv = (process.env.DOCKER_ENV as DockerEnvrionment) || 'development'
-const appEnv = (process.env.APP_ENV as AppEnvironment) || 'development'
-const envFile = envFiles[appEnv]
-const prefix = appEnv === 'development' ? './env' : '../env'
+const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
+  ? 'production'
+  : 'development'
 
-function resolveDir(dir: string): string {
-  const __filename = fileURLToPath(import.meta.url)
-  const splited = dirname(__filename).split('/src')
-  const cwd = splited.slice(0, -1).join('/src')
-  return join(cwd, dir)
-}
+const envFile = envFiles[dockerEnv]
+const prefix = dockerEnv === 'development' ? './env' : '../env'
 
-const configPath = resolveDir(`${prefix}/${envFile}`)
+const utils = container.resolve(UtilsService)
+const configPath = utils.resolveDir(`${prefix}/${envFile}`)
 
 if (!existsSync(configPath)) {
   console.log(`Read target: ${configPath}`)
@@ -94,5 +91,3 @@ export const ENV = env.parse({
   codenaryCallback: process.env.CODENARY_CALLBACK,
   redisHost: process.env.REDIS_HOST,
 })
-
-export type EnvVars = z.infer<typeof env>

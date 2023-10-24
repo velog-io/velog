@@ -20,11 +20,12 @@ ENV NEXT_TELEMETRY_DISABLED 1
 COPY /scripts/entrypoint.sh /scripts/entrypoint.sh
 RUN chmod +x /scripts/entrypoint.sh
 
-RUN pnpm build
-
 ARG DOCKER_ENV
 ENV DOCKER_ENV=${DOCKER_ENV}
 RUN echo "DOCKER_ENV value is: ${DOCKER_ENV}"
+
+RUN pnpm env:copy -e ${DOCKER_ENV}
+RUN pnpm build
 
 EXPOSE 3001
 

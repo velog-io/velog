@@ -1,5 +1,5 @@
-const isStageContainer = process.env.DOCKER_ENV === 'stage'
 const isProductionContainer = process.env.DOCKER_ENV === 'production'
+const isStageContainer = process.env.DOCKER_ENV === 'stage'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

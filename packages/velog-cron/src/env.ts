@@ -10,19 +10,23 @@ export type EnvFiles = Record<DockerEnvrionment, string>
 
 const envFiles: EnvFiles = {
   development: '.env.development',
-  production: '.env.production',
   stage: '.env.stage',
+  production: '.env.production',
 }
 
 const dockerEnv = (process.env.DOCKER_ENV as DockerEnvrionment) || 'development'
-const appEnv = (process.env.APP_ENV as AppEnvironment) || 'development'
-const envFile = envFiles[appEnv]
-const utils = container.resolve(UtilsService)
-const prefix = appEnv === 'development' ? './env' : '../env'
+const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
+  ? 'production'
+  : 'development'
 
+const envFile = envFiles[dockerEnv]
+const prefix = dockerEnv === 'development' ? './env' : '../env'
+
+const utils = container.resolve(UtilsService)
 const configPath = utils.resolveDir(`${prefix}/${envFile}`)
 
 if (!existsSync(configPath)) {
+  console.log(`Read target: ${configPath}`)
   throw new Error('Not found environment file')
 }
 
@@ -36,8 +40,6 @@ const env = z.object({
   cronApiKey: z.string(),
   redisHost: z.string(),
 })
-
-export type EnvVars = z.infer<typeof env>
 
 export const ENV = env.parse({
   dockerEnv,
