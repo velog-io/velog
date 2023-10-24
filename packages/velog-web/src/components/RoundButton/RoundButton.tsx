@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './Button.module.css'
+import styles from './RoundButton.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import VLink from '@/components/VLink/VLink'
 
@@ -16,12 +16,12 @@ interface Props extends ButtonProps {
   inline?: boolean
   to?: string
   size?: ButtonSize
-  color: ButtonColor
+  color?: ButtonColor
   border?: boolean
   className?: string
 }
 
-function Button({
+function RoundButton({
   to,
   color = 'teal',
   size = 'default',
@@ -40,4 +40,4 @@ function Button({
   return React.createElement(WrapperComponent, to ? { href: to } : null, ButtonComponent)
 }
 
-export default Button
+export default RoundButton

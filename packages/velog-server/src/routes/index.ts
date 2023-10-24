@@ -12,6 +12,10 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
     const serverTime = format(now, 'yyyy-MM-dd HH:mm:ss')
     reply.send({ serverTime })
   })
+
+  fastify.get('/check', (_, reply) => {
+    reply.status(200).send({ version: 'v3' })
+  })
   done()
 }
 

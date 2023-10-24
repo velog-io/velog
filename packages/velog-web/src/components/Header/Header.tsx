@@ -2,7 +2,7 @@
 
 import HeaderLogo from '@/components/Header/HeaderLogo'
 import styles from './Header.module.css'
-import Button from '@/components/Button'
+import RoundButton from '@/components/RoundButton'
 import { useAuth } from '@/state/auth'
 import { useTheme } from '@/state/theme'
 import HeaderSearchButton from '@/components/Header/HeaderSearchButton'
@@ -54,9 +54,14 @@ function Header() {
               <HeaderSearchButton to={urlForSearch} />
               {user && (
                 <>
-                  <Button color="darkGray" border={true} to="/write" className={cx('writeButton')}>
+                  <RoundButton
+                    color="darkGray"
+                    border={true}
+                    to="/write"
+                    className={cx('writeButton')}
+                  >
                     새 글 작성
-                  </Button>
+                  </RoundButton>
                   <div ref={ref}>
                     <HeaderUserIcon user={user} onClick={toggleUserMenu} />
                   </div>
@@ -64,7 +69,7 @@ function Header() {
                 </>
               )}
               {!user && (
-                <Button
+                <RoundButton
                   color="darkGray"
                   border={false}
                   onClick={() => {
@@ -72,7 +77,7 @@ function Header() {
                   }}
                 >
                   로그인
-                </Button>
+                </RoundButton>
               )}
             </>
           )}

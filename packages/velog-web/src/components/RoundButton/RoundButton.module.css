@@ -1,4 +1,18 @@
 .block {
+  transition: 0.125s all ease-in;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-weight: bold;
+  word-break: keep-all;
+
+  &:focus {
+    box-shadow: 0px 2px 12px #00000030;
+  }
+  &:disabled {
+    background: var(--bg-element2);
+  }
+
   &.small {
     height: 1.5rem;
     padding-left: 0.75rem;
@@ -17,9 +31,9 @@
 
   &.large {
     height: 3rem;
-    font-size: 1.5rem;
     padding-left: 2rem;
     padding-right: 2rem;
+    font-size: 1.5rem;
     border-radius: 1.5rem;
   }
 
@@ -107,17 +121,4 @@
       color: var(--button-text);
     }
   }
-  &:focus {
-    box-shadow: 0px 2px 12px #00000030;
-  }
-  &:disabled {
-    background: var(--bg-element2);
-  }
-
-  transition: 0.125s all ease-in;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  font-weight: bold;
-  word-break: keep-all;
 }

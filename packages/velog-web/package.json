@@ -44,6 +44,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
     "react-toastify": "^9.1.3",
+    "react-use": "^17.4.0",
     "sangte": "^0.1.26",
     "sharp": "^0.32.4",
     "tsx": "^3.12.7",
