@@ -15,12 +15,13 @@ COPY . .
 COPY /scripts/entrypoint.sh /scripts/entrypoint.sh
 RUN chmod +x /scripts/entrypoint.sh
 
-RUN npx prisma generate
-RUN pnpm build
-
 ARG DOCKER_ENV
 ENV DOCKER_ENV=${DOCKER_ENV}
 RUN echo "DOCKER_ENV value is: ${DOCKER_ENV}"
+
+RUN npx prisma generate
+RUN pnpm build
+
 
 EXPOSE 5004
 
