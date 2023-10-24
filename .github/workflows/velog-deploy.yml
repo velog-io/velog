@@ -1,4 +1,4 @@
-name: Velog Deployment workflow
+name: Velog Deploy workflow
 
 on:
   push:
