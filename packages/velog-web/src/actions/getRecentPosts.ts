@@ -22,6 +22,7 @@ export default async function getRecentPosts({ limit = ENV.defaultPostLimit }: R
 
     return recentPosts
   } catch (error) {
+    console.log('getRecentPosts error', error)
     return []
   }
 }

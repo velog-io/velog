@@ -4,6 +4,7 @@ import InteractiveViewProvider from '@/providers/InteractiveViewProvider'
 import ReactQueryProvider from '@/providers/ReactQueryProvider'
 import SangteContextProvider from '@/providers/SangteContextProvider'
 import ThemeProvider from '@/providers/ThemeProvider'
+import SentryProvider from './SentryProvider'
 
 type Props = {
   children: React.ReactNode
@@ -14,6 +15,7 @@ function CoreProvider({ children }: Props) {
     <>
       {/* run in server side */}
       <GtagProvider />
+      <SentryProvider />
       {/* run in client side */}
       <ConditionalBackgroundProvider>
         <ReactQueryProvider>

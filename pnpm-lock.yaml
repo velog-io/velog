@@ -450,6 +450,9 @@ importers:
       '@aws-sdk/client-ssm':
         specifier: ^3.431.0
         version: 3.431.0
+      '@sentry/browser':
+        specifier: ^7.75.0
+        version: 7.75.0
       '@tanstack/react-query':
         specifier: ^4.32.0
         version: 4.32.0(react-dom@18.2.0)(react@18.2.0)
@@ -5970,6 +5973,56 @@ packages:
   /@rushstack/eslint-patch@1.3.2:
     resolution: {integrity: sha512-V+MvGwaHH03hYhY+k6Ef/xKd6RYlc4q8WBx+2ANmipHJcKuktNcI/NgEsJgdSUF6Lw32njT6OnrRsKYCdgHjYw==}
     dev: true
+
+  /@sentry-internal/tracing@7.75.0:
+    resolution: {integrity: sha512-/j4opF/jB9j8qnSiQK75/lFLtkfqXS5/MoOKc2KWK/pOaf15W+6uJzGQ8jRBHLYd9dDg6AyqsF48Wqy561/mNg==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/core': 7.75.0
+      '@sentry/types': 7.75.0
+      '@sentry/utils': 7.75.0
+    dev: false
+
+  /@sentry/browser@7.75.0:
+    resolution: {integrity: sha512-DXH/69vzp2j8xjydX+lrUYasrk7a1mpbXFGA9GtnII7shMCy55+QkVxpa6cLojYUaG2K/8yFDMcrP9N395LnWg==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry-internal/tracing': 7.75.0
+      '@sentry/core': 7.75.0
+      '@sentry/replay': 7.75.0
+      '@sentry/types': 7.75.0
+      '@sentry/utils': 7.75.0
+    dev: false
+
+  /@sentry/core@7.75.0:
+    resolution: {integrity: sha512-vXg3cdJgwzP24oTS9zFCgLW4MgTkMZqXx+ESRq7gTD9qJTpcmAmYT+Ckmvebg8K6DBThV6+0v61r50na2+XdrA==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.75.0
+      '@sentry/utils': 7.75.0
+    dev: false
+
+  /@sentry/replay@7.75.0:
+    resolution: {integrity: sha512-TAAlj7JCMF6hFFL71RmPzVX89ltyPYFWR+t4SuWaBmU6HmTliI2eJvK+M36oE+N7s3CkyRVTaXXRe0YMwRMuZQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@sentry-internal/tracing': 7.75.0
+      '@sentry/core': 7.75.0
+      '@sentry/types': 7.75.0
+      '@sentry/utils': 7.75.0
+    dev: false
+
+  /@sentry/types@7.75.0:
+    resolution: {integrity: sha512-xG8OLADxG7HpGhMxrF4v4tKq/v/gqmLsTZ858R51pz0xCWM8SK6ZSWOKudkAGBIpRjI6RUHMnkBtRAN2aKDOkQ==}
+    engines: {node: '>=8'}
+    dev: false
+
+  /@sentry/utils@7.75.0:
+    resolution: {integrity: sha512-UHWKeevhUNRp+mAWDbMVFOMgseoq8t/xFgdUywO/2PC14qZKRBH+0k1BKoNkp5sOzDT06ETj2w6wYoYhy6i+dA==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.75.0
+    dev: false
 
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
