@@ -26,11 +26,8 @@ export default async function getTrendingPosts({
       cache: 'no-cache',
     })
 
-    if (!trendingPosts) return []
-
     return trendingPosts
   } catch (error) {
-    console.log('getTrendingPosts error', error)
-    return []
+    throw error
   }
 }

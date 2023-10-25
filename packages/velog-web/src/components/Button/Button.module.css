@@ -10,6 +10,7 @@
   border-radius: 4px;
   padding-top: 0;
   padding-bottom: 0;
+  user-select: none;
 
   &:disabled {
     cursor: not-allowed;
