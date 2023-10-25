@@ -219,32 +219,27 @@ export class PostService implements Service {
       whereInput = { ...whereInput, OR: OR }
     }
 
-    try {
-      const posts = await this.db.post.findMany({
-        where: whereInput,
-        orderBy: [
-          {
-            released_at: 'desc',
-          },
-          {
-            id: 'desc',
-          },
-        ],
-        include: {
-          user: {
-            include: {
-              profile: true,
-            },
+    const posts = await this.db.post.findMany({
+      where: whereInput,
+      orderBy: [
+        {
+          released_at: 'desc',
+        },
+        {
+          id: 'desc',
+        },
+      ],
+      include: {
+        user: {
+          include: {
+            profile: true,
           },
         },
-        take: limit,
-      })
+      },
+      take: limit,
+    })
 
-      return posts
-    } catch (error) {
-      console.log(error)
-      return []
-    }
+    return posts
   }
   public async getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]> {
     const { offset = 0, limit = 20, timeframe = 'week' } = input

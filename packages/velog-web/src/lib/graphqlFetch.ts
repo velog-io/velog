@@ -27,8 +27,9 @@ export default async function graphqlFetch<T>({
 
   if (!res.ok) {
     const errors = await res.json()
-    console.error(errors[0]?.extensions?.description || 'Error fetching GraphQL data.')
-    throw new Error(res.statusText)
+    console.log('graphqlFetch errors', errors)
+    console.log('body', body)
+    throw res
   }
 
   const json = await res.json()

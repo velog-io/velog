@@ -1,6 +1,6 @@
 import { container } from 'tsyringe'
 import { PostService } from './index'
-import { StubDbService, stubDbService } from 'test/stub/prisma/DbService'
+// import { StubDbService, stubDbService } from 'test/stub/prisma/DbService'
 
 describe('PostService', () => {
   let postService: PostService

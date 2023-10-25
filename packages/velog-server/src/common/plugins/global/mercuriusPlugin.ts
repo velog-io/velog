@@ -7,6 +7,7 @@ import { isHttpError } from '@errors/HttpError.js'
 
 const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.register(mercurius, {
+    logLevel: 'error',
     schema,
     resolvers: resolvers,
     graphiql: ENV.appEnv !== 'production',
@@ -28,13 +29,16 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         stack,
         errors: errors?.map((error) => ({ name: error.name, message: error.message })),
       }
-      console.log(result)
+      console.log('----errorHandler----\n', result)
     },
     errorFormatter: (execution) => {
+      console.log('errorFormatter error:', execution)
       const e = execution.errors?.[0]?.originalError
+
       if (!isHttpError(e)) {
-        return { statusCode: 400, response: execution }
+        return { statusCode: 500, response: execution }
       }
+
       const errors = execution.errors?.map((error) =>
         Object.assign(error, {
           extensions: {
@@ -43,7 +47,6 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
           },
         }),
       )
-
       return {
         statusCode: e.statusCode,
         response: {
