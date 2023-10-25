@@ -1,15 +1,11 @@
 'use client'
 
 import apiClient from '@/lib/api/apiClient'
-import styles from './ChunkErrorScreen.module.css'
-import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useEffect, useState } from 'react'
 import { useNetworkState } from 'react-use'
 import ErrorScreenTemplate from '../ErrorScreenTemplate'
 import { UndrawUpdate } from '@/assets/vectors/components'
 import NetworkErrorScreen from '../NetworkErrorScreen'
-
-const cx = bindClassNames(styles)
 
 type Props = {}
 
@@ -42,16 +38,16 @@ function ChunkErrorScreen({}: Props) {
   }, [network.online])
 
   if (networkStatus === null) return null
-  // if (networkStatus === 'online') {
-  //   return (
-  //     <ErrorScreenTemplate
-  //       Illustration={UndrawUpdate}
-  //       message={'벨로그가 업데이트 되었습니다. \n새로고침 후 다시 시도해주세요.'}
-  //       onButtonClick={() => window.location.reload()}
-  //       buttonText="새로고침"
-  //     />
-  //   )
-  // }
+  if (networkStatus === 'online') {
+    return (
+      <ErrorScreenTemplate
+        Illustration={UndrawUpdate}
+        message={'벨로그가 업데이트 되었습니다. \n새로고침 후 다시 시도해주세요.'}
+        onButtonClick={() => window.location.reload()}
+        buttonText="새로고침"
+      />
+    )
+  }
 
   return <NetworkErrorScreen />
 }

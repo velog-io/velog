@@ -1,7 +1,7 @@
-import RoundButton from '@/components/RoundButton'
 import styles from './ErrorScreenTemplate.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { SVGProps } from 'react'
+import Button from '@/components/Button'
 
 const cx = bindClassNames(styles)
 
@@ -19,9 +19,9 @@ function ErrorScreenTemplate({ Illustration, message, buttonText, onButtonClick 
       <div className={cx('message')}>{message}</div>
       {buttonText && (
         <div className={cx('button-wrapper')}>
-          <RoundButton size="large" onClick={onButtonClick}>
+          <Button size="large" onClick={onButtonClick}>
             {buttonText}
-          </RoundButton>
+          </Button>
         </div>
       )}
     </div>

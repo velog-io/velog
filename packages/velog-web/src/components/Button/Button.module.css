@@ -1,0 +1,109 @@
+.block {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  padding-top: 0;
+  padding-bottom: 0;
+
+  &:disabled {
+    cursor: not-allowed;
+    background: var(--bg-element4);
+    color: var(--text3);
+    &:hover {
+      background: var(--bg-element4);
+      color: var(--text3);
+    }
+  }
+
+  &.medium {
+    height: 32px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 16px;
+  }
+
+  &.large {
+    height: 40px;
+    padding-left: 18px;
+    padding-right: 18px;
+    & + & {
+      margin-left: 14px;
+    }
+    font-size: 18px;
+  }
+
+  &.teal {
+    background: var(--primary1);
+    color: var(--button-text);
+    &:focus,
+    &:hover {
+      background: var(--primary2);
+    }
+  }
+
+  &.lightGray {
+    background: var(--bg-element4);
+    color: var(--text1);
+    &:focus,
+    &:hover {
+      background: var(--bg-element3);
+    }
+  }
+
+  &.gray {
+    background: var(--gray6);
+    color: white;
+    &:focus,
+    &:hover {
+      background: var(--gray5);
+    }
+  }
+
+  &.darkGray {
+    background: var(--bg-element5);
+    color: var(--button-text);
+    &:focus,
+    &:hover {
+      background: var(--bg-element6);
+    }
+  }
+
+  &.trasnparent {
+    background: none;
+    color: var(--primary1);
+    &:focus,
+    &:hover {
+      background: var(--slight-layer);
+    }
+  }
+
+  &.red {
+    background: var(--destructive1);
+    color: var(--button-text);
+    &:focus,
+    &:hover {
+      background: var(--destructive2);
+    }
+  }
+
+  &.inline {
+    & + & {
+      margin-left: 8px;
+    }
+  }
+
+  &.responsive {
+    @media screen and (max-width: 768px) {
+      height: 24px;
+      padding-left: 15px;
+      padding-right: 15px;
+      font-size: 12px;
+    }
+  }
+}
