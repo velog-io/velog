@@ -1,5 +1,7 @@
 'use client'
 
+import ChunkErrorScreen from '@/components/Error/ChunkErrorScreen'
+import CrashErrorScreen from '@/components/Error/CrashErrorScreen'
 import { useEffect } from 'react'
 
 export default function GlobalError({
@@ -13,12 +15,9 @@ export default function GlobalError({
     console.error('global error', error)
   }, [error])
 
-  return (
-    <html>
-      <body>
-        <h2>Something went wrong!</h2>
-        <button onClick={() => reset()}>Try again</button>
-      </body>
-    </html>
-  )
+  if (error) {
+    return <CrashErrorScreen />
+  }
+
+  return <ChunkErrorScreen reset={reset} />
 }

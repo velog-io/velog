@@ -1,12 +1,23 @@
-import styles from './CrashErrorScreen.module.css'
-import { bindClassNames } from '@/lib/styles/bindClassNames'
+'use client'
 
-const cx = bindClassNames(styles)
+import { UndrawBugFixing } from '@/assets/vectors/components'
+import ErrorScreenTemplate from '../ErrorScreenTemplate'
+import { useRouter } from 'next/navigation'
 
 type Props = {}
 
 function CrashErrorScreen({}: Props) {
-  return <div className={cx('block')}></div>
+  const router = useRouter()
+  return (
+    <ErrorScreenTemplate
+      Illustration={UndrawBugFixing}
+      message="엇! 오류가 발생했습니다."
+      buttonText="홈으로"
+      onButtonClick={() => {
+        router.push('/')
+      }}
+    />
+  )
 }
 
 export default CrashErrorScreen

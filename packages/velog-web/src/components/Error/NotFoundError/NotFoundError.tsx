@@ -1,12 +1,23 @@
-import styles from './NotFoundError.module.css'
-import { bindClassNames } from '@/lib/styles/bindClassNames'
+'use client'
 
-const cx = bindClassNames(styles)
+import { UndrawPageNotFound } from '@/assets/vectors/components'
+import ErrorScreenTemplate from '../ErrorScreenTemplate'
+import { useRouter } from 'next/navigation'
 
 type Props = {}
 
 function NotFoundError({}: Props) {
-  return <div className={cx('block')}></div>
+  const router = useRouter()
+  return (
+    <ErrorScreenTemplate
+      Illustration={UndrawPageNotFound}
+      message="아무것도 없네요!"
+      buttonText="홈으로"
+      onButtonClick={() => {
+        router.push('/')
+      }}
+    />
+  )
 }
 
 export default NotFoundError

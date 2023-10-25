@@ -4,10 +4,11 @@ import apiClient from '@/lib/api/apiClient'
 import { useEffect, useState } from 'react'
 import { useNetworkState } from 'react-use'
 import ErrorScreenTemplate from '../ErrorScreenTemplate'
-import { UndrawUpdate } from '@/assets/vectors/components'
-import NetworkErrorScreen from '../NetworkErrorScreen'
+import { UndrawServerDown, UndrawUpdate } from '@/assets/vectors/components'
 
-type Props = {}
+type Props = {
+  reset: () => void
+}
 
 async function checkNetwork() {
   try {
@@ -18,7 +19,7 @@ async function checkNetwork() {
   }
 }
 
-function ChunkErrorScreen({}: Props) {
+function ChunkErrorScreen({ reset }: Props) {
   const [networkStatus, setNetworkStatus] = useState<'offline' | 'online' | null>(null)
 
   const network = useNetworkState()
@@ -43,13 +44,20 @@ function ChunkErrorScreen({}: Props) {
       <ErrorScreenTemplate
         Illustration={UndrawUpdate}
         message={'벨로그가 업데이트 되었습니다. \n새로고침 후 다시 시도해주세요.'}
-        onButtonClick={() => window.location.reload()}
+        onButtonClick={() => reset()}
         buttonText="새로고침"
       />
     )
   }
 
-  return <NetworkErrorScreen />
+  return (
+    <ErrorScreenTemplate
+      Illustration={UndrawServerDown}
+      message={'서버와의 연결이 불안정합니다.\n잠시 후 시도해주세요.'}
+      onButtonClick={() => reset()}
+      buttonText="새로고침"
+    />
+  )
 }
 
 export default ChunkErrorScreen
