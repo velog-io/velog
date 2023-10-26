@@ -12,7 +12,9 @@ type Props = { children: React.ReactNode }
 function ConditionalBackground({ children }: Props) {
   const pathname = usePathname()
   const isGray = useMemo(
-    () => ['/', '/recent', '/lists', '/trending'].some((path) => pathname.includes(path)),
+    () =>
+      pathname === '/' ||
+      ['/recent', '/lists', '/trending'].some((path) => pathname.includes(path)),
     [pathname],
   )
 
