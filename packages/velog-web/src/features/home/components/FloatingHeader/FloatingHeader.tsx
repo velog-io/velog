@@ -6,10 +6,12 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { getScrollTop } from '@/lib/utils'
 import Header from '@/components/Header/Header'
 import HomeTab from '@/features/home/components/HomeTab/HomeTab'
+import { usePathname } from 'next/navigation'
 
 const cx = bindClassNames(styles)
 
 function FloatingHeader() {
+  const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const blockRef = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState(0)
@@ -62,6 +64,8 @@ function FloatingHeader() {
       document.removeEventListener('scroll', onScroll)
     }
   }, [onScroll])
+
+  const isHome = pathname === '/' || ['/recent', '/trending'].includes(pathname)
   return (
     <div
       className={cx('block')}
@@ -81,7 +85,7 @@ function FloatingHeader() {
       <div className={cx('innerBlock')}>
         <div className={cx('mainResponsive')}>
           <Header />
-          <HomeTab isFloatingHeader={true} />
+          {isHome && <HomeTab isFloatingHeader={true} />}
         </div>
       </div>
     </div>

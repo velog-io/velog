@@ -1,0 +1,21 @@
+.block {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 4rem;
+
+  .innerBlock {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 0 auto;
+    height: 100%;
+  }
+}
+
+.mainWrapper {
+  display: flex;
+  margin-top: 32px;
+  padding-bottom: 16px;
+  main {
+    flex: 1;
+  }
+}

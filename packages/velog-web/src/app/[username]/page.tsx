@@ -1,5 +1,3 @@
-import useApplyVelogConfig from '@/hooks/useApplyVelogConfig'
-
 interface Props {
   params: { username: string }
 }
