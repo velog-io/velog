@@ -11,8 +11,10 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://velog.io/' },
 }
 
-export default async function Home({ params }: Props) {
+async function Home({ params }: Props) {
   const { timeframe = 'week' } = params
   const data = await getTrendingPosts({ timeframe, limit: ENV.defaultPostLimit })
   return <TrendingPosts data={data} />
 }
+
+export default Home

@@ -35,6 +35,8 @@ function HomeTab({ isFloatingHeader = false }: Props) {
     toggleTimeframePicker()
   }
 
+  if ((isFloatingHeader && !['/recent', '/trending'].includes(pathname)) || pathname === '/')
+    return null
   return (
     <div className={cx('wrapper', { noMargin: isFloatingHeader })}>
       <div className={cx('left')}>
