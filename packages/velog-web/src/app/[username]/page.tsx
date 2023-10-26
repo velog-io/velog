@@ -1,5 +1,12 @@
-async function VelogPage() {
-  return <>velog-page</>
+import useApplyVelogConfig from '@/hooks/useApplyVelogConfig'
+
+interface Props {
+  params: { username: string }
 }
 
-export default VelogPage
+export default async function VelogPage({ params }: Props) {
+  const encodedSymbol = encodeURIComponent('@')
+  const username = params.username.replace(encodedSymbol, '')
+
+  return <>velog-page</>
+}

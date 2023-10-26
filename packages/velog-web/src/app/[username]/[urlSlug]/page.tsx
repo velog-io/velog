@@ -1,6 +1,6 @@
 import getPostByUrlSlug from '@/actions/getPostByUrlSlug'
 import PostViewer from '@/features/post/components/PostViewer'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 interface Props {
   params: { urlSlug: string; username: string }
@@ -8,7 +8,6 @@ interface Props {
 
 export default async function PostViewerPage({ params }: Props) {
   const encodedSymbol = encodeURIComponent('@')
-  if (!params.username.includes(encodedSymbol)) return <></>
   const { username, urlSlug } = params
 
   const post = await getPostByUrlSlug({
@@ -17,8 +16,7 @@ export default async function PostViewerPage({ params }: Props) {
   })
 
   if (!post) {
-    redirect('/')
-    return
+    notFound()
   }
 
   return <PostViewer post={post} />
