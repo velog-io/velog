@@ -21,7 +21,7 @@ export class FollowService implements Service {
     private readonly userService: UserService,
   ) {}
   public async getFollowings(fk_follower_id: string): Promise<User[]> {
-    const follower = await this.userService.findById(fk_follower_id)
+    const follower = await this.userService.findByUserId(fk_follower_id)
 
     if (!follower) {
       throw new NotFoundError('Not found Follower')
@@ -51,7 +51,7 @@ export class FollowService implements Service {
     return followings
   }
   public async getFollowers(fk_following_id: string): Promise<User[]> {
-    const following = await this.userService.findById(fk_following_id)
+    const following = await this.userService.findByUserId(fk_following_id)
 
     if (!following) {
       throw new NotFoundError('Not found Follower')
