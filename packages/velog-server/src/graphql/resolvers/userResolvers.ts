@@ -1,6 +1,5 @@
 import { Resolvers } from '@graphql/generated'
 import { AuthService } from '@services/AuthService/index.js'
-import { FollowService } from '@services/FollowService/index.js'
 import { SeriesService } from '@services/SeriesService/index.js'
 import { UserMetaService } from '@services/UserMetaService/index.js'
 import { UserProfileService } from '@services/UserProfileService/index.js'
@@ -49,16 +48,6 @@ const userResolvers: Resolvers = {
     logout: async (_, __, ctx) => {
       const authService = container.resolve(AuthService)
       await authService.logout(ctx.reply)
-    },
-    follow: async (_, { input }, ctx) => {
-      const followService = container.resolve(FollowService)
-      await followService.follow(ctx.user?.id, input.followUserId)
-      return true
-    },
-    unfollow: async (_, { input }, ctx) => {
-      const followService = container.resolve(FollowService)
-      await followService.unfollow(ctx.user?.id, input.followUserId)
-      return true
     },
   },
 }

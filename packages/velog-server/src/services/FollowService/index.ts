@@ -43,11 +43,11 @@ export class FollowService implements Service {
     })
   }
   public async follow({ followingUserId, followerUserId }: FollowArgs): Promise<void> {
-    if (!followerUserId) {
-      throw new BadRequestError('followUesrId is required')
+    if (!followingUserId) {
+      throw new BadRequestError('following userId is required')
     }
 
-    if (!followingUserId) {
+    if (!followerUserId) {
       throw new UnauthorizedError('Not Logged In')
     }
 
@@ -84,11 +84,11 @@ export class FollowService implements Service {
     })
   }
   public async unfollow({ followingUserId, followerUserId }: FollowArgs): Promise<void> {
-    if (!followerUserId) {
-      throw new BadRequestError('followUesrId is required')
+    if (!followingUserId) {
+      throw new BadRequestError('following uesrId is required')
     }
 
-    if (!followingUserId) {
+    if (!followerUserId) {
       throw new UnauthorizedError('Not Logged In')
     }
 

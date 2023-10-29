@@ -80,11 +80,11 @@ export class FollowService implements Service {
     })
 
     const calcuatedTotalLikes = postLikes.reduce<CalculatedTotalLikes>(this.calculateTotalLikes, {
-      postMap: new Map(),
-      countedPostIds: new Set(),
+      followings: new Map(),
+      postIds: new Set(),
     })
 
-    return Array.from(calcuatedTotalLikes.postMap)
+    return Array.from(calcuatedTotalLikes.followings)
       .filter(([, post]) => post.totalLikes > 4)
       .sort(([, a], [, b]) => b.totalLikes - a.totalLikes)
       .map(([id, { user, posts, totalLikes }]) => ({ id, user, posts, totalLikes }))
@@ -94,13 +94,12 @@ export class FollowService implements Service {
 
     if (!user || !post) return result
 
-    const id = user.id
-    const exists = result.postMap.get(id)
-
-    const isCounted = result.countedPostIds.has(post.id)
+    const userId = user.id
+    const exists = result.followings.get(userId)
+    const isCounted = result.postIds.has(post.id)
 
     if (!isCounted) {
-      result.countedPostIds.add(post.id)
+      result.postIds.add(post.id)
     }
 
     if (exists) {
@@ -111,18 +110,17 @@ export class FollowService implements Service {
         .sort((a, b) => b.likes! - a.likes!)
         .slice(0, 3)
 
-      const data: PostMap = {
+      const data: FollowingMap = {
         user,
         posts,
         totalLikes: exists.totalLikes + (isCounted ? 0 : post.likes!),
       }
 
-      result.postMap.set(id, data)
+      result.followings.set(userId, data)
     } else {
       const data = { user: user, posts: [post], totalLikes: post.likes! }
-      result.postMap.set(id, data)
+      result.followings.set(userId, data)
     }
-
     return result
   }
 }
@@ -178,7 +176,7 @@ type Post = Prisma.PostGetPayload<{
   }
 }>
 
-type PostMapBase = { user: User; posts: Post[] }
-type PostMap = PostMapBase & { totalLikes: number }
-type CalculatedTotalLikes = { postMap: Map<string, PostMap>; countedPostIds: Set<string> }
+type FollowingMapBase = { user: User; posts: Post[] }
+type FollowingMap = FollowingMapBase & { totalLikes: number }
+type CalculatedTotalLikes = { followings: Map<string, FollowingMap>; postIds: Set<string> }
 type RecommedFollowingsResult = { id: string; user: User; posts: Post[] }

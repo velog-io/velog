@@ -12,10 +12,10 @@ interface Service {
 export class FeedService implements Service {
   constructor(
     private readonly db: DbService,
-    private readonly followService: FollowService,
+    private readonly followUserService: FollowService,
   ) {}
   public async createFeed(fk_follower_id: string, post_id: string): Promise<void> {
-    const followings = await this.followService.getFollowings(fk_follower_id)
+    const followings = await this.followUserService.getFollowings(fk_follower_id)
     const followingIds = followings.map((user) => user.id)
     for (const userId of followingIds) {
       await this.db.feed.create({
