@@ -7,9 +7,10 @@ import { CommentService } from '@services/CommentService/index.js'
 import { Post, Tag } from '@prisma/client'
 import { PostLikeService } from '@services/PostLikeService/index.js'
 import { DbService } from '@lib/db/DbService.js'
-import { FollowUserService } from '@services/FollowUserService/index.js'
+
 import { SeriesService } from '@services/SeriesService/index.js'
 import { TagService } from '@services/TagService/index.js'
+import { FollowService } from '@services/FollowService/index.js'
 
 const postResolvers: Resolvers = {
   Post: {
@@ -46,7 +47,7 @@ const postResolvers: Resolvers = {
       const seriesService = container.resolve(SeriesService)
       return await seriesService.getSeriesByPostId(parent.id)
     },
-    liked: async (parent: Post, _, ctx) => {
+    is_liked: async (parent: Post, _, ctx) => {
       if (!ctx.user) return false
       const db = container.resolve(DbService)
       const liked = await db.postLike.findFirst({
@@ -61,10 +62,13 @@ const postResolvers: Resolvers = {
       const postService = container.resolve(PostService)
       return await postService.recommendedPosts(parent)
     },
-    followed: async (parent: Post, _, ctx) => {
+    is_followed: async (parent: Post, _, ctx) => {
       if (!ctx.user) return false
-      const followUserService = container.resolve(FollowUserService)
-      return await followUserService.isFollowed(ctx.user.id, parent.fk_user_id)
+      const followService = container.resolve(FollowService)
+      return await followService.isFollowed({
+        followingUserId: parent.fk_user_id,
+        followerUserId: ctx.user.id,
+      })
     },
   },
   Query: {

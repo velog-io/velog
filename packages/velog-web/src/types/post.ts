@@ -120,7 +120,7 @@ export interface SinglePost {
     url_slug: string
     series_posts: SeriesPost[]
   } | null
-  liked: boolean
+  isLiked: boolean
   likes: number
   linked_posts: LinkedPosts
 }

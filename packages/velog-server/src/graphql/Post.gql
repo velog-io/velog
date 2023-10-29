@@ -41,11 +41,11 @@ type Post {
   tags: [String!]!
   comments_count: Int
   series: Series
-  liked: Boolean
+  is_liked: Boolean
   linked_posts: LinkedPosts
   last_read_at: Date
   recommended_posts: [Post!]!
-  followed: Boolean
+  is_followed: Boolean
 }
 
 type SearchResult {

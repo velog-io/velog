@@ -17,21 +17,26 @@ type RecommendFollowersUserProfile {
   thumbnail: String
 }
 
-type RecommendFollowers {
+type RecommendFollowings {
   id: ID!
   user: RecommendFollowersUser!
   posts: [RecommedFollowersPosts!]!
 }
 
-type RecommedFollwersResult {
+type RecommedFollowingsResult {
   totalPage: Int
-  followers: [RecommendFollowers!]!
+  followings: [RecommendFollowings!]!
 }
 
 type Query {
   followers(input: FollowersInput!): [User!]!
   followings(input: FollowingsInput!): [User!]!
-  recommendFollowers(input: RecommendFollowersInput!): RecommedFollwersResult!
+  recommendFollowings(input: RecommendFollowingsInput!): RecommedFollowingsResult!
+}
+
+type Mutation {
+  follow(input: FollowInput!): Boolean
+  unfollow(input: UnfollowInput!): Boolean
 }
 
 input FollowersInput {
@@ -42,7 +47,15 @@ input FollowingsInput {
   userId: ID
 }
 
-input RecommendFollowersInput {
+input RecommendFollowingsInput {
   page: PositiveInt
   take: PositiveInt
+}
+
+input FollowInput {
+  followingUserId: ID
+}
+
+input UnfollowInput {
+  followingUserId: ID
 }

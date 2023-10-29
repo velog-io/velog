@@ -23,7 +23,7 @@
     "env:copy": "tsx ./scripts/copyEnv.ts",
     "create-component": "tsx ./scripts/createComponent.ts",
     "create-svg-component": "tsx ./scripts/createSvgComponent.ts",
-    "codegen": "dotenv -e .env.development graphql-codegen --config codegen.ts -r dotenv/config",
+    "codegen": "pnpm env:copy -e development && graphql-codegen --config codegen.ts -r dotenv/config",
     "ssm": "tsx ./scripts/ssm/index.ts"
   },
   "dependencies": {

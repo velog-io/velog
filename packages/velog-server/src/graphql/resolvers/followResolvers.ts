@@ -1,23 +1,42 @@
 import { Resolvers } from '@graphql/generated'
-import { FollowUserService } from '@services/FollowUserService/index.js'
+import { FollowService } from '@services/FollowService/index.js'
+
 import { container } from 'tsyringe'
 
 const followerResolvers: Resolvers = {
   Query: {
     followers: async (_, { input }) => {
       const { userId } = input
-      const followUserService = container.resolve(FollowUserService)
-      return followUserService.getFollowers(userId)
+      const followService = container.resolve(FollowService)
+      return followService.getFollowers(userId)
     },
     followings: async (_, { input }) => {
       const { userId } = input
-      const followUserService = container.resolve(FollowUserService)
-      return followUserService.getFollowings(userId)
+      const followService = container.resolve(FollowService)
+      return followService.getFollowings(userId)
     },
-    recommendFollowers: async (_, { input }) => {
+    recommendFollowings: async (_, { input }) => {
       const { page, take } = input
-      const followUserService = container.resolve(FollowUserService)
-      return followUserService.getRecommededFollowers(page, take)
+      const followService = container.resolve(FollowService)
+      return followService.getRecommededFollowers(page, take)
+    },
+  },
+  Mutation: {
+    follow: async (_, { input }, ctx) => {
+      const followService = container.resolve(FollowService)
+      await followService.follow({
+        followerUserId: ctx.user?.id,
+        followingUserId: input.followingUserId,
+      })
+      return true
+    },
+    unfollow: async (_, { input }, ctx) => {
+      const followService = container.resolve(FollowService)
+      await followService.unfollow({
+        followerUserId: ctx.user?.id,
+        followingUserId: input.followingUserId,
+      })
+      return true
     },
   },
 }

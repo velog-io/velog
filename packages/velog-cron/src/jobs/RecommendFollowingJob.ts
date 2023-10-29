@@ -1,14 +1,14 @@
 import { injectable, singleton } from 'tsyringe'
 import { Job, JobProgress } from './JobProgress.js'
 import { RedisService } from '@lib/redis/RedisService.js'
-import { FollowUserService } from '@services/FollowUserService/index.js'
+import { FollowService } from '@services/FollowService/index.js'
 
 @singleton()
 @injectable()
-export class RecommendFollowerJob extends JobProgress implements Job {
+export class RecommendFollowingJob extends JobProgress implements Job {
   constructor(
     private readonly redis: RedisService,
-    private readonly followUserService: FollowUserService,
+    private readonly followService: FollowService,
   ) {
     super()
   }
@@ -16,11 +16,11 @@ export class RecommendFollowerJob extends JobProgress implements Job {
     console.log('Recommend follower job start...')
     console.time('recommend Followers')
 
-    const followers = await this.followUserService.createRecommendFollower()
+    const followings = await this.followService.createRecommendFollowings()
 
-    const json = JSON.stringify(followers)
-    const redisKey = this.redis.generateKey.recommendedFollowersKey()
-    this.redis.set(redisKey, json)
+    const json = JSON.stringify(followings)
+    const key = this.redis.generateKey.recommendedFollowingsKey()
+    this.redis.set(key, json)
 
     console.timeEnd('recommend Followers')
   }

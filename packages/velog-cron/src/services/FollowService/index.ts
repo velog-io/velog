@@ -1,22 +1,20 @@
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Prisma } from '@prisma/client'
-import { PostService } from '@services/PostService/index.js'
 import { subMonths } from 'date-fns'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
   getFollowings(fk_follower_id: string): Promise<User[]>
-  createRecommendFollower(): Promise<RecommedFollowerResult[]>
+  createRecommendFollowings(): Promise<RecommedFollowingsResult[]>
 }
 
 @injectable()
 @singleton()
-export class FollowUserService implements Service {
+export class FollowService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly utils: UtilsService,
-    private readonly postService: PostService,
   ) {}
   public async getFollowings(fk_follower_id: string): Promise<User[]> {
     const followUser = await this.db.followUser.findMany({
@@ -42,7 +40,7 @@ export class FollowUserService implements Service {
     const followings = followUser.map((follow) => follow.following!)
     return followings
   }
-  public async createRecommendFollower(): Promise<RecommedFollowerResult[]> {
+  public async createRecommendFollowings(): Promise<RecommedFollowingsResult[]> {
     const threeMonthAgo = subMonths(this.utils.now, 3)
     const sixMonthAgo = subMonths(this.utils.now, 6)
 
@@ -183,4 +181,4 @@ type Post = Prisma.PostGetPayload<{
 type PostMapBase = { user: User; posts: Post[] }
 type PostMap = PostMapBase & { totalLikes: number }
 type CalculatedTotalLikes = { postMap: Map<string, PostMap>; countedPostIds: Set<string> }
-type RecommedFollowerResult = { id: string; user: User; posts: Post[] }
+type RecommedFollowingsResult = { id: string; user: User; posts: Post[] }

@@ -13,7 +13,8 @@ query readPost($input: ReadPostInput!) {
     comments_count
     url_slug
     likes
-    liked
+    is_liked
+    is_followed
     user {
       id
       username
