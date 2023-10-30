@@ -9,6 +9,7 @@ import { useTimeFormat } from '@/hooks/useTimeFormat'
 import { PostCardSkeleton } from '@/features/post/components/PostCard/PostCardSkeleton'
 import { Post } from '@/graphql/generated'
 import VLink from '@/components/VLink'
+import Link from 'next/link'
 
 const cx = bindClassNames(styles)
 
@@ -56,7 +57,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
         </div>
       </div>
       <div className={cx('footer')}>
-        <VLink className={cx('userInfo')} href={`/@${post.user?.username}`}>
+        <Link className={cx('userInfo')} href={`/@${post.user?.username}`}>
           <Image
             src={post.user?.profile?.thumbnail || '/images/user-thumbnail.png'}
             alt={`user thumbnail of ${post.user?.username}`}
@@ -66,7 +67,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
           <span>
             by <b>{post.user?.username}</b>
           </span>
-        </VLink>
+        </Link>
         <div className={cx('likes')}>
           <LikeIcon />
           {post.likes}

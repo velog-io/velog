@@ -1,7 +1,7 @@
 .block {
   display: flex;
   justify-content: center;
-  padding-bottom: 4rem;
+  padding-bottom: 64px;
 
   .innerBlock {
     display: flex;
@@ -13,8 +13,14 @@
 
 .mainWrapper {
   display: flex;
-  margin-top: 32px;
-  padding-bottom: 16px;
+  justify-content: center;
+  margin: 90px auto;
+  width: 768px;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
+
   main {
     flex: 1;
   }

@@ -1,4 +1,3 @@
-import HeaderLayout from '@/components/Layouts/HeaderLayout'
 import VelogPageLayout from '@/components/Layouts/VelogPageLayout'
 
 type Props = {
