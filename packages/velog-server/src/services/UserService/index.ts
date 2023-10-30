@@ -7,7 +7,7 @@ import { GraphQLContext } from '@interfaces/graphql'
 import { JwtService } from '@lib/jwt/JwtService.js'
 import { RefreshTokenData } from '@lib/jwt/Jwt.interface.js'
 import { Time } from '@constants/TimeConstants.js'
-import { UnauthorizedError, NotFoundError } from '@errors/index.js'
+import { UnauthorizedError, NotFoundError, BadRequestError } from '@errors/index.js'
 import { UserToken } from '@graphql/generated'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import DataLoader from 'dataloader'
@@ -19,6 +19,7 @@ interface Service {
   restoreToken(ctx: GraphQLContext): Promise<UserToken>
   emailGuard(user: User, loggedUserId: string | undefined): void
   userLoader(): DataLoader<string, User>
+  findByIdOrUsername({ userId, username }: FindByIdOrUsernameArgs): Promise<User | null>
 }
 
 @injectable()
@@ -109,4 +110,20 @@ export class UserService implements Service {
       return userIds.map((userId) => nomalized[userId])
     })
   }
+  async findByIdOrUsername({ userId, username }: FindByIdOrUsernameArgs): Promise<User | null> {
+    if (!userId && !username) {
+      throw new BadRequestError()
+    }
+
+    if (username) {
+      return await this.findByUsername(username)
+    }
+
+    return await this.findById(userId!)
+  }
+}
+
+type FindByIdOrUsernameArgs = {
+  userId?: string
+  username?: string
 }

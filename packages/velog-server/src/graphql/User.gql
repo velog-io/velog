@@ -40,7 +40,7 @@ type UserToken {
 }
 
 type Query {
-  # user(id: ID, username: String): User
+  user(input: GetUserInput!): User
   # velog_config(username: String): VelogConfig
   currentUser: User
   restoreToken: UserToken
@@ -60,4 +60,9 @@ type Mutation {
   # acceptIntegration: String!
   # initiateChangeEmail(email: String!): Boolean
   # confirmChangeEmail(code: String!): Boolean
+}
+
+input GetUserInput {
+  id: ID
+  username: String
 }

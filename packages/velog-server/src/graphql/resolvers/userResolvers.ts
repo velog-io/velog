@@ -35,6 +35,11 @@ const userResolvers: Resolvers = {
     },
   },
   Query: {
+    user: async (_, { input }) => {
+      const { id: userId, username } = input
+      const userService = container.resolve(UserService)
+      return await userService.findByIdOrUsername({ userId, username })
+    },
     currentUser: async (_, __, ctx) => {
       const userService = container.resolve(UserService)
       return await userService.getCurrentUser(ctx.user?.id)

@@ -58,6 +58,11 @@ export type FollowingsInput = {
   userId?: InputMaybe<Scalars['ID']['input']>
 }
 
+export type GetUserInput = {
+  id?: InputMaybe<Scalars['ID']['input']>
+  username?: InputMaybe<Scalars['String']['input']>
+}
+
 export type LikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
@@ -145,6 +150,7 @@ export type Query = {
   recommendFollowings: RecommedFollowingsResult
   restoreToken?: Maybe<UserToken>
   trendingPosts: Array<Post>
+  user?: Maybe<User>
 }
 
 export type QueryFollowersArgs = {
@@ -173,6 +179,10 @@ export type QueryRecommendFollowingsArgs = {
 
 export type QueryTrendingPostsArgs = {
   input: TrendingPostsInput
+}
+
+export type QueryUserArgs = {
+  input: GetUserInput
 }
 
 export type ReadCountByDay = {
@@ -420,6 +430,7 @@ export type ResolversTypes = {
   FollowInput: FollowInput
   FollowersInput: FollowersInput
   FollowingsInput: FollowingsInput
+  GetUserInput: GetUserInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
   Int: ResolverTypeWrapper<Scalars['Int']['output']>
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
@@ -481,6 +492,7 @@ export type ResolversParentTypes = {
   FollowInput: FollowInput
   FollowersInput: FollowersInput
   FollowingsInput: FollowingsInput
+  GetUserInput: GetUserInput
   ID: Scalars['ID']['output']
   Int: Scalars['Int']['output']
   JSON: Scalars['JSON']['output']
@@ -695,6 +707,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryTrendingPostsArgs, 'input'>
+  >
+  user?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUserArgs, 'input'>
   >
 }
 

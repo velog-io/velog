@@ -4,13 +4,12 @@ import { injectable, singleton } from 'tsyringe'
 import { nanoid } from 'nanoid'
 import { createAuthEmail } from '@template/createAuthEmail.js'
 import { ENV } from '@env'
-import { SendMailInput } from '@graphql/generated'
 import { FastifyReply } from 'fastify'
 import { CookieService } from '@lib/cookie/CookieService.js'
 
 interface Service {
   logout(reply: FastifyReply): Promise<void>
-  sendMail(input: SendMailInput): Promise<{ registered: boolean }>
+  sendMail(email: string): Promise<{ registered: boolean }>
 }
 
 @injectable()
@@ -25,8 +24,7 @@ export class AuthService implements Service {
     this.cookie.clearCookie(reply, 'access_token')
     this.cookie.clearCookie(reply, 'refresh_token')
   }
-  async sendMail(input: SendMailInput): Promise<{ registered: boolean }> {
-    const { email } = input
+  async sendMail(email: string): Promise<{ registered: boolean }> {
     const user = await this.db.user.findUnique({
       where: {
         email,
