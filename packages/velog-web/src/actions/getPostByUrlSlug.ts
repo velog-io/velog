@@ -1,9 +1,9 @@
 import { ReadPostInput, ReadPostDocument, Post } from '@/graphql/generated'
-import graphqlFetch from '@/lib/graphqlFetch'
+import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getPostByUrlSlug({ username, url_slug }: ReadPostInput) {
   try {
-    const body = {
+    const body: GraphqlRequestBody = {
       operationName: 'readPost',
       query: ReadPostDocument,
       variables: {

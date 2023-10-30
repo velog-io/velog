@@ -2,6 +2,7 @@ import getRecentPosts from '@/actions/getRecentPosts'
 import { ENV } from '@/env'
 import RecentPosts from '@/features/home/components/RecentPosts'
 import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: '최신 포스트 - velog',
@@ -10,5 +11,10 @@ export const metadata: Metadata = {
 
 export default async function Recent() {
   const data = await getRecentPosts({ limit: ENV.defaultPostLimit })
+
+  if (!data) {
+    redirect('/')
+  }
+
   return <RecentPosts data={data} />
 }

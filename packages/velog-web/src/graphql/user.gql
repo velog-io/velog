@@ -1,3 +1,17 @@
+query getUserProfile($input: GetUserInput!) {
+  user(input: $input) {
+    id
+    username
+    profile {
+      id
+      display_name
+      short_bio
+      thumbnail
+      profile_links
+    }
+  }
+}
+
 query currentUser {
   currentUser {
     id

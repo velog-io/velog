@@ -38,7 +38,7 @@ export type Comment = {
 }
 
 export type FollowInput = {
-  followUserId?: InputMaybe<Scalars['ID']['input']>
+  followingUserId?: InputMaybe<Scalars['ID']['input']>
 }
 
 export type FollowersInput = {
@@ -47,6 +47,11 @@ export type FollowersInput = {
 
 export type FollowingsInput = {
   userId?: InputMaybe<Scalars['ID']['input']>
+}
+
+export type GetUserInput = {
+  id?: InputMaybe<Scalars['ID']['input']>
+  username?: InputMaybe<Scalars['String']['input']>
 }
 
 export type LikePostInput = {
@@ -94,8 +99,8 @@ export type Post = {
   created_at: Scalars['DateTimeISO']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
-  isFollowed: Maybe<Scalars['Boolean']['output']>
-  isLiked: Maybe<Scalars['Boolean']['output']>
+  is_followed: Maybe<Scalars['Boolean']['output']>
+  is_liked: Maybe<Scalars['Boolean']['output']>
   is_markdown: Maybe<Scalars['Boolean']['output']>
   is_private: Scalars['Boolean']['output']
   is_temp: Maybe<Scalars['Boolean']['output']>
@@ -136,6 +141,7 @@ export type Query = {
   recommendFollowings: RecommedFollowingsResult
   restoreToken: Maybe<UserToken>
   trendingPosts: Array<Post>
+  user: Maybe<User>
 }
 
 export type QueryFollowersArgs = {
@@ -164,6 +170,10 @@ export type QueryRecommendFollowingsArgs = {
 
 export type QueryTrendingPostsArgs = {
   input: TrendingPostsInput
+}
+
+export type QueryUserArgs = {
+  input: GetUserInput
 }
 
 export type ReadCountByDay = {
@@ -201,7 +211,7 @@ export type RecommedFollowersPosts = {
 }
 
 export type RecommedFollowingsResult = {
-  followers: Array<RecommendFollowings>
+  followings: Array<RecommendFollowings>
   totalPage: Maybe<Scalars['Int']['output']>
 }
 
@@ -273,7 +283,7 @@ export type TrendingPostsInput = {
 }
 
 export type UnfollowInput = {
-  followUserId?: InputMaybe<Scalars['ID']['input']>
+  followingUserId?: InputMaybe<Scalars['ID']['input']>
 }
 
 export type UnlikePostInput = {
@@ -346,8 +356,8 @@ export type ReadPostQuery = {
     comments_count: number | null
     url_slug: string | null
     likes: number | null
-    isLiked: boolean | null
-    isFollowed: boolean | null
+    is_liked: boolean | null
+    is_followed: boolean | null
     user: {
       id: string
       username: string
@@ -444,6 +454,24 @@ export type TrendingPostsQuery = {
   }>
 }
 
+export type GetUserProfileQueryVariables = Exact<{
+  input: GetUserInput
+}>
+
+export type GetUserProfileQuery = {
+  user: {
+    id: string
+    username: string
+    profile: {
+      id: string
+      display_name: string
+      short_bio: string
+      thumbnail: string | null
+      profile_links: JSON
+    }
+  } | null
+}
+
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
 
 export type CurrentUserQuery = {
@@ -491,8 +519,8 @@ export const ReadPostDocument = `
     comments_count
     url_slug
     likes
-    isLiked
-    isFollowed
+    is_liked
+    is_followed
     user {
       id
       username
@@ -637,6 +665,30 @@ export const useTrendingPostsQuery = <TData = TrendingPostsQuery, TError = unkno
   useQuery<TrendingPostsQuery, TError, TData>(
     ['trendingPosts', variables],
     fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, variables),
+    options,
+  )
+export const GetUserProfileDocument = `
+    query getUserProfile($input: GetUserInput!) {
+  user(input: $input) {
+    id
+    username
+    profile {
+      id
+      display_name
+      short_bio
+      thumbnail
+      profile_links
+    }
+  }
+}
+    `
+export const useGetUserProfileQuery = <TData = GetUserProfileQuery, TError = unknown>(
+  variables: GetUserProfileQueryVariables,
+  options?: UseQueryOptions<GetUserProfileQuery, TError, TData>,
+) =>
+  useQuery<GetUserProfileQuery, TError, TData>(
+    ['getUserProfile', variables],
+    fetcher<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, variables),
     options,
   )
 export const CurrentUserDocument = `
