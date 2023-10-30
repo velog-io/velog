@@ -47,6 +47,7 @@ function UserProfile({
 
   return (
     <div className={cx('block')}>
+      UserProfile
       <div className={cx('section')}>
         <div className={cx('left')}></div>
         <div className={cx('userInfo')}>

@@ -17,7 +17,6 @@ export default async function getUserProfile(username: string) {
       body,
     })
 
-    console.log('user', user)
     return user.profile!
   } catch (error) {
     console.log('getUesrProfile error', error)

@@ -20,5 +20,6 @@ export default async function PostViewerPage({ params }: Props) {
     notFound()
   }
 
-  return <PostViewer post={post} />
+  // return <PostViewer post={post} />
+  return <div>postView</div>
 }
