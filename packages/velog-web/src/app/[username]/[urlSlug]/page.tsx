@@ -1,5 +1,4 @@
 import getPostByUrlSlug from '@/actions/getPostByUrlSlug'
-
 import PostViewer from '@/features/post/components/PostViewer'
 import { notFound } from 'next/navigation'
 
