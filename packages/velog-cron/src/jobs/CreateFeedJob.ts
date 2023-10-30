@@ -23,7 +23,7 @@ export class CreateFeedJob extends JobProgress implements Job {
       if (!item) break
       const data: FeedQueueData = JSON.parse(item)
       const { fk_following_id, fk_post_id } = data
-      await this.feedService.createFeed({ fkFollowingId: fk_following_id, postId: fk_post_id })
+      await this.feedService.createFeed({ followingId: fk_following_id, postId: fk_post_id })
       await this.redis.lpop(feedQueueName)
       handledQueueCount++
     }

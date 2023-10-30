@@ -4,7 +4,7 @@ import { FollowService } from '@services/FollowService/index.js'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
-  createFeed({ fkFollowingId, postId }: CreateFeedArgs): Promise<void>
+  createFeed({ followingId, postId }: CreateFeedArgs): Promise<void>
 }
 
 @injectable()
@@ -14,10 +14,9 @@ export class FeedService implements Service {
     private readonly db: DbService,
     private readonly followService: FollowService,
   ) {}
-  public async createFeed({ fkFollowingId, postId }: CreateFeedArgs): Promise<void> {
-    const followers = await this.followService.getFollowers(fkFollowingId)
+  public async createFeed({ followingId, postId }: CreateFeedArgs): Promise<void> {
+    const followers = await this.followService.getFollowers(followingId)
     const followerIds = followers.map((user) => user.id)
-
     for (const userId of followerIds) {
       await this.db.feed.create({
         data: {
@@ -30,6 +29,6 @@ export class FeedService implements Service {
 }
 
 type CreateFeedArgs = {
-  fkFollowingId: string
+  followingId: string
   postId: string
 }
