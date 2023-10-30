@@ -9,8 +9,8 @@ interface Props {
 export default async function VelogSeries({ params }: Props) {
   return (
     <>
-      <div>velogSeries</div>
       <VelogPage params={params} />
+      <div>velogSeries</div>
     </>
   )
 }

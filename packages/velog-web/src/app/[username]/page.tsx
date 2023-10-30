@@ -33,7 +33,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // read route params
   const encodedSymbol = encodeURIComponent('@')
   const username = params.username.replace(encodedSymbol, '')
-
   const profile = await getUserProfile(username)
 
   if (!profile) {
