@@ -20,6 +20,7 @@ export type Scalars = {
   Float: { input: number; output: number }
   DateTimeISO: { input: any; output: any }
   JSON: { input: JSON; output: JSON }
+  PositiveInt: { input: any; output: any }
   Void: { input: any; output: any }
 }
 
@@ -30,7 +31,7 @@ export type Comment = {
   id: Scalars['ID']['output']
   level: Maybe<Scalars['Int']['output']>
   likes: Maybe<Scalars['Int']['output']>
-  replies: Maybe<Array<Maybe<Comment>>>
+  replies: Array<Comment>
   replies_count: Maybe<Scalars['Int']['output']>
   text: Maybe<Scalars['String']['output']>
   user: Maybe<User>
@@ -38,6 +39,14 @@ export type Comment = {
 
 export type FollowInput = {
   followUserId?: InputMaybe<Scalars['ID']['input']>
+}
+
+export type FollowersInput = {
+  userId?: InputMaybe<Scalars['ID']['input']>
+}
+
+export type FollowingsInput = {
+  userId?: InputMaybe<Scalars['ID']['input']>
 }
 
 export type LikePostInput = {
@@ -80,26 +89,26 @@ export type MutationUnlikePostArgs = {
 
 export type Post = {
   body: Maybe<Scalars['String']['output']>
-  comments: Maybe<Array<Maybe<Comment>>>
+  comments: Array<Comment>
   comments_count: Maybe<Scalars['Int']['output']>
   created_at: Scalars['DateTimeISO']['output']
   fk_user_id: Scalars['String']['output']
-  followed: Maybe<Scalars['Boolean']['output']>
   id: Scalars['ID']['output']
+  isFollowed: Maybe<Scalars['Boolean']['output']>
+  isLiked: Maybe<Scalars['Boolean']['output']>
   is_markdown: Maybe<Scalars['Boolean']['output']>
   is_private: Scalars['Boolean']['output']
   is_temp: Maybe<Scalars['Boolean']['output']>
   last_read_at: Maybe<Scalars['DateTimeISO']['output']>
-  liked: Maybe<Scalars['Boolean']['output']>
   likes: Maybe<Scalars['Int']['output']>
   linked_posts: Maybe<LinkedPosts>
   meta: Maybe<Scalars['JSON']['output']>
   original_post_id: Maybe<Scalars['ID']['output']>
-  recommended_posts: Maybe<Array<Maybe<Post>>>
+  recommended_posts: Array<Post>
   released_at: Maybe<Scalars['DateTimeISO']['output']>
   series: Maybe<Series>
   short_description: Maybe<Scalars['String']['output']>
-  tags: Maybe<Array<Maybe<Scalars['String']['output']>>>
+  tags: Array<Scalars['String']['output']>
   thumbnail: Maybe<Scalars['String']['output']>
   title: Maybe<Scalars['String']['output']>
   updated_at: Scalars['DateTimeISO']['output']
@@ -122,10 +131,19 @@ export type Query = {
   followers: Array<User>
   followings: Array<User>
   post: Maybe<Post>
-  readingList: Maybe<Array<Maybe<Post>>>
-  recentPosts: Maybe<Array<Maybe<Post>>>
+  readingList: Array<Post>
+  recentPosts: Array<Post>
+  recommendFollowings: RecommedFollowingsResult
   restoreToken: Maybe<UserToken>
-  trendingPosts: Maybe<Array<Maybe<Post>>>
+  trendingPosts: Array<Post>
+}
+
+export type QueryFollowersArgs = {
+  input: FollowersInput
+}
+
+export type QueryFollowingsArgs = {
+  input: FollowingsInput
 }
 
 export type QueryPostArgs = {
@@ -138,6 +156,10 @@ export type QueryReadingListArgs = {
 
 export type QueryRecentPostsArgs = {
   input: RecentPostsInput
+}
+
+export type QueryRecommendFollowingsArgs = {
+  input: RecommendFollowingsInput
 }
 
 export type QueryTrendingPostsArgs = {
@@ -171,6 +193,41 @@ export type RecentPostsInput = {
   limit?: InputMaybe<Scalars['Int']['input']>
 }
 
+export type RecommedFollowersPosts = {
+  id: Maybe<Scalars['ID']['output']>
+  thumbnail: Maybe<Scalars['String']['output']>
+  title: Maybe<Scalars['String']['output']>
+  url_slug: Maybe<Scalars['String']['output']>
+}
+
+export type RecommedFollowingsResult = {
+  followers: Array<RecommendFollowings>
+  totalPage: Maybe<Scalars['Int']['output']>
+}
+
+export type RecommendFollowersUser = {
+  id: Maybe<Scalars['ID']['output']>
+  profile: Maybe<RecommendFollowersUserProfile>
+  username: Maybe<Scalars['String']['output']>
+}
+
+export type RecommendFollowersUserProfile = {
+  display_name: Maybe<Scalars['String']['output']>
+  short_bio: Maybe<Scalars['String']['output']>
+  thumbnail: Maybe<Scalars['String']['output']>
+}
+
+export type RecommendFollowings = {
+  id: Scalars['ID']['output']
+  posts: Array<RecommedFollowersPosts>
+  user: RecommendFollowersUser
+}
+
+export type RecommendFollowingsInput = {
+  page?: InputMaybe<Scalars['PositiveInt']['input']>
+  take?: InputMaybe<Scalars['PositiveInt']['input']>
+}
+
 export type SearchResult = {
   count: Maybe<Scalars['Int']['output']>
   posts: Array<Post>
@@ -187,6 +244,7 @@ export type SendMailResponse = {
 export type Series = {
   created_at: Maybe<Scalars['DateTimeISO']['output']>
   description: Maybe<Scalars['String']['output']>
+  fk_user_id: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
   name: Maybe<Scalars['String']['output']>
   posts_count: Maybe<Scalars['Int']['output']>
@@ -228,7 +286,7 @@ export type User = {
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
-  series_list: Array<Maybe<Series>>
+  series_list: Maybe<Array<Maybe<Series>>>
   updated_at: Scalars['DateTimeISO']['output']
   user_meta: Maybe<UserMeta>
   username: Scalars['String']['output']
@@ -288,7 +346,8 @@ export type ReadPostQuery = {
     comments_count: number | null
     url_slug: string | null
     likes: number | null
-    liked: boolean | null
+    isLiked: boolean | null
+    isFollowed: boolean | null
     user: {
       id: string
       username: string
@@ -313,7 +372,7 @@ export type ReadPostQuery = {
         username: string
         profile: { id: string; thumbnail: string | null }
       } | null
-    } | null> | null
+    }>
     series: {
       id: string
       name: string | null
@@ -362,7 +421,7 @@ export type RecentPostsQuery = {
     likes: number | null
     comments_count: number | null
     user: { id: string; username: string; profile: { id: string; thumbnail: string | null } } | null
-  } | null> | null
+  }>
 }
 
 export type TrendingPostsQueryVariables = Exact<{
@@ -382,7 +441,7 @@ export type TrendingPostsQuery = {
     is_private: boolean
     comments_count: number | null
     user: { id: string; username: string; profile: { id: string; thumbnail: string | null } } | null
-  } | null> | null
+  }>
 }
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
@@ -432,7 +491,8 @@ export const ReadPostDocument = `
     comments_count
     url_slug
     likes
-    liked
+    isLiked
+    isFollowed
     user {
       id
       username

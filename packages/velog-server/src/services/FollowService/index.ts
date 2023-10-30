@@ -3,35 +3,38 @@ import { ConfilctError } from '@errors/ConfilctError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { RedisService } from '@lib/redis/RedisService.js'
-import { RecommedFollwersResult, RecommendFollowers } from '@graphql/generated'
+import { RecommedFollowingsResult, RecommendFollowings } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { FollowUser, User } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
-  findFollowRelationship(userId: string, followUserId: string): Promise<FollowUser | null>
-  isFollowed(follwingUserId: string, followerUserId: string): Promise<boolean>
-  follow(userId: string, followUserId: string): Promise<void>
-  unfollow(userId: string, followUserId: string): Promise<void>
+  findFollowRelationship({
+    followingUserId,
+    followerUserId,
+  }: FollowArgs): Promise<FollowUser | null>
+  isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean>
+  follow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
+  unfollow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
   getFollowers(userId: string): Promise<User[]>
   getFollowings(userId: string): Promise<User[]>
-  getRecommededFollowers(page?: number, take?: number): Promise<RecommedFollwersResult>
+  getRecommededFollowers(page?: number, take?: number): Promise<RecommedFollowingsResult>
 }
 
 @injectable()
 @singleton()
-export class FollowUserService implements Service {
+export class FollowService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly redis: RedisService,
   ) {}
-  public async isFollowed(followingUserId: string, followerUserId: string): Promise<boolean> {
-    return !!(await this.findFollowRelationship(followingUserId, followerUserId))
+  public async isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean> {
+    return !!(await this.findFollowRelationship({ followingUserId, followerUserId }))
   }
-  public async findFollowRelationship(
-    followingUserId: string,
-    followerUserId: string,
-  ): Promise<FollowUser | null> {
+  public async findFollowRelationship({
+    followingUserId,
+    followerUserId,
+  }: FollowArgs): Promise<FollowUser | null> {
     return await this.db.followUser.findFirst({
       where: {
         fk_following_user_id: followingUserId,
@@ -39,38 +42,38 @@ export class FollowUserService implements Service {
       },
     })
   }
-  public async follow(followingUserId?: string, followerUserId?: string): Promise<void> {
-    if (!followerUserId) {
-      throw new BadRequestError('followUesrId is required')
+  public async follow({ followingUserId, followerUserId }: FollowArgs): Promise<void> {
+    if (!followingUserId) {
+      throw new BadRequestError('following userId is required')
     }
 
-    if (!followingUserId) {
+    if (!followerUserId) {
       throw new UnauthorizedError('Not Logged In')
     }
 
-    const follower = await this.db.user.findUnique({
+    if (followingUserId === followerUserId) {
+      throw new ConfilctError('Users cannot follow themselves')
+    }
+
+    const following = await this.db.user.findUnique({
       where: {
-        id: followerUserId,
+        id: followingUserId,
       },
     })
 
-    if (!follower) {
-      throw new NotFoundError('Not found follower User')
+    if (!following) {
+      throw new NotFoundError('Not found following User')
     }
 
-    const existingFollower = await this.db.followUser.findFirst({
+    const relationship = await this.db.followUser.findFirst({
       where: {
         fk_following_user_id: followingUserId,
         fk_follower_user_id: followerUserId,
       },
     })
 
-    if (existingFollower) {
-      throw new ConfilctError('ALREADY_FOLLOWER')
-    }
-
-    if (followingUserId === followerUserId) {
-      throw new ConfilctError('Users cannot follow themselves.')
+    if (relationship) {
+      throw new ConfilctError('Already relationship')
     }
 
     await this.db.followUser.create({
@@ -80,21 +83,26 @@ export class FollowUserService implements Service {
       },
     })
   }
-  public async unfollow(followingUserId?: string, followerUserId?: string): Promise<void> {
-    if (!followerUserId) {
-      throw new BadRequestError('followUesrId is required')
+  public async unfollow({ followingUserId, followerUserId }: FollowArgs): Promise<void> {
+    if (!followingUserId) {
+      throw new BadRequestError('following uesrId is required')
     }
 
-    if (!followingUserId) {
+    if (!followerUserId) {
       throw new UnauthorizedError('Not Logged In')
     }
-    const follower = await this.db.user.findUnique({
+
+    if (followingUserId === followerUserId) {
+      throw new ConfilctError('Not allowed')
+    }
+
+    const following = await this.db.user.findUnique({
       where: {
         id: followerUserId,
       },
     })
 
-    if (!follower) {
+    if (!following) {
       throw new NotFoundError('Not found follower User')
     }
 
@@ -153,7 +161,7 @@ export class FollowUserService implements Service {
     })
     return followings.map((relationship) => relationship.following)
   }
-  async getRecommededFollowers(page?: number, take?: number): Promise<RecommedFollwersResult> {
+  async getRecommededFollowers(page?: number, take?: number): Promise<RecommedFollowingsResult> {
     if (!page || !take) {
       throw new BadRequestError()
     }
@@ -166,26 +174,31 @@ export class FollowUserService implements Service {
       throw new BadRequestError('Invalid input, input must be a non-negative number')
     }
 
-    const getFollowersKey = this.redis.generateKey.recommendedFollowersKey()
-    const followers = await this.redis.get(getFollowersKey)
+    const key = this.redis.generateKey.recommendedFollowingsKey()
+    const followings = await this.redis.get(key)
 
-    if (!followers) {
+    if (!followings) {
       return {
         totalPage: 0,
-        followers: [],
+        followings: [],
       }
     }
 
-    const recommededFollowers: RecommendFollowers[] = JSON.parse(followers)
+    const recommededFollowings: RecommendFollowings[] = JSON.parse(followings)
 
     const offset = (page - 1) * take
-    const totalPage = Math.ceil(recommededFollowers.length / take)
+    const totalPage = Math.ceil(recommededFollowings.length / take)
 
     const result = {
       totalPage,
-      followers: recommededFollowers.slice(offset, offset + take),
+      followings: recommededFollowings.slice(offset, offset + take),
     }
 
     return result
   }
+}
+
+type FollowArgs = {
+  followingUserId?: string
+  followerUserId?: string
 }

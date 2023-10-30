@@ -3,7 +3,7 @@ import { AuthService } from '@services/AuthService/index.js'
 import { SeriesService } from '@services/SeriesService/index.js'
 import { UserMetaService } from '@services/UserMetaService/index.js'
 import { UserProfileService } from '@services/UserProfileService/index.js'
-import { FollowUserService } from '@services/FollowUserService/index.js'
+
 import { UserService } from '@services/UserService/index.js'
 import { VelogConfigService } from '@services/VelogConfigService/index.js'
 import { container } from 'tsyringe'
@@ -48,16 +48,6 @@ const userResolvers: Resolvers = {
     logout: async (_, __, ctx) => {
       const authService = container.resolve(AuthService)
       await authService.logout(ctx.reply)
-    },
-    follow: async (_, { input }, ctx) => {
-      const followUserService = container.resolve(FollowUserService)
-      await followUserService.follow(ctx.user?.id, input.followUserId)
-      return true
-    },
-    unfollow: async (_, { input }, ctx) => {
-      const followUserService = container.resolve(FollowUserService)
-      await followUserService.unfollow(ctx.user?.id, input.followUserId)
-      return true
     },
   },
 }

@@ -1,9 +1,10 @@
 import { DbService } from '@lib/db/DbService.js'
-import { FollowUserService } from '@services/FollowUserService/index.js'
+import { FollowService } from '@services/FollowService/index.js'
+
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
-  createFeed(fk_follower_id: string, post_id: string): Promise<void>
+  createFeed({ followingId, postId }: CreateFeedArgs): Promise<void>
 }
 
 @injectable()
@@ -11,18 +12,23 @@ interface Service {
 export class FeedService implements Service {
   constructor(
     private readonly db: DbService,
-    private readonly followUserService: FollowUserService,
+    private readonly followService: FollowService,
   ) {}
-  public async createFeed(fk_follower_id: string, post_id: string): Promise<void> {
-    const followings = await this.followUserService.getFollowings(fk_follower_id)
-    const followingIds = followings.map((user) => user.id)
-    for (const userId of followingIds) {
+  public async createFeed({ followingId, postId }: CreateFeedArgs): Promise<void> {
+    const followers = await this.followService.getFollowers(followingId)
+    const followerIds = followers.map((user) => user.id)
+    for (const userId of followerIds) {
       await this.db.feed.create({
         data: {
           fk_user_id: userId,
-          fk_post_id: post_id,
+          fk_post_id: postId,
         },
       })
     }
   }
+}
+
+type CreateFeedArgs = {
+  followingId: string
+  postId: string
 }

@@ -60,15 +60,4 @@ type Mutation {
   # acceptIntegration: String!
   # initiateChangeEmail(email: String!): Boolean
   # confirmChangeEmail(code: String!): Boolean
-
-  follow(input: FollowInput!): Boolean
-  unfollow(input: UnfollowInput!): Boolean
-}
-
-input FollowInput {
-  followUserId: ID
-}
-
-input UnfollowInput {
-  followUserId: ID
 }

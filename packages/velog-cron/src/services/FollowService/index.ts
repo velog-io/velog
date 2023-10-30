@@ -1,25 +1,33 @@
+import { UserService } from '@services/UserService/index.js'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Prisma } from '@prisma/client'
-import { PostService } from '@services/PostService/index.js'
 import { subMonths } from 'date-fns'
 import { injectable, singleton } from 'tsyringe'
+import { NotFoundError } from '@errors/NotfoundError.js'
 
 interface Service {
   getFollowings(fk_follower_id: string): Promise<User[]>
-  createRecommendFollower(): Promise<RecommedFollowerResult[]>
+  getFollowers(fk_following_id: string): Promise<User[]>
+  createRecommendFollowings(): Promise<RecommedFollowingsResult[]>
 }
 
 @injectable()
 @singleton()
-export class FollowUserService implements Service {
+export class FollowService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly utils: UtilsService,
-    private readonly postService: PostService,
+    private readonly userService: UserService,
   ) {}
   public async getFollowings(fk_follower_id: string): Promise<User[]> {
-    const followUser = await this.db.followUser.findMany({
+    const follower = await this.userService.findByUserId(fk_follower_id)
+
+    if (!follower) {
+      throw new NotFoundError('Not found Follower')
+    }
+
+    const relationship = await this.db.followUser.findMany({
       where: {
         fk_follower_user_id: fk_follower_id,
       },
@@ -39,10 +47,40 @@ export class FollowUserService implements Service {
         },
       },
     })
-    const followings = followUser.map((follow) => follow.following!)
+    const followings = relationship.map((follow) => follow.following!)
     return followings
   }
-  public async createRecommendFollower(): Promise<RecommedFollowerResult[]> {
+  public async getFollowers(fk_following_id: string): Promise<User[]> {
+    const following = await this.userService.findByUserId(fk_following_id)
+
+    if (!following) {
+      throw new NotFoundError('Not found Follower')
+    }
+
+    const relationship = await this.db.followUser.findMany({
+      where: {
+        fk_following_user_id: fk_following_id,
+      },
+      select: {
+        follower: {
+          select: {
+            id: true,
+            username: true,
+            profile: {
+              select: {
+                display_name: true,
+                short_bio: true,
+                thumbnail: true,
+              },
+            },
+          },
+        },
+      },
+    })
+    const followers = relationship.map((follow) => follow.follower!)
+    return followers
+  }
+  public async createRecommendFollowings(): Promise<RecommedFollowingsResult[]> {
     const threeMonthAgo = subMonths(this.utils.now, 3)
     const sixMonthAgo = subMonths(this.utils.now, 6)
 
@@ -82,11 +120,11 @@ export class FollowUserService implements Service {
     })
 
     const calcuatedTotalLikes = postLikes.reduce<CalculatedTotalLikes>(this.calculateTotalLikes, {
-      postMap: new Map(),
-      countedPostIds: new Set(),
+      followings: new Map(),
+      postIds: new Set(),
     })
 
-    return Array.from(calcuatedTotalLikes.postMap)
+    return Array.from(calcuatedTotalLikes.followings)
       .filter(([, post]) => post.totalLikes > 4)
       .sort(([, a], [, b]) => b.totalLikes - a.totalLikes)
       .map(([id, { user, posts, totalLikes }]) => ({ id, user, posts, totalLikes }))
@@ -96,13 +134,12 @@ export class FollowUserService implements Service {
 
     if (!user || !post) return result
 
-    const id = user.id
-    const exists = result.postMap.get(id)
-
-    const isCounted = result.countedPostIds.has(post.id)
+    const userId = user.id
+    const exists = result.followings.get(userId)
+    const isCounted = result.postIds.has(post.id)
 
     if (!isCounted) {
-      result.countedPostIds.add(post.id)
+      result.postIds.add(post.id)
     }
 
     if (exists) {
@@ -113,18 +150,17 @@ export class FollowUserService implements Service {
         .sort((a, b) => b.likes! - a.likes!)
         .slice(0, 3)
 
-      const data: PostMap = {
+      const data: FollowingMap = {
         user,
         posts,
         totalLikes: exists.totalLikes + (isCounted ? 0 : post.likes!),
       }
 
-      result.postMap.set(id, data)
+      result.followings.set(userId, data)
     } else {
       const data = { user: user, posts: [post], totalLikes: post.likes! }
-      result.postMap.set(id, data)
+      result.followings.set(userId, data)
     }
-
     return result
   }
 }
@@ -180,7 +216,7 @@ type Post = Prisma.PostGetPayload<{
   }
 }>
 
-type PostMapBase = { user: User; posts: Post[] }
-type PostMap = PostMapBase & { totalLikes: number }
-type CalculatedTotalLikes = { postMap: Map<string, PostMap>; countedPostIds: Set<string> }
-type RecommedFollowerResult = { id: string; user: User; posts: Post[] }
+type FollowingMapBase = { user: User; posts: Post[] }
+type FollowingMap = FollowingMapBase & { totalLikes: number }
+type CalculatedTotalLikes = { followings: Map<string, FollowingMap>; postIds: Set<string> }
+type RecommedFollowingsResult = { id: string; user: User; posts: Post[] }
