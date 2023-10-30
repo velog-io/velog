@@ -6,7 +6,6 @@
 
   .section {
     display: flex;
-    justify-content: space-between;
     align-items: center;
 
     .left {
@@ -19,8 +18,6 @@
 
     img {
       display: block;
-      width: 128px;
-      height: 128px;
       border-radius: 50%;
       object-fit: cover;
       box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
@@ -66,6 +63,7 @@
           }
         }
       }
+
       .description {
         white-space: pre-wrap;
         font-size: 18px;
@@ -91,12 +89,13 @@
   }
 
   .profileIcons {
-    color: var(--text3);
     display: flex;
     svg {
       cursor: pointer;
       width: 32px;
       height: 32px;
+      color: var(--text3);
+
       &:hover {
         color: var(--text1);
       }
@@ -114,6 +113,25 @@
     a + a,
     a + svg {
       margin-left: 16px;
+    }
+
+    .emailBlock {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+
+      div {
+        background: var(--gray7);
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.05);
+        padding: 0.5rem;
+        font-size: 0.875rem;
+        color: white;
+        border-radius: 4px;
+
+        @media screen and (max-width: 768px) {
+          padding: 0.25rem 0.5rem;
+          font-size: 0.75rem;
+        }
+      }
     }
   }
 }

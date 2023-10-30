@@ -15,9 +15,14 @@ export default async function getUserProfile(username: string) {
 
     const { user } = await graphqlFetch<{ user: User }>({
       body,
+      next: { revalidate: 10 },
     })
 
-    return user.profile!
+    if (!user) {
+      return null
+    }
+
+    return user.profile
   } catch (error) {
     console.log('getUesrProfile error', error)
     return null

@@ -1,5 +1,8 @@
+'use client'
+
 import * as React from 'react'
 import type { SVGProps } from 'react'
+
 const SvgGithubIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" {...props}>
     <mask id="github-icon_svg__a" width={20} height={20} x={0} y={0} maskUnits="userSpaceOnUse">
@@ -11,8 +14,9 @@ const SvgGithubIcon = (props: SVGProps<SVGSVGElement>) => (
       />
     </mask>
     <g mask="url(#github-icon_svg__a)">
-      <path fill="#fff" d="M0 0h20v20H0z" />
+      <path fill="currentColor" d="M0 0h20v20H0z" style={{ ...props.style }} className="svgPath" />
     </g>
   </svg>
 )
+
 export default SvgGithubIcon
