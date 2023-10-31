@@ -1,5 +1,5 @@
 import getUserProfile from '@/actions/getUserProfile'
-import VelogPage from '../../page'
+import VelogPage from '../page'
 import { Metadata } from 'next'
 import strip from 'strip-markdown'
 import { remark } from 'remark'

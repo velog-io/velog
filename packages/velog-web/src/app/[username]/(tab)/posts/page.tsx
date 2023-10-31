@@ -6,11 +6,11 @@ interface Props {
   params: { username: string }
 }
 
-export default async function VelogSeries({ params }: Props) {
+export default async function VelogPosts({ params }: Props) {
   return (
     <>
       <VelogPage params={params} />
-      <div>velogSeries</div>
+      <div>velogPosts</div>
     </>
   )
 }

@@ -16,7 +16,7 @@ type Props = {
   style?: CSSProperties
   thumbnail: string | null
   displayName: string
-  description: string
+  shortBio: string
   profileLinks: ProfileLinks
   username: string
   followButton?: React.ReactNode
@@ -27,7 +27,7 @@ function UserProfile({
   style,
   thumbnail,
   displayName,
-  description,
+  shortBio,
   profileLinks,
   username,
   followButton,
@@ -65,7 +65,7 @@ function UserProfile({
           <div className={cx('name')}>
             <Link href={velogUrl}>{displayName}</Link>
           </div>
-          <div className={cx('description')}>{description}</div>
+          <div className={cx('description')}>{shortBio}</div>
         </div>
         {!ownPost && followButton && <div className={cx('right')}>{followButton}</div>}
       </div>
