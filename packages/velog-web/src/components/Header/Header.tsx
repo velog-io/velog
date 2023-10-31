@@ -15,6 +15,7 @@ import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
 import HeaderSkeleton from '@/components/Header/HeaderSkeleton'
 import { useCurrentUserQuery } from '@/graphql/generated'
 import HeaderLogo from './HeaderLogo'
+import HeaderCustomSkeleton from './HeaderCustomSkeleton'
 
 const cx = bindClassNames(styles)
 
@@ -45,45 +46,36 @@ function Header({ headerCustomLogo }: Props) {
   // const urlForSearch = customHeader.custom ? `/search?username=${customHeader.username}` : '/search'
   const urlForSearch = '/search'
 
+  if (isLoading && !headerCustomLogo) return <HeaderSkeleton />
+  if (isLoading && headerCustomLogo) return <HeaderCustomSkeleton />
   return (
     <header className={cx('block')}>
       <div className={cx('innerBlock')}>
         {headerCustomLogo ? headerCustomLogo : <HeaderLogo />}
         <div className={cx('right')}>
-          {isLoading ? (
-            <HeaderSkeleton />
-          ) : (
+          {themeReady && <ThemeToggleButton />}
+          <HeaderSearchButton to={urlForSearch} />
+          {user && (
             <>
-              {themeReady && <ThemeToggleButton />}
-              <HeaderSearchButton to={urlForSearch} />
-              {user && (
-                <>
-                  <RoundButton
-                    color="darkGray"
-                    border={true}
-                    to="/write"
-                    className={cx('writeButton')}
-                  >
-                    새 글 작성
-                  </RoundButton>
-                  <div ref={ref}>
-                    <HeaderUserIcon user={user} onClick={toggleUserMenu} />
-                  </div>
-                  <HeaderUserMenu onClose={toggleUserMenu} isVisible={userMenu} />
-                </>
-              )}
-              {!user && (
-                <RoundButton
-                  color="darkGray"
-                  border={false}
-                  onClick={() => {
-                    actions.showModal('login')
-                  }}
-                >
-                  로그인
-                </RoundButton>
-              )}
+              <RoundButton color="darkGray" border={true} to="/write" className={cx('writeButton')}>
+                새 글 작성
+              </RoundButton>
+              <div ref={ref}>
+                <HeaderUserIcon user={user} onClick={toggleUserMenu} />
+              </div>
+              <HeaderUserMenu onClose={toggleUserMenu} isVisible={userMenu} />
             </>
+          )}
+          {!user && (
+            <RoundButton
+              color="darkGray"
+              border={false}
+              onClick={() => {
+                actions.showModal('login')
+              }}
+            >
+              로그인
+            </RoundButton>
           )}
         </div>
       </div>

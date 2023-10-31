@@ -8,8 +8,8 @@ export default function useApplyVelogConfig(username: string) {
   const [userLogo, setUserLogo] = useState<UserLogo | null>(null)
   const { data, error, isLoading } = useVelogConfigQuery({ input: { username } })
 
-  if (error || !data) {
-    console.log(error)
+  if (error) {
+    console.log('get velog config error', error)
   }
 
   useEffect(() => {

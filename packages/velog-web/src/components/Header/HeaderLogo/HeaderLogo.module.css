@@ -15,9 +15,4 @@
       height: 20px;
     }
   }
-
-  .userLogo {
-    display: block;
-    max-width: calc(100vw - 200px);
-  }
 }
