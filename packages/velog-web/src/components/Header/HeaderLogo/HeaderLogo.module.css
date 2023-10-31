@@ -4,9 +4,7 @@
   justify-content: center;
   font-weight: bold;
   font-size: 21px;
-  font-family:
-    Fira Mono,
-    monospace;
+  font-family: Fira Mono, monospace;
   height: 100%;
   line-height: 10px;
 
@@ -16,5 +14,10 @@
     @media screen and (max-width: 1024px) {
       height: 20px;
     }
+  }
+
+  .userLogo {
+    display: block;
+    max-width: calc(100vw - 200px);
   }
 }

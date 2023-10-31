@@ -40,6 +40,10 @@ const userResolvers: Resolvers = {
       const userService = container.resolve(UserService)
       return await userService.findByIdOrUsername({ userId, username })
     },
+    velogConfig: async (_, { input }) => {
+      const velogConfigSerivce = container.resolve(VelogConfigService)
+      return await velogConfigSerivce.findByUsername(input.username)
+    },
     currentUser: async (_, __, ctx) => {
       const userService = container.resolve(UserService)
       return await userService.getCurrentUser(ctx.user?.id)

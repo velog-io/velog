@@ -41,7 +41,7 @@ type UserToken {
 
 type Query {
   user(input: GetUserInput!): User
-  # velog_config(username: String): VelogConfig
+  velogConfig(input: GetVelogConfigInput!): VelogConfig
   currentUser: User
   restoreToken: UserToken
   # unregister_token: String
@@ -65,4 +65,8 @@ type Mutation {
 input GetUserInput {
   id: ID
   username: String
+}
+
+input GetVelogConfigInput {
+  username: String!
 }

@@ -1,6 +1,5 @@
 'use client'
 
-import HeaderLogo from '@/components/Header/HeaderLogo'
 import styles from './Header.module.css'
 import RoundButton from '@/components/RoundButton'
 import { useAuth } from '@/state/auth'
@@ -15,10 +14,15 @@ import HeaderUserIcon from '@/components/Header/HeaderUserIcon'
 import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
 import HeaderSkeleton from '@/components/Header/HeaderSkeleton'
 import { useCurrentUserQuery } from '@/graphql/generated'
+import HeaderLogo from './HeaderLogo'
 
 const cx = bindClassNames(styles)
 
-function Header() {
+type Props = {
+  headerCustomLogo?: React.ReactNode
+}
+
+function Header({ headerCustomLogo }: Props) {
   const {
     value: { systemTheme },
   } = useTheme()
@@ -44,7 +48,7 @@ function Header() {
   return (
     <header className={cx('block')}>
       <div className={cx('innerBlock')}>
-        <HeaderLogo />
+        {headerCustomLogo ? headerCustomLogo : <HeaderLogo />}
         <div className={cx('right')}>
           {isLoading ? (
             <HeaderSkeleton />

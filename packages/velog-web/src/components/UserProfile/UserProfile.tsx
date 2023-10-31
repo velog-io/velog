@@ -47,7 +47,6 @@ function UserProfile({
   }
 
   const velogUrl = `/@${username}`
-
   return (
     <div className={cx('block')} style={style}>
       <div className={cx('section')}>
@@ -58,6 +57,7 @@ function UserProfile({
               width={128}
               height={128}
               alt="profile"
+              priority={true}
             />
           </Link>
         </div>

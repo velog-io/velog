@@ -54,6 +54,10 @@ export type GetUserInput = {
   username?: InputMaybe<Scalars['String']['input']>
 }
 
+export type GetVelogConfigInput = {
+  username: Scalars['String']['input']
+}
+
 export type LikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
@@ -142,6 +146,7 @@ export type Query = {
   restoreToken: Maybe<UserToken>
   trendingPosts: Array<Post>
   user: Maybe<User>
+  velogConfig: Maybe<VelogConfig>
 }
 
 export type QueryFollowersArgs = {
@@ -174,6 +179,10 @@ export type QueryTrendingPostsArgs = {
 
 export type QueryUserArgs = {
   input: GetUserInput
+}
+
+export type QueryVelogConfigArgs = {
+  input: GetVelogConfigInput
 }
 
 export type ReadCountByDay = {
@@ -487,6 +496,14 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never }>
 
 export type LogoutMutation = { logout: any | null }
 
+export type VelogConfigQueryVariables = Exact<{
+  input: GetVelogConfigInput
+}>
+
+export type VelogConfigQuery = {
+  velogConfig: { title: string | null; logo_image: string | null } | null
+}
+
 export const SendMailDocument = `
     mutation sendMail($input: SendMailInput!) {
   sendMail(input: $input) {
@@ -726,5 +743,22 @@ export const useLogoutMutation = <TError = unknown, TContext = unknown>(
     ['logout'],
     (variables?: LogoutMutationVariables) =>
       fetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables)(),
+    options,
+  )
+export const VelogConfigDocument = `
+    query velogConfig($input: GetVelogConfigInput!) {
+  velogConfig(input: $input) {
+    title
+    logo_image
+  }
+}
+    `
+export const useVelogConfigQuery = <TData = VelogConfigQuery, TError = unknown>(
+  variables: VelogConfigQueryVariables,
+  options?: UseQueryOptions<VelogConfigQuery, TError, TData>,
+) =>
+  useQuery<VelogConfigQuery, TError, TData>(
+    ['velogConfig', variables],
+    fetcher<VelogConfigQuery, VelogConfigQueryVariables>(VelogConfigDocument, variables),
     options,
   )

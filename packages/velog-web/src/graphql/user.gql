@@ -28,3 +28,10 @@ query currentUser {
 mutation logout {
   logout
 }
+
+query velogConfig($input: GetVelogConfigInput!) {
+  velogConfig(input: $input) {
+    title
+    logo_image
+  }
+}

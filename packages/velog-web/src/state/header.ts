@@ -6,7 +6,7 @@ type HeaderState = {
   username: string | null
 }
 
-type UserLogo = {
+export type UserLogo = {
   title: string | null
   logo_image: string | null
 }

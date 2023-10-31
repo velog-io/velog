@@ -63,6 +63,10 @@ export type GetUserInput = {
   username?: InputMaybe<Scalars['String']['input']>
 }
 
+export type GetVelogConfigInput = {
+  username: Scalars['String']['input']
+}
+
 export type LikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
@@ -151,6 +155,7 @@ export type Query = {
   restoreToken?: Maybe<UserToken>
   trendingPosts: Array<Post>
   user?: Maybe<User>
+  velogConfig?: Maybe<VelogConfig>
 }
 
 export type QueryFollowersArgs = {
@@ -183,6 +188,10 @@ export type QueryTrendingPostsArgs = {
 
 export type QueryUserArgs = {
   input: GetUserInput
+}
+
+export type QueryVelogConfigArgs = {
+  input: GetVelogConfigInput
 }
 
 export type ReadCountByDay = {
@@ -431,6 +440,7 @@ export type ResolversTypes = {
   FollowersInput: FollowersInput
   FollowingsInput: FollowingsInput
   GetUserInput: GetUserInput
+  GetVelogConfigInput: GetVelogConfigInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
   Int: ResolverTypeWrapper<Scalars['Int']['output']>
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
@@ -493,6 +503,7 @@ export type ResolversParentTypes = {
   FollowersInput: FollowersInput
   FollowingsInput: FollowingsInput
   GetUserInput: GetUserInput
+  GetVelogConfigInput: GetVelogConfigInput
   ID: Scalars['ID']['output']
   Int: Scalars['Int']['output']
   JSON: Scalars['JSON']['output']
@@ -713,6 +724,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryUserArgs, 'input'>
+  >
+  velogConfig?: Resolver<
+    Maybe<ResolversTypes['VelogConfig']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryVelogConfigArgs, 'input'>
   >
 }
 

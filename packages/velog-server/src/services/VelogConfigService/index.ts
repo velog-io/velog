@@ -6,6 +6,7 @@ import { injectable, singleton } from 'tsyringe'
 
 interface Service {
   velogConfigLoader(): DataLoader<string, VelogConfig>
+  findByUsername(username: string): Promise<VelogConfig | null>
 }
 
 @injectable()
@@ -31,5 +32,15 @@ export class VelogConfigService implements Service {
       const normalized = this.utils.normalize(configs, (config) => config.fk_user_id!)
       return userIds.map((id) => normalized[id])
     })
+  }
+  public async findByUsername(username: string): Promise<VelogConfig | null> {
+    const config = await this.db.velogConfig.findFirst({
+      where: {
+        user: {
+          username,
+        },
+      },
+    })
+    return config
   }
 }
