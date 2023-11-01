@@ -1,7 +1,8 @@
-import { usePathname, useParams, useSearchParams, redirect } from 'next/navigation'
+import { usePathname, redirect } from 'next/navigation'
 import styles from './VelogTab.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import ActiveLink from '@/components/ActiveLink'
+import { motion } from 'framer-motion'
 
 const cx = bindClassNames(styles)
 
@@ -26,6 +27,8 @@ function VelogTab({ username }: Props) {
     redirect(`${url}/posts`)
   }
 
+  const tabIndex = tabIndexMap[tab]
+
   const withPrefix = (path: Tab) => `${url}/${path}`
   return (
     <div className={cx('block')}>
@@ -48,6 +51,13 @@ function VelogTab({ username }: Props) {
         >
           소개
         </ActiveLink>
+        <motion.div
+          initial={false}
+          animate={{
+            left: `${tabIndex * 33.3333}%`,
+          }}
+          className={cx('indicator')}
+        />
       </div>
     </div>
   )

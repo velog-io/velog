@@ -39,5 +39,17 @@
         height: 40px;
       }
     }
+
+    .indicator {
+      width: 128px;
+      height: 2px;
+      background: var(--primary2);
+      position: absolute;
+      bottom: -2px;
+
+      @media screen and (max-width: 768px) {
+        width: 33.3333%;
+      }
+    }
   }
 }
