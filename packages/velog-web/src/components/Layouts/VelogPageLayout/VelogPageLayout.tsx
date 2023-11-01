@@ -8,6 +8,7 @@ import UserProfile from '@/components/UserProfile'
 import { ProfileLinks } from '@/types/user'
 import useApplyVelogConfig from '@/features/velog/hooks/useApplyVelogConfig'
 import HeaderCustomLogo from '@/components/Header/HeaderCustomLogo'
+import { UserLogo } from '@/state/header'
 
 const cx = bindClassNames(styles)
 
@@ -18,6 +19,7 @@ type Props = {
   profileLikns: ProfileLinks
   username: string
   thumbnail: string | null
+  userLogo: UserLogo
 }
 
 function VelogPageLayout({
@@ -27,19 +29,14 @@ function VelogPageLayout({
   username,
   thumbnail,
   children,
+  userLogo,
 }: Props) {
-  const { userLogo, isLoading } = useApplyVelogConfig(username)
-
   return (
     <div className={cx('block')}>
       <FloatingHeader />
       <div className={cx('mainResponsive')}>
         <div className={cx('innerBlock')}>
-          <Header
-            headerCustomLogo={
-              <HeaderCustomLogo username={username} userLogo={userLogo} isLoading={isLoading} />
-            }
-          />
+          <Header headerCustomLogo={<HeaderCustomLogo username={username} userLogo={userLogo} />} />
           <div className={cx('mainWrapper')}>
             <main>
               <UserProfile

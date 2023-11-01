@@ -15,7 +15,6 @@ const firaMono = Fira_Mono({
 })
 
 type Props = {
-  isLoading: boolean
   username: string | null
   userLogo: UserLogo | null
 }

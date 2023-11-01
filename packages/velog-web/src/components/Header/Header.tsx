@@ -15,7 +15,6 @@ import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
 import HeaderSkeleton from '@/components/Header/HeaderSkeleton'
 import { useCurrentUserQuery } from '@/graphql/generated'
 import HeaderLogo from './HeaderLogo'
-import HeaderCustomSkeleton from './HeaderCustomSkeleton'
 
 const cx = bindClassNames(styles)
 
@@ -47,7 +46,6 @@ function Header({ headerCustomLogo }: Props) {
   const urlForSearch = '/search'
 
   if (isLoading && !headerCustomLogo) return <HeaderSkeleton />
-  if (isLoading && headerCustomLogo) return <HeaderCustomSkeleton />
   return (
     <header className={cx('block')}>
       <div className={cx('innerBlock')}>
