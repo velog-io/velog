@@ -6,9 +6,10 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import FloatingHeader from '@/features/home/components/FloatingHeader'
 import UserProfile from '@/components/UserProfile'
 import { ProfileLinks } from '@/types/user'
-import useApplyVelogConfig from '@/features/velog/hooks/useApplyVelogConfig'
 import HeaderCustomLogo from '@/components/Header/HeaderCustomLogo'
 import { UserLogo } from '@/state/header'
+
+import VelogTab from '@/features/velog/components/VelogTab'
 
 const cx = bindClassNames(styles)
 
@@ -46,6 +47,7 @@ function VelogPageLayout({
                 thumbnail={thumbnail}
                 username={username}
               />
+              <VelogTab username={username} />
               {children}
             </main>
           </div>

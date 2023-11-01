@@ -1,0 +1,43 @@
+.block {
+  margin-top: 72px;
+  margin-bottom: 72px;
+  display: flex;
+  justify-content: center;
+
+  @media screen and (max-width: 768px) {
+    margin-top: 0;
+    margin-bottom: 24px;
+  }
+
+  .wrapper {
+    display: flex;
+    position: relative;
+
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21.2px;
+      width: 128px;
+      height: 48px;
+      color: var(--text2);
+      text-decoration: none;
+      transition: 0.25s color ease-in-out;
+      font-weight: 600;
+
+      &.active {
+        color: var(--primary2);
+      }
+
+      @media screen and (max-width: 768px) {
+        flex: 1;
+        font-size: 16px;
+        height: 40px;
+      }
+    }
+  }
+}
