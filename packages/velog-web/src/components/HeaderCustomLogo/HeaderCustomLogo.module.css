@@ -1,0 +1,36 @@
+.block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 21px;
+
+  @media screen and (max-width: 1024px) {
+    height: 20px;
+  }
+
+  .logo {
+    width: 28px;
+    height: 28px;
+
+    @media screen and (max-width: 1024px) {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  svg {
+    color: var(--text1);
+  }
+
+  .userLogo {
+    color: var(--text1);
+    height: 100%;
+    font-size: 21px;
+    margin-left: 16px;
+
+    @media screen and (max-width: 1024px) {
+      font-size: 18px;
+    }
+  }
+}
