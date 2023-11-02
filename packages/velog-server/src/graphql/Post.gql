@@ -64,7 +64,7 @@ type PostHistory {
 
 type Query {
   post(input: ReadPostInput!): Post
-  # posts(cursor: ID, limit: Int, username: String, temp_only: Boolean, tag: String): [Post]
+  posts(input: GetPostsInput!): [Post!]!
   recentPosts(input: RecentPostsInput!): [Post!]!
   trendingPosts(input: TrendingPostsInput!): [Post!]!
   # searchPosts(keyword: String!, offset: Int, limit: Int, username: String): SearchResult
@@ -120,6 +120,14 @@ input ReadPostInput {
   id: ID
   username: String
   url_slug: String
+}
+
+input GetPostsInput {
+  cursor: ID
+  username: String
+  temp_only: Boolean
+  tag: String
+  limit: Int
 }
 
 input ReadingListInput {

@@ -8,6 +8,7 @@ interface Service {
   findByNameFiltered(name: string): Promise<Tag | null>
   findById(tagId: string): Promise<Tag | null>
   tagLoader(): DataLoader<string, Tag[]>
+  getOriginTag(tagname: string): Promise<Tag | null>
 }
 
 @injectable()
@@ -62,5 +63,29 @@ export class TagService implements Service {
         )
         .map((array) => array.map((pt) => pt.tag!))
     })
+  }
+  public async getOriginTag(tagname: string): Promise<Tag | null> {
+    const filtered = this.utils.escapeForUrl(tagname).toLowerCase()
+    const tag = await this.db.tag.findFirst({
+      where: {
+        name_filtered: filtered,
+      },
+    })
+    if (!tag) return null
+    if (tag.is_alias) {
+      const alias = await this.db.tagAlias.findFirst({
+        where: {
+          fk_tag_id: tag.id,
+        },
+      })
+      if (!alias) return null
+      const originTag = await this.db.tag.findUnique({
+        where: {
+          id: alias.fk_alias_tag_id,
+        },
+      })
+      return originTag
+    }
+    return tag
   }
 }

@@ -1,14 +1,15 @@
 import removeMd from 'remove-markdown'
-import { Post, Prisma, Tag } from '@prisma/client'
+import { Post, PostTag, Prisma, Tag, User } from '@prisma/client'
 import { container, injectable, singleton } from 'tsyringe'
 import {
+  GetPostsInput,
   ReadPostInput,
   ReadingListInput,
   RecentPostsInput,
   TrendingPostsInput,
 } from '@graphql/generated.js'
 import { DbService } from '@lib/db/DbService.js'
-import { BadRequestError, UnauthorizedError } from '@errors/index.js'
+import { BadRequestError, ConfilctError, NotFoundError, UnauthorizedError } from '@errors/index.js'
 import { GetPostsByTypeParams, Timeframe } from './PostServiceInterface'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
@@ -30,6 +31,7 @@ interface Service {
   updatePostScore(postId: string): Promise<void>
   shortDescription(post: Post): string
   recommendedPosts(post: Post): Promise<Post[]>
+  getPosts(input: GetPostsInput, loggedUserId: string): Promise<Post[]>
 }
 
 @injectable()
@@ -298,7 +300,10 @@ export class PostService implements Service {
     const ordered = postIds.map((id) => normalized[id])
     return ordered
   }
-  public async getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null> {
+  public async getPost(
+    input: ReadPostInput,
+    loggedUserId: string | undefined,
+  ): Promise<Post | null> {
     const { id, url_slug, username } = input
     if (id) {
       const post = await this.db.post.findUnique({
@@ -314,7 +319,7 @@ export class PostService implements Service {
         },
       })
 
-      if (!post || ((post.is_temp || post.is_private) && post.fk_user_id !== userId)) {
+      if (!post || ((post.is_temp || post.is_private) && post.fk_user_id !== loggedUserId)) {
         return null
       }
       return post
@@ -362,14 +367,14 @@ export class PostService implements Service {
       }
     }
     if (!post) return null
-    if ((post.is_temp || post.is_private) && post.fk_user_id !== userId) return null
+    if ((post.is_temp || post.is_private) && post.fk_user_id !== loggedUserId) return null
 
     setTimeout(async () => {
-      if (post?.fk_user_id === userId || !userId) return
+      if (post?.fk_user_id === loggedUserId || !loggedUserId) return
       if (!post) return
       const postReadLogService = container.resolve(PostReadLogService)
       postReadLogService.log({
-        userId: userId,
+        userId: loggedUserId,
         postId: post.id,
         resumeTitleId: null,
         percentage: 0,
@@ -378,7 +383,7 @@ export class PostService implements Service {
 
     return post
   }
-  private serialize(post: SerializeParam): SerializedPost {
+  private serialize(post: SerializeArgs): SerializePost {
     return {
       id: post.id,
       url: `${ENV.apiHost}/@${post.user.username}/${encodeURI(post.url_slug ?? '')}`,
@@ -386,9 +391,9 @@ export class PostService implements Service {
       thumbnail: post.thumbnail,
       released_at: post.released_at,
       updated_at: post.updated_at,
-      shortDescription: this.shortDescription(post),
+      short_description: this.shortDescription(post),
       body: post.body,
-      tags: post.tags.map((tag) => tag.name || '').filter(Boolean),
+      tags: post.postTags.map((tags) => tags.tag!.name!),
       fk_user_id: post.fk_user_id,
       url_slug: post.url_slug,
       likes: post.likes,
@@ -465,35 +470,189 @@ export class PostService implements Service {
       return []
     }
   }
+  public async getPosts(input: GetPostsInput, loggedUserId: string): Promise<Post[]> {
+    const { cursor, limit = 20, username, temp_only, tag } = input
+
+    if (limit > 100) {
+      throw new BadRequestError('Max limit is 100')
+    }
+
+    const user = await this.db.user.findUnique({
+      where: {
+        username,
+      },
+    })
+
+    if (tag) {
+      return this.findPostsWithTag({
+        cursor,
+        tagName: tag,
+        userId: user?.id,
+        isSelf: !!(user && user.id === loggedUserId),
+      })
+    }
+
+    const whereQuery: Prisma.PostWhereInput = {}
+
+    if (!loggedUserId) {
+      const query: Prisma.PostWhereInput = {
+        is_private: false,
+      }
+      Object.assign(whereQuery, query)
+    } else {
+      const query: Prisma.PostWhereInput = {
+        OR: [{ is_private: false }, { fk_user_id: loggedUserId }],
+      }
+      Object.assign(whereQuery, query)
+    }
+
+    if (temp_only) {
+      if (!username) throw new BadRequestError('username is missing')
+      if (!user) throw new NotFoundError('Invalid username')
+      if (user.id !== loggedUserId)
+        throw new UnauthorizedError('You have no permission to load temp posts')
+
+      Object.assign(whereQuery, { is_temp: true })
+    } else {
+      Object.assign(whereQuery, { is_temp: false })
+    }
+
+    if (username) {
+      const query: Prisma.PostWhereInput = {
+        user: {
+          username: username,
+        },
+      }
+      Object.assign(whereQuery, { query })
+    }
+
+    if (cursor) {
+      const post = await this.db.post.findUnique({
+        where: {
+          id: cursor,
+        },
+      })
+
+      if (!post) {
+        throw new BadRequestError('Invalid cursor')
+      }
+
+      const query: Prisma.PostWhereInput = {
+        released_at: post.released_at,
+        id: post.id,
+      }
+
+      Object.assign(whereQuery, query)
+
+      const orQuery: Prisma.PostWhereInput = {
+        OR: [{ AND: [{ released_at: post.released_at }, { id: post.id }] }],
+      }
+
+      if (whereQuery.OR) {
+        Object.assign(whereQuery, { OR: whereQuery.OR.concat(orQuery) })
+      } else {
+        Object.assign(whereQuery, { OR: orQuery })
+      }
+    }
+
+    const posts = await this.db.post.findMany({
+      where: whereQuery,
+      include: {
+        user: true,
+      },
+      orderBy: {
+        released_at: 'desc',
+        id: 'desc',
+      },
+      take: limit,
+    })
+
+    return posts
+  }
+  private async findPostsWithTag({
+    cursor,
+    tagName,
+    userId,
+    isSelf,
+  }: FindPostsByTagArgs): Promise<Post[]> {
+    const originTag = await this.tagService.getOriginTag(tagName)
+    if (!originTag) {
+      throw new ConfilctError('Invalid tag')
+    }
+
+    const cursorPost = cursor
+      ? await this.db.post.findUnique({
+          where: { id: cursor },
+        })
+      : null
+
+    const postTags = await this.db.postTag.findMany({
+      where: {
+        fk_tag_id: originTag.id,
+        post: {
+          is_temp: false,
+          ...(cursorPost
+            ? {
+                released_at: {
+                  lt: cursorPost.released_at!,
+                },
+              }
+            : {}),
+          ...(userId
+            ? { fk_user_id: userId, ...(isSelf ? {} : { is_private: false }) }
+            : { is_private: false }),
+        },
+      },
+      include: {
+        post: {
+          include: {
+            postTags: {
+              include: {
+                tag: true,
+              },
+            },
+            user: true,
+          },
+        },
+      },
+      orderBy: {
+        post: {
+          released_at: 'desc',
+        },
+      },
+      take: 20,
+    })
+
+    return postTags.filter((tags) => tags.post).map((tags) => tags.post!)
+  }
 }
 
-export type SerializeParam = Prisma.PostGetPayload<{
-  include: {
-    id: true
-    title: true
-    body: true
-    thumbnail: true
-    is_private: true
-    released_at: true
-    likes: true
-    views: true
-    meta: true
-    url_slug: true
-    user: true
-  }
-}> & { tags: Tag[] }
-
-export type SerializedPost = {
+export type SerializePost = {
   id: string
   title: string | null
   body: string | null
-  url: string
   thumbnail: string | null
   released_at: Date | null
+  updated_at: Date
   likes: number | null
   url_slug: string | null
+  url: string
+  short_description: string
   tags: string[]
   fk_user_id: string
-  shortDescription: string
-  updated_at: Date
+}
+
+type SerializeArgs = Post & {
+  postTags: (PostTag & {
+    tag: Tag | null
+  })[]
+  user: User
+}
+
+export type FindPostsByTagArgs = {
+  tagName: string
+  cursor?: string
+  limit?: number
+  userId?: string
+  isSelf: boolean
 }

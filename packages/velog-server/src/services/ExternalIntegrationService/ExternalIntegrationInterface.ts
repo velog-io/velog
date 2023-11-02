@@ -1,4 +1,4 @@
-import { SerializedPost } from '@services/PostService'
+import { SerializePost } from '@services/PostService'
 
 export type IntegrationTokenData = {
   integrated_user_id: string
@@ -9,7 +9,7 @@ export type IntegrationTokenData = {
 export type NotifyParams =
   | {
       type: 'created' | 'updated'
-      post: SerializedPost
+      post: SerializePost
     }
   | {
       type: 'deleted'
