@@ -58,14 +58,17 @@ export default function Error({
         />
       )
     }
-    return (
-      <ErrorScreenTemplate
-        Illustration={UndrawServerDown}
-        message={'서버와의 연결이 불안정합니다.\n잠시 후 시도해주세요.'}
-        onButtonClick={() => window.location.reload()}
-        buttonText="새로고침"
-      />
-    )
+    if (networkStatus === 'offline') {
+      return (
+        <ErrorScreenTemplate
+          Illustration={UndrawServerDown}
+          message={'서버와의 연결이 불안정합니다.\n잠시 후 시도해주세요.'}
+          onButtonClick={() => window.location.reload()}
+          buttonText="새로고침"
+        />
+      )
+    }
+    return null
   }
 
   if (error) {
