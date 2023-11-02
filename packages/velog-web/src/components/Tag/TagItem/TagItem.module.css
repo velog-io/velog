@@ -1,0 +1,31 @@
+.default {
+  margin-bottom: 14px;
+  background: var(--bg-tag);
+  padding-left: 16px;
+  padding-right: 16px;
+  height: 32px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 14px;
+  color: var(--primary1);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+
+  @media screen and (max-width: 768px) {
+    height: 24px;
+    font-size: 12px;
+    border-radius: 12px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+}
+
+.tagLink {
+  &:hover {
+    opacity: 0.75;
+  }
+}

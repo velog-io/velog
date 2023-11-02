@@ -1,18 +1,12 @@
 import getUserProfile from '@/actions/getUserProfile'
-import VelogPage from '../page'
 import { Metadata } from 'next'
 
 interface Props {
   params: { username: string }
 }
 
-export default async function VelogPosts({ params }: Props) {
-  return (
-    <>
-      <VelogPage params={params} />
-      <div>velogPosts</div>
-    </>
-  )
+export default async function VelogPosts({}: Props) {
+  return <div>velogPosts</div>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -1,0 +1,11 @@
+.block {
+  margin-top: 14px;
+  margin-bottom: -14px;
+  min-height: 14px;
+
+  @media screen and (max-width: 768px) {
+    margin-top: 8px;
+    margin-bottom: -8px;
+    min-height: 8px;
+  }
+}

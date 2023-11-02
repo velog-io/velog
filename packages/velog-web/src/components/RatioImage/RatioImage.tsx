@@ -10,8 +10,8 @@ type Props = {
   src: string
   alt: string
   className?: string
-  width: number
-  height: number
+  width?: number
+  height?: number
 }
 
 function RatioImage({ widthRatio, heightRatio, src, alt, className = '', width, height }: Props) {
