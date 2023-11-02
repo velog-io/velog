@@ -17,3 +17,18 @@ type SeriesPost {
   index: Int
   post: Post
 }
+
+type Query {
+  series(input: GetSeriesInput!): Series
+  seriesList(input: GetSeriesListInput!): [Series!]!
+}
+
+input GetSeriesInput {
+  id: ID
+  username: String
+  url_slug: String
+}
+
+input GetSeriesListInput {
+  username: String!
+}

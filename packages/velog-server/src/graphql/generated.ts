@@ -66,6 +66,16 @@ export type GetPostsInput = {
   username?: InputMaybe<Scalars['String']['input']>
 }
 
+export type GetSeriesInput = {
+  id?: InputMaybe<Scalars['ID']['input']>
+  url_slug?: InputMaybe<Scalars['String']['input']>
+  username?: InputMaybe<Scalars['String']['input']>
+}
+
+export type GetSeriesListInput = {
+  username: Scalars['String']['input']
+}
+
 export type GetUserInput = {
   id?: InputMaybe<Scalars['ID']['input']>
   username?: InputMaybe<Scalars['String']['input']>
@@ -157,11 +167,13 @@ export type Query = {
   followers: Array<User>
   followings: Array<User>
   post?: Maybe<Post>
-  posts?: Maybe<Array<Maybe<SerializedPost>>>
+  posts: Array<Post>
   readingList: Array<Post>
   recentPosts: Array<Post>
   recommendFollowings: RecommedFollowingsResult
   restoreToken?: Maybe<UserToken>
+  series?: Maybe<Series>
+  seriesList: Array<Series>
   trendingPosts: Array<Post>
   user?: Maybe<User>
   velogConfig?: Maybe<VelogConfig>
@@ -193,6 +205,14 @@ export type QueryRecentPostsArgs = {
 
 export type QueryRecommendFollowingsArgs = {
   input: RecommendFollowingsInput
+}
+
+export type QuerySeriesArgs = {
+  input: GetSeriesInput
+}
+
+export type QuerySeriesListArgs = {
+  input: GetSeriesListInput
 }
 
 export type QueryTrendingPostsArgs = {
@@ -280,20 +300,6 @@ export type SendMailInput = {
 
 export type SendMailResponse = {
   registered?: Maybe<Scalars['Boolean']['output']>
-}
-
-export type SerializedPost = {
-  body?: Maybe<Scalars['String']['output']>
-  fk_user_id?: Maybe<Scalars['ID']['output']>
-  id?: Maybe<Scalars['ID']['output']>
-  likes?: Maybe<Scalars['Date']['output']>
-  released_at?: Maybe<Scalars['Date']['output']>
-  tags: Array<Scalars['String']['output']>
-  thumbnail?: Maybe<Scalars['String']['output']>
-  title?: Maybe<Scalars['String']['output']>
-  updated_at?: Maybe<Scalars['Date']['output']>
-  url?: Maybe<Scalars['String']['output']>
-  url_slug?: Maybe<Scalars['Date']['output']>
 }
 
 export type Series = {
@@ -467,6 +473,8 @@ export type ResolversTypes = {
   FollowersInput: FollowersInput
   FollowingsInput: FollowingsInput
   GetPostsInput: GetPostsInput
+  GetSeriesInput: GetSeriesInput
+  GetSeriesListInput: GetSeriesListInput
   GetUserInput: GetUserInput
   GetVelogConfigInput: GetVelogConfigInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
@@ -500,7 +508,6 @@ export type ResolversTypes = {
   >
   SendMailInput: SendMailInput
   SendMailResponse: ResolverTypeWrapper<SendMailResponse>
-  SerializedPost: ResolverTypeWrapper<SerializedPost>
   Series: ResolverTypeWrapper<
     Omit<Series, 'series_posts' | 'user'> & {
       series_posts?: Maybe<Array<Maybe<ResolversTypes['SeriesPost']>>>
@@ -532,6 +539,8 @@ export type ResolversParentTypes = {
   FollowersInput: FollowersInput
   FollowingsInput: FollowingsInput
   GetPostsInput: GetPostsInput
+  GetSeriesInput: GetSeriesInput
+  GetSeriesListInput: GetSeriesListInput
   GetUserInput: GetUserInput
   GetVelogConfigInput: GetVelogConfigInput
   ID: Scalars['ID']['output']
@@ -560,7 +569,6 @@ export type ResolversParentTypes = {
   SearchResult: Omit<SearchResult, 'posts'> & { posts: Array<ResolversParentTypes['Post']> }
   SendMailInput: SendMailInput
   SendMailResponse: SendMailResponse
-  SerializedPost: SerializedPost
   Series: Omit<Series, 'series_posts' | 'user'> & {
     series_posts?: Maybe<Array<Maybe<ResolversParentTypes['SeriesPost']>>>
     user?: Maybe<ResolversParentTypes['User']>
@@ -726,7 +734,7 @@ export type QueryResolvers<
     RequireFields<QueryPostArgs, 'input'>
   >
   posts?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['SerializedPost']>>>,
+    Array<ResolversTypes['Post']>,
     ParentType,
     ContextType,
     RequireFields<QueryPostsArgs, 'input'>
@@ -750,6 +758,18 @@ export type QueryResolvers<
     RequireFields<QueryRecommendFollowingsArgs, 'input'>
   >
   restoreToken?: Resolver<Maybe<ResolversTypes['UserToken']>, ParentType, ContextType>
+  series?: Resolver<
+    Maybe<ResolversTypes['Series']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySeriesArgs, 'input'>
+  >
+  seriesList?: Resolver<
+    Array<ResolversTypes['Series']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySeriesListArgs, 'input'>
+  >
   trendingPosts?: Resolver<
     Array<ResolversTypes['Post']>,
     ParentType,
@@ -854,25 +874,6 @@ export type SendMailResponseResolvers<
     ResolversParentTypes['SendMailResponse'] = ResolversParentTypes['SendMailResponse'],
 > = {
   registered?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
-}
-
-export type SerializedPostResolvers<
-  ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['SerializedPost'] = ResolversParentTypes['SerializedPost'],
-> = {
-  body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  fk_user_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
-  likes?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
-  released_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
-  tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>
-  thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  updated_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
-  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  url_slug?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -1004,7 +1005,6 @@ export type Resolvers<ContextType = GraphQLContext> = {
   RecommendFollowings?: RecommendFollowingsResolvers<ContextType>
   SearchResult?: SearchResultResolvers<ContextType>
   SendMailResponse?: SendMailResponseResolvers<ContextType>
-  SerializedPost?: SerializedPostResolvers<ContextType>
   Series?: SeriesResolvers<ContextType>
   SeriesPost?: SeriesPostResolvers<ContextType>
   Stats?: StatsResolvers<ContextType>

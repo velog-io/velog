@@ -26,6 +26,16 @@ const seriesResolvers: Resolvers = {
       return await seriesService.getPostCount(parent.id)
     },
   },
+  Query: {
+    series: async (_, { input }) => {
+      const seriesService = container.resolve(SeriesService)
+      return await seriesService.getSeries(input)
+    },
+    seriesList: async (_, { input }) => {
+      const seriesService = container.resolve(SeriesService)
+      return await seriesService.getSeriesListByUsername(input.username)
+    },
+  },
 }
 
 export default seriesResolvers

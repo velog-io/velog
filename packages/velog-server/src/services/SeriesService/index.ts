@@ -1,23 +1,34 @@
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
-
+import { GetSeriesInput } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
-import { Series, SeriesPost } from '@prisma/client'
+import { SeriesPost, Series } from '@prisma/client'
 import DataLoader from 'dataloader'
 
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
+  findBySeriesId(seriesId: string): Promise<Series | null>
   findByUserId(userId?: string): Promise<Series[]>
   getSeriesByPostId(postId: string): Promise<Series | null>
   getPostCount(series: string): Promise<number>
   seriesPostLoader(): DataLoader<string, SeriesPost[]>
   getThumbnail(seriesId: string): Promise<string | null>
+  getSeriesListByUsername(username: string): Promise<Series[]>
+  getSeries(input: GetSeriesInput): Promise<Series | null>
 }
 
 @injectable()
 @singleton()
 export class SeriesService implements Service {
   constructor(private readonly db: DbService) {}
+  public async findBySeriesId(seriesId: string): Promise<Series | null> {
+    const series = await this.db.series.findUnique({
+      where: {
+        id: seriesId,
+      },
+    })
+    return series
+  }
   public async findByUserId(userId?: string): Promise<Series[]> {
     if (!userId) {
       throw new UnauthorizedError('Not Logged In')
@@ -103,5 +114,39 @@ export class SeriesService implements Service {
 
     if (!seriesPost) return null
     return seriesPost.post!.thumbnail
+  }
+  public async getSeriesListByUsername(username: string): Promise<Series[]> {
+    const seriesList = await this.db.series.findMany({
+      where: {
+        user: {
+          username,
+        },
+      },
+      include: {
+        user: true,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    })
+    return seriesList
+  }
+
+  public async getSeries(input: GetSeriesInput): Promise<Series | null> {
+    const { id, username, url_slug } = input
+    if (id) {
+      return await this.findBySeriesId(id)
+    }
+
+    const series = await this.db.series.findFirst({
+      where: {
+        user: {
+          username,
+        },
+        url_slug,
+      },
+    })
+
+    return series
   }
 }
