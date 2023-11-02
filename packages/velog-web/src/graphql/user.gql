@@ -35,3 +35,33 @@ query velogConfig($input: GetVelogConfigInput!) {
     logo_image
   }
 }
+
+input GetVelogConfigInput {
+  username: String!
+}
+
+query getUserAbout($input: GetUserInput!) {
+  user(input: $input) {
+    id
+    profile {
+      id
+      about
+      display_name
+    }
+  }
+}
+
+query getUserSeriesList($input: GetUserInput!) {
+  user(input: $input) {
+    id
+    series_list {
+      id
+      name
+      description
+      url_slug
+      thumbnail
+      updated_at
+      posts_count
+    }
+  }
+}

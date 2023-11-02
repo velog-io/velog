@@ -148,3 +148,35 @@ input TrendingPostsInput {
   offset: Int
   timeframe: String
 }
+
+query Posts($input: GetPostsInput!) {
+  posts(input: $input) {
+    id
+    title
+    short_description
+    thumbnail
+    user {
+      id
+      username
+      profile {
+        id
+        thumbnail
+      }
+    }
+    url_slug
+    released_at
+    updated_at
+    comments_count
+    tags
+    is_private
+    likes
+  }
+}
+
+input GetPostsInput {
+  cursor: ID
+  username: String
+  temp_only: Boolean
+  tag: String
+  limit: Int
+}

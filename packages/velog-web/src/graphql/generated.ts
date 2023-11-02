@@ -49,6 +49,24 @@ export type FollowingsInput = {
   userId?: InputMaybe<Scalars['ID']['input']>
 }
 
+export type GetPostsInput = {
+  cursor?: InputMaybe<Scalars['ID']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  tag?: InputMaybe<Scalars['String']['input']>
+  temp_only?: InputMaybe<Scalars['Boolean']['input']>
+  username?: InputMaybe<Scalars['String']['input']>
+}
+
+export type GetSeriesInput = {
+  id?: InputMaybe<Scalars['ID']['input']>
+  url_slug?: InputMaybe<Scalars['String']['input']>
+  username?: InputMaybe<Scalars['String']['input']>
+}
+
+export type GetSeriesListInput = {
+  username: Scalars['String']['input']
+}
+
 export type GetUserInput = {
   id?: InputMaybe<Scalars['ID']['input']>
   username?: InputMaybe<Scalars['String']['input']>
@@ -140,10 +158,13 @@ export type Query = {
   followers: Array<User>
   followings: Array<User>
   post: Maybe<Post>
+  posts: Array<Post>
   readingList: Array<Post>
   recentPosts: Array<Post>
   recommendFollowings: RecommedFollowingsResult
   restoreToken: Maybe<UserToken>
+  series: Maybe<Series>
+  seriesList: Array<Series>
   trendingPosts: Array<Post>
   user: Maybe<User>
   velogConfig: Maybe<VelogConfig>
@@ -161,6 +182,10 @@ export type QueryPostArgs = {
   input: ReadPostInput
 }
 
+export type QueryPostsArgs = {
+  input: GetPostsInput
+}
+
 export type QueryReadingListArgs = {
   input: ReadingListInput
 }
@@ -171,6 +196,14 @@ export type QueryRecentPostsArgs = {
 
 export type QueryRecommendFollowingsArgs = {
   input: RecommendFollowingsInput
+}
+
+export type QuerySeriesArgs = {
+  input: GetSeriesInput
+}
+
+export type QuerySeriesListArgs = {
+  input: GetSeriesListInput
 }
 
 export type QueryTrendingPostsArgs = {
@@ -463,6 +496,27 @@ export type TrendingPostsQuery = {
   }>
 }
 
+export type PostsQueryVariables = Exact<{
+  input: GetPostsInput
+}>
+
+export type PostsQuery = {
+  posts: Array<{
+    id: string
+    title: string | null
+    short_description: string | null
+    thumbnail: string | null
+    url_slug: string | null
+    released_at: any | null
+    updated_at: any
+    comments_count: number | null
+    tags: Array<string>
+    is_private: boolean
+    likes: number | null
+    user: { id: string; username: string; profile: { id: string; thumbnail: string | null } } | null
+  }>
+}
+
 export type GetUserProfileQueryVariables = Exact<{
   input: GetUserInput
 }>
@@ -502,6 +556,33 @@ export type VelogConfigQueryVariables = Exact<{
 
 export type VelogConfigQuery = {
   velogConfig: { title: string | null; logo_image: string | null } | null
+}
+
+export type GetUserAboutQueryVariables = Exact<{
+  input: GetUserInput
+}>
+
+export type GetUserAboutQuery = {
+  user: { id: string; profile: { id: string; about: string; display_name: string } } | null
+}
+
+export type GetUserSeriesListQueryVariables = Exact<{
+  input: GetUserInput
+}>
+
+export type GetUserSeriesListQuery = {
+  user: {
+    id: string
+    series_list: Array<{
+      id: string
+      name: string | null
+      description: string | null
+      url_slug: string | null
+      thumbnail: string | null
+      updated_at: any | null
+      posts_count: number | null
+    } | null> | null
+  } | null
 }
 
 export const SendMailDocument = `
@@ -684,6 +765,40 @@ export const useTrendingPostsQuery = <TData = TrendingPostsQuery, TError = unkno
     fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, variables),
     options,
   )
+export const PostsDocument = `
+    query Posts($input: GetPostsInput!) {
+  posts(input: $input) {
+    id
+    title
+    short_description
+    thumbnail
+    user {
+      id
+      username
+      profile {
+        id
+        thumbnail
+      }
+    }
+    url_slug
+    released_at
+    updated_at
+    comments_count
+    tags
+    is_private
+    likes
+  }
+}
+    `
+export const usePostsQuery = <TData = PostsQuery, TError = unknown>(
+  variables: PostsQueryVariables,
+  options?: UseQueryOptions<PostsQuery, TError, TData>,
+) =>
+  useQuery<PostsQuery, TError, TData>(
+    ['Posts', variables],
+    fetcher<PostsQuery, PostsQueryVariables>(PostsDocument, variables),
+    options,
+  )
 export const GetUserProfileDocument = `
     query getUserProfile($input: GetUserInput!) {
   user(input: $input) {
@@ -760,5 +875,54 @@ export const useVelogConfigQuery = <TData = VelogConfigQuery, TError = unknown>(
   useQuery<VelogConfigQuery, TError, TData>(
     ['velogConfig', variables],
     fetcher<VelogConfigQuery, VelogConfigQueryVariables>(VelogConfigDocument, variables),
+    options,
+  )
+export const GetUserAboutDocument = `
+    query getUserAbout($input: GetUserInput!) {
+  user(input: $input) {
+    id
+    profile {
+      id
+      about
+      display_name
+    }
+  }
+}
+    `
+export const useGetUserAboutQuery = <TData = GetUserAboutQuery, TError = unknown>(
+  variables: GetUserAboutQueryVariables,
+  options?: UseQueryOptions<GetUserAboutQuery, TError, TData>,
+) =>
+  useQuery<GetUserAboutQuery, TError, TData>(
+    ['getUserAbout', variables],
+    fetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(GetUserAboutDocument, variables),
+    options,
+  )
+export const GetUserSeriesListDocument = `
+    query getUserSeriesList($input: GetUserInput!) {
+  user(input: $input) {
+    id
+    series_list {
+      id
+      name
+      description
+      url_slug
+      thumbnail
+      updated_at
+      posts_count
+    }
+  }
+}
+    `
+export const useGetUserSeriesListQuery = <TData = GetUserSeriesListQuery, TError = unknown>(
+  variables: GetUserSeriesListQueryVariables,
+  options?: UseQueryOptions<GetUserSeriesListQuery, TError, TData>,
+) =>
+  useQuery<GetUserSeriesListQuery, TError, TData>(
+    ['getUserSeriesList', variables],
+    fetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
+      GetUserSeriesListDocument,
+      variables,
+    ),
     options,
   )
