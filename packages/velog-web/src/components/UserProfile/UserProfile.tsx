@@ -46,6 +46,8 @@ function UserProfile({
     setHoverEmail(false)
   }
 
+  const getSocialId = (link: string) => link.split('/').reverse()[0]
+
   const velogUrl = `/@${username}`
   return (
     <div className={cx('block')} style={style}>
@@ -73,7 +75,7 @@ function UserProfile({
       <div className={cx('profileIcons')}>
         {github && (
           <a
-            href={`https://github.com/${github}`}
+            href={`https://github.com/${getSocialId(github)}`}
             target="_blank"
             rel="noopener noreferrer"
             data-testid="github"
@@ -83,7 +85,7 @@ function UserProfile({
         )}
         {twitter && (
           <a
-            href={`https://twitter.com/${twitter}`}
+            href={`https://twitter.com/${getSocialId(twitter)}`}
             target="_blank"
             rel="noopener noreferrer"
             data-testid="twitter"
@@ -93,7 +95,7 @@ function UserProfile({
         )}
         {facebook && (
           <a
-            href={`https://facebook.com/${facebook}`}
+            href={`https://facebook.com/${getSocialId(facebook)}`}
             target="_blank"
             rel="noopener noreferrer"
             data-testid="facebook"
