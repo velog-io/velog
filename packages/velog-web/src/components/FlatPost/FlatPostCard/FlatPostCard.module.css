@@ -92,11 +92,12 @@ p {
   margin-top: 1rem;
   color: var(--text3);
   font-size: 0.875rem;
+
   @media screen and (max-width: 768px) {
     font-size: 0.75rem;
   }
 
-  .separator {
+  .seperator {
     margin-left: 0.5rem;
     margin-right: 0.5rem;
   }
@@ -104,6 +105,7 @@ p {
   .likes {
     display: flex;
     align-items: center;
+
     svg {
       width: 0.875rem;
       height: 0.875rem;

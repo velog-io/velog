@@ -5,7 +5,7 @@ interface Props {
   params: { username: string }
 }
 
-export default async function VelogSeries({}: Props) {
+export default async function VelogSeriesPage({}: Props) {
   return <div>velogSeries</div>
 }
 

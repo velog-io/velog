@@ -17,7 +17,7 @@ function RecentPosts({ data }: Props) {
 
   const getRecentPostsMore = () => {
     if (isFetching || isError) return
-    if (hasNextPage === false) return
+    if (!hasNextPage) return
     fetchNextPage()
   }
 

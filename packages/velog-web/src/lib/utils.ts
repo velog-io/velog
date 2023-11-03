@@ -16,3 +16,9 @@ export const escapeForUrl = (text: string): string => {
     .replace(/ /g, '-')
     .replace(/--+/g, '-')
 }
+
+export const getUsernameFromParams = (params: { username: string }) => {
+  const encodedSymbol = encodeURIComponent('@')
+  const username = params.username.replace(encodedSymbol, '')
+  return username
+}

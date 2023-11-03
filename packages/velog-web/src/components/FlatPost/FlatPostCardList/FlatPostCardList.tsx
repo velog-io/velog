@@ -1,16 +1,23 @@
-import { PartialPosts } from '@/types/post'
+import { Post } from '@/graphql/generated'
 import styles from './FlatPostCardList.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
+import FlatPostCard from '../FlatPostCard/FlatPostCard'
 
 const cx = bindClassNames(styles)
 
 type Props = {
-  posts: PartialPosts[]
+  posts: Post[]
   hideUser: boolean
 }
 
-function FlatPostCardList({}: Props) {
-  return <div className={cx('block')}></div>
+function FlatPostCardList({ posts, hideUser }: Props) {
+  return (
+    <div className={cx('block')}>
+      {posts.map((post) => (
+        <FlatPostCard key={post.id} post={post} hideUser={hideUser} />
+      ))}
+    </div>
+  )
 }
 
 export default FlatPostCardList

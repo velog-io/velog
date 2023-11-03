@@ -1,7 +1,6 @@
 .block {
   display: flex;
   justify-content: center;
-  padding-bottom: 64px;
   height: 100%;
 
   .innerBlock {

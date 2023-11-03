@@ -1,19 +1,21 @@
 import getUserProfile from '@/actions/getUserProfile'
+import VelogPosts from '@/features/velog/components/VelogPosts'
+import { getUsernameFromParams } from '@/lib/utils'
 import { Metadata } from 'next'
 
 interface Props {
   params: { username: string }
+  searchParams: { tag: string }
 }
 
-export default async function VelogPosts({}: Props) {
-  return <div>velogPosts</div>
+export default async function VelogPostsPage({ params, searchParams }: Props) {
+  const tag = Array.isArray(searchParams.tag) ? searchParams.tag[0] : searchParams.tag
+  const username = getUsernameFromParams(params)
+  return <VelogPosts username={username} tag={tag} />
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // read route params
-  const encodedSymbol = encodeURIComponent('@')
-  const username = params.username.replace(encodedSymbol, '')
-
+  const username = getUsernameFromParams(params)
   const profile = await getUserProfile(username)
 
   if (!profile) {

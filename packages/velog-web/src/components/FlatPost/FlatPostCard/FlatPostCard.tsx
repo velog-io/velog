@@ -1,4 +1,4 @@
-import { PartialPosts } from '@/types/post'
+import { Post } from '@/graphql/generated'
 import styles from './FlatPostCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import Link from 'next/link'
@@ -8,18 +8,19 @@ import TagItem from '@/components/Tag/TagItem'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
 import { LikeIcon } from '@/assets/icons/components'
 import PrivatePostLabel from '@/components/PrivatePostLabel'
+import FlatPostCardSkeleton from './FlatPostCardSkeleton'
 
 const cx = bindClassNames(styles)
 
 type Props = {
-  post: PartialPosts
+  post: Post
   hideUser: boolean
 }
 
 function FlatPostCard({ post, hideUser }: Props) {
   const { time: releasedAt, loading } = useTimeFormat(post.released_at!)
 
-  if (loading) return <div>loading...</div>
+  if (loading) return <FlatPostCardSkeleton hideUser={hideUser} />
   if (!post.user || !post.released_at) return null
 
   const url = `/@${post.user.username}/${post.url_slug}`
@@ -48,6 +49,8 @@ function FlatPostCard({ post, hideUser }: Props) {
             widthRatio={1.91}
             heightRatio={1}
             className="postThumbnail"
+            width={768}
+            height={402}
           />
         </Link>
       )}
@@ -62,14 +65,14 @@ function FlatPostCard({ post, hideUser }: Props) {
         <span>{releasedAt}</span>
         <div className={cx('seperator')}>.</div>
         <span>{post.comments_count}개의 댓글</span>
-        <div className="separator">·</div>
-        <span className="likes">
+        <div className={cx('seperator')}>·</div>
+        <span className={cx('likes')}>
           <LikeIcon />
           {post.likes}
         </span>
         {post.is_private && (
           <>
-            <div className="separator">·</div>
+            <div className={cx('seperator')}>·</div>
             <span>
               <PrivatePostLabel />
             </span>
