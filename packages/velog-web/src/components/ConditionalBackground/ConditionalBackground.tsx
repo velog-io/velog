@@ -20,17 +20,19 @@ function ConditionalBackground({ children }: Props) {
 
   useEffect(() => {
     const body = document.body
+    const html = document.querySelector('html')
     const classNameMap = {
       isGray: isGray,
       isWhite: !isGray,
     }
 
     Object.entries(classNameMap).forEach(([className, condition]) => {
-      const classValue = cx(className)
       if (condition) {
-        body.classList.add(classValue)
+        html?.classList.add(className)
+        body.classList.add(cx(className))
       } else {
-        body.classList.remove(classValue)
+        html?.classList.remove(className)
+        body.classList.remove(cx(className))
       }
     })
   }, [isGray])

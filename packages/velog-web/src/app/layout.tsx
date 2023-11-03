@@ -48,7 +48,7 @@ type Props = {
 
 export default async function RootLayout({ children }: Props) {
   return (
-    <html lang="ko">
+    <html id="html" lang="ko">
       <body className="body" suppressHydrationWarning={true}>
         <CoreProvider>{children}</CoreProvider>
       </body>

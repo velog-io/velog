@@ -34,6 +34,8 @@ function FlatPostCard({ post, hideUser }: Props) {
             <Image
               src={post.user.profile?.thumbnail || '/images/user-thumbnail.png'}
               alt="post-card-thumbnail"
+              width={48}
+              height={48}
             />
           </Link>
           <div className={cx('username')}>

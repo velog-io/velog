@@ -212,6 +212,10 @@ body {
   height: 100%;
 }
 
-.body {
+.isGray {
   background-color: var(--bg-page1);
+}
+
+.isWhite {
+  background-color: var(--bg-page2);
 }
