@@ -4,6 +4,10 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import Link from 'next/link'
 import Image from 'next/image'
 import RatioImage from '@/components/RatioImage'
+import TagItem from '@/components/Tag/TagItem'
+import { useTimeFormat } from '@/hooks/useTimeFormat'
+import { LikeIcon } from '@/assets/icons/components'
+import PrivatePostLabel from '@/components/PrivatePostLabel'
 
 const cx = bindClassNames(styles)
 
@@ -13,7 +17,11 @@ type Props = {
 }
 
 function FlatPostCard({ post, hideUser }: Props) {
-  if (!post.user) return null
+  const { time: releasedAt, loading } = useTimeFormat(post.released_at!)
+
+  if (loading) return <div>loading...</div>
+  if (!post.user || !post.released_at) return null
+
   const url = `/@${post.user.username}/${post.url_slug}`
   const velogUrl = `/@${post.user.username}`
 
@@ -47,7 +55,27 @@ function FlatPostCard({ post, hideUser }: Props) {
         <h2>{post.title}</h2>
       </Link>
       <p>{post.short_description}</p>
-      <div className={cx('tagsWrapper')}>{post.tags?.map((tag) => null)}</div>
+      <div className={cx('tagsWrapper')}>
+        {post.tags?.map((tag) => <TagItem key={tag} name={tag} link={true} />)}
+      </div>
+      <div className={cx('subInfo')}>
+        <span>{releasedAt}</span>
+        <div className={cx('seperator')}>.</div>
+        <span>{post.comments_count}개의 댓글</span>
+        <div className="separator">·</div>
+        <span className="likes">
+          <LikeIcon />
+          {post.likes}
+        </span>
+        {post.is_private && (
+          <>
+            <div className="separator">·</div>
+            <span>
+              <PrivatePostLabel />
+            </span>
+          </>
+        )}
+      </div>
     </div>
   )
 }
