@@ -32,7 +32,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
       console.log('----errorHandler----\n', result)
     },
     errorFormatter: (execution) => {
-      console.log('errorFormatter error:', execution)
+      console.log('errorFormatter execution:', execution)
       const e = execution.errors?.[0]?.originalError
 
       if (!isHttpError(e)) {

@@ -31,7 +31,7 @@ interface Service {
   updatePostScore(postId: string): Promise<void>
   shortDescription(post: Post): string
   recommendedPosts(post: Post): Promise<Post[]>
-  getPosts(input: GetPostsInput, loggedUserId: string): Promise<Post[]>
+  getPosts(input: GetPostsInput, loggedUserId?: string): Promise<Post[]>
 }
 
 @injectable()
@@ -470,7 +470,7 @@ export class PostService implements Service {
       return []
     }
   }
-  public async getPosts(input: GetPostsInput, loggedUserId: string): Promise<Post[]> {
+  public async getPosts(input: GetPostsInput, loggedUserId?: string): Promise<Post[]> {
     const { cursor, limit = 20, username, temp_only, tag } = input
 
     if (limit > 100) {
@@ -498,12 +498,12 @@ export class PostService implements Service {
       const query: Prisma.PostWhereInput = {
         is_private: false,
       }
-      Object.assign(whereQuery, query)
+      Object.assign(whereQuery, { ...query })
     } else {
       const query: Prisma.PostWhereInput = {
         OR: [{ is_private: false }, { fk_user_id: loggedUserId }],
       }
-      Object.assign(whereQuery, query)
+      Object.assign(whereQuery, { ...query })
     }
 
     if (temp_only) {
@@ -523,7 +523,7 @@ export class PostService implements Service {
           username: username,
         },
       }
-      Object.assign(whereQuery, { query })
+      Object.assign(whereQuery, { ...query })
     }
 
     if (cursor) {
@@ -542,7 +542,7 @@ export class PostService implements Service {
         id: post.id,
       }
 
-      Object.assign(whereQuery, query)
+      Object.assign(whereQuery, { ...query })
 
       const orQuery: Prisma.PostWhereInput = {
         OR: [{ AND: [{ released_at: post.released_at }, { id: post.id }] }],
@@ -551,7 +551,7 @@ export class PostService implements Service {
       if (whereQuery.OR) {
         Object.assign(whereQuery, { OR: whereQuery.OR.concat(orQuery) })
       } else {
-        Object.assign(whereQuery, { OR: orQuery })
+        Object.assign(whereQuery, { ...query })
       }
     }
 
@@ -562,7 +562,6 @@ export class PostService implements Service {
       },
       orderBy: {
         released_at: 'desc',
-        id: 'desc',
       },
       take: limit,
     })

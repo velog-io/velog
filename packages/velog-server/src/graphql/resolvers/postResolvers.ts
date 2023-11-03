@@ -88,6 +88,10 @@ const postResolvers: Resolvers = {
       const postService = container.resolve(PostService)
       return await postService.getReadingList(input, ctx.user?.id)
     },
+    posts: async (_, { input }, ctx) => {
+      const postService = container.resolve(PostService)
+      return await postService.getPosts(input, ctx.user?.id)
+    },
   },
   Mutation: {
     likePost: async (_, { input }, ctx): Promise<Post> => {
