@@ -471,7 +471,7 @@ export class PostService implements Service {
     }
   }
   public async getPosts(input: GetPostsInput, loggedUserId?: string): Promise<Post[]> {
-    const { cursor, limit = 20, username, temp_only, tag } = input
+    const { cursor, limit = 1, username, temp_only, tag } = input
 
     if (limit > 100) {
       throw new BadRequestError('Max limit is 100')
@@ -538,18 +538,19 @@ export class PostService implements Service {
       }
 
       const query: Prisma.PostWhereInput = {
-        released_at: post.released_at,
-        id: post.id,
+        released_at: {
+          lt: post.released_at!,
+        },
       }
 
       Object.assign(whereQuery, { ...query })
 
-      const orQuery: Prisma.PostWhereInput = {
-        OR: [{ AND: [{ released_at: post.released_at }, { id: post.id }] }],
+      const orQuery = {
+        OR: [{ AND: [{ released_at: post.released_at }, { id: { lt: post.id } }] }],
       }
 
       if (whereQuery.OR) {
-        Object.assign(whereQuery, { OR: whereQuery.OR.concat(orQuery) })
+        Object.assign(whereQuery, { OR: whereQuery.OR.concat(orQuery.OR) })
       } else {
         Object.assign(whereQuery, { ...query })
       }

@@ -14,7 +14,8 @@
 .mainWrapper {
   display: flex;
   justify-content: center;
-  margin: 90px auto;
+  margin: 0px auto;
+  margin-top: 90px;
   width: 768px;
 
   @media screen and (max-width: 768px) {
