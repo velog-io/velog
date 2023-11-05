@@ -1,12 +1,26 @@
-import styles from './VelogTag.module.css'
-import { bindClassNames } from '@/lib/styles/bindClassNames'
+import { UserTags } from '@/graphql/generated'
+import VelogTagVerticalList from '../VelogTagVerticalList'
+import VelogTagHorizontalList from '../VelogTagHorizontalList'
 
-const cx = bindClassNames(styles)
+type Props = {
+  tag: string | null
+  username: string
+  userTags: UserTags
+}
 
-type Props = {}
-
-function VelogTag({}: Props) {
-  return <div className={cx('block')}></div>
+function VelogTag({ tag, username, userTags }: Props) {
+  const { tags, posts_count: postsCount } = userTags
+  return (
+    <>
+      <VelogTagVerticalList active={tag} tags={tags} postsCount={postsCount} username={username} />
+      <VelogTagHorizontalList
+        active={tag}
+        tags={tags}
+        postsCount={postsCount}
+        username={username}
+      />
+    </>
+  )
 }
 
 export default VelogTag

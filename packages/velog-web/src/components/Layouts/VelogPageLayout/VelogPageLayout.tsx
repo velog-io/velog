@@ -48,7 +48,7 @@ function VelogPageLayout({
                 username={username}
               />
               <VelogTab username={username} />
-              {children}
+              <section className={cx('section')}>{children}</section>
             </main>
           </div>
         </div>

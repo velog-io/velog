@@ -1,6 +1,7 @@
 import getUserProfile from '@/actions/getUserProfile'
 import getUserTags from '@/actions/getUserTags'
 import VelogPosts from '@/features/velog/components/VelogPosts'
+import VelogTag from '@/features/velog/components/VelogTag'
 import { getUsernameFromParams } from '@/lib/utils'
 import { Metadata } from 'next'
 
@@ -14,7 +15,12 @@ export default async function VelogPostsPage({ params, searchParams }: Props) {
   const username = getUsernameFromParams(params)
 
   const userTags = await getUserTags(username)
-  return <VelogPosts username={username} tag={tag} />
+  return (
+    <>
+      <VelogPosts username={username} tag={tag} />
+      <VelogTag userTags={userTags} tag={tag} username={username} />
+    </>
+  )
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
