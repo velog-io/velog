@@ -8,8 +8,8 @@ type Tag {
 }
 
 type UserTags {
-  tags: [Tag]
-  posts_count: Int
+  tags: [Tag!]!
+  posts_count: Int!
 }
 
 type Query {

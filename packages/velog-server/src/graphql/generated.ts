@@ -386,8 +386,8 @@ export type UserProfile = {
 }
 
 export type UserTags = {
-  posts_count?: Maybe<Scalars['Int']['output']>
-  tags?: Maybe<Array<Maybe<Tag>>>
+  posts_count: Scalars['Int']['output']
+  tags: Array<Tag>
 }
 
 export type UserTagsInput = {
@@ -1016,8 +1016,8 @@ export type UserTagsResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['UserTags'] = ResolversParentTypes['UserTags'],
 > = {
-  posts_count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
-  tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tag']>>>, ParentType, ContextType>
+  posts_count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 

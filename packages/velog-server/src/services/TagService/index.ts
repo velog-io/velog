@@ -3,8 +3,8 @@ import { DbService } from '@lib/db/DbService.js'
 import { Prisma, Tag } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { UserService } from '@services/UserService'
-import { NotFoundError } from '@errors/NotfoundError'
+import { UserService } from '@services/UserService/index.js'
+import { NotFoundError } from '@errors/NotfoundError.js'
 import { UserTags } from '@graphql/generated'
 
 interface Service {
@@ -123,20 +123,25 @@ export class TagService implements Service {
   }
   private async getUserPostTags(
     userId: string,
-    showPrivate: boolean,
+    isShowPrivate: boolean,
   ): Promise<GetUserPostTagsResult[]> {
-    const rawData = await this.db.$queryRaw<GetUserPostTagsResult[]>`
+    // The original type of posts_count is bigint in SQL.
+    const rawData = await this.db.$queryRawUnsafe<GetUserPostTagsResult[]>(
+      `
         select tags.id, tags.name, tags.created_at, tags.description, tags.thumbnail, posts_count from (
         select count(fk_post_id) as posts_count, fk_tag_id from posts_tags
         inner join posts on posts.id = fk_post_id
           and posts.is_temp = false
-          and posts.fk_user_id = ${userId}
-          ${showPrivate ? '' : 'and posts.is_private = false'}
+          and posts.fk_user_id = $1::uuid
+          ${isShowPrivate ? '' : 'and posts.is_private = false'}
         group by fk_tag_id
       ) as q inner join tags on q.fk_tag_id = tags.id
       order by posts_count desc
-    `
-    return rawData
+    `,
+      userId,
+    )
+
+    return rawData.map((data) => ({ ...data, posts_count: Number(data.posts_count) }))
   }
 }
 

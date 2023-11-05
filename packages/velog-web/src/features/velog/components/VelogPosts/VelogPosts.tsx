@@ -30,6 +30,7 @@ function VelogPosts({ username, tag }: Props) {
   useInfiniteScroll(ref, getVelogPostsMore, isError)
 
   if (isInitLoading) return <FlatPostCardListSkeleton forLoading={false} hideUser={true} />
+
   return (
     <div className={cx('block')}>
       {!isInitLoading && posts.length > 0 ? (

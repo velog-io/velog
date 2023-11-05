@@ -167,6 +167,7 @@ export type Query = {
   seriesList: Array<Series>
   trendingPosts: Array<Post>
   user: Maybe<User>
+  userTags: Maybe<UserTags>
   velogConfig: Maybe<VelogConfig>
 }
 
@@ -212,6 +213,10 @@ export type QueryTrendingPostsArgs = {
 
 export type QueryUserArgs = {
   input: GetUserInput
+}
+
+export type QueryUserTagsArgs = {
+  input: UserTagsInput
 }
 
 export type QueryVelogConfigArgs = {
@@ -318,6 +323,15 @@ export type Stats = {
   total: Maybe<Scalars['Int']['output']>
 }
 
+export type Tag = {
+  created_at: Maybe<Scalars['DateTimeISO']['output']>
+  description: Maybe<Scalars['String']['output']>
+  id: Scalars['ID']['output']
+  name: Maybe<Scalars['String']['output']>
+  posts_count: Maybe<Scalars['Int']['output']>
+  thumbnail: Maybe<Scalars['String']['output']>
+}
+
 export type TrendingPostsInput = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -360,6 +374,15 @@ export type UserProfile = {
   short_bio: Scalars['String']['output']
   thumbnail: Maybe<Scalars['String']['output']>
   updated_at: Scalars['DateTimeISO']['output']
+}
+
+export type UserTags = {
+  posts_count: Scalars['Int']['output']
+  tags: Array<Tag>
+}
+
+export type UserTagsInput = {
+  username: Scalars['String']['input']
 }
 
 export type UserToken = {
@@ -515,6 +538,23 @@ export type PostsQuery = {
     likes: number | null
     user: { id: string; username: string; profile: { id: string; thumbnail: string | null } } | null
   }>
+}
+
+export type UserTagsQueryVariables = Exact<{
+  input: UserTagsInput
+}>
+
+export type UserTagsQuery = {
+  userTags: {
+    posts_count: number
+    tags: Array<{
+      id: string
+      name: string | null
+      description: string | null
+      posts_count: number | null
+      thumbnail: string | null
+    }>
+  } | null
 }
 
 export type GetUserProfileQueryVariables = Exact<{
@@ -797,6 +837,29 @@ export const usePostsQuery = <TData = PostsQuery, TError = unknown>(
   useQuery<PostsQuery, TError, TData>(
     ['Posts', variables],
     fetcher<PostsQuery, PostsQueryVariables>(PostsDocument, variables),
+    options,
+  )
+export const UserTagsDocument = `
+    query userTags($input: UserTagsInput!) {
+  userTags(input: $input) {
+    tags {
+      id
+      name
+      description
+      posts_count
+      thumbnail
+    }
+    posts_count
+  }
+}
+    `
+export const useUserTagsQuery = <TData = UserTagsQuery, TError = unknown>(
+  variables: UserTagsQueryVariables,
+  options?: UseQueryOptions<UserTagsQuery, TError, TData>,
+) =>
+  useQuery<UserTagsQuery, TError, TData>(
+    ['userTags', variables],
+    fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables),
     options,
   )
 export const GetUserProfileDocument = `

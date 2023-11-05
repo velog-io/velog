@@ -1,5 +1,5 @@
 import { Resolvers } from '@graphql/generated'
-import { TagService } from '@services/TagService'
+import { TagService } from '@services/TagService/index.js'
 import { container } from 'tsyringe'
 
 const tagResolvers: Resolvers = {

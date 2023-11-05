@@ -1,0 +1,12 @@
+query userTags($input: UserTagsInput!) {
+  userTags(input: $input) {
+    tags {
+      id
+      name
+      description
+      posts_count
+      thumbnail
+    }
+    posts_count
+  }
+}
