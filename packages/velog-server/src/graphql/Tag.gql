@@ -1,0 +1,27 @@
+type Tag {
+  id: ID!
+  name: String
+  description: String
+  thumbnail: String
+  created_at: Date
+  posts_count: Int
+}
+
+type UserTags {
+  tags: [Tag]
+  posts_count: Int
+}
+
+type Query {
+  #   tags(sort: String!, cursor: ID, limit: Int): [Tag]
+  #   tag(name: String!): Tag
+  userTags(input: UserTagsInput!): UserTags
+}
+
+# type Mutation {
+#   mergeTag(selected: String, merge_to: String): Boolean
+# }
+
+input UserTagsInput {
+  username: String!
+}

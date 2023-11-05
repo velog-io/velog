@@ -3,12 +3,16 @@ import { DbService } from '@lib/db/DbService.js'
 import { Prisma, Tag } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { UtilsService } from '@lib/utils/UtilsService.js'
+import { UserService } from '@services/UserService'
+import { NotFoundError } from '@errors/NotfoundError'
+import { UserTags } from '@graphql/generated'
 
 interface Service {
   findByNameFiltered(name: string): Promise<Tag | null>
   findById(tagId: string): Promise<Tag | null>
   tagLoader(): DataLoader<string, Tag[]>
   getOriginTag(tagname: string): Promise<Tag | null>
+  getUserTags(username: string, loggedUserId?: string): Promise<GetUserTagsResult>
 }
 
 @injectable()
@@ -17,6 +21,7 @@ export class TagService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly utils: UtilsService,
+    private readonly userService: UserService,
   ) {}
   public async findByNameFiltered(name: string): Promise<Tag | null> {
     return await this.db.tag.findFirst({
@@ -88,4 +93,52 @@ export class TagService implements Service {
     }
     return tag
   }
+  public async getUserTags(username: string, loggedUserId?: string): Promise<GetUserTagsResult> {
+    const user = await this.userService.findByUsername(username)
+
+    if (!user) {
+      throw new NotFoundError('Invalid username')
+    }
+
+    const isSelf = user.id === loggedUserId
+    const tags = await this.getUserPostTags(user.id, isSelf)
+
+    // TODO: get total posts count and return
+    const postsCount = await this.db.post.count({
+      where: {
+        fk_user_id: user.id,
+        is_temp: false,
+        ...(isSelf ? {} : { is_private: false }),
+      },
+    })
+
+    // prevents wrong tags conflict with public tag posts_count
+    const transformedTags = tags.map((tag) => ({ ...tag, id: `${user.id}:${tag.id}` }))
+
+    // transform id for user tag
+    return {
+      tags: transformedTags,
+      posts_count: postsCount,
+    }
+  }
+  private async getUserPostTags(
+    userId: string,
+    showPrivate: boolean,
+  ): Promise<GetUserPostTagsResult[]> {
+    const rawData = await this.db.$queryRaw<GetUserPostTagsResult[]>`
+        select tags.id, tags.name, tags.created_at, tags.description, tags.thumbnail, posts_count from (
+        select count(fk_post_id) as posts_count, fk_tag_id from posts_tags
+        inner join posts on posts.id = fk_post_id
+          and posts.is_temp = false
+          and posts.fk_user_id = ${userId}
+          ${showPrivate ? '' : 'and posts.is_private = false'}
+        group by fk_tag_id
+      ) as q inner join tags on q.fk_tag_id = tags.id
+      order by posts_count desc
+    `
+    return rawData
+  }
 }
+
+type GetUserPostTagsResult = Tag & { posts_count: number }
+type GetUserTagsResult = UserTags

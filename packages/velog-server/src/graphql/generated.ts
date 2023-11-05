@@ -176,6 +176,7 @@ export type Query = {
   seriesList: Array<Series>
   trendingPosts: Array<Post>
   user?: Maybe<User>
+  userTags?: Maybe<UserTags>
   velogConfig?: Maybe<VelogConfig>
 }
 
@@ -221,6 +222,10 @@ export type QueryTrendingPostsArgs = {
 
 export type QueryUserArgs = {
   input: GetUserInput
+}
+
+export type QueryUserTagsArgs = {
+  input: UserTagsInput
 }
 
 export type QueryVelogConfigArgs = {
@@ -327,6 +332,15 @@ export type Stats = {
   total?: Maybe<Scalars['Int']['output']>
 }
 
+export type Tag = {
+  created_at?: Maybe<Scalars['Date']['output']>
+  description?: Maybe<Scalars['String']['output']>
+  id: Scalars['ID']['output']
+  name?: Maybe<Scalars['String']['output']>
+  posts_count?: Maybe<Scalars['Int']['output']>
+  thumbnail?: Maybe<Scalars['String']['output']>
+}
+
 export type TrendingPostsInput = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -369,6 +383,15 @@ export type UserProfile = {
   short_bio: Scalars['String']['output']
   thumbnail?: Maybe<Scalars['String']['output']>
   updated_at: Scalars['Date']['output']
+}
+
+export type UserTags = {
+  posts_count?: Maybe<Scalars['Int']['output']>
+  tags?: Maybe<Array<Maybe<Tag>>>
+}
+
+export type UserTagsInput = {
+  username: Scalars['String']['input']
 }
 
 export type UserToken = {
@@ -519,12 +542,15 @@ export type ResolversTypes = {
   >
   Stats: ResolverTypeWrapper<Stats>
   String: ResolverTypeWrapper<Scalars['String']['output']>
+  Tag: ResolverTypeWrapper<Tag>
   TrendingPostsInput: TrendingPostsInput
   UnfollowInput: UnfollowInput
   UnlikePostInput: UnlikePostInput
   User: ResolverTypeWrapper<UserModel>
   UserMeta: ResolverTypeWrapper<UserMeta>
   UserProfile: ResolverTypeWrapper<UserProfileModel>
+  UserTags: ResolverTypeWrapper<UserTags>
+  UserTagsInput: UserTagsInput
   UserToken: ResolverTypeWrapper<UserToken>
   VelogConfig: ResolverTypeWrapper<VelogConfig>
   Void: ResolverTypeWrapper<Scalars['Void']['output']>
@@ -576,12 +602,15 @@ export type ResolversParentTypes = {
   SeriesPost: Omit<SeriesPost, 'post'> & { post?: Maybe<ResolversParentTypes['Post']> }
   Stats: Stats
   String: Scalars['String']['output']
+  Tag: Tag
   TrendingPostsInput: TrendingPostsInput
   UnfollowInput: UnfollowInput
   UnlikePostInput: UnlikePostInput
   User: UserModel
   UserMeta: UserMeta
   UserProfile: UserProfileModel
+  UserTags: UserTags
+  UserTagsInput: UserTagsInput
   UserToken: UserToken
   VelogConfig: VelogConfig
   Void: Scalars['Void']['output']
@@ -782,6 +811,12 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryUserArgs, 'input'>
   >
+  userTags?: Resolver<
+    Maybe<ResolversTypes['UserTags']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUserTagsArgs, 'input'>
+  >
   velogConfig?: Resolver<
     Maybe<ResolversTypes['VelogConfig']>,
     ParentType,
@@ -922,6 +957,19 @@ export type StatsResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
+export type TagResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag'],
+> = {
+  created_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  posts_count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
 export type UserResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
@@ -961,6 +1009,15 @@ export type UserProfileResolvers<
   short_bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
+export type UserTagsResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['UserTags'] = ResolversParentTypes['UserTags'],
+> = {
+  posts_count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tag']>>>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -1008,9 +1065,11 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Series?: SeriesResolvers<ContextType>
   SeriesPost?: SeriesPostResolvers<ContextType>
   Stats?: StatsResolvers<ContextType>
+  Tag?: TagResolvers<ContextType>
   User?: UserResolvers<ContextType>
   UserMeta?: UserMetaResolvers<ContextType>
   UserProfile?: UserProfileResolvers<ContextType>
+  UserTags?: UserTagsResolvers<ContextType>
   UserToken?: UserTokenResolvers<ContextType>
   VelogConfig?: VelogConfigResolvers<ContextType>
   Void?: GraphQLScalarType
