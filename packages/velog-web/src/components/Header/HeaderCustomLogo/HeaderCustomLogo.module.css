@@ -2,7 +2,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: bold;
   font-size: 21px;
 
   @media screen and (max-width: 1024px) {
@@ -28,6 +27,7 @@
     height: 100%;
     font-size: 21px;
     margin-left: 16px;
+    font-weight: 600;
 
     @media screen and (max-width: 1024px) {
       font-size: 18px;

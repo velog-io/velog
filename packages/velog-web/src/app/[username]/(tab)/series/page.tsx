@@ -1,4 +1,5 @@
 import getUserProfile from '@/actions/getUserProfile'
+import VelogSeries from '@/features/velog/components/VelogSeries'
 import { getUsernameFromParams } from '@/lib/utils'
 import { Metadata } from 'next'
 
@@ -6,8 +7,9 @@ interface Props {
   params: { username: string }
 }
 
-export default async function VelogSeriesPage({}: Props) {
-  return <div>velogSeries</div>
+export default async function VelogSeriesPage({ params }: Props) {
+  const username = getUsernameFromParams(params)
+  return <VelogSeries username={username} />
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

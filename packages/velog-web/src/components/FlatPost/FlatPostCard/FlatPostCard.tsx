@@ -18,9 +18,9 @@ type Props = {
 }
 
 function FlatPostCard({ post, hideUser }: Props) {
-  const { time: releasedAt, loading } = useTimeFormat(post.released_at!)
+  const { time: releasedAt, isLoading } = useTimeFormat(post.released_at!)
 
-  if (loading) return <FlatPostCardSkeleton hideUser={hideUser} />
+  if (isLoading) return <FlatPostCardSkeleton hideUser={hideUser} />
   if (!post.user || !post.released_at) return null
 
   const url = `/@${post.user.username}/${post.url_slug}`

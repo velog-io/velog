@@ -299,15 +299,15 @@ export type SendMailResponse = {
 }
 
 export type Series = {
-  created_at: Maybe<Scalars['DateTimeISO']['output']>
+  created_at: Scalars['DateTimeISO']['output']
   description: Maybe<Scalars['String']['output']>
   fk_user_id: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
   name: Maybe<Scalars['String']['output']>
   posts_count: Maybe<Scalars['Int']['output']>
-  series_posts: Maybe<Array<Maybe<SeriesPost>>>
+  series_posts: Array<SeriesPost>
   thumbnail: Maybe<Scalars['String']['output']>
-  updated_at: Maybe<Scalars['DateTimeISO']['output']>
+  updated_at: Scalars['DateTimeISO']['output']
   url_slug: Maybe<Scalars['String']['output']>
   user: Maybe<User>
 }
@@ -352,9 +352,9 @@ export type User = {
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
-  series_list: Maybe<Array<Maybe<Series>>>
+  series_list: Array<Series>
   updated_at: Scalars['DateTimeISO']['output']
-  user_meta: Maybe<UserMeta>
+  user_meta: UserMeta
   username: Scalars['String']['output']
   velog_config: Maybe<VelogConfig>
 }
@@ -460,7 +460,7 @@ export type ReadPostQuery = {
           url_slug: string | null
           user: { id: string; username: string } | null
         } | null
-      } | null> | null
+      }>
     } | null
     linked_posts: {
       previous: {
@@ -619,9 +619,9 @@ export type GetUserSeriesListQuery = {
       description: string | null
       url_slug: string | null
       thumbnail: string | null
-      updated_at: any | null
+      updated_at: any
       posts_count: number | null
-    } | null> | null
+    }>
   } | null
 }
 

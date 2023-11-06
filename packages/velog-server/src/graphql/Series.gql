@@ -4,10 +4,10 @@ type Series {
   name: String
   description: String
   url_slug: String
-  created_at: Date
-  updated_at: Date
+  created_at: Date!
+  updated_at: Date!
   user: User
-  series_posts: [SeriesPost]
+  series_posts: [SeriesPost!]
   thumbnail: String
   posts_count: Int
 }

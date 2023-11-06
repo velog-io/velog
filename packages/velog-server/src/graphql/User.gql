@@ -7,7 +7,7 @@ type User {
   is_certified: Boolean!
   profile: UserProfile!
   velog_config: VelogConfig
-  series_list: [Series]
+  series_list: [Series!]!
   user_meta: UserMeta
 }
 

@@ -5,7 +5,7 @@ import { zonedTimeToUtc } from 'date-fns-tz'
 import { useEffect, useState } from 'react'
 
 export function useTimeFormat(date: string) {
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setLoading] = useState(true)
   const [time, setTime] = useState<string>('')
 
   useEffect(() => {
@@ -36,5 +36,5 @@ export function useTimeFormat(date: string) {
     setLoading(false)
   }, [date, time])
 
-  return { loading, time }
+  return { isLoading, time }
 }

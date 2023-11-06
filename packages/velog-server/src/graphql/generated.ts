@@ -308,15 +308,15 @@ export type SendMailResponse = {
 }
 
 export type Series = {
-  created_at?: Maybe<Scalars['Date']['output']>
+  created_at: Scalars['Date']['output']
   description?: Maybe<Scalars['String']['output']>
   fk_user_id?: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
   name?: Maybe<Scalars['String']['output']>
   posts_count?: Maybe<Scalars['Int']['output']>
-  series_posts?: Maybe<Array<Maybe<SeriesPost>>>
+  series_posts?: Maybe<Array<SeriesPost>>
   thumbnail?: Maybe<Scalars['String']['output']>
-  updated_at?: Maybe<Scalars['Date']['output']>
+  updated_at: Scalars['Date']['output']
   url_slug?: Maybe<Scalars['String']['output']>
   user?: Maybe<User>
 }
@@ -361,7 +361,7 @@ export type User = {
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
-  series_list?: Maybe<Array<Maybe<Series>>>
+  series_list: Array<Series>
   updated_at: Scalars['Date']['output']
   user_meta?: Maybe<UserMeta>
   username: Scalars['String']['output']
@@ -533,7 +533,7 @@ export type ResolversTypes = {
   SendMailResponse: ResolverTypeWrapper<SendMailResponse>
   Series: ResolverTypeWrapper<
     Omit<Series, 'series_posts' | 'user'> & {
-      series_posts?: Maybe<Array<Maybe<ResolversTypes['SeriesPost']>>>
+      series_posts?: Maybe<Array<ResolversTypes['SeriesPost']>>
       user?: Maybe<ResolversTypes['User']>
     }
   >
@@ -596,7 +596,7 @@ export type ResolversParentTypes = {
   SendMailInput: SendMailInput
   SendMailResponse: SendMailResponse
   Series: Omit<Series, 'series_posts' | 'user'> & {
-    series_posts?: Maybe<Array<Maybe<ResolversParentTypes['SeriesPost']>>>
+    series_posts?: Maybe<Array<ResolversParentTypes['SeriesPost']>>
     user?: Maybe<ResolversParentTypes['User']>
   }
   SeriesPost: Omit<SeriesPost, 'post'> & { post?: Maybe<ResolversParentTypes['Post']> }
@@ -916,19 +916,15 @@ export type SeriesResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Series'] = ResolversParentTypes['Series'],
 > = {
-  created_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
+  created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   fk_user_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   posts_count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
-  series_posts?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes['SeriesPost']>>>,
-    ParentType,
-    ContextType
-  >
+  series_posts?: Resolver<Maybe<Array<ResolversTypes['SeriesPost']>>, ParentType, ContextType>
   thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  updated_at?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
+  updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   url_slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
@@ -979,7 +975,7 @@ export type UserResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_certified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>
-  series_list?: Resolver<Maybe<Array<Maybe<ResolversTypes['Series']>>>, ParentType, ContextType>
+  series_list?: Resolver<Array<ResolversTypes['Series']>, ParentType, ContextType>
   updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   user_meta?: Resolver<Maybe<ResolversTypes['UserMeta']>, ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
