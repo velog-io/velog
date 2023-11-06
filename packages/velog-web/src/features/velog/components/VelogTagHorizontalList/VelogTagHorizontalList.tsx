@@ -11,8 +11,8 @@ type Props = {
   username: string
 }
 
-function VelogTagHorizontalList({}: Props) {
-  return <div className={cx('block')}></div>
+function VelogTagHorizontalList({ active, tags, postsCount, username }: Props) {
+  return <div className={cx('block')}>horizontalList</div>
 }
 
 export default VelogTagHorizontalList

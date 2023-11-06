@@ -17,8 +17,8 @@ export default async function VelogPostsPage({ params, searchParams }: Props) {
   const userTags = await getUserTags(username)
   return (
     <>
-      <VelogPosts username={username} tag={tag} />
       <VelogTag userTags={userTags} tag={tag} username={username} />
+      <VelogPosts username={username} tag={tag} />
     </>
   )
 }

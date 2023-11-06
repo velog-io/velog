@@ -10,6 +10,7 @@ import HeaderCustomLogo from '@/components/Header/HeaderCustomLogo'
 import { UserLogo } from '@/state/header'
 
 import VelogTab from '@/features/velog/components/VelogTab'
+import MobileSeparator from '@/features/velog/components/MobileSeparator'
 
 const cx = bindClassNames(styles)
 
@@ -35,23 +36,22 @@ function VelogPageLayout({
   return (
     <div className={cx('block')}>
       <FloatingHeader />
-      <div className={cx('mainResponsive')}>
+      <div className={cx('responsive')}>
         <div className={cx('innerBlock')}>
           <Header headerCustomLogo={<HeaderCustomLogo username={username} userLogo={userLogo} />} />
-          <div className={cx('mainWrapper')}>
-            <main>
-              <UserProfile
-                displayName={displayName}
-                shortBio={shortBio}
-                profileLinks={profileLikns as ProfileLinks}
-                thumbnail={thumbnail}
-                username={username}
-              />
-              <VelogTab username={username} />
-              <section className={cx('section')}>{children}</section>
-            </main>
-          </div>
         </div>
+        <main className={cx('mainWrapper')}>
+          <UserProfile
+            displayName={displayName}
+            shortBio={shortBio}
+            profileLinks={profileLikns as ProfileLinks}
+            thumbnail={thumbnail}
+            username={username}
+          />
+          <MobileSeparator />
+          <VelogTab username={username} />
+          <section className={cx('section')}>{children}</section>
+        </main>
       </div>
     </div>
   )

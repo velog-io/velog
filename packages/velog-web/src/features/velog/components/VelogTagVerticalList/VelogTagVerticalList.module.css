@@ -46,6 +46,10 @@
   &.active {
     color: var(--primary2);
     font-weight: bold;
+
+    a {
+      color: var(--primary2);
+    }
   }
 
   span {

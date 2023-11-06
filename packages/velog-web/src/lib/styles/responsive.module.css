@@ -1,5 +1,6 @@
 .mainResponsive {
   width: 1728px;
+  height: fit-content;
   @media screen and (max-width: 1919px) {
     width: 1376px;
   }

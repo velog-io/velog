@@ -3,6 +3,7 @@
   margin-bottom: 72px;
   display: flex;
   justify-content: center;
+  width: 100%;
 
   @media screen and (max-width: 768px) {
     margin-top: 0;

@@ -62,12 +62,12 @@ function UserProfile({
               priority={true}
             />
           </Link>
-        </div>
-        <div className={cx('userInfo')}>
-          <div className={cx('name')}>
-            <Link href={velogUrl}>{displayName}</Link>
+          <div className={cx('userInfo')}>
+            <div className={cx('name')}>
+              <Link href={velogUrl}>{displayName}</Link>
+            </div>
+            <div className={cx('description')}>{shortBio}</div>
           </div>
-          <div className={cx('description')}>{shortBio}</div>
         </div>
         {!ownPost && followButton && <div className={cx('right')}>{followButton}</div>}
       </div>
