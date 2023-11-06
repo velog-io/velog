@@ -7,7 +7,7 @@ import { escapeForUrl } from '@/lib/utils'
 const cx = bindClassNames(styles)
 
 type Props = {
-  active: string | null
+  active?: string
   tags: Tag[]
   postsCount: number
   username: string

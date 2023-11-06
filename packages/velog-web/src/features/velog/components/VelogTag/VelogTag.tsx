@@ -3,7 +3,7 @@ import VelogTagVerticalList from '../VelogTagVerticalList'
 import VelogTagHorizontalList from '../VelogTagHorizontalList'
 
 type Props = {
-  tag: string | null
+  tag?: string
   username: string
   userTags: UserTags
 }

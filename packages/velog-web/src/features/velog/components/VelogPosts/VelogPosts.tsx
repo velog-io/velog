@@ -19,6 +19,7 @@ function VelogPosts({ username, tag }: Props) {
     username,
     tag,
   })
+
   const ref = useRef<HTMLDivElement>(null)
 
   const getVelogPostsMore = () => {

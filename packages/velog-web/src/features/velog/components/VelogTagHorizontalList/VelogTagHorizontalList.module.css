@@ -1,2 +1,51 @@
 .block {
+  display: none;
+  overflow-x: auto;
+  margin-top: -24px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 8px;
+
+  @media screen and (max-width: 1200px) {
+    display: flex;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+.tagItem {
+  flex-shrink: 0;
+  height: 24px;
+  font-size: 12px;
+  border-radius: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
+  background: var(--bg-element2);
+  color: var(--text1);
+  display: flex;
+  align-items: center;
+  line-height: 1.5;
+  text-decoration: none;
+
+  & + & {
+    margin-left: 8px;
+  }
+
+  &.active {
+    background: var(--primary1);
+    color: white;
+    span {
+      color: white;
+      opacity: 0.8;
+    }
+  }
+
+  span {
+    color: var(--text3);
+    font-size: 12px;
+    margin-left: 4px;
+  }
 }

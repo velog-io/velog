@@ -1,4 +1,6 @@
 .block {
+  padding-left: 16px;
+  padding-right: 16px;
   .seperator {
     border-top: 1px solid var(--border4);
   }

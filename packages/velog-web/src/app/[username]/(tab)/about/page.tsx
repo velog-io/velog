@@ -2,6 +2,7 @@ import getUserProfile from '@/actions/getUserProfile'
 import { Metadata } from 'next'
 import strip from 'strip-markdown'
 import { remark } from 'remark'
+import { getUsernameFromParams } from '@/lib/utils'
 
 interface Props {
   params: { username: string }
@@ -13,8 +14,7 @@ export default async function VelogAboutPage({}: Props) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // read route params
-  const encodedSymbol = encodeURIComponent('@')
-  const username = params.username.replace(encodedSymbol, '')
+  const username = getUsernameFromParams(params)
   const profile = await getUserProfile(username)
 
   if (!profile) {

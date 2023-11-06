@@ -1,4 +1,5 @@
 import getUserProfile from '@/actions/getUserProfile'
+import { getUsernameFromParams } from '@/lib/utils'
 import { Metadata } from 'next'
 
 interface Props {
@@ -10,10 +11,7 @@ export default async function VelogSeriesPage({}: Props) {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // read route params
-  const encodedSymbol = encodeURIComponent('@')
-  const username = params.username.replace(encodedSymbol, '')
-
+  const username = getUsernameFromParams(params)
   const profile = await getUserProfile(username)
 
   if (!profile) {
