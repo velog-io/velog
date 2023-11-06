@@ -1,6 +1,7 @@
 import getUserProfile from '@/actions/getUserProfile'
 import getVelogConfig from '@/actions/getVelogConfig'
 import VelogPageLayout from '@/components/Layouts/VelogPageLayout'
+import { getUsernameFromParams } from '@/lib/utils'
 import { UserLogo } from '@/state/header'
 import { ProfileLinks } from '@/types/user'
 import { notFound } from 'next/navigation'
@@ -11,9 +12,7 @@ type Props = {
 }
 
 export default async function VelogLayout({ children, params }: Props) {
-  const encodedSymbol = encodeURIComponent('@')
-  const username = params.username.replace(encodedSymbol, '')
-
+  const username = getUsernameFromParams(params)
   const profile = await getUserProfile(username)
   const velogConfig = await getVelogConfig(username)
 

@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default async function VelogPage({}: Props) {
-  return <div></div>
+  return <></>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

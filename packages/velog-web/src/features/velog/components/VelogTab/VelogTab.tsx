@@ -1,4 +1,4 @@
-import { usePathname, redirect } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import styles from './VelogTab.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import ActiveLink from '@/components/ActiveLink'
@@ -16,20 +16,13 @@ const tabIndexMap: Record<Tab, number> = {
   about: 2,
 }
 
-const tabs = ['posts', 'series', 'about']
-
 function VelogTab({ username }: Props) {
   const pathname = usePathname()
   const url = `/@${username}`
-  const tab = pathname.split('/').reverse()[0] as Tab
-
-  if (!tabs.includes(tab)) {
-    redirect(`${url}/posts`)
-  }
-
+  const tab = pathname.split('?')[0].split('/').reverse()[0] as Tab
   const tabIndex = tabIndexMap[tab]
 
-  const withPrefix = (path: Tab) => `${url}/${path}`
+  const withPrefix = (text: Tab) => `${url}/${text}`
   return (
     <div className={cx('block')}>
       <div className={cx('wrapper')}>

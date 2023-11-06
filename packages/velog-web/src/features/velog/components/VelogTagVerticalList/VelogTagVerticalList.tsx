@@ -19,7 +19,7 @@ function VelogTagVerticalList({ active, tags, postsCount, username }: Props) {
       <div className={cx('title')}>태그 목록</div>
       <ul>
         <li className={cx('listItem', { active: !active })}>
-          <Link href={`/@${username}`}>전체보기</Link>
+          <Link href={`/@${username}/posts`}>전체보기</Link>
           <span>({postsCount})</span>
         </li>
         {tags.map((tag) => (
@@ -27,7 +27,7 @@ function VelogTagVerticalList({ active, tags, postsCount, username }: Props) {
             key={tag.id}
             className={cx('listItem', { active: active === escapeForUrl(tag.name!) })}
           >
-            <Link href={`/@${username}?tag=${escapeForUrl(tag.name!)}`}>{tag.name}</Link>
+            <Link href={`/@${username}/posts?tag=${escapeForUrl(tag.name!)}`}>{tag.name}</Link>
             <span>({tag.posts_count})</span>
           </li>
         ))}
