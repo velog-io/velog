@@ -3,13 +3,15 @@ import { Metadata } from 'next'
 import strip from 'strip-markdown'
 import { remark } from 'remark'
 import { getUsernameFromParams } from '@/lib/utils'
+import VelogAbout from '@/features/velog/components/VelogAbout'
 
 interface Props {
   params: { username: string }
 }
 
-export default async function VelogAboutPage({}: Props) {
-  return <div>velog About</div>
+export default async function VelogAboutPage({ params }: Props) {
+  const username = getUsernameFromParams(params)
+  return <VelogAbout username={username} />
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

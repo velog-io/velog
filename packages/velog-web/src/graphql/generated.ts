@@ -305,7 +305,7 @@ export type Series = {
   id: Scalars['ID']['output']
   name: Maybe<Scalars['String']['output']>
   posts_count: Maybe<Scalars['Int']['output']>
-  series_posts: Array<SeriesPost>
+  series_posts: Maybe<Array<SeriesPost>>
   thumbnail: Maybe<Scalars['String']['output']>
   updated_at: Scalars['DateTimeISO']['output']
   url_slug: Maybe<Scalars['String']['output']>
@@ -354,7 +354,7 @@ export type User = {
   profile: UserProfile
   series_list: Array<Series>
   updated_at: Scalars['DateTimeISO']['output']
-  user_meta: UserMeta
+  user_meta: Maybe<UserMeta>
   username: Scalars['String']['output']
   velog_config: Maybe<VelogConfig>
 }
@@ -460,7 +460,7 @@ export type ReadPostQuery = {
           url_slug: string | null
           user: { id: string; username: string } | null
         } | null
-      }>
+      }> | null
     } | null
     linked_posts: {
       previous: {

@@ -65,3 +65,14 @@ query getUserSeriesList($input: GetUserInput!) {
     }
   }
 }
+
+query getUserAbout($input: GetUserInput!) {
+  user(input: $input) {
+    id
+    profile {
+      id
+      about
+      display_name
+    }
+  }
+}

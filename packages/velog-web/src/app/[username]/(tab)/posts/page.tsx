@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${username} (${profile.display_name}) / 시리즈 - velog`,
+    title: `${username} (${profile.display_name}) / 작성글 - velog`,
     description: `${username}님이 작성한 포스트 시리즈들을 확인해보세요.`,
   }
 }

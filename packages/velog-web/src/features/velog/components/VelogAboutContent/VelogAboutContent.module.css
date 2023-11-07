@@ -1,0 +1,23 @@
+.block {
+  width: 100%;
+  background-color: red;
+}
+
+.skeletonBlock {
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+  .lines {
+    width: 100%;
+    .line {
+      margin-bottom: 0.75rem;
+      display: flex;
+      font-size: 1.125rem;
+    }
+  }
+
+  .lines + .lines {
+    margin-top: 3rem;
+  }
+}
