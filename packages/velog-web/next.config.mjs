@@ -14,6 +14,9 @@ const nextConfig = {
     : isStageContainer
     ? 'https://assets-stage.velcdn.com'
     : undefined,
+  experimental: {
+    esmExternals: true,
+  },
 }
 
-module.exports = nextConfig
+export default nextConfig

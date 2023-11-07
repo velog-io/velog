@@ -13,6 +13,7 @@
   "keywords": [
     "velog"
   ],
+  "type": "module",
   "scripts": {
     "dev": "pnpm env:copy -e development && next dev -p 3001 --turbo",
     "stage": "pnpm env:copy -e stage && pnpm start",
