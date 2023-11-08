@@ -51,7 +51,6 @@ function MarkdownRender({ markdown, codeTheme = 'atom-one', onConvertFinish, isE
         .use(rehypeKatex)
         .use(rehypeStringify)
         .process(text, (_, file: any) => {
-          console.log('text', text)
           const lines = text.split(/\r\n|\r|\n/).length
           const nextDelay = Math.max(Math.min(Math.floor(lines * 0.5), 1500), 22)
 
@@ -84,7 +83,6 @@ function MarkdownRender({ markdown, codeTheme = 'atom-one', onConvertFinish, isE
 
   useEffect(() => {
     throttledUpdate(markdown)
-    console.log('throttledUpdate', html)
   }, [markdown, throttledUpdate, html])
 
   return (
