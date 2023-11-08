@@ -8,13 +8,13 @@ function VelogAboutContentSkeleton() {
   const skeletonParagraph = (
     <div className={cx('lines')}>
       <div className={cx('line')}>
-        <SkeletonTexts wordLengths={[4, 6, 3, 2, 9, 3, 3, 5, 7, 6]} useFlex />
+        <SkeletonTexts wordLengths={[4, 6, 3, 2, 9, 3, 3, 5, 7, 6]} useFlex={true} />
       </div>
       <div className={cx('line')}>
-        <SkeletonTexts wordLengths={[1, 2, 3, 4, 4, 2, 8, 4, 7, 6]} useFlex />
+        <SkeletonTexts wordLengths={[1, 2, 3, 4, 4, 2, 8, 4, 7, 6]} useFlex={true} />
       </div>
       <div className={cx('line')}>
-        <SkeletonTexts wordLengths={[1, 6, 6, 2, 9, 3, 4, 2, 7, 4]} useFlex />
+        <SkeletonTexts wordLengths={[1, 6, 6, 2, 9, 3, 4, 2, 7, 4]} useFlex={true} />
       </div>
       <div className={cx('line')}>
         <SkeletonTexts wordLengths={[3, 6, 5, 5, 9]} />

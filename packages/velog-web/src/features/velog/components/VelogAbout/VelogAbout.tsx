@@ -3,7 +3,7 @@
 import { useCurrentUserQuery, useGetUserAboutQuery } from '@/graphql/generated'
 import styles from './VelogAbout.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import VelogAboutContentSkeleton from '../VelogAboutContent/VelogAboutContentSkeleton'
+import { VelogAboutContent, VelogAboutContentSkeleton } from '../VelogAboutContent'
 
 const cx = bindClassNames(styles)
 
@@ -18,7 +18,15 @@ function VelogAbout({ username }: Props) {
   const isOwn = currentUserData?.currentUser?.username === username || false
 
   if (isLoading) return <VelogAboutContentSkeleton />
-  return <div className={cx('block')}>gehe</div>
+  return (
+    <div className={cx('block')}>
+      <VelogAboutContent
+        markdown={userAboutData?.user?.profile.about || ''}
+        isOwn={isOwn}
+        onClickWrite={() => {}}
+      />
+    </div>
+  )
 }
 
 export default VelogAbout
