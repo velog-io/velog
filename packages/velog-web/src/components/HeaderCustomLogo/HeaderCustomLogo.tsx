@@ -9,7 +9,7 @@ const cx = bindClassNames(styles)
 
 const firaMono = Fira_Mono({
   weight: ['400', '500', '700'],
-  subsets: ['latin'],
+  preload: false,
   display: 'swap',
   variable: '--monospace',
 })

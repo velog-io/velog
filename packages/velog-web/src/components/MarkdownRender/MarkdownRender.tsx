@@ -4,20 +4,20 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { throttle } from 'throttle-debounce'
 import prismPlugin from '@/lib/remark/prismPlugin'
 import embedPlugin from '@/lib/remark/embedPlugin'
-import remarkBreaks from 'remark-breaks'
-import remarkRehype from 'remark-rehype'
-import rehypeRaw from 'rehype-raw'
 import rehypeDocument from 'rehype-document'
-import rehypeKatex from 'rehype-katex'
-import rehypeStringify from 'rehype-stringify'
-import rehypeSlug from 'rehype-slug'
 import { htmlFilter } from './utils'
 import { loadScript } from '@/lib/utils'
 import parse from 'html-react-parser'
 import Typography from '../Typography'
+import remark from 'remark'
 import remarkParse from 'remark-parse'
-import { remark } from 'remark'
-import remarkMath from 'remark-math'
+import breaks from 'remark-breaks'
+import remark2rehype from 'remark-rehype'
+import math from 'remark-math'
+import slug from 'remark-slug'
+import raw from 'rehype-raw'
+import katex from 'rehype-katex'
+import stringify from 'rehype-stringify'
 
 const cx = bindClassNames(styles)
 
@@ -36,21 +36,26 @@ function MarkdownRender({ markdown, codeTheme = 'atom-one', onConvertFinish, isE
   const throttledUpdate = useMemo(() => {
     return throttle(delay, (text: string) => {
       remark()
-        .use(remarkBreaks)
+        .use(breaks)
         .use(remarkParse)
+        .use(slug)
         .use(prismPlugin)
         .use(embedPlugin)
-        .use(remarkRehype, { allowDangerousHtml: true })
-        .use(rehypeSlug)
-        .use(rehypeRaw)
-        .use(remarkMath)
+        .use(remark2rehype, { allowDangerousHTML: true })
+        .use(raw)
+        .use(math)
+        .use(katex)
+        .use(stringify)
         .use(rehypeDocument, {
           // Get the latest one from: <https://katex.org/
-          css: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
+          link: {
+            rel: 'stylesheet',
+            href: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
+            integrity: 'sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq',
+            crossOrigin: 'anonymous',
+          },
         })
-        .use(rehypeKatex)
-        .use(rehypeStringify)
-        .process(text, (_, file: any) => {
+        .process(text, (_: any, file: any) => {
           const lines = text.split(/\r\n|\r|\n/).length
           const nextDelay = Math.max(Math.min(Math.floor(lines * 0.5), 1500), 22)
 
@@ -88,9 +93,12 @@ function MarkdownRender({ markdown, codeTheme = 'atom-one', onConvertFinish, isE
   return (
     <Typography>
       {isEdit ? (
-        <div className={cx('block', codeTheme)}>{element}</div>
+        <div className={cx('block', 'init', codeTheme)}>{element}</div>
       ) : (
-        <div className={cx('block', codeTheme)} dangerouslySetInnerHTML={{ __html: html }} />
+        <div
+          className={cx('block', 'init', codeTheme)}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
       )}
     </Typography>
   )
