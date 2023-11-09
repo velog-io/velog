@@ -1,42 +1,18 @@
 .block {
-  .responsive {
-    width: 1728px;
-    height: fit-content;
-    margin: 0 auto;
-    padding-bottom: 64px;
-    @media screen and (max-width: 1919px) {
-      width: 1376px;
-    }
-    @media screen and (max-width: 1440px) {
-      width: 1024px;
-    }
-    @media screen and (max-width: 1056px) {
-      width: calc(100% - 32px);
-    }
-    @media screen and (max-width: 768px) {
-      width: 100%;
-    }
-  }
-
-  .innerBlock {
-    margin: 0 auto;
-
-    @media screen and (max-width: 768px) {
-      margin: 0;
-      padding-left: 16px;
-      padding-right: 16px;
-    }
-  }
+  width: 100%;
 }
 
 .mainWrapper {
   margin: 0 auto;
   margin-top: 90px;
-  width: 768px;
+  width: 100%;
+  padding-bottom: 64px;
 
   @media screen and (max-width: 768px) {
     width: 100%;
-    margin: 48px auto;
+    margin: 0;
+    padding-bottom: 32px;
+    /* margin: 48px 0; */
   }
 }
 

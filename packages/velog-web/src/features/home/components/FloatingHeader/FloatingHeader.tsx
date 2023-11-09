@@ -86,11 +86,9 @@ function FloatingHeader({ header }: Props) {
       }
       ref={blockRef}
     >
-      <div className={cx('innerBlock')}>
-        <div className={cx('mainResponsive')}>
-          {header}
-          {isHome && <HomeTab isFloatingHeader={true} />}
-        </div>
+      <div className={cx('mainResponsive')}>
+        {header}
+        {isHome && <HomeTab isFloatingHeader={true} />}
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 .mainResponsive {
   width: 1728px;
   height: fit-content;
+  margin: 0 auto;
   @media screen and (max-width: 1919px) {
     width: 1376px;
   }
@@ -10,13 +11,24 @@
   @media screen and (max-width: 1056px) {
     width: calc(100% - 32px);
   }
-}
-
-.velogResponsive {
-  width: 768px;
-  margin-left: auto;
-  margin-right: auto;
   @media screen and (max-width: 768px) {
     width: 100%;
+  }
+}
+
+.mainHeaderResponsive {
+  width: 100%;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  margin: 0 auto;
+
+  @media screen and (max-width: 768px) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  @media screen and (max-width: 375px) {
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }

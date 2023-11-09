@@ -10,7 +10,7 @@ type Props = {
 
 function HeaderSkeleton({ logo }: Props) {
   return (
-    <div className={cx('block')}>
+    <div className={cx('block', 'mainHeaderResponsive')}>
       <div className={cx('innerBlock')}>
         {logo}
         <div className={cx('right')}>

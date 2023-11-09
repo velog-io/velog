@@ -39,8 +39,8 @@ function VelogPageLayout({
   return (
     <div className={cx('block')}>
       <FloatingHeader header={header} />
-      <div className={cx('responsive')}>
-        <div className={cx('innerBlock')}>{header}</div>
+      <div className={cx('mainResponsive')}>
+        {header}
         <main className={cx('mainWrapper')}>
           <UserProfile
             displayName={displayName}

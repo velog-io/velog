@@ -48,7 +48,7 @@ function Header({ headerCustomLogo }: Props) {
   if (isLoading) return <HeaderSkeleton logo={headerCustomLogo || <HeaderLogo />} />
 
   return (
-    <header className={cx('block')}>
+    <header className={cx('block', 'mainHeaderResponsive')}>
       <div className={cx('innerBlock')}>
         {headerCustomLogo || <HeaderLogo />}
         <div className={cx('right')}>
