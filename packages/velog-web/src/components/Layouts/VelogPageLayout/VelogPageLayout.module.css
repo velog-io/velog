@@ -3,6 +3,7 @@
     width: 1728px;
     height: fit-content;
     margin: 0 auto;
+    padding-bottom: 64px;
     @media screen and (max-width: 1919px) {
       width: 1376px;
     }

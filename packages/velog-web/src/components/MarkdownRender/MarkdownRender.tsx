@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import styles from './MarkdownRender.module.css'
+import revertStyles from '@/lib/styles/revert.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { throttle } from 'throttle-debounce'
 import prismPlugin from '@/lib/remark/prismPlugin'
@@ -19,7 +20,7 @@ import raw from 'rehype-raw'
 import katex from 'rehype-katex'
 import stringify from 'rehype-stringify'
 
-const cx = bindClassNames(styles)
+const cx = bindClassNames({ ...styles, ...revertStyles })
 
 type Props = {
   markdown: string
@@ -93,10 +94,10 @@ function MarkdownRender({ markdown, codeTheme = 'atom-one', onConvertFinish, isE
   return (
     <Typography>
       {isEdit ? (
-        <div className={cx('block', 'init', codeTheme)}>{element}</div>
+        <div className={cx('block', 'revert', codeTheme)}>{element}</div>
       ) : (
         <div
-          className={cx('block', 'init', codeTheme)}
+          className={cx('block', 'revert', codeTheme)}
           dangerouslySetInnerHTML={{ __html: html }}
         />
       )}
