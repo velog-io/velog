@@ -45,11 +45,12 @@ function Header({ headerCustomLogo }: Props) {
   // const urlForSearch = customHeader.custom ? `/search?username=${customHeader.username}` : '/search'
   const urlForSearch = '/search'
 
-  if (isLoading && !headerCustomLogo) return <HeaderSkeleton />
+  if (isLoading) return <HeaderSkeleton logo={headerCustomLogo || <HeaderLogo />} />
+
   return (
     <header className={cx('block')}>
       <div className={cx('innerBlock')}>
-        {headerCustomLogo ? headerCustomLogo : <HeaderLogo />}
+        {headerCustomLogo || <HeaderLogo />}
         <div className={cx('right')}>
           {themeReady && <ThemeToggleButton />}
           <HeaderSearchButton to={urlForSearch} />

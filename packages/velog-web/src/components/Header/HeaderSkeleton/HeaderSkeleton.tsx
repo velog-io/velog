@@ -4,11 +4,15 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 
 const cx = bindClassNames(styles)
 
-function HeaderSkeleton() {
+type Props = {
+  logo: React.ReactNode
+}
+
+function HeaderSkeleton({ logo }: Props) {
   return (
     <div className={cx('block')}>
       <div className={cx('innerBlock')}>
-        <HeaderLogo />
+        {logo}
         <div className={cx('right')}>
           <div className={cx('button')} />
           <div className={cx('button')} />
