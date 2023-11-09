@@ -20,7 +20,12 @@ type Props = {
 }
 
 function VelogAbout({ username }: Props) {
-  const { data: getUserAboutData, isLoading } = useGetUserAboutQuery({ input: { username } })
+  const {
+    data: getUserAboutData,
+    refetch,
+    isLoading,
+    isRefetching,
+  } = useGetUserAboutQuery({ input: { username } })
   const { data: currentUserData } = useCurrentUserQuery()
   const { mutateAsync } = useUpdateAboutMutation()
 
@@ -32,11 +37,13 @@ function VelogAbout({ username }: Props) {
   const onClickUpdate = async () => {
     if (isEdit) {
       await mutateAsync({ input: { about } })
+      refetch()
     }
     onToggleEdit()
   }
 
   if (isLoading) return <VelogAboutContentSkeleton />
+  if (isRefetching) return null
   return (
     <div className={cx('block')}>
       {isOwn && (getUserAboutData?.user?.profile.about || isEdit) && (
