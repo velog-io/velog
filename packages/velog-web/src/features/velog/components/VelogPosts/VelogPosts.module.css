@@ -1,2 +1,23 @@
 .block {
+  .empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    svg {
+      display: block;
+      width: 320px;
+      height: 320px;
+      margin-bottom: 32px;
+    }
+    .message {
+      font-size: 32px;
+      color: var(--text3);
+      margin-bottom: 32px;
+
+      @media screen and (max-width: 425px) {
+        font-size: 28px;
+      }
+    }
+  }
 }
