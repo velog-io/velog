@@ -76,3 +76,10 @@ query getUserAbout($input: GetUserInput!) {
     }
   }
 }
+
+mutation updateAbout($input: UpdateAboutInput!) {
+  updateAbout(input: $input) {
+    id
+    about
+  }
+}

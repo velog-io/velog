@@ -1,2 +1,5 @@
 .block {
+  display: flex;
+  margin-bottom: 1.5rem;
+  justify-content: flex-end;
 }

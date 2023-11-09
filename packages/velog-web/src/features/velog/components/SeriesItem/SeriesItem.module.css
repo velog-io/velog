@@ -1,6 +1,11 @@
 .styledLink {
   display: block;
   color: inherit;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .block {
@@ -28,6 +33,7 @@
       line-height: 1;
     }
   }
+
   .info {
     font-size: 14px;
     color: var(--text3);

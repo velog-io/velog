@@ -22,7 +22,7 @@ function VelogAboutContent({ markdown, isOwn, onClickWrite }: Props) {
           <UndrawEmpty width={320} height={320} />
           <div className={cx('message')}>소개가 작성되지 않았습니다.</div>
           {isOwn && (
-            <Button size="large" onClick={onClickWrite}>
+            <Button color="teal" size="large" onClick={onClickWrite}>
               소개글 작성하기
             </Button>
           )}

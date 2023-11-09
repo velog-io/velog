@@ -3,11 +3,15 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 
 const cx = bindClassNames(styles)
 
-type ColorType = 'teal' | 'gray' | 'darkGray' | 'lightGray' | 'transparent' | 'red'
+type ButtonProps = React.DetailedHTMLProps<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>
+type ButtonColor = 'teal' | 'gray' | 'darkGray' | 'lightGray' | 'transparent' | 'red'
 type ButtonSize = 'medium' | 'large'
 
-interface Props extends Omit<React.HTMLProps<HTMLButtonElement>, 'inline' | 'size'> {
-  color?: ColorType
+interface Props extends ButtonProps {
+  color?: ButtonColor
   inline?: boolean
   size?: ButtonSize
   responsive?: boolean
@@ -21,21 +25,20 @@ function Button({
   responsive = false,
   ...rest
 }: Props) {
-  const htmlProps = rest as any
   return (
-    <div
+    <button
       className={cx('block', size, color, inline ? 'inline' : '', responsive ? 'responsive' : '')}
-      {...htmlProps}
+      {...rest}
       onClick={(e) => {
-        if (htmlProps.onClick) {
-          htmlProps.onClick(e)
+        if (rest.onClick) {
+          rest.onClick(e)
         }
         const target = e.target as HTMLButtonElement
         target.blur()
       }}
     >
       {children}
-    </div>
+    </button>
   )
 }
 

@@ -92,6 +92,7 @@ export type Mutation = {
   sendMail: Maybe<SendMailResponse>
   unfollow: Maybe<Scalars['Boolean']['output']>
   unlikePost: Maybe<Post>
+  updateAbout: Maybe<UserProfile>
 }
 
 export type MutationFollowArgs = {
@@ -112,6 +113,10 @@ export type MutationUnfollowArgs = {
 
 export type MutationUnlikePostArgs = {
   input: UnlikePostInput
+}
+
+export type MutationUpdateAboutArgs = {
+  input: UpdateAboutInput
 }
 
 export type Post = {
@@ -344,6 +349,10 @@ export type UnfollowInput = {
 
 export type UnlikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
+}
+
+export type UpdateAboutInput = {
+  about: Scalars['String']['input']
 }
 
 export type User = {
@@ -624,6 +633,12 @@ export type GetUserSeriesListQuery = {
     }>
   } | null
 }
+
+export type UpdateAboutMutationVariables = Exact<{
+  input: UpdateAboutInput
+}>
+
+export type UpdateAboutMutation = { updateAbout: { id: string; about: string } | null }
 
 export const SendMailDocument = `
     mutation sendMail($input: SendMailInput!) {
@@ -987,5 +1002,22 @@ export const useGetUserSeriesListQuery = <TData = GetUserSeriesListQuery, TError
       GetUserSeriesListDocument,
       variables,
     ),
+    options,
+  )
+export const UpdateAboutDocument = `
+    mutation updateAbout($input: UpdateAboutInput!) {
+  updateAbout(input: $input) {
+    id
+    about
+  }
+}
+    `
+export const useUpdateAboutMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<UpdateAboutMutation, TError, UpdateAboutMutationVariables, TContext>,
+) =>
+  useMutation<UpdateAboutMutation, TError, UpdateAboutMutationVariables, TContext>(
+    ['updateAbout'],
+    (variables?: UpdateAboutMutationVariables) =>
+      fetcher<UpdateAboutMutation, UpdateAboutMutationVariables>(UpdateAboutDocument, variables)(),
     options,
   )

@@ -18,7 +18,7 @@
       margin-bottom: 32px;
 
       @media screen and (max-width: 425px) {
-        font-size: 28px;
+        font-size: 24px;
       }
     }
   }
@@ -26,20 +26,33 @@
 
 .skeletonBlock {
   width: 100%;
+
+  @media screen and (max-width: 768px) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
   h1 {
-    font-size: 3rem;
-    margin-bottom: 2rem;
+    font-size: 48px;
+    margin-bottom: 32px;
+
+    @media screen and (max-width: 768px) {
+      margin-bottom: 26px;
+    }
   }
   .lines {
     width: 100%;
     .line {
-      margin-bottom: 0.75rem;
+      margin-bottom: 12px;
       display: flex;
-      font-size: 1.125rem;
+      font-size: 18px;
     }
   }
 
   .lines + .lines {
-    margin-top: 3rem;
+    margin-top: 48px;
+
+    @media screen and (max-width: 768px) {
+      margin-top: 32px;
+    }
   }
 }
