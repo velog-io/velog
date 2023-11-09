@@ -10,5 +10,9 @@
   .innerBlock {
     display: flex;
     justify-content: center;
+    @media screen and (max-width: 768px) {
+      justify-content: flex-start;
+      margin-left: 16px;
+    }
   }
 }

@@ -13,7 +13,7 @@ interface Props {
 async function BasicLayout({ children }: Props) {
   return (
     <div className={cx('block')}>
-      <FloatingHeader />
+      <FloatingHeader header={<Header />} />
       <div className={cx('mainResponsive')}>
         <div className={cx('innerBlock')}>
           <Header />

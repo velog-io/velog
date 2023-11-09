@@ -27,8 +27,8 @@ function HeaderCustomLogo({ username, userLogo }: Props) {
       <Link href="/" className={cx('logo')}>
         <VelogIcon />
       </Link>
-      <Link href={velogPath} className={cx('userLogo', 'ellipsis', firaMono.className)}>
-        {userLogo.title || `${username}.log`}
+      <Link href={velogPath} className={cx('userLogo', firaMono.className)}>
+        <span className={cx('ellipsis')}>{userLogo.title || `${username}.log`}</span>
       </Link>
     </div>
   )

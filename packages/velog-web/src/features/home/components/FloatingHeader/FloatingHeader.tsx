@@ -10,7 +10,11 @@ import { usePathname } from 'next/navigation'
 
 const cx = bindClassNames(styles)
 
-function FloatingHeader() {
+type Props = {
+  header: React.ReactNode
+}
+
+function FloatingHeader({ header }: Props) {
   const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const blockRef = useRef<HTMLDivElement>(null)
@@ -84,7 +88,7 @@ function FloatingHeader() {
     >
       <div className={cx('innerBlock')}>
         <div className={cx('mainResponsive')}>
-          <Header />
+          {header}
           {isHome && <HomeTab isFloatingHeader={true} />}
         </div>
       </div>

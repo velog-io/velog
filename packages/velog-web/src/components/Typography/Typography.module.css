@@ -19,7 +19,7 @@
       font-weight: 400;
     }
     code {
-      background: var(----bg-inline-code);
+      background: var(--bg-inline-code);
       padding: 0.2em 0.4em;
       font-size: 85%;
       border-radius: 3px;

@@ -16,6 +16,10 @@
       font-size: 32px;
       color: var(--text3);
       margin-bottom: 32px;
+
+      @media screen and (max-width: 425px) {
+        font-size: 28px;
+      }
     }
   }
 }

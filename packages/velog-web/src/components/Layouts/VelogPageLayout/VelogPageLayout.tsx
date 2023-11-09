@@ -33,13 +33,14 @@ function VelogPageLayout({
   children,
   userLogo,
 }: Props) {
+  const header = (
+    <Header headerCustomLogo={<HeaderCustomLogo username={username} userLogo={userLogo} />} />
+  )
   return (
     <div className={cx('block')}>
-      <FloatingHeader />
+      <FloatingHeader header={header} />
       <div className={cx('responsive')}>
-        <div className={cx('innerBlock')}>
-          <Header headerCustomLogo={<HeaderCustomLogo username={username} userLogo={userLogo} />} />
-        </div>
+        <div className={cx('innerBlock')}>{header}</div>
         <main className={cx('mainWrapper')}>
           <UserProfile
             displayName={displayName}
