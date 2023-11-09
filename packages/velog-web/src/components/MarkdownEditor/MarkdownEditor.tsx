@@ -3,6 +3,7 @@
 import style from './MarkdownEditor.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import CodeMirror, { EditorFromTextArea, Editor } from 'codemirror'
+import './styles/global.css'
 import './styles/atom-one-light.module.css'
 import './styles/atom-one-dark.module.css'
 import 'codemirror/lib/codemirror.css'

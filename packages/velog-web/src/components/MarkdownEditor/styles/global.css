@@ -1,0 +1,42 @@
+.CodeMirror {
+  height: auto;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: var(--text1);
+  font-family: 'Fira Mono', monospace;
+}
+
+.cm-header {
+  line-height: 2;
+  color: var(--text1);
+}
+.cm-header-1 {
+  font-size: 2.5rem;
+}
+.cm-header-2 {
+  font-size: 2rem;
+}
+
+.cm-header-3 {
+  font-size: 1.5rem;
+}
+
+.cm-header-4,
+.cm-header-5,
+.cm-header-6 {
+  font-size: 1.3125rem;
+}
+.cm-strong,
+.cm-em {
+  color: var(--text1);
+}
+
+pre.CodeMirror-placeholder {
+  color: var(--text3) !important;
+  font-style: italic !important;
+}
+
+.CodeMirror pre.CodeMirror-line,
+.CodeMirror pre.CodeMirror-line-like {
+  color: none;
+}

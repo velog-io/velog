@@ -254,8 +254,13 @@ body {
   color: var(--text1);
 }
 
-.CodeMirror-placeholder {
+pre.CodeMirror-placeholder CodeMirror-line-like {
   color: var(--text3) !important;
   color: gold !important;
   font-style: italic !important;
+}
+
+.CodeMirror pre.CodeMirror-line,
+.CodeMirror pre.CodeMirror-line-like {
+  background-color: red !important;
 }
