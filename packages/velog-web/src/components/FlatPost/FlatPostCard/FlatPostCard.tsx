@@ -9,6 +9,7 @@ import { useTimeFormat } from '@/hooks/useTimeFormat'
 import { LikeIcon } from '@/assets/icons/components'
 import PrivatePostLabel from '@/components/PrivatePostLabel'
 import FlatPostCardSkeleton from './FlatPostCardSkeleton'
+import VLink from '@/components/VLink'
 
 const cx = bindClassNames(styles)
 
@@ -24,7 +25,7 @@ function FlatPostCard({ post, hideUser }: Props) {
   if (!post.user || !post.released_at) return null
 
   const url = `/@${post.user.username}/${post.url_slug}`
-  const velogUrl = `/@${post.user.username}`
+  const velogUrl = `/@${post.user.username}/posts`
 
   return (
     <div className={cx('block')}>
@@ -44,7 +45,7 @@ function FlatPostCard({ post, hideUser }: Props) {
         </div>
       )}
       {post.thumbnail && (
-        <Link href={url}>
+        <VLink href={url}>
           <RatioImage
             src={post.thumbnail}
             alt="post-thumbnail"
@@ -54,11 +55,11 @@ function FlatPostCard({ post, hideUser }: Props) {
             width={768}
             height={402}
           />
-        </Link>
+        </VLink>
       )}
-      <Link href={url}>
+      <VLink href={url}>
         <h2>{post.title}</h2>
-      </Link>
+      </VLink>
       <p>{post.short_description}</p>
       <div className={cx('tagsWrapper')}>
         {post.tags?.map((tag) => <TagItem key={tag} name={tag} link={true} />)}
