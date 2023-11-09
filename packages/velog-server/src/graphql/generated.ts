@@ -101,6 +101,7 @@ export type Mutation = {
   sendMail?: Maybe<SendMailResponse>
   unfollow?: Maybe<Scalars['Boolean']['output']>
   unlikePost?: Maybe<Post>
+  updateAbout?: Maybe<UserProfile>
 }
 
 export type MutationFollowArgs = {
@@ -121,6 +122,10 @@ export type MutationUnfollowArgs = {
 
 export type MutationUnlikePostArgs = {
   input: UnlikePostInput
+}
+
+export type MutationUpdateAboutArgs = {
+  input: UpdateAboutInput
 }
 
 export type Post = {
@@ -355,6 +360,10 @@ export type UnlikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
 
+export type UpdateAboutInput = {
+  about: Scalars['String']['input']
+}
+
 export type User = {
   created_at: Scalars['Date']['output']
   email?: Maybe<Scalars['String']['output']>
@@ -546,6 +555,7 @@ export type ResolversTypes = {
   TrendingPostsInput: TrendingPostsInput
   UnfollowInput: UnfollowInput
   UnlikePostInput: UnlikePostInput
+  UpdateAboutInput: UpdateAboutInput
   User: ResolverTypeWrapper<UserModel>
   UserMeta: ResolverTypeWrapper<UserMeta>
   UserProfile: ResolverTypeWrapper<UserProfileModel>
@@ -606,6 +616,7 @@ export type ResolversParentTypes = {
   TrendingPostsInput: TrendingPostsInput
   UnfollowInput: UnfollowInput
   UnlikePostInput: UnlikePostInput
+  UpdateAboutInput: UpdateAboutInput
   User: UserModel
   UserMeta: UserMeta
   UserProfile: UserProfileModel
@@ -684,6 +695,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationUnlikePostArgs, 'input'>
+  >
+  updateAbout?: Resolver<
+    Maybe<ResolversTypes['UserProfile']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateAboutArgs, 'input'>
   >
 }
 

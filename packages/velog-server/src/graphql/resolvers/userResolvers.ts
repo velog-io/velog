@@ -58,6 +58,10 @@ const userResolvers: Resolvers = {
       const authService = container.resolve(AuthService)
       await authService.logout(ctx.reply)
     },
+    updateAbout: async (_, { input }, ctx) => {
+      const userProfileService = container.resolve(UserProfileService)
+      return await userProfileService.updateUserProfile({ ...input }, ctx.user?.id)
+    },
   },
 }
 
