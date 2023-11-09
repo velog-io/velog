@@ -212,6 +212,10 @@ body {
   height: 100%;
 }
 
+img {
+  object-fit: cover;
+}
+
 .isGray {
   background-color: var(--bg-page1);
 }

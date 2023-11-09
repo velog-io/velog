@@ -2,9 +2,9 @@
   display: block;
   color: inherit;
 
-  img {
-    width: 100%;
-    height: 100%;
+  a {
+    max-width: 358px;
+    max-height: 193px;
   }
 }
 
