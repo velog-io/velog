@@ -14,9 +14,9 @@ async function BasicLayout({ children }: Props) {
   return (
     <div className={cx('block')}>
       <FloatingHeader header={<Header />} />
-      <Header />
       <div className={cx('mainResponsive')}>
         <div className={cx('innerBlock')}>
+          <Header />
           <HomeTab />
           <div className={cx('mainWrapper')}>
             <main>{children}</main>

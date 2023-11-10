@@ -7,8 +7,6 @@
     display: flex;
     margin: 0 auto;
     flex-flow: row wrap;
-    padding-left: 16px;
-    padding-right: 16px;
   }
 }
 

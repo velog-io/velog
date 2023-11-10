@@ -11,9 +11,6 @@
   @media screen and (max-width: 1056px) {
     width: calc(100% - 32px);
   }
-  @media screen and (max-width: 768px) {
-    width: 100%;
-  }
 }
 
 .mainHeaderResponsive {
@@ -21,14 +18,4 @@
   padding-top: 12px;
   padding-bottom: 12px;
   margin: 0 auto;
-
-  @media screen and (max-width: 768px) {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  @media screen and (max-width: 375px) {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
 }
