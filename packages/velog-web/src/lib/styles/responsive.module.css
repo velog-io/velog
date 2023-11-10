@@ -1,7 +1,8 @@
 .mainResponsive {
   width: 1728px;
   height: fit-content;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   @media screen and (max-width: 1919px) {
     width: 1376px;
   }
@@ -9,7 +10,7 @@
     width: 1024px;
   }
   @media screen and (max-width: 1056px) {
-    width: calc(100% - 32px);
+    width: 100%;
   }
 }
 
@@ -18,4 +19,14 @@
   padding-top: 12px;
   padding-bottom: 12px;
   margin: 0 auto;
+
+  @media screen and (max-width: 1056px) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  @media screen and (max-width: 375px) {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 }

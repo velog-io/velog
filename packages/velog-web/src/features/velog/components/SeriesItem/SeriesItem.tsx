@@ -24,21 +24,22 @@ function SeriesItem({ thumbnail, name, postsCount, lastUpdate, urlSlug, username
   if (isLoading) return <SeriesItemSkeleton />
   return (
     <div className={cx('block')}>
-      <PlainLink href={url} className={cx('styledLink')}>
-        {thumbnail ? (
-          <Image
-            src={thumbnail}
-            className={cx('thumbnail')}
-            alt="series thumbnail"
-            width={500}
-            height={350}
-          />
-        ) : (
-          <SeriesThumbnail className={cx('thumbnail')} width={368} height={193} />
-        )}
+      <PlainLink href={url}>
+        <div className={cx('imageWrapper')}>
+          {thumbnail ? (
+            <Image
+              src={thumbnail}
+              className={cx('thumbnail')}
+              alt="series thumbnail"
+              layout="fill"
+            />
+          ) : (
+            <SeriesThumbnail className={cx('thumbnail')} />
+          )}
+        </div>
       </PlainLink>
       <h4>
-        <PlainLink href={url} className={cx('styledLink', 'ellipsis')}>
+        <PlainLink href={url} className={cx('name', 'ellipsis')}>
           {name}
         </PlainLink>
       </h4>
