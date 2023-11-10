@@ -10,20 +10,25 @@
   }
 
   .empty {
+    margin-top: 48px;
     width: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin-top: 96px;
-    margin-bottom: 48px;
-    img {
+    svg {
       width: 320px;
+      height: 320px;
+      margin-bottom: 32px;
+      display: block;
     }
     .message {
       font-size: 32px;
       color: var(--text3);
-      margin-top: 48px;
       margin-bottom: 32px;
+
+      @media screen and (max-width: 425px) {
+        font-size: 24px;
+      }
     }
   }
 }

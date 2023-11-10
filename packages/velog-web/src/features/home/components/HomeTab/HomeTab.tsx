@@ -36,7 +36,7 @@ function HomeTab({ isFloatingHeader = false }: Props) {
   }
 
   return (
-    <div className={cx('wrapper', { isFloating: isFloatingHeader })}>
+    <div className={cx('wrapper', 'mainHeaderResponsive', { isFloating: isFloatingHeader })}>
       <div className={cx('left')}>
         <div className={cx('block')}>
           <ActiveLink

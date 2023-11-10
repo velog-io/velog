@@ -16,8 +16,8 @@ function SeriesList({ list, username }: Props) {
     <div className={cx('block')}>
       {list.length === 0 && (
         <div className={cx('empty')}>
-          <UndrawBlankCanvas width={320} />
-          <div className="message">시리즈가 없습니다.</div>
+          <UndrawBlankCanvas width={320} height={320} />
+          <div className={cx('message')}>시리즈가 없습니다.</div>
         </div>
       )}
       {list.map((series) => (
