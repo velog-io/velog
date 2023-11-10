@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './FloatingHeader.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { getScrollTop } from '@/lib/utils'
-import Header from '@/components/Header/Header'
 import HomeTab from '@/features/home/components/HomeTab/HomeTab'
 import { usePathname } from 'next/navigation'
 

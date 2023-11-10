@@ -5,8 +5,10 @@
   align-items: center;
   position: relative;
 
-  &.noMargin {
+  &.isFloating {
     margin-top: 0;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }
 

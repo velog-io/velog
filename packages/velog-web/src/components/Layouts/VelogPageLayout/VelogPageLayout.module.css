@@ -3,16 +3,16 @@
 }
 
 .mainWrapper {
-  margin: 0 auto;
-  margin-top: 90px;
-  width: 100%;
+  padding-top: 90px;
+  width: 768px;
   padding-bottom: 64px;
+  margin: 0 auto;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1024px) {
+    max-width: 768px;
     width: 100%;
-    margin: 0;
     padding-bottom: 32px;
-    /* margin: 48px 0; */
+    margin: none;
   }
 }
 

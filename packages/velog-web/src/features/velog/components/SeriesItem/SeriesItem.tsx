@@ -26,9 +26,15 @@ function SeriesItem({ thumbnail, name, postsCount, lastUpdate, urlSlug, username
     <div className={cx('block')}>
       <PlainLink href={url} className={cx('styledLink')}>
         {thumbnail ? (
-          <Image src={thumbnail} alt="series thumbnail" width={368} height={193} />
+          <Image
+            src={thumbnail}
+            className={cx('thumbnail')}
+            alt="series thumbnail"
+            width={500}
+            height={350}
+          />
         ) : (
-          <SeriesThumbnail width={368} height={193} />
+          <SeriesThumbnail className={cx('thumbnail')} width={368} height={193} />
         )}
       </PlainLink>
       <h4>

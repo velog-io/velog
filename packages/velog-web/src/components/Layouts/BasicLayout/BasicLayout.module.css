@@ -1,18 +1,20 @@
 .block {
   display: flex;
   justify-content: center;
+  flex-flow: row wrap;
 
   .innerBlock {
     display: flex;
-    flex-flow: column nowrap;
     margin: 0 auto;
-    height: 100%;
+    flex-flow: row wrap;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }
 
 .mainWrapper {
   display: flex;
-  margin-top: 32px;
+  padding-top: 32px;
   padding-bottom: 16px;
   main {
     flex: 1;
