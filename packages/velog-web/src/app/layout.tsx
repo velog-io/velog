@@ -1,5 +1,5 @@
-import '@/styles/global.module.css'
-import '@/styles/reset.module.css'
+import '@/styles/global.css'
+import '@/styles/reset.css'
 import CoreProvider from '@/providers/CoreProvider'
 import { Metadata } from 'next'
 
