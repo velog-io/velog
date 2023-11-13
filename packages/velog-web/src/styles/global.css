@@ -180,6 +180,14 @@
   --prism-line-number: #585c63;
 }
 
+* {
+  box-sizing: inherit;
+}
+
+html {
+  overflow-y: scroll;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -191,8 +199,11 @@ body {
   box-sizing: border-box;
 }
 
-* {
-  box-sizing: inherit;
+html,
+body {
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 code {
@@ -203,13 +214,6 @@ input,
 button,
 textarea {
   font-family: inherit;
-}
-
-html,
-body {
-  max-width: 100%;
-  width: 100%;
-  height: 100%;
 }
 
 img {
