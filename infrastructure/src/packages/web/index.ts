@@ -3,8 +3,6 @@ import { CreateInfraParameter } from '../../type'
 import { createECSfargateService } from '../../common/ecs'
 import { createLoadBalancer } from '../../common/loadBalancer'
 import { createSecurityGroup } from '../../common/securityGroup'
-import { withPrefix } from '../../lib/prefix'
-import * as aws from '@pulumi/aws'
 
 export const createWebInfra = ({
   vpcId,

@@ -61,7 +61,7 @@ const main = () => {
     throw new Error(`${command} is Invalid command`)
   }
 
-  const env = process.env.APP_ENV
+  const env = process.env.DOCKER_ENV
   const args = process.argv.slice(3)
   const eFlagIndex = args.indexOf('-e')
   const environment = args[eFlagIndex + 1] || env || ''

@@ -18,8 +18,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
-    "stage": "pnpm ssm pull -e stage && APP_ENV=stage pnpm start",
-    "prod": "pnpm ssm pull -e production && APP_ENV=production pnpm start",
+    "stage": "pnpm ssm pull -e stage && DOCKER_ENV=stage pnpm start",
+    "prod": "pnpm ssm pull -e production && DOCKER_ENV=production pnpm start",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "start": "node dist/src/main.js",
     "prisma:copy": "tsx ./scripts/copyPrisma.ts",

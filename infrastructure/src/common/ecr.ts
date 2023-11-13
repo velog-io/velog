@@ -93,6 +93,11 @@ export const getECRImage = (repo: Repository): pulumi.Output<string> => {
     repositoryName: repo.name,
     mostRecent: true,
   })
+
+  if (!image) {
+    throw new Error(`Not found ${repo} Image`)
+  }
+
   return image.apply((img) => {
     const tag = img.imageTags.filter((str) => str !== 'latest')[0]
     const imageUri = `${img.registryId}.dkr.ecr.ap-northeast-2.amazonaws.com/${img.repositoryName}:${tag}`
