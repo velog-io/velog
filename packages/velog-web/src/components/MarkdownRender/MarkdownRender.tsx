@@ -42,7 +42,7 @@ function MarkdownRender({ markdown, codeTheme = 'atom-one', onConvertFinish, isE
         .use(slug)
         .use(prismPlugin)
         .use(embedPlugin)
-        .use(remark2rehype, { allowDangerousHTML: true })
+        .use(remark2rehype, { allowDangerousHtml: true })
         .use(raw)
         .use(math)
         .use(katex)

@@ -27,12 +27,7 @@ function SeriesItem({ thumbnail, name, postsCount, lastUpdate, urlSlug, username
       <PlainLink href={url}>
         <div className={cx('imageWrapper')}>
           {thumbnail ? (
-            <Image
-              src={thumbnail}
-              className={cx('thumbnail')}
-              alt="series thumbnail"
-              layout="fill"
-            />
+            <Image src={thumbnail} className={cx('thumbnail')} alt="series thumbnail" fill={true} />
           ) : (
             <SeriesThumbnail className={cx('thumbnail')} />
           )}
