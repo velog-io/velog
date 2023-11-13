@@ -28,19 +28,6 @@ export const createWebInfra = ({
     packageType: 'web',
   })
 
-  // connecting for v2 client
-  const targetGroupName = withPrefix('v2-tg')
-  const targetGroup2 = new aws.lb.TargetGroup(
-    targetGroupName,
-    {
-      port: ENV.webV2Port,
-      protocol: 'HTTP',
-      targetType: 'ip',
-      vpcId: vpcId,
-    },
-    {},
-  )
-
   createECSfargateService({
     packageType: 'web',
     imageUri,
