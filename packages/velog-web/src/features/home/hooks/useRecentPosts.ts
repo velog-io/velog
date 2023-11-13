@@ -21,29 +21,35 @@ export default function useRecentPosts(initialPosts: Post[] = []) {
     }
   }, [initialPosts, limit])
 
-  const { data, isLoading, fetchNextPage, isFetching, hasNextPage, isError } =
-    useInfiniteQuery<RecentPostsQuery>(
-      ['recentPosts', { input: fetchInput || {} }],
-      ({ pageParam = fetchInput }) =>
-        fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, {
-          input: pageParam,
-        })(),
-      {
-        retryDelay: 100,
-        cacheTime: 1000 * 60 * 1,
-        staleTime: 1000 * 60 * 1,
-        enabled: hasCheckedRef.current,
-        getNextPageParam: (page) => {
-          const recentPosts = page.recentPosts
-          if (!recentPosts) return false
-          if (recentPosts && recentPosts?.length < limit) return false
-          return {
-            limit,
-            cursor: recentPosts[recentPosts.length - 1]?.id,
-          }
-        },
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    isFetching,
+    hasNextPage = true,
+    isError,
+  } = useInfiniteQuery<RecentPostsQuery>(
+    ['recentPosts', { input: fetchInput || {} }],
+    ({ pageParam = fetchInput }) =>
+      fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, {
+        input: pageParam,
+      })(),
+    {
+      retryDelay: 100,
+      cacheTime: 1000 * 60 * 1,
+      staleTime: 1000 * 60 * 1,
+      enabled: hasCheckedRef.current,
+      getNextPageParam: (page) => {
+        const recentPosts = page.recentPosts
+        if (!recentPosts) return false
+        if (recentPosts && recentPosts?.length < limit) return false
+        return {
+          limit,
+          cursor: recentPosts[recentPosts.length - 1]?.id,
+        }
       },
-    )
+    },
+  )
 
   // TODO: remove Start
   const queryClient = useQueryClient()
