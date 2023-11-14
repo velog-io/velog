@@ -86,12 +86,6 @@ query readPost($input: ReadPostInput!) {
   }
 }
 
-input ReadPostInput {
-  id: String
-  username: String
-  user_slug: String
-}
-
 query recentPosts($input: RecentPostsInput!) {
   recentPosts(input: $input) {
     id
@@ -115,11 +109,6 @@ query recentPosts($input: RecentPostsInput!) {
   }
 }
 
-input RecentPostsInput {
-  cursor: ID
-  limit: Int
-}
-
 query trendingPosts($input: TrendingPostsInput!) {
   trendingPosts(input: $input) {
     id
@@ -141,12 +130,6 @@ query trendingPosts($input: TrendingPostsInput!) {
     is_private
     comments_count
   }
-}
-
-input TrendingPostsInput {
-  limit: Int
-  offset: Int
-  timeframe: String
 }
 
 query Posts($input: GetPostsInput!) {
@@ -173,11 +156,27 @@ query Posts($input: GetPostsInput!) {
   }
 }
 
-input GetPostsInput {
-  cursor: ID
-  username: String
-  temp_only: Boolean
-  tag: String
-  limit: Int
-  keyword: String
+query SearchPosts($input: GetSearchPostsInput!) {
+  searchPosts(input: $input) {
+    count
+    posts {
+      id
+      title
+      short_description
+      thumbnail
+      user {
+        id
+        username
+        profile {
+          id
+          thumbnail
+        }
+      }
+      url_slug
+      released_at
+      tags
+      is_private
+      comments_count
+    }
+  }
 }

@@ -7,6 +7,7 @@ import { Search2Icon } from '@/assets/icons/components'
 import useToggle from '@/hooks/useToggle'
 import useInput from '@/hooks/useInput'
 import { debounce } from 'throttle-debounce'
+import { useRouter } from 'next/navigation'
 
 const cx = bindClassNames(styles)
 
@@ -16,14 +17,20 @@ type Props = {
 }
 
 function VelogSearchInput({ query, username }: Props) {
+  const router = useRouter()
   const [focus, toggleFocus] = useToggle(false)
   const [value, onChange] = useInput(query)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const onSearch = useCallback((keyword: string) => {
-    console.log('query', keyword)
-  }, [])
+  const onSearch = useCallback(
+    (keyword: string) => {
+      const urlPath = keyword ? `/?q=${keyword}` : ''
+      const nextUrl = `/@${username}/posts/${urlPath}`
+      router.replace(nextUrl)
+    },
+    [username, router],
+  )
 
   const debouncedSearch = useMemo(() => {
     return debounce(300, (keyword: string) => {

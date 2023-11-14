@@ -1,4 +1,5 @@
 .block {
+  position: relative;
   .empty {
     display: flex;
     justify-content: center;

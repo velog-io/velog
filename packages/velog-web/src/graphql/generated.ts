@@ -51,10 +51,16 @@ export type FollowingsInput = {
 
 export type GetPostsInput = {
   cursor?: InputMaybe<Scalars['ID']['input']>
-  keyword?: InputMaybe<Scalars['String']['input']>
   limit?: InputMaybe<Scalars['Int']['input']>
   tag?: InputMaybe<Scalars['String']['input']>
   temp_only?: InputMaybe<Scalars['Boolean']['input']>
+  username?: InputMaybe<Scalars['String']['input']>
+}
+
+export type GetSearchPostsInput = {
+  keyword: Scalars['String']['input']
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset: Scalars['Int']['input']
   username?: InputMaybe<Scalars['String']['input']>
 }
 
@@ -169,6 +175,7 @@ export type Query = {
   recentPosts: Array<Post>
   recommendFollowings: RecommedFollowingsResult
   restoreToken: Maybe<UserToken>
+  searchPosts: SearchResult
   series: Maybe<Series>
   seriesList: Array<Series>
   trendingPosts: Array<Post>
@@ -203,6 +210,10 @@ export type QueryRecentPostsArgs = {
 
 export type QueryRecommendFollowingsArgs = {
   input: RecommendFollowingsInput
+}
+
+export type QuerySearchPostsArgs = {
+  input: GetSearchPostsInput
 }
 
 export type QuerySeriesArgs = {
@@ -292,7 +303,7 @@ export type RecommendFollowingsInput = {
 }
 
 export type SearchResult = {
-  count: Maybe<Scalars['Int']['output']>
+  count: Scalars['Int']['output']
   posts: Array<Post>
 }
 
@@ -548,6 +559,32 @@ export type PostsQuery = {
     likes: number | null
     user: { id: string; username: string; profile: { id: string; thumbnail: string | null } } | null
   }>
+}
+
+export type SearchPostsQueryVariables = Exact<{
+  input: GetSearchPostsInput
+}>
+
+export type SearchPostsQuery = {
+  searchPosts: {
+    count: number
+    posts: Array<{
+      id: string
+      title: string | null
+      short_description: string | null
+      thumbnail: string | null
+      url_slug: string | null
+      released_at: any | null
+      tags: Array<string>
+      is_private: boolean
+      comments_count: number | null
+      user: {
+        id: string
+        username: string
+        profile: { id: string; thumbnail: string | null }
+      } | null
+    }>
+  }
 }
 
 export type UserTagsQueryVariables = Exact<{
@@ -853,6 +890,41 @@ export const usePostsQuery = <TData = PostsQuery, TError = unknown>(
   useQuery<PostsQuery, TError, TData>(
     ['Posts', variables],
     fetcher<PostsQuery, PostsQueryVariables>(PostsDocument, variables),
+    options,
+  )
+export const SearchPostsDocument = `
+    query SearchPosts($input: GetSearchPostsInput!) {
+  searchPosts(input: $input) {
+    count
+    posts {
+      id
+      title
+      short_description
+      thumbnail
+      user {
+        id
+        username
+        profile {
+          id
+          thumbnail
+        }
+      }
+      url_slug
+      released_at
+      tags
+      is_private
+      comments_count
+    }
+  }
+}
+    `
+export const useSearchPostsQuery = <TData = SearchPostsQuery, TError = unknown>(
+  variables: SearchPostsQueryVariables,
+  options?: UseQueryOptions<SearchPostsQuery, TError, TData>,
+) =>
+  useQuery<SearchPostsQuery, TError, TData>(
+    ['SearchPosts', variables],
+    fetcher<SearchPostsQuery, SearchPostsQueryVariables>(SearchPostsDocument, variables),
     options,
   )
 export const UserTagsDocument = `

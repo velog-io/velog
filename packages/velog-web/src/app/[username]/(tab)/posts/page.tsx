@@ -24,16 +24,22 @@ export default async function VelogPostsPage({ params, searchParams }: Props) {
   )
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ searchParams, params }: Props): Promise<Metadata> {
   const username = getUsernameFromParams(params)
   const profile = await getUserProfile(username)
+
+  const query = getTagByKey(searchParams, 'q')
 
   if (!profile) {
     return {}
   }
 
+  const basic = `${username} (${profile.display_name}) / 작성글 - velog`
+  const search = `"${query}" 검색 결과 - velog`
+  const title = query ? search : basic
+
   return {
-    title: `${username} (${profile.display_name}) / 작성글 - velog`,
+    title,
     description: `${username}님이 작성한 포스트 시리즈들을 확인해보세요.`,
   }
 }
