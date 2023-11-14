@@ -1,8 +1,0 @@
-.block {
-  display: flex;
-  margin: -1rem;
-  flex-wrap: wrap;
-  @media screen and (max-width: 767px) {
-    margin: 0;
-  }
-}

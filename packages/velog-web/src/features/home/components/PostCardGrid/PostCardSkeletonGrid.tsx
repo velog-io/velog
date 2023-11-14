@@ -1,6 +1,6 @@
 import styles from './PostCardGrid.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { PostCardSkeleton } from '@/features/post/components/PostCard/PostCardSkeleton'
+import { PostCardSkeleton } from '@/features/home/components/PostCard/PostCardSkeleton'
 import { ENV } from '@/env'
 
 const cx = bindClassNames(styles)

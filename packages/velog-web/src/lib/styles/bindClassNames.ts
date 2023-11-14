@@ -1,6 +1,7 @@
 import utils from './utils.module.css'
 import keyframes from './keyframes.module.css'
 import responsive from './responsive.module.css'
+import grid from './grid.module.css'
 
 const getKeyLength = (obj: Record<string, any>): number => Object.keys(obj).length
 
@@ -14,6 +15,7 @@ export function bindClassNames<T extends Styles>(styles: T) {
     ...utils,
     ...keyframes,
     ...responsive,
+    ...grid,
   }
 
   const styleUtils = {

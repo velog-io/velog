@@ -1,37 +1,20 @@
 .block {
-  width: 20rem;
+  width: 100%;
   background: var(--bg-element1);
   border-radius: 4px;
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.04);
   transition: 0.25s box-shadow ease-in, 0.25s transform ease-in;
+
   &:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 20px 0 rgba(0, 0, 0, 0.08);
+
     @media screen and (max-width: 1024px) {
       transform: none;
     }
-    /* ${mediaQuery(1024)} {
-      transform: none;
-    } */
-  }
-  margin: 1rem;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-
-  @media screen and (max-width: 1056px) {
-    width: calc(50% - 2rem);
   }
 
-  @media screen and (max-width: 767px) {
-    margin: 0;
-    width: 100%;
-    & + & {
-      margin-top: 1rem;
-    }
-  }
-
-  .isNotHomeAndPost {
+  /* .isNotHomeAndPost {
     @media screen and (max-width: 1440px) {
       width: calc(25% - 2rem);
     }
@@ -39,7 +22,7 @@
     @media screen and (max-width: 1312px) {
       width: calc(33% - 1.8125rem);
     }
-  }
+  } */
 
   .styleLink {
     display: block;

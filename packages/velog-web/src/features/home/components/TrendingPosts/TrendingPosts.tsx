@@ -1,6 +1,6 @@
 'use client'
 
-import PostCardGrid from '@/features/post/components/PostCardGrid'
+import PostCardGrid from '@/features/home/components/PostCardGrid'
 import { useRef } from 'react'
 import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'

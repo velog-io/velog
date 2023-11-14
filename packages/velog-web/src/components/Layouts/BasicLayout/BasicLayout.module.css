@@ -11,10 +11,15 @@
 }
 
 .mainWrapper {
-  display: flex;
-  padding-top: 32px;
-  padding-bottom: 16px;
+  width: 100%;
+  margin-top: 32px;
+  margin-bottom: 16px;
+
+  @media screen and (max-width: 1056px) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
   main {
-    flex: 1;
+    width: 100%;
   }
 }
