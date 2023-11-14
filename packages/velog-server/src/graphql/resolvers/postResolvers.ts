@@ -92,6 +92,10 @@ const postResolvers: Resolvers = {
       const postService = container.resolve(PostService)
       return await postService.getPosts(input, ctx.user?.id)
     },
+    searchPosts: async (_, { input }, ctx) => {
+      const postService = container.resolve(PostService)
+      return await postService.getSeachPost(input, ctx.user?.id)
+    },
   },
   Mutation: {
     likePost: async (_, { input }, ctx): Promise<Post> => {

@@ -37,3 +37,13 @@ export function loadScript(url: string) {
     document.head.appendChild(script)
   })
 }
+
+export const getTagByKey = <T extends Record<string, string | string[]>>(
+  searchParams: T,
+  key: keyof T,
+  defaultValue = '',
+): string => {
+  return Array.isArray(searchParams[key])
+    ? searchParams[key][0]
+    : (searchParams[key] as string) || defaultValue
+}

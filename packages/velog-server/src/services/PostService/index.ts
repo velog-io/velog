@@ -3,6 +3,7 @@ import { Post, PostTag, Prisma, Tag, User } from '@prisma/client'
 import { container, injectable, singleton } from 'tsyringe'
 import {
   GetPostsInput,
+  GetSearchPostsInput,
   ReadPostInput,
   ReadingListInput,
   RecentPostsInput,
@@ -24,14 +25,15 @@ import { TagService } from '@services/TagService/index.js'
 
 interface Service {
   getPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
-  getReadingList(input: ReadingListInput, userId: string | undefined): Promise<Post[]>
-  getRecentPosts(input: RecentPostsInput, userId: string | undefined): Promise<Post[]>
+  getReadingList(input: ReadingListInput, signedUserId?: string): Promise<Post[]>
+  getRecentPosts(input: RecentPostsInput, signedUserId?: string): Promise<Post[]>
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
-  getPost(input: ReadPostInput, userId: string | undefined): Promise<Post | null>
+  getPost(input: ReadPostInput, signedUserId?: string): Promise<Post | null>
   updatePostScore(postId: string): Promise<void>
   shortDescription(post: Post): string
   recommendedPosts(post: Post): Promise<Post[]>
-  getPosts(input: GetPostsInput, loggedUserId?: string): Promise<Post[]>
+  getPosts(input: GetPostsInput, signedUserId?: string): Promise<Post[]>
+  getSeachPost(input: GetSearchPostsInput): Promise<{ count: number; posts: Post[] }>
 }
 
 @injectable()
@@ -300,10 +302,7 @@ export class PostService implements Service {
     const ordered = postIds.map((id) => normalized[id])
     return ordered
   }
-  public async getPost(
-    input: ReadPostInput,
-    loggedUserId: string | undefined,
-  ): Promise<Post | null> {
+  public async getPost(input: ReadPostInput, signedUserId?: string): Promise<Post | null> {
     const { id, url_slug, username } = input
     if (id) {
       const post = await this.db.post.findUnique({
@@ -319,7 +318,7 @@ export class PostService implements Service {
         },
       })
 
-      if (!post || ((post.is_temp || post.is_private) && post.fk_user_id !== loggedUserId)) {
+      if (!post || ((post.is_temp || post.is_private) && post.fk_user_id !== signedUserId)) {
         return null
       }
       return post
@@ -367,14 +366,14 @@ export class PostService implements Service {
       }
     }
     if (!post) return null
-    if ((post.is_temp || post.is_private) && post.fk_user_id !== loggedUserId) return null
+    if ((post.is_temp || post.is_private) && post.fk_user_id !== signedUserId) return null
 
     setTimeout(async () => {
-      if (post?.fk_user_id === loggedUserId || !loggedUserId) return
+      if (post?.fk_user_id === signedUserId || !signedUserId) return
       if (!post) return
       const postReadLogService = container.resolve(PostReadLogService)
       postReadLogService.log({
-        userId: loggedUserId,
+        userId: signedUserId,
         postId: post.id,
         resumeTitleId: null,
         percentage: 0,
@@ -470,7 +469,7 @@ export class PostService implements Service {
       return []
     }
   }
-  public async getPosts(input: GetPostsInput, loggedUserId?: string): Promise<Post[]> {
+  public async getPosts(input: GetPostsInput, signedUserId?: string): Promise<Post[]> {
     const { cursor, limit = 1, username, temp_only, tag } = input
 
     if (limit > 100) {
@@ -488,20 +487,20 @@ export class PostService implements Service {
         cursor,
         tagName: tag,
         userId: user?.id,
-        isSelf: !!(user && user.id === loggedUserId),
+        isSelf: !!(user && user.id === signedUserId),
       })
     }
 
     const whereQuery: Prisma.PostWhereInput = {}
 
-    if (!loggedUserId) {
+    if (!signedUserId) {
       const query: Prisma.PostWhereInput = {
         is_private: false,
       }
       Object.assign(whereQuery, { ...query })
     } else {
       const query: Prisma.PostWhereInput = {
-        OR: [{ is_private: false }, { fk_user_id: loggedUserId }],
+        OR: [{ is_private: false }, { fk_user_id: signedUserId }],
       }
       Object.assign(whereQuery, { ...query })
     }
@@ -509,7 +508,7 @@ export class PostService implements Service {
     if (temp_only) {
       if (!username) throw new BadRequestError('username is missing')
       if (!user) throw new NotFoundError('Invalid username')
-      if (user.id !== loggedUserId)
+      if (user.id !== signedUserId)
         throw new UnauthorizedError('You have no permission to load temp posts')
 
       Object.assign(whereQuery, { is_temp: true })
@@ -624,6 +623,26 @@ export class PostService implements Service {
     })
 
     return postTags.filter((tags) => tags.post).map((tags) => tags.post!)
+  }
+  public async getSeachPost(
+    input: GetSearchPostsInput,
+    signedUserId?: string,
+  ): Promise<{ count: number; posts: Post[] }> {
+    const { keyword, offset, limit = 20, username } = input
+
+    if (limit > 100) {
+      throw new BadRequestError('Max limit is 100')
+    }
+
+    const result = await this.elsaticSearch.keywordSearch({
+      keyword,
+      username,
+      from: offset,
+      size: limit,
+      signedUserId,
+    })
+
+    return result
   }
 }
 

@@ -66,6 +66,13 @@ export type GetPostsInput = {
   username?: InputMaybe<Scalars['String']['input']>
 }
 
+export type GetSearchPostsInput = {
+  keyword: Scalars['String']['input']
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset: Scalars['Int']['input']
+  username?: InputMaybe<Scalars['String']['input']>
+}
+
 export type GetSeriesInput = {
   id?: InputMaybe<Scalars['ID']['input']>
   url_slug?: InputMaybe<Scalars['String']['input']>
@@ -177,6 +184,7 @@ export type Query = {
   recentPosts: Array<Post>
   recommendFollowings: RecommedFollowingsResult
   restoreToken?: Maybe<UserToken>
+  searchPosts: SearchResult
   series?: Maybe<Series>
   seriesList: Array<Series>
   trendingPosts: Array<Post>
@@ -211,6 +219,10 @@ export type QueryRecentPostsArgs = {
 
 export type QueryRecommendFollowingsArgs = {
   input: RecommendFollowingsInput
+}
+
+export type QuerySearchPostsArgs = {
+  input: GetSearchPostsInput
 }
 
 export type QuerySeriesArgs = {
@@ -300,7 +312,7 @@ export type RecommendFollowingsInput = {
 }
 
 export type SearchResult = {
-  count?: Maybe<Scalars['Int']['output']>
+  count: Scalars['Int']['output']
   posts: Array<Post>
 }
 
@@ -505,6 +517,7 @@ export type ResolversTypes = {
   FollowersInput: FollowersInput
   FollowingsInput: FollowingsInput
   GetPostsInput: GetPostsInput
+  GetSearchPostsInput: GetSearchPostsInput
   GetSeriesInput: GetSeriesInput
   GetSeriesListInput: GetSeriesListInput
   GetUserInput: GetUserInput
@@ -575,6 +588,7 @@ export type ResolversParentTypes = {
   FollowersInput: FollowersInput
   FollowingsInput: FollowingsInput
   GetPostsInput: GetPostsInput
+  GetSearchPostsInput: GetSearchPostsInput
   GetSeriesInput: GetSeriesInput
   GetSeriesListInput: GetSeriesListInput
   GetUserInput: GetUserInput
@@ -804,6 +818,12 @@ export type QueryResolvers<
     RequireFields<QueryRecommendFollowingsArgs, 'input'>
   >
   restoreToken?: Resolver<Maybe<ResolversTypes['UserToken']>, ParentType, ContextType>
+  searchPosts?: Resolver<
+    ResolversTypes['SearchResult'],
+    ParentType,
+    ContextType,
+    RequireFields<QuerySearchPostsArgs, 'input'>
+  >
   series?: Resolver<
     Maybe<ResolversTypes['Series']>,
     ParentType,
@@ -915,7 +935,7 @@ export type SearchResultResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['SearchResult'] = ResolversParentTypes['SearchResult'],
 > = {
-  count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }

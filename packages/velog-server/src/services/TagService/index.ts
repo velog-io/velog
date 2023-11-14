@@ -12,7 +12,7 @@ interface Service {
   findById(tagId: string): Promise<Tag | null>
   tagLoader(): DataLoader<string, Tag[]>
   getOriginTag(tagname: string): Promise<Tag | null>
-  getUserTags(username: string, loggedUserId?: string): Promise<GetUserTagsResult>
+  getUserTags(username: string, signedUserId?: string): Promise<GetUserTagsResult>
 }
 
 @injectable()
@@ -93,14 +93,14 @@ export class TagService implements Service {
     }
     return tag
   }
-  public async getUserTags(username: string, loggedUserId?: string): Promise<GetUserTagsResult> {
+  public async getUserTags(username: string, signedUserId?: string): Promise<GetUserTagsResult> {
     const user = await this.userService.findByUsername(username)
 
     if (!user) {
       throw new NotFoundError('Invalid username')
     }
 
-    const isSelf = user.id === loggedUserId
+    const isSelf = user.id === signedUserId
     const tags = await this.getUserPostTags(user.id, isSelf)
 
     // TODO: get total posts count and return

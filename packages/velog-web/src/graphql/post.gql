@@ -179,4 +179,5 @@ input GetPostsInput {
   temp_only: Boolean
   tag: String
   limit: Int
+  keyword: String
 }

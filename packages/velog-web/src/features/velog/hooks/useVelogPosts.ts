@@ -6,16 +6,18 @@ import { useMemo } from 'react'
 
 type Props = {
   username: string
-  tag: string | null
+  tag?: string
+  keyword?: string
 }
 
-export default function useVelogPosts({ username, tag }: Props) {
+export default function useVelogPosts({ username, tag, keyword }: Props) {
   const fetchInput = useMemo(() => {
     return {
       username,
       tag,
+      keyword,
     }
-  }, [username, tag])
+  }, [username, tag, keyword])
 
   const { data, fetchNextPage, isFetching, hasNextPage, isError, isLoading } =
     useInfiniteQuery<PostsQuery>(

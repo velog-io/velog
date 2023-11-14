@@ -51,6 +51,7 @@ export type FollowingsInput = {
 
 export type GetPostsInput = {
   cursor?: InputMaybe<Scalars['ID']['input']>
+  keyword?: InputMaybe<Scalars['String']['input']>
   limit?: InputMaybe<Scalars['Int']['input']>
   tag?: InputMaybe<Scalars['String']['input']>
   temp_only?: InputMaybe<Scalars['Boolean']['input']>

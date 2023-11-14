@@ -10,7 +10,7 @@ interface Service {
   userProfileLoader(): DataLoader<string, UserProfile>
   updateUserProfile(
     patch: Prisma.UserProfileUpdateInput,
-    loggedUserId?: string,
+    signedUserId?: string,
   ): Promise<UserProfile>
 }
 
@@ -40,15 +40,15 @@ export class UserProfileService implements Service {
   }
   async updateUserProfile(
     patch: Prisma.UserProfileUpdateInput,
-    loggedUserId?: string,
+    signedUserId?: string,
   ): Promise<UserProfile> {
-    if (!loggedUserId) {
+    if (!signedUserId) {
       throw new UnauthorizedError('Not logged In')
     }
 
     const profile = await this.db.userProfile.findUnique({
       where: {
-        fk_user_id: loggedUserId,
+        fk_user_id: signedUserId,
       },
     })
 
@@ -59,7 +59,7 @@ export class UserProfileService implements Service {
     const updated = await this.db.userProfile.update({
       data: { ...patch },
       where: {
-        fk_user_id: loggedUserId,
+        fk_user_id: signedUserId,
       },
     })
 

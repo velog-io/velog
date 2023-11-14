@@ -1,0 +1,52 @@
+.block {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+
+  .search {
+    display: flex;
+    height: 2.25rem;
+    border: 1px solid var(--border2);
+    padding-left: 0.625rem;
+    padding-right: 0.625rem;
+    align-items: center;
+    transition: all 0.125s ease-in;
+    cursor: text;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      transition: all 0.125s ease-in;
+      margin-right: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    input {
+      transition: all 0.125s ease-in;
+      font-size: 14px;
+      flex: 1;
+      display: block;
+      line-height: 16px;
+      height: 16px;
+      padding: 0;
+      border: none;
+      outline: 0;
+      background: transparent;
+      color: var(--text2);
+      min-width: 0;
+      &::placeholder {
+        color: var(--text3);
+      }
+    }
+  }
+
+  .focus {
+    border: 1px solid var(--border1);
+    svg {
+      fill: var(--gray9);
+    }
+    input {
+      color: var(--text1);
+    }
+  }
+}

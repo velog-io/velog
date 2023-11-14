@@ -1,24 +1,25 @@
 import getUserProfile from '@/actions/getUserProfile'
 import getUserTags from '@/actions/getUserTags'
 import VelogPosts from '@/features/velog/components/VelogPosts'
-import VelogTag from '@/features/velog/components/VelogTag'
-import { getUsernameFromParams } from '@/lib/utils'
+import VelogSearchInput from '@/features/velog/components/VelogSearchInput'
+import { getTagByKey, getUsernameFromParams } from '@/lib/utils'
 import { Metadata } from 'next'
 
 interface Props {
   params: { username: string }
-  searchParams: { tag: string }
+  searchParams: { tag?: string | string[]; q?: string | string[] }
 }
 
 export default async function VelogPostsPage({ params, searchParams }: Props) {
-  const tag = Array.isArray(searchParams.tag) ? searchParams.tag[0] : searchParams.tag
+  const tag = getTagByKey(searchParams, 'tag')
+  const query = getTagByKey(searchParams, 'q')
   const username = getUsernameFromParams(params)
-
   const userTags = await getUserTags(username)
+
   return (
     <>
-      <VelogTag userTags={userTags} tag={tag} username={username} />
-      <VelogPosts username={username} tag={tag} />
+      <VelogSearchInput query={query} username={username} />
+      <VelogPosts username={username} tag={tag} userTags={userTags} />
     </>
   )
 }

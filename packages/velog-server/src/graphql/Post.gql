@@ -49,7 +49,7 @@ type Post {
 }
 
 type SearchResult {
-  count: Int
+  count: Int!
   posts: [Post!]!
 }
 
@@ -67,7 +67,7 @@ type Query {
   posts(input: GetPostsInput!): [Post!]!
   recentPosts(input: RecentPostsInput!): [Post!]!
   trendingPosts(input: TrendingPostsInput!): [Post!]!
-  # searchPosts(keyword: String!, offset: Int, limit: Int, username: String): SearchResult
+  searchPosts(input: GetSearchPostsInput!): SearchResult!
   # postHistories(post_id: ID): [PostHistory]
   # lastPostHistory(post_id: ID!): PostHistory
   readingList(input: ReadingListInput!): [Post!]!
@@ -128,6 +128,13 @@ input GetPostsInput {
   temp_only: Boolean
   tag: String
   limit: Int
+}
+
+input GetSearchPostsInput {
+  keyword: String!
+  offset: Int!
+  limit: Int
+  username: String
 }
 
 input ReadingListInput {
