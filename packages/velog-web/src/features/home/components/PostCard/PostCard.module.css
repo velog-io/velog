@@ -1,4 +1,6 @@
 .block {
+  display: flex;
+  flex-flow: column nowrap;
   width: 100%;
   background: var(--bg-element1);
   border-radius: 4px;
@@ -13,16 +15,6 @@
       transform: none;
     }
   }
-
-  /* .isNotHomeAndPost {
-    @media screen and (max-width: 1440px) {
-      width: calc(25% - 2rem);
-    }
-
-    @media screen and (max-width: 1312px) {
-      width: calc(33% - 1.8125rem);
-    }
-  } */
 
   .styleLink {
     display: block;
@@ -73,6 +65,7 @@
   }
 
   .subInfo {
+    margin-top: auto;
     font-size: 0.75rem;
     line-height: 1.5;
     color: var(--text3);

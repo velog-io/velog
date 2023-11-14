@@ -1,12 +1,13 @@
 .block {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: -48px;
+  display: grid;
+  grid-gap: 32px;
+  grid-template-columns: repeat(2, calc(50% - (32px * 1 / 2)));
 
   @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(1, calc(100%));
     padding-left: 16px;
     padding-right: 16px;
-    margin: 0;
+    grid-gap: 48px;
   }
 
   .empty {

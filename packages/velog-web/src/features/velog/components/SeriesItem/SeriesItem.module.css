@@ -1,16 +1,5 @@
 .block {
-  width: 50%;
-  padding-left: 16px;
-  padding-top: 48px;
-
-  @media screen and (max-width: 768px) {
-    padding: 0;
-    width: 100%;
-    & + & {
-      margin-top: 48px;
-    }
-  }
-
+  width: 100%;
   a {
     display: block;
     color: inherit;
@@ -24,10 +13,6 @@
     @media screen and (max-width: 768px) {
       width: 100%;
       height: calc(100vw * 0.5);
-    }
-
-    img {
-      object-fit: cover;
     }
   }
 

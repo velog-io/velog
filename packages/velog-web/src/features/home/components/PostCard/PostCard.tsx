@@ -27,7 +27,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
   if (isLoading) return <PostCardSkeleton forHome={forHome} forPost={forPost} />
 
   return (
-    <div className={cx('block', { isNotHomeAndPost: !forHome && !forPost })} onClick={onClick}>
+    <div className={cx('block')} onClick={onClick}>
       {post.thumbnail && (
         <VLink href={url} className={cx('styleLink')}>
           <RatioImage
@@ -35,8 +35,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
             heightRatio={1}
             src={post.thumbnail}
             alt={`${post.title} post`}
-            width={320}
-            height={167}
+            fill={true}
           />
         </VLink>
       )}

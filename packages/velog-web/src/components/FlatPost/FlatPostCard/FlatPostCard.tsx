@@ -52,8 +52,7 @@ function FlatPostCard({ post, hideUser }: Props) {
             widthRatio={1.91}
             heightRatio={1}
             className="postThumbnail"
-            width={768}
-            height={402}
+            fill={true}
           />
         </VLink>
       )}
