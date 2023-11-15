@@ -1,4 +1,4 @@
-import getUserProfile from '@/prefetch/getUserProfile'
+import getUser from '@/prefetch/getUser'
 import { getUsernameFromParams } from '@/lib/utils'
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
@@ -16,12 +16,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // read route params
 
   const username = getUsernameFromParams(params)
-  const profile = await getUserProfile(username)
+  const user = await getUser(username)
 
-  if (!profile) {
+  if (!user) {
     return {}
   }
 
+  const profile = user.profile
   return {
     title: `${username} (${profile.display_name}) - velog`,
     description: `${profile.short_bio}`,

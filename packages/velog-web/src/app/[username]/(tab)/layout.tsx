@@ -1,4 +1,4 @@
-import getUserProfile from '@/prefetch/getUserProfile'
+import getUser from '@/prefetch/getUser'
 import getVelogConfig from '@/prefetch/getVelogConfig'
 import VelogPageLayout from '@/components/Layouts/VelogPageLayout'
 import { getUsernameFromParams } from '@/lib/utils'
@@ -13,18 +13,21 @@ type Props = {
 
 export default async function VelogLayout({ children, params }: Props) {
   const username = getUsernameFromParams(params)
-  const profile = await getUserProfile(username)
+  const user = await getUser(username)
   const velogConfig = await getVelogConfig(username)
 
-  if (!profile || !velogConfig) {
+  if (!user || !velogConfig) {
     notFound()
   }
+
+  const profile = user.profile
 
   const userLogo: UserLogo = {
     title: velogConfig.title,
     logo_image: velogConfig.logo_image,
   }
 
+  console.log('profile', profile)
   return (
     <VelogPageLayout
       displayName={profile.display_name}

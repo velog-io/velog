@@ -42,11 +42,11 @@ export type FollowInput = {
 }
 
 export type FollowersInput = {
-  userId?: InputMaybe<Scalars['ID']['input']>
+  username: Scalars['String']['input']
 }
 
 export type FollowingsInput = {
-  userId?: InputMaybe<Scalars['ID']['input']>
+  username: Scalars['String']['input']
 }
 
 export type GetPostsInput = {
@@ -370,6 +370,8 @@ export type UpdateAboutInput = {
 export type User = {
   created_at: Scalars['DateTimeISO']['output']
   email: Maybe<Scalars['String']['output']>
+  followers_count: Scalars['Int']['output']
+  followings_count: Scalars['Int']['output']
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
@@ -604,14 +606,16 @@ export type UserTagsQuery = {
   } | null
 }
 
-export type GetUserProfileQueryVariables = Exact<{
+export type GetUserQueryVariables = Exact<{
   input: GetUserInput
 }>
 
-export type GetUserProfileQuery = {
+export type GetUserQuery = {
   user: {
     id: string
     username: string
+    followers_count: number
+    followings_count: number
     profile: {
       id: string
       display_name: string
@@ -950,8 +954,8 @@ export const useUserTagsQuery = <TData = UserTagsQuery, TError = unknown>(
     fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables),
     options,
   )
-export const GetUserProfileDocument = `
-    query getUserProfile($input: GetUserInput!) {
+export const GetUserDocument = `
+    query getUser($input: GetUserInput!) {
   user(input: $input) {
     id
     username
@@ -962,16 +966,18 @@ export const GetUserProfileDocument = `
       thumbnail
       profile_links
     }
+    followers_count
+    followings_count
   }
 }
     `
-export const useGetUserProfileQuery = <TData = GetUserProfileQuery, TError = unknown>(
-  variables: GetUserProfileQueryVariables,
-  options?: UseQueryOptions<GetUserProfileQuery, TError, TData>,
+export const useGetUserQuery = <TData = GetUserQuery, TError = unknown>(
+  variables: GetUserQueryVariables,
+  options?: UseQueryOptions<GetUserQuery, TError, TData>,
 ) =>
-  useQuery<GetUserProfileQuery, TError, TData>(
-    ['getUserProfile', variables],
-    fetcher<GetUserProfileQuery, GetUserProfileQueryVariables>(GetUserProfileDocument, variables),
+  useQuery<GetUserQuery, TError, TData>(
+    ['getUser', variables],
+    fetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables),
     options,
   )
 export const CurrentUserDocument = `

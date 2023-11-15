@@ -40,11 +40,11 @@ type Mutation {
 }
 
 input FollowersInput {
-  userId: ID
+  username: String!
 }
 
 input FollowingsInput {
-  userId: ID
+  username: String!
 }
 
 input RecommendFollowingsInput {

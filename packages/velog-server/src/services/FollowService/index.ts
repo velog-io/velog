@@ -7,6 +7,7 @@ import { RecommedFollowingsResult, RecommendFollowings } from '@graphql/generate
 import { DbService } from '@lib/db/DbService.js'
 import { FollowUser, User } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
+import { UserService } from '@services/UserService/index.js'
 
 interface Service {
   findFollowRelationship({
@@ -16,8 +17,10 @@ interface Service {
   isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean>
   follow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
   unfollow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
-  getFollowers(userId: string): Promise<User[]>
-  getFollowings(userId: string): Promise<User[]>
+  getFollowers(uesrname: string): Promise<User[]>
+  getFollowersCount(username: string): Promise<number>
+  getFollowings(uesrname: string): Promise<User[]>
+  getFollowingsCount(username: string): Promise<number>
   getRecommededFollowers(page?: number, take?: number): Promise<RecommedFollowingsResult>
 }
 
@@ -27,6 +30,7 @@ export class FollowService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly redis: RedisService,
+    private readonly userService: UserService,
   ) {}
   public async isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean> {
     return !!(await this.findFollowRelationship({ followingUserId, followerUserId }))
@@ -123,14 +127,15 @@ export class FollowService implements Service {
       },
     })
   }
-  public async getFollowers(userId?: string): Promise<User[]> {
-    if (!userId) {
-      throw new BadRequestError('UserId is required')
+  public async getFollowers(username: string): Promise<User[]> {
+    const user = await this.userService.findByUsername(username)
+    if (!user) {
+      throw new NotFoundError('Not found user')
     }
 
     const followers = await this.db.followUser.findMany({
       where: {
-        fk_following_user_id: userId,
+        fk_following_user_id: user.id,
       },
       include: {
         follower: {
@@ -142,14 +147,31 @@ export class FollowService implements Service {
     })
     return followers.map((relationship) => relationship.follower)
   }
-  public async getFollowings(userId?: string): Promise<User[]> {
-    if (!userId) {
-      throw new BadRequestError('UserId is required')
+  public async getFollowersCount(username: string): Promise<number> {
+    const user = await this.userService.findByUsername(username)
+
+    if (!user) {
+      throw new NotFoundError('Not found user')
+    }
+
+    const followersCount = await this.db.followUser.count({
+      where: {
+        fk_following_user_id: user.id,
+      },
+    })
+
+    return followersCount
+  }
+  public async getFollowings(username: string): Promise<User[]> {
+    const user = await this.userService.findByUsername(username)
+
+    if (!user) {
+      throw new NotFoundError('Not found user')
     }
 
     const followings = await this.db.followUser.findMany({
       where: {
-        fk_follower_user_id: userId,
+        fk_follower_user_id: user.id,
       },
       include: {
         following: {
@@ -161,7 +183,25 @@ export class FollowService implements Service {
     })
     return followings.map((relationship) => relationship.following)
   }
-  async getRecommededFollowers(page?: number, take?: number): Promise<RecommedFollowingsResult> {
+  public async getFollowingsCount(username: string): Promise<number> {
+    const user = await this.userService.findByUsername(username)
+
+    if (!user) {
+      throw new NotFoundError('Not found user')
+    }
+
+    const followingsCount = await this.db.followUser.count({
+      where: {
+        fk_follower_user_id: user.id,
+      },
+    })
+
+    return followingsCount
+  }
+  public async getRecommededFollowers(
+    page?: number,
+    take?: number,
+  ): Promise<RecommedFollowingsResult> {
     if (!page || !take) {
       throw new BadRequestError()
     }

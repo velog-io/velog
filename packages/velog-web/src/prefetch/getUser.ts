@@ -1,11 +1,11 @@
-import { GetUserProfileDocument, User } from '@/graphql/generated'
+import { GetUserDocument, User } from '@/graphql/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
-export default async function getUserProfile(username: string) {
+export default async function getUser(username: string) {
   try {
     const body: GraphqlRequestBody = {
-      operationName: 'getUserProfile',
-      query: GetUserProfileDocument,
+      operationName: 'getUser',
+      query: GetUserDocument,
       variables: {
         input: {
           username,
@@ -22,7 +22,7 @@ export default async function getUserProfile(username: string) {
       return null
     }
 
-    return user.profile
+    return { ...user, profile: user.profile! }
   } catch (error) {
     console.log('getUesrProfile error', error)
     return null

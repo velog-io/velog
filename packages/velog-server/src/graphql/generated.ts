@@ -51,11 +51,11 @@ export type FollowInput = {
 }
 
 export type FollowersInput = {
-  userId?: InputMaybe<Scalars['ID']['input']>
+  username: Scalars['String']['input']
 }
 
 export type FollowingsInput = {
-  userId?: InputMaybe<Scalars['ID']['input']>
+  username: Scalars['String']['input']
 }
 
 export type GetPostsInput = {
@@ -379,6 +379,8 @@ export type UpdateAboutInput = {
 export type User = {
   created_at: Scalars['Date']['output']
   email?: Maybe<Scalars['String']['output']>
+  followers_count: Scalars['Int']['output']
+  followings_count: Scalars['Int']['output']
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
@@ -1009,6 +1011,8 @@ export type UserResolvers<
 > = {
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  followers_count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  followings_count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_certified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>

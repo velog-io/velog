@@ -19,10 +19,11 @@ type Props = {
 }
 
 function VelogSearchPosts({ username, tag, userTags, keyword }: Props) {
-  const { posts, count, fetchNextPage, isFetching, hasNextPage, isError } = useVelogSearchPosts({
-    username,
-    keyword,
-  })
+  const { posts, count, fetchNextPage, isFetching, hasNextPage, isError, isInitLoading } =
+    useVelogSearchPosts({
+      username,
+      keyword,
+    })
 
   const getVelogSearchPostsMore = () => {
     if (isFetching || isError) return
@@ -36,7 +37,7 @@ function VelogSearchPosts({ username, tag, userTags, keyword }: Props) {
   return (
     <div className={cx('block')}>
       <VelogTag userTags={userTags} tag={tag} username={username} />
-      {!isFetching && (
+      {!isInitLoading && (
         <div className={cx('info')}>
           {count === 0 ? (
             <p>검색 결과가 없습니다.</p>
@@ -48,7 +49,7 @@ function VelogSearchPosts({ username, tag, userTags, keyword }: Props) {
         </div>
       )}
       {posts.length > 0 && <FlatPostCardList posts={posts} hideUser={true} />}
-      {isFetching && <FlatPostCardListSkeleton forLoading={false} hideUser={true} />}
+      {isInitLoading && <FlatPostCardListSkeleton forLoading={false} hideUser={true} />}
       <div ref={ref}></div>
     </div>
   )

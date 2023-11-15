@@ -1,4 +1,4 @@
-query getUserProfile($input: GetUserInput!) {
+query getUser($input: GetUserInput!) {
   user(input: $input) {
     id
     username
@@ -9,6 +9,8 @@ query getUserProfile($input: GetUserInput!) {
       thumbnail
       profile_links
     }
+    followers_count
+    followings_count
   }
 }
 
@@ -36,10 +38,6 @@ query velogConfig($input: GetVelogConfigInput!) {
   }
 }
 
-input GetVelogConfigInput {
-  username: String!
-}
-
 query getUserAbout($input: GetUserInput!) {
   user(input: $input) {
     id
@@ -62,17 +60,6 @@ query getUserSeriesList($input: GetUserInput!) {
       thumbnail
       updated_at
       posts_count
-    }
-  }
-}
-
-query getUserAbout($input: GetUserInput!) {
-  user(input: $input) {
-    id
-    profile {
-      id
-      about
-      display_name
     }
   }
 }

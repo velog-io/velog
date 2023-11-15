@@ -9,6 +9,8 @@ type User {
   velog_config: VelogConfig
   series_list: [Series!]!
   user_meta: UserMeta
+  followers_count: Int!
+  followings_count: Int!
 }
 
 type UserProfile {
