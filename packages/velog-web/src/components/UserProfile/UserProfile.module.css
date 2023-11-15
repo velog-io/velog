@@ -89,48 +89,69 @@
     }
   }
 
-  .profileIcons {
+  .bottom {
     display: flex;
-    svg {
-      cursor: pointer;
-      width: 32px;
-      height: 32px;
-      color: var(--text3);
+    align-items: flex-end;
+    .profileIcons {
+      flex: 2;
+      display: flex;
+      svg {
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        color: var(--text3);
 
-      &:hover {
-        color: var(--text1);
-      }
-
-      @media screen and (max-width: 768px) {
-        width: 24px;
-        height: 24px;
-      }
-    }
-
-    a {
-      color: inherit;
-      display: block;
-    }
-    a + a,
-    a + svg {
-      margin-left: 16px;
-    }
-
-    .emailBlock {
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-
-      div {
-        background: var(--gray7);
-        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.05);
-        padding: 0.5rem;
-        font-size: 0.875rem;
-        color: white;
-        border-radius: 4px;
+        &:hover {
+          color: var(--text1);
+        }
 
         @media screen and (max-width: 768px) {
-          padding: 0.25rem 0.5rem;
-          font-size: 0.75rem;
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      a {
+        color: inherit;
+        display: block;
+      }
+      a + a,
+      a + svg {
+        margin-left: 16px;
+      }
+
+      .emailBlock {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+
+        div {
+          background: var(--gray7);
+          box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.05);
+          padding: 0.5rem;
+          font-size: 0.875rem;
+          color: white;
+          border-radius: 4px;
+
+          @media screen and (max-width: 768px) {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+          }
+        }
+      }
+    }
+
+    .followInfo {
+      flex: 1;
+      display: flex;
+      flex-flow: column wrap;
+
+      .inner {
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+
+        &.button {
+          margin-top: 32px;
         }
       }
     }

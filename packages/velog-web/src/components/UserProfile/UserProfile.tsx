@@ -9,6 +9,8 @@ import Image from 'next/image'
 import { EmailIcon, FacebookSquareIcon, GithubIcon, TwitterIcon } from '@/assets/icons/components'
 import { includeProtocol } from '@/lib/includeProtocol'
 import { MdHome } from 'react-icons/md'
+import Button from '../Button'
+import RoundButton from '../RoundButton'
 
 const cx = bindClassNames(styles)
 
@@ -72,61 +74,78 @@ function UserProfile({
         {!ownPost && followButton && <div className={cx('right')}>{followButton}</div>}
       </div>
       <div className={cx('seperator')}></div>
-      <div className={cx('profileIcons')}>
-        {github && (
-          <a
-            href={`https://github.com/${getSocialId(github)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-testid="github"
-          >
-            <GithubIcon />
-          </a>
-        )}
-        {twitter && (
-          <a
-            href={`https://twitter.com/${getSocialId(twitter)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-testid="twitter"
-          >
-            <TwitterIcon />
-          </a>
-        )}
-        {facebook && (
-          <a
-            href={`https://facebook.com/${getSocialId(facebook)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-testid="facebook"
-          >
-            <FacebookSquareIcon />
-          </a>
-        )}
-        {url && (
-          <a
-            href={includeProtocol(url)}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-testid="facebook"
-          >
-            <MdHome />
-          </a>
-        )}
-        {email && (
-          <a href={`mailto:${email}`}>
-            <EmailIcon
-              data-testid="email"
-              onMouseEnter={onMouseEnterEmail}
-              onMouseLeave={onMouseLeaveEmail}
-            />
-          </a>
-        )}
-        {hoverEmail && (
-          <div className={cx('emailBlock')} ref={emailBlockRef} onMouseLeave={onMouseLeaveEmail}>
-            <div>{email}</div>
+      <div className={cx('bottom')}>
+        <div className={cx('profileIcons')}>
+          {github && (
+            <a
+              href={`https://github.com/${getSocialId(github)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="github"
+            >
+              <GithubIcon />
+            </a>
+          )}
+          {twitter && (
+            <a
+              href={`https://twitter.com/${getSocialId(twitter)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="twitter"
+            >
+              <TwitterIcon />
+            </a>
+          )}
+          {facebook && (
+            <a
+              href={`https://facebook.com/${getSocialId(facebook)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="facebook"
+            >
+              <FacebookSquareIcon />
+            </a>
+          )}
+          {url && (
+            <a
+              href={includeProtocol(url)}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="facebook"
+            >
+              <MdHome />
+            </a>
+          )}
+          {email && (
+            <a href={`mailto:${email}`}>
+              <EmailIcon
+                data-testid="email"
+                onMouseEnter={onMouseEnterEmail}
+                onMouseLeave={onMouseLeaveEmail}
+              />
+            </a>
+          )}
+          {hoverEmail && (
+            <div className={cx('emailBlock')} ref={emailBlockRef} onMouseLeave={onMouseLeaveEmail}>
+              <div>{email}</div>
+            </div>
+          )}
+        </div>
+        <div className={cx('followInfo')}>
+          <div className={cx('inner')}>
+            <div className={cx('info')}>
+              <span className={cx('number')}>1392</span>
+              <span className={cx('text')}>팔로워</span>
+            </div>
+            <div className={cx('info')}>
+              <span className={cx('number')}>30</span>
+              <span className={cx('text')}>팔로잉</span>
+            </div>
           </div>
-        )}
+          <div className={cx('inner', 'button')}>
+            <RoundButton size="default">팔로우</RoundButton>
+          </div>
+        </div>
       </div>
     </div>
   )
