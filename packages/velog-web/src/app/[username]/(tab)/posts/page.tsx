@@ -1,4 +1,4 @@
-import getUserProfile from '@/prefetch/getUserProfile'
+import getUser from '@/prefetch/getUser'
 import getUserTags from '@/prefetch/getUserTags'
 import VelogPosts from '@/features/velog/components/VelogPosts'
 import VelogSearchInput from '@/features/velog/components/VelogSearchInput'
@@ -31,14 +31,15 @@ export default async function VelogPostsPage({ params, searchParams }: Props) {
 
 export async function generateMetadata({ searchParams, params }: Props): Promise<Metadata> {
   const username = getUsernameFromParams(params)
-  const profile = await getUserProfile(username)
+  const user = await getUser(username)
 
   const query = getTagByKey(searchParams, 'q')
 
-  if (!profile) {
+  if (!user) {
     return {}
   }
 
+  const profile = user.profile
   const basic = `${username} (${profile.display_name}) / 작성글 - velog`
   const search = `"${query}" 검색 결과 - velog`
   const title = query ? search : basic

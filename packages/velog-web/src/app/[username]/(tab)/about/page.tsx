@@ -1,4 +1,4 @@
-import getUserProfile from '@/prefetch/getUserProfile'
+import getUser from '@/prefetch/getUser'
 import { Metadata } from 'next'
 import strip from 'strip-markdown'
 import { remark } from 'remark'
@@ -17,12 +17,13 @@ export default async function VelogAboutPage({ params }: Props) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // read route params
   const username = getUsernameFromParams(params)
-  const profile = await getUserProfile(username)
+  const user = await getUser(username)
 
-  if (!profile) {
+  if (!user) {
     return {}
   }
 
+  const profile = user.profile
   return {
     title: `${username} (${profile.display_name}) / 소개 - velog`,
     description: profile?.about

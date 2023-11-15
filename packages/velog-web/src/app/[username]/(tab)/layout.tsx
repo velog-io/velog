@@ -27,7 +27,6 @@ export default async function VelogLayout({ children, params }: Props) {
     logo_image: velogConfig.logo_image,
   }
 
-  console.log('profile', profile)
   return (
     <VelogPageLayout
       displayName={profile.display_name}
