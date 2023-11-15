@@ -628,7 +628,7 @@ export class PostService implements Service {
     input: GetSearchPostsInput,
     signedUserId?: string,
   ): Promise<{ count: number; posts: Post[] }> {
-    const { keyword, offset, limit = 20, username } = input
+    const { keyword, offset = 0, limit = 20, username } = input
 
     if (limit > 100) {
       throw new BadRequestError('Max limit is 100')
