@@ -24,14 +24,13 @@ function VelogPosts({ username, tag, userTags }: Props) {
     tag,
   })
 
-  const ref = useRef<HTMLDivElement>(null)
-
   const getVelogPostsMore = () => {
     if (isFetching || isError) return
     if (!hasNextPage) return
     fetchNextPage()
   }
 
+  const ref = useRef<HTMLDivElement>(null)
   useInfiniteScroll(ref, getVelogPostsMore, isError)
 
   if (isInitLoading) return <FlatPostCardListSkeleton forLoading={false} hideUser={true} />
@@ -39,7 +38,7 @@ function VelogPosts({ username, tag, userTags }: Props) {
   return (
     <div className={cx('block')}>
       <VelogTag userTags={userTags} tag={tag} username={username} />
-      {!isInitLoading && posts.length > 0 ? (
+      {posts.length > 0 ? (
         <FlatPostCardList posts={posts} hideUser={true} />
       ) : (
         <div className={cx('empty')}>

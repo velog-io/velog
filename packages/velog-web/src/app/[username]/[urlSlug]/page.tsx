@@ -1,4 +1,4 @@
-import getPostByUrlSlug from '@/actions/getPostByUrlSlug'
+import getPostByUrlSlug from '@/prefetch/getPostByUrlSlug'
 import PostViewer from '@/features/post/components/PostViewer'
 import { getUsernameFromParams } from '@/lib/utils'
 import { notFound } from 'next/navigation'

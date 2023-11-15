@@ -1,5 +1,5 @@
-import getUserProfile from '@/actions/getUserProfile'
-import getVelogConfig from '@/actions/getVelogConfig'
+import getUserProfile from '@/prefetch/getUserProfile'
+import getVelogConfig from '@/prefetch/getVelogConfig'
 import VelogPageLayout from '@/components/Layouts/VelogPageLayout'
 import { getUsernameFromParams } from '@/lib/utils'
 import { UserLogo } from '@/state/header'

@@ -1,4 +1,4 @@
-import getTrendingPosts from '@/actions/getTrendingPosts'
+import getTrendingPosts from '@/prefetch/getTrendingPosts'
 import { ENV } from '@/env'
 import TrendingPosts from '@/features/home/components/TrendingPosts'
 import { Metadata } from 'next'

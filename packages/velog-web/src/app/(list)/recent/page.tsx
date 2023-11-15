@@ -1,4 +1,4 @@
-import getRecentPosts from '@/actions/getRecentPosts'
+import getRecentPosts from '@/prefetch/getRecentPosts'
 import { ENV } from '@/env'
 import RecentPosts from '@/features/home/components/RecentPosts'
 import { Metadata } from 'next'

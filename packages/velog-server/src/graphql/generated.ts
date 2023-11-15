@@ -69,7 +69,7 @@ export type GetPostsInput = {
 export type GetSearchPostsInput = {
   keyword: Scalars['String']['input']
   limit?: InputMaybe<Scalars['Int']['input']>
-  offset: Scalars['Int']['input']
+  offset?: InputMaybe<Scalars['Int']['input']>
   username?: InputMaybe<Scalars['String']['input']>
 }
 

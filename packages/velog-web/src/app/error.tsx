@@ -2,12 +2,12 @@
 
 import * as Sentry from '@sentry/browser'
 import { useNetworkState } from 'react-use'
-import CrashErrorScreen from '@/components/Error/CrashErrorScreen'
 import apiClient from '@/lib/apiClient'
 import { useEffect, useState } from 'react'
 import ErrorScreenTemplate from '@/components/Error/ErrorScreenTemplate'
-import { UndrawServerDown, UndrawUpdate } from '@/assets/vectors/components'
+import { UndrawBugFixing, UndrawServerDown, UndrawUpdate } from '@/assets/vectors/components'
 import { ENV } from '@/env'
+import { useRouter } from 'next/navigation'
 
 async function checkNetwork() {
   try {
@@ -20,6 +20,7 @@ async function checkNetwork() {
 
 export default function Error({
   error,
+  reset,
 }: {
   error: Error & { digest?: string }
   reset: () => void
@@ -53,7 +54,7 @@ export default function Error({
         <ErrorScreenTemplate
           Illustration={UndrawUpdate}
           message={'벨로그가 업데이트 되었습니다. \n새로고침 후 다시 시도해주세요.'}
-          onButtonClick={() => window.location.reload()}
+          onButtonClick={() => reset()}
           buttonText="새로고침"
         />
       )
@@ -63,7 +64,7 @@ export default function Error({
         <ErrorScreenTemplate
           Illustration={UndrawServerDown}
           message={'서버와의 연결이 불안정합니다.\n잠시 후 시도해주세요.'}
-          onButtonClick={() => window.location.reload()}
+          onButtonClick={() => reset()}
           buttonText="새로고침"
         />
       )
@@ -72,7 +73,16 @@ export default function Error({
   }
 
   if (error) {
-    return <CrashErrorScreen />
+    return (
+      <ErrorScreenTemplate
+        Illustration={UndrawBugFixing}
+        message="엇! 오류가 발생했습니다."
+        buttonText="홈으로"
+        onButtonClick={() => {
+          window.location.href = '/'
+        }}
+      />
+    )
   }
 
   return null

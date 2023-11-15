@@ -4,20 +4,18 @@ import { Post, PostsDocument, PostsQuery, PostsQueryVariables } from '@/graphql/
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
-type Props = {
+type Args = {
   username: string
   tag?: string
-  keyword?: string
 }
 
-export default function useVelogPosts({ username, tag, keyword }: Props) {
+export default function useVelogPosts({ username, tag }: Args) {
   const fetchInput = useMemo(() => {
     return {
       username,
       tag,
-      keyword,
     }
-  }, [username, tag, keyword])
+  }, [username, tag])
 
   const { data, fetchNextPage, isFetching, hasNextPage, isError, isLoading } =
     useInfiniteQuery<PostsQuery>(

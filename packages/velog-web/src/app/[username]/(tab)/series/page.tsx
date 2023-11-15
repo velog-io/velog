@@ -1,4 +1,4 @@
-import getUserProfile from '@/actions/getUserProfile'
+import getUserProfile from '@/prefetch/getUserProfile'
 import VelogSeries from '@/features/velog/components/VelogSeries'
 import { getUsernameFromParams } from '@/lib/utils'
 import { Metadata } from 'next'

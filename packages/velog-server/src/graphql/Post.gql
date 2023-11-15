@@ -132,7 +132,7 @@ input GetPostsInput {
 
 input GetSearchPostsInput {
   keyword: String!
-  offset: Int!
+  offset: Int
   limit: Int
   username: String
 }

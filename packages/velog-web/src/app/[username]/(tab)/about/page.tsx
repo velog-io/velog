@@ -1,4 +1,4 @@
-import getUserProfile from '@/actions/getUserProfile'
+import getUserProfile from '@/prefetch/getUserProfile'
 import { Metadata } from 'next'
 import strip from 'strip-markdown'
 import { remark } from 'remark'
