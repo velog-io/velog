@@ -93,72 +93,76 @@ function UserProfile({
       </div>
       <div className={cx('seperator')}></div>
       <div className={cx('bottom')}>
-        <div className={cx('profileIcons')}>
-          {github && (
-            <a
-              href={`https://github.com/${getSocialId(github)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid="github"
-            >
-              <GithubIcon />
-            </a>
-          )}
-          {twitter && (
-            <a
-              href={`https://twitter.com/${getSocialId(twitter)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid="twitter"
-            >
-              <TwitterIcon />
-            </a>
-          )}
-          {facebook && (
-            <a
-              href={`https://facebook.com/${getSocialId(facebook)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid="facebook"
-            >
-              <FacebookSquareIcon />
-            </a>
-          )}
-          {url && (
-            <a
-              href={includeProtocol(url)}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid="facebook"
-            >
-              <MdHome />
-            </a>
-          )}
-          {email && (
-            <a href={`mailto:${email}`}>
-              <EmailIcon
-                data-testid="email"
-                onMouseEnter={onMouseEnterEmail}
-                onMouseLeave={onMouseLeaveEmail}
-              />
-            </a>
-          )}
-          {hoverEmail && (
-            <div className={cx('emailBlock')} ref={emailBlockRef} onMouseLeave={onMouseLeaveEmail}>
-              <div>{email}</div>
-            </div>
-          )}
-        </div>
         <div className={cx('followInfo')}>
-          <div className={cx('inner')}>
-            <Link href={`${velogUrl}/followers`} className={cx('info')}>
-              <span className={cx('number')}>{followerCnt}</span>
-              <span className={cx('text')}>팔로워</span>
-            </Link>
-            <Link href={`${velogUrl}/followings`} className={cx('info')}>
-              <span className={cx('number')}>{followingsCount}</span>
-              <span className={cx('text')}>팔로잉</span>
-            </Link>
+          <Link href={`${velogUrl}/followers`} className={cx('info')}>
+            <span className={cx('number')}>{followerCnt}</span>
+            <span className={cx('text')}>팔로워</span>
+          </Link>
+          <Link href={`${velogUrl}/followings`} className={cx('info')}>
+            <span className={cx('number')}>{followingsCount}</span>
+            <span className={cx('text')}>팔로잉</span>
+          </Link>
+        </div>
+        <div className={cx('section')}>
+          <div className={cx('icons')}>
+            {github && (
+              <a
+                href={`https://github.com/${getSocialId(github)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="github"
+              >
+                <GithubIcon />
+              </a>
+            )}
+            {twitter && (
+              <a
+                href={`https://twitter.com/${getSocialId(twitter)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="twitter"
+              >
+                <TwitterIcon />
+              </a>
+            )}
+            {facebook && (
+              <a
+                href={`https://facebook.com/${getSocialId(facebook)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="facebook"
+              >
+                <FacebookSquareIcon />
+              </a>
+            )}
+            {url && (
+              <a
+                href={includeProtocol(url)}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="facebook"
+              >
+                <MdHome />
+              </a>
+            )}
+            {email && (
+              <a href={`mailto:${email}`}>
+                <EmailIcon
+                  data-testid="email"
+                  onMouseEnter={onMouseEnterEmail}
+                  onMouseLeave={onMouseLeaveEmail}
+                />
+              </a>
+            )}
+            {hoverEmail && (
+              <div
+                className={cx('emailBlock')}
+                ref={emailBlockRef}
+                onMouseLeave={onMouseLeaveEmail}
+              >
+                <div>{email}</div>
+              </div>
+            )}
           </div>
           <div className={cx('inner', 'button')}>
             {!isOwn && (
