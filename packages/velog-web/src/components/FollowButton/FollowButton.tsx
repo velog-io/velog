@@ -50,13 +50,13 @@ function FollowButton({ isFollowing, followingUserId, onSuccess }: Props) {
       const input = { followingUserId }
       if (currentFollowState) {
         unfollowMutate({ input })
-        setCurrentFollowState(false)
-        setInitialFollowState(false)
       } else {
         followMutate({ input })
-        setCurrentFollowState(true)
         setButtonText('팔로잉')
       }
+
+      setCurrentFollowState(!currentFollowState)
+      setInitialFollowState(!currentFollowState)
 
       if (onSuccess) {
         onSuccess(currentFollowState ? 'unfollow' : 'follow')
@@ -67,7 +67,6 @@ function FollowButton({ isFollowing, followingUserId, onSuccess }: Props) {
   })
 
   if (isLoading) return <div className={cx('skeleton')} />
-
   return (
     <div className={cx('block')}>
       {!initialFollowState ? (
