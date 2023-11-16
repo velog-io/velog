@@ -35,6 +35,8 @@ export default async function VelogLayout({ children, params }: Props) {
       thumbnail={profile.thumbnail}
       username={username}
       userLogo={userLogo}
+      followersCount={user.followers_count}
+      followingsCount={user.followings_count}
     >
       {children}
     </VelogPageLayout>

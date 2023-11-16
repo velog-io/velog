@@ -9,7 +9,6 @@ import Image from 'next/image'
 import { EmailIcon, FacebookSquareIcon, GithubIcon, TwitterIcon } from '@/assets/icons/components'
 import { includeProtocol } from '@/lib/includeProtocol'
 import { MdHome } from 'react-icons/md'
-import Button from '../Button'
 import RoundButton from '../RoundButton'
 
 const cx = bindClassNames(styles)
@@ -23,6 +22,8 @@ type Props = {
   username: string
   followButton?: React.ReactNode
   ownPost?: boolean
+  followersCount: number
+  followingsCount: number
 }
 
 function UserProfile({
@@ -34,6 +35,8 @@ function UserProfile({
   username,
   followButton,
   ownPost = false,
+  followersCount,
+  followingsCount,
 }: Props) {
   const { email, facebook, github, twitter, url } = profileLinks
   const [hoverEmail, setHoverEmail] = useState(false)
@@ -133,14 +136,14 @@ function UserProfile({
         </div>
         <div className={cx('followInfo')}>
           <div className={cx('inner')}>
-            <div className={cx('info')}>
-              <span className={cx('number')}>1392</span>
+            <Link href={`${velogUrl}/followers`} className={cx('info')}>
+              <span className={cx('number')}>{followersCount}</span>
               <span className={cx('text')}>팔로워</span>
-            </div>
-            <div className={cx('info')}>
-              <span className={cx('number')}>30</span>
+            </Link>
+            <Link href={`${velogUrl}/followings`} className={cx('info')}>
+              <span className={cx('number')}>{followingsCount}</span>
               <span className={cx('text')}>팔로잉</span>
-            </div>
+            </Link>
           </div>
           <div className={cx('inner', 'button')}>
             <RoundButton size="default">팔로우</RoundButton>

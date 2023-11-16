@@ -19,10 +19,10 @@ import HeaderLogo from './HeaderLogo'
 const cx = bindClassNames(styles)
 
 type Props = {
-  headerCustomLogo?: React.ReactNode
+  logo?: React.ReactNode
 }
 
-function Header({ headerCustomLogo }: Props) {
+function Header({ logo }: Props) {
   const {
     value: { systemTheme },
   } = useTheme()
@@ -45,12 +45,12 @@ function Header({ headerCustomLogo }: Props) {
   // const urlForSearch = customHeader.custom ? `/search?username=${customHeader.username}` : '/search'
   const urlForSearch = '/search'
 
-  if (isLoading) return <HeaderSkeleton logo={headerCustomLogo || <HeaderLogo />} />
+  if (isLoading) return <HeaderSkeleton logo={logo || <HeaderLogo />} />
 
   return (
     <header className={cx('block', 'mainHeaderResponsive')}>
       <div className={cx('innerBlock')}>
-        {headerCustomLogo || <HeaderLogo />}
+        {logo || <HeaderLogo />}
         <div className={cx('right')}>
           {themeReady && <ThemeToggleButton />}
           <HeaderSearchButton to={urlForSearch} />

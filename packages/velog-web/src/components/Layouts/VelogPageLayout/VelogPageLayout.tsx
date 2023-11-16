@@ -22,6 +22,8 @@ type Props = {
   username: string
   thumbnail: string | null
   userLogo: UserLogo
+  followersCount: number
+  followingsCount: number
 }
 
 function VelogPageLayout({
@@ -32,10 +34,10 @@ function VelogPageLayout({
   thumbnail,
   children,
   userLogo,
+  followersCount,
+  followingsCount,
 }: Props) {
-  const header = (
-    <Header headerCustomLogo={<HeaderCustomLogo username={username} userLogo={userLogo} />} />
-  )
+  const header = <Header logo={<HeaderCustomLogo username={username} userLogo={userLogo} />} />
   return (
     <div className={cx('block')}>
       <FloatingHeader header={header} />
@@ -48,6 +50,8 @@ function VelogPageLayout({
             profileLinks={profileLikns as ProfileLinks}
             thumbnail={thumbnail}
             username={username}
+            followersCount={followersCount}
+            followingsCount={followingsCount}
           />
           <MobileSeparator />
           <VelogTab username={username} />
