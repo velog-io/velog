@@ -9,11 +9,12 @@
     border-radius: 16px;
     font-weight: 700;
     font-size: 16px;
-    gap: 10px;
-    padding: 8px 45px;
+    width: 96px;
+    height: 32px;
 
     @media screen and (max-width: 768px) {
-      padding: 4px 16px;
+      width: 80px;
+      height: 24px;
     }
   }
 
@@ -32,10 +33,24 @@
     border: 1px solid var(--bg-element6);
 
     &.isUnfollow {
-      &:hover {
+      &:hover,
+      &:active {
         color: var(--destructive);
         border: 1px solid var(--destructive);
       }
     }
+  }
+}
+
+.skeleton {
+  width: 96px;
+  height: 32px;
+  border-radius: 16px;
+  background: var(--bg-element4);
+  cursor: pointer;
+
+  @media screen and (max-width: 768px) {
+    width: 80px;
+    height: 24px;
   }
 }

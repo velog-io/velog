@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styles from './FollowButton.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { useFollowMutation, useUnfollowMutation } from '@/graphql/generated'
+import { useCurrentUserQuery, useFollowMutation, useUnfollowMutation } from '@/graphql/generated'
 import { useAuth } from '@/state/auth'
 import { debounce } from 'throttle-debounce'
 import { useModal } from '@/state/modal'
@@ -18,6 +18,8 @@ function FollowButton({ isFollowing, followingUserId, onSuccess }: Props) {
   const {
     value: { currentUser },
   } = useAuth()
+
+  const { isLoading } = useCurrentUserQuery()
   const { actions } = useModal()
   const { mutate: followMutate } = useFollowMutation()
   const { mutate: unfollowMutate } = useUnfollowMutation()
@@ -63,6 +65,8 @@ function FollowButton({ isFollowing, followingUserId, onSuccess }: Props) {
       console.log(error)
     }
   })
+
+  if (isLoading) return <div className={cx('skeleton')} />
 
   return (
     <div className={cx('block')}>
