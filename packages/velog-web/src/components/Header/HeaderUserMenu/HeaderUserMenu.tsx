@@ -15,7 +15,7 @@ type Props = {
 
 function HeaderUserMenu({ isVisible, onClose }: Props) {
   const {
-    value: { user },
+    value: { currentUser },
     actions: { update },
   } = useAuth()
   const { ref } = useOutsideClick<HTMLDivElement>(onClose)
@@ -31,7 +31,7 @@ function HeaderUserMenu({ isVisible, onClose }: Props) {
   return (
     <div className={cx('block')} ref={ref}>
       <div className={cx('menu-wrapper')}>
-        <HeaderUserMenuItem to={`/@${user?.username}`} isMigrated={true}>
+        <HeaderUserMenuItem to={`/@${currentUser?.username}`} isMigrated={true}>
           내 벨로그
         </HeaderUserMenuItem>
         <div className={cx('mobile-only')}>

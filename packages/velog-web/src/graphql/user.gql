@@ -11,7 +11,14 @@ query getUser($input: GetUserInput!) {
     }
     followers_count
     followings_count
+    is_following
   }
+}
+
+fragment followField on User {
+  followers_count
+  followings_count
+  is_following
 }
 
 query currentUser {

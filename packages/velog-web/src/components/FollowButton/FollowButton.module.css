@@ -1,0 +1,41 @@
+.block {
+  .button {
+    display: flex;
+    box-shadow: none;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    cursor: pointer;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 16px;
+    gap: 10px;
+    padding: 8px 45px;
+
+    @media screen and (max-width: 768px) {
+      padding: 4px 16px;
+    }
+  }
+
+  .followButton {
+    color: var(--primary1);
+    border: 1px solid var(--primary1);
+
+    &.isFollowing {
+      color: var(--bg-element6);
+      border: 1px solid var(--bg-element6);
+    }
+  }
+
+  .unfollowButton {
+    color: var(--bg-element6);
+    border: 1px solid var(--bg-element6);
+
+    &.isUnfollow {
+      &:hover {
+        color: var(--destructive);
+        border: 1px solid var(--destructive);
+      }
+    }
+  }
+}

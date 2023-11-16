@@ -9,21 +9,22 @@ import Image from 'next/image'
 import { EmailIcon, FacebookSquareIcon, GithubIcon, TwitterIcon } from '@/assets/icons/components'
 import { includeProtocol } from '@/lib/includeProtocol'
 import { MdHome } from 'react-icons/md'
-import RoundButton from '../RoundButton'
+import FollowButton from '../FollowButton'
+import { useAuth } from '@/state/auth'
 
 const cx = bindClassNames(styles)
 
 type Props = {
+  userId: string
   style?: CSSProperties
   thumbnail: string | null
   displayName: string
   shortBio: string
   profileLinks: ProfileLinks
   username: string
-  followButton?: React.ReactNode
-  ownPost?: boolean
   followersCount: number
   followingsCount: number
+  isFollowing: boolean
 }
 
 function UserProfile({
@@ -33,14 +34,20 @@ function UserProfile({
   shortBio,
   profileLinks,
   username,
-  followButton,
-  ownPost = false,
   followersCount,
   followingsCount,
+  userId,
+  isFollowing,
 }: Props) {
+  const {
+    value: { currentUser },
+  } = useAuth()
+
   const { email, facebook, github, twitter, url } = profileLinks
   const [hoverEmail, setHoverEmail] = useState(false)
   const emailBlockRef = useRef<HTMLDivElement>(null)
+
+  const [followerCnt, setFollowerCnt] = useState(followersCount)
 
   const onMouseEnterEmail = () => {
     setHoverEmail(true)
@@ -53,7 +60,16 @@ function UserProfile({
 
   const getSocialId = (link: string) => link.split('/').reverse()[0]
 
+  const onFollowSuccess = (type: 'follow' | 'unfollow') => {
+    if (type === 'follow') {
+      setFollowerCnt((state) => state + 1)
+    } else {
+      setFollowerCnt((state) => state - 1)
+    }
+  }
+
   const velogUrl = `/@${username}`
+  const isOwn = userId === currentUser?.id
   return (
     <div className={cx('block')} style={style}>
       <div className={cx('section')}>
@@ -74,7 +90,6 @@ function UserProfile({
             <div className={cx('description')}>{shortBio}</div>
           </div>
         </div>
-        {!ownPost && followButton && <div className={cx('right')}>{followButton}</div>}
       </div>
       <div className={cx('seperator')}></div>
       <div className={cx('bottom')}>
@@ -137,7 +152,7 @@ function UserProfile({
         <div className={cx('followInfo')}>
           <div className={cx('inner')}>
             <Link href={`${velogUrl}/followers`} className={cx('info')}>
-              <span className={cx('number')}>{followersCount}</span>
+              <span className={cx('number')}>{followerCnt}</span>
               <span className={cx('text')}>팔로워</span>
             </Link>
             <Link href={`${velogUrl}/followings`} className={cx('info')}>
@@ -146,7 +161,13 @@ function UserProfile({
             </Link>
           </div>
           <div className={cx('inner', 'button')}>
-            <RoundButton size="default">팔로우</RoundButton>
+            {!isOwn && (
+              <FollowButton
+                isFollowing={isFollowing}
+                followingUserId={userId}
+                onSuccess={onFollowSuccess}
+              />
+            )}
           </div>
         </div>
       </div>

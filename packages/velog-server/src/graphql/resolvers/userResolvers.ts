@@ -37,12 +37,19 @@ const userResolvers: Resolvers = {
     followers_count: async (parent) => {
       const { username } = parent
       const followService = container.resolve(FollowService)
-      return followService.getFollowersCount(username)
+      return await followService.getFollowersCount(username)
     },
     followings_count: async (parent) => {
       const { username } = parent
       const followService = container.resolve(FollowService)
-      return followService.getFollowingsCount(username)
+      return await followService.getFollowingsCount(username)
+    },
+    is_following: async (parent, _, ctx) => {
+      const followService = container.resolve(FollowService)
+      return await followService.isFollowed({
+        followingUserId: parent.id,
+        followerUserId: ctx.user?.id,
+      })
     },
   },
   Query: {

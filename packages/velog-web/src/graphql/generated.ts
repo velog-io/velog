@@ -38,7 +38,7 @@ export type Comment = {
 }
 
 export type FollowInput = {
-  followingUserId?: InputMaybe<Scalars['ID']['input']>
+  followingUserId: Scalars['ID']['input']
 }
 
 export type FollowersInput = {
@@ -356,7 +356,7 @@ export type TrendingPostsInput = {
 }
 
 export type UnfollowInput = {
-  followingUserId?: InputMaybe<Scalars['ID']['input']>
+  followingUserId: Scalars['ID']['input']
 }
 
 export type UnlikePostInput = {
@@ -374,6 +374,7 @@ export type User = {
   followings_count: Scalars['Int']['output']
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
+  is_following: Scalars['Boolean']['output']
   profile: UserProfile
   series_list: Array<Series>
   updated_at: Scalars['DateTimeISO']['output']
@@ -424,6 +425,18 @@ export type SendMailMutationVariables = Exact<{
 }>
 
 export type SendMailMutation = { sendMail: { registered: boolean | null } | null }
+
+export type FollowMutationVariables = Exact<{
+  input: FollowInput
+}>
+
+export type FollowMutation = { follow: boolean | null }
+
+export type UnfollowMutationVariables = Exact<{
+  input: UnfollowInput
+}>
+
+export type UnfollowMutation = { unfollow: boolean | null }
 
 export type ReadPostQueryVariables = Exact<{
   input: ReadPostInput
@@ -616,6 +629,7 @@ export type GetUserQuery = {
     username: string
     followers_count: number
     followings_count: number
+    is_following: boolean
     profile: {
       id: string
       display_name: string
@@ -625,6 +639,14 @@ export type GetUserQuery = {
     }
   } | null
 }
+
+export type FollowFieldFragment = {
+  followers_count: number
+  followings_count: number
+  is_following: boolean
+}
+
+export type FollowFieldFragmentVariables = Exact<{ [key: string]: never }>
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
 
@@ -682,6 +704,13 @@ export type UpdateAboutMutationVariables = Exact<{
 
 export type UpdateAboutMutation = { updateAbout: { id: string; about: string } | null }
 
+export const FollowFieldFragmentDoc = `
+    fragment followField on User {
+  followers_count
+  followings_count
+  is_following
+}
+    `
 export const SendMailDocument = `
     mutation sendMail($input: SendMailInput!) {
   sendMail(input: $input) {
@@ -696,6 +725,34 @@ export const useSendMailMutation = <TError = unknown, TContext = unknown>(
     ['sendMail'],
     (variables?: SendMailMutationVariables) =>
       fetcher<SendMailMutation, SendMailMutationVariables>(SendMailDocument, variables)(),
+    options,
+  )
+export const FollowDocument = `
+    mutation follow($input: FollowInput!) {
+  follow(input: $input)
+}
+    `
+export const useFollowMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<FollowMutation, TError, FollowMutationVariables, TContext>,
+) =>
+  useMutation<FollowMutation, TError, FollowMutationVariables, TContext>(
+    ['follow'],
+    (variables?: FollowMutationVariables) =>
+      fetcher<FollowMutation, FollowMutationVariables>(FollowDocument, variables)(),
+    options,
+  )
+export const UnfollowDocument = `
+    mutation unfollow($input: UnfollowInput!) {
+  unfollow(input: $input)
+}
+    `
+export const useUnfollowMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<UnfollowMutation, TError, UnfollowMutationVariables, TContext>,
+) =>
+  useMutation<UnfollowMutation, TError, UnfollowMutationVariables, TContext>(
+    ['unfollow'],
+    (variables?: UnfollowMutationVariables) =>
+      fetcher<UnfollowMutation, UnfollowMutationVariables>(UnfollowDocument, variables)(),
     options,
   )
 export const ReadPostDocument = `
@@ -968,6 +1025,7 @@ export const GetUserDocument = `
     }
     followers_count
     followings_count
+    is_following
   }
 }
     `

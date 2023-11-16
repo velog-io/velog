@@ -1,0 +1,7 @@
+mutation follow($input: FollowInput!) {
+  follow(input: $input)
+}
+
+mutation unfollow($input: UnfollowInput!) {
+  unfollow(input: $input)
+}

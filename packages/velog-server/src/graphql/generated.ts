@@ -47,7 +47,7 @@ export type Comment = {
 }
 
 export type FollowInput = {
-  followingUserId?: InputMaybe<Scalars['ID']['input']>
+  followingUserId: Scalars['ID']['input']
 }
 
 export type FollowersInput = {
@@ -365,7 +365,7 @@ export type TrendingPostsInput = {
 }
 
 export type UnfollowInput = {
-  followingUserId?: InputMaybe<Scalars['ID']['input']>
+  followingUserId: Scalars['ID']['input']
 }
 
 export type UnlikePostInput = {
@@ -383,6 +383,7 @@ export type User = {
   followings_count: Scalars['Int']['output']
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
+  is_following: Scalars['Boolean']['output']
   profile: UserProfile
   series_list: Array<Series>
   updated_at: Scalars['Date']['output']
@@ -1015,6 +1016,7 @@ export type UserResolvers<
   followings_count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_certified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  is_following?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>
   series_list?: Resolver<Array<ResolversTypes['Series']>, ParentType, ContextType>
   updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>

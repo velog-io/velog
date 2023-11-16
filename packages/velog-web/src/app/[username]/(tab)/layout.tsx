@@ -5,6 +5,7 @@ import { getUsernameFromParams } from '@/lib/utils'
 import { UserLogo } from '@/state/header'
 import { ProfileLinks } from '@/types/user'
 import { notFound } from 'next/navigation'
+import UserProfile from '@/components/UserProfile'
 
 type Props = {
   params: { username: string }
@@ -15,7 +16,6 @@ export default async function VelogLayout({ children, params }: Props) {
   const username = getUsernameFromParams(params)
   const user = await getUser(username)
   const velogConfig = await getVelogConfig(username)
-
   if (!user || !velogConfig) {
     notFound()
   }
@@ -29,14 +29,21 @@ export default async function VelogLayout({ children, params }: Props) {
 
   return (
     <VelogPageLayout
-      displayName={profile.display_name}
-      profileLikns={profile.profile_links as ProfileLinks}
-      shortBio={profile.short_bio}
-      thumbnail={profile.thumbnail}
       username={username}
       userLogo={userLogo}
-      followersCount={user.followers_count}
-      followingsCount={user.followings_count}
+      userProfile={
+        <UserProfile
+          displayName={profile.display_name}
+          shortBio={profile.short_bio}
+          profileLinks={profile.profile_links as ProfileLinks}
+          thumbnail={profile.thumbnail}
+          username={username}
+          followersCount={user.followers_count}
+          followingsCount={user.followings_count}
+          userId={user.id}
+          isFollowing={user.is_following}
+        />
+      }
     >
       {children}
     </VelogPageLayout>

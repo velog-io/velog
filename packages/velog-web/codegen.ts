@@ -12,6 +12,7 @@ const config: CodegenConfig = {
     'src/graphql/generated.ts': {
       documents: 'string',
       config: {
+        experimentalFragmentVariables: true,
         skipTypename: true,
         maybeValue: 'T | null',
         inputMaybeValue: 'T | undefined',
