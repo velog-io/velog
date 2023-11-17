@@ -1,7 +1,7 @@
 'use client'
 
 import Header from '@/components/Header'
-import styles from './VelogPageLayout.module.css'
+import styles from './VelogLayout.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import FloatingHeader from '@/features/home/components/FloatingHeader'
 import HeaderCustomLogo from '@/components/Header/HeaderCustomLogo'
@@ -19,7 +19,7 @@ type Props = {
   userProfile: React.ReactNode
 }
 
-function VelogPageLayout({ username, children, userLogo, userProfile }: Props) {
+function VelogLayout({ username, children, userLogo, userProfile }: Props) {
   const header = <Header logo={<HeaderCustomLogo username={username} userLogo={userLogo} />} />
   return (
     <div className={cx('block')}>
@@ -37,4 +37,4 @@ function VelogPageLayout({ username, children, userLogo, userProfile }: Props) {
   )
 }
 
-export default VelogPageLayout
+export default VelogLayout

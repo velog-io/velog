@@ -1,6 +1,6 @@
 import getUser from '@/prefetch/getUser'
 import getVelogConfig from '@/prefetch/getVelogConfig'
-import VelogPageLayout from '@/components/Layouts/VelogPageLayout'
+import VelogLayout from '@/components/Layouts/VelogLayout'
 import { getUsernameFromParams } from '@/lib/utils'
 import { UserLogo } from '@/state/header'
 import { ProfileLinks } from '@/types/user'
@@ -28,7 +28,7 @@ export default async function VelogLayout({ children, params }: Props) {
   }
 
   return (
-    <VelogPageLayout
+    <VelogLayout
       username={username}
       userLogo={userLogo}
       userProfile={
@@ -46,6 +46,6 @@ export default async function VelogLayout({ children, params }: Props) {
       }
     >
       {children}
-    </VelogPageLayout>
+    </VelogLayout>
   )
 }
