@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, useRef, useState } from 'react'
+import { CSSProperties, useEffect, useRef, useState } from 'react'
 import styles from './UserProfile.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { ProfileLinks } from '@/types/user'
@@ -11,6 +11,7 @@ import { includeProtocol } from '@/lib/includeProtocol'
 import { MdHome } from 'react-icons/md'
 import FollowButton from '../FollowButton'
 import { useAuth } from '@/state/auth'
+import { useGetUserFollowInfoQuery } from '@/graphql/generated'
 
 const cx = bindClassNames(styles)
 
@@ -24,7 +25,6 @@ type Props = {
   username: string
   followersCount: number
   followingsCount: number
-  isFollowing: boolean
 }
 
 function UserProfile({
@@ -37,7 +37,6 @@ function UserProfile({
   followersCount,
   followingsCount,
   userId,
-  isFollowing,
 }: Props) {
   const {
     value: { currentUser },
@@ -47,7 +46,8 @@ function UserProfile({
   const [hoverEmail, setHoverEmail] = useState(false)
   const emailBlockRef = useRef<HTMLDivElement>(null)
 
-  const [followersCnt, setFollowersCnt] = useState(followersCount)
+  const { data } = useGetUserFollowInfoQuery({ input: { id: userId } }, { networkMode: 'always' })
+  const [followersCnt, setFollowersCnt] = useState(0)
 
   const onMouseEnterEmail = () => {
     setHoverEmail(true)
@@ -67,6 +67,12 @@ function UserProfile({
       setFollowersCnt((state) => state - 1)
     }
   }
+
+  const count = data?.user?.followers_count ?? followersCount
+
+  useEffect(() => {
+    setFollowersCnt(count)
+  }, [count])
 
   const velogUrl = `/@${username}`
   const isOwn = userId === currentUser?.id
@@ -165,13 +171,7 @@ function UserProfile({
             )}
           </div>
           <div className={cx('inner', 'button')}>
-            {!isOwn && (
-              <FollowButton
-                isFollowing={isFollowing}
-                followingUserId={userId}
-                onSuccess={onFollowSuccess}
-              />
-            )}
+            {!isOwn && <FollowButton followingUserId={userId} onSuccess={onFollowSuccess} />}
           </div>
         </div>
       </div>

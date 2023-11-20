@@ -15,7 +15,6 @@ export default async function Layout({ children, params }: Props) {
   const user = await getUserFollowerInfo(username)
   const velogConfig = await getVelogConfig(username)
 
-  console.log('user', user)
   if (!user || !velogConfig) {
     notFound()
   }
