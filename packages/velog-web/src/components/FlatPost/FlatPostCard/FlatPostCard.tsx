@@ -31,7 +31,7 @@ function FlatPostCard({ post, hideUser }: Props) {
     <div className={cx('block')}>
       {!hideUser && (
         <div className={cx('userInfo')}>
-          <Link href={velogUrl}>
+          <Link href={velogUrl} scroll={false}>
             <Image
               src={post.user.profile?.thumbnail || '/images/user-thumbnail.png'}
               alt="post-card-thumbnail"
@@ -40,7 +40,9 @@ function FlatPostCard({ post, hideUser }: Props) {
             />
           </Link>
           <div className={cx('username')}>
-            <Link href={`/@${post.user.username}`}>{post.user.username}</Link>
+            <Link href={`/@${post.user.username}`} scroll={false}>
+              {post.user.username}
+            </Link>
           </div>
         </div>
       )}

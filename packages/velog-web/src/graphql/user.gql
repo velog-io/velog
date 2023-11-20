@@ -9,16 +9,24 @@ query getUser($input: GetUserInput!) {
       thumbnail
       profile_links
     }
+  }
+}
+
+query getUserFollowInfo($input: GetUserInput!) {
+  user(input: $input) {
+    id
+    username
+    profile {
+      id
+      display_name
+      short_bio
+      thumbnail
+      profile_links
+    }
     followers_count
     followings_count
     is_following
   }
-}
-
-fragment followField on User {
-  followers_count
-  followings_count
-  is_following
 }
 
 query currentUser {

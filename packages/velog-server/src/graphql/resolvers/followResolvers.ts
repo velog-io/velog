@@ -6,14 +6,12 @@ import { container } from 'tsyringe'
 const followerResolvers: Resolvers = {
   Query: {
     followers: async (_, { input }) => {
-      const { username } = input
       const followService = container.resolve(FollowService)
-      return followService.getFollowers(username)
+      return followService.getFollowers(input)
     },
     followings: async (_, { input }) => {
-      const { username } = input
       const followService = container.resolve(FollowService)
-      return followService.getFollowings(username)
+      return followService.getFollowings(input)
     },
     recommendFollowings: async (_, { input }) => {
       const { page, take } = input

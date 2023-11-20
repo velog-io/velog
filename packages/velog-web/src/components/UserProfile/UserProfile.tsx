@@ -47,7 +47,7 @@ function UserProfile({
   const [hoverEmail, setHoverEmail] = useState(false)
   const emailBlockRef = useRef<HTMLDivElement>(null)
 
-  const [followerCnt, setFollowerCnt] = useState(followersCount)
+  const [followersCnt, setFollowersCnt] = useState(followersCount)
 
   const onMouseEnterEmail = () => {
     setHoverEmail(true)
@@ -62,9 +62,9 @@ function UserProfile({
 
   const onFollowSuccess = (type: 'follow' | 'unfollow') => {
     if (type === 'follow') {
-      setFollowerCnt((state) => state + 1)
+      setFollowersCnt((state) => state + 1)
     } else {
-      setFollowerCnt((state) => state - 1)
+      setFollowersCnt((state) => state - 1)
     }
   }
 
@@ -95,7 +95,7 @@ function UserProfile({
       <div className={cx('bottom')}>
         <div className={cx('followInfo')}>
           <Link href={`${velogUrl}/followers`} className={cx('info')}>
-            <span className={cx('number')}>{followerCnt}</span>
+            <span className={cx('number')}>{followersCnt}</span>
             <span className={cx('text')}>팔로워</span>
           </Link>
           <Link href={`${velogUrl}/followings`} className={cx('info')}>

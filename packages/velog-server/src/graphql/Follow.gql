@@ -41,10 +41,14 @@ type Mutation {
 
 input FollowersInput {
   username: String!
+  cursor: String
+  take: PositiveInt
 }
 
 input FollowingsInput {
   username: String!
+  cursor: String
+  take: PositiveInt
 }
 
 input RecommendFollowingsInput {

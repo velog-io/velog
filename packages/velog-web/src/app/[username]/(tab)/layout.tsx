@@ -6,16 +6,18 @@ import { UserLogo } from '@/state/header'
 import { ProfileLinks } from '@/types/user'
 import { notFound } from 'next/navigation'
 import UserProfile from '@/components/UserProfile'
+import getUserFollowerInfo from '@/prefetch/getUserFollowerInfo'
 
 type Props = {
   params: { username: string }
   children: React.ReactNode
 }
 
-export default async function VelogLayout({ children, params }: Props) {
+export default async function VelogPageLayout({ children, params }: Props) {
   const username = getUsernameFromParams(params)
-  const user = await getUser(username)
+  const user = await getUserFollowerInfo(username)
   const velogConfig = await getVelogConfig(username)
+
   if (!user || !velogConfig) {
     notFound()
   }

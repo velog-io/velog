@@ -1,0 +1,27 @@
+.block {
+  .header {
+    .category {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text2);
+
+      .thumbnail {
+        margin-right: 8px;
+      }
+      .allow {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+      .subCategory {
+        margin-top: 1px;
+      }
+    }
+
+    .info {
+      margin-top: 16px;
+      font-size: 32px;
+    }
+  }
+}

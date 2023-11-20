@@ -42,10 +42,14 @@ export type FollowInput = {
 }
 
 export type FollowersInput = {
+  cursor?: InputMaybe<Scalars['String']['input']>
+  take?: InputMaybe<Scalars['PositiveInt']['input']>
   username: Scalars['String']['input']
 }
 
 export type FollowingsInput = {
+  cursor?: InputMaybe<Scalars['String']['input']>
+  take?: InputMaybe<Scalars['PositiveInt']['input']>
   username: Scalars['String']['input']
 }
 
@@ -627,6 +631,24 @@ export type GetUserQuery = {
   user: {
     id: string
     username: string
+    profile: {
+      id: string
+      display_name: string
+      short_bio: string
+      thumbnail: string | null
+      profile_links: JSON
+    }
+  } | null
+}
+
+export type GetUserFollowInfoQueryVariables = Exact<{
+  input: GetUserInput
+}>
+
+export type GetUserFollowInfoQuery = {
+  user: {
+    id: string
+    username: string
     followers_count: number
     followings_count: number
     is_following: boolean
@@ -639,14 +661,6 @@ export type GetUserQuery = {
     }
   } | null
 }
-
-export type FollowFieldFragment = {
-  followers_count: number
-  followings_count: number
-  is_following: boolean
-}
-
-export type FollowFieldFragmentVariables = Exact<{ [key: string]: never }>
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never }>
 
@@ -704,13 +718,6 @@ export type UpdateAboutMutationVariables = Exact<{
 
 export type UpdateAboutMutation = { updateAbout: { id: string; about: string } | null }
 
-export const FollowFieldFragmentDoc = `
-    fragment followField on User {
-  followers_count
-  followings_count
-  is_following
-}
-    `
 export const SendMailDocument = `
     mutation sendMail($input: SendMailInput!) {
   sendMail(input: $input) {
@@ -1023,9 +1030,6 @@ export const GetUserDocument = `
       thumbnail
       profile_links
     }
-    followers_count
-    followings_count
-    is_following
   }
 }
     `
@@ -1036,6 +1040,36 @@ export const useGetUserQuery = <TData = GetUserQuery, TError = unknown>(
   useQuery<GetUserQuery, TError, TData>(
     ['getUser', variables],
     fetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables),
+    options,
+  )
+export const GetUserFollowInfoDocument = `
+    query getUserFollowInfo($input: GetUserInput!) {
+  user(input: $input) {
+    id
+    username
+    profile {
+      id
+      display_name
+      short_bio
+      thumbnail
+      profile_links
+    }
+    followers_count
+    followings_count
+    is_following
+  }
+}
+    `
+export const useGetUserFollowInfoQuery = <TData = GetUserFollowInfoQuery, TError = unknown>(
+  variables: GetUserFollowInfoQueryVariables,
+  options?: UseQueryOptions<GetUserFollowInfoQuery, TError, TData>,
+) =>
+  useQuery<GetUserFollowInfoQuery, TError, TData>(
+    ['getUserFollowInfo', variables],
+    fetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
+      GetUserFollowInfoDocument,
+      variables,
+    ),
     options,
   )
 export const CurrentUserDocument = `

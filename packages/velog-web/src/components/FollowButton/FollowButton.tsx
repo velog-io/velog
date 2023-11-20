@@ -55,8 +55,8 @@ function FollowButton({ isFollowing, followingUserId, onSuccess }: Props) {
         setButtonText('팔로잉')
       }
 
-      setCurrentFollowState(!currentFollowState)
       setInitialFollowState(!currentFollowState)
+      setCurrentFollowState(!currentFollowState)
 
       if (onSuccess) {
         onSuccess(currentFollowState ? 'unfollow' : 'follow')

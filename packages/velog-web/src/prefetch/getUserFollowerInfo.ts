@@ -1,11 +1,11 @@
-import { GetUserDocument, User } from '@/graphql/generated'
+import { GetUserFollowInfoDocument, User } from '@/graphql/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
-export default async function getUser(username: string) {
+export default async function getUserFollowerInfo(username: string) {
   try {
     const body: GraphqlRequestBody = {
-      operationName: 'getUser',
-      query: GetUserDocument,
+      operationName: 'getUserFollowInfo',
+      query: GetUserFollowInfoDocument,
       variables: {
         input: {
           username,
@@ -24,7 +24,7 @@ export default async function getUser(username: string) {
 
     return { ...user, profile: user.profile! }
   } catch (error) {
-    console.log('getUser error', error)
+    console.log('getUserFollowerInfo error', error)
     return null
   }
 }

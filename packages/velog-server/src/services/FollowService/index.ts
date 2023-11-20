@@ -3,9 +3,14 @@ import { ConfilctError } from '@errors/ConfilctError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { RedisService } from '@lib/redis/RedisService.js'
-import { RecommedFollowingsResult, RecommendFollowings } from '@graphql/generated'
+import {
+  FollowersInput,
+  FollowingsInput,
+  RecommedFollowingsResult,
+  RecommendFollowings,
+} from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
-import { FollowUser, User } from '@prisma/client'
+import { FollowUser, Prisma, User } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
 
@@ -17,9 +22,9 @@ interface Service {
   isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean>
   follow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
   unfollow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
-  getFollowers(uesrname: string): Promise<User[]>
+  getFollowers(input: FollowersInput): Promise<User[]>
   getFollowersCount(username: string): Promise<number>
-  getFollowings(uesrname: string): Promise<User[]>
+  getFollowings(input: FollowingsInput): Promise<User[]>
   getFollowingsCount(username: string): Promise<number>
   getRecommededFollowers(page?: number, take?: number): Promise<RecommedFollowingsResult>
 }
@@ -127,15 +132,49 @@ export class FollowService implements Service {
       },
     })
   }
-  public async getFollowers(username: string): Promise<User[]> {
+  public async getFollowers(input: FollowersInput): Promise<User[]> {
+    const { username, cursor, take = 10 } = input
+
+    if (take > 100) {
+      throw new BadRequestError('Max take is 100')
+    }
+
     const user = await this.userService.findByUsername(username)
+
     if (!user) {
       throw new NotFoundError('Not found user')
     }
 
+    const whereInput: Prisma.FollowUserWhereInput = {
+      fk_following_user_id: user.id,
+    }
+
+    if (cursor) {
+      const cursorData = await this.db.followUser.findUnique({
+        where: {
+          id: cursor,
+        },
+      })
+
+      if (!cursorData) {
+        throw new NotFoundError('Invalid cursor')
+      }
+
+      const AND: any[] = [
+        {
+          created_at: {
+            lt: cursorData.created_at,
+          },
+        },
+      ]
+      Object.assign(whereInput, { AND })
+    }
+
     const followers = await this.db.followUser.findMany({
-      where: {
-        fk_following_user_id: user.id,
+      where: whereInput,
+      take,
+      orderBy: {
+        created_at: 'desc',
       },
       include: {
         follower: {
@@ -162,16 +201,49 @@ export class FollowService implements Service {
 
     return followersCount
   }
-  public async getFollowings(username: string): Promise<User[]> {
+  public async getFollowings(input: FollowingsInput): Promise<User[]> {
+    const { username, cursor, take = 10 } = input
+
+    if (take > 100) {
+      throw new BadRequestError('Max take is 100')
+    }
+
     const user = await this.userService.findByUsername(username)
 
     if (!user) {
       throw new NotFoundError('Not found user')
     }
 
+    const whereInput: Prisma.FollowUserWhereInput = {
+      fk_follower_user_id: user.id,
+    }
+
+    if (cursor) {
+      const cursorData = await this.db.followUser.findUnique({
+        where: {
+          id: cursor,
+        },
+      })
+
+      if (!cursorData) {
+        throw new NotFoundError('Invalid cursor')
+      }
+
+      const AND: any[] = [
+        {
+          created_at: {
+            lt: cursorData.created_at,
+          },
+        },
+      ]
+      Object.assign(whereInput, { AND })
+    }
+
     const followings = await this.db.followUser.findMany({
-      where: {
-        fk_follower_user_id: user.id,
+      where: whereInput,
+      take,
+      orderBy: {
+        created_at: 'desc',
       },
       include: {
         following: {

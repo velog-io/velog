@@ -51,10 +51,14 @@ export type FollowInput = {
 }
 
 export type FollowersInput = {
+  cursor?: InputMaybe<Scalars['String']['input']>
+  take?: InputMaybe<Scalars['PositiveInt']['input']>
   username: Scalars['String']['input']
 }
 
 export type FollowingsInput = {
+  cursor?: InputMaybe<Scalars['String']['input']>
+  take?: InputMaybe<Scalars['PositiveInt']['input']>
   username: Scalars['String']['input']
 }
 
