@@ -44,7 +44,6 @@ export type FollowInput = {
 export type FollowResult = {
   id: Scalars['ID']['output']
   is_followed: Maybe<Scalars['Boolean']['output']>
-  posts: Array<Post>
   profile: Maybe<UserProfile>
   username: Scalars['String']['output']
 }
@@ -444,6 +443,22 @@ export type UnfollowMutationVariables = Exact<{
 
 export type UnfollowMutation = { unfollow: boolean | null }
 
+export type GetFollowersQueryVariables = Exact<{
+  input: GetFollowInput
+}>
+
+export type GetFollowersQuery = {
+  followers: Array<{ id: string; username: string; profile: { short_bio: string } | null }>
+}
+
+export type GetFollowingsQueryVariables = Exact<{
+  input: GetFollowInput
+}>
+
+export type GetFollowingsQuery = {
+  followings: Array<{ id: string; username: string; profile: { short_bio: string } | null }>
+}
+
 export type ReadPostQueryVariables = Exact<{
   input: ReadPostInput
 }>
@@ -762,6 +777,46 @@ export const useUnfollowMutation = <TError = unknown, TContext = unknown>(
     ['unfollow'],
     (variables?: UnfollowMutationVariables) =>
       fetcher<UnfollowMutation, UnfollowMutationVariables>(UnfollowDocument, variables)(),
+    options,
+  )
+export const GetFollowersDocument = `
+    query getFollowers($input: GetFollowInput!) {
+  followers(input: $input) {
+    id
+    username
+    profile {
+      short_bio
+    }
+  }
+}
+    `
+export const useGetFollowersQuery = <TData = GetFollowersQuery, TError = unknown>(
+  variables: GetFollowersQueryVariables,
+  options?: UseQueryOptions<GetFollowersQuery, TError, TData>,
+) =>
+  useQuery<GetFollowersQuery, TError, TData>(
+    ['getFollowers', variables],
+    fetcher<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, variables),
+    options,
+  )
+export const GetFollowingsDocument = `
+    query getFollowings($input: GetFollowInput!) {
+  followings(input: $input) {
+    id
+    username
+    profile {
+      short_bio
+    }
+  }
+}
+    `
+export const useGetFollowingsQuery = <TData = GetFollowingsQuery, TError = unknown>(
+  variables: GetFollowingsQueryVariables,
+  options?: UseQueryOptions<GetFollowingsQuery, TError, TData>,
+) =>
+  useQuery<GetFollowingsQuery, TError, TData>(
+    ['getFollowings', variables],
+    fetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(GetFollowingsDocument, variables),
     options,
   )
 export const ReadPostDocument = `

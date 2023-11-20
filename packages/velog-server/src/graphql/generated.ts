@@ -53,7 +53,6 @@ export type FollowInput = {
 export type FollowResult = {
   id: Scalars['ID']['output']
   is_followed?: Maybe<Scalars['Boolean']['output']>
-  posts: Array<Post>
   profile?: Maybe<UserProfile>
   username: Scalars['String']['output']
 }
@@ -524,10 +523,7 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
   FollowInput: FollowInput
   FollowResult: ResolverTypeWrapper<
-    Omit<FollowResult, 'posts' | 'profile'> & {
-      posts: Array<ResolversTypes['Post']>
-      profile?: Maybe<ResolversTypes['UserProfile']>
-    }
+    Omit<FollowResult, 'profile'> & { profile?: Maybe<ResolversTypes['UserProfile']> }
   >
   GetFollowInput: GetFollowInput
   GetPostsInput: GetPostsInput
@@ -599,8 +595,7 @@ export type ResolversParentTypes = {
   Comment: CommentModel
   Date: Scalars['Date']['output']
   FollowInput: FollowInput
-  FollowResult: Omit<FollowResult, 'posts' | 'profile'> & {
-    posts: Array<ResolversParentTypes['Post']>
+  FollowResult: Omit<FollowResult, 'profile'> & {
     profile?: Maybe<ResolversParentTypes['UserProfile']>
   }
   GetFollowInput: GetFollowInput
@@ -685,7 +680,6 @@ export type FollowResultResolvers<
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_followed?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
-  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
   profile?: Resolver<Maybe<ResolversTypes['UserProfile']>, ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>

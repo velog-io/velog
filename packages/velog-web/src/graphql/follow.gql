@@ -5,3 +5,23 @@ mutation follow($input: FollowInput!) {
 mutation unfollow($input: UnfollowInput!) {
   unfollow(input: $input)
 }
+
+query getFollowers($input: GetFollowInput!) {
+  followers(input: $input) {
+    id
+    username
+    profile {
+      short_bio
+    }
+  }
+}
+
+query getFollowings($input: GetFollowInput!) {
+  followings(input: $input) {
+    id
+    username
+    profile {
+      short_bio
+    }
+  }
+}

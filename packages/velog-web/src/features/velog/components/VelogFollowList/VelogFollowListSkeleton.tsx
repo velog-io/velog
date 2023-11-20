@@ -1,3 +1,5 @@
+'use client'
+
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import styles from './VelogFollowList.module.css'
 import { VelogFollowItemSkeleton } from '../VelogFollowItem'

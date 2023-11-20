@@ -1,5 +1,5 @@
-import VelogFollowListSkeleton from '@/features/velog/components/VelogFollowList/VelogFollowListSkeleton'
 import VelogFollowStats from '@/features/velog/components/VelogFollowStats'
+import VelogFollowings from '@/features/velog/components/VelogFollowings'
 import { getUsernameFromParams } from '@/lib/utils'
 import getUserFollowerInfo from '@/prefetch/getUserFollowerInfo'
 import { notFound } from 'next/navigation'
@@ -29,7 +29,7 @@ export default async function VelogFollwingsPage({ params }: Props) {
         text="을 팔로우 중"
         type="following"
       />
-      <VelogFollowListSkeleton />
+      <VelogFollowings username={username} />
     </>
   )
 }

@@ -176,18 +176,12 @@ export class FollowService implements Service {
         follower: {
           include: {
             profile: true,
-            post: {
-              take: 3,
-              orderBy: {
-                score: 'desc',
-              },
-            },
           },
         },
       },
     })
     const promises = followers.map(async (relationship) => {
-      const { id: followingUserId, post, ...rest } = relationship.follower
+      const { id: followingUserId, ...rest } = relationship.follower
       const is_followed = await this.isFollowed({
         followingUserId,
         followerUserId: signedUserId,
@@ -195,7 +189,6 @@ export class FollowService implements Service {
       return {
         ...rest,
         id: followingUserId,
-        posts: post,
         is_followed,
       }
     })
@@ -268,18 +261,12 @@ export class FollowService implements Service {
         following: {
           include: {
             profile: true,
-            post: {
-              take: 3,
-              orderBy: {
-                score: 'desc',
-              },
-            },
           },
         },
       },
     })
     const promises = followings.map(async (relationship) => {
-      const { id: followingUserId, post, ...rest } = relationship.following
+      const { id: followingUserId, ...rest } = relationship.following
       const is_followed = await this.isFollowed({
         followingUserId,
         followerUserId: signedUserId,
@@ -287,7 +274,6 @@ export class FollowService implements Service {
       return {
         ...rest,
         id: followingUserId,
-        posts: post,
         is_followed,
       }
     })
@@ -354,7 +340,7 @@ type FollowArgs = {
   followerUserId?: string
 }
 
-type FollowResult = { posts: Post[] } & Prisma.UserGetPayload<{
+type FollowResult = Prisma.UserGetPayload<{
   include: {
     profile: true
   }
