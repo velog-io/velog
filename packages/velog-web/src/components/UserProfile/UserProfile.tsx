@@ -25,6 +25,7 @@ type Props = {
   username: string
   followersCount: number
   followingsCount: number
+  isFollowing: boolean
 }
 
 function UserProfile({
@@ -37,6 +38,7 @@ function UserProfile({
   followersCount,
   followingsCount,
   userId,
+  isFollowing,
 }: Props) {
   const {
     value: { currentUser },
@@ -46,8 +48,12 @@ function UserProfile({
   const [hoverEmail, setHoverEmail] = useState(false)
   const emailBlockRef = useRef<HTMLDivElement>(null)
 
-  const { data } = useGetUserFollowInfoQuery({ input: { id: userId } }, { networkMode: 'always' })
-  const [followersCnt, setFollowersCnt] = useState(0)
+  const { data, refetch, isRefetching } = useGetUserFollowInfoQuery(
+    { input: { id: userId } },
+    { staleTime: 10 },
+  )
+  const [followersCnt, setFollowersCnt] = useState(followersCount)
+  const [isFollow, setIsFollow] = useState(isFollowing)
 
   const onMouseEnterEmail = () => {
     setHoverEmail(true)
@@ -60,19 +66,22 @@ function UserProfile({
 
   const getSocialId = (link: string) => link.split('/').reverse()[0]
 
-  const onFollowSuccess = (type: 'follow' | 'unfollow') => {
+  const onFollowSuccess = async (type: 'follow' | 'unfollow') => {
     if (type === 'follow') {
       setFollowersCnt((state) => state + 1)
+      setIsFollow(true)
     } else {
       setFollowersCnt((state) => state - 1)
+      setIsFollow(false)
     }
+    refetch()
   }
 
-  const count = data?.user?.followers_count ?? followersCount
-
   useEffect(() => {
-    setFollowersCnt(count)
-  }, [count])
+    if (isRefetching) return
+    setFollowersCnt(data?.user?.followers_count ?? followersCnt)
+    setIsFollow(data?.user?.is_following || isFollow)
+  }, [isRefetching, data, followersCnt, isFollow])
 
   const velogUrl = `/@${username}`
   const isOwn = userId === currentUser?.id
@@ -171,7 +180,13 @@ function UserProfile({
             )}
           </div>
           <div className={cx('inner', 'button')}>
-            {!isOwn && <FollowButton followingUserId={userId} onSuccess={onFollowSuccess} />}
+            {!isOwn && (
+              <FollowButton
+                followingUserId={userId}
+                onSuccess={onFollowSuccess}
+                isFollowing={isFollow}
+              />
+            )}
           </div>
         </div>
       </div>

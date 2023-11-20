@@ -15,32 +15,31 @@ const cx = bindClassNames(styles)
 
 type Props = {
   followingUserId: string
-  onSuccess?: (param?: any) => void
+  onSuccess?: (param?: any) => void | Promise<void>
+  isFollowing: boolean
 }
 
-function FollowButton({ followingUserId, onSuccess }: Props) {
+function FollowButton({ followingUserId, isFollowing, onSuccess }: Props) {
   const {
     value: { currentUser },
   } = useAuth()
 
-  const { data, refetch } = useGetUserFollowInfoQuery({ input: { id: followingUserId } })
+  const { data, isRefetching } = useGetUserFollowInfoQuery(
+    { input: { id: followingUserId } },
+    { staleTime: 10 },
+  )
   const { isLoading } = useCurrentUserQuery()
   const { actions } = useModal()
-  const { mutate: followMutate } = useFollowMutation()
-  const { mutate: unfollowMutate } = useUnfollowMutation()
+  const { mutateAsync: followMutate } = useFollowMutation()
+  const { mutateAsync: unfollowMutate } = useUnfollowMutation()
 
-  const [initialFollowState, setInitialFollowState] = useState<boolean | null>(null)
-  const [currentFollowState, setCurrentFollowState] = useState<boolean | null>(null)
+  const [initialFollowState, setInitialFollowState] = useState<boolean>(isFollowing)
+  const [currentFollowState, setCurrentFollowState] = useState<boolean>(isFollowing)
 
   const [buttonText, setButtonText] = useState('팔로잉')
 
-  useEffect(() => {
-    setInitialFollowState(data?.user?.is_following || false)
-    setCurrentFollowState(data?.user?.is_following || false)
-  }, [data])
-
   const onFollowButtonMouseLeave = () => {
-    setInitialFollowState(currentFollowState)
+    setInitialFollowState(currentFollowState || false)
   }
 
   const onUnfollowButtonMouseEnter = () => {
@@ -59,23 +58,27 @@ function FollowButton({ followingUserId, onSuccess }: Props) {
 
       const input = { followingUserId }
       if (currentFollowState) {
-        unfollowMutate({ input })
+        await unfollowMutate({ input })
       } else {
-        followMutate({ input })
+        await followMutate({ input })
         setButtonText('팔로잉')
       }
 
       setInitialFollowState(!currentFollowState)
       setCurrentFollowState(!currentFollowState)
-      refetch()
 
       if (onSuccess) {
-        onSuccess(currentFollowState ? 'unfollow' : 'follow')
+        await onSuccess(currentFollowState ? 'unfollow' : 'follow')
       }
     } catch (error) {
       console.log(error)
     }
   })
+
+  useEffect(() => {
+    if (isRefetching) return
+    setCurrentFollowState(data?.user?.is_following || isFollowing)
+  }, [data, isFollowing, isRefetching])
 
   if (isLoading) return <div className={cx('skeleton')} />
 
@@ -83,7 +86,7 @@ function FollowButton({ followingUserId, onSuccess }: Props) {
     <div className={cx('block')}>
       {!initialFollowState ? (
         <button
-          className={cx('followButton', 'button', { isFollowing: !!currentFollowState })}
+          className={cx('followButton', 'button', { isFollowing: currentFollowState })}
           onClick={onClick}
           onMouseLeave={onFollowButtonMouseLeave}
         >
