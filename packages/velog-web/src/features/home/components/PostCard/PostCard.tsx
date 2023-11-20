@@ -24,7 +24,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
   const url = `/@${post?.user?.username}/${post.url_slug}`
   const { time: releasedAt, isLoading } = useTimeFormat(post.released_at)
 
-  if (!isLoading) return <PostCardSkeleton forHome={forHome} forPost={forPost} />
+  if (isLoading) return <PostCardSkeleton forHome={forHome} forPost={forPost} />
 
   return (
     <div className={cx('block')} onClick={onClick}>

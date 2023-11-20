@@ -1,17 +1,16 @@
 import { Resolvers } from '@graphql/generated'
 import { FollowService } from '@services/FollowService/index.js'
-
 import { container } from 'tsyringe'
 
 const followerResolvers: Resolvers = {
   Query: {
-    followers: async (_, { input }) => {
+    followers: async (_, { input }, ctx) => {
       const followService = container.resolve(FollowService)
-      return followService.getFollowers(input)
+      return await followService.getFollowers(input, ctx.user?.id)
     },
-    followings: async (_, { input }) => {
+    followings: async (_, { input }, ctx) => {
       const followService = container.resolve(FollowService)
-      return followService.getFollowings(input)
+      return await followService.getFollowings(input, ctx.user?.id)
     },
     recommendFollowings: async (_, { input }) => {
       const { page, take } = input

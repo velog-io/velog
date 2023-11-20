@@ -28,9 +28,17 @@ type RecommedFollowingsResult {
   followings: [RecommendFollowings!]!
 }
 
+type FollowResult {
+  id: ID!
+  username: String!
+  profile: UserProfile
+  is_followed: Boolean
+  posts: [Post!]!
+}
+
 type Query {
-  followers(input: FollowersInput!): [User!]!
-  followings(input: FollowingsInput!): [User!]!
+  followers(input: GetFollowInput!): [FollowResult!]!
+  followings(input: GetFollowInput!): [FollowResult!]!
   recommendFollowings(input: RecommendFollowingsInput!): RecommedFollowingsResult!
 }
 
@@ -39,13 +47,7 @@ type Mutation {
   unfollow(input: UnfollowInput!): Boolean
 }
 
-input FollowersInput {
-  username: String!
-  cursor: String
-  take: PositiveInt
-}
-
-input FollowingsInput {
+input GetFollowInput {
   username: String!
   cursor: String
   take: PositiveInt

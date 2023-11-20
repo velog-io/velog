@@ -11,7 +11,7 @@ type User {
   user_meta: UserMeta
   followers_count: Int!
   followings_count: Int!
-  is_following: Boolean!
+  is_followed: Boolean!
 }
 
 type UserProfile {

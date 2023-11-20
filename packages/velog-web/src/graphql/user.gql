@@ -25,7 +25,7 @@ query getUserFollowInfo($input: GetUserInput!) {
     }
     followers_count
     followings_count
-    is_following
+    is_followed
   }
 }
 

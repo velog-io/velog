@@ -44,7 +44,7 @@ const userResolvers: Resolvers = {
       const followService = container.resolve(FollowService)
       return await followService.getFollowingsCount(username)
     },
-    is_following: async (parent, _, ctx) => {
+    is_followed: async (parent, _, ctx) => {
       const followService = container.resolve(FollowService)
       return await followService.isFollowed({
         followingUserId: parent.id,

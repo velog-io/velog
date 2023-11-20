@@ -3,14 +3,9 @@ import { ConfilctError } from '@errors/ConfilctError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { RedisService } from '@lib/redis/RedisService.js'
-import {
-  FollowersInput,
-  FollowingsInput,
-  RecommedFollowingsResult,
-  RecommendFollowings,
-} from '@graphql/generated'
+import { GetFollowInput, RecommedFollowingsResult, RecommendFollowings } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
-import { FollowUser, Prisma, User } from '@prisma/client'
+import { FollowUser, Post, Prisma } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
 
@@ -22,9 +17,9 @@ interface Service {
   isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean>
   follow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
   unfollow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
-  getFollowers(input: FollowersInput): Promise<User[]>
+  getFollowers(input: GetFollowInput): Promise<FollowResult[]>
   getFollowersCount(username: string): Promise<number>
-  getFollowings(input: FollowingsInput): Promise<User[]>
+  getFollowings(input: GetFollowInput): Promise<FollowResult[]>
   getFollowingsCount(username: string): Promise<number>
   getRecommededFollowers(page?: number, take?: number): Promise<RecommedFollowingsResult>
 }
@@ -38,6 +33,7 @@ export class FollowService implements Service {
     private readonly userService: UserService,
   ) {}
   public async isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean> {
+    if (!followingUserId || !followerUserId) return false
     return !!(await this.findFollowRelationship({ followingUserId, followerUserId }))
   }
   public async findFollowRelationship({
@@ -132,7 +128,7 @@ export class FollowService implements Service {
       },
     })
   }
-  public async getFollowers(input: FollowersInput): Promise<User[]> {
+  public async getFollowers(input: GetFollowInput, signedUserId?: string): Promise<FollowResult[]> {
     const { username, cursor, take = 10 } = input
 
     if (take > 100) {
@@ -180,11 +176,31 @@ export class FollowService implements Service {
         follower: {
           include: {
             profile: true,
+            post: {
+              take: 3,
+              orderBy: {
+                score: 'desc',
+              },
+            },
           },
         },
       },
     })
-    return followers.map((relationship) => relationship.follower)
+    const promises = followers.map(async (relationship) => {
+      const { id: followingUserId, post, ...rest } = relationship.follower
+      const is_followed = await this.isFollowed({
+        followingUserId,
+        followerUserId: signedUserId,
+      })
+      return {
+        ...rest,
+        id: followingUserId,
+        posts: post,
+        is_followed,
+      }
+    })
+
+    return await Promise.all(promises)
   }
   public async getFollowersCount(username: string): Promise<number> {
     const user = await this.userService.findByUsername(username)
@@ -201,7 +217,10 @@ export class FollowService implements Service {
 
     return followersCount
   }
-  public async getFollowings(input: FollowingsInput): Promise<User[]> {
+  public async getFollowings(
+    input: GetFollowInput,
+    signedUserId?: string,
+  ): Promise<FollowResult[]> {
     const { username, cursor, take = 10 } = input
 
     if (take > 100) {
@@ -249,11 +268,31 @@ export class FollowService implements Service {
         following: {
           include: {
             profile: true,
+            post: {
+              take: 3,
+              orderBy: {
+                score: 'desc',
+              },
+            },
           },
         },
       },
     })
-    return followings.map((relationship) => relationship.following)
+    const promises = followings.map(async (relationship) => {
+      const { id: followingUserId, post, ...rest } = relationship.following
+      const is_followed = await this.isFollowed({
+        followingUserId,
+        followerUserId: signedUserId,
+      })
+      return {
+        ...rest,
+        id: followingUserId,
+        posts: post,
+        is_followed,
+      }
+    })
+
+    return await Promise.all(promises)
   }
   public async getFollowingsCount(username: string): Promise<number> {
     const user = await this.userService.findByUsername(username)
@@ -314,3 +353,10 @@ type FollowArgs = {
   followingUserId?: string
   followerUserId?: string
 }
+
+type FollowResult = { posts: Post[] } & Prisma.UserGetPayload<{
+  include: {
+    profile: true
+  }
+  is_followed: boolean
+}>

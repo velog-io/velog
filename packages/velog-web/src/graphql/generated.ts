@@ -41,13 +41,15 @@ export type FollowInput = {
   followingUserId: Scalars['ID']['input']
 }
 
-export type FollowersInput = {
-  cursor?: InputMaybe<Scalars['String']['input']>
-  take?: InputMaybe<Scalars['PositiveInt']['input']>
-  username: Scalars['String']['input']
+export type FollowResult = {
+  id: Scalars['ID']['output']
+  is_followed: Maybe<Scalars['Boolean']['output']>
+  posts: Array<Post>
+  profile: Maybe<UserProfile>
+  username: Scalars['String']['output']
 }
 
-export type FollowingsInput = {
+export type GetFollowInput = {
   cursor?: InputMaybe<Scalars['String']['input']>
   take?: InputMaybe<Scalars['PositiveInt']['input']>
   username: Scalars['String']['input']
@@ -171,8 +173,8 @@ export type PostHistory = {
 
 export type Query = {
   currentUser: Maybe<User>
-  followers: Array<User>
-  followings: Array<User>
+  followers: Array<FollowResult>
+  followings: Array<FollowResult>
   post: Maybe<Post>
   posts: Array<Post>
   readingList: Array<Post>
@@ -189,11 +191,11 @@ export type Query = {
 }
 
 export type QueryFollowersArgs = {
-  input: FollowersInput
+  input: GetFollowInput
 }
 
 export type QueryFollowingsArgs = {
-  input: FollowingsInput
+  input: GetFollowInput
 }
 
 export type QueryPostArgs = {
@@ -378,7 +380,7 @@ export type User = {
   followings_count: Scalars['Int']['output']
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
-  is_following: Scalars['Boolean']['output']
+  is_followed: Scalars['Boolean']['output']
   profile: UserProfile
   series_list: Array<Series>
   updated_at: Scalars['DateTimeISO']['output']
@@ -651,7 +653,7 @@ export type GetUserFollowInfoQuery = {
     username: string
     followers_count: number
     followings_count: number
-    is_following: boolean
+    is_followed: boolean
     profile: {
       id: string
       display_name: string
@@ -1056,7 +1058,7 @@ export const GetUserFollowInfoDocument = `
     }
     followers_count
     followings_count
-    is_following
+    is_followed
   }
 }
     `

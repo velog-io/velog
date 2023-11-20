@@ -77,7 +77,7 @@ function FollowButton({ followingUserId, isFollowing, onSuccess }: Props) {
 
   useEffect(() => {
     if (isRefetching) return
-    setCurrentFollowState(data?.user?.is_following || isFollowing)
+    setCurrentFollowState(data?.user?.is_followed || isFollowing)
   }, [data, isFollowing, isRefetching])
 
   if (isLoading) return <div className={cx('skeleton')} />

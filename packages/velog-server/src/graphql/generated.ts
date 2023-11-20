@@ -50,13 +50,15 @@ export type FollowInput = {
   followingUserId: Scalars['ID']['input']
 }
 
-export type FollowersInput = {
-  cursor?: InputMaybe<Scalars['String']['input']>
-  take?: InputMaybe<Scalars['PositiveInt']['input']>
-  username: Scalars['String']['input']
+export type FollowResult = {
+  id: Scalars['ID']['output']
+  is_followed?: Maybe<Scalars['Boolean']['output']>
+  posts: Array<Post>
+  profile?: Maybe<UserProfile>
+  username: Scalars['String']['output']
 }
 
-export type FollowingsInput = {
+export type GetFollowInput = {
   cursor?: InputMaybe<Scalars['String']['input']>
   take?: InputMaybe<Scalars['PositiveInt']['input']>
   username: Scalars['String']['input']
@@ -180,8 +182,8 @@ export type PostHistory = {
 
 export type Query = {
   currentUser?: Maybe<User>
-  followers: Array<User>
-  followings: Array<User>
+  followers: Array<FollowResult>
+  followings: Array<FollowResult>
   post?: Maybe<Post>
   posts: Array<Post>
   readingList: Array<Post>
@@ -198,11 +200,11 @@ export type Query = {
 }
 
 export type QueryFollowersArgs = {
-  input: FollowersInput
+  input: GetFollowInput
 }
 
 export type QueryFollowingsArgs = {
-  input: FollowingsInput
+  input: GetFollowInput
 }
 
 export type QueryPostArgs = {
@@ -387,7 +389,7 @@ export type User = {
   followings_count: Scalars['Int']['output']
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
-  is_following: Scalars['Boolean']['output']
+  is_followed: Scalars['Boolean']['output']
   profile: UserProfile
   series_list: Array<Series>
   updated_at: Scalars['Date']['output']
@@ -521,8 +523,13 @@ export type ResolversTypes = {
   Comment: ResolverTypeWrapper<CommentModel>
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
   FollowInput: FollowInput
-  FollowersInput: FollowersInput
-  FollowingsInput: FollowingsInput
+  FollowResult: ResolverTypeWrapper<
+    Omit<FollowResult, 'posts' | 'profile'> & {
+      posts: Array<ResolversTypes['Post']>
+      profile?: Maybe<ResolversTypes['UserProfile']>
+    }
+  >
+  GetFollowInput: GetFollowInput
   GetPostsInput: GetPostsInput
   GetSearchPostsInput: GetSearchPostsInput
   GetSeriesInput: GetSeriesInput
@@ -592,8 +599,11 @@ export type ResolversParentTypes = {
   Comment: CommentModel
   Date: Scalars['Date']['output']
   FollowInput: FollowInput
-  FollowersInput: FollowersInput
-  FollowingsInput: FollowingsInput
+  FollowResult: Omit<FollowResult, 'posts' | 'profile'> & {
+    posts: Array<ResolversParentTypes['Post']>
+    profile?: Maybe<ResolversParentTypes['UserProfile']>
+  }
+  GetFollowInput: GetFollowInput
   GetPostsInput: GetPostsInput
   GetSearchPostsInput: GetSearchPostsInput
   GetSeriesInput: GetSeriesInput
@@ -667,6 +677,18 @@ export type CommentResolvers<
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date'
+}
+
+export type FollowResultResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['FollowResult'] = ResolversParentTypes['FollowResult'],
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  is_followed?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
+  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
+  profile?: Resolver<Maybe<ResolversTypes['UserProfile']>, ParentType, ContextType>
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
 export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
@@ -783,13 +805,13 @@ export type QueryResolvers<
 > = {
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
   followers?: Resolver<
-    Array<ResolversTypes['User']>,
+    Array<ResolversTypes['FollowResult']>,
     ParentType,
     ContextType,
     RequireFields<QueryFollowersArgs, 'input'>
   >
   followings?: Resolver<
-    Array<ResolversTypes['User']>,
+    Array<ResolversTypes['FollowResult']>,
     ParentType,
     ContextType,
     RequireFields<QueryFollowingsArgs, 'input'>
@@ -1020,7 +1042,7 @@ export type UserResolvers<
   followings_count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_certified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
-  is_following?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  is_followed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>
   series_list?: Resolver<Array<ResolversTypes['Series']>, ParentType, ContextType>
   updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
@@ -1090,6 +1112,7 @@ export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export type Resolvers<ContextType = GraphQLContext> = {
   Comment?: CommentResolvers<ContextType>
   Date?: GraphQLScalarType
+  FollowResult?: FollowResultResolvers<ContextType>
   JSON?: GraphQLScalarType
   LinkedPosts?: LinkedPostsResolvers<ContextType>
   Mutation?: MutationResolvers<ContextType>

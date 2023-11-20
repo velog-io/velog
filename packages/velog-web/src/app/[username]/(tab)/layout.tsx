@@ -1,4 +1,3 @@
-import getUser from '@/prefetch/getUser'
 import getVelogConfig from '@/prefetch/getVelogConfig'
 import VelogLayout from '@/components/Layouts/VelogLayout'
 import { getUsernameFromParams } from '@/lib/utils'
@@ -43,7 +42,7 @@ export default async function VelogPageLayout({ children, params }: Props) {
           followersCount={user.followers_count}
           followingsCount={user.followings_count}
           userId={user.id}
-          isFollowing={user.is_following}
+          isFollowed={user.is_followed}
         />
       }
     >

@@ -25,7 +25,7 @@ type Props = {
   username: string
   followersCount: number
   followingsCount: number
-  isFollowing: boolean
+  isFollowed: boolean
 }
 
 function UserProfile({
@@ -38,7 +38,7 @@ function UserProfile({
   followersCount,
   followingsCount,
   userId,
-  isFollowing,
+  isFollowed,
 }: Props) {
   const {
     value: { currentUser },
@@ -53,7 +53,7 @@ function UserProfile({
     { staleTime: 10 },
   )
   const [followersCnt, setFollowersCnt] = useState(followersCount)
-  const [isFollow, setIsFollow] = useState(isFollowing)
+  const [isFollow, setIsFollow] = useState(isFollowed)
 
   const onMouseEnterEmail = () => {
     setHoverEmail(true)
@@ -80,7 +80,7 @@ function UserProfile({
   useEffect(() => {
     if (isRefetching) return
     setFollowersCnt(data?.user?.followers_count ?? followersCnt)
-    setIsFollow(data?.user?.is_following || isFollow)
+    setIsFollow(data?.user?.is_followed || isFollow)
   }, [isRefetching, data, followersCnt, isFollow])
 
   const velogUrl = `/@${username}`
