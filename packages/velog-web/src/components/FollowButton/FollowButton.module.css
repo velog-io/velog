@@ -22,7 +22,7 @@
     color: var(--primary1);
     border: 1px solid var(--primary1);
 
-    &.isFollowing {
+    &.isFollowed {
       color: var(--bg-element6);
       border: 1px solid var(--bg-element6);
     }

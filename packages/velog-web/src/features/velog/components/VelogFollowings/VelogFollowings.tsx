@@ -1,6 +1,7 @@
 'use client'
 
 import useFollowings from '../../hooks/useFollowings'
+import { VelogFollowList } from '../VelogFollowList'
 import VelogFollowListSkeleton from '../VelogFollowList/VelogFollowListSkeleton'
 import styles from './VelogFollowings.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
@@ -17,7 +18,7 @@ function VelogFollowings({ username }: Props) {
   if (isInitLoading) return <VelogFollowListSkeleton />
 
   console.log('followings', followings)
-  return <div className={cx('block')}>list</div>
+  return <VelogFollowList data={followings} />
 }
 
 export default VelogFollowings

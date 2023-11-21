@@ -5,7 +5,7 @@ import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { RedisService } from '@lib/redis/RedisService.js'
 import { GetFollowInput, RecommedFollowingsResult, RecommendFollowings } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
-import { FollowUser, Post, Prisma } from '@prisma/client'
+import { FollowUser, Prisma, UserProfile } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
 
@@ -181,14 +181,15 @@ export class FollowService implements Service {
       },
     })
     const promises = followers.map(async (relationship) => {
-      const { id: followingUserId, ...rest } = relationship.follower
+      const { id: followingUserId, username, profile } = relationship.follower
       const is_followed = await this.isFollowed({
         followingUserId,
         followerUserId: signedUserId,
       })
       return {
-        ...rest,
         id: followingUserId,
+        username,
+        profile: profile!,
         is_followed,
       }
     })
@@ -266,14 +267,15 @@ export class FollowService implements Service {
       },
     })
     const promises = followings.map(async (relationship) => {
-      const { id: followingUserId, ...rest } = relationship.following
+      const { id: followingUserId, profile, username } = relationship.following
       const is_followed = await this.isFollowed({
         followingUserId,
         followerUserId: signedUserId,
       })
       return {
-        ...rest,
         id: followingUserId,
+        username,
+        profile: profile!,
         is_followed,
       }
     })
@@ -340,9 +342,4 @@ type FollowArgs = {
   followerUserId?: string
 }
 
-type FollowResult = Prisma.UserGetPayload<{
-  include: {
-    profile: true
-  }
-  is_followed: boolean
-}>
+type FollowResult = { id: string; username: string; is_followed: boolean; profile: UserProfile }

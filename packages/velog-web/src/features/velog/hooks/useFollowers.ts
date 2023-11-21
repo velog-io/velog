@@ -1,5 +1,7 @@
 import { fetcher } from '@/graphql/fetcher'
 import {
+  FollowResult,
+  GetFollowersDocument,
   GetFollowersQuery,
   GetFollowersQueryVariables,
   GetFollowingsDocument,
@@ -20,7 +22,7 @@ export default function useFollowers(username: string, take = 1) {
     useInfiniteQuery<GetFollowersQuery>(
       ['getFollwings', { input: fetchInput }],
       ({ pageParam = fetchInput }) =>
-        fetcher<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowingsDocument, {
+        fetcher<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, {
           input: pageParam,
         })(),
       {
@@ -41,7 +43,7 @@ export default function useFollowers(username: string, take = 1) {
     )
 
   const followers = useMemo(() => {
-    return [...(data?.pages?.flatMap((page) => page.followers) || [])] as User[]
+    return [...(data?.pages?.flatMap((page) => page.followers) || [])] as FollowResult[]
   }, [data])
 
   return {

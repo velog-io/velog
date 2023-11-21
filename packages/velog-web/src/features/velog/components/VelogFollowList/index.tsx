@@ -1,1 +1,2 @@
-export { default } from './VelogFollowList'
+export { default as VelogFollowList } from './VelogFollowList'
+export { default as VelogFollowListSkeleton } from './VelogFollowListSkeleton'

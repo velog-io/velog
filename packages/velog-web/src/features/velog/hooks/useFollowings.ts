@@ -2,10 +2,10 @@
 
 import { fetcher } from '@/graphql/fetcher'
 import {
+  FollowResult,
   GetFollowingsDocument,
   GetFollowingsQuery,
   GetFollowingsQueryVariables,
-  User,
 } from '@/graphql/generated'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
@@ -43,7 +43,7 @@ export default function useFollowings(username: string, take = 1) {
     )
 
   const followings = useMemo(() => {
-    return [...(data?.pages?.flatMap((page) => page.followings) || [])] as User[]
+    return [...(data?.pages?.flatMap((page) => page.followings) || [])] as FollowResult[]
   }, [data])
 
   return {

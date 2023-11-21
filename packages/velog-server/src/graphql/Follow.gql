@@ -32,7 +32,7 @@ type FollowResult {
   id: ID!
   username: String!
   profile: UserProfile
-  is_followed: Boolean
+  is_followed: Boolean!
 }
 
 type Query {

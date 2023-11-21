@@ -3,7 +3,7 @@
 import Thumbnail from '@/components/Thumbnail'
 import styles from './VelogFollowItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { Post, useGetUserFollowInfoQuery } from '@/graphql/generated'
+import { useGetUserFollowInfoQuery } from '@/graphql/generated'
 import FollowButton from '@/components/FollowButton'
 import { useEffect, useState } from 'react'
 import VelogFollowItemSkeleton from './VelogFollowItemSkeleton'
@@ -11,18 +11,20 @@ import VelogFollowItemSkeleton from './VelogFollowItemSkeleton'
 const cx = bindClassNames(styles)
 
 type Props = {
-  username: string
+  displayName: string
   userId: string
   thumbnail: string
-  posts: Post[]
+  isFollowed: boolean
+  description: string
+  username: string
 }
 
-function VelogFollowItem({ username, userId, thumbnail, posts }: Props) {
+function VelogFollowItem({ displayName, userId, thumbnail }: Props) {
   const { data, isLoading } = useGetUserFollowInfoQuery({ input: { username } })
-  const [isFollowing, setIsFollowing] = useState<boolean>(!!data?.user?.is_followed)
+  const [isFollowed, setIsFollowed] = useState<boolean>(!!data?.user?.is_followed)
 
   useEffect(() => {
-    setIsFollowing(!!data?.user?.is_followed)
+    setIsFollowed(!!data?.user?.is_followed)
   }, [data])
 
   if (isLoading) return <VelogFollowItemSkeleton />
@@ -32,10 +34,10 @@ function VelogFollowItem({ username, userId, thumbnail, posts }: Props) {
       <div className={cx('content')}>
         <div className={cx('username')}>
           <span>Username</span>
-          <span>{`@${username}`}</span>
+          <span>{`@${displayName}`}</span>
         </div>
       </div>
-      <FollowButton followingUserId={userId} isFollowing={!!isFollowing} />
+      <FollowButton followingUserId={userId} isFollowed={!!isFollowed} />
     </div>
   )
 }

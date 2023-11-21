@@ -1,12 +1,30 @@
+import { FollowResult } from '@/graphql/generated'
 import styles from './VelogFollowList.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
+import { VelogFollowItem } from '../VelogFollowItem'
 
 const cx = bindClassNames(styles)
 
-type Props = {}
+type Props = {
+  data: FollowResult[]
+}
 
-function VelogFollowList({}: Props) {
-  return <div className={cx('block')}></div>
+function VelogFollowList({ data }: Props) {
+  return (
+    <ul className={cx('block')}>
+      {/* {data.map((followState) => (
+        <VelogFollowItem
+          key={followState.id}
+          isFollowed={followState.is_followed}
+          thumbnail={followState.profile.thumbnail!}
+          description={followState.profile.short_bio}
+          userId={followState.id}
+          displayName={followState.profile.display_name}
+          username={followState.username}
+        />
+      ))} */}
+    </ul>
+  )
 }
 
 export default VelogFollowList

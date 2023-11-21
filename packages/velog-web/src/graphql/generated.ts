@@ -43,7 +43,7 @@ export type FollowInput = {
 
 export type FollowResult = {
   id: Scalars['ID']['output']
-  is_followed: Maybe<Scalars['Boolean']['output']>
+  is_followed: Scalars['Boolean']['output']
   profile: Maybe<UserProfile>
   username: Scalars['String']['output']
 }
@@ -448,7 +448,12 @@ export type GetFollowersQueryVariables = Exact<{
 }>
 
 export type GetFollowersQuery = {
-  followers: Array<{ id: string; username: string; profile: { short_bio: string } | null }>
+  followers: Array<{
+    id: string
+    username: string
+    is_followed: boolean
+    profile: { display_name: string; short_bio: string } | null
+  }>
 }
 
 export type GetFollowingsQueryVariables = Exact<{
@@ -456,7 +461,12 @@ export type GetFollowingsQueryVariables = Exact<{
 }>
 
 export type GetFollowingsQuery = {
-  followings: Array<{ id: string; username: string; profile: { short_bio: string } | null }>
+  followings: Array<{
+    id: string
+    username: string
+    is_followed: boolean
+    profile: { display_name: string; short_bio: string } | null
+  }>
 }
 
 export type ReadPostQueryVariables = Exact<{
@@ -785,8 +795,10 @@ export const GetFollowersDocument = `
     id
     username
     profile {
+      display_name
       short_bio
     }
+    is_followed
   }
 }
     `
@@ -805,8 +817,10 @@ export const GetFollowingsDocument = `
     id
     username
     profile {
+      display_name
       short_bio
     }
+    is_followed
   }
 }
     `

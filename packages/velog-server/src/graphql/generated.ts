@@ -52,7 +52,7 @@ export type FollowInput = {
 
 export type FollowResult = {
   id: Scalars['ID']['output']
-  is_followed?: Maybe<Scalars['Boolean']['output']>
+  is_followed: Scalars['Boolean']['output']
   profile?: Maybe<UserProfile>
   username: Scalars['String']['output']
 }
@@ -679,7 +679,7 @@ export type FollowResultResolvers<
   ParentType extends ResolversParentTypes['FollowResult'] = ResolversParentTypes['FollowResult'],
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  is_followed?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
+  is_followed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   profile?: Resolver<Maybe<ResolversTypes['UserProfile']>, ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
