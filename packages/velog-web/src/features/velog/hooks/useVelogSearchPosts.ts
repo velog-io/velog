@@ -58,14 +58,18 @@ export default function useVelogSearchPosts({ keyword, username }: Args) {
     return data?.pages[0].searchPosts.count || 0
   }, [data])
 
+  const fetchMore = () => {
+    if (isFetching || isError) return
+    if (!hasNextPage) return
+    fetchNextPage()
+  }
+
   return {
     posts,
     count,
-    fetchNextPage,
     isFetching,
-    hasNextPage,
     originData: data,
-    isError,
     isInitLoading: isLoading,
+    fetchMore,
   }
 }

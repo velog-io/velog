@@ -2,6 +2,8 @@
   display: flex;
   align-items: center;
 
+  height: 400px;
+  background-color: red;
   & + & {
     margin-top: 16px;
   }

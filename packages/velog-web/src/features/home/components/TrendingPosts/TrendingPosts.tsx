@@ -11,17 +11,10 @@ type Props = {
 }
 
 function TrendingPosts({ data }: Props) {
-  const { posts, fetchNextPage, isFetching, hasNextPage, originData, isError } =
-    useTrendingPosts(data)
+  const { posts, isFetching, originData, fetchMore } = useTrendingPosts(data)
   const ref = useRef<HTMLDivElement>(null)
 
-  const getTreningPostsMore = () => {
-    if (isFetching || isError) return
-    if (hasNextPage === false) return
-    fetchNextPage()
-  }
-
-  useInfiniteScroll(ref, getTreningPostsMore, isError)
+  useInfiniteScroll(ref, fetchMore)
 
   return (
     <>

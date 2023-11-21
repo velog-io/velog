@@ -46,6 +46,12 @@ export default function useFollowings(username: string, take = 20) {
     return [...(data?.pages?.flatMap((page) => page.followings) || [])] as FollowResult[]
   }, [data])
 
+  const fetchMore = () => {
+    if (isFetching || isError) return
+    if (!hasNextPage) return
+    fetchNextPage()
+  }
+
   return {
     followings,
     fetchNextPage,
@@ -54,5 +60,6 @@ export default function useFollowings(username: string, take = 20) {
     originData: data,
     isError,
     isInitLoading: isLoading,
+    fetchMore,
   }
 }

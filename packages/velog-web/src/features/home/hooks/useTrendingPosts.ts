@@ -100,13 +100,17 @@ export default function useTrendingPosts(initialPost: Post[] = []) {
     return [...initialPost, ...(data?.pages?.flatMap((page) => page.trendingPosts) || [])] as Post[]
   }, [data, initialPost])
 
+  const fetchMore = () => {
+    if (isFetching || isError) return
+    if (hasNextPage === false) return
+    fetchNextPage()
+  }
+
   return {
     posts,
     isLoading,
-    fetchNextPage,
     isFetching,
-    hasNextPage,
     originData: data,
-    isError,
+    fetchMore,
   }
 }

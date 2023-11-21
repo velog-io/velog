@@ -43,6 +43,12 @@ export default function useVelogPosts({ username, tag }: Args) {
     return [...(data?.pages?.flatMap((page) => page.posts) || [])] as Post[]
   }, [data])
 
+  const fetchMore = () => {
+    if (isFetching || isError) return
+    if (!hasNextPage) return
+    fetchNextPage()
+  }
+
   return {
     posts,
     fetchNextPage,
@@ -51,5 +57,6 @@ export default function useVelogPosts({ username, tag }: Args) {
     originData: data,
     isError,
     isInitLoading: isLoading,
+    fetchMore,
   }
 }

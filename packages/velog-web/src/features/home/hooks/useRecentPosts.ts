@@ -80,12 +80,16 @@ export default function useRecentPosts(initialPosts: Post[] = []) {
     return [...initialPosts, ...(data?.pages?.flatMap((page) => page.recentPosts) || [])] as Post[]
   }, [data, initialPosts])
 
+  const fetchMore = () => {
+    if (isFetching || isError) return
+    if (!hasNextPage) return
+    fetchNextPage()
+  }
+
   return {
     posts,
-    fetchNextPage,
     isFetching,
-    hasNextPage,
     originData: data,
-    isError,
+    fetchMore,
   }
 }

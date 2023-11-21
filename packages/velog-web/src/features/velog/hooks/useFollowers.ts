@@ -44,13 +44,18 @@ export default function useFollowers(username: string, take = 1) {
     return [...(data?.pages?.flatMap((page) => page.followers) || [])] as FollowResult[]
   }, [data])
 
+  const fetchMore = () => {
+    if (isFetching || isError) return
+    if (!hasNextPage) return
+    fetchNextPage()
+  }
+
   return {
     followers,
     fetchNextPage,
     isFetching,
-    hasNextPage,
     originData: data,
-    isError,
     isInitLoading: isLoading,
+    fetchMore,
   }
 }

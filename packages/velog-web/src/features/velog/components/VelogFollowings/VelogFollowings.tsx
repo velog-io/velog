@@ -1,23 +1,28 @@
 'use client'
 
+import { useRef } from 'react'
 import useFollowings from '../../hooks/useFollowings'
-import { VelogFollowList } from '../VelogFollowList'
-import VelogFollowListSkeleton from '../VelogFollowList/VelogFollowListSkeleton'
-import styles from './VelogFollowings.module.css'
-import { bindClassNames } from '@/lib/styles/bindClassNames'
-
-const cx = bindClassNames(styles)
+import { VelogFollowList, VelogFollowListSkeleton } from '../VelogFollowList'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 
 type Props = {
   username: string
 }
 
 function VelogFollowings({ username }: Props) {
-  const { followings, isInitLoading } = useFollowings(username)
+  const ref = useRef<HTMLDivElement>(null)
+  const { followings, isInitLoading, fetchMore } = useFollowings(username)
+
+  useInfiniteScroll(ref, fetchMore)
 
   if (isInitLoading) return <VelogFollowListSkeleton />
 
-  return <VelogFollowList data={followings} />
+  return (
+    <>
+      <VelogFollowList data={followings} />
+      <div ref={ref} />
+    </>
+  )
 }
 
 export default VelogFollowings

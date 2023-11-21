@@ -2,13 +2,9 @@
 
 import { useEffect } from 'react'
 
-export function useInfiniteScroll(
-  ref: React.RefObject<HTMLElement>,
-  fetchNext: () => void,
-  isError: boolean,
-) {
+export function useInfiniteScroll(ref: React.RefObject<HTMLElement>, fetchNext: () => void) {
   useEffect(() => {
-    if (!ref.current || isError) return
+    if (!ref.current) return
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return
@@ -23,5 +19,5 @@ export function useInfiniteScroll(
     return () => {
       observer.disconnect()
     }
-  }, [ref, fetchNext, isError])
+  }, [ref, fetchNext])
 }

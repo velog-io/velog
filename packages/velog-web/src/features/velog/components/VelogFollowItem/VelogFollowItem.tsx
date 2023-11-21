@@ -7,11 +7,11 @@ import { useGetUserFollowInfoQuery } from '@/graphql/generated'
 import FollowButton from '@/components/FollowButton'
 import { useEffect, useState } from 'react'
 import VelogFollowItemSkeleton from './VelogFollowItemSkeleton'
+import Link from 'next/link'
 
 const cx = bindClassNames(styles)
 
 type Props = {
-  displayName: string
   userId: string
   thumbnail: string
   isFollowed: boolean
@@ -19,7 +19,7 @@ type Props = {
   username: string
 }
 
-function VelogFollowItem({ displayName, userId, thumbnail, username, description }: Props) {
+function VelogFollowItem({ userId, thumbnail, username, description }: Props) {
   const { data, isLoading } = useGetUserFollowInfoQuery({ input: { username } })
   const [isFollowed, setIsFollowed] = useState<boolean>(!!data?.user?.is_followed)
 
@@ -27,14 +27,20 @@ function VelogFollowItem({ displayName, userId, thumbnail, username, description
     setIsFollowed(!!data?.user?.is_followed)
   }, [data])
 
+  const velogUrl = `/@${username}/posts`
+
   if (isLoading) return <VelogFollowItemSkeleton />
   return (
     <li className={cx('block')}>
-      <Thumbnail className={cx('thumbnail')} width={40} height={40} thumbnail={thumbnail} />
+      <Link href={velogUrl}>
+        <Thumbnail className={cx('thumbnail')} width={40} height={40} thumbnail={thumbnail} />
+      </Link>
       <div className={cx('content')}>
         <div className={cx('info')}>
           <span className={cx('text')}>Username</span>
-          <span className={cx('username')}>{`@${displayName}`}</span>
+          <span className={cx('username')}>
+            <Link href={velogUrl}>{`@${username}`}</Link>
+          </span>
         </div>
         <div className={cx('description')}>{description}</div>
       </div>

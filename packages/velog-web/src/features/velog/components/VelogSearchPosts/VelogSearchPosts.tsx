@@ -19,20 +19,13 @@ type Props = {
 }
 
 function VelogSearchPosts({ username, tag, userTags, keyword }: Props) {
-  const { posts, count, fetchNextPage, isFetching, hasNextPage, isError, isInitLoading } =
-    useVelogSearchPosts({
-      username,
-      keyword,
-    })
-
-  const getVelogSearchPostsMore = () => {
-    if (isFetching || isError) return
-    if (!hasNextPage) return
-    fetchNextPage()
-  }
+  const { posts, count, isInitLoading, fetchMore } = useVelogSearchPosts({
+    username,
+    keyword,
+  })
 
   const ref = useRef<HTMLDivElement>(null)
-  useInfiniteScroll(ref, getVelogSearchPostsMore, isError)
+  useInfiniteScroll(ref, fetchMore)
 
   return (
     <div className={cx('block')}>
