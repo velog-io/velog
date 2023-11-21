@@ -48,7 +48,7 @@ function VelogFollowStats({
         <div className={cx('category')}>
           <div className={cx('thumbnail')}>
             <Link href={velogUrl}>
-              <Thumbnail thumbnail={thumbnail} width={32} height={32} />
+              <Thumbnail src={thumbnail} width={32} height={32} borderRadius={16} />
             </Link>
           </div>
           <span className={cx('displayName')}>

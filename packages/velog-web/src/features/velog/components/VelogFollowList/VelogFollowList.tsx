@@ -19,8 +19,7 @@ function VelogFollowList({ data }: Props) {
           isFollowed={followState.is_followed}
           thumbnail={followState.profile.thumbnail!}
           description={followState.profile.short_bio}
-          userId={followState.id}
-          displayName={followState.profile.display_name}
+          userId={followState.userId}
           username={followState.username}
         />
       ))}

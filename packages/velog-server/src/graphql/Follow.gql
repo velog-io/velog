@@ -30,6 +30,7 @@ type RecommedFollowingsResult {
 
 type FollowResult {
   id: ID!
+  userId: ID!
   username: String!
   profile: UserProfile!
   is_followed: Boolean!

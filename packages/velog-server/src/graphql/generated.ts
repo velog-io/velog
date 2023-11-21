@@ -54,6 +54,7 @@ export type FollowResult = {
   id: Scalars['ID']['output']
   is_followed: Scalars['Boolean']['output']
   profile: UserProfile
+  userId: Scalars['ID']['output']
   username: Scalars['String']['output']
 }
 
@@ -679,6 +680,7 @@ export type FollowResultResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_followed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>
+  userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }

@@ -187,7 +187,8 @@ export class FollowService implements Service {
         followerUserId: signedUserId,
       })
       return {
-        id: followingUserId,
+        id: relationship.id,
+        userId: followingUserId,
         username,
         profile: profile!,
         is_followed,
@@ -273,7 +274,8 @@ export class FollowService implements Service {
         followerUserId: signedUserId,
       })
       return {
-        id: followingUserId,
+        id: relationship.id,
+        userId: followingUserId,
         username,
         profile: profile!,
         is_followed,
@@ -342,4 +344,10 @@ type FollowArgs = {
   followerUserId?: string
 }
 
-type FollowResult = { id: string; username: string; is_followed: boolean; profile: UserProfile }
+type FollowResult = {
+  id: string
+  userId: string
+  username: string
+  is_followed: boolean
+  profile: UserProfile
+}

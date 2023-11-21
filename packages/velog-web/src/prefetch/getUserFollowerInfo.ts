@@ -2,6 +2,7 @@ import { GetUserFollowInfoDocument, User } from '@/graphql/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getUserFollowerInfo(username: string) {
+  if (!username) return null
   try {
     const body: GraphqlRequestBody = {
       operationName: 'getUserFollowInfo',

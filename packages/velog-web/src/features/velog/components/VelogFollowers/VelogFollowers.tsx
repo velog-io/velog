@@ -11,15 +11,15 @@ type Props = {
 
 function VelogFollowers({ username }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const { followers, isInitLoading, fetchMore } = useFollowers(username)
+  const { followers, isInitLoading, fetchMore, isFetching } = useFollowers(username)
 
   useInfiniteScroll(ref, fetchMore)
 
   if (isInitLoading) return <VelogFollowListSkeleton />
-
   return (
     <>
       <VelogFollowList data={followers} />
+      {isFetching && <VelogFollowListSkeleton />}
       <div ref={ref} />
     </>
   )

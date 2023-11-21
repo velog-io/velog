@@ -45,6 +45,7 @@ export type FollowResult = {
   id: Scalars['ID']['output']
   is_followed: Scalars['Boolean']['output']
   profile: UserProfile
+  userId: Scalars['ID']['output']
   username: Scalars['String']['output']
 }
 
@@ -450,9 +451,10 @@ export type GetFollowersQueryVariables = Exact<{
 export type GetFollowersQuery = {
   followers: Array<{
     id: string
+    userId: string
     username: string
     is_followed: boolean
-    profile: { display_name: string; short_bio: string; thumbnail: string | null }
+    profile: { short_bio: string; thumbnail: string | null }
   }>
 }
 
@@ -463,9 +465,10 @@ export type GetFollowingsQueryVariables = Exact<{
 export type GetFollowingsQuery = {
   followings: Array<{
     id: string
+    userId: string
     username: string
     is_followed: boolean
-    profile: { display_name: string; short_bio: string; thumbnail: string | null }
+    profile: { short_bio: string; thumbnail: string | null }
   }>
 }
 
@@ -793,9 +796,9 @@ export const GetFollowersDocument = `
     query getFollowers($input: GetFollowInput!) {
   followers(input: $input) {
     id
+    userId
     username
     profile {
-      display_name
       short_bio
       thumbnail
     }
@@ -816,9 +819,9 @@ export const GetFollowingsDocument = `
     query getFollowings($input: GetFollowInput!) {
   followings(input: $input) {
     id
+    userId
     username
     profile {
-      display_name
       short_bio
       thumbnail
     }

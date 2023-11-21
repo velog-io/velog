@@ -9,9 +9,9 @@ mutation unfollow($input: UnfollowInput!) {
 query getFollowers($input: GetFollowInput!) {
   followers(input: $input) {
     id
+    userId
     username
     profile {
-      display_name
       short_bio
       thumbnail
     }
@@ -22,9 +22,9 @@ query getFollowers($input: GetFollowInput!) {
 query getFollowings($input: GetFollowInput!) {
   followings(input: $input) {
     id
+    userId
     username
     profile {
-      display_name
       short_bio
       thumbnail
     }
