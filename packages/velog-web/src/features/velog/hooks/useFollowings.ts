@@ -56,9 +56,7 @@ export default function useFollowings(username: string, take = 20) {
     followings,
     fetchNextPage,
     isFetching,
-    hasNextPage,
     originData: data,
-    isError,
     isInitLoading: isLoading,
     fetchMore,
   }

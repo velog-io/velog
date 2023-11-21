@@ -3,7 +3,6 @@ import styles from './FlatPostCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import Link from 'next/link'
 import Image from 'next/image'
-import RatioImage from '@/components/RatioImage'
 import TagItem from '@/components/Tag/TagItem'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
 import { LikeIcon } from '@/assets/icons/components'
@@ -47,15 +46,8 @@ function FlatPostCard({ post, hideUser }: Props) {
         </div>
       )}
       {post.thumbnail && (
-        <VLink href={url}>
-          <RatioImage
-            src={post.thumbnail}
-            alt="post-thumbnail"
-            widthRatio={1.91}
-            heightRatio={1}
-            className="postThumbnail"
-            fill={true}
-          />
+        <VLink href={url} className={cx('postThumbnail')}>
+          <Image src={post.thumbnail} alt="post-thumbnail" fill={true} />
         </VLink>
       )}
       <VLink href={url}>

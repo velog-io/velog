@@ -5,30 +5,26 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 const cx = bindClassNames(styles)
 
 type Props = {
-  thumbnail: string | null
+  src: string | null
   alt?: string
-  width: number
-  height: number
+  width?: number
+  height?: number
   borderRadius?: number
   className?: string
 }
 
 function Thumbnail({
-  thumbnail,
+  src,
   alt = 'thumbnail',
-  width,
+  width = 100,
   height,
   className,
   borderRadius,
 }: Props) {
+  const styles = !borderRadius ? {} : { borderRadius: borderRadius || width / 2 }
   return (
     <div className={cx('block', className)} style={{ width, height }}>
-      <Image
-        src={thumbnail || '/images/user-thumbnail.png'}
-        alt={alt}
-        fill={true}
-        style={{ borderRadius: borderRadius || width / 2 }}
-      />
+      <Image src={src || '/images/user-thumbnail.png'} alt={alt} fill={true} style={styles} />
     </div>
   )
 }

@@ -52,7 +52,6 @@ export default function useFollowers(username: string, take = 1) {
 
   return {
     followers,
-    fetchNextPage,
     isFetching,
     originData: data,
     isInitLoading: isLoading,
