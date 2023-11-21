@@ -227,3 +227,13 @@ img {
 .isWhite {
   background-color: var(--bg-page2);
 }
+
+a {
+  display: inline-block;
+  color: inherit;
+}
+
+button {
+  outline: none;
+  user-select: none;
+}

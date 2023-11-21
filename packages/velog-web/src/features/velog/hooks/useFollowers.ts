@@ -4,8 +4,6 @@ import {
   GetFollowersDocument,
   GetFollowersQuery,
   GetFollowersQueryVariables,
-  GetFollowingsDocument,
-  User,
 } from '@/graphql/generated'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'

@@ -10,9 +10,10 @@ type Props = {
 }
 
 function VelogFollowList({ data }: Props) {
+  if (data.length === 0) return null
   return (
     <ul className={cx('block')}>
-      {/* {data.map((followState) => (
+      {data.map((followState) => (
         <VelogFollowItem
           key={followState.id}
           isFollowed={followState.is_followed}
@@ -22,7 +23,7 @@ function VelogFollowList({ data }: Props) {
           displayName={followState.profile.display_name}
           username={followState.username}
         />
-      ))} */}
+      ))}
     </ul>
   )
 }

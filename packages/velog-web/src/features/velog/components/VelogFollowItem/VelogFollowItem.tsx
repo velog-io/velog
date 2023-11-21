@@ -19,7 +19,7 @@ type Props = {
   username: string
 }
 
-function VelogFollowItem({ displayName, userId, thumbnail }: Props) {
+function VelogFollowItem({ displayName, userId, thumbnail, username, description }: Props) {
   const { data, isLoading } = useGetUserFollowInfoQuery({ input: { username } })
   const [isFollowed, setIsFollowed] = useState<boolean>(!!data?.user?.is_followed)
 
@@ -29,16 +29,19 @@ function VelogFollowItem({ displayName, userId, thumbnail }: Props) {
 
   if (isLoading) return <VelogFollowItemSkeleton />
   return (
-    <div className={cx('block')}>
+    <li className={cx('block')}>
       <Thumbnail className={cx('thumbnail')} width={40} height={40} thumbnail={thumbnail} />
       <div className={cx('content')}>
-        <div className={cx('username')}>
-          <span>Username</span>
-          <span>{`@${displayName}`}</span>
+        <div className={cx('info')}>
+          <span className={cx('text')}>Username</span>
+          <span className={cx('username')}>{`@${displayName}`}</span>
         </div>
+        <div className={cx('description')}>{description}</div>
       </div>
-      <FollowButton followingUserId={userId} isFollowed={!!isFollowed} />
-    </div>
+      <div className={cx('button')}>
+        <FollowButton followingUserId={userId} isFollowed={!!isFollowed} />
+      </div>
+    </li>
   )
 }
 

@@ -1,6 +1,46 @@
 .block {
   display: flex;
   align-items: center;
+
+  & + & {
+    margin-top: 16px;
+  }
+
+  .thumbnail {
+    border-radius: 50%;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .content {
+    margin-left: 24px;
+    max-width: 70%;
+    word-break: keep-all;
+
+    .info {
+      .text {
+        color: var(--text2);
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .username {
+        color: var(--text3);
+        font-size: 14px;
+        font-weight: 400;
+        margin-left: 4px;
+      }
+    }
+
+    .description {
+      color: var(--text2);
+      font-size: 14px;
+      font-weight: 400;
+      margin-top: 5px;
+    }
+  }
+
+  .button {
+    margin-left: auto;
+  }
 }
 
 .skeletonBlock {

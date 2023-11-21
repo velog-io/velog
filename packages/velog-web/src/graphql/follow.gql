@@ -13,6 +13,7 @@ query getFollowers($input: GetFollowInput!) {
     profile {
       display_name
       short_bio
+      thumbnail
     }
     is_followed
   }
@@ -25,6 +26,7 @@ query getFollowings($input: GetFollowInput!) {
     profile {
       display_name
       short_bio
+      thumbnail
     }
     is_followed
   }

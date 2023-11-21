@@ -4,6 +4,7 @@ import Thumbnail from '@/components/Thumbnail'
 import styles from './VelogFollowStats.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useGetUserFollowInfoQuery } from '@/graphql/generated'
+import Link from 'next/link'
 
 const cx = bindClassNames(styles)
 
@@ -40,14 +41,19 @@ function VelogFollowStats({
   const followersCount = data?.user?.followers_count ?? totalCount
   const followingsCount = data?.user?.followings_count ?? totalCount
 
+  const velogUrl = `/@${username}/posts`
   return (
     <section className={cx('block')}>
       <div className={cx('header')}>
         <div className={cx('category')}>
           <div className={cx('thumbnail')}>
-            <Thumbnail thumbnail={thumbnail} width={32} height={32} />
+            <Link href={velogUrl}>
+              <Thumbnail thumbnail={thumbnail} width={32} height={32} />
+            </Link>
           </div>
-          <span className={cx('displayName')}>{displayName}</span>
+          <span className={cx('displayName')}>
+            <Link href={velogUrl}>{displayName}</Link>
+          </span>
           <span className={cx('allow')}>{'>'}</span>
           <span className={cx('subCategory')}>{category}</span>
         </div>

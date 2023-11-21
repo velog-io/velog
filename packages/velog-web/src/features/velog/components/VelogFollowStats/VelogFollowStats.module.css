@@ -8,7 +8,14 @@
       color: var(--text2);
 
       .thumbnail {
+        display: block;
         margin-right: 8px;
+        border-radius: 50%;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+      }
+
+      .displayName {
+        color: var(--text2);
       }
       .allow {
         padding-left: 8px;

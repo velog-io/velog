@@ -17,7 +17,6 @@ function VelogFollowings({ username }: Props) {
 
   if (isInitLoading) return <VelogFollowListSkeleton />
 
-  console.log('followings', followings)
   return <VelogFollowList data={followings} />
 }
 

@@ -10,7 +10,7 @@ import {
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
-export default function useFollowings(username: string, take = 1) {
+export default function useFollowings(username: string, take = 20) {
   const fetchInput = useMemo(() => {
     return {
       username,

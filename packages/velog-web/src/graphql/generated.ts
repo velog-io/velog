@@ -44,7 +44,7 @@ export type FollowInput = {
 export type FollowResult = {
   id: Scalars['ID']['output']
   is_followed: Scalars['Boolean']['output']
-  profile: Maybe<UserProfile>
+  profile: UserProfile
   username: Scalars['String']['output']
 }
 
@@ -452,7 +452,7 @@ export type GetFollowersQuery = {
     id: string
     username: string
     is_followed: boolean
-    profile: { display_name: string; short_bio: string } | null
+    profile: { display_name: string; short_bio: string; thumbnail: string | null }
   }>
 }
 
@@ -465,7 +465,7 @@ export type GetFollowingsQuery = {
     id: string
     username: string
     is_followed: boolean
-    profile: { display_name: string; short_bio: string } | null
+    profile: { display_name: string; short_bio: string; thumbnail: string | null }
   }>
 }
 
@@ -797,6 +797,7 @@ export const GetFollowersDocument = `
     profile {
       display_name
       short_bio
+      thumbnail
     }
     is_followed
   }
@@ -819,6 +820,7 @@ export const GetFollowingsDocument = `
     profile {
       display_name
       short_bio
+      thumbnail
     }
     is_followed
   }
