@@ -1,5 +1,14 @@
 .block {
   position: relative;
+  margin-top: 32px;
+
+  @media screen and (max-width: 768px) {
+    margin-top: 24px;
+  }
+
+  @media screen and (max-width: 425px) {
+    margin-top: 0px;
+  }
   .empty {
     display: flex;
     justify-content: center;

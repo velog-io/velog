@@ -1,17 +1,27 @@
 .block {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 2rem;
+
+  @media screen and (max-width: 768px) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 
   .search {
     display: flex;
-    height: 2.25rem;
+    height: 36px;
     border: 1px solid var(--border2);
-    padding-left: 0.625rem;
-    padding-right: 0.625rem;
+    padding-left: 10px;
+    padding-right: 10px;
     align-items: center;
     transition: all 0.125s ease-in;
     cursor: text;
+
+    @media screen and (max-width: 768px) {
+      height: 30px;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
 
     svg {
       width: 16px;
@@ -19,6 +29,11 @@
       transition: all 0.125s ease-in;
       margin-right: 0.5rem;
       flex-shrink: 0;
+
+      @media screen and (max-width: 425px) {
+        width: 14px;
+        height: 14px;
+      }
     }
 
     input {
@@ -36,6 +51,10 @@
       min-width: 0;
       &::placeholder {
         color: var(--text3);
+      }
+
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
       }
     }
   }

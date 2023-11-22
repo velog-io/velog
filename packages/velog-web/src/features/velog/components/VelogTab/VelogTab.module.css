@@ -10,6 +10,10 @@
     margin-bottom: 24px;
   }
 
+  @media screen and (max-width: 425px) {
+    margin-bottom: 18px;
+  }
+
   .wrapper {
     display: flex;
     position: relative;
