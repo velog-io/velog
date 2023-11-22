@@ -33,7 +33,7 @@ function VelogFollowItem({ userId, thumbnail, username, description }: Props) {
   return (
     <li className={cx('block')}>
       <Link href={velogUrl}>
-        <Thumbnail className={cx('thumbnail')} width={40} height={40} src={thumbnail} />
+        <Thumbnail className={cx('thumbnail')} src={thumbnail} />
       </Link>
       <div className={cx('content')}>
         <div className={cx('info')}>

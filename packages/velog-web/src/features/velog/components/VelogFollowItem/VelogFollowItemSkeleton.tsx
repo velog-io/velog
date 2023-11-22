@@ -8,7 +8,7 @@ const cx = bindClassNames(styles)
 function VelogFollowItemSkeleton() {
   return (
     <div className={cx('block', 'skeletonBlock')}>
-      <div className={cx('thumbnail')}>
+      <div>
         <Skeleton circle={true} width="56px" height="56px" />
       </div>
       <div className={cx('content')}>

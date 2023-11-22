@@ -7,8 +7,12 @@
   }
 
   .thumbnail {
-    border-radius: 50%;
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+    width: 40px;
+    height: 40px;
+    img {
+      border-radius: 50%;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+    }
   }
 
   .content {
@@ -17,6 +21,7 @@
     word-break: keep-all;
 
     .info {
+      display: flex;
       .text {
         color: var(--text2);
         font-size: 16px;
@@ -45,7 +50,7 @@
 
 .skeletonBlock {
   & + & {
-    margin-top: 12px;
+    margin-top: 20px;
   }
 
   .content {
