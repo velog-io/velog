@@ -25,11 +25,9 @@
         color: var(--text2);
       }
       .allow {
+        margin-top: -4px;
         padding-left: 8px;
         padding-right: 8px;
-      }
-      .subCategory {
-        margin-top: 1px;
       }
     }
 
