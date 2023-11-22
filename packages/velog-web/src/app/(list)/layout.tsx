@@ -4,6 +4,6 @@ type Props = {
   children: React.ReactNode
 }
 
-export default function ListLayout({ children }: Props) {
+export default function Layout({ children }: Props) {
   return <BasicLayout>{children}</BasicLayout>
 }

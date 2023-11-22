@@ -1,7 +1,5 @@
-type Props = {
-  children: React.ReactNode
-}
+type Props = {}
 
-export default function TrendingWritersPage({ children }: Props) {
+export default function Page({}: Props) {
   return <>TrendingWritersPage</>
 }

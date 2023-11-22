@@ -12,11 +12,6 @@ const followerResolvers: Resolvers = {
       const followService = container.resolve(FollowService)
       return await followService.getFollowings(input, ctx.user?.id)
     },
-    recommendFollowings: async (_, { input }) => {
-      const { page, take } = input
-      const followService = container.resolve(FollowService)
-      return followService.getRecommededFollowers(page, take)
-    },
   },
   Mutation: {
     follow: async (_, { input }, ctx) => {

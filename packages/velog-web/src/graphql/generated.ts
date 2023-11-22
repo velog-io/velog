@@ -179,12 +179,12 @@ export type Query = {
   posts: Array<Post>
   readingList: Array<Post>
   recentPosts: Array<Post>
-  recommendFollowings: RecommedFollowingsResult
   restoreToken: Maybe<UserToken>
   searchPosts: SearchResult
   series: Maybe<Series>
   seriesList: Array<Series>
   trendingPosts: Array<Post>
+  trendingWriters: TrendingWritersResult
   user: Maybe<User>
   userTags: Maybe<UserTags>
   velogConfig: Maybe<VelogConfig>
@@ -214,10 +214,6 @@ export type QueryRecentPostsArgs = {
   input: RecentPostsInput
 }
 
-export type QueryRecommendFollowingsArgs = {
-  input: RecommendFollowingsInput
-}
-
 export type QuerySearchPostsArgs = {
   input: GetSearchPostsInput
 }
@@ -232,6 +228,10 @@ export type QuerySeriesListArgs = {
 
 export type QueryTrendingPostsArgs = {
   input: TrendingPostsInput
+}
+
+export type QueryTrendingWritersArgs = {
+  input: TrendingWritersInput
 }
 
 export type QueryUserArgs = {
@@ -271,41 +271,6 @@ export enum ReadingListOption {
 export type RecentPostsInput = {
   cursor?: InputMaybe<Scalars['ID']['input']>
   limit?: InputMaybe<Scalars['Int']['input']>
-}
-
-export type RecommedFollowersPosts = {
-  id: Maybe<Scalars['ID']['output']>
-  thumbnail: Maybe<Scalars['String']['output']>
-  title: Maybe<Scalars['String']['output']>
-  url_slug: Maybe<Scalars['String']['output']>
-}
-
-export type RecommedFollowingsResult = {
-  followings: Array<RecommendFollowings>
-  totalPage: Maybe<Scalars['Int']['output']>
-}
-
-export type RecommendFollowersUser = {
-  id: Maybe<Scalars['ID']['output']>
-  profile: Maybe<RecommendFollowersUserProfile>
-  username: Maybe<Scalars['String']['output']>
-}
-
-export type RecommendFollowersUserProfile = {
-  display_name: Maybe<Scalars['String']['output']>
-  short_bio: Maybe<Scalars['String']['output']>
-  thumbnail: Maybe<Scalars['String']['output']>
-}
-
-export type RecommendFollowings = {
-  id: Scalars['ID']['output']
-  posts: Array<RecommedFollowersPosts>
-  user: RecommendFollowersUser
-}
-
-export type RecommendFollowingsInput = {
-  page?: InputMaybe<Scalars['PositiveInt']['input']>
-  take?: InputMaybe<Scalars['PositiveInt']['input']>
 }
 
 export type SearchResult = {
@@ -359,6 +324,41 @@ export type TrendingPostsInput = {
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
   timeframe?: InputMaybe<Scalars['String']['input']>
+}
+
+export type TrendingWriter = {
+  id: Scalars['ID']['output']
+  posts: Array<TrendingWriterPosts>
+  user: TrendingWriterUser
+}
+
+export type TrendingWriterPosts = {
+  id: Scalars['ID']['output']
+  thumbnail: Scalars['String']['output']
+  title: Scalars['String']['output']
+  url_slug: Scalars['String']['output']
+}
+
+export type TrendingWriterProfile = {
+  display_name: Scalars['String']['output']
+  short_bio: Scalars['String']['output']
+  thumbnail: Scalars['String']['output']
+}
+
+export type TrendingWriterUser = {
+  id: Scalars['ID']['output']
+  profile: TrendingWriterProfile
+  username: Scalars['String']['output']
+}
+
+export type TrendingWritersInput = {
+  page?: InputMaybe<Scalars['PositiveInt']['input']>
+  take?: InputMaybe<Scalars['PositiveInt']['input']>
+}
+
+export type TrendingWritersResult = {
+  totalPage: Scalars['Int']['output']
+  writers: Array<TrendingWriter>
 }
 
 export type UnfollowInput = {

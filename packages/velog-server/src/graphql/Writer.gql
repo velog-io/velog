@@ -1,0 +1,33 @@
+type TrendingWriterPosts {
+  id: ID!
+  title: String!
+  url_slug: String!
+  thumbnail: String!
+}
+
+type TrendingWriterUser {
+  id: ID!
+  username: String!
+  profile: TrendingWriterProfile!
+}
+
+type TrendingWriterProfile {
+  display_name: String!
+  short_bio: String!
+  thumbnail: String!
+}
+
+type TrendingWriter {
+  id: ID!
+  user: TrendingWriterUser!
+  posts: [TrendingWriterPosts!]!
+}
+
+type TrendingWritersResult {
+  totalPage: Int!
+  writers: [TrendingWriter!]!
+}
+
+type Query {
+  trendingWriters(input: TrendingWritersInput!): TrendingWritersResult!
+}

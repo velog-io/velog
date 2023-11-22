@@ -3,7 +3,7 @@ import { ConfilctError } from '@errors/ConfilctError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { RedisService } from '@lib/redis/RedisService.js'
-import { GetFollowInput, RecommedFollowingsResult, RecommendFollowings } from '@graphql/generated'
+import { GetFollowInput } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { FollowUser, Prisma, UserProfile } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
@@ -21,7 +21,6 @@ interface Service {
   getFollowersCount(username: string): Promise<number>
   getFollowings(input: GetFollowInput): Promise<FollowResult[]>
   getFollowingsCount(username: string): Promise<number>
-  getRecommededFollowers(page?: number, take?: number): Promise<RecommedFollowingsResult>
 }
 
 @injectable()
@@ -298,44 +297,6 @@ export class FollowService implements Service {
     })
 
     return followingsCount
-  }
-  public async getRecommededFollowers(
-    page?: number,
-    take?: number,
-  ): Promise<RecommedFollowingsResult> {
-    if (!page || !take) {
-      throw new BadRequestError()
-    }
-
-    if (take > 100) {
-      throw new BadRequestError('Max take is 100')
-    }
-
-    if (page < 0 || take < 0) {
-      throw new BadRequestError('Invalid input, input must be a non-negative number')
-    }
-
-    const key = this.redis.generateKey.recommendedFollowingsKey()
-    const followings = await this.redis.get(key)
-
-    if (!followings) {
-      return {
-        totalPage: 0,
-        followings: [],
-      }
-    }
-
-    const recommededFollowings: RecommendFollowings[] = JSON.parse(followings)
-
-    const offset = (page - 1) * take
-    const totalPage = Math.ceil(recommededFollowings.length / take)
-
-    const result = {
-      totalPage,
-      followings: recommededFollowings.slice(offset, offset + take),
-    }
-
-    return result
   }
 }
 
