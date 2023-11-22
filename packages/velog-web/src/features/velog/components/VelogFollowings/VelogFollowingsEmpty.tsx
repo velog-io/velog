@@ -14,7 +14,7 @@ function VelogFollowingsEmpty({}: Props) {
         <UndrawFollowEmpty />
       </div>
       <p className={cx('text')}>팔로우 중인 사람이 없어요.</p>
-      <Link href="/" className={cx('buttonWrapper')}>
+      <Link href="/trending-writers" className={cx('buttonWrapper')}>
         <button color="darkGray" className={cx('button')}>
           <span>인기 작가 둘러보기</span>
         </button>

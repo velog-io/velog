@@ -13,7 +13,7 @@ type Props = {
 
 function SeriesList({ list, username }: Props) {
   return (
-    <div className={cx('block')}>
+    <div className={cx('block', list.length === 0 ? 'empty' : '')}>
       {list.length === 0 && (
         <div className={cx('empty')}>
           <UndrawBlankCanvas width={320} height={320} />

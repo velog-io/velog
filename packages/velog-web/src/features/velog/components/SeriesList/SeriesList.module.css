@@ -3,6 +3,10 @@
   grid-gap: 32px;
   grid-template-columns: repeat(2, calc(50% - (32px * 1 / 2)));
 
+  &.empty {
+    grid-template-columns: repeat(1, calc(100%));
+  }
+
   @media screen and (max-width: 768px) {
     grid-template-columns: repeat(1, calc(100%));
     padding-left: 16px;
@@ -16,6 +20,8 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    grid-template-columns: repeat(1, 100%);
+
     svg {
       width: 320px;
       height: 320px;
