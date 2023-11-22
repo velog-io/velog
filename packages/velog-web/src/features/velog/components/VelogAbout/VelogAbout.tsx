@@ -24,7 +24,6 @@ function VelogAbout({ username }: Props) {
     data: getUserAboutData,
     refetch,
     isLoading,
-    isRefetching,
   } = useGetUserAboutQuery({ input: { username } })
   const { data: currentUserData } = useCurrentUserQuery()
   const { mutateAsync } = useUpdateAboutMutation()
@@ -43,7 +42,6 @@ function VelogAbout({ username }: Props) {
   }
 
   if (isLoading) return <VelogAboutContentSkeleton />
-  if (isRefetching) return null
   return (
     <div className={cx('block')}>
       {isOwn && (getUserAboutData?.user?.profile.about || isEdit) && (
