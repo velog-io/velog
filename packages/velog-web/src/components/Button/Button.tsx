@@ -15,6 +15,7 @@ interface Props extends ButtonProps {
   inline?: boolean
   size?: ButtonSize
   responsive?: boolean
+  className?: string
 }
 
 function Button({
@@ -23,11 +24,19 @@ function Button({
   inline = false,
   size = 'medium',
   responsive = false,
+  className,
   ...rest
 }: Props) {
   return (
     <button
-      className={cx('block', size, color, inline ? 'inline' : '', responsive ? 'responsive' : '')}
+      className={cx(
+        'block',
+        size,
+        color,
+        inline ? 'inline' : '',
+        responsive ? 'responsive' : '',
+        className,
+      )}
       {...rest}
       onClick={(e) => {
         if (rest.onClick) {

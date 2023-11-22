@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import useFollowings from '../../hooks/useFollowings'
 import { VelogFollowList, VelogFollowListSkeleton } from '../VelogFollowList'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import VelogFollowingsEmpty from './VelogFollowingsEmpty'
 
 type Props = {
   username: string
@@ -16,6 +17,7 @@ function VelogFollowings({ username }: Props) {
   useInfiniteScroll(ref, fetchMore)
 
   if (isInitLoading) return <VelogFollowListSkeleton />
+  if (followings.length === 0) return <VelogFollowingsEmpty />
   return (
     <>
       <VelogFollowList data={followings} />

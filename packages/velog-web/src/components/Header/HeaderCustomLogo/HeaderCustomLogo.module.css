@@ -9,12 +9,14 @@
   }
 
   .logo {
-    width: 28px;
-    height: 28px;
+    svg {
+      width: 28px;
+      height: 28px;
 
-    @media screen and (max-width: 1024px) {
-      width: 24px;
-      height: 24px;
+      @media screen and (max-width: 1024px) {
+        width: 24px;
+        height: 24px;
+      }
     }
   }
 

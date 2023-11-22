@@ -1,0 +1,49 @@
+.block {
+  margin-top: 64px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+
+  .image {
+    width: 269px;
+    height: 300px;
+    margin: 0 auto;
+  }
+
+  .text {
+    margin-top: 32px;
+    color: var(--text2);
+    font-size: 32px;
+    font-weight: 400;
+
+    @media screen and (max-width: 768px) {
+      font-size: 20px;
+    }
+  }
+
+  .buttonWrapper {
+    margin-top: 40px;
+
+    @media screen and (max-width: 768px) {
+      margin-top: 32px;
+    }
+
+    .button {
+      border-radius: 27px;
+      font-size: 24px;
+      padding: 12px 32px;
+      user-select: none;
+      outline: none;
+      background-color: var(--bg-element5);
+      color: white;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+
+      @media screen and (max-width: 768px) {
+        font-size: 18px;
+        padding: 12px 28px;
+      }
+    }
+  }
+}

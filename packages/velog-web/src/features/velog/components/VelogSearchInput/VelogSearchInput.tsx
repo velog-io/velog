@@ -65,7 +65,7 @@ function VelogSearchInput({ query, username }: Props) {
           ref={inputRef}
           onChange={onChange}
           value={value}
-          autoFocus={true}
+          autoFocus={false}
         />
       </div>
     </div>

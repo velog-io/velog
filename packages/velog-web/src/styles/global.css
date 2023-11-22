@@ -229,7 +229,7 @@ img {
 }
 
 a {
-  display: flex;
+  display: inline-block;
   color: inherit;
 }
 
