@@ -1,9 +1,9 @@
-.homePostCardGrid {
+.homeGrid {
   display: grid;
   grid-gap: 32px;
 
   --card-count: 5;
-  --spacer: 4;
+  --spacer: calc(var(--card-count) - 1);
   --width: 20%;
 
   grid-template-columns: repeat(
@@ -13,21 +13,47 @@
 
   @media screen and (max-width: 1919px) {
     --card-count: 4;
-    --spacer: 3;
     --width: 25%;
   }
   @media screen and (max-width: 1440px) {
     --card-count: 3;
-    --spacer: 2;
     --width: 33.33%;
   }
   @media screen and (max-width: 1056px) {
     --card-count: 2;
-    --spacer: 1;
     --width: 50%;
   }
   @media screen and (max-width: 768px) {
     grid-template-columns: repeat(1, 100%);
+    grid-gap: 16px;
+  }
+}
+
+.trendingWriterGrid {
+  display: grid;
+  grid-gap: 24px 16px;
+
+  --row-gap: 16px;
+  --card-count: 3;
+  --spacer: calc(var(--card-count) - 1);
+  --width: 33.33%;
+
+  grid-template-columns: repeat(
+    var(--card-count),
+    calc(var(--width) - (var(--row-gap) * var(--spacer) / var(--card-count)))
+  );
+
+  @media screen and (max-width: 768px) {
+    --card-count: 2;
+    --width: 50%;
+    --row-gap: 24px;
+    grid-gap: 24px;
+  }
+
+  @media screen and (max-width: 425px) {
+    --card-count: 1;
+    --width: 100%;
+    --row-gap: 16px;
     grid-gap: 16px;
   }
 }

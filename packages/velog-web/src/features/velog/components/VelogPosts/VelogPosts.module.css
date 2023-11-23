@@ -3,7 +3,7 @@
   margin-top: 32px;
 
   @media screen and (max-width: 768px) {
-    margin-top: 24px;
+    margin-top: 16px;
   }
 
   @media screen and (max-width: 425px) {

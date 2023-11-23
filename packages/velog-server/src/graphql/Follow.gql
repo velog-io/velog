@@ -22,11 +22,6 @@ input GetFollowInput {
   take: PositiveInt
 }
 
-input TrendingWritersInput {
-  page: PositiveInt
-  take: PositiveInt
-}
-
 input FollowInput {
   followingUserId: ID!
 }

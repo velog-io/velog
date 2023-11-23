@@ -27,7 +27,13 @@ function VelogTagVerticalList({ active, tags, postsCount, username }: Props) {
             key={tag.id}
             className={cx('listItem', { active: active === escapeForUrl(tag.name!) })}
           >
-            <Link href={`/@${username}/posts?tag=${escapeForUrl(tag.name!)}`}>{tag.name}</Link>
+            <Link
+              className={cx('name', 'ellipsis')}
+              href={`/@${username}/posts?tag=${escapeForUrl(tag.name!)}`}
+              scroll={false}
+            >
+              {tag.name}
+            </Link>
             <span>({tag.posts_count})</span>
           </li>
         ))}

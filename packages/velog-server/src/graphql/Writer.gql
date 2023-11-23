@@ -31,3 +31,8 @@ type TrendingWritersResult {
 type Query {
   trendingWriters(input: TrendingWritersInput!): TrendingWritersResult!
 }
+
+input TrendingWritersInput {
+  page: PositiveInt!
+  take: PositiveInt!
+}

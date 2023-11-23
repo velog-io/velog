@@ -1,0 +1,7 @@
+.block {
+  margin-top: 56px;
+
+  span {
+    border: 1px solid red;
+  }
+}

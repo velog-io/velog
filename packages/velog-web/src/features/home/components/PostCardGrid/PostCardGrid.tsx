@@ -44,7 +44,7 @@ function PostCardGrid({
   }
 
   return (
-    <div className={cx('block', 'homePostCardGrid')}>
+    <div className={cx('block', 'homeGrid')}>
       {posts.map((post) => {
         return (
           <PostCard
