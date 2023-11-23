@@ -70,6 +70,47 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
 
+  packages/common:
+    dependencies:
+      inquirer:
+        specifier: ^9.2.7
+        version: 9.2.7
+      ioredis:
+        specifier: ^5.3.2
+        version: 5.3.2
+      tsyringe:
+        specifier: ^4.7.0
+        version: 4.7.0
+    devDependencies:
+      '@types/inquirer':
+        specifier: ^9.0.3
+        version: 9.0.3
+      '@types/jest':
+        specifier: ^29.5.10
+        version: 29.5.10
+
+  packages/velog-common:
+    dependencies:
+      inquirer:
+        specifier: ^9.2.7
+        version: 9.2.12
+      ioredis:
+        specifier: ^5.3.2
+        version: 5.3.2
+      reflect-metadata:
+        specifier: ^0.1.13
+        version: 0.1.13
+      tsyringe:
+        specifier: ^4.7.0
+        version: 4.7.0
+    devDependencies:
+      '@types/inquirer':
+        specifier: ^9.0.3
+        version: 9.0.7
+      '@types/jest':
+        specifier: ^29.5.10
+        version: 29.5.10
+
   packages/velog-cron:
     dependencies:
       '@aws-sdk/client-ssm':
@@ -126,6 +167,9 @@ importers:
       tsyringe:
         specifier: ^4.7.0
         version: 4.7.0
+      velog-common:
+        specifier: workspace:^
+        version: link:../velog-common
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -297,8 +341,8 @@ importers:
         specifier: ^1.22.2
         version: 1.22.2(graphql@16.7.1)
       inquirer:
-        specifier: ^9.2.7
-        version: 9.2.7
+        specifier: ^9.2.12
+        version: 9.2.12
       ioredis:
         specifier: ^5.3.2
         version: 5.3.2
@@ -353,6 +397,9 @@ importers:
       tsyringe:
         specifier: ^4.7.0
         version: 4.7.0
+      velog-common:
+        specifier: workspace:*
+        version: link:../velog-common
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -376,8 +423,8 @@ importers:
         specifier: ^1.5.2
         version: 1.5.2
       '@types/inquirer':
-        specifier: ^9.0.3
-        version: 9.0.3
+        specifier: ^9.0.7
+        version: 9.0.7
       '@types/jest':
         specifier: ^29.5.2
         version: 29.5.2
@@ -5169,7 +5216,7 @@ packages:
     resolution: {integrity: sha512-o319vIf5pEMx0LmzSxxkYYxo4wrRLKHq9dP1yJU7FoPTB0LfAKSz8SWD6D/6U3v/O52t9cF5t+MeJiRsfk7zMw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      jest-get-type: 29.4.3
+      jest-get-type: 29.6.3
     dev: true
 
   /@jest/expect-utils@29.6.4:
@@ -5250,13 +5297,6 @@ packages:
       - supports-color
     dev: true
 
-  /@jest/schemas@29.6.0:
-    resolution: {integrity: sha512-rxLjXyJBTL4LQeJW3aKo0M/+GkCOXsO+8i9Iu7eDb6KwtP65ayoDsitrdPBtujxQ88k4wI2FNYfa6TOGwSn6cQ==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    dependencies:
-      '@sinclair/typebox': 0.27.8
-    dev: true
-
   /@jest/schemas@29.6.3:
     resolution: {integrity: sha512-mo5j5X+jIZmJQveBKeS/clAueipV7KgiX1vMgCxam1RNYiqE1w62n0/tJJnHtjW8ZHcQco5gY85jA3mi0L+nSA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -5320,7 +5360,7 @@ packages:
     resolution: {integrity: sha512-tPKQNMPuXgvdOn2/Lg9HNfUvjYVGolt04Hp03f5hAk878uwOLikN+JzeLY0HcVgKgFl9Hs3EIqpu3WX27XNhnw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@jest/schemas': 29.6.0
+      '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
       '@types/node': 20.5.0
@@ -5379,6 +5419,13 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
+
+  /@ljharb/through@2.3.11:
+    resolution: {integrity: sha512-ccfcIDlogiXNq5KcbAwbaO7lMh3Tm1i3khMPYpxlK8hH/W53zN81KM9coerRLOnTGu3nfXIniAmQbRI9OxbC0w==}
+    engines: {node: '>= 0.4'}
+    dependencies:
+      call-bind: 1.0.2
+    dev: false
 
   /@logdna/tail-file@2.2.0:
     resolution: {integrity: sha512-XGSsWDweP80Fks16lwkAUIr54ICyBs6PsI4mpfTLQaWgEJRtY9xEV+PeyDpJ+sJEGZxqINlpmAwe/6tS1pP8Ng==}
@@ -8008,6 +8055,13 @@ packages:
       rxjs: 7.8.1
     dev: true
 
+  /@types/inquirer@9.0.7:
+    resolution: {integrity: sha512-Q0zyBupO6NxGRZut/JdmqYKOnN95Eg5V8Csg3PGKkP+FnvsUZx1jAyK7fztIszxxMuoBA6E3KXWvdZVXIpx60g==}
+    dependencies:
+      '@types/through': 0.0.30
+      rxjs: 7.8.1
+    dev: true
+
   /@types/istanbul-lib-coverage@2.0.4:
     resolution: {integrity: sha512-z/QT1XN4K4KYuslS23k62yDIDLwLFkzxOuMplDtObz0+y7VqJCaO2o+SPwHCvLFZh7xazvvoor2tA/hPz9ee7g==}
     dev: true
@@ -8022,6 +8076,13 @@ packages:
     resolution: {integrity: sha512-c3mAZEuK0lvBp8tmuL74XRKn1+y2dcwOUpH7x4WrF6gk1GIgiluDRgMYQtw2OFcBvAJWlt6ASU3tSqxp0Uu0Aw==}
     dependencies:
       '@types/istanbul-lib-report': 3.0.0
+    dev: true
+
+  /@types/jest@29.5.10:
+    resolution: {integrity: sha512-tE4yxKEphEyxj9s4inideLHktW/x6DwesIwWZ9NN1FKf9zbJYsnhBoA9vrHA/IuIOKwPa5PcFBNV4lpMIOEzyQ==}
+    dependencies:
+      expect: 29.6.4
+      pretty-format: 29.6.3
     dev: true
 
   /@types/jest@29.5.2:
@@ -9465,6 +9526,11 @@ packages:
     engines: {node: '>= 12'}
     dev: false
 
+  /cli-width@4.1.0:
+    resolution: {integrity: sha512-ouuZd4/dm2Sw5Gmqy6bGyNNNe1qt9RpmxveLSO7KcgsTnU7RXfsw+/bukWGo1abgBiMAic068rclZsO4IWmmxQ==}
+    engines: {node: '>= 12'}
+    dev: false
+
   /client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
     dev: false
@@ -9994,11 +10060,6 @@ packages:
       asap: 2.0.6
       wrappy: 1.0.2
     dev: false
-
-  /diff-sequences@29.4.3:
-    resolution: {integrity: sha512-ofrBgwpPhCD85kMKtE9RYFFq6OC1A89oW2vvgWZNCwxrUpRUILopY7lsYyMDSjc8g6U6aiO0Qubg6r4Wgt5ZnA==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    dev: true
 
   /diff-sequences@29.6.3:
     resolution: {integrity: sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==}
@@ -11877,6 +11938,27 @@ packages:
       wrap-ansi: 7.0.0
     dev: true
 
+  /inquirer@9.2.12:
+    resolution: {integrity: sha512-mg3Fh9g2zfuVWJn6lhST0O7x4n03k7G8Tx5nvikJkbq8/CK47WDVm+UznF0G6s5Zi0KcyUisr6DU8T67N5U+1Q==}
+    engines: {node: '>=14.18.0'}
+    dependencies:
+      '@ljharb/through': 2.3.11
+      ansi-escapes: 4.3.2
+      chalk: 5.3.0
+      cli-cursor: 3.1.0
+      cli-width: 4.1.0
+      external-editor: 3.1.0
+      figures: 5.0.0
+      lodash: 4.17.21
+      mute-stream: 1.0.0
+      ora: 5.4.1
+      run-async: 3.0.0
+      rxjs: 7.8.1
+      string-width: 4.2.3
+      strip-ansi: 6.0.1
+      wrap-ansi: 6.2.0
+    dev: false
+
   /inquirer@9.2.7:
     resolution: {integrity: sha512-Bf52lnfvNxGPJPltiNO2tLBp3zC339KNlGMqOkW+dsvNikBhcVDK5kqU2lVX2FTPzuXUFX5WJDlsw//w3ZwoTw==}
     engines: {node: '>=14.18.0'}
@@ -12480,16 +12562,6 @@ packages:
       - supports-color
     dev: true
 
-  /jest-diff@29.6.1:
-    resolution: {integrity: sha512-FsNCvinvl8oVxpNLttNQX7FAq7vR+gMDGj90tiP7siWw1UdakWUGqrylpsYrpvj908IYckm5Y0Q7azNAozU1Kg==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    dependencies:
-      chalk: 4.1.2
-      diff-sequences: 29.4.3
-      jest-get-type: 29.4.3
-      pretty-format: 29.6.1
-    dev: true
-
   /jest-diff@29.6.4:
     resolution: {integrity: sha512-9F48UxR9e4XOEZvoUXEHSWY4qC4zERJaOfrbBg9JpbJOO43R1vN76REt/aMGZoY6GD5g84nnJiBIVlscegefpw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -12572,9 +12644,9 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       chalk: 4.1.2
-      jest-diff: 29.6.1
-      jest-get-type: 29.4.3
-      pretty-format: 29.6.1
+      jest-diff: 29.6.4
+      jest-get-type: 29.6.3
+      pretty-format: 29.6.3
     dev: true
 
   /jest-matcher-utils@29.6.4:
@@ -12597,7 +12669,7 @@ packages:
       chalk: 4.1.2
       graceful-fs: 4.2.11
       micromatch: 4.0.5
-      pretty-format: 29.6.1
+      pretty-format: 29.6.3
       slash: 3.0.0
       stack-utils: 2.0.6
     dev: true
@@ -14655,7 +14727,7 @@ packages:
     resolution: {integrity: sha512-7jRj+yXO0W7e4/tSJKoR7HRIHLPPjtNaUGG2xxKQnGvPNRkgWcQ0AZX6P4KBRJN4FcTBWb3sa7DVUJmocYuoog==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@jest/schemas': 29.6.0
+      '@jest/schemas': 29.6.3
       ansi-styles: 5.2.0
       react-is: 18.2.0
     dev: true

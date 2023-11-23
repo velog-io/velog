@@ -2,12 +2,12 @@ import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { ConfilctError } from '@errors/ConfilctError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
-import { RedisService } from '@lib/redis/RedisService.js'
 import { GetFollowInput } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { FollowUser, Prisma, UserProfile } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
+import { RedisService } from '@lib/redis/RedisService.js'
 
 interface Service {
   findFollowRelationship({

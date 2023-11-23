@@ -1,6 +1,5 @@
-import { ENV } from '@env'
 import Redis from 'ioredis'
-import { injectable, singleton } from 'tsyringe'
+import { inject, injectable, singleton } from 'tsyringe'
 
 interface Service {
   get generateKey(): GenerateRedisKey
@@ -10,14 +9,16 @@ interface Service {
 @injectable()
 @singleton()
 export class RedisService extends Redis implements Service {
-  constructor() {
-    super({ port: 6379, host: ENV.redisHost })
+  private redisHost: string = ''
+  constructor(@inject('RedisHost') redisHost: string) {
+    super({ port: 6379, host: redisHost })
+    this.redisHost = redisHost
   }
 
   async connection(): Promise<string> {
     return new Promise((resolve) => {
       this.connect(() => {
-        resolve(`Redis connection established to ${ENV.redisHost}`)
+        resolve(`Redis connection established to ${this.redisHost}`)
       })
     })
   }
