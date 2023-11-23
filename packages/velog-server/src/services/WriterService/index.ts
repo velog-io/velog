@@ -24,7 +24,7 @@ export class WriterService implements Service {
       throw new BadRequestError('Invalid input, input must be a non-negative number')
     }
 
-    const key = this.redis.generateKey.recommendedFollowingsKey()
+    const key = this.redis.generateKey.trendingWriters()
     const writers = await this.redis.get(key)
 
     if (!writers) {

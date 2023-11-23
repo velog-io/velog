@@ -1,14 +1,14 @@
 import { CreateFeedJob } from '@jobs/CreateFeedJob.js'
 import { CalculatePostScoreJob } from '@jobs/CalculatePostScoreJob.js'
+import { GenerateTrendingWritersJob } from '@jobs/GenerateTrendingWritersJob.js'
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
-import { RecommendFollowingJob } from '@jobs/RecommendFollowingJob.js'
 import { ENV } from '@env'
 
 const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   const calculatePostScoreJob = container.resolve(CalculatePostScoreJob)
   const createFeedJob = container.resolve(CreateFeedJob)
-  const recommendFollowingJob = container.resolve(RecommendFollowingJob)
+  const generateTrendingWritersJob = container.resolve(GenerateTrendingWritersJob)
 
   const jobDescription: JobDescription[] = [
     {
@@ -30,38 +30,51 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       param: undefined,
     },
     {
-      name: 'generate recommend followers',
+      name: 'generate trending writers',
       cronTime: '0 5 * * *', // every day at 05:00 (5:00 AM)
-      jobService: recommendFollowingJob,
+      jobService: generateTrendingWritersJob,
       param: undefined,
     },
   ]
 
+  const createTick = async (description: JobDescription) => {
+    const { jobService } = description
+    if (jobService.isProgressing) return
+    jobService.start()
+
+    if (isNeedParamJobService(description)) {
+      await description.jobService.runner(description.param)
+    }
+
+    if (isNotNeedParamJobService(description)) {
+      await description.jobService.runner()
+    }
+
+    jobService.stop()
+  }
+
   const createJob = (description: JobDescription) => {
-    const { name, cronTime, jobService } = description
+    const { name, cronTime } = description
     return fastfiy.cron.createJob({
       name,
       cronTime,
-      onTick: async () => {
-        if (jobService.isProgressing) return
-        jobService.start()
-
-        if (isNeedParamJobService(description)) {
-          await description.jobService.runner(description.param)
-        }
-
-        if (isNotNeedParamJobService(description)) {
-          await description.jobService.runner()
-        }
-
-        jobService.stop()
-      },
+      onTick: async () => await createTick(description),
     })
+  }
+
+  if (ENV.appEnv === 'development') {
+    const jobs = jobDescription.filter((job) => !!job.isRunInDev)
+    await Promise.all(jobs.map(createTick))
   }
 
   if (ENV.dockerEnv === 'production') {
     const crons = jobDescription.map(createJob)
-    await Promise.all(crons.map((cron) => cron.start()))
+    await Promise.all(
+      crons.map((cron) => {
+        console.log(`${cron.name} is registered`)
+        cron.start()
+      }),
+    )
   }
 
   done()
@@ -74,7 +87,9 @@ function isNeedParamJobService(arg: any): arg is NeedParamJobService {
 }
 
 function isNotNeedParamJobService(arg: any): arg is NotNeedParamJobService {
-  return arg.jobService instanceof CreateFeedJob || arg.jobService instanceof RecommendFollowingJob
+  return (
+    arg.jobService instanceof CreateFeedJob || arg.jobService instanceof GenerateTrendingWritersJob
+  )
 }
 
 type JobDescription = NeedParamJobService | NotNeedParamJobService
@@ -84,13 +99,13 @@ type NeedParamJobService = {
   cronTime: string
   jobService: CalculatePostScoreJob
   param: number
-  isOnlyStage?: boolean
+  isRunInDev?: boolean
 }
 
 type NotNeedParamJobService = {
   name: string
   cronTime: string
-  jobService: CreateFeedJob | RecommendFollowingJob
+  jobService: CreateFeedJob | GenerateTrendingWritersJob
   param: undefined
-  isOnlyStage?: boolean
+  isRunInDev?: boolean
 }
