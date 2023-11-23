@@ -1,2 +1,49 @@
 .block {
+  width: 100%;
+  background-color: white;
+  box-shadow: 1px 4px 16px 0px rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+}
+
+.skeletonBlock {
+  .header {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+
+    .username {
+      width: 60px;
+
+      @media screen and (max-width: 768px) {
+        width: 80px;
+      }
+    }
+
+    .button {
+      border-radius: 16px;
+    }
+  }
+
+  .content {
+    border-top: 1px solid var(--border4);
+    padding: 8px;
+    padding-bottom: 24px;
+
+    .pc {
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    }
+    .mobile {
+      display: none;
+      @media screen and (max-width: 768px) {
+        display: inline-block;
+      }
+    }
+
+    .spacer {
+      height: 10px;
+      width: 1px;
+    }
+  }
 }

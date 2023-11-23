@@ -50,7 +50,7 @@
     grid-gap: 24px;
   }
 
-  @media screen and (max-width: 425px) {
+  @media screen and (max-width: 625px) {
     --card-count: 1;
     --width: 100%;
     --row-gap: 16px;
