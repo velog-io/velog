@@ -1,0 +1,15 @@
+query getTrendingWriters($input: TrendingWritersInput!) {
+  trendingWriters(input: $input) {
+    totalPage
+    writers {
+      id
+      user {
+        id
+        username
+      }
+      posts {
+        title
+      }
+    }
+  }
+}

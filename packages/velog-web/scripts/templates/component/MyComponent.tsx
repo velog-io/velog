@@ -1,3 +1,5 @@
+'use client'
+
 import styles from './MyComponent.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 

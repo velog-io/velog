@@ -352,8 +352,8 @@ export type TrendingWriterUser = {
 }
 
 export type TrendingWritersInput = {
-  page?: InputMaybe<Scalars['PositiveInt']['input']>
-  take?: InputMaybe<Scalars['PositiveInt']['input']>
+  page: Scalars['PositiveInt']['input']
+  take: Scalars['PositiveInt']['input']
 }
 
 export type TrendingWritersResult = {
@@ -747,6 +747,21 @@ export type UpdateAboutMutationVariables = Exact<{
 }>
 
 export type UpdateAboutMutation = { updateAbout: { id: string; about: string } | null }
+
+export type GetTrendingWritersQueryVariables = Exact<{
+  input: TrendingWritersInput
+}>
+
+export type GetTrendingWritersQuery = {
+  trendingWriters: {
+    totalPage: number
+    writers: Array<{
+      id: string
+      user: { id: string; username: string }
+      posts: Array<{ title: string }>
+    }>
+  }
+}
 
 export const SendMailDocument = `
     mutation sendMail($input: SendMailInput!) {
@@ -1266,5 +1281,34 @@ export const useUpdateAboutMutation = <TError = unknown, TContext = unknown>(
     ['updateAbout'],
     (variables?: UpdateAboutMutationVariables) =>
       fetcher<UpdateAboutMutation, UpdateAboutMutationVariables>(UpdateAboutDocument, variables)(),
+    options,
+  )
+export const GetTrendingWritersDocument = `
+    query getTrendingWriters($input: TrendingWritersInput!) {
+  trendingWriters(input: $input) {
+    totalPage
+    writers {
+      id
+      user {
+        id
+        username
+      }
+      posts {
+        title
+      }
+    }
+  }
+}
+    `
+export const useGetTrendingWritersQuery = <TData = GetTrendingWritersQuery, TError = unknown>(
+  variables: GetTrendingWritersQueryVariables,
+  options?: UseQueryOptions<GetTrendingWritersQuery, TError, TData>,
+) =>
+  useQuery<GetTrendingWritersQuery, TError, TData>(
+    ['getTrendingWriters', variables],
+    fetcher<GetTrendingWritersQuery, GetTrendingWritersQueryVariables>(
+      GetTrendingWritersDocument,
+      variables,
+    ),
     options,
   )

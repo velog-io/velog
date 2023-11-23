@@ -361,8 +361,8 @@ export type TrendingWriterUser = {
 }
 
 export type TrendingWritersInput = {
-  page?: InputMaybe<Scalars['PositiveInt']['input']>
-  take?: InputMaybe<Scalars['PositiveInt']['input']>
+  page: Scalars['PositiveInt']['input']
+  take: Scalars['PositiveInt']['input']
 }
 
 export type TrendingWritersResult = {

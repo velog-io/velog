@@ -1,3 +1,5 @@
+'use client'
+
 import styles from './TrendingWriterHeader.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 
