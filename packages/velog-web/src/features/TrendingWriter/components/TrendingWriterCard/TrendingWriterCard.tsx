@@ -12,7 +12,7 @@ const cx = bindClassNames(styles)
 type Props = {
   writerId: string
   posts: TrendingWriterPosts[]
-  thumbnail: string
+  thumbnail?: string | null
   displayName: string
   username: string
 }

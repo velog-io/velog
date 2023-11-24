@@ -5,7 +5,7 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 const cx = bindClassNames(styles)
 
 type Props = {
-  src?: string
+  src?: string | null
   alt?: string
   className?: string
 }

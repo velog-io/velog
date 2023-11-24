@@ -1,4 +1,3 @@
-import HeaderLogo from '../HeaderLogo'
 import styles from './HeaderSkeleton.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 

@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react'
 import ErrorScreenTemplate from '@/components/Error/ErrorScreenTemplate'
 import { UndrawBugFixing, UndrawServerDown, UndrawUpdate } from '@/assets/vectors/components'
 import { ENV } from '@/env'
-import { useRouter } from 'next/navigation'
 
 async function checkNetwork() {
   try {
