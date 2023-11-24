@@ -5,7 +5,7 @@ import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 import { ENV } from '@env'
 
-const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
+const cronPlugin: FastifyPluginCallback = async (fastfiy) => {
   const calculatePostScoreJob = container.resolve(CalculatePostScoreJob)
   const createFeedJob = container.resolve(CreateFeedJob)
   const generateTrendingWritersJob = container.resolve(GenerateTrendingWritersJob)
@@ -34,24 +34,9 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       cronTime: '0 5 * * *', // every day at 05:00 (5:00 AM)
       jobService: generateTrendingWritersJob,
       param: undefined,
+      isRunInDev: true,
     },
   ]
-
-  const createTick = async (description: JobDescription) => {
-    const { jobService } = description
-    if (jobService.isProgressing) return
-    jobService.start()
-
-    if (isNeedParamJobService(description)) {
-      await description.jobService.runner(description.param)
-    }
-
-    if (isNotNeedParamJobService(description)) {
-      await description.jobService.runner()
-    }
-
-    jobService.stop()
-  }
 
   const createJob = (description: JobDescription) => {
     const { name, cronTime } = description
@@ -76,8 +61,6 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       }),
     )
   }
-
-  done()
 }
 
 export default cronPlugin
@@ -108,4 +91,20 @@ type NotNeedParamJobService = {
   jobService: CreateFeedJob | GenerateTrendingWritersJob
   param: undefined
   isRunInDev?: boolean
+}
+
+async function createTick(description: JobDescription) {
+  const { jobService } = description
+  if (jobService.isProgressing) return
+  jobService.start()
+
+  if (isNeedParamJobService(description)) {
+    await description.jobService.runner(description.param)
+  }
+
+  if (isNotNeedParamJobService(description)) {
+    await description.jobService.runner()
+  }
+
+  jobService.stop()
 }
