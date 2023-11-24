@@ -1,4 +1,18 @@
 .block {
+  width: 96px;
+  height: 32px;
+
+  @media screen and (max-width: 768px) {
+    width: 80px;
+    height: 24px;
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 425px) {
+    width: 72px;
+    font-size: 12px;
+  }
+
   .button {
     display: flex;
     box-shadow: none;
@@ -9,19 +23,7 @@
     border-radius: 16px;
     font-weight: 700;
     font-size: 16px;
-    width: 96px;
-    height: 32px;
-
-    @media screen and (max-width: 768px) {
-      width: 80px;
-      height: 24px;
-      font-size: 14px;
-    }
-
-    @media screen and (max-width: 425px) {
-      width: 72px;
-      font-size: 12px;
-    }
+    width: 100%;
   }
 
   .followButton {

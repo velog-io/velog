@@ -5,12 +5,15 @@ query getTrendingWriters($input: TrendingWritersInput!) {
       id
       user {
         id
+        username
         profile {
           display_name
+          thumbnail
         }
       }
       posts {
         title
+        url_slug
       }
     }
   }

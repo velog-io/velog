@@ -352,7 +352,7 @@ export type TrendingWriterPosts = {
 export type TrendingWriterProfile = {
   display_name: Scalars['String']['output']
   short_bio: Scalars['String']['output']
-  thumbnail: Scalars['String']['output']
+  thumbnail?: Maybe<Scalars['String']['output']>
 }
 
 export type TrendingWriterUser = {
@@ -998,7 +998,7 @@ export type TrendingWriterProfileResolvers<
 > = {
   display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   short_bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 

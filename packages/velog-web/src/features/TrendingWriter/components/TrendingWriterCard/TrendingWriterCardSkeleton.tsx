@@ -20,7 +20,7 @@ function TrendingWriterCardSkeleton({}: Props) {
           marginRight="5px"
           className={cx('thumbnail')}
         />
-        <Skeleton height="18px" marginRight="auto" className={cx('username')} />
+        <Skeleton height="18px" marginRight="auto" className={cx('displayName')} />
         <Skeleton width="70px" height="20px" className={cx('button')} />
       </div>
       <div className={cx('content')}>

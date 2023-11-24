@@ -3,6 +3,83 @@
   background-color: white;
   box-shadow: 1px 4px 16px 0px rgba(0, 0, 0, 0.04);
   border-radius: 4px;
+
+  .header {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .left {
+      display: flex;
+      align-items: center;
+
+      .thumbnail {
+        width: 32px;
+        height: 32px;
+        img {
+          border-radius: 50%;
+          box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+        }
+      }
+
+      .displayName {
+        margin-left: 8px;
+        font-weight: 700;
+        font-size: 14px;
+        width: 90px;
+
+        @media screen and (max-width: 768px) {
+          width: 150px;
+        }
+
+        @media screen and (max-width: 425px) {
+          width: 120px;
+        }
+      }
+    }
+
+    .right {
+      padding: 8px;
+
+      .button {
+        width: 80px;
+        height: 24px;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .content {
+    border-top: 1px solid var(--border4);
+    padding: 8px;
+    padding-bottom: 24px;
+
+    .post {
+      list-style: none;
+      font-size: 14px;
+      color: var(--text1);
+
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
+      }
+
+      .title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        word-break: keep-all;
+        -webkit-line-clamp: 2;
+        max-height: 40px;
+      }
+    }
+
+    .post + .post {
+      margin-top: 10px;
+    }
+  }
 }
 
 .skeletonBlock {
@@ -11,7 +88,7 @@
     display: flex;
     align-items: center;
 
-    .username {
+    .displayName {
       width: 60px;
 
       @media screen and (max-width: 768px) {
@@ -25,10 +102,6 @@
   }
 
   .content {
-    border-top: 1px solid var(--border4);
-    padding: 8px;
-    padding-bottom: 24px;
-
     .pc {
       @media screen and (max-width: 768px) {
         display: none;

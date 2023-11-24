@@ -17,9 +17,10 @@ type Props = {
   followingUserId: string
   onSuccess?: (param?: any) => void | Promise<void>
   isFollowed: boolean
+  className?: string
 }
 
-function FollowButton({ followingUserId, isFollowed, onSuccess }: Props) {
+function FollowButton({ followingUserId, isFollowed, onSuccess, className }: Props) {
   const {
     value: { currentUser },
   } = useAuth()
@@ -83,7 +84,7 @@ function FollowButton({ followingUserId, isFollowed, onSuccess }: Props) {
   if (isLoading) return <div className={cx('skeleton')} />
 
   return (
-    <div className={cx('block')}>
+    <div className={cx('block', className)}>
       {!initialFollowState ? (
         <button
           className={cx('followButton', 'button', { isFollowed: currentFollowState })}

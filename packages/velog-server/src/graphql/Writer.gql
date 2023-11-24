@@ -14,7 +14,7 @@ type TrendingWriterUser {
 type TrendingWriterProfile {
   display_name: String!
   short_bio: String!
-  thumbnail: String!
+  thumbnail: String
 }
 
 type TrendingWriter {

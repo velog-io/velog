@@ -19,8 +19,9 @@ function TrendingWriterGrid({}: Props) {
 
   useInfiniteScroll(ref, fetchMore)
   if (isInitLoading) return <TrendingWriterGridSkeleton />
+
   return (
-    <>
+    <section>
       <ul className={cx('block', 'trendingWriterGrid')}>
         {trendingWriters.map((writer) => (
           <TrendingWriterCard
@@ -29,13 +30,14 @@ function TrendingWriterGrid({}: Props) {
             displayName={writer.user.profile.display_name}
             posts={writer.posts}
             thumbnail={writer.user.profile.thumbnail}
+            username={writer.user.username}
           />
         ))}
         {isFetching &&
           Array.from({ length: 6 }).map((_, i) => <TrendingWriterCardSkeleton key={i} />)}
       </ul>
       <div ref={ref} />
-    </>
+    </section>
   )
 }
 

@@ -343,7 +343,7 @@ export type TrendingWriterPosts = {
 export type TrendingWriterProfile = {
   display_name: Scalars['String']['output']
   short_bio: Scalars['String']['output']
-  thumbnail: Scalars['String']['output']
+  thumbnail: Maybe<Scalars['String']['output']>
 }
 
 export type TrendingWriterUser = {
@@ -757,8 +757,12 @@ export type GetTrendingWritersQuery = {
     writers: Array<{
       index: number
       id: string
-      user: { id: string; profile: { display_name: string } }
-      posts: Array<{ title: string }>
+      user: {
+        id: string
+        username: string
+        profile: { display_name: string; thumbnail: string | null }
+      }
+      posts: Array<{ title: string; url_slug: string }>
     }>
   }
 }
@@ -1291,12 +1295,15 @@ export const GetTrendingWritersDocument = `
       id
       user {
         id
+        username
         profile {
           display_name
+          thumbnail
         }
       }
       posts {
         title
+        url_slug
       }
     }
   }
