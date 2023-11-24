@@ -54,7 +54,6 @@ export class WriterService implements Service {
       },
     })
 
-    console.log('postLikes', postLikes.length)
     const calcuatedTotalLikes = postLikes.reduce<CalculatedTotalLikes>(this.calculateTotalLikes, {
       writers: new Map(),
       postIds: new Set(),
@@ -63,7 +62,7 @@ export class WriterService implements Service {
     return Array.from(calcuatedTotalLikes.writers)
       .filter(([, post]) => post.totalLikes > 4)
       .sort(([, a], [, b]) => b.totalLikes - a.totalLikes)
-      .map(([id, { user, posts, totalLikes }]) => ({ id, user, posts, totalLikes }))
+      .map(([id, { user, posts, totalLikes }], index) => ({ index, id, user, posts, totalLikes }))
   }
   private calculateTotalLikes(result: CalculatedTotalLikes, postLike: PostLikePaylaod) {
     const { user, ...post } = postLike.post!
@@ -155,4 +154,4 @@ type Post = Prisma.PostGetPayload<{
 type MapBase = { user: User; posts: Post[] }
 type MapData = MapBase & { totalLikes: number }
 type CalculatedTotalLikes = { writers: Map<string, MapData>; postIds: Set<string> }
-type GenerateTrendingWriters = { id: string; user: User; posts: Post[] }
+type GenerateTrendingWriters = { index: number; id: string; user: User; posts: Post[] }
