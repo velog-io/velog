@@ -1,7 +1,6 @@
 import { TrendingWriterPosts, useGetUserFollowInfoQuery } from '@/graphql/generated'
 import styles from './TrendingWriterCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { useEffect, useState } from 'react'
 import TrendingWriterCardSkeleton from './TrendingWriterCardSkeleton'
 import Link from 'next/link'
 import Thumbnail from '@/components/Thumbnail'
@@ -20,11 +19,6 @@ type Props = {
 
 function TrendingWriterCard({ writerId, posts, thumbnail, displayName, username }: Props) {
   const { data, isLoading } = useGetUserFollowInfoQuery({ input: { id: writerId } })
-  const [isFollowed, setIsFollowed] = useState<boolean>(!!data?.user?.is_followed)
-
-  useEffect(() => {
-    setIsFollowed(!!data?.user?.is_followed)
-  }, [data])
 
   if (isLoading) return <TrendingWriterCardSkeleton />
   const velogUrl = `/@${username}/posts`
@@ -35,11 +29,13 @@ function TrendingWriterCard({ writerId, posts, thumbnail, displayName, username 
           <Link href={velogUrl}>
             <Thumbnail src={thumbnail} className={cx('thumbnail')} />
           </Link>
-          <span className={cx('displayName', 'ellipsis')}>{displayName}</span>
+          <Link href={velogUrl} className={cx('displayName', 'ellipsis')}>
+            {displayName}
+          </Link>
         </div>
         <div className={cx('right')}>
           <FollowButton
-            isFollowed={isFollowed}
+            isFollowed={data?.user?.is_followed}
             followingUserId={writerId}
             className={cx('button')}
           />

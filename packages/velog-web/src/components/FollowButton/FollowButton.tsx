@@ -16,7 +16,7 @@ const cx = bindClassNames(styles)
 type Props = {
   followingUserId: string
   onSuccess?: (param?: any) => void | Promise<void>
-  isFollowed: boolean
+  isFollowed: boolean | undefined
   className?: string
 }
 
@@ -25,17 +25,18 @@ function FollowButton({ followingUserId, isFollowed, onSuccess, className }: Pro
     value: { currentUser },
   } = useAuth()
 
-  const { data, isRefetching } = useGetUserFollowInfoQuery(
-    { input: { id: followingUserId } },
-    { staleTime: 10 },
-  )
-  const { isLoading } = useCurrentUserQuery()
+  const {
+    data,
+    isRefetching,
+    isLoading: isFollowInfoLoading,
+  } = useGetUserFollowInfoQuery({ input: { id: followingUserId } }, { staleTime: 10 })
+  const { isLoading: isCurrentUserLoading } = useCurrentUserQuery()
   const { actions } = useModal()
   const { mutateAsync: followMutate } = useFollowMutation()
   const { mutateAsync: unfollowMutate } = useUnfollowMutation()
 
-  const [initialFollowState, setInitialFollowState] = useState<boolean>(isFollowed)
-  const [currentFollowState, setCurrentFollowState] = useState<boolean>(isFollowed)
+  const [initialFollowState, setInitialFollowState] = useState<boolean | undefined>(isFollowed)
+  const [currentFollowState, setCurrentFollowState] = useState<boolean | undefined>(isFollowed)
 
   const [buttonText, setButtonText] = useState('팔로잉')
 
@@ -77,11 +78,19 @@ function FollowButton({ followingUserId, isFollowed, onSuccess, className }: Pro
   })
 
   useEffect(() => {
+    if (isFollowed !== undefined) {
+      setInitialFollowState(isFollowed)
+      setCurrentFollowState(isFollowed)
+    }
+  }, [isFollowed])
+
+  useEffect(() => {
     if (isRefetching) return
-    setCurrentFollowState(data?.user?.is_followed || isFollowed)
+    setCurrentFollowState(!!data?.user?.is_followed || isFollowed)
   }, [data, isFollowed, isRefetching])
 
-  if (isLoading) return <div className={cx('skeleton')} />
+  if (isFollowed === undefined || isFollowInfoLoading || isCurrentUserLoading)
+    return <div className={cx('skeleton')} />
 
   return (
     <div className={cx('block', className)}>

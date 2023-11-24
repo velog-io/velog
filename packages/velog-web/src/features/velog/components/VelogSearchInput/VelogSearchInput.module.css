@@ -1,6 +1,7 @@
 .block {
   display: flex;
   justify-content: flex-end;
+  margin-bottom: 32px;
 
   @media screen and (max-width: 768px) {
     padding-left: 16px;
