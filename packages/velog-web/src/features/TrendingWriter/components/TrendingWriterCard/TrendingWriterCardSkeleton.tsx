@@ -11,7 +11,7 @@ type Props = {}
 
 function TrendingWriterCardSkeleton({}: Props) {
   return (
-    <div className={cx('block', 'skeletonBlock')}>
+    <li className={cx('block', 'skeletonBlock')}>
       <div className={cx('header')}>
         <Skeleton
           width="32px"
@@ -33,7 +33,7 @@ function TrendingWriterCardSkeleton({}: Props) {
         <SkeletonTexts wordLengths={[1, 8, 3]} className={cx('pc')} />
         <SkeletonTexts wordLengths={[4, 8, 2]} className={cx('mobile')} />
       </div>
-    </div>
+    </li>
   )
 }
 

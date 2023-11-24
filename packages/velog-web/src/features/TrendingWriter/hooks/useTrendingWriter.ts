@@ -6,17 +6,15 @@ import {
   TrendingWriter,
 } from '@/graphql/generated'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
-export default function useTrendingWriters(initPage: number = 10, take: number = 10) {
-  const [page, setPage] = useState(initPage)
-
+export default function useTrendingWriters(cursor: number = 0, take: number = 20) {
   const fetchInput = useMemo(() => {
     return {
-      page,
+      cursor,
       take,
     }
-  }, [page, take])
+  }, [cursor, take])
 
   const { data, fetchNextPage, isFetching, hasNextPage, isError, isLoading } =
     useInfiniteQuery<GetTrendingWritersQuery>(
@@ -29,20 +27,18 @@ export default function useTrendingWriters(initPage: number = 10, take: number =
           },
         )(),
       {
-        retryDelay: 500,
+        retryDelay: 1000,
         cacheTime: 1000 * 60 * 10,
         staleTime: 1000 * 60 * 10,
-        getNextPageParam: (nextPage) => {
-          const { trendingWriters } = nextPage
+        getNextPageParam: (page) => {
+          const { trendingWriters } = page
           if (!trendingWriters) return false
 
-          const { totalPage, writers } = trendingWriters
-          if (totalPage === page) return false
+          const { writers } = trendingWriters
           if (writers.length < take) return false
-
-          setPage((state) => state + 1)
+          const cursor = writers[writers.length - 1].index + 1
           return {
-            page,
+            cursor,
             take,
           }
         },
@@ -51,7 +47,7 @@ export default function useTrendingWriters(initPage: number = 10, take: number =
 
   const trendingWriters = useMemo(() => {
     return [
-      ...(data?.pages.flatMap((page) => page.trendingWriters.writers) || []),
+      ...(data?.pages?.flatMap((page) => page.trendingWriters.writers) || []),
     ] as TrendingWriter[]
   }, [data])
 

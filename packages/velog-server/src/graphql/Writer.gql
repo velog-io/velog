@@ -18,13 +18,13 @@ type TrendingWriterProfile {
 }
 
 type TrendingWriter {
+  index: Int!
   id: ID!
   user: TrendingWriterUser!
   posts: [TrendingWriterPosts!]!
 }
 
 type TrendingWritersResult {
-  totalPage: Int!
   writers: [TrendingWriter!]!
 }
 
@@ -33,6 +33,6 @@ type Query {
 }
 
 input TrendingWritersInput {
-  page: PositiveInt!
+  cursor: Int!
   take: PositiveInt!
 }

@@ -23,5 +23,6 @@ export class GenerateTrendingWritersJob extends JobProgress implements Job {
     this.redis.set(key, json)
 
     console.timeEnd('generate Trending Writers')
+    console.log('Generated writers count:', writers.length)
   }
 }

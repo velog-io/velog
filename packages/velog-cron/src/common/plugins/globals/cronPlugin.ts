@@ -5,7 +5,7 @@ import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 import { ENV } from '@env'
 
-const cronPlugin: FastifyPluginCallback = async (fastfiy) => {
+const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   const calculatePostScoreJob = container.resolve(CalculatePostScoreJob)
   const createFeedJob = container.resolve(CreateFeedJob)
   const generateTrendingWritersJob = container.resolve(GenerateTrendingWritersJob)
@@ -61,6 +61,8 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy) => {
       }),
     )
   }
+
+  done()
 }
 
 export default cronPlugin

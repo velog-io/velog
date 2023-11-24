@@ -7,6 +7,7 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import TrendingWriterGridSkeleton from './TrendingWriterGridSkeleton'
 import TrendingWriterCardSkeleton from '../TrendingWriterCard/TrendingWriterCardSkeleton'
+import TrendingWriterCard from '../TrendingWriterCard'
 
 const cx = bindClassNames(styles)
 
@@ -17,12 +18,22 @@ function TrendingWriterGrid({}: Props) {
   const { trendingWriters, fetchMore, isInitLoading, isFetching } = useTrendingWriters()
 
   useInfiniteScroll(ref, fetchMore)
-  if (!isInitLoading) return <TrendingWriterGridSkeleton />
+  if (isInitLoading) return <TrendingWriterGridSkeleton />
   return (
     <>
-      <div className={cx('block', 'trendingWriterGrid')}></div>
-      {isFetching &&
-        Array.from({ length: 3 }).map((_, i) => <TrendingWriterCardSkeleton key={i} />)}
+      <ul className={cx('block', 'trendingWriterGrid')}>
+        {trendingWriters.map((writer) => (
+          <TrendingWriterCard
+            key={writer.id}
+            writerId={writer.user.id}
+            displayName={writer.user.profile.display_name}
+            posts={writer.posts}
+            thumbnail={writer.user.profile.thumbnail}
+          />
+        ))}
+        {isFetching &&
+          Array.from({ length: 6 }).map((_, i) => <TrendingWriterCardSkeleton key={i} />)}
+      </ul>
       <div ref={ref} />
     </>
   )

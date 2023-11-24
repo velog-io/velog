@@ -1,11 +1,13 @@
 query getTrendingWriters($input: TrendingWritersInput!) {
   trendingWriters(input: $input) {
-    totalPage
     writers {
+      index
       id
       user {
         id
-        username
+        profile {
+          display_name
+        }
       }
       posts {
         title

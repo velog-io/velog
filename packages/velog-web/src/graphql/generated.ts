@@ -328,6 +328,7 @@ export type TrendingPostsInput = {
 
 export type TrendingWriter = {
   id: Scalars['ID']['output']
+  index: Scalars['Int']['output']
   posts: Array<TrendingWriterPosts>
   user: TrendingWriterUser
 }
@@ -352,12 +353,11 @@ export type TrendingWriterUser = {
 }
 
 export type TrendingWritersInput = {
-  page: Scalars['PositiveInt']['input']
+  cursor: Scalars['Int']['input']
   take: Scalars['PositiveInt']['input']
 }
 
 export type TrendingWritersResult = {
-  totalPage: Scalars['Int']['output']
   writers: Array<TrendingWriter>
 }
 
@@ -754,10 +754,10 @@ export type GetTrendingWritersQueryVariables = Exact<{
 
 export type GetTrendingWritersQuery = {
   trendingWriters: {
-    totalPage: number
     writers: Array<{
+      index: number
       id: string
-      user: { id: string; username: string }
+      user: { id: string; profile: { display_name: string } }
       posts: Array<{ title: string }>
     }>
   }
@@ -1286,12 +1286,14 @@ export const useUpdateAboutMutation = <TError = unknown, TContext = unknown>(
 export const GetTrendingWritersDocument = `
     query getTrendingWriters($input: TrendingWritersInput!) {
   trendingWriters(input: $input) {
-    totalPage
     writers {
+      index
       id
       user {
         id
-        username
+        profile {
+          display_name
+        }
       }
       posts {
         title

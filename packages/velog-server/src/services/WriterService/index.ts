@@ -11,16 +11,15 @@ interface Service {
 @singleton()
 export class WriterService implements Service {
   constructor(private readonly redis: RedisService) {}
-  public async getTrendingWriters(page?: number, take?: number): Promise<TrendingWritersResult> {
-    if (!page || !take) {
-      throw new BadRequestError()
-    }
-
+  public async getTrendingWriters(
+    cursor: number = 0,
+    take: number = 20,
+  ): Promise<TrendingWritersResult> {
     if (take > 100) {
       throw new BadRequestError('Max take is 100')
     }
 
-    if (page < 0 || take < 0) {
+    if (cursor < 0 || take < 0) {
       throw new BadRequestError('Invalid input, input must be a non-negative number')
     }
 
@@ -29,21 +28,15 @@ export class WriterService implements Service {
 
     if (!writers) {
       return {
-        totalPage: 0,
         writers: [],
       }
     }
 
     const trendingWriters: TrendingWriter[] = JSON.parse(writers)
-
-    const offset = (page - 1) * take
-    const totalPage = Math.ceil(trendingWriters.length / take)
-
-    const result = {
-      totalPage,
-      writers: trendingWriters.slice(offset, offset + take),
+    return {
+      writers: trendingWriters.filter(
+        (writer) => writer.index >= cursor && writer.index < cursor + take,
+      ),
     }
-
-    return result
   }
 }

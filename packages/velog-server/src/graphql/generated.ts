@@ -337,6 +337,7 @@ export type TrendingPostsInput = {
 
 export type TrendingWriter = {
   id: Scalars['ID']['output']
+  index: Scalars['Int']['output']
   posts: Array<TrendingWriterPosts>
   user: TrendingWriterUser
 }
@@ -361,12 +362,11 @@ export type TrendingWriterUser = {
 }
 
 export type TrendingWritersInput = {
-  page: Scalars['PositiveInt']['input']
+  cursor: Scalars['Int']['input']
   take: Scalars['PositiveInt']['input']
 }
 
 export type TrendingWritersResult = {
-  totalPage: Scalars['Int']['output']
   writers: Array<TrendingWriter>
 }
 
@@ -973,6 +973,7 @@ export type TrendingWriterResolvers<
     ResolversParentTypes['TrendingWriter'] = ResolversParentTypes['TrendingWriter'],
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   posts?: Resolver<Array<ResolversTypes['TrendingWriterPosts']>, ParentType, ContextType>
   user?: Resolver<ResolversTypes['TrendingWriterUser'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
@@ -1017,7 +1018,6 @@ export type TrendingWritersResultResolvers<
   ParentType extends
     ResolversParentTypes['TrendingWritersResult'] = ResolversParentTypes['TrendingWritersResult'],
 > = {
-  totalPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   writers?: Resolver<Array<ResolversTypes['TrendingWriter']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
