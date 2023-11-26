@@ -41,7 +41,7 @@
     "graphql-tag": "^2.12.6",
     "html-react-parser": "^5.0.6",
     "inquirer": "^9.2.7",
-    "next": "^14.0.2",
+    "next": "^14.0.3",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^8.5.0",
     "prismjs": "^1.29.0",
