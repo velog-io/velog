@@ -15,6 +15,8 @@ import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
 import HeaderSkeleton from '@/components/Header/HeaderSkeleton'
 import { useCurrentUserQuery } from '@/graphql/generated'
 import HeaderLogo from './HeaderLogo'
+import { useParams } from 'next/navigation'
+import { getUsernameFromParams } from '@/lib/utils'
 
 const cx = bindClassNames(styles)
 
@@ -26,6 +28,7 @@ function Header({ logo }: Props) {
   const {
     value: { systemTheme },
   } = useTheme()
+  const params = useParams()
   const [userMenu, toggleUserMenu] = useToggle(false)
   const ref = useRef<HTMLDivElement>(null)
   const { actions } = useModal()
@@ -42,8 +45,8 @@ function Header({ logo }: Props) {
     update(user)
   }, [update, user])
 
-  // const urlForSearch = customHeader.custom ? `/search?username=${customHeader.username}` : '/search'
-  const urlForSearch = '/search'
+  const username = getUsernameFromParams(params)
+  const urlForSearch = username ? `/search?username=${username}` : '/search'
 
   if (isLoading) return <HeaderSkeleton logo={logo || <HeaderLogo />} />
 
