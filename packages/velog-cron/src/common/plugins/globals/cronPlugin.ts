@@ -34,7 +34,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       cronTime: '0 5 * * *', // every day at 05:00 (5:00 AM)
       jobService: generateTrendingWritersJob,
       param: undefined,
-      isRunInDev: true,
+      isImmediate: true,
     },
   ]
 
@@ -47,10 +47,9 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     })
   }
 
-  if (ENV.appEnv === 'development') {
-    const jobs = jobDescription.filter((job) => !!job.isRunInDev)
-    await Promise.all(jobs.map(createTick))
-  }
+  // for test
+  const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediate)
+  await Promise.all(immediateRunJobs.map(createTick))
 
   if (ENV.dockerEnv === 'production') {
     const crons = jobDescription.map(createJob)
@@ -84,7 +83,7 @@ type NeedParamJobService = {
   cronTime: string
   jobService: CalculatePostScoreJob
   param: number
-  isRunInDev?: boolean
+  isImmediate?: boolean
 }
 
 type NotNeedParamJobService = {
@@ -92,7 +91,7 @@ type NotNeedParamJobService = {
   cronTime: string
   jobService: CreateFeedJob | GenerateTrendingWritersJob
   param: undefined
-  isRunInDev?: boolean
+  isImmediate?: boolean
 }
 
 async function createTick(description: JobDescription) {
