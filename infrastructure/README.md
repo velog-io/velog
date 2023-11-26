@@ -10,7 +10,7 @@ pulumi stack ls
 
 ## 2. Selecting a Stack
 
-To select a specific stack, choose from `stage`, or `production` as needed:
+To select a specific stack, choose from `velog/stage`, or `velog/production` as needed:
 
 ```bash
 pulumi stack select [stage|production]
