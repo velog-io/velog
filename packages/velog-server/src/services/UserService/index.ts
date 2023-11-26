@@ -115,6 +115,7 @@ export class UserService implements Service {
       throw new BadRequestError()
     }
 
+    console.log('username1111', username)
     if (username) {
       return await this.findByUsername(username)
     }

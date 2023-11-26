@@ -7,7 +7,7 @@ type Props = {
 
 function ActiveLink({ href, className = '', children, ...rest }: Props) {
   return (
-    <Link href={href} className={className} {...rest} scroll={false}>
+    <Link href={href} className={className} {...rest}>
       {children}
     </Link>
   )

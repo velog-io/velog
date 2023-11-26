@@ -38,7 +38,7 @@ function Header({ logo }: Props) {
 
   const themeReady = systemTheme !== 'not-ready'
 
-  const { isLoading, data } = useCurrentUserQuery()
+  const { isLoading, data, isFetching } = useCurrentUserQuery()
   const user = data?.currentUser || null
 
   useEffect(() => {
@@ -48,8 +48,7 @@ function Header({ logo }: Props) {
   const username = getUsernameFromParams(params)
   const urlForSearch = username ? `/search?username=${username}` : '/search'
 
-  if (isLoading) return <HeaderSkeleton logo={logo || <HeaderLogo />} />
-
+  if (isLoading || isFetching) return <HeaderSkeleton logo={logo || <HeaderLogo />} />
   return (
     <header className={cx('block', 'mainHeaderResponsive')}>
       <div className={cx('innerBlock')}>

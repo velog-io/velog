@@ -12,46 +12,39 @@ import { MdHome } from 'react-icons/md'
 import FollowButton from '../FollowButton'
 import { useAuth } from '@/state/auth'
 import { useGetUserFollowInfoQuery } from '@/graphql/generated'
+import { notFound, useParams } from 'next/navigation'
+import { getUsernameFromParams } from '@/lib/utils'
 
 const cx = bindClassNames(styles)
 
 type Props = {
-  userId: string
   style?: CSSProperties
-  thumbnail: string | null
-  displayName: string
-  shortBio: string
-  profileLinks: ProfileLinks
-  username: string
-  followersCount: number
-  followingsCount: number
 }
 
-function UserProfile({
-  style,
-  thumbnail,
-  displayName,
-  shortBio,
-  profileLinks,
-  username,
-  followersCount,
-  followingsCount,
-  userId,
-}: Props) {
+function UserProfile({ style }: Props) {
+  const params = useParams()
+  const username = getUsernameFromParams(params)
   const {
     value: { currentUser },
   } = useAuth()
 
-  const { email, facebook, github, twitter, url } = profileLinks
+  const { data, refetch, isRefetching, isLoading } = useGetUserFollowInfoQuery({
+    input: { username: username },
+  })
+
+  const user = data?.user
+
+  if (!user) {
+    notFound()
+  }
+
+  const { display_name, profile_links, short_bio, thumbnail } = user.profile
+  const { email, facebook, github, twitter, url } = profile_links as ProfileLinks
+
   const [hoverEmail, setHoverEmail] = useState(false)
   const emailBlockRef = useRef<HTMLDivElement>(null)
 
-  const { data, refetch, isRefetching } = useGetUserFollowInfoQuery(
-    { input: { id: userId } },
-    { staleTime: 10 },
-  )
-
-  const [followersCnt, setFollowersCnt] = useState(followersCount)
+  const [followersCnt, setFollowersCnt] = useState<number>(user.followers_count)
   const onMouseEnterEmail = () => {
     setHoverEmail(true)
   }
@@ -61,6 +54,7 @@ function UserProfile({
     setHoverEmail(false)
   }
 
+  const userId = user.id
   const getSocialId = (link: string) => link.split('/').reverse()[0]
 
   const onFollowSuccess = async (type: 'follow' | 'unfollow') => {
@@ -77,8 +71,9 @@ function UserProfile({
     setFollowersCnt(data?.user?.followers_count ?? followersCnt)
   }, [isRefetching, data, followersCnt])
 
-  const velogUrl = `/@${username}`
+  const velogUrl = `/@${user.username}`
   const isOwn = userId === currentUser?.id
+  if (isLoading) return null
   return (
     <div className={cx('block')} style={style}>
       <div className={cx('section')}>
@@ -94,9 +89,9 @@ function UserProfile({
           </Link>
           <div className={cx('userInfo')}>
             <div className={cx('name')}>
-              <Link href={velogUrl}>{displayName}</Link>
+              <Link href={velogUrl}>{display_name}</Link>
             </div>
-            <div className={cx('description')}>{shortBio}</div>
+            <div className={cx('description')}>{short_bio}</div>
           </div>
         </div>
       </div>
@@ -108,7 +103,7 @@ function UserProfile({
             <span className={cx('text')}>팔로워</span>
           </Link>
           <Link href={`${velogUrl}/followings`} className={cx('info')}>
-            <span className={cx('number')}>{followingsCount}</span>
+            <span className={cx('number')}>{user.followings_count}</span>
             <span className={cx('text')}>팔로잉</span>
           </Link>
         </div>

@@ -29,7 +29,7 @@ function FollowButton({ followingUserId, isFollowed, onSuccess, className }: Pro
     data,
     isRefetching,
     isLoading: isFollowInfoLoading,
-  } = useGetUserFollowInfoQuery({ input: { id: followingUserId } }, { staleTime: 10 })
+  } = useGetUserFollowInfoQuery({ input: { id: followingUserId } })
   const { isLoading: isCurrentUserLoading } = useCurrentUserQuery()
   const { actions } = useModal()
   const { mutateAsync: followMutate } = useFollowMutation()

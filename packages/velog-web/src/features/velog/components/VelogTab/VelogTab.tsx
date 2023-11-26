@@ -29,21 +29,18 @@ function VelogTab({ username }: Props) {
         <ActiveLink
           href={withPrefix('posts')}
           className={cx('item', { active: pathname.includes('/posts') })}
-          scroll={false}
         >
           글
         </ActiveLink>
         <ActiveLink
           href={withPrefix('series')}
           className={cx('item', { active: pathname.includes('/series') })}
-          scroll={false}
         >
           시리즈
         </ActiveLink>
         <ActiveLink
           href={withPrefix('about')}
           className={cx('item', { active: pathname.includes('/about') })}
-          scroll={false}
         >
           소개
         </ActiveLink>
