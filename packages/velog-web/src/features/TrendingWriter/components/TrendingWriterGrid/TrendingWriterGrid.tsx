@@ -8,14 +8,19 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import TrendingWriterGridSkeleton from './TrendingWriterGridSkeleton'
 import TrendingWriterCardSkeleton from '../TrendingWriterCard/TrendingWriterCardSkeleton'
 import TrendingWriterCard from '../TrendingWriterCard'
+import { TrendingWriter } from '@/graphql/generated'
 
 const cx = bindClassNames(styles)
 
-type Props = {}
+type Props = {
+  initialData: TrendingWriter[]
+}
 
-function TrendingWriterGrid({}: Props) {
+function TrendingWriterGrid({ initialData }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const { trendingWriters, fetchMore, isInitLoading, isFetching } = useTrendingWriters()
+  const { trendingWriters, fetchMore, isInitLoading, isFetching } = useTrendingWriters({
+    initialData,
+  })
 
   useInfiniteScroll(ref, fetchMore)
   if (isInitLoading) return <TrendingWriterGridSkeleton />

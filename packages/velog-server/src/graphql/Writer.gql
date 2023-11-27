@@ -24,15 +24,11 @@ type TrendingWriter {
   posts: [TrendingWriterPosts!]!
 }
 
-type TrendingWritersResult {
-  writers: [TrendingWriter!]!
-}
-
 type Query {
-  trendingWriters(input: TrendingWritersInput!): TrendingWritersResult!
+  trendingWriters(input: TrendingWritersInput!): [TrendingWriter!]!
 }
 
 input TrendingWritersInput {
   cursor: Int!
-  take: PositiveInt!
+  limit: PositiveInt!
 }

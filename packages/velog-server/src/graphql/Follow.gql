@@ -19,7 +19,7 @@ type Mutation {
 input GetFollowInput {
   username: String!
   cursor: String
-  take: PositiveInt
+  limit: PositiveInt
 }
 
 input FollowInput {

@@ -29,6 +29,8 @@ const config: CodegenConfig = {
           Date: 'Date',
           JSON: 'JSON',
           ID: 'string',
+          Void: 'void',
+          PositiveInt: 'number',
         },
       },
       plugins: [

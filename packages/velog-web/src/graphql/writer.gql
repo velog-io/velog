@@ -1,20 +1,18 @@
-query getTrendingWriters($input: TrendingWritersInput!) {
+query trendingWriters($input: TrendingWritersInput!) {
   trendingWriters(input: $input) {
-    writers {
-      index
+    index
+    id
+    user {
       id
-      user {
-        id
-        username
-        profile {
-          display_name
-          thumbnail
-        }
+      username
+      profile {
+        display_name
+        thumbnail
       }
-      posts {
-        title
-        url_slug
-      }
+    }
+    posts {
+      title
+      url_slug
     }
   }
 }

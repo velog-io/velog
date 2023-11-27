@@ -20,8 +20,8 @@ export type Scalars = {
   Float: { input: number; output: number }
   DateTimeISO: { input: any; output: any }
   JSON: { input: JSON; output: JSON }
-  PositiveInt: { input: any; output: any }
-  Void: { input: any; output: any }
+  PositiveInt: { input: number; output: number }
+  Void: { input: void; output: void }
 }
 
 export type Comment = {
@@ -51,7 +51,7 @@ export type FollowResult = {
 
 export type GetFollowInput = {
   cursor?: InputMaybe<Scalars['String']['input']>
-  take?: InputMaybe<Scalars['PositiveInt']['input']>
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>
   username: Scalars['String']['input']
 }
 
@@ -184,7 +184,7 @@ export type Query = {
   series: Maybe<Series>
   seriesList: Array<Series>
   trendingPosts: Array<Post>
-  trendingWriters: TrendingWritersResult
+  trendingWriters: Array<TrendingWriter>
   user: Maybe<User>
   userTags: Maybe<UserTags>
   velogConfig: Maybe<VelogConfig>
@@ -354,11 +354,7 @@ export type TrendingWriterUser = {
 
 export type TrendingWritersInput = {
   cursor: Scalars['Int']['input']
-  take: Scalars['PositiveInt']['input']
-}
-
-export type TrendingWritersResult = {
-  writers: Array<TrendingWriter>
+  limit: Scalars['PositiveInt']['input']
 }
 
 export type UnfollowInput = {
@@ -705,7 +701,7 @@ export type CurrentUserQuery = {
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never }>
 
-export type LogoutMutation = { logout: any | null }
+export type LogoutMutation = { logout: void | null }
 
 export type VelogConfigQueryVariables = Exact<{
   input: GetVelogConfigInput
@@ -748,23 +744,21 @@ export type UpdateAboutMutationVariables = Exact<{
 
 export type UpdateAboutMutation = { updateAbout: { id: string; about: string } | null }
 
-export type GetTrendingWritersQueryVariables = Exact<{
+export type TrendingWritersQueryVariables = Exact<{
   input: TrendingWritersInput
 }>
 
-export type GetTrendingWritersQuery = {
-  trendingWriters: {
-    writers: Array<{
-      index: number
+export type TrendingWritersQuery = {
+  trendingWriters: Array<{
+    index: number
+    id: string
+    user: {
       id: string
-      user: {
-        id: string
-        username: string
-        profile: { display_name: string; thumbnail: string | null }
-      }
-      posts: Array<{ title: string; url_slug: string }>
-    }>
-  }
+      username: string
+      profile: { display_name: string; thumbnail: string | null }
+    }
+    posts: Array<{ title: string; url_slug: string }>
+  }>
 }
 
 export const SendMailDocument = `
@@ -1287,36 +1281,34 @@ export const useUpdateAboutMutation = <TError = unknown, TContext = unknown>(
       fetcher<UpdateAboutMutation, UpdateAboutMutationVariables>(UpdateAboutDocument, variables)(),
     options,
   )
-export const GetTrendingWritersDocument = `
-    query getTrendingWriters($input: TrendingWritersInput!) {
+export const TrendingWritersDocument = `
+    query trendingWriters($input: TrendingWritersInput!) {
   trendingWriters(input: $input) {
-    writers {
-      index
+    index
+    id
+    user {
       id
-      user {
-        id
-        username
-        profile {
-          display_name
-          thumbnail
-        }
+      username
+      profile {
+        display_name
+        thumbnail
       }
-      posts {
-        title
-        url_slug
-      }
+    }
+    posts {
+      title
+      url_slug
     }
   }
 }
     `
-export const useGetTrendingWritersQuery = <TData = GetTrendingWritersQuery, TError = unknown>(
-  variables: GetTrendingWritersQueryVariables,
-  options?: UseQueryOptions<GetTrendingWritersQuery, TError, TData>,
+export const useTrendingWritersQuery = <TData = TrendingWritersQuery, TError = unknown>(
+  variables: TrendingWritersQueryVariables,
+  options?: UseQueryOptions<TrendingWritersQuery, TError, TData>,
 ) =>
-  useQuery<GetTrendingWritersQuery, TError, TData>(
-    ['getTrendingWriters', variables],
-    fetcher<GetTrendingWritersQuery, GetTrendingWritersQueryVariables>(
-      GetTrendingWritersDocument,
+  useQuery<TrendingWritersQuery, TError, TData>(
+    ['trendingWriters', variables],
+    fetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(
+      TrendingWritersDocument,
       variables,
     ),
     options,

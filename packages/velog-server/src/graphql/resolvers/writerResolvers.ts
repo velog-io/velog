@@ -5,9 +5,9 @@ import { container } from 'tsyringe'
 const writerResolvers: Resolvers = {
   Query: {
     trendingWriters: async (_, { input }) => {
-      const { cursor, take } = input
+      const { cursor, limit } = input
       const writerService = container.resolve(WriterService)
-      return writerService.getTrendingWriters(cursor, take)
+      return await writerService.getTrendingWriters(cursor, limit)
     },
   },
 }

@@ -60,7 +60,7 @@ export type FollowResult = {
 
 export type GetFollowInput = {
   cursor?: InputMaybe<Scalars['String']['input']>
-  take?: InputMaybe<Scalars['PositiveInt']['input']>
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>
   username: Scalars['String']['input']
 }
 
@@ -193,7 +193,7 @@ export type Query = {
   series?: Maybe<Series>
   seriesList: Array<Series>
   trendingPosts: Array<Post>
-  trendingWriters: TrendingWritersResult
+  trendingWriters: Array<TrendingWriter>
   user?: Maybe<User>
   userTags?: Maybe<UserTags>
   velogConfig?: Maybe<VelogConfig>
@@ -363,11 +363,7 @@ export type TrendingWriterUser = {
 
 export type TrendingWritersInput = {
   cursor: Scalars['Int']['input']
-  take: Scalars['PositiveInt']['input']
-}
-
-export type TrendingWritersResult = {
-  writers: Array<TrendingWriter>
+  limit: Scalars['PositiveInt']['input']
 }
 
 export type UnfollowInput = {
@@ -576,7 +572,6 @@ export type ResolversTypes = {
   TrendingWriterProfile: ResolverTypeWrapper<TrendingWriterProfile>
   TrendingWriterUser: ResolverTypeWrapper<TrendingWriterUser>
   TrendingWritersInput: TrendingWritersInput
-  TrendingWritersResult: ResolverTypeWrapper<TrendingWritersResult>
   UnfollowInput: UnfollowInput
   UnlikePostInput: UnlikePostInput
   UpdateAboutInput: UpdateAboutInput
@@ -638,7 +633,6 @@ export type ResolversParentTypes = {
   TrendingWriterProfile: TrendingWriterProfile
   TrendingWriterUser: TrendingWriterUser
   TrendingWritersInput: TrendingWritersInput
-  TrendingWritersResult: TrendingWritersResult
   UnfollowInput: UnfollowInput
   UnlikePostInput: UnlikePostInput
   UpdateAboutInput: UpdateAboutInput
@@ -860,7 +854,7 @@ export type QueryResolvers<
     RequireFields<QueryTrendingPostsArgs, 'input'>
   >
   trendingWriters?: Resolver<
-    ResolversTypes['TrendingWritersResult'],
+    Array<ResolversTypes['TrendingWriter']>,
     ParentType,
     ContextType,
     RequireFields<QueryTrendingWritersArgs, 'input'>
@@ -1013,15 +1007,6 @@ export type TrendingWriterUserResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
-export type TrendingWritersResultResolvers<
-  ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['TrendingWritersResult'] = ResolversParentTypes['TrendingWritersResult'],
-> = {
-  writers?: Resolver<Array<ResolversTypes['TrendingWriter']>, ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
-}
-
 export type UserResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
@@ -1121,7 +1106,6 @@ export type Resolvers<ContextType = GraphQLContext> = {
   TrendingWriterPosts?: TrendingWriterPostsResolvers<ContextType>
   TrendingWriterProfile?: TrendingWriterProfileResolvers<ContextType>
   TrendingWriterUser?: TrendingWriterUserResolvers<ContextType>
-  TrendingWritersResult?: TrendingWritersResultResolvers<ContextType>
   User?: UserResolvers<ContextType>
   UserMeta?: UserMetaResolvers<ContextType>
   UserProfile?: UserProfileResolvers<ContextType>
