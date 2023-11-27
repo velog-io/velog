@@ -37,6 +37,7 @@
     @media screen and (max-width: 1024px) {
       font-size: 18px;
       margin-left: 12px;
+      max-width: calc(100vw - 250px);
     }
   }
 }
