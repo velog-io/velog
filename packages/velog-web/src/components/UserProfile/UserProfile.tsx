@@ -11,40 +11,44 @@ import { includeProtocol } from '@/lib/includeProtocol'
 import { MdHome } from 'react-icons/md'
 import FollowButton from '../FollowButton'
 import { useAuth } from '@/state/auth'
-import { useGetUserFollowInfoQuery } from '@/graphql/generated'
-import { notFound, useParams } from 'next/navigation'
-import { getUsernameFromParams } from '@/lib/utils'
+import { UserProfile as Profile, useGetUserFollowInfoQuery } from '@/graphql/generated'
 
 const cx = bindClassNames(styles)
 
 type Props = {
   style?: CSSProperties
+  userId: string
+  profile: Profile
+  followersCount: number
+  followingsCount: number
+  isFollowed: boolean
+  username: string
 }
 
-function UserProfile({ style }: Props) {
-  const params = useParams()
-  const username = getUsernameFromParams(params)
+function UserProfile({
+  style,
+  userId,
+  profile,
+  followersCount,
+  followingsCount,
+  isFollowed,
+  username,
+}: Props) {
   const {
     value: { currentUser },
   } = useAuth()
 
-  const { data, refetch, isRefetching, isLoading } = useGetUserFollowInfoQuery({
-    input: { username: username },
+  const { refetch, isRefetching } = useGetUserFollowInfoQuery({
+    input: { username },
   })
 
-  const user = data?.user
-
-  if (!user) {
-    notFound()
-  }
-
-  const { display_name, profile_links, short_bio, thumbnail } = user.profile
+  const { display_name, profile_links, short_bio, thumbnail } = profile
   const { email, facebook, github, twitter, url } = profile_links as ProfileLinks
 
   const [hoverEmail, setHoverEmail] = useState(false)
   const emailBlockRef = useRef<HTMLDivElement>(null)
 
-  const [followersCnt, setFollowersCnt] = useState<number>(user.followers_count)
+  const [followersCnt, setFollowersCnt] = useState<number>(followersCount)
   const onMouseEnterEmail = () => {
     setHoverEmail(true)
   }
@@ -54,7 +58,6 @@ function UserProfile({ style }: Props) {
     setHoverEmail(false)
   }
 
-  const userId = user.id
   const getSocialId = (link: string) => link.split('/').reverse()[0]
 
   const onFollowSuccess = async (type: 'follow' | 'unfollow') => {
@@ -68,12 +71,12 @@ function UserProfile({ style }: Props) {
 
   useEffect(() => {
     if (isRefetching) return
-    setFollowersCnt(data?.user?.followers_count ?? followersCnt)
-  }, [isRefetching, data, followersCnt])
+    setFollowersCnt(followersCnt)
+  }, [isRefetching, followersCnt])
 
-  const velogUrl = `/@${user.username}`
+  const velogUrl = `/@${username}`
   const isOwn = userId === currentUser?.id
-  if (isLoading) return null
+
   return (
     <div className={cx('block')} style={style}>
       <div className={cx('section')}>
@@ -103,11 +106,11 @@ function UserProfile({ style }: Props) {
             <span className={cx('text')}>팔로워</span>
           </Link>
           <Link href={`${velogUrl}/followings`} className={cx('info')}>
-            <span className={cx('number')}>{user.followings_count}</span>
+            <span className={cx('number')}>{followingsCount}</span>
             <span className={cx('text')}>팔로잉</span>
           </Link>
         </div>
-        <div className={cx('section')}>
+        <div className={cx('bottomSection')}>
           <div className={cx('icons')}>
             {github && (
               <a
@@ -168,15 +171,13 @@ function UserProfile({ style }: Props) {
               </div>
             )}
           </div>
-          <div className={cx('inner', 'button')}>
-            {!isOwn && (
-              <FollowButton
-                followingUserId={userId}
-                onSuccess={onFollowSuccess}
-                isFollowed={data?.user?.is_followed}
-              />
-            )}
-          </div>
+          {!isOwn && (
+            <FollowButton
+              followingUserId={userId}
+              onSuccess={onFollowSuccess}
+              isFollowed={isFollowed}
+            />
+          )}
         </div>
       </div>
     </div>

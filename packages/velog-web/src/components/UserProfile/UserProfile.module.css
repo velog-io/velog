@@ -117,10 +117,11 @@
       }
     }
 
-    .section {
+    .bottomSection {
       margin-top: 24px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
 
       .icons {
         display: flex;

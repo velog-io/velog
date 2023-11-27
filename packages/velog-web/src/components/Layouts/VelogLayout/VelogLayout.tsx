@@ -9,7 +9,6 @@ import { UserLogo } from '@/state/header'
 
 import VelogTab from '@/features/velog/components/VelogTab'
 import MobileSeparator from '@/features/velog/components/MobileSeparator'
-import UserProfile from '@/components/UserProfile'
 
 const cx = bindClassNames(styles)
 
@@ -17,9 +16,10 @@ type Props = {
   children: React.ReactNode
   username: string
   userLogo: UserLogo
+  userProfile: React.ReactNode
 }
 
-function VelogLayout({ username, children, userLogo }: Props) {
+function VelogLayout({ username, children, userLogo, userProfile }: Props) {
   const header = <Header logo={<HeaderCustomLogo username={username} userLogo={userLogo} />} />
   return (
     <div className={cx('block')}>
@@ -27,7 +27,7 @@ function VelogLayout({ username, children, userLogo }: Props) {
       <div className={cx('mainResponsive')}>
         {header}
         <main className={cx('mainWrapper')}>
-          <UserProfile />
+          {userProfile}
           <MobileSeparator />
           <VelogTab username={username} />
           <section className={cx('section')}>{children}</section>
