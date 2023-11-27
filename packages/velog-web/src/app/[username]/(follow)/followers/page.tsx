@@ -24,7 +24,7 @@ export default async function VelogFollowersPage({ params }: Props) {
         username={username}
         displayName={profile.display_name}
         thumbnail={profile.thumbnail}
-        totalCount={user.followers_count}
+        followCount={user.followers_count}
         category="팔로워"
         text="의 팔로워"
         type="follower"

@@ -8,7 +8,7 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { FlatPostCardList, FlatPostCardListSkeleton } from '@/components/FlatPost/FlatPostCardList'
 import { UndrawBlankCanvas } from '@/assets/vectors/components'
 import VelogTag from '../VelogTag'
-import { UserTags } from '@/graphql/generated'
+import { Post, UserTags } from '@/graphql/generated'
 
 const cx = bindClassNames(styles)
 
@@ -16,12 +16,14 @@ type Props = {
   username: string
   tag?: string
   userTags: UserTags
+  initialData: Post[]
 }
 
-function VelogPosts({ username, tag, userTags }: Props) {
+function VelogPosts({ username, tag, userTags, initialData }: Props) {
   const { posts, isFetching, fetchMore, isInitLoading } = useVelogPosts({
     username,
     tag,
+    initialData,
   })
 
   const ref = useRef<HTMLDivElement>(null)

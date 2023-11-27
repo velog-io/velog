@@ -34,8 +34,8 @@ export default async function VelogPageLayout({ children, params }: Props) {
           userId={user.id}
           username={username}
           followersCount={user.followers_count}
-          isFollowed={user.is_followed}
           followingsCount={user.followings_count}
+          isFollowed={user.is_followed}
           profile={user.profile}
         />
       }

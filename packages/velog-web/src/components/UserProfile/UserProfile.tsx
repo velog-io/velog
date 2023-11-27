@@ -38,7 +38,7 @@ function UserProfile({
     value: { currentUser },
   } = useAuth()
 
-  const { refetch, isRefetching } = useGetUserFollowInfoQuery({
+  const { data, refetch, isRefetching } = useGetUserFollowInfoQuery({
     input: { username },
   })
 
@@ -62,9 +62,9 @@ function UserProfile({
 
   const onFollowSuccess = async (type: 'follow' | 'unfollow') => {
     if (type === 'follow') {
-      setFollowersCnt((state) => state + 1)
+      setFollowersCnt((state) => (state ?? 0) + 1)
     } else {
-      setFollowersCnt((state) => state - 1)
+      setFollowersCnt((state) => (state ?? 0) - 1)
     }
     refetch()
   }
@@ -73,6 +73,10 @@ function UserProfile({
     if (isRefetching) return
     setFollowersCnt(followersCnt)
   }, [isRefetching, followersCnt])
+
+  useEffect(() => {
+    setFollowersCnt(data?.user?.followers_count ?? followersCount ?? 0)
+  }, [data, followersCount])
 
   const velogUrl = `/@${username}`
   const isOwn = userId === currentUser?.id
@@ -101,14 +105,18 @@ function UserProfile({
       <div className={cx('seperator')}></div>
       <div className={cx('bottom')}>
         <div className={cx('followInfo')}>
-          <Link href={`${velogUrl}/followers`} className={cx('info')}>
-            <span className={cx('number')}>{followersCnt}</span>
-            <span className={cx('text')}>팔로워</span>
-          </Link>
-          <Link href={`${velogUrl}/followings`} className={cx('info')}>
-            <span className={cx('number')}>{followingsCount}</span>
-            <span className={cx('text')}>팔로잉</span>
-          </Link>
+          {followersCnt !== null && (
+            <>
+              <Link href={`${velogUrl}/followers`} className={cx('info')}>
+                <span className={cx('number')}>{followersCnt}</span>
+                <span className={cx('text')}>팔로워</span>
+              </Link>
+              <Link href={`${velogUrl}/followings`} className={cx('info')}>
+                <span className={cx('number')}>{followingsCount}</span>
+                <span className={cx('text')}>팔로잉</span>
+              </Link>
+            </>
+          )}
         </div>
         <div className={cx('bottomSection')}>
           <div className={cx('icons')}>

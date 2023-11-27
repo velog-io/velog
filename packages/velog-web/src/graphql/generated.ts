@@ -1022,7 +1022,7 @@ export const useTrendingPostsQuery = <TData = TrendingPostsQuery, TError = unkno
     options,
   )
 export const PostsDocument = `
-    query Posts($input: GetPostsInput!) {
+    query posts($input: GetPostsInput!) {
   posts(input: $input) {
     id
     title
@@ -1051,7 +1051,7 @@ export const usePostsQuery = <TData = PostsQuery, TError = unknown>(
   options?: UseQueryOptions<PostsQuery, TError, TData>,
 ) =>
   useQuery<PostsQuery, TError, TData>(
-    ['Posts', variables],
+    ['posts', variables],
     fetcher<PostsQuery, PostsQueryVariables>(PostsDocument, variables),
     options,
   )

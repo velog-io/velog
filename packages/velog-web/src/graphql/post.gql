@@ -132,7 +132,7 @@ query trendingPosts($input: TrendingPostsInput!) {
   }
 }
 
-query Posts($input: GetPostsInput!) {
+query posts($input: GetPostsInput!) {
   posts(input: $input) {
     id
     title

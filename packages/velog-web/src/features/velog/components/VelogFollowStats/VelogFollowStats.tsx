@@ -5,13 +5,14 @@ import styles from './VelogFollowStats.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useGetUserFollowInfoQuery } from '@/graphql/generated'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 const cx = bindClassNames(styles)
 
 type Props = {
   category: string
   text: string
-  totalCount: number
+  followCount: number
   thumbnail: string | null
   displayName: string
   username: string
@@ -21,7 +22,7 @@ type Props = {
 function VelogFollowStats({
   category,
   text,
-  totalCount,
+  followCount,
   thumbnail,
   displayName,
   username,
@@ -34,12 +35,17 @@ function VelogFollowStats({
       },
     },
     {
-      networkMode: 'always',
+      cacheTime: 0,
+      staleTime: 0,
     },
   )
 
-  const followersCount = data?.user?.followers_count ?? totalCount
-  const followingsCount = data?.user?.followings_count ?? totalCount
+  const [follows, setFollows] = useState<number>(followCount)
+
+  useEffect(() => {
+    const count = type === 'follower' ? data?.user?.followers_count : data?.user?.followings_count
+    setFollows(count ?? 0)
+  }, [data, type])
 
   const velogUrl = `/@${username}/posts`
   return (
@@ -58,12 +64,7 @@ function VelogFollowStats({
           <span className={cx('subCategory')}>{category}</span>
         </div>
         <div className={cx('info')}>
-          <b className={cx('bold')}>
-            {type === 'follower'
-              ? followersCount.toLocaleString()
-              : followingsCount.toLocaleString()}
-            명
-          </b>
+          <b className={cx('bold')}>{follows.toLocaleString()}명</b>
           <span className={cx('text')}>{text}</span>
         </div>
       </div>

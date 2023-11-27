@@ -93,7 +93,7 @@ function FollowButton({ followingUserId, isFollowed, onSuccess, className }: Pro
     return <div className={cx('skeleton')} />
 
   return (
-    <div className={cx('block', className)}>
+    <div className={cx('block', { hide: followingUserId === currentUser?.id }, className)}>
       {!initialFollowState ? (
         <button
           className={cx('followButton', 'button', { isFollowed: currentFollowState })}
