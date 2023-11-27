@@ -128,10 +128,10 @@ export class FollowService implements Service {
     })
   }
   public async getFollowers(input: GetFollowInput, signedUserId?: string): Promise<FollowResult[]> {
-    const { username, cursor, take = 10 } = input
+    const { username, cursor, limit = 10 } = input
 
-    if (take > 100) {
-      throw new BadRequestError('Max take is 100')
+    if (limit > 100) {
+      throw new BadRequestError('Max limit is 100')
     }
 
     const user = await this.userService.findByUsername(username)
@@ -167,7 +167,7 @@ export class FollowService implements Service {
 
     const followers = await this.db.followUser.findMany({
       where: whereInput,
-      take,
+      take: limit,
       orderBy: {
         created_at: 'desc',
       },
@@ -215,10 +215,10 @@ export class FollowService implements Service {
     input: GetFollowInput,
     signedUserId?: string,
   ): Promise<FollowResult[]> {
-    const { username, cursor, take = 10 } = input
+    const { username, cursor, limit = 10 } = input
 
-    if (take > 100) {
-      throw new BadRequestError('Max take is 100')
+    if (limit > 100) {
+      throw new BadRequestError('Max limit is 100')
     }
 
     const user = await this.userService.findByUsername(username)
@@ -254,7 +254,7 @@ export class FollowService implements Service {
 
     const followings = await this.db.followUser.findMany({
       where: whereInput,
-      take,
+      take: limit,
       orderBy: {
         created_at: 'desc',
       },
