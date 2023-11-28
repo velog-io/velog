@@ -62,7 +62,7 @@ export default function useTrendingWriters({ limit = 20, initialData = [] }: Arg
     trendingWriters,
     isFetching,
     originData: data,
-    isInitLoading: isLoading,
+    isLoading,
     fetchMore,
   }
 }

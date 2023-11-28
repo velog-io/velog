@@ -54,7 +54,7 @@ export default function useFollowers(username: string, limit = 1) {
     followers,
     isFetching,
     originData: data,
-    isInitLoading: isLoading,
+    isLoading,
     fetchMore,
   }
 }

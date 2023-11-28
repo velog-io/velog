@@ -20,7 +20,7 @@ type Props = {
 }
 
 function VelogPosts({ username, tag, userTags, initialData }: Props) {
-  const { posts, isFetching, fetchMore, isInitLoading } = useVelogPosts({
+  const { posts, isFetching, fetchMore, isLoading } = useVelogPosts({
     username,
     tag,
     initialData,
@@ -29,7 +29,7 @@ function VelogPosts({ username, tag, userTags, initialData }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   useInfiniteScroll(ref, fetchMore)
 
-  if (isInitLoading) return <FlatPostCardListSkeleton forLoading={false} hideUser={true} />
+  if (isLoading) return <FlatPostCardListSkeleton forLoading={false} hideUser={true} />
 
   return (
     <div className={cx('block')}>

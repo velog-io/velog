@@ -61,7 +61,7 @@ export default function useVelogPosts({ username, tag, initialData = [] }: Args)
     hasNextPage,
     originData: data,
     isError,
-    isInitLoading: isLoading,
+    isLoading,
     fetchMore,
   }
 }

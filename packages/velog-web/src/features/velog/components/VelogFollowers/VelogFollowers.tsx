@@ -12,11 +12,11 @@ type Props = {
 
 function VelogFollowers({ username }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const { followers, isInitLoading, fetchMore, isFetching } = useFollowers(username)
+  const { followers, isLoading, fetchMore, isFetching } = useFollowers(username)
 
   useInfiniteScroll(ref, fetchMore)
-  console.log('isInitLoading', isInitLoading)
-  if (isInitLoading) return <VelogFollowListSkeleton />
+
+  if (isLoading) return <VelogFollowListSkeleton />
   if (followers.length === 0) return <VelogFollowersEmpty />
   return (
     <>

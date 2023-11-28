@@ -18,12 +18,12 @@ type Props = {
 
 function TrendingWriterGrid({ initialData }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const { trendingWriters, fetchMore, isInitLoading, isFetching } = useTrendingWriters({
+  const { trendingWriters, fetchMore, isLoading, isFetching } = useTrendingWriters({
     initialData,
   })
 
   useInfiniteScroll(ref, fetchMore)
-  if (isInitLoading) return <TrendingWriterGridSkeleton />
+  if (isLoading) return <TrendingWriterGridSkeleton />
 
   return (
     <section>

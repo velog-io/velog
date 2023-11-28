@@ -69,7 +69,7 @@ export default function useVelogSearchPosts({ keyword, username }: Args) {
     count,
     isFetching,
     originData: data,
-    isInitLoading: isLoading,
+    isLoading,
     fetchMore,
   }
 }
