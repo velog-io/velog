@@ -9,6 +9,7 @@
   }
 
   .logo {
+    display: flex;
     svg {
       width: 28px;
       height: 28px;
