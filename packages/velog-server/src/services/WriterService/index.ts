@@ -4,7 +4,7 @@ import { RedisService } from '@lib/redis/RedisService.js'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
-  getTrendingWriters(page?: number, take?: number): Promise<TrendingWriter[]>
+  getTrendingWriters(page?: number, limit?: number): Promise<TrendingWriter[]>
 }
 
 @injectable()
@@ -16,7 +16,7 @@ export class WriterService implements Service {
     limit: number = 20,
   ): Promise<TrendingWriter[]> {
     if (limit > 100) {
-      throw new BadRequestError('Max take is 100')
+      throw new BadRequestError('Max limit is 100')
     }
 
     if (cursor < 0 || limit < 0) {

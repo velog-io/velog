@@ -15,7 +15,7 @@ function VelogFollowers({ username }: Props) {
   const { followers, isInitLoading, fetchMore, isFetching } = useFollowers(username)
 
   useInfiniteScroll(ref, fetchMore)
-
+  console.log('isInitLoading', isInitLoading)
   if (isInitLoading) return <VelogFollowListSkeleton />
   if (followers.length === 0) return <VelogFollowersEmpty />
   return (

@@ -10,13 +10,13 @@ import {
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
-export default function useFollowings(username: string, take = 20) {
+export default function useFollowings(username: string, limit = 20) {
   const fetchInput = useMemo(() => {
     return {
       username,
-      take,
+      limit,
     }
-  }, [username, take])
+  }, [username, limit])
 
   const { data, fetchNextPage, isFetching, hasNextPage, isError, isLoading } =
     useInfiniteQuery<GetFollowingsQuery>(
@@ -32,10 +32,10 @@ export default function useFollowings(username: string, take = 20) {
         getNextPageParam: (page) => {
           const { followings } = page
           if (!followings) return false
-          if (followings.length < take) return false
+          if (followings.length < limit) return false
           return {
             username,
-            take,
+            limit,
             cursor: followings[followings.length - 1]?.id,
           }
         },
