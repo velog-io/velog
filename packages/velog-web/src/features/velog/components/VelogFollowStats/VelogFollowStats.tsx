@@ -44,7 +44,8 @@ function VelogFollowStats({
 
   useEffect(() => {
     const count = type === 'follower' ? data?.user?.followers_count : data?.user?.followings_count
-    setFollows(count ?? 0)
+    if (count === undefined) return
+    setFollows(count)
   }, [data, type])
 
   const velogUrl = `/@${username}/posts`
@@ -57,13 +58,15 @@ function VelogFollowStats({
               <Thumbnail className={cx('thumbnail')} src={thumbnail} />
             </Link>
           </div>
-          <span className={cx('displayName')}>
-            <Link href={velogUrl}>{displayName}</Link>
+          <span className={cx('info')}>
+            <span className={cx('displayName')}>
+              <Link href={velogUrl}>{displayName}</Link>
+            </span>
+            <span className={cx('allow')}>{'>'}</span>
+            <span className={cx('subCategory')}>{category}</span>
           </span>
-          <span className={cx('allow')}>{'>'}</span>
-          <span className={cx('subCategory')}>{category}</span>
         </div>
-        <div className={cx('info')}>
+        <div className={cx('count')}>
           <b className={cx('bold')}>{follows.toLocaleString()}명</b>
           <span className={cx('text')}>{text}</span>
         </div>

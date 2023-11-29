@@ -20,18 +20,20 @@
           }
         }
       }
+      .info {
+        margin-top: -3px;
 
-      .displayName {
-        color: var(--text2);
-      }
-      .allow {
-        margin-top: -4px;
-        padding-left: 8px;
-        padding-right: 8px;
+        .displayName {
+          color: var(--text2);
+        }
+        .allow {
+          padding-left: 8px;
+          padding-right: 8px;
+        }
       }
     }
 
-    .info {
+    .count {
       margin-top: 16px;
       font-size: 32px;
 
