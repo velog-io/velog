@@ -35,8 +35,8 @@ function FollowButton({ followingUserId, isFollowed, onSuccess, className }: Pro
   const { mutateAsync: followMutate } = useFollowMutation()
   const { mutateAsync: unfollowMutate } = useUnfollowMutation()
 
-  const [initialFollowState, setInitialFollowState] = useState<boolean | undefined>(isFollowed)
-  const [currentFollowState, setCurrentFollowState] = useState<boolean | undefined>(isFollowed)
+  const [initialFollowState, setInitialFollowState] = useState<boolean>()
+  const [currentFollowState, setCurrentFollowState] = useState<boolean>()
 
   const [buttonText, setButtonText] = useState('팔로잉')
 
@@ -78,16 +78,17 @@ function FollowButton({ followingUserId, isFollowed, onSuccess, className }: Pro
   })
 
   useEffect(() => {
-    if (isFollowed !== undefined) {
-      setInitialFollowState(isFollowed)
-      setCurrentFollowState(isFollowed)
-    }
+    if (isFollowed === undefined) return
+    setInitialFollowState(isFollowed)
+    setCurrentFollowState(isFollowed)
   }, [isFollowed])
 
   useEffect(() => {
     if (isRefetching) return
-    setCurrentFollowState(!!data?.user?.is_followed || isFollowed)
-  }, [data, isFollowed, isRefetching])
+    const result = data?.user?.is_followed
+    if (result === undefined) return
+    setCurrentFollowState(result)
+  }, [data, isRefetching])
 
   if (isFollowed === undefined || isFollowInfoLoading || isCurrentUserLoading)
     return <div className={cx('skeleton')} />
