@@ -7,6 +7,7 @@ import { useGetUserFollowInfoQuery } from '@/graphql/generated'
 import FollowButton from '@/components/FollowButton'
 import VelogFollowItemSkeleton from './VelogFollowItemSkeleton'
 import Link from 'next/link'
+import { Noto_Sans_KR } from 'next/font/google'
 
 const cx = bindClassNames(styles)
 
@@ -17,6 +18,12 @@ type Props = {
   description: string
   username: string
 }
+
+const notoSansKr = Noto_Sans_KR({
+  weight: ['300', '400'],
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 function VelogFollowItem({ userId, thumbnail, username, description }: Props) {
   const { data, isLoading } = useGetUserFollowInfoQuery({ input: { username } })
@@ -35,7 +42,7 @@ function VelogFollowItem({ userId, thumbnail, username, description }: Props) {
             <Link href={velogUrl}>{`@${username}`}</Link>
           </span>
         </div>
-        <div className={cx('description')}>{description}</div>
+        <div className={cx('description', notoSansKr.className)}>{description}</div>
       </div>
       <div className={cx('button')}>
         <FollowButton followingUserId={userId} isFollowed={data?.user?.is_followed} />
