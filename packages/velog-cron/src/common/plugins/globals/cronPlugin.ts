@@ -1,4 +1,4 @@
-import { CreateFeedJob } from '@jobs/CreateFeedJob.js'
+import { GenerateFeedJob } from '@jobs/GenerateFeedJob.js'
 import { CalculatePostScoreJob } from '@jobs/CalculatePostScoreJob.js'
 import { GenerateTrendingWritersJob } from '@jobs/GenerateTrendingWritersJob.js'
 import { FastifyPluginCallback } from 'fastify'
@@ -7,7 +7,7 @@ import { ENV } from '@env'
 
 const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   const calculatePostScoreJob = container.resolve(CalculatePostScoreJob)
-  const createFeedJob = container.resolve(CreateFeedJob)
+  const generateFeedJob = container.resolve(GenerateFeedJob)
   const generateTrendingWritersJob = container.resolve(GenerateTrendingWritersJob)
 
   const jobDescription: JobDescription[] = [
@@ -24,13 +24,13 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       param: 0.1,
     },
     {
-      name: 'generate feeds',
-      cronTime: '*/1 * * * *', // every 1 minutes
-      jobService: createFeedJob,
+      name: 'generate feeds in every 1 minute',
+      cronTime: '*/1 * * * *', // every 1 minute
+      jobService: generateFeedJob,
       param: undefined,
     },
     {
-      name: 'generate trending writers',
+      name: 'generate trending writers every day at 05:00',
       cronTime: '0 5 * * *', // every day at 05:00 (5:00 AM)
       jobService: generateTrendingWritersJob,
       param: undefined,
@@ -47,8 +47,10 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   }
 
   // for test
-  const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediate)
-  await Promise.all(immediateRunJobs.map(createTick))
+  if (ENV.dockerEnv !== 'production') {
+    const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediate)
+    await Promise.all(immediateRunJobs.map(createTick))
+  }
 
   if (ENV.dockerEnv === 'production') {
     const crons = jobDescription.map(createJob)
@@ -71,7 +73,8 @@ function isNeedParamJobService(arg: any): arg is NeedParamJobService {
 
 function isNotNeedParamJobService(arg: any): arg is NotNeedParamJobService {
   return (
-    arg.jobService instanceof CreateFeedJob || arg.jobService instanceof GenerateTrendingWritersJob
+    arg.jobService instanceof GenerateFeedJob ||
+    arg.jobService instanceof GenerateTrendingWritersJob
   )
 }
 
@@ -88,7 +91,7 @@ type NeedParamJobService = {
 type NotNeedParamJobService = {
   name: string
   cronTime: string
-  jobService: CreateFeedJob | GenerateTrendingWritersJob
+  jobService: GenerateFeedJob | GenerateTrendingWritersJob
   param: undefined
   isImmediate?: boolean
 }

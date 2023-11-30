@@ -37,7 +37,7 @@ export class RedisService extends Redis implements Service {
 
   get queueName(): Record<QueueName, string> {
     return {
-      feed: 'feedQueue',
+      feed: 'queue:feed',
     }
   }
 }

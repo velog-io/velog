@@ -30,7 +30,7 @@ export class RedisService extends Redis implements Service {
 
   get queueName() {
     return {
-      feed: 'feedQueue',
+      feed: 'queue:feed',
     }
   }
 }
