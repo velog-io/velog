@@ -38,9 +38,12 @@ function UserProfile({
     value: { currentUser },
   } = useAuth()
 
-  const { data, refetch, isRefetching } = useGetUserFollowInfoQuery({
-    input: { username },
-  })
+  const { data, refetch, isRefetching } = useGetUserFollowInfoQuery(
+    {
+      input: { username },
+    },
+    { retryDelay: 300, cacheTime: 1000 * 60 * 1, staleTime: 1000 },
+  )
 
   const { display_name, profile_links, short_bio, thumbnail } = profile
   const { email, facebook, github, twitter, url } = profile_links as ProfileLinks
@@ -181,6 +184,7 @@ function UserProfile({
           </div>
           {!isOwn && (
             <FollowButton
+              username={username}
               followingUserId={userId}
               onSuccess={onFollowSuccess}
               isFollowed={isFollowed}

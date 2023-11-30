@@ -10,17 +10,29 @@ import {
 import { useAuth } from '@/state/auth'
 import { debounce } from 'throttle-debounce'
 import { useModal } from '@/state/modal'
+import { useQueryClient } from '@tanstack/react-query'
+import { useParams } from 'next/navigation'
+import { getUsernameFromParams } from '@/lib/utils'
 
 const cx = bindClassNames(styles)
 
 type Props = {
+  username: string
   followingUserId: string
   onSuccess?: (param?: any) => void | Promise<void>
   isFollowed: boolean | undefined
   className?: string
 }
 
-function FollowButton({ followingUserId, isFollowed, onSuccess, className }: Props) {
+function FollowButton({
+  username: itemUsername,
+  followingUserId,
+  isFollowed,
+  onSuccess,
+  className,
+}: Props) {
+  const params = useParams()
+  const username = getUsernameFromParams(params)
   const {
     value: { currentUser },
   } = useAuth()
@@ -29,11 +41,15 @@ function FollowButton({ followingUserId, isFollowed, onSuccess, className }: Pro
     data,
     isRefetching,
     isLoading: isFollowInfoLoading,
-  } = useGetUserFollowInfoQuery({ input: { id: followingUserId } })
+  } = useGetUserFollowInfoQuery(
+    { input: { username: itemUsername } },
+    { retryDelay: 400, cacheTime: 1000 * 60 * 1, staleTime: 1000 },
+  )
   const { isLoading: isCurrentUserLoading } = useCurrentUserQuery()
   const { actions } = useModal()
-  const { mutateAsync: followMutate } = useFollowMutation()
-  const { mutateAsync: unfollowMutate } = useUnfollowMutation()
+
+  const { mutate: followMutate } = useFollowMutation()
+  const { mutate: unfollowMutate } = useUnfollowMutation()
 
   const [initialFollowState, setInitialFollowState] = useState<boolean>()
   const [currentFollowState, setCurrentFollowState] = useState<boolean>()
@@ -51,6 +67,7 @@ function FollowButton({ followingUserId, isFollowed, onSuccess, className }: Pro
     setButtonText('팔로잉')
   }
 
+  const queryClient = useQueryClient()
   const onClick = debounce(300, async () => {
     try {
       if (!currentUser) {
@@ -60,9 +77,28 @@ function FollowButton({ followingUserId, isFollowed, onSuccess, className }: Pro
 
       const input = { followingUserId }
       if (currentFollowState) {
-        await unfollowMutate({ input })
+        unfollowMutate(
+          { input },
+          {
+            onSuccess: () => {
+              console.log('hello')
+              queryClient.refetchQueries({
+                queryKey: ['getUserFollowInfo', { input: { username } }],
+              })
+            },
+          },
+        )
       } else {
-        await followMutate({ input })
+        followMutate(
+          { input },
+          {
+            onSuccess: () => {
+              queryClient.refetchQueries({
+                queryKey: ['getUserFollowInfo', { input: { username } }],
+              })
+            },
+          },
+        )
         setButtonText('팔로잉')
       }
 

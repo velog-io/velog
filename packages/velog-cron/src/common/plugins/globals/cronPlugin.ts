@@ -30,7 +30,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       param: undefined,
     },
     {
-      name: 'generate trending writers every day at 05:00',
+      name: 'generate trending writers every day',
       cronTime: '0 5 * * *', // every day at 05:00 (5:00 AM)
       jobService: generateTrendingWritersJob,
       param: undefined,

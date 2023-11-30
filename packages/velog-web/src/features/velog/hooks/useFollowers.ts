@@ -25,8 +25,8 @@ export default function useFollowers(username: string, limit = 1) {
         })(),
       {
         retryDelay: 3000,
-        cacheTime: 0,
-        staleTime: 0,
+        cacheTime: 1000 * 60 * 3,
+        staleTime: 100,
         getNextPageParam: (page) => {
           const { followers } = page
           if (!followers) return false

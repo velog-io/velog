@@ -35,8 +35,7 @@ function VelogFollowStats({
       },
     },
     {
-      cacheTime: 0,
-      staleTime: 0,
+      retryDelay: 300,
     },
   )
 

@@ -26,10 +26,14 @@ const notoSansKr = Noto_Sans_KR({
 })
 
 function VelogFollowItem({ userId, thumbnail, username, description }: Props) {
-  const { data, isLoading } = useGetUserFollowInfoQuery({ input: { username } })
+  const { data, isLoading } = useGetUserFollowInfoQuery(
+    { input: { username } },
+    { retryDelay: 400, cacheTime: 1000 * 60 * 1, staleTime: 1000 },
+  )
 
   const velogUrl = `/@${username}/posts`
   if (isLoading) return <VelogFollowItemSkeleton />
+
   return (
     <li className={cx('block')}>
       <Link href={velogUrl}>
@@ -45,7 +49,11 @@ function VelogFollowItem({ userId, thumbnail, username, description }: Props) {
         <div className={cx('description', notoSansKr.className)}>{description}</div>
       </div>
       <div className={cx('button')}>
-        <FollowButton followingUserId={userId} isFollowed={data?.user?.is_followed} />
+        <FollowButton
+          username={username}
+          followingUserId={userId}
+          isFollowed={data?.user?.is_followed}
+        />
       </div>
     </li>
   )

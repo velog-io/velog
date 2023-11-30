@@ -28,7 +28,7 @@ export default function useFollowings(username: string, limit = 20) {
       {
         retryDelay: 3000,
         cacheTime: 1000 * 60 * 3,
-        staleTime: 1000 * 60 * 3,
+        staleTime: 100,
         getNextPageParam: (page) => {
           const { followings } = page
           if (!followings) return false

@@ -2,7 +2,6 @@ import { FollowResult } from '@/graphql/generated'
 import styles from './VelogFollowList.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { VelogFollowItem } from '../VelogFollowItem'
-
 const cx = bindClassNames(styles)
 
 type Props = {

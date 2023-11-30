@@ -35,6 +35,7 @@ function TrendingWriterCard({ writerId, posts, thumbnail, displayName, username 
         </div>
         <div className={cx('right')}>
           <FollowButton
+            username={username}
             isFollowed={data?.user?.is_followed}
             followingUserId={writerId}
             className={cx('button')}
