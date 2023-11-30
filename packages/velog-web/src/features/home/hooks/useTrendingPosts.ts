@@ -56,30 +56,30 @@ export default function useTrendingPosts(initialPost: Post[] = []) {
       },
     )
 
-  // TODO: remove Start
-  const queryClient = useQueryClient()
-  useEffect(() => {
-    if (hasCheckedRef.current) return
-    hasCheckedRef.current = true
-    try {
-      const stringPosts = localStorage.getItem(`trendingPosts/${timeframe}`)
-      if (!stringPosts) return
-      const parsed = JSON.parse(stringPosts)
-      queryClient.setQueryData(['trendingPosts', { input: fetchInput }], parsed)
-    } catch (_) {}
-  }, [queryClient, fetchInput, timeframe])
+  // // TODO: remove Start
+  // const queryClient = useQueryClient()
+  // useEffect(() => {
+  //   if (hasCheckedRef.current) return
+  //   hasCheckedRef.current = true
+  //   try {
+  //     const stringPosts = localStorage.getItem(`trendingPosts/${timeframe}`)
+  //     if (!stringPosts) return
+  //     const parsed = JSON.parse(stringPosts)
+  //     queryClient.setQueryData(['trendingPosts', { input: fetchInput }], parsed)
+  //   } catch (_) {}
+  // }, [queryClient, fetchInput, timeframe])
 
-  useEffect(() => {
-    const storageKey = `trendingPosts/${timeframe}`
-    const scrolly = Number(localStorage.getItem(`${storageKey}/scrollPosition`))
-    if (!scrolly || isLoading) return
-    window.scrollTo({
-      top: Number(scrolly),
-    })
-    localStorage.removeItem(storageKey)
-    localStorage.removeItem(`${storageKey}/scrollPosition`)
-  }, [timeframe, isLoading])
-  // TODO: remove END
+  // useEffect(() => {
+  //   const storageKey = `trendingPosts/${timeframe}`
+  //   const scrolly = Number(localStorage.getItem(`${storageKey}/scrollPosition`))
+  //   if (!scrolly || isLoading) return
+  //   window.scrollTo({
+  //     top: Number(scrolly),
+  //   })
+  //   localStorage.removeItem(storageKey)
+  //   localStorage.removeItem(`${storageKey}/scrollPosition`)
+  // }, [timeframe, isLoading])
+  // // TODO: remove END
 
   useEffect(() => {
     if (prevTimeframe.current === timeframe) return
