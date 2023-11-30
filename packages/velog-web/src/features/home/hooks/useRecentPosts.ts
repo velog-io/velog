@@ -6,8 +6,8 @@ import {
   RecentPostsQuery,
   RecentPostsQueryVariables,
 } from '@/graphql/generated'
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useMemo, useRef } from 'react'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { useMemo, useRef } from 'react'
 
 export default function useRecentPosts(initialPosts: Post[] = []) {
   const hasCheckedRef = useRef<boolean>(false)
@@ -89,6 +89,7 @@ export default function useRecentPosts(initialPosts: Post[] = []) {
   return {
     posts,
     isFetching,
+    isLoading,
     originData: data,
     fetchMore,
   }

@@ -59,6 +59,11 @@
       font-size: 14px;
       color: var(--text1);
 
+      &:active,
+      &:hover {
+        text-decoration: underline;
+      }
+
       @media screen and (max-width: 768px) {
         font-size: 12px;
       }
@@ -96,6 +101,8 @@
     }
 
     .button {
+      width: 80px;
+      height: 24px;
       border-radius: 16px;
     }
   }

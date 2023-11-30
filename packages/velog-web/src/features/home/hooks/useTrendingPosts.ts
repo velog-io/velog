@@ -7,7 +7,7 @@ import {
   TrendingPostsQuery,
   TrendingPostsQueryVariables,
 } from '@/graphql/generated'
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 
