@@ -98,6 +98,7 @@ query recentPosts($input: RecentPostsInput!) {
       profile {
         id
         thumbnail
+        display_name
       }
     }
     url_slug
@@ -122,6 +123,7 @@ query trendingPosts($input: TrendingPostsInput!) {
       profile {
         id
         thumbnail
+        display_name
       }
     }
     url_slug
@@ -129,30 +131,6 @@ query trendingPosts($input: TrendingPostsInput!) {
     updated_at
     is_private
     comments_count
-  }
-}
-
-query posts($input: GetPostsInput!) {
-  posts(input: $input) {
-    id
-    title
-    short_description
-    thumbnail
-    user {
-      id
-      username
-      profile {
-        id
-        thumbnail
-      }
-    }
-    url_slug
-    released_at
-    updated_at
-    comments_count
-    tags
-    is_private
-    likes
   }
 }
 
@@ -170,6 +148,7 @@ query SearchPosts($input: GetSearchPostsInput!) {
         profile {
           id
           thumbnail
+          display_name
         }
       }
       url_slug

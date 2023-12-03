@@ -561,7 +561,11 @@ export type RecentPostsQuery = {
     is_private: boolean
     likes: number | null
     comments_count: number | null
-    user: { id: string; username: string; profile: { id: string; thumbnail: string | null } } | null
+    user: {
+      id: string
+      username: string
+      profile: { id: string; thumbnail: string | null; display_name: string }
+    } | null
   }>
 }
 
@@ -581,28 +585,11 @@ export type TrendingPostsQuery = {
     updated_at: any
     is_private: boolean
     comments_count: number | null
-    user: { id: string; username: string; profile: { id: string; thumbnail: string | null } } | null
-  }>
-}
-
-export type PostsQueryVariables = Exact<{
-  input: GetPostsInput
-}>
-
-export type PostsQuery = {
-  posts: Array<{
-    id: string
-    title: string | null
-    short_description: string | null
-    thumbnail: string | null
-    url_slug: string | null
-    released_at: any | null
-    updated_at: any
-    comments_count: number | null
-    tags: Array<string>
-    is_private: boolean
-    likes: number | null
-    user: { id: string; username: string; profile: { id: string; thumbnail: string | null } } | null
+    user: {
+      id: string
+      username: string
+      profile: { id: string; thumbnail: string | null; display_name: string }
+    } | null
   }>
 }
 
@@ -626,7 +613,7 @@ export type SearchPostsQuery = {
       user: {
         id: string
         username: string
-        profile: { id: string; thumbnail: string | null }
+        profile: { id: string; thumbnail: string | null; display_name: string }
       } | null
     }>
   }
@@ -962,6 +949,7 @@ export const RecentPostsDocument = `
       profile {
         id
         thumbnail
+        display_name
       }
     }
     url_slug
@@ -996,6 +984,7 @@ export const TrendingPostsDocument = `
       profile {
         id
         thumbnail
+        display_name
       }
     }
     url_slug
@@ -1015,40 +1004,6 @@ export const useTrendingPostsQuery = <TData = TrendingPostsQuery, TError = unkno
     fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, variables),
     options,
   )
-export const PostsDocument = `
-    query posts($input: GetPostsInput!) {
-  posts(input: $input) {
-    id
-    title
-    short_description
-    thumbnail
-    user {
-      id
-      username
-      profile {
-        id
-        thumbnail
-      }
-    }
-    url_slug
-    released_at
-    updated_at
-    comments_count
-    tags
-    is_private
-    likes
-  }
-}
-    `
-export const usePostsQuery = <TData = PostsQuery, TError = unknown>(
-  variables: PostsQueryVariables,
-  options?: UseQueryOptions<PostsQuery, TError, TData>,
-) =>
-  useQuery<PostsQuery, TError, TData>(
-    ['posts', variables],
-    fetcher<PostsQuery, PostsQueryVariables>(PostsDocument, variables),
-    options,
-  )
 export const SearchPostsDocument = `
     query SearchPosts($input: GetSearchPostsInput!) {
   searchPosts(input: $input) {
@@ -1064,6 +1019,7 @@ export const SearchPostsDocument = `
         profile {
           id
           thumbnail
+          display_name
         }
       }
       url_slug
