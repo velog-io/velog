@@ -44,7 +44,7 @@
     "prisma": "^5.2.0",
     "reflect-metadata": "^0.1.13",
     "tsc-alias": "^1.8.7",
-    "tsx": "^3.12.7",
+    "tsx": "^4.6.2",
     "tsyringe": "^4.7.0",
     "zod": "^3.21.4"
   },
