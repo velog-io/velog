@@ -6,8 +6,8 @@ import {
   RecentPostsQuery,
   RecentPostsQueryVariables,
 } from '@/graphql/generated'
-import { useInfiniteQuery } from '@tanstack/react-query'
-import { useMemo, useRef } from 'react'
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useMemo, useRef } from 'react'
 
 export default function useRecentPosts(initialPosts: Post[] = []) {
   const hasCheckedRef = useRef<boolean>(false)
@@ -51,30 +51,30 @@ export default function useRecentPosts(initialPosts: Post[] = []) {
     },
   )
 
-  // // TODO: remove Start
-  // const queryClient = useQueryClient()
-  // useEffect(() => {
-  //   if (hasCheckedRef.current) return
-  //   hasCheckedRef.current = true
+  // TODO: remove Start
+  const queryClient = useQueryClient()
+  useEffect(() => {
+    if (hasCheckedRef.current) return
+    hasCheckedRef.current = true
 
-  //   try {
-  //     const stringPosts = localStorage.getItem('recentPosts')
-  //     if (!stringPosts) return
-  //     const parsed = JSON.parse(stringPosts)
-  //     queryClient.setQueriesData(['recentPosts', { input: fetchInput }], parsed)
-  //   } catch (_) {}
-  // }, [queryClient, fetchInput])
+    try {
+      const stringPosts = localStorage.getItem('recentPosts')
+      if (!stringPosts) return
+      const parsed = JSON.parse(stringPosts)
+      queryClient.setQueriesData(['recentPosts', { input: fetchInput }], parsed)
+    } catch (_) {}
+  }, [queryClient, fetchInput])
 
-  // useEffect(() => {
-  //   const scrolly = Number(localStorage.getItem('recentPosts/scrollPosition'))
-  //   if (!scrolly || isLoading) return
-  //   window.scrollTo({
-  //     top: Number(scrolly),
-  //   })
-  //   localStorage.removeItem('recentPosts')
-  //   localStorage.removeItem('recentPosts/scrollPosition')
-  // }, [isLoading])
-  // // TODO: remove End
+  useEffect(() => {
+    const scrolly = Number(localStorage.getItem('recentPosts/scrollPosition'))
+    if (!scrolly || isLoading) return
+    window.scrollTo({
+      top: Number(scrolly),
+    })
+    localStorage.removeItem('recentPosts')
+    localStorage.removeItem('recentPosts/scrollPosition')
+  }, [isLoading])
+  // TODO: remove End
 
   const posts = useMemo(() => {
     return [...initialPosts, ...(data?.pages?.flatMap((page) => page.recentPosts) || [])] as Post[]
