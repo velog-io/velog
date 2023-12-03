@@ -593,6 +593,31 @@ export type TrendingPostsQuery = {
   }>
 }
 
+export type VelogPostsQueryVariables = Exact<{
+  input: GetPostsInput
+}>
+
+export type VelogPostsQuery = {
+  posts: Array<{
+    id: string
+    title: string | null
+    short_description: string | null
+    thumbnail: string | null
+    url_slug: string | null
+    released_at: any | null
+    updated_at: any
+    comments_count: number | null
+    tags: Array<string>
+    is_private: boolean
+    likes: number | null
+    user: {
+      id: string
+      username: string
+      profile: { id: string; thumbnail: string | null; display_name: string }
+    } | null
+  }>
+}
+
 export type SearchPostsQueryVariables = Exact<{
   input: GetSearchPostsInput
 }>
@@ -1004,8 +1029,43 @@ export const useTrendingPostsQuery = <TData = TrendingPostsQuery, TError = unkno
     fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, variables),
     options,
   )
+export const VelogPostsDocument = `
+    query velogPosts($input: GetPostsInput!) {
+  posts(input: $input) {
+    id
+    title
+    short_description
+    thumbnail
+    user {
+      id
+      username
+      profile {
+        id
+        thumbnail
+        display_name
+      }
+    }
+    url_slug
+    released_at
+    updated_at
+    comments_count
+    tags
+    is_private
+    likes
+  }
+}
+    `
+export const useVelogPostsQuery = <TData = VelogPostsQuery, TError = unknown>(
+  variables: VelogPostsQueryVariables,
+  options?: UseQueryOptions<VelogPostsQuery, TError, TData>,
+) =>
+  useQuery<VelogPostsQuery, TError, TData>(
+    ['velogPosts', variables],
+    fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, variables),
+    options,
+  )
 export const SearchPostsDocument = `
-    query SearchPosts($input: GetSearchPostsInput!) {
+    query searchPosts($input: GetSearchPostsInput!) {
   searchPosts(input: $input) {
     count
     posts {
@@ -1036,7 +1096,7 @@ export const useSearchPostsQuery = <TData = SearchPostsQuery, TError = unknown>(
   options?: UseQueryOptions<SearchPostsQuery, TError, TData>,
 ) =>
   useQuery<SearchPostsQuery, TError, TData>(
-    ['SearchPosts', variables],
+    ['searchPosts', variables],
     fetcher<SearchPostsQuery, SearchPostsQueryVariables>(SearchPostsDocument, variables),
     options,
   )

@@ -134,7 +134,32 @@ query trendingPosts($input: TrendingPostsInput!) {
   }
 }
 
-query SearchPosts($input: GetSearchPostsInput!) {
+query velogPosts($input: GetPostsInput!) {
+  posts(input: $input) {
+    id
+    title
+    short_description
+    thumbnail
+    user {
+      id
+      username
+      profile {
+        id
+        thumbnail
+        display_name
+      }
+    }
+    url_slug
+    released_at
+    updated_at
+    comments_count
+    tags
+    is_private
+    likes
+  }
+}
+
+query searchPosts($input: GetSearchPostsInput!) {
   searchPosts(input: $input) {
     count
     posts {

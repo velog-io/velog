@@ -1,5 +1,10 @@
 import { fetcher } from '@/graphql/fetcher'
-import { Post, PostsDocument, PostsQuery, PostsQueryVariables } from '@/graphql/generated'
+import {
+  Post,
+  VelogPostsDocument,
+  VelogPostsQuery,
+  VelogPostsQueryVariables,
+} from '@/graphql/generated'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
@@ -21,10 +26,12 @@ export default function useVelogPosts({ username, tag, initialData = [] }: Args)
   }, [username, tag, initialData])
 
   const { data, fetchNextPage, isFetching, hasNextPage, isError, isLoading } =
-    useInfiniteQuery<PostsQuery>(
+    useInfiniteQuery<VelogPostsQuery>(
       ['posts', { input: fetchInput }],
       ({ pageParam = fetchInput }) =>
-        fetcher<PostsQuery, PostsQueryVariables>(PostsDocument, { input: pageParam })(),
+        fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, {
+          input: pageParam,
+        })(),
       {
         retryDelay: 100,
         cacheTime: 1000 * 60 * 5,

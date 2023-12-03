@@ -1,11 +1,11 @@
-import { GetPostsInput, Post, PostsDocument } from '@/graphql/generated'
+import { GetPostsInput, Post, VelogPostsDocument } from '@/graphql/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getVelogPosts({ username, tag }: GetPostsInput) {
   try {
     const body: GraphqlRequestBody = {
       operationName: 'posts',
-      query: PostsDocument,
+      query: VelogPostsDocument,
       variables: {
         input: {
           username,
