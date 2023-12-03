@@ -24,17 +24,18 @@
       }
 
       .displayName {
+        display: inline;
         margin-left: 8px;
         font-weight: 700;
         font-size: 14px;
-        width: 90px;
+        max-width: 90px;
 
         @media screen and (max-width: 768px) {
-          width: 150px;
+          max-width: 150px;
         }
 
         @media screen and (max-width: 425px) {
-          width: 120px;
+          max-width: 120px;
         }
       }
     }
@@ -87,6 +88,7 @@
 }
 
 .skeletonBlock {
+  padding-bottom: 24px;
   .header {
     padding: 8px;
     display: flex;

@@ -30,7 +30,7 @@ function TrendingWriterCard({ writerId, posts, thumbnail, displayName, username 
             <Thumbnail src={thumbnail} className={cx('thumbnail')} />
           </Link>
           <Link href={velogUrl} className={cx('displayName', 'ellipsis')}>
-            {displayName}
+            <span>{displayName}</span>
           </Link>
         </div>
         <div className={cx('right')}>

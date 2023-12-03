@@ -59,12 +59,12 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
         <Link className={cx('userInfo')} href={`/@${post.user?.username}/posts`}>
           <Image
             src={post.user?.profile?.thumbnail || '/images/user-thumbnail.png'}
-            alt={`user thumbnail of ${post.user?.username}`}
+            alt={`user thumbnail of ${post.user?.profile.display_name}`}
             width={24}
             height={24}
           />
           <span>
-            by <b>{post.user?.username}</b>
+            by <b>{post.user?.profile.display_name}</b>
           </span>
         </Link>
         <div className={cx('likes')}>
