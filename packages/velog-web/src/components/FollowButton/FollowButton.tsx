@@ -34,7 +34,7 @@ function FollowButton({ username, followingUserId, className, resetFollowCount }
     isLoading: isFollowInfoLoading,
   } = useGetUserFollowInfoQuery(
     { input: { username: username } },
-    { retryDelay: 400, cacheTime: 1000 * 60 * 1, staleTime: 1000 },
+    { retryDelay: 400, gcTime: 1000 * 60 * 1, staleTime: 1000 },
   )
 
   const { actions } = useModal()

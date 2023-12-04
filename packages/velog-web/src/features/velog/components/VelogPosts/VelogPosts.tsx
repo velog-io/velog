@@ -27,7 +27,7 @@ function VelogPosts({ username, tag, userTags, initialData }: Props) {
   })
 
   const ref = useRef<HTMLDivElement>(null)
-  useInfiniteScroll(ref, fetchMore)
+  // useInfiniteScroll(ref, fetchMore)
 
   if (isLoading) return <FlatPostCardListSkeleton forLoading={false} hideUser={true} />
 

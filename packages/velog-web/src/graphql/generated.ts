@@ -1,4 +1,12 @@
-import { useMutation, useQuery, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
+import {
+  useMutation,
+  useQuery,
+  useInfiniteQuery,
+  UseMutationOptions,
+  UseQueryOptions,
+  UseInfiniteQueryOptions,
+  InfiniteData,
+} from '@tanstack/react-query'
 import { fetcher } from './fetcher'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = T | undefined
@@ -780,15 +788,18 @@ export const SendMailDocument = `
   }
 }
     `
+
 export const useSendMailMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<SendMailMutation, TError, SendMailMutationVariables, TContext>,
-) =>
-  useMutation<SendMailMutation, TError, SendMailMutationVariables, TContext>(
-    ['sendMail'],
-    (variables?: SendMailMutationVariables) =>
+) => {
+  return useMutation<SendMailMutation, TError, SendMailMutationVariables, TContext>({
+    mutationKey: ['sendMail'],
+    mutationFn: (variables?: SendMailMutationVariables) =>
       fetcher<SendMailMutation, SendMailMutationVariables>(SendMailDocument, variables)(),
-    options,
-  )
+    ...options,
+  })
+}
+
 useSendMailMutation.getKey = () => ['sendMail']
 
 export const FollowDocument = `
@@ -796,15 +807,18 @@ export const FollowDocument = `
   follow(input: $input)
 }
     `
+
 export const useFollowMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<FollowMutation, TError, FollowMutationVariables, TContext>,
-) =>
-  useMutation<FollowMutation, TError, FollowMutationVariables, TContext>(
-    ['follow'],
-    (variables?: FollowMutationVariables) =>
+) => {
+  return useMutation<FollowMutation, TError, FollowMutationVariables, TContext>({
+    mutationKey: ['follow'],
+    mutationFn: (variables?: FollowMutationVariables) =>
       fetcher<FollowMutation, FollowMutationVariables>(FollowDocument, variables)(),
-    options,
-  )
+    ...options,
+  })
+}
+
 useFollowMutation.getKey = () => ['follow']
 
 export const UnfollowDocument = `
@@ -812,15 +826,18 @@ export const UnfollowDocument = `
   unfollow(input: $input)
 }
     `
+
 export const useUnfollowMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<UnfollowMutation, TError, UnfollowMutationVariables, TContext>,
-) =>
-  useMutation<UnfollowMutation, TError, UnfollowMutationVariables, TContext>(
-    ['unfollow'],
-    (variables?: UnfollowMutationVariables) =>
+) => {
+  return useMutation<UnfollowMutation, TError, UnfollowMutationVariables, TContext>({
+    mutationKey: ['unfollow'],
+    mutationFn: (variables?: UnfollowMutationVariables) =>
       fetcher<UnfollowMutation, UnfollowMutationVariables>(UnfollowDocument, variables)(),
-    options,
-  )
+    ...options,
+  })
+}
+
 useUnfollowMutation.getKey = () => ['unfollow']
 
 export const GetFollowersDocument = `
@@ -837,17 +854,55 @@ export const GetFollowersDocument = `
   }
 }
     `
+
 export const useGetFollowersQuery = <TData = GetFollowersQuery, TError = unknown>(
   variables: GetFollowersQueryVariables,
-  options?: UseQueryOptions<GetFollowersQuery, TError, TData>,
-) =>
-  useQuery<GetFollowersQuery, TError, TData>(
-    ['getFollowers', variables],
-    fetcher<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, variables),
-    options,
-  )
+  options?: Omit<UseQueryOptions<GetFollowersQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<GetFollowersQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetFollowersQuery, TError, TData>({
+    queryKey: ['getFollowers', variables],
+    queryFn: fetcher<GetFollowersQuery, GetFollowersQueryVariables>(
+      GetFollowersDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
 
 useGetFollowersQuery.getKey = (variables: GetFollowersQueryVariables) => ['getFollowers', variables]
+
+export const useInfiniteGetFollowersQuery = <
+  TData = InfiniteData<GetFollowersQuery>,
+  TError = unknown,
+>(
+  variables: GetFollowersQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<GetFollowersQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<GetFollowersQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetFollowersQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['getFollowers.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetFollowersQuery.getKey = (variables: GetFollowersQueryVariables) => [
+  'getFollowers.infinite',
+  variables,
+]
+
 export const GetFollowingsDocument = `
     query getFollowings($input: GetFollowInput!) {
   followings(input: $input) {
@@ -862,20 +917,58 @@ export const GetFollowingsDocument = `
   }
 }
     `
+
 export const useGetFollowingsQuery = <TData = GetFollowingsQuery, TError = unknown>(
   variables: GetFollowingsQueryVariables,
-  options?: UseQueryOptions<GetFollowingsQuery, TError, TData>,
-) =>
-  useQuery<GetFollowingsQuery, TError, TData>(
-    ['getFollowings', variables],
-    fetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(GetFollowingsDocument, variables),
-    options,
-  )
+  options?: Omit<UseQueryOptions<GetFollowingsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<GetFollowingsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetFollowingsQuery, TError, TData>({
+    queryKey: ['getFollowings', variables],
+    queryFn: fetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(
+      GetFollowingsDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
 
 useGetFollowingsQuery.getKey = (variables: GetFollowingsQueryVariables) => [
   'getFollowings',
   variables,
 ]
+
+export const useInfiniteGetFollowingsQuery = <
+  TData = InfiniteData<GetFollowingsQuery>,
+  TError = unknown,
+>(
+  variables: GetFollowingsQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<GetFollowingsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<GetFollowingsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetFollowingsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['getFollowings.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(GetFollowingsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetFollowingsQuery.getKey = (variables: GetFollowingsQueryVariables) => [
+  'getFollowings.infinite',
+  variables,
+]
+
 export const ReadPostDocument = `
     query readPost($input: ReadPostInput!) {
   post(input: $input) {
@@ -965,17 +1058,49 @@ export const ReadPostDocument = `
   }
 }
     `
+
 export const useReadPostQuery = <TData = ReadPostQuery, TError = unknown>(
   variables: ReadPostQueryVariables,
-  options?: UseQueryOptions<ReadPostQuery, TError, TData>,
-) =>
-  useQuery<ReadPostQuery, TError, TData>(
-    ['readPost', variables],
-    fetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables),
-    options,
-  )
+  options?: Omit<UseQueryOptions<ReadPostQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<ReadPostQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<ReadPostQuery, TError, TData>({
+    queryKey: ['readPost', variables],
+    queryFn: fetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables),
+    ...options,
+  })
+}
 
 useReadPostQuery.getKey = (variables: ReadPostQueryVariables) => ['readPost', variables]
+
+export const useInfiniteReadPostQuery = <TData = InfiniteData<ReadPostQuery>, TError = unknown>(
+  variables: ReadPostQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<ReadPostQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<ReadPostQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<ReadPostQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['readPost.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteReadPostQuery.getKey = (variables: ReadPostQueryVariables) => [
+  'readPost.infinite',
+  variables,
+]
+
 export const RecentPostsDocument = `
     query recentPosts($input: RecentPostsInput!) {
   recentPosts(input: $input) {
@@ -1001,17 +1126,52 @@ export const RecentPostsDocument = `
   }
 }
     `
+
 export const useRecentPostsQuery = <TData = RecentPostsQuery, TError = unknown>(
   variables: RecentPostsQueryVariables,
-  options?: UseQueryOptions<RecentPostsQuery, TError, TData>,
-) =>
-  useQuery<RecentPostsQuery, TError, TData>(
-    ['recentPosts', variables],
-    fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, variables),
-    options,
-  )
+  options?: Omit<UseQueryOptions<RecentPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<RecentPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<RecentPostsQuery, TError, TData>({
+    queryKey: ['recentPosts', variables],
+    queryFn: fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, variables),
+    ...options,
+  })
+}
 
 useRecentPostsQuery.getKey = (variables: RecentPostsQueryVariables) => ['recentPosts', variables]
+
+export const useInfiniteRecentPostsQuery = <
+  TData = InfiniteData<RecentPostsQuery>,
+  TError = unknown,
+>(
+  variables: RecentPostsQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<RecentPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<RecentPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<RecentPostsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['recentPosts.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteRecentPostsQuery.getKey = (variables: RecentPostsQueryVariables) => [
+  'recentPosts.infinite',
+  variables,
+]
+
 export const TrendingPostsDocument = `
     query trendingPosts($input: TrendingPostsInput!) {
   trendingPosts(input: $input) {
@@ -1037,20 +1197,58 @@ export const TrendingPostsDocument = `
   }
 }
     `
+
 export const useTrendingPostsQuery = <TData = TrendingPostsQuery, TError = unknown>(
   variables: TrendingPostsQueryVariables,
-  options?: UseQueryOptions<TrendingPostsQuery, TError, TData>,
-) =>
-  useQuery<TrendingPostsQuery, TError, TData>(
-    ['trendingPosts', variables],
-    fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, variables),
-    options,
-  )
+  options?: Omit<UseQueryOptions<TrendingPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<TrendingPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<TrendingPostsQuery, TError, TData>({
+    queryKey: ['trendingPosts', variables],
+    queryFn: fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
+      TrendingPostsDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
 
 useTrendingPostsQuery.getKey = (variables: TrendingPostsQueryVariables) => [
   'trendingPosts',
   variables,
 ]
+
+export const useInfiniteTrendingPostsQuery = <
+  TData = InfiniteData<TrendingPostsQuery>,
+  TError = unknown,
+>(
+  variables: TrendingPostsQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<TrendingPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<TrendingPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<TrendingPostsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['trendingPosts.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteTrendingPostsQuery.getKey = (variables: TrendingPostsQueryVariables) => [
+  'trendingPosts.infinite',
+  variables,
+]
+
 export const VelogPostsDocument = `
     query velogPosts($input: GetPostsInput!) {
   posts(input: $input) {
@@ -1077,17 +1275,51 @@ export const VelogPostsDocument = `
   }
 }
     `
+
 export const useVelogPostsQuery = <TData = VelogPostsQuery, TError = unknown>(
   variables: VelogPostsQueryVariables,
-  options?: UseQueryOptions<VelogPostsQuery, TError, TData>,
-) =>
-  useQuery<VelogPostsQuery, TError, TData>(
-    ['velogPosts', variables],
-    fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, variables),
-    options,
-  )
+  options?: Omit<UseQueryOptions<VelogPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<VelogPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<VelogPostsQuery, TError, TData>({
+    queryKey: ['velogPosts', variables],
+    queryFn: fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, variables),
+    ...options,
+  })
+}
 
 useVelogPostsQuery.getKey = (variables: VelogPostsQueryVariables) => ['velogPosts', variables]
+
+export const useInfiniteVelogPostsQuery = <TData = InfiniteData<VelogPostsQuery>, TError = unknown>(
+  variables: VelogPostsQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<VelogPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<VelogPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<VelogPostsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['velogPosts.infinite', variables],
+        queryFn: (metaData) => {
+          console.log('helo')
+          return fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })()
+        },
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteVelogPostsQuery.getKey = (variables: VelogPostsQueryVariables) => [
+  'velogPosts.infinite',
+  variables,
+]
+
 export const SearchPostsDocument = `
     query searchPosts($input: GetSearchPostsInput!) {
   searchPosts(input: $input) {
@@ -1115,17 +1347,52 @@ export const SearchPostsDocument = `
   }
 }
     `
+
 export const useSearchPostsQuery = <TData = SearchPostsQuery, TError = unknown>(
   variables: SearchPostsQueryVariables,
-  options?: UseQueryOptions<SearchPostsQuery, TError, TData>,
-) =>
-  useQuery<SearchPostsQuery, TError, TData>(
-    ['searchPosts', variables],
-    fetcher<SearchPostsQuery, SearchPostsQueryVariables>(SearchPostsDocument, variables),
-    options,
-  )
+  options?: Omit<UseQueryOptions<SearchPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<SearchPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<SearchPostsQuery, TError, TData>({
+    queryKey: ['searchPosts', variables],
+    queryFn: fetcher<SearchPostsQuery, SearchPostsQueryVariables>(SearchPostsDocument, variables),
+    ...options,
+  })
+}
 
 useSearchPostsQuery.getKey = (variables: SearchPostsQueryVariables) => ['searchPosts', variables]
+
+export const useInfiniteSearchPostsQuery = <
+  TData = InfiniteData<SearchPostsQuery>,
+  TError = unknown,
+>(
+  variables: SearchPostsQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<SearchPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<SearchPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<SearchPostsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['searchPosts.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<SearchPostsQuery, SearchPostsQueryVariables>(SearchPostsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteSearchPostsQuery.getKey = (variables: SearchPostsQueryVariables) => [
+  'searchPosts.infinite',
+  variables,
+]
+
 export const UserTagsDocument = `
     query userTags($input: UserTagsInput!) {
   userTags(input: $input) {
@@ -1140,17 +1407,49 @@ export const UserTagsDocument = `
   }
 }
     `
+
 export const useUserTagsQuery = <TData = UserTagsQuery, TError = unknown>(
   variables: UserTagsQueryVariables,
-  options?: UseQueryOptions<UserTagsQuery, TError, TData>,
-) =>
-  useQuery<UserTagsQuery, TError, TData>(
-    ['userTags', variables],
-    fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables),
-    options,
-  )
+  options?: Omit<UseQueryOptions<UserTagsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<UserTagsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<UserTagsQuery, TError, TData>({
+    queryKey: ['userTags', variables],
+    queryFn: fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables),
+    ...options,
+  })
+}
 
 useUserTagsQuery.getKey = (variables: UserTagsQueryVariables) => ['userTags', variables]
+
+export const useInfiniteUserTagsQuery = <TData = InfiniteData<UserTagsQuery>, TError = unknown>(
+  variables: UserTagsQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<UserTagsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<UserTagsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<UserTagsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['userTags.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteUserTagsQuery.getKey = (variables: UserTagsQueryVariables) => [
+  'userTags.infinite',
+  variables,
+]
+
 export const GetUserDocument = `
     query getUser($input: GetUserInput!) {
   user(input: $input) {
@@ -1166,17 +1465,49 @@ export const GetUserDocument = `
   }
 }
     `
+
 export const useGetUserQuery = <TData = GetUserQuery, TError = unknown>(
   variables: GetUserQueryVariables,
-  options?: UseQueryOptions<GetUserQuery, TError, TData>,
-) =>
-  useQuery<GetUserQuery, TError, TData>(
-    ['getUser', variables],
-    fetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables),
-    options,
-  )
+  options?: Omit<UseQueryOptions<GetUserQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<GetUserQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetUserQuery, TError, TData>({
+    queryKey: ['getUser', variables],
+    queryFn: fetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables),
+    ...options,
+  })
+}
 
 useGetUserQuery.getKey = (variables: GetUserQueryVariables) => ['getUser', variables]
+
+export const useInfiniteGetUserQuery = <TData = InfiniteData<GetUserQuery>, TError = unknown>(
+  variables: GetUserQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<GetUserQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<GetUserQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetUserQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['getUser.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetUserQuery.getKey = (variables: GetUserQueryVariables) => [
+  'getUser.infinite',
+  variables,
+]
+
 export const GetUserFollowInfoDocument = `
     query getUserFollowInfo($input: GetUserInput!) {
   user(input: $input) {
@@ -1195,23 +1526,58 @@ export const GetUserFollowInfoDocument = `
   }
 }
     `
+
 export const useGetUserFollowInfoQuery = <TData = GetUserFollowInfoQuery, TError = unknown>(
   variables: GetUserFollowInfoQueryVariables,
-  options?: UseQueryOptions<GetUserFollowInfoQuery, TError, TData>,
-) =>
-  useQuery<GetUserFollowInfoQuery, TError, TData>(
-    ['getUserFollowInfo', variables],
-    fetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
+  options?: Omit<UseQueryOptions<GetUserFollowInfoQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<GetUserFollowInfoQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetUserFollowInfoQuery, TError, TData>({
+    queryKey: ['getUserFollowInfo', variables],
+    queryFn: fetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
       GetUserFollowInfoDocument,
       variables,
     ),
-    options,
-  )
+    ...options,
+  })
+}
 
 useGetUserFollowInfoQuery.getKey = (variables: GetUserFollowInfoQueryVariables) => [
   'getUserFollowInfo',
   variables,
 ]
+
+export const useInfiniteGetUserFollowInfoQuery = <
+  TData = InfiniteData<GetUserFollowInfoQuery>,
+  TError = unknown,
+>(
+  variables: GetUserFollowInfoQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<GetUserFollowInfoQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<GetUserFollowInfoQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetUserFollowInfoQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['getUserFollowInfo.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
+            GetUserFollowInfoDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetUserFollowInfoQuery.getKey = (variables: GetUserFollowInfoQueryVariables) => [
+  'getUserFollowInfo.infinite',
+  variables,
+]
+
 export const CurrentUserDocument = `
     query currentUser {
   currentUser {
@@ -1226,32 +1592,71 @@ export const CurrentUserDocument = `
   }
 }
     `
+
 export const useCurrentUserQuery = <TData = CurrentUserQuery, TError = unknown>(
   variables?: CurrentUserQueryVariables,
-  options?: UseQueryOptions<CurrentUserQuery, TError, TData>,
-) =>
-  useQuery<CurrentUserQuery, TError, TData>(
-    variables === undefined ? ['currentUser'] : ['currentUser', variables],
-    fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, variables),
-    options,
-  )
+  options?: Omit<UseQueryOptions<CurrentUserQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<CurrentUserQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<CurrentUserQuery, TError, TData>({
+    queryKey: variables === undefined ? ['currentUser'] : ['currentUser', variables],
+    queryFn: fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, variables),
+    ...options,
+  })
+}
 
 useCurrentUserQuery.getKey = (variables?: CurrentUserQueryVariables) =>
   variables === undefined ? ['currentUser'] : ['currentUser', variables]
+
+export const useInfiniteCurrentUserQuery = <
+  TData = InfiniteData<CurrentUserQuery>,
+  TError = unknown,
+>(
+  variables: CurrentUserQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<CurrentUserQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<CurrentUserQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<CurrentUserQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['currentUser.infinite']
+            : ['currentUser.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteCurrentUserQuery.getKey = (variables?: CurrentUserQueryVariables) =>
+  variables === undefined ? ['currentUser.infinite'] : ['currentUser.infinite', variables]
+
 export const LogoutDocument = `
     mutation logout {
   logout
 }
     `
+
 export const useLogoutMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<LogoutMutation, TError, LogoutMutationVariables, TContext>,
-) =>
-  useMutation<LogoutMutation, TError, LogoutMutationVariables, TContext>(
-    ['logout'],
-    (variables?: LogoutMutationVariables) =>
+) => {
+  return useMutation<LogoutMutation, TError, LogoutMutationVariables, TContext>({
+    mutationKey: ['logout'],
+    mutationFn: (variables?: LogoutMutationVariables) =>
       fetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables)(),
-    options,
-  )
+    ...options,
+  })
+}
+
 useLogoutMutation.getKey = () => ['logout']
 
 export const VelogConfigDocument = `
@@ -1262,17 +1667,52 @@ export const VelogConfigDocument = `
   }
 }
     `
+
 export const useVelogConfigQuery = <TData = VelogConfigQuery, TError = unknown>(
   variables: VelogConfigQueryVariables,
-  options?: UseQueryOptions<VelogConfigQuery, TError, TData>,
-) =>
-  useQuery<VelogConfigQuery, TError, TData>(
-    ['velogConfig', variables],
-    fetcher<VelogConfigQuery, VelogConfigQueryVariables>(VelogConfigDocument, variables),
-    options,
-  )
+  options?: Omit<UseQueryOptions<VelogConfigQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<VelogConfigQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<VelogConfigQuery, TError, TData>({
+    queryKey: ['velogConfig', variables],
+    queryFn: fetcher<VelogConfigQuery, VelogConfigQueryVariables>(VelogConfigDocument, variables),
+    ...options,
+  })
+}
 
 useVelogConfigQuery.getKey = (variables: VelogConfigQueryVariables) => ['velogConfig', variables]
+
+export const useInfiniteVelogConfigQuery = <
+  TData = InfiniteData<VelogConfigQuery>,
+  TError = unknown,
+>(
+  variables: VelogConfigQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<VelogConfigQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<VelogConfigQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<VelogConfigQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['velogConfig.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<VelogConfigQuery, VelogConfigQueryVariables>(VelogConfigDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteVelogConfigQuery.getKey = (variables: VelogConfigQueryVariables) => [
+  'velogConfig.infinite',
+  variables,
+]
+
 export const GetUserAboutDocument = `
     query getUserAbout($input: GetUserInput!) {
   user(input: $input) {
@@ -1285,17 +1725,55 @@ export const GetUserAboutDocument = `
   }
 }
     `
+
 export const useGetUserAboutQuery = <TData = GetUserAboutQuery, TError = unknown>(
   variables: GetUserAboutQueryVariables,
-  options?: UseQueryOptions<GetUserAboutQuery, TError, TData>,
-) =>
-  useQuery<GetUserAboutQuery, TError, TData>(
-    ['getUserAbout', variables],
-    fetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(GetUserAboutDocument, variables),
-    options,
-  )
+  options?: Omit<UseQueryOptions<GetUserAboutQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<GetUserAboutQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetUserAboutQuery, TError, TData>({
+    queryKey: ['getUserAbout', variables],
+    queryFn: fetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(
+      GetUserAboutDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
 
 useGetUserAboutQuery.getKey = (variables: GetUserAboutQueryVariables) => ['getUserAbout', variables]
+
+export const useInfiniteGetUserAboutQuery = <
+  TData = InfiniteData<GetUserAboutQuery>,
+  TError = unknown,
+>(
+  variables: GetUserAboutQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<GetUserAboutQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<GetUserAboutQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetUserAboutQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['getUserAbout.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(GetUserAboutDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetUserAboutQuery.getKey = (variables: GetUserAboutQueryVariables) => [
+  'getUserAbout.infinite',
+  variables,
+]
+
 export const GetUserSeriesListDocument = `
     query getUserSeriesList($input: GetUserInput!) {
   user(input: $input) {
@@ -1312,23 +1790,58 @@ export const GetUserSeriesListDocument = `
   }
 }
     `
+
 export const useGetUserSeriesListQuery = <TData = GetUserSeriesListQuery, TError = unknown>(
   variables: GetUserSeriesListQueryVariables,
-  options?: UseQueryOptions<GetUserSeriesListQuery, TError, TData>,
-) =>
-  useQuery<GetUserSeriesListQuery, TError, TData>(
-    ['getUserSeriesList', variables],
-    fetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
+  options?: Omit<UseQueryOptions<GetUserSeriesListQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<GetUserSeriesListQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetUserSeriesListQuery, TError, TData>({
+    queryKey: ['getUserSeriesList', variables],
+    queryFn: fetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
       GetUserSeriesListDocument,
       variables,
     ),
-    options,
-  )
+    ...options,
+  })
+}
 
 useGetUserSeriesListQuery.getKey = (variables: GetUserSeriesListQueryVariables) => [
   'getUserSeriesList',
   variables,
 ]
+
+export const useInfiniteGetUserSeriesListQuery = <
+  TData = InfiniteData<GetUserSeriesListQuery>,
+  TError = unknown,
+>(
+  variables: GetUserSeriesListQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<GetUserSeriesListQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<GetUserSeriesListQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetUserSeriesListQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['getUserSeriesList.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
+            GetUserSeriesListDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetUserSeriesListQuery.getKey = (variables: GetUserSeriesListQueryVariables) => [
+  'getUserSeriesList.infinite',
+  variables,
+]
+
 export const UpdateAboutDocument = `
     mutation updateAbout($input: UpdateAboutInput!) {
   updateAbout(input: $input) {
@@ -1337,15 +1850,18 @@ export const UpdateAboutDocument = `
   }
 }
     `
+
 export const useUpdateAboutMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<UpdateAboutMutation, TError, UpdateAboutMutationVariables, TContext>,
-) =>
-  useMutation<UpdateAboutMutation, TError, UpdateAboutMutationVariables, TContext>(
-    ['updateAbout'],
-    (variables?: UpdateAboutMutationVariables) =>
+) => {
+  return useMutation<UpdateAboutMutation, TError, UpdateAboutMutationVariables, TContext>({
+    mutationKey: ['updateAbout'],
+    mutationFn: (variables?: UpdateAboutMutationVariables) =>
       fetcher<UpdateAboutMutation, UpdateAboutMutationVariables>(UpdateAboutDocument, variables)(),
-    options,
-  )
+    ...options,
+  })
+}
+
 useUpdateAboutMutation.getKey = () => ['updateAbout']
 
 export const TrendingWritersDocument = `
@@ -1368,20 +1884,54 @@ export const TrendingWritersDocument = `
   }
 }
     `
+
 export const useTrendingWritersQuery = <TData = TrendingWritersQuery, TError = unknown>(
   variables: TrendingWritersQueryVariables,
-  options?: UseQueryOptions<TrendingWritersQuery, TError, TData>,
-) =>
-  useQuery<TrendingWritersQuery, TError, TData>(
-    ['trendingWriters', variables],
-    fetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(
+  options?: Omit<UseQueryOptions<TrendingWritersQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<TrendingWritersQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<TrendingWritersQuery, TError, TData>({
+    queryKey: ['trendingWriters', variables],
+    queryFn: fetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(
       TrendingWritersDocument,
       variables,
     ),
-    options,
-  )
+    ...options,
+  })
+}
 
 useTrendingWritersQuery.getKey = (variables: TrendingWritersQueryVariables) => [
   'trendingWriters',
+  variables,
+]
+
+export const useInfiniteTrendingWritersQuery = <
+  TData = InfiniteData<TrendingWritersQuery>,
+  TError = unknown,
+>(
+  variables: TrendingWritersQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<TrendingWritersQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<TrendingWritersQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<TrendingWritersQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['trendingWriters.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(TrendingWritersDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteTrendingWritersQuery.getKey = (variables: TrendingWritersQueryVariables) => [
+  'trendingWriters.infinite',
   variables,
 ]
