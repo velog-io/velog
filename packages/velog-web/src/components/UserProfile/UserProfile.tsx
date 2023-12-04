@@ -25,20 +25,12 @@ type Props = {
   username: string
 }
 
-function UserProfile({
-  style,
-  userId,
-  profile,
-  followersCount,
-  followingsCount,
-  isFollowed,
-  username,
-}: Props) {
+function UserProfile({ style, userId, profile, followersCount, followingsCount, username }: Props) {
   const {
     value: { currentUser },
   } = useAuth()
 
-  const { data, refetch, isRefetching } = useGetUserFollowInfoQuery(
+  const { data, isRefetching } = useGetUserFollowInfoQuery(
     {
       input: { username },
     },
@@ -62,15 +54,6 @@ function UserProfile({
   }
 
   const getSocialId = (link: string) => link.split('/').reverse()[0]
-
-  const onFollowSuccess = async (type: 'follow' | 'unfollow') => {
-    if (type === 'follow') {
-      setFollowersCnt((state) => (state ?? 0) + 1)
-    } else {
-      setFollowersCnt((state) => (state ?? 0) - 1)
-    }
-    refetch()
-  }
 
   useEffect(() => {
     if (isRefetching) return
@@ -182,14 +165,7 @@ function UserProfile({
               </div>
             )}
           </div>
-          {!isOwn && (
-            <FollowButton
-              username={username}
-              followingUserId={userId}
-              onSuccess={onFollowSuccess}
-              isFollowed={isFollowed}
-            />
-          )}
+          {!isOwn && <FollowButton username={username} followingUserId={userId} />}
         </div>
       </div>
     </div>

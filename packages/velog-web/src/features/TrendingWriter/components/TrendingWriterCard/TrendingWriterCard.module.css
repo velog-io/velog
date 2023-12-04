@@ -1,6 +1,6 @@
 .block {
   width: 100%;
-  background-color: white;
+  background-color: var(--bg-element1);
   box-shadow: 1px 4px 16px 0px rgba(0, 0, 0, 0.04);
   border-radius: 4px;
 
