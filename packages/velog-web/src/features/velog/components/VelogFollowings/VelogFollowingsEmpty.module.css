@@ -35,7 +35,7 @@
       user-select: none;
       outline: none;
       background-color: var(--bg-element5);
-      color: white;
+      color: var(--button-text);
       font-weight: 700;
       border: none;
       cursor: pointer;
