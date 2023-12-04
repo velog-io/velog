@@ -1,5 +1,4 @@
 import getTrendingPosts from '@/prefetch/getTrendingPosts'
-import { ENV } from '@/env'
 import TrendingPosts from '@/features/home/components/TrendingPosts'
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function Home({ params }: Props) {
   const { timeframe = 'week' } = params
-  const data = await getTrendingPosts({ timeframe, limit: ENV.defaultPostLimit })
+  const data = await getTrendingPosts({ timeframe, limit: 50 })
 
   if (!data) {
     redirect('/')

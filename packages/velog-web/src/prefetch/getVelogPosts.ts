@@ -4,7 +4,7 @@ import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 export default async function getVelogPosts({ username, tag }: GetPostsInput) {
   try {
     const body: GraphqlRequestBody = {
-      operationName: 'posts',
+      operationName: 'velogPosts',
       query: VelogPostsDocument,
       variables: {
         input: {

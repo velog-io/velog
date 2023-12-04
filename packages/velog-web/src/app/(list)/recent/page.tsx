@@ -1,5 +1,4 @@
 import getRecentPosts from '@/prefetch/getRecentPosts'
-import { ENV } from '@/env'
 import RecentPosts from '@/features/home/components/RecentPosts'
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
 }
 
 export default async function Recent() {
-  const data = await getRecentPosts({ limit: ENV.defaultPostLimit })
+  const data = await getRecentPosts({ limit: 50 })
 
   if (!data) {
     redirect('/')
