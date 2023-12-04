@@ -789,6 +789,8 @@ export const useSendMailMutation = <TError = unknown, TContext = unknown>(
       fetcher<SendMailMutation, SendMailMutationVariables>(SendMailDocument, variables)(),
     options,
   )
+useSendMailMutation.getKey = () => ['sendMail']
+
 export const FollowDocument = `
     mutation follow($input: FollowInput!) {
   follow(input: $input)
@@ -803,6 +805,8 @@ export const useFollowMutation = <TError = unknown, TContext = unknown>(
       fetcher<FollowMutation, FollowMutationVariables>(FollowDocument, variables)(),
     options,
   )
+useFollowMutation.getKey = () => ['follow']
+
 export const UnfollowDocument = `
     mutation unfollow($input: UnfollowInput!) {
   unfollow(input: $input)
@@ -817,6 +821,8 @@ export const useUnfollowMutation = <TError = unknown, TContext = unknown>(
       fetcher<UnfollowMutation, UnfollowMutationVariables>(UnfollowDocument, variables)(),
     options,
   )
+useUnfollowMutation.getKey = () => ['unfollow']
+
 export const GetFollowersDocument = `
     query getFollowers($input: GetFollowInput!) {
   followers(input: $input) {
@@ -840,6 +846,8 @@ export const useGetFollowersQuery = <TData = GetFollowersQuery, TError = unknown
     fetcher<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, variables),
     options,
   )
+
+useGetFollowersQuery.getKey = (variables: GetFollowersQueryVariables) => ['getFollowers', variables]
 export const GetFollowingsDocument = `
     query getFollowings($input: GetFollowInput!) {
   followings(input: $input) {
@@ -863,6 +871,11 @@ export const useGetFollowingsQuery = <TData = GetFollowingsQuery, TError = unkno
     fetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(GetFollowingsDocument, variables),
     options,
   )
+
+useGetFollowingsQuery.getKey = (variables: GetFollowingsQueryVariables) => [
+  'getFollowings',
+  variables,
+]
 export const ReadPostDocument = `
     query readPost($input: ReadPostInput!) {
   post(input: $input) {
@@ -961,6 +974,8 @@ export const useReadPostQuery = <TData = ReadPostQuery, TError = unknown>(
     fetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables),
     options,
   )
+
+useReadPostQuery.getKey = (variables: ReadPostQueryVariables) => ['readPost', variables]
 export const RecentPostsDocument = `
     query recentPosts($input: RecentPostsInput!) {
   recentPosts(input: $input) {
@@ -995,6 +1010,8 @@ export const useRecentPostsQuery = <TData = RecentPostsQuery, TError = unknown>(
     fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, variables),
     options,
   )
+
+useRecentPostsQuery.getKey = (variables: RecentPostsQueryVariables) => ['recentPosts', variables]
 export const TrendingPostsDocument = `
     query trendingPosts($input: TrendingPostsInput!) {
   trendingPosts(input: $input) {
@@ -1029,6 +1046,11 @@ export const useTrendingPostsQuery = <TData = TrendingPostsQuery, TError = unkno
     fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, variables),
     options,
   )
+
+useTrendingPostsQuery.getKey = (variables: TrendingPostsQueryVariables) => [
+  'trendingPosts',
+  variables,
+]
 export const VelogPostsDocument = `
     query velogPosts($input: GetPostsInput!) {
   posts(input: $input) {
@@ -1064,6 +1086,8 @@ export const useVelogPostsQuery = <TData = VelogPostsQuery, TError = unknown>(
     fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, variables),
     options,
   )
+
+useVelogPostsQuery.getKey = (variables: VelogPostsQueryVariables) => ['velogPosts', variables]
 export const SearchPostsDocument = `
     query searchPosts($input: GetSearchPostsInput!) {
   searchPosts(input: $input) {
@@ -1100,6 +1124,8 @@ export const useSearchPostsQuery = <TData = SearchPostsQuery, TError = unknown>(
     fetcher<SearchPostsQuery, SearchPostsQueryVariables>(SearchPostsDocument, variables),
     options,
   )
+
+useSearchPostsQuery.getKey = (variables: SearchPostsQueryVariables) => ['searchPosts', variables]
 export const UserTagsDocument = `
     query userTags($input: UserTagsInput!) {
   userTags(input: $input) {
@@ -1123,6 +1149,8 @@ export const useUserTagsQuery = <TData = UserTagsQuery, TError = unknown>(
     fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables),
     options,
   )
+
+useUserTagsQuery.getKey = (variables: UserTagsQueryVariables) => ['userTags', variables]
 export const GetUserDocument = `
     query getUser($input: GetUserInput!) {
   user(input: $input) {
@@ -1147,6 +1175,8 @@ export const useGetUserQuery = <TData = GetUserQuery, TError = unknown>(
     fetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables),
     options,
   )
+
+useGetUserQuery.getKey = (variables: GetUserQueryVariables) => ['getUser', variables]
 export const GetUserFollowInfoDocument = `
     query getUserFollowInfo($input: GetUserInput!) {
   user(input: $input) {
@@ -1177,6 +1207,11 @@ export const useGetUserFollowInfoQuery = <TData = GetUserFollowInfoQuery, TError
     ),
     options,
   )
+
+useGetUserFollowInfoQuery.getKey = (variables: GetUserFollowInfoQueryVariables) => [
+  'getUserFollowInfo',
+  variables,
+]
 export const CurrentUserDocument = `
     query currentUser {
   currentUser {
@@ -1200,6 +1235,9 @@ export const useCurrentUserQuery = <TData = CurrentUserQuery, TError = unknown>(
     fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, variables),
     options,
   )
+
+useCurrentUserQuery.getKey = (variables?: CurrentUserQueryVariables) =>
+  variables === undefined ? ['currentUser'] : ['currentUser', variables]
 export const LogoutDocument = `
     mutation logout {
   logout
@@ -1214,6 +1252,8 @@ export const useLogoutMutation = <TError = unknown, TContext = unknown>(
       fetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables)(),
     options,
   )
+useLogoutMutation.getKey = () => ['logout']
+
 export const VelogConfigDocument = `
     query velogConfig($input: GetVelogConfigInput!) {
   velogConfig(input: $input) {
@@ -1231,6 +1271,8 @@ export const useVelogConfigQuery = <TData = VelogConfigQuery, TError = unknown>(
     fetcher<VelogConfigQuery, VelogConfigQueryVariables>(VelogConfigDocument, variables),
     options,
   )
+
+useVelogConfigQuery.getKey = (variables: VelogConfigQueryVariables) => ['velogConfig', variables]
 export const GetUserAboutDocument = `
     query getUserAbout($input: GetUserInput!) {
   user(input: $input) {
@@ -1252,6 +1294,8 @@ export const useGetUserAboutQuery = <TData = GetUserAboutQuery, TError = unknown
     fetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(GetUserAboutDocument, variables),
     options,
   )
+
+useGetUserAboutQuery.getKey = (variables: GetUserAboutQueryVariables) => ['getUserAbout', variables]
 export const GetUserSeriesListDocument = `
     query getUserSeriesList($input: GetUserInput!) {
   user(input: $input) {
@@ -1280,6 +1324,11 @@ export const useGetUserSeriesListQuery = <TData = GetUserSeriesListQuery, TError
     ),
     options,
   )
+
+useGetUserSeriesListQuery.getKey = (variables: GetUserSeriesListQueryVariables) => [
+  'getUserSeriesList',
+  variables,
+]
 export const UpdateAboutDocument = `
     mutation updateAbout($input: UpdateAboutInput!) {
   updateAbout(input: $input) {
@@ -1297,6 +1346,8 @@ export const useUpdateAboutMutation = <TError = unknown, TContext = unknown>(
       fetcher<UpdateAboutMutation, UpdateAboutMutationVariables>(UpdateAboutDocument, variables)(),
     options,
   )
+useUpdateAboutMutation.getKey = () => ['updateAbout']
+
 export const TrendingWritersDocument = `
     query trendingWriters($input: TrendingWritersInput!) {
   trendingWriters(input: $input) {
@@ -1329,3 +1380,8 @@ export const useTrendingWritersQuery = <TData = TrendingWritersQuery, TError = u
     ),
     options,
   )
+
+useTrendingWritersQuery.getKey = (variables: TrendingWritersQueryVariables) => [
+  'trendingWriters',
+  variables,
+]

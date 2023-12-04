@@ -30,7 +30,7 @@
       transition: all 0.125s ease-in;
       margin-right: 0.5rem;
       flex-shrink: 0;
-
+      fill: var(--gray5);
       @media screen and (max-width: 425px) {
         width: 14px;
         height: 14px;

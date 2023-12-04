@@ -12,6 +12,8 @@ const config: CodegenConfig = {
     'src/graphql/generated.ts': {
       documents: 'string',
       config: {
+        exposeQueryKeys: true,
+        exposeMutationKeys: true,
         experimentalFragmentVariables: true,
         skipTypename: true,
         maybeValue: 'T | null',

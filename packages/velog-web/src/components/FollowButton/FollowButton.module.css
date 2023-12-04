@@ -19,7 +19,7 @@
     box-shadow: none;
     align-items: center;
     justify-content: center;
-    background-color: white;
+    background-color: var(--bg-element1);
     cursor: pointer;
     border-radius: 16px;
     font-weight: 700;
@@ -51,7 +51,7 @@
     color: var(--bg-element6);
     border: 1px solid var(--bg-element6);
 
-    &.isUnfollow {
+    &.isUnfollowText {
       &:hover,
       &:active {
         color: var(--destructive);

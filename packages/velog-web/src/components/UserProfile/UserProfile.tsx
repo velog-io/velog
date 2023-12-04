@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, useEffect, useRef, useState } from 'react'
+import { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 import styles from './UserProfile.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { ProfileLinks } from '@/types/user'
@@ -25,20 +25,12 @@ type Props = {
   username: string
 }
 
-function UserProfile({
-  style,
-  userId,
-  profile,
-  followersCount,
-  followingsCount,
-  isFollowed,
-  username,
-}: Props) {
+function UserProfile({ style, userId, profile, followersCount, followingsCount, username }: Props) {
   const {
     value: { currentUser },
   } = useAuth()
 
-  const { data, refetch, isRefetching } = useGetUserFollowInfoQuery(
+  const { data, isRefetching } = useGetUserFollowInfoQuery(
     {
       input: { username },
     },
@@ -63,14 +55,13 @@ function UserProfile({
 
   const getSocialId = (link: string) => link.split('/').reverse()[0]
 
-  const onFollowSuccess = async (type: 'follow' | 'unfollow') => {
+  const resetFollowCount = useCallback((type: 'follow' | 'unfollow') => {
     if (type === 'follow') {
       setFollowersCnt((state) => (state ?? 0) + 1)
     } else {
       setFollowersCnt((state) => (state ?? 0) - 1)
     }
-    refetch()
-  }
+  }, [])
 
   useEffect(() => {
     if (isRefetching) return
@@ -186,8 +177,7 @@ function UserProfile({
             <FollowButton
               username={username}
               followingUserId={userId}
-              onSuccess={onFollowSuccess}
-              isFollowed={isFollowed}
+              resetFollowCount={resetFollowCount}
             />
           )}
         </div>

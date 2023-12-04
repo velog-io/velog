@@ -1,7 +1,6 @@
-import { TrendingWriterPosts, useGetUserFollowInfoQuery } from '@/graphql/generated'
+import { TrendingWriterPosts } from '@/graphql/generated'
 import styles from './TrendingWriterCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import TrendingWriterCardSkeleton from './TrendingWriterCardSkeleton'
 import Link from 'next/link'
 import Thumbnail from '@/components/Thumbnail'
 import FollowButton from '@/components/FollowButton'
@@ -18,9 +17,6 @@ type Props = {
 }
 
 function TrendingWriterCard({ writerId, posts, thumbnail, displayName, username }: Props) {
-  const { data, isLoading } = useGetUserFollowInfoQuery({ input: { id: writerId } })
-
-  if (isLoading) return <TrendingWriterCardSkeleton />
   const velogUrl = `/@${username}/posts`
   return (
     <li className={cx('block')}>
@@ -34,12 +30,7 @@ function TrendingWriterCard({ writerId, posts, thumbnail, displayName, username 
           </Link>
         </div>
         <div className={cx('right')}>
-          <FollowButton
-            username={username}
-            isFollowed={data?.user?.is_followed}
-            followingUserId={writerId}
-            className={cx('button')}
-          />
+          <FollowButton username={username} followingUserId={writerId} className={cx('button')} />
         </div>
       </div>
       <ul className={cx('content')}>
