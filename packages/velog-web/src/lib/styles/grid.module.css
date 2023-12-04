@@ -34,9 +34,9 @@
   grid-gap: 24px 16px;
 
   --row-gap: 16px;
-  --card-count: 3;
+  --card-count: 2;
   --spacer: calc(var(--card-count) - 1);
-  --width: 33.33%;
+  --width: 50%;
 
   grid-template-columns: repeat(
     var(--card-count),

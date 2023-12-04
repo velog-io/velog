@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styles from './FollowButton.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import {
@@ -19,11 +19,11 @@ type Props = {
   username: string
   followingUserId: string
   className?: string
+  resetFollowCount?: (param: 'follow' | 'unfollow') => void
 }
 
-function FollowButton({ username: itemUsername, followingUserId, className }: Props) {
+function FollowButton({ username, followingUserId, className, resetFollowCount }: Props) {
   const params = useParams()
-  const username = getUsernameFromParams(params)
   const {
     value: { currentUser },
   } = useAuth()
@@ -33,7 +33,7 @@ function FollowButton({ username: itemUsername, followingUserId, className }: Pr
     isRefetching,
     isLoading: isFollowInfoLoading,
   } = useGetUserFollowInfoQuery(
-    { input: { username: itemUsername } },
+    { input: { username: username } },
     { retryDelay: 400, cacheTime: 1000 * 60 * 1, staleTime: 1000 },
   )
 
@@ -58,15 +58,18 @@ function FollowButton({ username: itemUsername, followingUserId, className }: Pr
     setFollowingButtonText('팔로잉')
   }
 
-  const initialize = (value: boolean) => {
+  const initialize = useCallback((value: boolean) => {
     setInitialFollowState(value)
     setCurrentFollowState(value)
-  }
+  }, [])
 
   const queryClient = useQueryClient()
+
   const onSuccess = () => {
+    const targetUsername = getUsernameFromParams(params)
+    console.log('targetUsername', targetUsername)
     queryClient.refetchQueries({
-      queryKey: useGetUserFollowInfoQuery.getKey({ input: { username } }),
+      queryKey: useGetUserFollowInfoQuery.getKey({ input: { username: targetUsername } }),
     })
   }
 
@@ -96,6 +99,9 @@ function FollowButton({ username: itemUsername, followingUserId, className }: Pr
       }
 
       initialize(!currentFollowState)
+      if (resetFollowCount) {
+        resetFollowCount(currentFollowState ? 'unfollow' : 'follow')
+      }
     } catch (error) {
       console.log(error)
     }
@@ -106,7 +112,7 @@ function FollowButton({ username: itemUsername, followingUserId, className }: Pr
     const isFollowed = data?.user?.is_followed
     if (isFollowed === undefined) return
     initialize(isFollowed)
-  }, [data, isRefetching])
+  }, [data, isRefetching, initialize])
 
   if (isFollowInfoLoading) return <div className={cx('skeleton', className)} />
 

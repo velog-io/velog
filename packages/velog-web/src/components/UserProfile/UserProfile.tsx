@@ -1,6 +1,6 @@
 'use client'
 
-import { CSSProperties, useEffect, useRef, useState } from 'react'
+import { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 import styles from './UserProfile.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { ProfileLinks } from '@/types/user'
@@ -54,6 +54,14 @@ function UserProfile({ style, userId, profile, followersCount, followingsCount, 
   }
 
   const getSocialId = (link: string) => link.split('/').reverse()[0]
+
+  const resetFollowCount = useCallback((type: 'follow' | 'unfollow') => {
+    if (type === 'follow') {
+      setFollowersCnt((state) => (state ?? 0) + 1)
+    } else {
+      setFollowersCnt((state) => (state ?? 0) - 1)
+    }
+  }, [])
 
   useEffect(() => {
     if (isRefetching) return
@@ -165,7 +173,13 @@ function UserProfile({ style, userId, profile, followersCount, followingsCount, 
               </div>
             )}
           </div>
-          {!isOwn && <FollowButton username={username} followingUserId={userId} />}
+          {!isOwn && (
+            <FollowButton
+              username={username}
+              followingUserId={userId}
+              resetFollowCount={resetFollowCount}
+            />
+          )}
         </div>
       </div>
     </div>
