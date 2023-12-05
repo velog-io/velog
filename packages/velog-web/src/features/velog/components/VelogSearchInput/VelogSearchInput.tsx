@@ -27,7 +27,7 @@ function VelogSearchInput({ query, username }: Props) {
     (keyword: string) => {
       const urlPath = keyword ? `/?q=${keyword}` : ''
       const nextUrl = `/@${username}/posts/${urlPath}`
-      router.replace(nextUrl)
+      router.replace(nextUrl, { scroll: false })
     },
     [username, router],
   )
@@ -65,7 +65,6 @@ function VelogSearchInput({ query, username }: Props) {
           ref={inputRef}
           onChange={onChange}
           value={value}
-          autoFocus={false}
         />
       </div>
     </div>

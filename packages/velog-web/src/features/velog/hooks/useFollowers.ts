@@ -8,7 +8,7 @@ import {
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
-export default function useFollowers(username: string, limit = 1) {
+export default function useFollowers(username: string, limit = 10) {
   const fetchInput = useMemo(() => {
     return {
       username,
@@ -18,7 +18,7 @@ export default function useFollowers(username: string, limit = 1) {
 
   const { data, fetchNextPage, isFetching, hasNextPage, isError, isLoading } =
     useInfiniteQuery<GetFollowersQuery>(
-      ['getFollwings', { input: fetchInput }],
+      ['getFollowers', { input: fetchInput }],
       ({ pageParam = fetchInput }) =>
         fetcher<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, {
           input: pageParam,

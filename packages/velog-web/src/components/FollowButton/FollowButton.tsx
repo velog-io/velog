@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import styles from './FollowButton.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import {
+  useCurrentUserQuery,
   useFollowMutation,
   useGetUserFollowInfoQuery,
   useUnfollowMutation,
@@ -37,6 +38,8 @@ function FollowButton({ username, followingUserId, className, resetFollowCount }
     { retryDelay: 400, cacheTime: 1000 * 60 * 1, staleTime: 1000 },
   )
 
+  const { isLoading: isCurrentUserLoading } = useCurrentUserQuery()
+
   const { actions } = useModal()
 
   const { mutate: followMutate } = useFollowMutation()
@@ -67,7 +70,6 @@ function FollowButton({ username, followingUserId, className, resetFollowCount }
 
   const onSuccess = () => {
     const targetUsername = getUsernameFromParams(params)
-    console.log('targetUsername', targetUsername)
     queryClient.refetchQueries({
       queryKey: useGetUserFollowInfoQuery.getKey({ input: { username: targetUsername } }),
     })
@@ -114,7 +116,8 @@ function FollowButton({ username, followingUserId, className, resetFollowCount }
     initialize(isFollowed)
   }, [data, isRefetching, initialize])
 
-  if (isFollowInfoLoading) return <div className={cx('skeleton', className)} />
+  if (isFollowInfoLoading || isCurrentUserLoading)
+    return <div className={cx('skeleton', className)} />
 
   return (
     <div className={cx('block', { hide: followingUserId === currentUser?.id }, className)}>
