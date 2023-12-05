@@ -46,7 +46,7 @@ function FlatPostCard({ post, hideUser }: Props) {
       )}
       {post.thumbnail && (
         <VLink href={url} className={cx('postThumbnail')}>
-          <Image src={post.thumbnail} alt="post-thumbnail" fill={true} property="false" />
+          <Image src={post.thumbnail} alt="post-thumbnail" fill={true} priority={true} />
         </VLink>
       )}
       <VLink href={url}>

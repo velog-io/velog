@@ -17,6 +17,7 @@ export default async function VelogPostsPage({ params, searchParams }: Props) {
   const query = getTagByKey(searchParams, 'q')
   const username = getUsernameFromParams(params)
   const posts = await getVelogPosts({ username, tag })
+
   const userTags = await getUserTags(username)
 
   return (

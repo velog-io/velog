@@ -9,7 +9,7 @@ export function fetcher<TData, TVariables extends Record<string, any>>(
     const data = await graphqlFetch<TData>({
       url: `${ENV.graphqlHost}/graphql`,
       method: 'POST',
-      body: { query, variables },
+      body: { query, variables: variables ?? {} },
     })
 
     return data

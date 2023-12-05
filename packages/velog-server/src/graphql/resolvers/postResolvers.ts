@@ -89,7 +89,6 @@ const postResolvers: Resolvers = {
       return await postService.getReadingList(input, ctx.user?.id)
     },
     posts: async (_, { input }, ctx) => {
-      console.log('hello', input)
       const postService = container.resolve(PostService)
       return await postService.getPosts(input, ctx.user?.id)
     },
