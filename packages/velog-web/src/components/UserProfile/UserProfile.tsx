@@ -34,7 +34,7 @@ function UserProfile({ style, userId, profile, followersCount, followingsCount, 
     {
       input: { username },
     },
-    { retryDelay: 300, cacheTime: 1000 * 60 * 1, staleTime: 1000 },
+    { retryDelay: 300, gcTime: 1000 * 60 * 1, staleTime: 1000 },
   )
 
   const { display_name, profile_links, short_bio, thumbnail } = profile

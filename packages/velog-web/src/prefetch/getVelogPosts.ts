@@ -10,7 +10,7 @@ export default async function getVelogPosts({ username, tag }: GetPostsInput) {
         input: {
           username,
           tag,
-          limit: 20,
+          limit: 5,
         },
       },
     }

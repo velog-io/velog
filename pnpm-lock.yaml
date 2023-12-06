@@ -476,8 +476,8 @@ importers:
         specifier: ^7.75.0
         version: 7.75.0
       '@tanstack/react-query':
-        specifier: ^4.32.0
-        version: 4.32.0(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^5.12.2
+        version: 5.12.2(react@18.2.0)
       axios:
         specifier: ^1.4.0
         version: 1.4.0
@@ -496,6 +496,9 @@ importers:
       framer-motion:
         specifier: ^10.12.17
         version: 10.12.17(react-dom@18.2.0)(react@18.2.0)
+      graphql:
+        specifier: ^16.7.1
+        version: 16.7.1
       graphql-request:
         specifier: ^6.1.0
         version: 6.1.0(encoding@0.1.13)(graphql@16.7.1)
@@ -600,11 +603,11 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1(@types/node@20.4.2)(encoding@0.1.13)(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: ^4.0.1
+        specifier: ^4.0.0
         version: 4.0.1(encoding@0.1.13)(graphql@16.7.1)
       '@graphql-codegen/typescript-react-query':
-        specifier: ^4.1.0
-        version: 4.1.0(encoding@0.1.13)(graphql@16.7.1)
+        specifier: ^6.0.0
+        version: 6.0.0(encoding@0.1.13)(graphql@16.7.1)
       '@svgr/cli':
         specifier: ^8.0.1
         version: 8.0.1
@@ -4720,8 +4723,9 @@ packages:
       - supports-color
     dev: true
 
-  /@graphql-codegen/typescript-react-query@4.1.0(encoding@0.1.13)(graphql@16.7.1):
-    resolution: {integrity: sha512-+3Hk+ws6HfCAZl7+5Q4LBkFh3y+2ISuahMYRHIqzqpwNnrthftg8xNx11VH5sabqqjqEmjY3UaP8glP93itPWQ==}
+  /@graphql-codegen/typescript-react-query@6.0.0(encoding@0.1.13)(graphql@16.7.1):
+    resolution: {integrity: sha512-FYGAMYd/Cf77hcToQNo3O9BNZUcrINmjNFuwtX48kgoLXd0Zu0yjLZPCv6sTlOX6YUJrYPf0kDGQDGLH/Q9P6w==}
+    engines: {node: '>= 16.0.0'}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
@@ -4730,7 +4734,7 @@ packages:
       auto-bind: 4.0.0
       change-case-all: 1.0.15
       graphql: 16.7.1
-      tslib: 2.4.1
+      tslib: 2.6.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -8074,26 +8078,17 @@ packages:
       tslib: 2.6.1
     dev: false
 
-  /@tanstack/query-core@4.32.0:
-    resolution: {integrity: sha512-ei4IYwL2kmlKSlCw9WgvV7PpXi0MiswVwfQRxawhJA690zWO3dU49igaQ/UMTl+Jy9jj9dK5IKAYvbX7kUvviQ==}
+  /@tanstack/query-core@5.12.1:
+    resolution: {integrity: sha512-WbZztNmKq0t6QjdNmHzezbi/uifYo9j6e2GLJkodsYaYUlzMbAp91RDyeHkIZrm7EfO4wa6Sm5sxJZm5SPlh6w==}
     dev: false
 
-  /@tanstack/react-query@4.32.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-B8WUMcByYAH9500ENejDCATOmEZhqjtS9wsfiQ3BNa+s+yAynY8SESI8WWHhSqUmjd0pmCSFRP6BOUGSda3QXA==}
+  /@tanstack/react-query@5.12.2(react@18.2.0):
+    resolution: {integrity: sha512-BeWZu8zVFH20oRc+S/K9ADPgWjEzP/XQCGBNz5IbApUwPQAdwkQYbXODVL5AyAlWiSxhx+P2xlARPBApj2Yrog==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
+      react: ^18.0.0
     dependencies:
-      '@tanstack/query-core': 4.32.0
+      '@tanstack/query-core': 5.12.1
       react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
   /@testing-library/dom@9.3.1:
