@@ -1,11 +1,10 @@
-import { fetcher } from '@/graphql/fetcher'
 import {
   FollowResult,
   GetFollowersDocument,
   GetFollowersQuery,
   GetFollowersQueryVariables,
 } from '@/graphql/generated'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'
 
 export default function useFollowers(username: string, limit = 10) {
@@ -16,39 +15,32 @@ export default function useFollowers(username: string, limit = 10) {
     }
   }, [username, limit])
 
-  const { data, fetchNextPage, isFetching, hasNextPage, isError, isLoading } =
-    useInfiniteQuery<GetFollowersQuery>(
-      ['getFollowers', { input: fetchInput }],
-      ({ pageParam = fetchInput }) =>
-        fetcher<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, {
-          input: pageParam,
-        })(),
-      {
-        retryDelay: 3000,
-        cacheTime: 1000 * 60 * 3,
-        staleTime: 100,
-        getNextPageParam: (page) => {
-          const { followers } = page
-          if (!followers) return false
-          if (followers.length < limit) return false
-          return {
-            username,
-            limit,
-            cursor: followers[followers.length - 1]?.id,
-          }
-        },
-      },
-    )
-
+  const { data, isFetching, isLoading, fetchMore } = useCustomInfiniteQuery<
+    GetFollowersQuery,
+    GetFollowersQueryVariables
+  >({
+    queryKey: ['trendingPosts.infinite'],
+    document: GetFollowersDocument,
+    initialPageParam: {
+      input: fetchInput,
+    },
+    getNextPageParam: (page) => {
+      const { followers } = page
+      if (!followers) return undefined
+      if (followers.length < limit) return undefined
+      return {
+        username,
+        limit,
+        cursor: followers[followers.length - 1]?.id,
+      }
+    },
+    retryDelay: 1000, // default
+    staleTime: 1000 * 60 * 3,
+    gcTime: 1000 * 60 * 5, // default
+  })
   const followers = useMemo(() => {
     return [...(data?.pages?.flatMap((page) => page.followers) || [])] as FollowResult[]
   }, [data])
-
-  const fetchMore = () => {
-    if (isFetching || isError) return
-    if (!hasNextPage) return
-    fetchNextPage()
-  }
 
   return {
     followers,

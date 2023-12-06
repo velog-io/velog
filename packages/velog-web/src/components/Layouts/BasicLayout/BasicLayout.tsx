@@ -1,9 +1,8 @@
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import styles from './BasicLayout.module.css'
-import Header from '@/components/Header/Header'
 import HomeTab from '@/features/home/components/HomeTab/HomeTab'
 import FloatingHeader from '@/features/home/components/FloatingHeader/FloatingHeader'
-
+import Header from '@/components/Header'
 const cx = bindClassNames(styles)
 
 interface Props {

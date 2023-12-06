@@ -20,7 +20,7 @@ function AuthForm() {
   const [email, onChangeEmail] = useInput('')
   const [isSendEmail, setSendEmail] = useState(false)
 
-  const { mutate, data, isLoading } = useSendMailMutation({})
+  const { mutate, data, isPending } = useSendMailMutation({})
 
   const onToggleMode = useCallback(() => {
     const nextMode = mode === 'register' ? 'login' : 'register'
@@ -61,7 +61,7 @@ function AuthForm() {
               value={email}
               onChange={onChangeEmail}
               onSubmit={onSendAuthEmail}
-              disabled={isLoading}
+              disabled={isPending}
             />
           )}
         </section>
