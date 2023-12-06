@@ -1,7 +1,7 @@
-import Header from '@/components/Header'
 import styles from './TrendingWriterLayout.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import FloatingHeader from '@/features/home/components/FloatingHeader'
+import Header from '@/components/Header'
 
 const cx = bindClassNames(styles)
 

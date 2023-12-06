@@ -1,3 +1,5 @@
+'use client'
+
 import { useToggleTheme } from '@/components/Header/hooks/useToggleTheme'
 import styles from './ThemeToggleButton.module.css'
 import { motion, AnimatePresence } from 'framer-motion'
