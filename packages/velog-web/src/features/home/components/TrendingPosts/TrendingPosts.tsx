@@ -11,9 +11,8 @@ type Props = {
 }
 
 function TrendingPosts({ data }: Props) {
-  const { posts, isFetching, originData, fetchMore } = useTrendingPosts(data)
+  const { posts, isFetching, originData, fetchMore, isLoading } = useTrendingPosts(data)
   const ref = useRef<HTMLDivElement>(null)
-
   useInfiniteScroll(ref, fetchMore)
 
   return (
@@ -23,7 +22,8 @@ function TrendingPosts({ data }: Props) {
         originData={originData}
         forHome={true}
         forPost={false}
-        loading={isFetching}
+        isFetching={isFetching}
+        isLoading={isLoading}
       />
       <div ref={ref} />
     </>

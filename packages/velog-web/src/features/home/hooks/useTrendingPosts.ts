@@ -63,7 +63,7 @@ export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.d
       const stringPosts = localStorage.getItem(`trendingPosts/${timeframe}`)
       if (!stringPosts) return
       const parsed = JSON.parse(stringPosts)
-      queryClient.setQueryData(['trendingPosts', { input: fetchInput }], parsed)
+      queryClient.setQueryData(['trendingPosts.infinite'], parsed)
     } catch (_) {}
   }, [queryClient, fetchInput, timeframe])
 

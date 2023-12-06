@@ -23,7 +23,7 @@ function RecentPosts({ data }: Props) {
         originData={originData}
         forHome={true}
         forPost={false}
-        loading={isFetching}
+        isFetching={isFetching}
       />
       <div ref={ref} />
     </>

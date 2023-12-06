@@ -12,7 +12,7 @@ type Props = {
 
 function PostCardSkeletonGrid({ forHome, forPost }: Props) {
   return (
-    <div className={cx('block')}>
+    <div className={cx('block', 'skeleton', 'homeGrid')}>
       {Array(ENV.defaultPostLimit)
         .fill(0)
         .map((_, i) => (

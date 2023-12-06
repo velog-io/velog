@@ -3,12 +3,13 @@
 import styles from './PostCardGrid.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import PostCard from '@/features/home/components/PostCard/PostCard'
-import { PostCardSkeleton } from '@/features/home/components/PostCard/PostCardSkeleton'
-import { ENV } from '@/env'
 import { Timeframe } from '@/features/home/state/timeframe'
 import { useParams, usePathname } from 'next/navigation'
 import { InfiniteData } from '@tanstack/react-query'
 import { Post, RecentPostsQuery, TrendingPostsQuery } from '@/graphql/generated'
+import PostCardSkeletonGrid from './PostCardSkeletonGrid'
+import { ENV } from '@/env'
+import { PostCardSkeleton } from '../PostCard/PostCardSkeleton'
 
 const cx = bindClassNames(styles)
 
@@ -17,14 +18,16 @@ type Props = {
   forHome: boolean
   forPost: boolean
   originData?: InfiniteData<TrendingPostsQuery | RecentPostsQuery>
-  loading?: boolean
+  isFetching: boolean
+  isLoading: boolean
 }
 
 function PostCardGrid({
   posts = [],
   forHome = false,
   forPost = false,
-  loading = false,
+  isFetching,
+  isLoading,
   originData,
 }: Props) {
   const params = useParams()
@@ -43,6 +46,7 @@ function PostCardGrid({
     localStorage.setItem(`${prefix}/scrollPosition`, scrollHeight)
   }
 
+  if (isLoading) return <PostCardSkeletonGrid forHome={forHome} forPost={forPost} />
   return (
     <div className={cx('block', 'homeGrid')}>
       {posts.map((post) => {
@@ -56,7 +60,7 @@ function PostCardGrid({
           />
         )
       })}
-      {loading &&
+      {isFetching &&
         Array(ENV.defaultPostLimit)
           .fill(0)
           .map((_, i) => <PostCardSkeleton key={i} forHome={forHome} forPost={forPost} />)}

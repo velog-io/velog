@@ -1,4 +1,4 @@
-import Home from '@/app/(list)/page'
+import TrendingHome from '@/app/(list)/page'
 import { Metadata } from 'next'
 
 type Props = {
@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 }
 
 export default async function Trending({ params }: Props) {
-  return <Home params={params} />
+  return <TrendingHome params={params} />
 }
