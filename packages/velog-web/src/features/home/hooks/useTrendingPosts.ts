@@ -50,8 +50,7 @@ export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.d
       }
     },
     retryDelay: 100,
-    gcTime: 1000 * 60 * 5, // default
-    staleTime: 1000 * 60 * 3,
+    staleTime: 1000 * 60 * 10,
   })
 
   useEffect(() => {

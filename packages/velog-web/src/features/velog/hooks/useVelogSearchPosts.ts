@@ -41,8 +41,7 @@ export default function useVelogSearchPosts({ keyword, username }: Args) {
     },
     enabled: !!keyword,
     retryDelay: 1000,
-    gcTime: 1000 * 60 * 5, // default
-    staleTime: 1000 * 60 * 3,
+    staleTime: 1000 * 60 * 10,
   })
 
   const posts = useMemo(

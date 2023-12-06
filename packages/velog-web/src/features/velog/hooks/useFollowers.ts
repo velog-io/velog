@@ -35,8 +35,7 @@ export default function useFollowers(username: string, limit = 10) {
       }
     },
     retryDelay: 1000, // default
-    staleTime: 1000 * 60 * 3,
-    gcTime: 1000 * 60 * 5, // default
+    staleTime: 1000 * 60 * 5,
   })
   const followers = useMemo(() => {
     return [...(data?.pages?.flatMap((page) => page.followers) || [])] as FollowResult[]
