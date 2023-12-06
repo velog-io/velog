@@ -1,11 +1,15 @@
 import {
   useMutation,
   useQuery,
+  useSuspenseQuery,
   useInfiniteQuery,
+  useSuspenseInfiniteQuery,
   UseMutationOptions,
   UseQueryOptions,
+  UseSuspenseQueryOptions,
   UseInfiniteQueryOptions,
   InfiniteData,
+  UseSuspenseInfiniteQueryOptions,
 } from '@tanstack/react-query'
 import { fetcher } from './fetcher'
 export type Maybe<T> = T | null
@@ -873,6 +877,27 @@ export const useGetFollowersQuery = <TData = GetFollowersQuery, TError = unknown
 
 useGetFollowersQuery.getKey = (variables: GetFollowersQueryVariables) => ['getFollowers', variables]
 
+export const useSuspenseGetFollowersQuery = <TData = GetFollowersQuery, TError = unknown>(
+  variables: GetFollowersQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<GetFollowersQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<GetFollowersQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<GetFollowersQuery, TError, TData>({
+    queryKey: ['getFollowersSuspense', variables],
+    queryFn: fetcher<GetFollowersQuery, GetFollowersQueryVariables>(
+      GetFollowersDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSuspenseGetFollowersQuery.getKey = (variables: GetFollowersQueryVariables) => [
+  'getFollowersSuspense',
+  variables,
+]
+
 export const useInfiniteGetFollowersQuery = <
   TData = InfiniteData<GetFollowersQuery>,
   TError = unknown,
@@ -900,6 +925,36 @@ export const useInfiniteGetFollowersQuery = <
 
 useInfiniteGetFollowersQuery.getKey = (variables: GetFollowersQueryVariables) => [
   'getFollowers.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteGetFollowersQuery = <
+  TData = InfiniteData<GetFollowersQuery>,
+  TError = unknown,
+>(
+  variables: GetFollowersQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<GetFollowersQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<GetFollowersQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<GetFollowersQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['getFollowers.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteGetFollowersQuery.getKey = (variables: GetFollowersQueryVariables) => [
+  'getFollowers.infiniteSuspense',
   variables,
 ]
 
@@ -939,6 +994,27 @@ useGetFollowingsQuery.getKey = (variables: GetFollowingsQueryVariables) => [
   variables,
 ]
 
+export const useSuspenseGetFollowingsQuery = <TData = GetFollowingsQuery, TError = unknown>(
+  variables: GetFollowingsQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<GetFollowingsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<GetFollowingsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<GetFollowingsQuery, TError, TData>({
+    queryKey: ['getFollowingsSuspense', variables],
+    queryFn: fetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(
+      GetFollowingsDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSuspenseGetFollowingsQuery.getKey = (variables: GetFollowingsQueryVariables) => [
+  'getFollowingsSuspense',
+  variables,
+]
+
 export const useInfiniteGetFollowingsQuery = <
   TData = InfiniteData<GetFollowingsQuery>,
   TError = unknown,
@@ -966,6 +1042,36 @@ export const useInfiniteGetFollowingsQuery = <
 
 useInfiniteGetFollowingsQuery.getKey = (variables: GetFollowingsQueryVariables) => [
   'getFollowings.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteGetFollowingsQuery = <
+  TData = InfiniteData<GetFollowingsQuery>,
+  TError = unknown,
+>(
+  variables: GetFollowingsQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<GetFollowingsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<GetFollowingsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<GetFollowingsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['getFollowings.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(GetFollowingsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteGetFollowingsQuery.getKey = (variables: GetFollowingsQueryVariables) => [
+  'getFollowings.infiniteSuspense',
   variables,
 ]
 
@@ -1074,6 +1180,24 @@ export const useReadPostQuery = <TData = ReadPostQuery, TError = unknown>(
 
 useReadPostQuery.getKey = (variables: ReadPostQueryVariables) => ['readPost', variables]
 
+export const useSuspenseReadPostQuery = <TData = ReadPostQuery, TError = unknown>(
+  variables: ReadPostQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<ReadPostQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<ReadPostQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<ReadPostQuery, TError, TData>({
+    queryKey: ['readPostSuspense', variables],
+    queryFn: fetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseReadPostQuery.getKey = (variables: ReadPostQueryVariables) => [
+  'readPostSuspense',
+  variables,
+]
+
 export const useInfiniteReadPostQuery = <TData = InfiniteData<ReadPostQuery>, TError = unknown>(
   variables: ReadPostQueryVariables,
   options: Omit<UseInfiniteQueryOptions<ReadPostQuery, TError, TData>, 'queryKey'> & {
@@ -1098,6 +1222,36 @@ export const useInfiniteReadPostQuery = <TData = InfiniteData<ReadPostQuery>, TE
 
 useInfiniteReadPostQuery.getKey = (variables: ReadPostQueryVariables) => [
   'readPost.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteReadPostQuery = <
+  TData = InfiniteData<ReadPostQuery>,
+  TError = unknown,
+>(
+  variables: ReadPostQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<ReadPostQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<ReadPostQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<ReadPostQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['readPost.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteReadPostQuery.getKey = (variables: ReadPostQueryVariables) => [
+  'readPost.infiniteSuspense',
   variables,
 ]
 
@@ -1142,6 +1296,24 @@ export const useRecentPostsQuery = <TData = RecentPostsQuery, TError = unknown>(
 
 useRecentPostsQuery.getKey = (variables: RecentPostsQueryVariables) => ['recentPosts', variables]
 
+export const useSuspenseRecentPostsQuery = <TData = RecentPostsQuery, TError = unknown>(
+  variables: RecentPostsQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<RecentPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<RecentPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<RecentPostsQuery, TError, TData>({
+    queryKey: ['recentPostsSuspense', variables],
+    queryFn: fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseRecentPostsQuery.getKey = (variables: RecentPostsQueryVariables) => [
+  'recentPostsSuspense',
+  variables,
+]
+
 export const useInfiniteRecentPostsQuery = <
   TData = InfiniteData<RecentPostsQuery>,
   TError = unknown,
@@ -1169,6 +1341,36 @@ export const useInfiniteRecentPostsQuery = <
 
 useInfiniteRecentPostsQuery.getKey = (variables: RecentPostsQueryVariables) => [
   'recentPosts.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteRecentPostsQuery = <
+  TData = InfiniteData<RecentPostsQuery>,
+  TError = unknown,
+>(
+  variables: RecentPostsQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<RecentPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<RecentPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<RecentPostsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['recentPosts.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteRecentPostsQuery.getKey = (variables: RecentPostsQueryVariables) => [
+  'recentPosts.infiniteSuspense',
   variables,
 ]
 
@@ -1219,6 +1421,27 @@ useTrendingPostsQuery.getKey = (variables: TrendingPostsQueryVariables) => [
   variables,
 ]
 
+export const useSuspenseTrendingPostsQuery = <TData = TrendingPostsQuery, TError = unknown>(
+  variables: TrendingPostsQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<TrendingPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<TrendingPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<TrendingPostsQuery, TError, TData>({
+    queryKey: ['trendingPostsSuspense', variables],
+    queryFn: fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
+      TrendingPostsDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSuspenseTrendingPostsQuery.getKey = (variables: TrendingPostsQueryVariables) => [
+  'trendingPostsSuspense',
+  variables,
+]
+
 export const useInfiniteTrendingPostsQuery = <
   TData = InfiniteData<TrendingPostsQuery>,
   TError = unknown,
@@ -1246,6 +1469,36 @@ export const useInfiniteTrendingPostsQuery = <
 
 useInfiniteTrendingPostsQuery.getKey = (variables: TrendingPostsQueryVariables) => [
   'trendingPosts.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteTrendingPostsQuery = <
+  TData = InfiniteData<TrendingPostsQuery>,
+  TError = unknown,
+>(
+  variables: TrendingPostsQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<TrendingPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<TrendingPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<TrendingPostsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['trendingPosts.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteTrendingPostsQuery.getKey = (variables: TrendingPostsQueryVariables) => [
+  'trendingPosts.infiniteSuspense',
   variables,
 ]
 
@@ -1291,6 +1544,24 @@ export const useVelogPostsQuery = <TData = VelogPostsQuery, TError = unknown>(
 
 useVelogPostsQuery.getKey = (variables: VelogPostsQueryVariables) => ['velogPosts', variables]
 
+export const useSuspenseVelogPostsQuery = <TData = VelogPostsQuery, TError = unknown>(
+  variables: VelogPostsQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<VelogPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<VelogPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<VelogPostsQuery, TError, TData>({
+    queryKey: ['velogPostsSuspense', variables],
+    queryFn: fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseVelogPostsQuery.getKey = (variables: VelogPostsQueryVariables) => [
+  'velogPostsSuspense',
+  variables,
+]
+
 export const useInfiniteVelogPostsQuery = <TData = InfiniteData<VelogPostsQuery>, TError = unknown>(
   variables: VelogPostsQueryVariables,
   options: Omit<UseInfiniteQueryOptions<VelogPostsQuery, TError, TData>, 'queryKey'> & {
@@ -1302,13 +1573,11 @@ export const useInfiniteVelogPostsQuery = <TData = InfiniteData<VelogPostsQuery>
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey: optionsQueryKey ?? ['velogPosts.infinite', variables],
-        queryFn: (metaData) => {
-          console.log('helo')
-          return fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, {
+        queryFn: (metaData) =>
+          fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, {
             ...variables,
             ...(metaData.pageParam ?? {}),
-          })()
-        },
+          })(),
         ...restOptions,
       }
     })(),
@@ -1317,6 +1586,36 @@ export const useInfiniteVelogPostsQuery = <TData = InfiniteData<VelogPostsQuery>
 
 useInfiniteVelogPostsQuery.getKey = (variables: VelogPostsQueryVariables) => [
   'velogPosts.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteVelogPostsQuery = <
+  TData = InfiniteData<VelogPostsQuery>,
+  TError = unknown,
+>(
+  variables: VelogPostsQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<VelogPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<VelogPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<VelogPostsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['velogPosts.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteVelogPostsQuery.getKey = (variables: VelogPostsQueryVariables) => [
+  'velogPosts.infiniteSuspense',
   variables,
 ]
 
@@ -1363,6 +1662,24 @@ export const useSearchPostsQuery = <TData = SearchPostsQuery, TError = unknown>(
 
 useSearchPostsQuery.getKey = (variables: SearchPostsQueryVariables) => ['searchPosts', variables]
 
+export const useSuspenseSearchPostsQuery = <TData = SearchPostsQuery, TError = unknown>(
+  variables: SearchPostsQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<SearchPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<SearchPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<SearchPostsQuery, TError, TData>({
+    queryKey: ['searchPostsSuspense', variables],
+    queryFn: fetcher<SearchPostsQuery, SearchPostsQueryVariables>(SearchPostsDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseSearchPostsQuery.getKey = (variables: SearchPostsQueryVariables) => [
+  'searchPostsSuspense',
+  variables,
+]
+
 export const useInfiniteSearchPostsQuery = <
   TData = InfiniteData<SearchPostsQuery>,
   TError = unknown,
@@ -1390,6 +1707,36 @@ export const useInfiniteSearchPostsQuery = <
 
 useInfiniteSearchPostsQuery.getKey = (variables: SearchPostsQueryVariables) => [
   'searchPosts.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteSearchPostsQuery = <
+  TData = InfiniteData<SearchPostsQuery>,
+  TError = unknown,
+>(
+  variables: SearchPostsQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<SearchPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<SearchPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<SearchPostsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['searchPosts.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<SearchPostsQuery, SearchPostsQueryVariables>(SearchPostsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteSearchPostsQuery.getKey = (variables: SearchPostsQueryVariables) => [
+  'searchPosts.infiniteSuspense',
   variables,
 ]
 
@@ -1423,6 +1770,24 @@ export const useUserTagsQuery = <TData = UserTagsQuery, TError = unknown>(
 
 useUserTagsQuery.getKey = (variables: UserTagsQueryVariables) => ['userTags', variables]
 
+export const useSuspenseUserTagsQuery = <TData = UserTagsQuery, TError = unknown>(
+  variables: UserTagsQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<UserTagsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<UserTagsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<UserTagsQuery, TError, TData>({
+    queryKey: ['userTagsSuspense', variables],
+    queryFn: fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseUserTagsQuery.getKey = (variables: UserTagsQueryVariables) => [
+  'userTagsSuspense',
+  variables,
+]
+
 export const useInfiniteUserTagsQuery = <TData = InfiniteData<UserTagsQuery>, TError = unknown>(
   variables: UserTagsQueryVariables,
   options: Omit<UseInfiniteQueryOptions<UserTagsQuery, TError, TData>, 'queryKey'> & {
@@ -1447,6 +1812,36 @@ export const useInfiniteUserTagsQuery = <TData = InfiniteData<UserTagsQuery>, TE
 
 useInfiniteUserTagsQuery.getKey = (variables: UserTagsQueryVariables) => [
   'userTags.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteUserTagsQuery = <
+  TData = InfiniteData<UserTagsQuery>,
+  TError = unknown,
+>(
+  variables: UserTagsQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<UserTagsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<UserTagsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<UserTagsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['userTags.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteUserTagsQuery.getKey = (variables: UserTagsQueryVariables) => [
+  'userTags.infiniteSuspense',
   variables,
 ]
 
@@ -1481,6 +1876,24 @@ export const useGetUserQuery = <TData = GetUserQuery, TError = unknown>(
 
 useGetUserQuery.getKey = (variables: GetUserQueryVariables) => ['getUser', variables]
 
+export const useSuspenseGetUserQuery = <TData = GetUserQuery, TError = unknown>(
+  variables: GetUserQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<GetUserQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<GetUserQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<GetUserQuery, TError, TData>({
+    queryKey: ['getUserSuspense', variables],
+    queryFn: fetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseGetUserQuery.getKey = (variables: GetUserQueryVariables) => [
+  'getUserSuspense',
+  variables,
+]
+
 export const useInfiniteGetUserQuery = <TData = InfiniteData<GetUserQuery>, TError = unknown>(
   variables: GetUserQueryVariables,
   options: Omit<UseInfiniteQueryOptions<GetUserQuery, TError, TData>, 'queryKey'> & {
@@ -1505,6 +1918,36 @@ export const useInfiniteGetUserQuery = <TData = InfiniteData<GetUserQuery>, TErr
 
 useInfiniteGetUserQuery.getKey = (variables: GetUserQueryVariables) => [
   'getUser.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteGetUserQuery = <
+  TData = InfiniteData<GetUserQuery>,
+  TError = unknown,
+>(
+  variables: GetUserQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<GetUserQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<GetUserQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<GetUserQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['getUser.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteGetUserQuery.getKey = (variables: GetUserQueryVariables) => [
+  'getUser.infiniteSuspense',
   variables,
 ]
 
@@ -1548,6 +1991,27 @@ useGetUserFollowInfoQuery.getKey = (variables: GetUserFollowInfoQueryVariables) 
   variables,
 ]
 
+export const useSuspenseGetUserFollowInfoQuery = <TData = GetUserFollowInfoQuery, TError = unknown>(
+  variables: GetUserFollowInfoQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<GetUserFollowInfoQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<GetUserFollowInfoQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<GetUserFollowInfoQuery, TError, TData>({
+    queryKey: ['getUserFollowInfoSuspense', variables],
+    queryFn: fetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
+      GetUserFollowInfoDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSuspenseGetUserFollowInfoQuery.getKey = (variables: GetUserFollowInfoQueryVariables) => [
+  'getUserFollowInfoSuspense',
+  variables,
+]
+
 export const useInfiniteGetUserFollowInfoQuery = <
   TData = InfiniteData<GetUserFollowInfoQuery>,
   TError = unknown,
@@ -1575,6 +2039,39 @@ export const useInfiniteGetUserFollowInfoQuery = <
 
 useInfiniteGetUserFollowInfoQuery.getKey = (variables: GetUserFollowInfoQueryVariables) => [
   'getUserFollowInfo.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteGetUserFollowInfoQuery = <
+  TData = InfiniteData<GetUserFollowInfoQuery>,
+  TError = unknown,
+>(
+  variables: GetUserFollowInfoQueryVariables,
+  options: Omit<
+    UseSuspenseInfiniteQueryOptions<GetUserFollowInfoQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<GetUserFollowInfoQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<GetUserFollowInfoQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['getUserFollowInfo.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
+            GetUserFollowInfoDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteGetUserFollowInfoQuery.getKey = (variables: GetUserFollowInfoQueryVariables) => [
+  'getUserFollowInfo.infiniteSuspense',
   variables,
 ]
 
@@ -1609,6 +2106,23 @@ export const useCurrentUserQuery = <TData = CurrentUserQuery, TError = unknown>(
 useCurrentUserQuery.getKey = (variables?: CurrentUserQueryVariables) =>
   variables === undefined ? ['currentUser'] : ['currentUser', variables]
 
+export const useSuspenseCurrentUserQuery = <TData = CurrentUserQuery, TError = unknown>(
+  variables?: CurrentUserQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<CurrentUserQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<CurrentUserQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<CurrentUserQuery, TError, TData>({
+    queryKey:
+      variables === undefined ? ['currentUserSuspense'] : ['currentUserSuspense', variables],
+    queryFn: fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseCurrentUserQuery.getKey = (variables?: CurrentUserQueryVariables) =>
+  variables === undefined ? ['currentUserSuspense'] : ['currentUserSuspense', variables]
+
 export const useInfiniteCurrentUserQuery = <
   TData = InfiniteData<CurrentUserQuery>,
   TError = unknown,
@@ -1639,6 +2153,39 @@ export const useInfiniteCurrentUserQuery = <
 
 useInfiniteCurrentUserQuery.getKey = (variables?: CurrentUserQueryVariables) =>
   variables === undefined ? ['currentUser.infinite'] : ['currentUser.infinite', variables]
+
+export const useSuspenseInfiniteCurrentUserQuery = <
+  TData = InfiniteData<CurrentUserQuery>,
+  TError = unknown,
+>(
+  variables: CurrentUserQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<CurrentUserQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<CurrentUserQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<CurrentUserQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['currentUser.infiniteSuspense']
+            : ['currentUser.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteCurrentUserQuery.getKey = (variables?: CurrentUserQueryVariables) =>
+  variables === undefined
+    ? ['currentUser.infiniteSuspense']
+    : ['currentUser.infiniteSuspense', variables]
 
 export const LogoutDocument = `
     mutation logout {
@@ -1683,6 +2230,24 @@ export const useVelogConfigQuery = <TData = VelogConfigQuery, TError = unknown>(
 
 useVelogConfigQuery.getKey = (variables: VelogConfigQueryVariables) => ['velogConfig', variables]
 
+export const useSuspenseVelogConfigQuery = <TData = VelogConfigQuery, TError = unknown>(
+  variables: VelogConfigQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<VelogConfigQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<VelogConfigQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<VelogConfigQuery, TError, TData>({
+    queryKey: ['velogConfigSuspense', variables],
+    queryFn: fetcher<VelogConfigQuery, VelogConfigQueryVariables>(VelogConfigDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseVelogConfigQuery.getKey = (variables: VelogConfigQueryVariables) => [
+  'velogConfigSuspense',
+  variables,
+]
+
 export const useInfiniteVelogConfigQuery = <
   TData = InfiniteData<VelogConfigQuery>,
   TError = unknown,
@@ -1710,6 +2275,36 @@ export const useInfiniteVelogConfigQuery = <
 
 useInfiniteVelogConfigQuery.getKey = (variables: VelogConfigQueryVariables) => [
   'velogConfig.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteVelogConfigQuery = <
+  TData = InfiniteData<VelogConfigQuery>,
+  TError = unknown,
+>(
+  variables: VelogConfigQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<VelogConfigQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<VelogConfigQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<VelogConfigQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['velogConfig.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<VelogConfigQuery, VelogConfigQueryVariables>(VelogConfigDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteVelogConfigQuery.getKey = (variables: VelogConfigQueryVariables) => [
+  'velogConfig.infiniteSuspense',
   variables,
 ]
 
@@ -1744,6 +2339,27 @@ export const useGetUserAboutQuery = <TData = GetUserAboutQuery, TError = unknown
 
 useGetUserAboutQuery.getKey = (variables: GetUserAboutQueryVariables) => ['getUserAbout', variables]
 
+export const useSuspenseGetUserAboutQuery = <TData = GetUserAboutQuery, TError = unknown>(
+  variables: GetUserAboutQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<GetUserAboutQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<GetUserAboutQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<GetUserAboutQuery, TError, TData>({
+    queryKey: ['getUserAboutSuspense', variables],
+    queryFn: fetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(
+      GetUserAboutDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSuspenseGetUserAboutQuery.getKey = (variables: GetUserAboutQueryVariables) => [
+  'getUserAboutSuspense',
+  variables,
+]
+
 export const useInfiniteGetUserAboutQuery = <
   TData = InfiniteData<GetUserAboutQuery>,
   TError = unknown,
@@ -1771,6 +2387,36 @@ export const useInfiniteGetUserAboutQuery = <
 
 useInfiniteGetUserAboutQuery.getKey = (variables: GetUserAboutQueryVariables) => [
   'getUserAbout.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteGetUserAboutQuery = <
+  TData = InfiniteData<GetUserAboutQuery>,
+  TError = unknown,
+>(
+  variables: GetUserAboutQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<GetUserAboutQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<GetUserAboutQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<GetUserAboutQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['getUserAbout.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(GetUserAboutDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteGetUserAboutQuery.getKey = (variables: GetUserAboutQueryVariables) => [
+  'getUserAbout.infiniteSuspense',
   variables,
 ]
 
@@ -1812,6 +2458,27 @@ useGetUserSeriesListQuery.getKey = (variables: GetUserSeriesListQueryVariables) 
   variables,
 ]
 
+export const useSuspenseGetUserSeriesListQuery = <TData = GetUserSeriesListQuery, TError = unknown>(
+  variables: GetUserSeriesListQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<GetUserSeriesListQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<GetUserSeriesListQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<GetUserSeriesListQuery, TError, TData>({
+    queryKey: ['getUserSeriesListSuspense', variables],
+    queryFn: fetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
+      GetUserSeriesListDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSuspenseGetUserSeriesListQuery.getKey = (variables: GetUserSeriesListQueryVariables) => [
+  'getUserSeriesListSuspense',
+  variables,
+]
+
 export const useInfiniteGetUserSeriesListQuery = <
   TData = InfiniteData<GetUserSeriesListQuery>,
   TError = unknown,
@@ -1839,6 +2506,39 @@ export const useInfiniteGetUserSeriesListQuery = <
 
 useInfiniteGetUserSeriesListQuery.getKey = (variables: GetUserSeriesListQueryVariables) => [
   'getUserSeriesList.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteGetUserSeriesListQuery = <
+  TData = InfiniteData<GetUserSeriesListQuery>,
+  TError = unknown,
+>(
+  variables: GetUserSeriesListQueryVariables,
+  options: Omit<
+    UseSuspenseInfiniteQueryOptions<GetUserSeriesListQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<GetUserSeriesListQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<GetUserSeriesListQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['getUserSeriesList.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
+            GetUserSeriesListDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteGetUserSeriesListQuery.getKey = (variables: GetUserSeriesListQueryVariables) => [
+  'getUserSeriesList.infiniteSuspense',
   variables,
 ]
 
@@ -1906,6 +2606,27 @@ useTrendingWritersQuery.getKey = (variables: TrendingWritersQueryVariables) => [
   variables,
 ]
 
+export const useSuspenseTrendingWritersQuery = <TData = TrendingWritersQuery, TError = unknown>(
+  variables: TrendingWritersQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<TrendingWritersQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<TrendingWritersQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<TrendingWritersQuery, TError, TData>({
+    queryKey: ['trendingWritersSuspense', variables],
+    queryFn: fetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(
+      TrendingWritersDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSuspenseTrendingWritersQuery.getKey = (variables: TrendingWritersQueryVariables) => [
+  'trendingWritersSuspense',
+  variables,
+]
+
 export const useInfiniteTrendingWritersQuery = <
   TData = InfiniteData<TrendingWritersQuery>,
   TError = unknown,
@@ -1933,5 +2654,38 @@ export const useInfiniteTrendingWritersQuery = <
 
 useInfiniteTrendingWritersQuery.getKey = (variables: TrendingWritersQueryVariables) => [
   'trendingWriters.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteTrendingWritersQuery = <
+  TData = InfiniteData<TrendingWritersQuery>,
+  TError = unknown,
+>(
+  variables: TrendingWritersQueryVariables,
+  options: Omit<
+    UseSuspenseInfiniteQueryOptions<TrendingWritersQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<TrendingWritersQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<TrendingWritersQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['trendingWriters.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(TrendingWritersDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteTrendingWritersQuery.getKey = (variables: TrendingWritersQueryVariables) => [
+  'trendingWriters.infiniteSuspense',
   variables,
 ]

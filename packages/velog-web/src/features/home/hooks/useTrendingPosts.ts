@@ -1,17 +1,17 @@
 import { ENV } from '@/env'
 import { Timeframe, useTimeframe } from '@/features/home/state/timeframe'
-import { fetcher } from '@/graphql/fetcher'
 import {
   Post,
   TrendingPostsDocument,
   TrendingPostsQuery,
   TrendingPostsQueryVariables,
 } from '@/graphql/generated'
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
+import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
+import { useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 
-export default function useTrendingPosts(initialPost: Post[] = []) {
+export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.defaultPostLimit) {
   const params = useParams()
   const timeframe = (params.timeframe ?? 'week') as Timeframe
   const prevTimeframe = useRef<Timeframe>(timeframe)
@@ -19,7 +19,6 @@ export default function useTrendingPosts(initialPost: Post[] = []) {
   const hasCheckedRef = useRef<boolean>(false)
 
   // query
-  const limit = ENV.defaultPostLimit
   const initialOffset = initialPost.length
   const fetchInput = useMemo(() => {
     return {
@@ -29,32 +28,31 @@ export default function useTrendingPosts(initialPost: Post[] = []) {
     }
   }, [initialOffset, timeframe, limit])
 
-  const { data, isLoading, fetchNextPage, refetch, isFetching, hasNextPage, isError } =
-    useInfiniteQuery<TrendingPostsQuery>(
-      ['trendingPosts', { input: fetchInput }],
-      ({ pageParam = fetchInput }) =>
-        fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(TrendingPostsDocument, {
-          input: pageParam,
-        })(),
-      {
-        retryDelay: 100,
-        cacheTime: 1000 * 60 * 3,
-        staleTime: 1000 * 60 * 3,
-        enabled: hasCheckedRef.current,
-        getNextPageParam: (pages, allPages) => {
-          const trendingPosts = pages.trendingPosts
-          if (!trendingPosts) return false
-          if (trendingPosts.length < limit) return false
+  const { data, isLoading, isFetching, fetchMore, refetch } = useCustomInfiniteQuery<
+    TrendingPostsQuery,
+    TrendingPostsQueryVariables
+  >({
+    queryKey: ['trendingPosts.infinite'],
+    document: TrendingPostsDocument,
+    initialPageParam: {
+      input: fetchInput,
+    },
+    getNextPageParam: (page, pages) => {
+      const trendingPosts = page.trendingPosts
+      if (!trendingPosts) return undefined
+      if (trendingPosts.length < limit) return undefined
 
-          const offset = allPages.flatMap((pages) => pages.trendingPosts).length + initialOffset
-          return {
-            limit,
-            offset,
-            timeframe,
-          }
-        },
-      },
-    )
+      const offset = pages.flatMap((page) => page.trendingPosts).length + initialOffset
+      return {
+        limit,
+        offset,
+        timeframe,
+      }
+    },
+    retryDelay: 100,
+    gcTime: 1000 * 60 * 5, // default
+    staleTime: 1000 * 60 * 3,
+  })
 
   // TODO: remove Start
   const queryClient = useQueryClient()
@@ -99,12 +97,6 @@ export default function useTrendingPosts(initialPost: Post[] = []) {
   const posts = useMemo(() => {
     return [...initialPost, ...(data?.pages?.flatMap((page) => page.trendingPosts) || [])] as Post[]
   }, [data, initialPost])
-
-  const fetchMore = () => {
-    if (isFetching || isError) return
-    if (hasNextPage === false) return
-    fetchNextPage()
-  }
 
   return {
     posts,

@@ -32,7 +32,6 @@ export default function useVelogPosts({ username, tag, initialData, limit = 10 }
     getNextPageParam: (page) => {
       const { posts } = page
       if (!posts) return undefined
-      if (posts.length === 0) return undefined
       if (posts.length < limit) return undefined
       return {
         username,

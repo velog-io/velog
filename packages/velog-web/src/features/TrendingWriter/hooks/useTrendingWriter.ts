@@ -1,11 +1,10 @@
-import { fetcher } from '@/graphql/fetcher'
 import {
   TrendingWritersDocument,
   TrendingWritersQuery,
   TrendingWritersQueryVariables,
   TrendingWriter,
 } from '@/graphql/generated'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'
 
 type Args = {
@@ -21,29 +20,29 @@ export default function useTrendingWriters({ limit = 20, initialData = [] }: Arg
     }
   }, [limit, initialData])
 
-  const { data, fetchNextPage, isFetching, hasNextPage, isError, isLoading } =
-    useInfiniteQuery<TrendingWritersQuery>(
-      ['getTrendingWriters', { input: fetchInput }],
-      ({ pageParam = fetchInput }) =>
-        fetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(TrendingWritersDocument, {
-          input: pageParam,
-        })(),
-      {
-        retryDelay: 1000,
-        cacheTime: 1000 * 60 * 10,
-        staleTime: 1000 * 60 * 10,
-        getNextPageParam: (page) => {
-          const { trendingWriters } = page
-          if (!trendingWriters) return false
-          if (trendingWriters.length < limit) return false
-          const cursor = trendingWriters[trendingWriters.length - 1].index + 1
-          return {
-            cursor,
-            limit,
-          }
-        },
-      },
-    )
+  const { data, isFetching, isLoading, fetchMore } = useCustomInfiniteQuery<
+    TrendingWritersQuery,
+    TrendingWritersQueryVariables
+  >({
+    queryKey: ['getTrendingWriters.infinite'],
+    document: TrendingWritersDocument,
+    initialPageParam: {
+      input: fetchInput,
+    },
+    getNextPageParam: (page) => {
+      const { trendingWriters } = page
+      if (!trendingWriters) return undefined
+      if (trendingWriters.length < limit) return undefined
+      const cursor = trendingWriters[trendingWriters.length - 1].index + 1
+      return {
+        cursor,
+        limit,
+      }
+    },
+    retryDelay: 1000,
+    gcTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 10,
+  })
 
   const trendingWriters = useMemo(() => {
     return [
@@ -51,12 +50,6 @@ export default function useTrendingWriters({ limit = 20, initialData = [] }: Arg
       ...(data?.pages?.flatMap((page) => page.trendingWriters) || []),
     ] as TrendingWriter[]
   }, [data, initialData])
-
-  const fetchMore = () => {
-    if (isFetching || isError) return
-    if (!hasNextPage) return
-    fetchNextPage()
-  }
 
   return {
     trendingWriters,

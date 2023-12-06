@@ -14,6 +14,7 @@ const config: CodegenConfig = {
       config: {
         reactQueryVersion: 5,
         addInfiniteQuery: true,
+        addSuspenseQuery: true,
         exposeQueryKeys: true,
         exposeMutationKeys: true,
         skipTypename: true,
