@@ -6,8 +6,7 @@ import {
   RecentPostsQueryVariables,
 } from '@/graphql/generated'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
-import { useQueryClient } from '@tanstack/react-query'
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 
 export default function useRecentPosts(initialPosts: Post[] = [], limit = ENV.defaultPostLimit) {
   const hasCheckedRef = useRef<boolean>(false)
@@ -24,7 +23,7 @@ export default function useRecentPosts(initialPosts: Post[] = [], limit = ENV.de
     RecentPostsQuery,
     RecentPostsQueryVariables
   >({
-    queryKey: ['recentPosts.infinite'],
+    queryKey: ['recentPosts.infinite', { input: fetchInput }],
     document: RecentPostsDocument,
     initialPageParam: {
       input: fetchInput,
@@ -42,31 +41,6 @@ export default function useRecentPosts(initialPosts: Post[] = [], limit = ENV.de
     gcTime: 1000 * 60 * 1,
     staleTime: 1000 * 60 * 1,
   })
-
-  // TODO: remove Start
-  const queryClient = useQueryClient()
-  useEffect(() => {
-    if (hasCheckedRef.current) return
-    hasCheckedRef.current = true
-
-    try {
-      const stringPosts = localStorage.getItem('recentPosts')
-      if (!stringPosts) return
-      const parsed = JSON.parse(stringPosts)
-      queryClient.setQueryData(['recentPosts.infinite'], parsed)
-    } catch (_) {}
-  }, [queryClient, fetchInput])
-
-  useEffect(() => {
-    const scrolly = Number(localStorage.getItem('recentPosts/scrollPosition'))
-    if (!scrolly || isLoading) return
-    window.scrollTo({
-      top: Number(scrolly),
-    })
-    localStorage.removeItem('recentPosts')
-    localStorage.removeItem('recentPosts/scrollPosition')
-  }, [isLoading])
-  // TODO: remove End
 
   const posts = useMemo(() => {
     return [...initialPosts, ...(data?.pages?.flatMap((page) => page.recentPosts) || [])] as Post[]

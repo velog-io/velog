@@ -7,7 +7,6 @@ import {
   TrendingPostsQueryVariables,
 } from '@/graphql/generated'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
-import { useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 
@@ -32,8 +31,9 @@ export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.d
     TrendingPostsQuery,
     TrendingPostsQueryVariables
   >({
-    queryKey: ['trendingPosts.infinite'],
+    queryKey: ['trendingPosts.infinite', { input: fetchInput }],
     document: TrendingPostsDocument,
+    enabled: !!hasCheckedRef,
     initialPageParam: {
       input: fetchInput,
     },
@@ -53,31 +53,6 @@ export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.d
     gcTime: 1000 * 60 * 5, // default
     staleTime: 1000 * 60 * 3,
   })
-
-  // TODO: remove Start
-  const queryClient = useQueryClient()
-  useEffect(() => {
-    if (hasCheckedRef.current) return
-    hasCheckedRef.current = true
-    try {
-      const stringPosts = localStorage.getItem(`trendingPosts/${timeframe}`)
-      if (!stringPosts) return
-      const parsed = JSON.parse(stringPosts)
-      queryClient.setQueryData(['trendingPosts.infinite'], parsed)
-    } catch (_) {}
-  }, [queryClient, fetchInput, timeframe])
-
-  useEffect(() => {
-    const storageKey = `trendingPosts/${timeframe}`
-    const scrolly = Number(localStorage.getItem(`${storageKey}/scrollPosition`))
-    if (!scrolly || isLoading) return
-    window.scrollTo({
-      top: Number(scrolly),
-    })
-    localStorage.removeItem(storageKey)
-    localStorage.removeItem(`${storageKey}/scrollPosition`)
-  }, [timeframe, isLoading])
-  // TODO: remove END
 
   useEffect(() => {
     if (prevTimeframe.current === timeframe) return

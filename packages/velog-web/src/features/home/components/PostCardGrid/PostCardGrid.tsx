@@ -42,6 +42,7 @@ function PostCardGrid({
     const serialized = JSON.stringify(originData)
     const scrollHeight = window.scrollY.toString()
     if (scrollHeight === '0' || [scrollHeight, serialized].includes('undefined')) return
+    console.log('saved!')
     localStorage.setItem(prefix, serialized)
     localStorage.setItem(`${prefix}/scrollPosition`, scrollHeight)
   }
