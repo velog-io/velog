@@ -116,8 +116,9 @@ function FollowButton({ username, followingUserId, className, resetFollowCount }
     initialize(isFollowed)
   }, [data, isRefetching, initialize])
 
-  if (isFollowInfoLoading || isCurrentUserLoading)
+  if (isFollowInfoLoading || isCurrentUserLoading) {
     return <div className={cx('skeleton', className)} />
+  }
 
   return (
     <div className={cx('block', { hide: followingUserId === currentUser?.id }, className)}>
