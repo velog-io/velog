@@ -2,6 +2,7 @@ import styles from './PostCardGrid.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { PostCardSkeleton } from '@/features/home/components/PostCard/PostCardSkeleton'
 import { ENV } from '@/env'
+import { nanoid } from 'nanoid'
 
 const cx = bindClassNames(styles)
 
@@ -12,13 +13,13 @@ type Props = {
 
 function PostCardSkeletonGrid({ forHome, forPost }: Props) {
   return (
-    <div className={cx('block', 'skeleton', 'homeGrid')}>
+    <ul className={cx('block', 'skeleton', 'homeGrid')}>
       {Array(ENV.defaultPostLimit)
         .fill(0)
-        .map((_, i) => (
-          <PostCardSkeleton key={i} forHome={forHome} forPost={forPost} />
+        .map(() => (
+          <PostCardSkeleton key={nanoid()} forHome={forHome} forPost={forPost} />
         ))}
-    </div>
+    </ul>
   )
 }
 

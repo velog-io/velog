@@ -5,11 +5,13 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import PostCard from '@/features/home/components/PostCard/PostCard'
 import { Timeframe } from '@/features/home/state/timeframe'
 import { useParams, usePathname } from 'next/navigation'
-import { InfiniteData } from '@tanstack/react-query'
-import { Post, RecentPostsQuery, TrendingPostsQuery } from '@/graphql/generated'
+
+import { Post } from '@/graphql/generated'
 import PostCardSkeletonGrid from './PostCardSkeletonGrid'
 import { ENV } from '@/env'
 import { PostCardSkeleton } from '../PostCard/PostCardSkeleton'
+import { nanoid } from 'nanoid'
+import { Fragment } from 'react'
 
 const cx = bindClassNames(styles)
 
@@ -17,9 +19,9 @@ type Props = {
   posts: Post[]
   forHome: boolean
   forPost: boolean
-  originData?: InfiniteData<TrendingPostsQuery | RecentPostsQuery>
   isFetching: boolean
   isLoading: boolean
+  fetchMore: () => void
 }
 
 function PostCardGrid({
@@ -28,7 +30,7 @@ function PostCardGrid({
   forPost = false,
   isFetching,
   isLoading,
-  originData,
+  fetchMore,
 }: Props) {
   const params = useParams()
   const pathname = usePathname()
@@ -39,33 +41,30 @@ function PostCardGrid({
     const isRecent = pathname === '/recent'
     const prefix = isRecent ? 'recentPosts' : `trendingPosts/${timeframe}`
 
-    const serialized = JSON.stringify(originData)
+    const stringify = JSON.stringify(posts)
     const scrollHeight = window.scrollY.toString()
-    if (scrollHeight === '0' || [scrollHeight, serialized].includes('undefined')) return
-    console.log('saved!')
-    localStorage.setItem(prefix, serialized)
+    if (scrollHeight === '0' || [scrollHeight, stringify].includes('undefined')) return
+    localStorage.setItem(prefix, stringify)
     localStorage.setItem(`${prefix}/scrollPosition`, scrollHeight)
   }
 
   if (isLoading) return <PostCardSkeletonGrid forHome={forHome} forPost={forPost} />
+
   return (
-    <div className={cx('block', 'homeGrid')}>
-      {posts.map((post) => {
-        return (
-          <PostCard
-            key={post.id}
-            post={post}
-            forHome={forHome}
-            forPost={forPost}
-            onClick={onPostCardClick}
-          />
-        )
-      })}
+    <ul className={cx('block', 'homeGrid')}>
+      {posts.map((post, i) => (
+        <Fragment key={post.id}>
+          <PostCard post={post} forHome={forHome} forPost={forPost} onClick={onPostCardClick} />
+          {posts.length - 1 === i && (
+            <PostCardSkeleton forHome={forHome} forPost={forPost} fetchMore={fetchMore} />
+          )}
+        </Fragment>
+      ))}
       {isFetching &&
         Array(ENV.defaultPostLimit)
           .fill(0)
-          .map((_, i) => <PostCardSkeleton key={i} forHome={forHome} forPost={forPost} />)}
-    </div>
+          .map(() => <PostCardSkeleton key={nanoid()} forHome={forHome} forPost={forPost} />)}
+    </ul>
   )
 }
 

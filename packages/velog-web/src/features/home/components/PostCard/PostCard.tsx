@@ -27,7 +27,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
   if (isLoading) return <PostCardSkeleton forHome={forHome} forPost={forPost} />
 
   return (
-    <div className={cx('block')} onClick={onClick}>
+    <li className={cx('block')} onClick={onClick}>
       {post.thumbnail && (
         <VLink href={url} className={cx('styleLink')}>
           <RatioImage
@@ -72,7 +72,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
           {post.likes}
         </div>
       </div>
-    </div>
+    </li>
   )
 }
 

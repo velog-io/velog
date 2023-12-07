@@ -511,6 +511,9 @@ importers:
       inquirer:
         specifier: ^9.2.7
         version: 9.2.7
+      nanoid:
+        specifier: ^4.0.2
+        version: 4.0.2
       next:
         specifier: ^14.0.3
         version: 14.0.3(@babel/core@7.22.9)(react-dom@18.2.0)(react@18.2.0)

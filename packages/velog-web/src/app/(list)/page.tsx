@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function TrendingHome({ params }: Props) {
   const { timeframe = 'week' } = params
-  const data = await getTrendingPosts({ timeframe, limit: 50 })
+  const data = await getTrendingPosts({ timeframe, limit: 5 })
 
   if (!data) {
     redirect('/')

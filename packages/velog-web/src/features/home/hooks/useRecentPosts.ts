@@ -6,11 +6,9 @@ import {
   RecentPostsQueryVariables,
 } from '@/graphql/generated'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
-import { useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 
 export default function useRecentPosts(initialPosts: Post[] = [], limit = ENV.defaultPostLimit) {
-  const hasCheckedRef = useRef<boolean>(false)
-
   // query
   const fetchInput = useMemo(() => {
     return {
@@ -23,8 +21,9 @@ export default function useRecentPosts(initialPosts: Post[] = [], limit = ENV.de
     RecentPostsQuery,
     RecentPostsQueryVariables
   >({
-    queryKey: ['recentPosts.infinite', { input: fetchInput }],
+    queryKey: ['recentPosts.infinite'],
     document: RecentPostsDocument,
+    enabled: initialPosts.length !== 0,
     initialPageParam: {
       input: fetchInput,
     },
@@ -37,8 +36,9 @@ export default function useRecentPosts(initialPosts: Post[] = [], limit = ENV.de
         cursor: recentPosts[recentPosts.length - 1].id,
       }
     },
-    retry: 10,
-    staleTime: 1000 * 60 * 3,
+    retry: 1000 * 1,
+    gcTime: 1000 * 60,
+    staleTime: 1000 * 30,
   })
 
   const posts = useMemo(() => {
@@ -49,7 +49,6 @@ export default function useRecentPosts(initialPosts: Post[] = [], limit = ENV.de
     posts,
     isFetching,
     isLoading,
-    originData: data,
     fetchMore,
   }
 }

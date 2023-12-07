@@ -1,7 +1,8 @@
 .homeGrid {
   display: grid;
   grid-gap: 32px;
-
+  padding: 0;
+  margin: 0;
   --card-count: 5;
   --spacer: calc(var(--card-count) - 1);
   --width: 20%;

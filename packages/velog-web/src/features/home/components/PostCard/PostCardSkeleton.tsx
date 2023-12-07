@@ -2,18 +2,25 @@ import Skeleton from '@/components/Skeleton/Skeleton'
 import styles from './PostCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import SkeletonTexts from '@/components/Skeleton/SkeletonTexts'
+import { useRef } from 'react'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 
 const cx = bindClassNames(styles)
 
 export function PostCardSkeleton({
   forHome = false,
   forPost = false,
+  fetchMore = () => {},
 }: {
   forHome: boolean
   forPost: boolean
+  fetchMore?: () => void
 }) {
+  const ref = useRef<HTMLLIElement>(null)
+  useInfiniteScroll(ref, fetchMore)
   return (
-    <div
+    <li
+      ref={ref}
       className={cx('block', 'skeletonBlock', {
         isNotHomeAndPost: !forHome && !forPost,
       })}
@@ -53,6 +60,6 @@ export function PostCardSkeleton({
           </span>
         </div>
       </div>
-    </div>
+    </li>
   )
 }

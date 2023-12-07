@@ -15,7 +15,6 @@ export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.d
   const timeframe = (params.timeframe ?? 'week') as Timeframe
   const prevTimeframe = useRef<Timeframe>(timeframe)
   const { actions } = useTimeframe()
-  const hasCheckedRef = useRef<boolean>(false)
 
   // query
   const initialOffset = initialPost.length
@@ -31,9 +30,9 @@ export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.d
     TrendingPostsQuery,
     TrendingPostsQueryVariables
   >({
-    queryKey: ['trendingPosts.infinite', { input: fetchInput }],
+    queryKey: ['trendingPosts.infinite', { fetchInput }],
     document: TrendingPostsDocument,
-    enabled: !!hasCheckedRef,
+    enabled: initialOffset !== 0,
     initialPageParam: {
       input: fetchInput,
     },
@@ -41,7 +40,6 @@ export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.d
       const trendingPosts = page.trendingPosts
       if (!trendingPosts) return undefined
       if (trendingPosts.length < limit) return undefined
-
       const offset = pages.flatMap((page) => page.trendingPosts).length + initialOffset
       return {
         limit,
@@ -49,8 +47,8 @@ export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.d
         timeframe,
       }
     },
-    retryDelay: 100,
-    staleTime: 1000 * 60 * 10,
+    retryDelay: 1000,
+    staleTime: 1000 * 60 * 5,
   })
 
   useEffect(() => {
@@ -76,7 +74,6 @@ export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.d
     posts,
     isLoading,
     isFetching,
-    originData: data,
     fetchMore,
   }
 }

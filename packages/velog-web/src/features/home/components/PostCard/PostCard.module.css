@@ -16,6 +16,10 @@
     }
   }
 
+  &.isRef {
+    background-color: red;
+  }
+
   .styleLink {
     display: block;
     color: inherit;
