@@ -1,7 +1,7 @@
-import distanceInWordsToNow from 'date-fns/formatDistanceToNow'
+import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import format from 'date-fns/format'
 import koLocale from 'date-fns/locale/ko'
-import { zonedTimeToUtc } from 'date-fns-tz'
+import { utcToZonedTime } from 'date-fns-tz'
 import { useEffect, useState } from 'react'
 
 export function useTimeFormat(date: string) {
@@ -11,9 +11,9 @@ export function useTimeFormat(date: string) {
   useEffect(() => {
     setLoading(true)
 
-    const d = new Date(date)
-    const now = zonedTimeToUtc(new Date(), 'Asia/Seoul')
-    const diff = now.getTime() - d.getTime()
+    const targetDate = utcToZonedTime(new Date(date), 'Asia/Seoul')
+    const now = utcToZonedTime(new Date(), 'Asia/Seoul')
+    const diff = now.getTime() - targetDate.getTime()
 
     const getTimeDescription = () => {
       // less than 5 minutes
@@ -21,20 +21,20 @@ export function useTimeFormat(date: string) {
         return '방금 전'
       }
       if (diff < 1000 * 60 * 60 * 24) {
-        return distanceInWordsToNow(d, { addSuffix: true, locale: koLocale })
+        return formatDistanceToNow(targetDate, { addSuffix: true, locale: koLocale })
       }
       if (diff < 1000 * 60 * 60 * 36) {
         return '어제'
       }
       if (diff < 1000 * 60 * 60 * 24 * 7) {
-        return distanceInWordsToNow(d, { addSuffix: true, locale: koLocale })
+        return formatDistanceToNow(targetDate, { addSuffix: true, locale: koLocale })
       }
-      return format(d, 'yyyy년 M월 d일')
+      return format(targetDate, 'yyyy년 M월 d일')
     }
 
     setTime(getTimeDescription())
     setLoading(false)
-  }, [date, time])
+  }, [date])
 
   return { isLoading, time }
 }
