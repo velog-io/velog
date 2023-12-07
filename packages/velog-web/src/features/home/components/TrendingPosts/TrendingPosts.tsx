@@ -6,7 +6,7 @@ import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
 import { Post } from '@/graphql/generated'
 import { redirect, useParams } from 'next/navigation'
 import { Timeframe } from '../../state/timeframe'
-import { sleep } from '@/lib/utils'
+
 type Props = {
   data: Post[]
 }
@@ -23,7 +23,7 @@ function TrendingPosts({ data }: Props) {
   useEffect(() => {
     if (hasEffectRun.current) return
     hasEffectRun.current = true
-
+    let timeout: NodeJS.Timeout
     const storageKey = `trendingPosts/${timeframe}`
     try {
       const infiniteData = localStorage.getItem(`trendingPosts/${timeframe}`)
@@ -39,17 +39,21 @@ function TrendingPosts({ data }: Props) {
 
       const position = Number(localStorage.getItem(`${storageKey}/scrollPosition`))
       if (!position) return
-      sleep(300).then(() => {
+      timeout = setTimeout(() => {
         window.scrollTo({
           top: position,
           behavior: 'instant',
         })
-      })
+      }, 1000)
     } catch (e) {
       redirect('/')
     } finally {
       localStorage.removeItem(storageKey)
       localStorage.removeItem(`${storageKey}/scrollPosition`)
+    }
+
+    return () => {
+      clearTimeout(timeout)
     }
   }, [data, timeframe])
 

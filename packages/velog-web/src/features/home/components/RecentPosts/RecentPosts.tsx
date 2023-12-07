@@ -5,7 +5,6 @@ import useRecentPosts from '@/features/home/hooks/useRecentPosts'
 import { useEffect, useRef, useState } from 'react'
 import { Post } from '@/graphql/generated'
 
-import { sleep } from '@/lib/utils'
 import { redirect } from 'next/navigation'
 
 type Props = {
@@ -23,6 +22,7 @@ function RecentPosts({ data }: Props) {
     hasEffectRun.current = true
 
     const storageKey = 'recentPosts'
+    let timeout: NodeJS.Timeout
     try {
       const infiniteData = localStorage.getItem(storageKey)
 
@@ -37,17 +37,21 @@ function RecentPosts({ data }: Props) {
 
       const position = Number(localStorage.getItem(`${storageKey}/scrollPosition`))
       if (!position) return
-      sleep(300).then(() => {
+      timeout = setTimeout(() => {
         window.scrollTo({
           top: position,
           behavior: 'instant',
         })
-      })
+      }, 1000)
     } catch (e) {
       redirect('/')
     } finally {
       localStorage.removeItem(storageKey)
       localStorage.removeItem(`${storageKey}/scrollPosition`)
+    }
+
+    return () => {
+      clearTimeout(timeout)
     }
   }, [data])
 
