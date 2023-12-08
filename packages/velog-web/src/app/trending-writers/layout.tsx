@@ -1,9 +1,9 @@
-import TrendingWriterLayout from '@/components/Layouts/TrendingWriterLayout'
+import ResponsiveLayout from '@/components/Layouts/ResponsiveLayout'
 
 type Props = {
   children: React.ReactNode
 }
 
 export default function Layout({ children }: Props) {
-  return <TrendingWriterLayout>{children}</TrendingWriterLayout>
+  return <ResponsiveLayout isCustomHeader={false}>{children}</ResponsiveLayout>
 }

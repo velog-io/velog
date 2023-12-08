@@ -1,4 +1,4 @@
-import VelogFollowLayout from '@/components/Layouts/VelogFollowLayout'
+import ResponsiveLayout from '@/components/Layouts/ResponsiveLayout'
 import { getUsernameFromParams } from '@/lib/utils'
 import getUserFollowerInfo from '@/prefetch/getUserFollowerInfo'
 import getVelogConfig from '@/prefetch/getVelogConfig'
@@ -25,8 +25,8 @@ export default async function Layout({ children, params }: Props) {
   }
 
   return (
-    <VelogFollowLayout username={username} userLogo={userLogo}>
+    <ResponsiveLayout isCustomHeader={true} username={username} userLogo={userLogo}>
       {children}
-    </VelogFollowLayout>
+    </ResponsiveLayout>
   )
 }
