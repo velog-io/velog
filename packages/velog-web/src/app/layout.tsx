@@ -31,12 +31,12 @@ export const metadata: Metadata = {
       {
         rel: 'apple-touch-icon',
         sizes: '152x152',
-        url: 'https://assets-stage.velcdn.com/favicon/apple/apple-icon-152x152.png',
+        url: '/favicon/apple/apple-icon-152x152.png',
       },
       {
         rel: 'apple-touch-icon',
         sizes: '180x180',
-        url: '/favicon/apple/apple-icon-180x180.png',
+        url: '/favicon/apple/apple-icon-180.png',
       },
       {
         rel: 'apple-touch-icon',
