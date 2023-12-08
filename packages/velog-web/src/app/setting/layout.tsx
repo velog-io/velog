@@ -4,6 +4,6 @@ type Props = {
   children: React.ReactNode
 }
 
-export default function SettingLayout({ children }: Props) {
+export default async function Layout({ children }: Props) {
   return <ResponsiveLayout>{children}</ResponsiveLayout>
 }

@@ -6,6 +6,7 @@ import { Metadata } from 'next'
 import VelogSearchPosts from '@/features/velog/components/VelogSearchPosts'
 import VelogPosts from '@/features/velog/components/VelogPosts'
 import getVelogPosts from '@/prefetch/getVelogPosts'
+import { notFound } from 'next/navigation'
 
 interface Props {
   params: { username: string }
@@ -17,8 +18,11 @@ export default async function VelogPostsPage({ params, searchParams }: Props) {
   const query = getTagByKey(searchParams, 'q')
   const username = getUsernameFromParams(params)
   const posts = await getVelogPosts({ username, tag })
-
   const userTags = await getUserTags(username)
+
+  if (!posts || !userTags) {
+    notFound()
+  }
 
   return (
     <>

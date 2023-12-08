@@ -9,14 +9,14 @@ const cx = bindClassNames(styles)
 
 type DefaultProps = {
   children: React.ReactNode
-  isCustomHeader: false
+  isCustomHeader?: false
 }
 
 type CustomLogoHeaderProps = {
   children: React.ReactNode
   username: string
   userLogo: UserLogo
-  isCustomHeader: true
+  isCustomHeader?: true
 }
 
 type Props = DefaultProps | CustomLogoHeaderProps
