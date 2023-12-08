@@ -23,7 +23,7 @@ export default function useVelogPosts({ username, tag, initialData, limit = 10 }
     document: VelogPostsDocument,
     initialPageParam: {
       input: {
-        cursor: initialData[initialData.length - 1].id,
+        cursor: initialData[initialData.length - 1]?.id,
         username,
         limit,
         tag,
