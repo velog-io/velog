@@ -31,7 +31,17 @@ export const metadata: Metadata = {
       {
         rel: 'apple-touch-icon',
         sizes: '152x152',
-        url: '/favicon/apple-icon-152x152.png',
+        url: 'https://assets-stage.velcdn.com/favicon/apple/apple-icon-152x152.png',
+      },
+      {
+        rel: 'apple-touch-icon',
+        sizes: '180x180',
+        url: '/favicon/apple/apple-icon-180x180.png',
+      },
+      {
+        rel: 'apple-touch-icon',
+        sizes: '240x240',
+        url: '/favicon/apple/apple-icon-240x240.png',
       },
     ],
   },

@@ -32,7 +32,7 @@ function RecentPosts({ data }: Props) {
       }
 
       const parsed: Post[] = JSON.parse(infiniteData) || []
-      const savedPosts = parsed?.slice(data.length)
+      const savedPosts = parsed?.slice(data.length) || []
       setInitialData([...data, ...savedPosts])
 
       const position = Number(localStorage.getItem(`${storageKey}/scrollPosition`))

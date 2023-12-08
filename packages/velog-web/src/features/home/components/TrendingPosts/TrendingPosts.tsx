@@ -34,7 +34,7 @@ function TrendingPosts({ data }: Props) {
       }
 
       const parsed: Post[] = JSON.parse(infiniteData) || []
-      const savedPosts = parsed?.slice(data.length)
+      const savedPosts = parsed?.slice(data.length) || []
       setInitialData([...data, ...savedPosts])
 
       const position = Number(localStorage.getItem(`${storageKey}/scrollPosition`))
@@ -46,6 +46,7 @@ function TrendingPosts({ data }: Props) {
         })
       }, 1000)
     } catch (e) {
+      console.log('getTrendingError,', e)
       redirect('/')
     } finally {
       localStorage.removeItem(storageKey)
