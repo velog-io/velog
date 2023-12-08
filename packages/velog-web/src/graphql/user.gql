@@ -39,6 +39,11 @@ query currentUser {
       thumbnail
       display_name
     }
+    user_meta {
+      id
+      email_notification
+      email_promotion
+    }
   }
 }
 

@@ -720,6 +720,11 @@ export type CurrentUserQuery = {
     username: string
     email: string | null
     profile: { id: string; thumbnail: string | null; display_name: string }
+    user_meta: {
+      id: string
+      email_notification: boolean | null
+      email_promotion: boolean | null
+    } | null
   } | null
 }
 
@@ -2085,6 +2090,11 @@ export const CurrentUserDocument = `
       id
       thumbnail
       display_name
+    }
+    user_meta {
+      id
+      email_notification
+      email_promotion
     }
   }
 }

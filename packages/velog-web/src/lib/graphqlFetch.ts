@@ -48,7 +48,7 @@ function convertToQueryString(body: GraphqlRequestBody): string {
     : ''
 
   // variables가 제공되지 않으면 빈 문자열을 반환
-  const variablesPart = body.variables
+  const variablesPart = body?.variables
     ? `&variables=${encodeURIComponent(JSON.stringify(body.variables))}`
     : ''
 

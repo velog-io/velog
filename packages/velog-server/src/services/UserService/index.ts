@@ -45,8 +45,10 @@ export class UserService implements Service {
       },
       include: {
         profile: true,
+        userMeta: true,
       },
     })
+
     if (!user) return null
 
     await this.db.userProfile.update({
