@@ -5,6 +5,7 @@ import {
   RecentPostsQuery,
   RecentPostsQueryVariables,
 } from '@/graphql/generated'
+import { infiniteRecentPostsQueryKey } from '@/graphql/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'
 
@@ -21,7 +22,7 @@ export default function useRecentPosts(initialPosts: Post[] = [], limit = ENV.de
     RecentPostsQuery,
     RecentPostsQueryVariables
   >({
-    queryKey: ['recentPosts.infinite'],
+    queryKey: infiniteRecentPostsQueryKey({ input: fetchInput }),
     document: RecentPostsDocument,
     enabled: initialPosts.length !== 0,
     initialPageParam: {

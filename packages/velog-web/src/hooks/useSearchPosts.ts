@@ -4,6 +4,7 @@ import {
   SearchPostsQuery,
   SearchPostsQueryVariables,
 } from '@/graphql/generated'
+import { infiniteSearchPostsQueryKey } from '@/graphql/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'
 
@@ -12,7 +13,7 @@ type Args = {
   username: string
 }
 
-export default function useVelogSearchPosts({ keyword, username }: Args) {
+export default function useSearchPosts({ keyword, username }: Args) {
   const fetchInput = useMemo(() => {
     return {
       keyword,
@@ -24,7 +25,7 @@ export default function useVelogSearchPosts({ keyword, username }: Args) {
     SearchPostsQuery,
     SearchPostsQueryVariables
   >({
-    queryKey: ['trendingPosts.infinite'],
+    queryKey: infiniteSearchPostsQueryKey({ input: fetchInput }),
     document: SearchPostsDocument,
     initialPageParam: {
       input: fetchInput,

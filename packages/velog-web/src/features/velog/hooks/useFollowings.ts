@@ -6,6 +6,7 @@ import {
   GetFollowingsQuery,
   GetFollowingsQueryVariables,
 } from '@/graphql/generated'
+import { infiniteGetFollowingsQueryKey } from '@/graphql/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'
 
@@ -21,7 +22,7 @@ export default function useFollowings(username: string, limit = 20) {
     GetFollowingsQuery,
     GetFollowingsQueryVariables
   >({
-    queryKey: ['getFollowings.infinite'],
+    queryKey: infiniteGetFollowingsQueryKey({ input: fetchInput }),
     document: GetFollowingsDocument,
     initialPageParam: {
       input: fetchInput,
