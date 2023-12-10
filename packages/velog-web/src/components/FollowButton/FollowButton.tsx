@@ -13,6 +13,7 @@ import { useModal } from '@/state/modal'
 import { useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { getUsernameFromParams } from '@/lib/utils'
+import { infiniteGetFollowersQueryKey } from '@/graphql/queryKey'
 
 const cx = bindClassNames(styles)
 
@@ -70,13 +71,13 @@ function FollowButton({ username, followingUserId, className, resetFollowCount }
 
   const onSuccess = () => {
     const targetUsername = getUsernameFromParams(params)
-    console.log('heeloo')
+
     queryClient.refetchQueries({
       queryKey: useGetUserFollowInfoQuery.getKey({ input: { username: targetUsername } }),
     })
-    console.log('user', targetUsername)
+
     queryClient.refetchQueries({
-      queryKey: ['trendingPosts.infinite', { input: { username: targetUsername } }],
+      queryKey: infiniteGetFollowersQueryKey({ input: { username: targetUsername } }),
     })
   }
 

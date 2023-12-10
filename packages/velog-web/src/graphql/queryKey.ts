@@ -18,13 +18,13 @@ export const infiniteRecentPostsQueryKey = (variables: RecentPostsQueryVariables
   variables,
 ]
 
-export const infiniteGetFollowersQueryKey = (variables: GetFollowersQueryVariables) => [
-  'getFollowers.infinite',
+export const infiniteTrendingWritersQueryKey = (variables: TrendingWritersQueryVariables) => [
+  'trendingWriters.infinite',
   variables,
 ]
 
-export const infiniteTrendingWritersQueryKey = (variables: TrendingWritersQueryVariables) => [
-  'trendingWriters.infinite',
+export const infiniteGetFollowersQueryKey = (variables: GetFollowersQueryVariables) => [
+  'getFollowers.infinite',
   variables,
 ]
 
