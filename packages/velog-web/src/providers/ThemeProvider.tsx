@@ -35,9 +35,10 @@ const themeScript = `
       themeMetaTag.setAttribute('name', 'theme-color')
       document.head.appendChild(themeMetaTag)
     }
+    themeMetaTag.setAttribute('media', \`(prefers-color-scheme: \${theme})\`)
     themeMetaTag.setAttribute('content', color)
 
-    // set scorll-scheme
+    // set scrollbar-scheme
     let scrollSchemeMetaTag = document.querySelector('meta[name="color-scheme"]')
     if (!scrollSchemeMetaTag) {
       scrollSchemeMetaTag = document.createElement('meta')

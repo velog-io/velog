@@ -18,10 +18,11 @@ export const setThemeColor = (theme: Theme) => {
     metaThemeColor.setAttribute('name', 'theme-color')
     document.head.appendChild(metaThemeColor)
   }
+  metaThemeColor.setAttribute('media', `(prefers-color-scheme: ${theme})`)
   metaThemeColor.setAttribute('content', color)
 }
 
-export const setScrollSchemeColor = (theme: Theme) => {
+export const setScrollBarSchemeColor = (theme: Theme) => {
   let scrollSchemeMetaTag = document.querySelector('meta[name="color-scheme"]')
   if (!scrollSchemeMetaTag) {
     scrollSchemeMetaTag = document.createElement('meta')
