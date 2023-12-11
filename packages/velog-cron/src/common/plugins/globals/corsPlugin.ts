@@ -11,17 +11,19 @@ const corsPlugin: FastifyPluginCallback = (fastify, opts, done) => {
   ]
 
   if (ENV.appEnv === 'development') {
-    corsWhitelist.push(/^http:\/\/localhost/)
+    // corsWhitelist.push(/^http:\/\/localhost/)
   }
 
   fastify.register(cors, {
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    methods: ['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     optionsSuccessStatus: 204,
     origin: (origin, callback) => {
       if (!origin || corsWhitelist.some((re) => re.test(origin))) {
+        console.log('hello')
         callback(null, true)
       } else {
+        console.log('forbiddenError')
         callback(new ForbiddenError(), false)
       }
     },

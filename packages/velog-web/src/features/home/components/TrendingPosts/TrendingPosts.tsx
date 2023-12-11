@@ -4,7 +4,7 @@ import PostCardGrid from '@/features/home/components/PostCardGrid'
 import { useEffect, useRef, useState } from 'react'
 import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
 import { Post } from '@/graphql/generated'
-import { redirect, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { Timeframe } from '../../state/timeframe'
 
 type Props = {
@@ -47,7 +47,7 @@ function TrendingPosts({ data }: Props) {
       }, 1000)
     } catch (e) {
       console.log('getTrendingError,', e)
-      redirect('/')
+      window.location.href = '/'
     } finally {
       localStorage.removeItem(storageKey)
       localStorage.removeItem(`${storageKey}/scrollPosition`)
