@@ -5,7 +5,7 @@ services:
       context: ./
       dockerfile: Dockerfile
       args:
-        DOCKER_ENV: 'production'
+        DOCKER_ENV: 'stage'
     env_file:
       - ../../.env
     tty: true
