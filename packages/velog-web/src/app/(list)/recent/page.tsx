@@ -1,7 +1,7 @@
 import getRecentPosts from '@/prefetch/getRecentPosts'
 import RecentPosts from '@/features/home/components/RecentPosts'
 import { Metadata } from 'next'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: '최신 포스트 - velog',
@@ -12,7 +12,7 @@ export default async function RecentHome() {
   const data = await getRecentPosts({ limit: 50 })
 
   if (!data) {
-    redirect('/')
+    notFound()
   }
 
   return <RecentPosts data={data} />

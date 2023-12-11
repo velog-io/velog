@@ -45,9 +45,8 @@ function TrendingPosts({ data }: Props) {
           behavior: 'instant',
         })
       }, 1000)
-    } catch (e) {
-      console.log('getTrendingError,', e)
-      window.location.href = '/'
+    } catch (error) {
+      console.log('getTrendingPosts from storage error', error)
     } finally {
       localStorage.removeItem(storageKey)
       localStorage.removeItem(`${storageKey}/scrollPosition`)
