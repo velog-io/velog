@@ -23,11 +23,11 @@ export const setThemeColor = (theme: Theme) => {
 }
 
 export const setScrollBarSchemeColor = (theme: Theme) => {
-  let scrollSchemeMetaTag = document.querySelector('meta[name="color-scheme"]')
-  if (!scrollSchemeMetaTag) {
-    scrollSchemeMetaTag = document.createElement('meta')
-    scrollSchemeMetaTag.setAttribute('name', 'color-scheme')
-    document.head.appendChild(scrollSchemeMetaTag)
+  let scrollBarSchemeMetaTag = document.querySelector('meta[name="color-scheme"]')
+  if (!scrollBarSchemeMetaTag) {
+    scrollBarSchemeMetaTag = document.createElement('meta')
+    scrollBarSchemeMetaTag.setAttribute('name', 'color-scheme')
+    document.head.appendChild(scrollBarSchemeMetaTag)
   }
-  scrollSchemeMetaTag.setAttribute('content', theme)
+  scrollBarSchemeMetaTag.setAttribute('content', theme)
 }

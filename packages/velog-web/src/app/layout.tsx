@@ -1,7 +1,7 @@
 import '@/styles/global.css'
 import '@/styles/reset.css'
 import CoreProvider from '@/providers/CoreProvider'
-import { Metadata } from 'next'
+import { Metadata, Viewport } from 'next'
 
 export const metadata: Metadata = {
   title: 'velog',
@@ -50,6 +50,13 @@ export const metadata: Metadata = {
     'og:image': 'https://images.velog.io/velog.png',
     'format-detection': 'telephone=no, date=no, email=no, address=no',
   },
+}
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#1e1e1e' },
+  ],
 }
 
 type Props = {
