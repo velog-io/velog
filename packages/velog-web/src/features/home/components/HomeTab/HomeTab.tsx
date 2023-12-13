@@ -7,7 +7,7 @@ import useToggle from '@/hooks/useToggle'
 import { useRef } from 'react'
 import { useTimeframeValue } from '@/features/home/state/timeframe'
 import ActiveLink from '@/components/ActiveLink/ActiveLink'
-import { MdAccessTime, MdArrowDropDown, MdMoreVert, MdTrendingUp } from 'react-icons/md'
+import { MdAccessTime, MdArrowDropDown, MdMoreVert, MdTrendingUp, MdRssFeed } from 'react-icons/md'
 import { motion } from 'framer-motion'
 import { timeframes } from '@/features/home/utils/timeframeMap'
 import TimeframePicker from '@/features/home/components/TimeframePicker'
@@ -29,6 +29,7 @@ function HomeTab({ isFloatingHeader = false }: Props) {
   const { isFetching } = useTimeframeValue()
   const timeframeRef = useRef<HTMLDivElement | null>(null)
   const isRecent = pathname === '/recent'
+  const isFeed = pathname === '/feed'
 
   const handleToggle = () => {
     if (isFetching) return
@@ -38,7 +39,7 @@ function HomeTab({ isFloatingHeader = false }: Props) {
   return (
     <div className={cx('wrapper', 'mainHeaderResponsive', { isFloating: isFloatingHeader })}>
       <div className={cx('left')}>
-        <div className={cx('block')}>
+        <div className={cx('tab')}>
           <ActiveLink
             href="/trending/week"
             className={cx({
@@ -52,14 +53,20 @@ function HomeTab({ isFloatingHeader = false }: Props) {
             <MdAccessTime />
             <span>최신</span>
           </ActiveLink>
+          <ActiveLink href="/feed" className={cx({ active: pathname.includes('/feed') })}>
+            <MdRssFeed />
+            <span>피드</span>
+          </ActiveLink>
           <motion.div
             initial={false}
             animate={{
-              left: isRecent ? '50%' : '0%',
+              left: isFeed ? '71.33%' : isRecent ? '37.33%' : '1%',
             }}
             className={cx('indicator')}
           />
         </div>
+      </div>
+      <div className={cx('right')}>
         {(pathname === '/' || pathname.includes('/trending')) && (
           <>
             <div className={cx('selector')} onClick={handleToggle} ref={timeframeRef}>
@@ -69,9 +76,9 @@ function HomeTab({ isFloatingHeader = false }: Props) {
             <TimeframePicker isVisible={timeframePicker} onClose={toggleTimeframePicker} />
           </>
         )}
+        <MdMoreVert onClick={toggleMoreButton} className={cx('extra')} />
+        <HomeMoreButton isVisible={moreButton} onClose={toggleMoreButton} />
       </div>
-      <MdMoreVert onClick={toggleMoreButton} className={cx('extra')} />
-      <HomeMoreButton isVisible={moreButton} onClose={toggleMoreButton} />
     </div>
   )
 }

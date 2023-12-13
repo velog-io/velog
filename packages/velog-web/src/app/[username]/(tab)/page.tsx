@@ -13,8 +13,6 @@ export default async function VelogPage({ params }: Props) {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // read route params
-
   const username = getUsernameFromParams(params)
   const user = await getUser(username)
 
