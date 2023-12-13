@@ -1,4 +1,5 @@
 import {
+  FeedPostsQueryVariables,
   GetFollowersQueryVariables,
   GetFollowingsQueryVariables,
   RecentPostsQueryVariables,
@@ -40,5 +41,10 @@ export const infiniteVelogPostsQueryKey = (variables: VelogPostsQueryVariables) 
 
 export const infiniteSearchPostsQueryKey = (variables: SearchPostsQueryVariables) => [
   'searchPosts.infinite',
+  variables,
+]
+
+export const infiniteFeedPostsQueryKey = (variables: FeedPostsQueryVariables) => [
+  'feedPosts.infinite',
   variables,
 ]

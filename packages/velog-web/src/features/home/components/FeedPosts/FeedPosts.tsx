@@ -1,14 +1,32 @@
 'use client'
 
-import styles from './FeedPosts.module.css'
-import { bindClassNames } from '@/lib/styles/bindClassNames'
+import { Post } from '@/graphql/generated'
+import PostCardGrid from '../PostCardGrid'
+import { useEffect, useState } from 'react'
+import useFeedPosts from '../../hooks/useFeedPosts'
 
-const cx = bindClassNames(styles)
+type Props = {
+  data: Post[]
+}
 
-type Props = {}
+function FeedPosts({ data }: Props) {
+  const [initialData, setInitialData] = useState<Post[]>([])
+  const { posts, isFetching, fetchMore, isLoading } = useFeedPosts(initialData)
 
-function FeedPosts({}: Props) {
-  return <div className={cx('block')}></div>
+  useEffect(() => {
+    setInitialData(data)
+  }, [data])
+
+  return (
+    <PostCardGrid
+      posts={posts}
+      forHome={true}
+      forPost={false}
+      isFetching={isFetching}
+      isLoading={isLoading}
+      fetchMore={fetchMore}
+    />
+  )
 }
 
 export default FeedPosts

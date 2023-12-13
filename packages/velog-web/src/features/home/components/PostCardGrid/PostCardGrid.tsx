@@ -36,10 +36,11 @@ function PostCardGrid({
   const pathname = usePathname()
   const timeframe = (params.timeframe ?? 'week') as Timeframe
 
+  const isFeed = pathname === '/feed'
+  const isRecent = pathname === '/recent'
   // TODO: remove
   const onPostCardClick = () => {
-    const isRecent = pathname === '/recent'
-    const prefix = isRecent ? 'recentPosts' : `trendingPosts/${timeframe}`
+    const prefix = isRecent ? 'recentPosts' : !isFeed ? `trendingPosts/${timeframe}` : ''
 
     const stringify = JSON.stringify(posts)
     const scrollHeight = window.scrollY.toString()
@@ -55,7 +56,7 @@ function PostCardGrid({
       {posts.map((post, i) => (
         <Fragment key={post.id}>
           <PostCard post={post} forHome={forHome} forPost={forPost} onClick={onPostCardClick} />
-          {posts.length - 1 === i && (
+          {posts.length - 1 === i && !isFeed && (
             <PostCardSkeleton forHome={forHome} forPost={forPost} fetchMore={fetchMore} />
           )}
         </Fragment>
