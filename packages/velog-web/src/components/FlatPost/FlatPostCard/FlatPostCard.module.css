@@ -28,7 +28,7 @@
     font-size: 1.5rem;
     margin: revert;
     color: var(--text1);
-    word-break: keep-all;
+    word-break: break-all;
     @media screen and (max-width: 768px) {
       font-size: 1rem;
     }
@@ -40,7 +40,7 @@
     font-size: 1rem;
     color: var(--text2);
     word-break: keep-all;
-    overflow-wrap: break-word;
+    word-break: break-all;
     @media screen and (max-width: 768px) {
       font-size: 0.875rem;
       margin-bottom: 1.5rem;

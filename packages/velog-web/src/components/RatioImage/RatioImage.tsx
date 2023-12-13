@@ -28,7 +28,15 @@ function RatioImage({
   const paddingTop = `${(heightRatio / widthRatio) * 100}%`
   return (
     <div className={cx('block', className)} style={{ paddingTop }}>
-      <Image src={src} alt={alt} width={width} height={height} priority={true} fill={fill} />
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        priority={true}
+        fill={fill}
+        blurDataURL={src}
+      />
     </div>
   )
 }

@@ -16,7 +16,7 @@ const corsPlugin: FastifyPluginCallback = (fastify, opts, done) => {
 
   fastify.register(cors, {
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    methods: ['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     optionsSuccessStatus: 204,
     origin: (origin, callback) => {
       if (!origin || corsWhitelist.some((re) => re.test(origin))) {

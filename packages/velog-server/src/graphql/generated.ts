@@ -46,6 +46,11 @@ export type Comment = {
   user?: Maybe<User>
 }
 
+export type FeedPostsInput = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+}
+
 export type FollowInput = {
   followingUserId: Scalars['ID']['input']
 }
@@ -182,6 +187,7 @@ export type PostHistory = {
 
 export type Query = {
   currentUser?: Maybe<User>
+  feedPosts: Array<Post>
   followers: Array<FollowResult>
   followings: Array<FollowResult>
   post?: Maybe<Post>
@@ -197,6 +203,10 @@ export type Query = {
   user?: Maybe<User>
   userTags?: Maybe<UserTags>
   velogConfig?: Maybe<VelogConfig>
+}
+
+export type QueryFeedPostsArgs = {
+  input: FeedPostsInput
 }
 
 export type QueryFollowersArgs = {
@@ -518,6 +528,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
   Comment: ResolverTypeWrapper<CommentModel>
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
+  FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
   FollowResult: ResolverTypeWrapper<
     Omit<FollowResult, 'profile'> & { profile: ResolversTypes['UserProfile'] }
@@ -590,6 +601,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output']
   Comment: CommentModel
   Date: Scalars['Date']['output']
+  FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
   FollowResult: Omit<FollowResult, 'profile'> & { profile: ResolversParentTypes['UserProfile'] }
   GetFollowInput: GetFollowInput
@@ -792,6 +804,12 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
+  feedPosts?: Resolver<
+    Array<ResolversTypes['Post']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryFeedPostsArgs, 'input'>
+  >
   followers?: Resolver<
     Array<ResolversTypes['FollowResult']>,
     ParentType,

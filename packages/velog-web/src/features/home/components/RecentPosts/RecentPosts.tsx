@@ -5,8 +5,6 @@ import useRecentPosts from '@/features/home/hooks/useRecentPosts'
 import { useEffect, useRef, useState } from 'react'
 import { Post } from '@/graphql/generated'
 
-import { redirect } from 'next/navigation'
-
 type Props = {
   data: Post[]
 }
@@ -43,8 +41,8 @@ function RecentPosts({ data }: Props) {
           behavior: 'instant',
         })
       }, 1000)
-    } catch (e) {
-      redirect('/')
+    } catch (error) {
+      console.log('getRecentPosts from storage error', error)
     } finally {
       localStorage.removeItem(storageKey)
       localStorage.removeItem(`${storageKey}/scrollPosition`)

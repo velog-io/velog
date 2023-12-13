@@ -6,6 +6,7 @@ import {
   TrendingPostsQuery,
   TrendingPostsQueryVariables,
 } from '@/graphql/generated'
+import { infiniteTrendingPostsQueryKey } from '@/graphql/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
@@ -30,7 +31,7 @@ export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.d
     TrendingPostsQuery,
     TrendingPostsQueryVariables
   >({
-    queryKey: ['trendingPosts.infinite', { fetchInput }],
+    queryKey: infiniteTrendingPostsQueryKey({ input: fetchInput }),
     document: TrendingPostsDocument,
     enabled: initialOffset !== 0,
     initialPageParam: {

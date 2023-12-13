@@ -4,6 +4,7 @@ import {
   VelogPostsQuery,
   VelogPostsQueryVariables,
 } from '@/graphql/generated'
+import { infiniteVelogPostsQueryKey } from '@/graphql/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'
 
@@ -15,11 +16,20 @@ type Args = {
 }
 
 export default function useVelogPosts({ username, tag, initialData, limit = 10 }: Args) {
+  const fetchInput = useMemo(() => {
+    return {
+      cursor: initialData[initialData.length - 1]?.id,
+      username,
+      limit,
+      tag,
+    }
+  }, [username, limit, initialData, tag])
+
   const { data, fetchMore, isFetching, isLoading } = useCustomInfiniteQuery<
     VelogPostsQuery,
     VelogPostsQueryVariables
   >({
-    queryKey: ['velogPosts.infinite'],
+    queryKey: infiniteVelogPostsQueryKey({ input: fetchInput }),
     document: VelogPostsDocument,
     initialPageParam: {
       input: {

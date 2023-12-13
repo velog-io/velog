@@ -4,6 +4,7 @@ import {
   GetFollowersQuery,
   GetFollowersQueryVariables,
 } from '@/graphql/generated'
+import { infiniteGetFollowersQueryKey } from '@/graphql/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'
 
@@ -19,7 +20,7 @@ export default function useFollowers(username: string, limit = 10) {
     GetFollowersQuery,
     GetFollowersQueryVariables
   >({
-    queryKey: ['trendingPosts.infinite'],
+    queryKey: infiniteGetFollowersQueryKey({ input: fetchInput }),
     document: GetFollowersDocument,
     initialPageParam: {
       input: fetchInput,

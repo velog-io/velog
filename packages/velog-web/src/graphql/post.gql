@@ -134,6 +134,30 @@ query trendingPosts($input: TrendingPostsInput!) {
   }
 }
 
+query feedPosts($input: FeedPostsInput!) {
+  feedPosts(input: $input) {
+    id
+    title
+    short_description
+    thumbnail
+    likes
+    user {
+      id
+      username
+      profile {
+        id
+        thumbnail
+        display_name
+      }
+    }
+    url_slug
+    released_at
+    updated_at
+    is_private
+    comments_count
+  }
+}
+
 query velogPosts($input: GetPostsInput!) {
   posts(input: $input) {
     id

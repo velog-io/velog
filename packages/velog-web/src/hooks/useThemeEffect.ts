@@ -1,6 +1,6 @@
 'use client'
 
-import { saveThemeToStorage, setThemeColor, setScrollSchemeColor } from '@/lib/themeHelpers'
+import { saveThemeToStorage, setThemeColor, setScrollBarSchemeColor } from '@/lib/themeHelpers'
 import { useTheme } from '@/state/theme'
 import { useEffect } from 'react'
 
@@ -27,6 +27,6 @@ export function useThemeEffect() {
     document.body.dataset.theme = currentTheme
     saveThemeToStorage(currentTheme)
     setThemeColor(currentTheme)
-    setScrollSchemeColor(currentTheme)
+    setScrollBarSchemeColor(currentTheme)
   }, [actions, currentTheme])
 }

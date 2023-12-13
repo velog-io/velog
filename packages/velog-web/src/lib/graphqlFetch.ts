@@ -18,7 +18,11 @@ export default async function graphqlFetch<T>({
   const res = await fetch(targetUrl, {
     method,
     body: method.toUpperCase() === 'POST' ? JSON.stringify(body) : undefined,
-    headers: new Headers({ 'Content-Type': 'application/json', ...headers }),
+    headers: new Headers({
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...headers,
+    }),
     credentials: 'include',
     next,
     cache,

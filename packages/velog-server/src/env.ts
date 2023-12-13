@@ -14,6 +14,12 @@ const envFiles: EnvFiles = {
   stage: '.env.stage',
 }
 
+if (!process.env.DOCKER_ENV && process.env.NODE_ENV !== 'development') {
+  console.error(
+    'Development environment was initiated despite the absence of the Docker environment.',
+  )
+}
+
 const dockerEnv = (process.env.DOCKER_ENV as DockerEnv) || 'development'
 const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
   ? 'production'

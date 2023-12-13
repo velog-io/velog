@@ -5,9 +5,10 @@ import VelogTag from '../VelogTag'
 import styles from './VelogSearchPosts.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useRef } from 'react'
-import useVelogSearchPosts from '../../hooks/useVelogSearchPosts'
+
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { FlatPostCardList, FlatPostCardListSkeleton } from '@/components/FlatPost/FlatPostCardList'
+import useSearchPosts from '@/hooks/useSearchPosts'
 
 const cx = bindClassNames(styles)
 
@@ -19,7 +20,7 @@ type Props = {
 }
 
 function VelogSearchPosts({ username, tag, userTags, keyword }: Props) {
-  const { posts, count, isLoading, fetchMore } = useVelogSearchPosts({
+  const { posts, count, isLoading, fetchMore } = useSearchPosts({
     username,
     keyword,
   })

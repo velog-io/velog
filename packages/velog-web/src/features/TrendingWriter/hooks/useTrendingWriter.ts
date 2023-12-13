@@ -4,6 +4,7 @@ import {
   TrendingWritersQueryVariables,
   TrendingWriter,
 } from '@/graphql/generated'
+import { infiniteTrendingWritersQueryKey } from '@/graphql/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'
 
@@ -24,7 +25,7 @@ export default function useTrendingWriters({ limit = 20, initialData = [] }: Arg
     TrendingWritersQuery,
     TrendingWritersQueryVariables
   >({
-    queryKey: ['getTrendingWriters.infinite'],
+    queryKey: infiniteTrendingWritersQueryKey({ input: fetchInput }),
     document: TrendingWritersDocument,
     initialPageParam: {
       input: fetchInput,

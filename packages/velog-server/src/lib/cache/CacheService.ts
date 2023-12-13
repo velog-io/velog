@@ -16,7 +16,7 @@ export class CacheService implements Service {
   }
   get generateKey() {
     return {
-      trending: (timeframe: string, offset: number, limit: number) =>
+      trendingPosts: (timeframe: string, offset: number, limit: number) =>
         `trending-${timeframe[0]}-${offset}-${limit}`,
     }
   }
