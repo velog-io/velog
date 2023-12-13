@@ -49,6 +49,11 @@ export type Comment = {
   user: Maybe<User>
 }
 
+export type FeedPostsInput = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+}
+
 export type FollowInput = {
   followingUserId: Scalars['ID']['input']
 }
@@ -185,6 +190,7 @@ export type PostHistory = {
 
 export type Query = {
   currentUser: Maybe<User>
+  feedPosts: Array<Post>
   followers: Array<FollowResult>
   followings: Array<FollowResult>
   post: Maybe<Post>
@@ -200,6 +206,10 @@ export type Query = {
   user: Maybe<User>
   userTags: Maybe<UserTags>
   velogConfig: Maybe<VelogConfig>
+}
+
+export type QueryFeedPostsArgs = {
+  input: FeedPostsInput
 }
 
 export type QueryFollowersArgs = {
@@ -587,6 +597,30 @@ export type TrendingPostsQueryVariables = Exact<{
 
 export type TrendingPostsQuery = {
   trendingPosts: Array<{
+    id: string
+    title: string | null
+    short_description: string | null
+    thumbnail: string | null
+    likes: number | null
+    url_slug: string | null
+    released_at: any | null
+    updated_at: any
+    is_private: boolean
+    comments_count: number | null
+    user: {
+      id: string
+      username: string
+      profile: { id: string; thumbnail: string | null; display_name: string }
+    } | null
+  }>
+}
+
+export type FeedPostsQueryVariables = Exact<{
+  input: FeedPostsInput
+}>
+
+export type FeedPostsQuery = {
+  feedPosts: Array<{
     id: string
     title: string | null
     short_description: string | null
@@ -1499,6 +1533,122 @@ export const useSuspenseInfiniteTrendingPostsQuery = <
 
 useSuspenseInfiniteTrendingPostsQuery.getKey = (variables: TrendingPostsQueryVariables) => [
   'trendingPosts.infiniteSuspense',
+  variables,
+]
+
+export const FeedPostsDocument = `
+    query feedPosts($input: FeedPostsInput!) {
+  feedPosts(input: $input) {
+    id
+    title
+    short_description
+    thumbnail
+    likes
+    user {
+      id
+      username
+      profile {
+        id
+        thumbnail
+        display_name
+      }
+    }
+    url_slug
+    released_at
+    updated_at
+    is_private
+    comments_count
+  }
+}
+    `
+
+export const useFeedPostsQuery = <TData = FeedPostsQuery, TError = unknown>(
+  variables: FeedPostsQueryVariables,
+  options?: Omit<UseQueryOptions<FeedPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<FeedPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<FeedPostsQuery, TError, TData>({
+    queryKey: ['feedPosts', variables],
+    queryFn: fetcher<FeedPostsQuery, FeedPostsQueryVariables>(FeedPostsDocument, variables),
+    ...options,
+  })
+}
+
+useFeedPostsQuery.getKey = (variables: FeedPostsQueryVariables) => ['feedPosts', variables]
+
+export const useSuspenseFeedPostsQuery = <TData = FeedPostsQuery, TError = unknown>(
+  variables: FeedPostsQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<FeedPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<FeedPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<FeedPostsQuery, TError, TData>({
+    queryKey: ['feedPostsSuspense', variables],
+    queryFn: fetcher<FeedPostsQuery, FeedPostsQueryVariables>(FeedPostsDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseFeedPostsQuery.getKey = (variables: FeedPostsQueryVariables) => [
+  'feedPostsSuspense',
+  variables,
+]
+
+export const useInfiniteFeedPostsQuery = <TData = InfiniteData<FeedPostsQuery>, TError = unknown>(
+  variables: FeedPostsQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<FeedPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<FeedPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<FeedPostsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['feedPosts.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<FeedPostsQuery, FeedPostsQueryVariables>(FeedPostsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteFeedPostsQuery.getKey = (variables: FeedPostsQueryVariables) => [
+  'feedPosts.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteFeedPostsQuery = <
+  TData = InfiniteData<FeedPostsQuery>,
+  TError = unknown,
+>(
+  variables: FeedPostsQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<FeedPostsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<FeedPostsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<FeedPostsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['feedPosts.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<FeedPostsQuery, FeedPostsQueryVariables>(FeedPostsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteFeedPostsQuery.getKey = (variables: FeedPostsQueryVariables) => [
+  'feedPosts.infiniteSuspense',
   variables,
 ]
 

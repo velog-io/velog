@@ -15,6 +15,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
       const refreshToken: string | undefined = request.cookies['refresh_token']
       const authorization = request.headers['authorization']
 
+      console.log('req', request.headers)
       if (!accessToken && authorization) {
         accessToken = authorization.split('Bearer ')[1]
       }

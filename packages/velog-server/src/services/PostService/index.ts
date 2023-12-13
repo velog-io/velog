@@ -645,7 +645,7 @@ export class PostService implements Service {
   }
   async getFeedPosts(input: FeedPostsInput, singedUserId?: string): Promise<Post[]> {
     if (!singedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      return []
     }
 
     const { offset = 0, limit = 20 } = input
