@@ -1,7 +1,7 @@
-import Link from 'next/link'
 import styles from './TagItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { escapeForUrl } from '@/lib/utils'
+import VLink from '@/components/VLink'
 
 const cx = bindClassNames(styles)
 
@@ -13,9 +13,9 @@ type Props = {
 function TagItem({ name, link }: Props) {
   if (link) {
     return (
-      <Link className={cx('tagLink', 'default')} href={`/tags/${escapeForUrl(name)}`}>
+      <VLink className={cx('tagLink', 'default')} href={`/tags/${escapeForUrl(name)}`}>
         {name}
-      </Link>
+      </VLink>
     )
   }
   return <div className={cx('default')}>{name}</div>

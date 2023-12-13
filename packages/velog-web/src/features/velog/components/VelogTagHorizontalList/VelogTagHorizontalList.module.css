@@ -27,6 +27,7 @@
   align-items: center;
   line-height: 1.5;
   text-decoration: none;
+  user-select: none;
 
   & + & {
     margin-left: 8px;
@@ -34,9 +35,9 @@
 
   &.active {
     background: var(--primary1);
-    color: white;
+    color: var(--button-text);
     span {
-      color: white;
+      color: var(--button-text);
       opacity: 0.8;
     }
   }
