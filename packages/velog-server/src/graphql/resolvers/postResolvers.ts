@@ -76,21 +76,25 @@ const postResolvers: Resolvers = {
       const postService = container.resolve(PostService)
       return await postService.getPost(input, ctx.user?.id)
     },
-    recentPosts: async (_, { input }, ctx) => {
+    posts: async (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
-      return await postService.getRecentPosts(input, ctx.user?.id)
+      return await postService.getPosts(input, ctx.user?.id)
     },
     trendingPosts: async (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
       return await postService.getTrendingPosts(input, ctx.ip)
     },
+    recentPosts: async (_, { input }, ctx) => {
+      const postService = container.resolve(PostService)
+      return await postService.getRecentPosts(input, ctx.user?.id)
+    },
+    feedPosts: async (_, { input }, ctx) => {
+      const postService = container.resolve(PostService)
+      return await postService.getFeedPosts(input, ctx.user?.id)
+    },
     readingList: async (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
       return await postService.getReadingList(input, ctx.user?.id)
-    },
-    posts: async (_, { input }, ctx) => {
-      const postService = container.resolve(PostService)
-      return await postService.getPosts(input, ctx.user?.id)
     },
     searchPosts: async (_, { input }, ctx) => {
       const postService = container.resolve(PostService)

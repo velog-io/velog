@@ -2,6 +2,7 @@ import removeMd from 'remove-markdown'
 import { Post, PostTag, Prisma, Tag, User } from '@prisma/client'
 import { container, injectable, singleton } from 'tsyringe'
 import {
+  FeedPostsInput,
   GetPostsInput,
   GetSearchPostsInput,
   ReadPostInput,
@@ -25,10 +26,11 @@ import { TagService } from '@services/TagService/index.js'
 
 interface Service {
   getPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
-  getReadingList(input: ReadingListInput, signedUserId?: string): Promise<Post[]>
-  getRecentPosts(input: RecentPostsInput, signedUserId?: string): Promise<Post[]>
-  getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
   getPost(input: ReadPostInput, signedUserId?: string): Promise<Post | null>
+  getReadingList(input: ReadingListInput, signedUserId?: string): Promise<Post[]>
+  getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
+  getRecentPosts(input: RecentPostsInput, signedUserId?: string): Promise<Post[]>
+  getFeedPosts(input: FeedPostsInput, singedUserId?: string): Promise<Post[]>
   updatePostScore(postId: string): Promise<void>
   shortDescription(post: Post): string
   recommendedPosts(post: Post): Promise<Post[]>
@@ -157,10 +159,7 @@ export class PostService implements Service {
     })
     return logs.map((log) => log.post)
   }
-  public async getRecentPosts(
-    input: RecentPostsInput,
-    userId: string | undefined,
-  ): Promise<Post[]> {
+  public async getRecentPosts(input: RecentPostsInput, singedUserId?: string): Promise<Post[]> {
     const { cursor, limit = 20 } = input
 
     if (limit > 100) {
@@ -171,7 +170,7 @@ export class PostService implements Service {
       is_temp: false,
     }
 
-    if (!userId) {
+    if (!singedUserId) {
       whereInput = { ...whereInput, is_private: false }
     } else {
       whereInput = {
@@ -183,7 +182,7 @@ export class PostService implements Service {
                 is_private: false,
               },
               {
-                fk_user_id: userId,
+                fk_user_id: singedUserId,
               },
             ],
           },
@@ -263,7 +262,7 @@ export class PostService implements Service {
       throw new BadRequestError('Limit is too high')
     }
 
-    const cacheKey = this.cache.generateKey.trending(timeframe, offset, limit)
+    const cacheKey = this.cache.generateKey.trendingPosts(timeframe, offset, limit)
     let postIds: string[] | undefined = this.cache.lruCache.get(cacheKey)
     if (!postIds) {
       const now = this.utils.now
@@ -643,6 +642,38 @@ export class PostService implements Service {
     })
 
     return result
+  }
+  async getFeedPosts(input: FeedPostsInput, singedUserId?: string): Promise<Post[]> {
+    if (!singedUserId) {
+      throw new UnauthorizedError('Not Logged In')
+    }
+
+    const { offset = 0, limit = 20 } = input
+
+    if (limit < 0 || offset < 0) {
+      throw new BadRequestError('Invalid value')
+    }
+
+    if (limit > 100) {
+      throw new BadRequestError('Limit is too high')
+    }
+
+    const feeds = await this.db.feed.findMany({
+      where: {
+        fk_user_id: singedUserId,
+      },
+      include: {
+        post: true,
+      },
+      take: limit,
+      skip: offset,
+      orderBy: {
+        created_at: 'desc',
+      },
+    })
+
+    const posts = feeds.map((feed) => feed.post)
+    return posts
   }
 }
 

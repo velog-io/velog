@@ -67,6 +67,7 @@ type Query {
   posts(input: GetPostsInput!): [Post!]!
   recentPosts(input: RecentPostsInput!): [Post!]!
   trendingPosts(input: TrendingPostsInput!): [Post!]!
+  feedPosts(input: FeedPostsInput!): [Post!]!
   searchPosts(input: GetSearchPostsInput!): SearchResult!
   # postHistories(post_id: ID): [PostHistory]
   # lastPostHistory(post_id: ID!): PostHistory
@@ -143,15 +144,20 @@ input ReadingListInput {
   limit: Int
 }
 
+input TrendingPostsInput {
+  offset: Int
+  limit: Int
+  timeframe: String
+}
+
 input RecentPostsInput {
   cursor: ID
   limit: Int
 }
 
-input TrendingPostsInput {
+input FeedPostsInput {
   offset: Int
-  limit: Int
-  timeframe: String
+  limit: PositiveInt
 }
 
 input LikePostInput {
