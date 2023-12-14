@@ -66,6 +66,10 @@ const env = z.object({
   codenaryApiKey: z.string(),
   codenaryCallback: z.string(),
   redisHost: z.string(),
+  slackUrl: z.string(),
+  blacklistUsername: z.array(z.string()),
+  blacklistIp: z.array(z.string()),
+  bucketName: z.string(),
 })
 
 export const ENV = env.parse({
@@ -96,4 +100,8 @@ export const ENV = env.parse({
   codenaryApiKey: process.env.CODENARY_API_KEY,
   codenaryCallback: process.env.CODENARY_CALLBACK,
   redisHost: process.env.REDIS_HOST,
+  slackUrl: `https://hooks.slack.com/services/${process.env.SLACK_TOKEN}`,
+  blacklistUsername: (process.env.BLACKLIST_USERNAME ?? '').split(','),
+  blacklistIp: (process.env.BLACKLIST_IP ?? '').split(','),
+  bucketName: process.env.BUCKET_NAME,
 })
