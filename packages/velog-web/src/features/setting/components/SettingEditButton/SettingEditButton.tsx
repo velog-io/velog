@@ -5,10 +5,17 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 
 const cx = bindClassNames(styles)
 
-type Props = {}
+type Props = {
+  onClick?: () => void
+  customText?: string
+}
 
-function SettingEditButton({}: Props) {
-  return <div className={cx('block')}></div>
+function SettingEditButton({ onClick, customText = '수정' }: Props) {
+  return (
+    <button className={cx('block')} onClick={onClick}>
+      {customText}
+    </button>
+  )
 }
 
 export default SettingEditButton

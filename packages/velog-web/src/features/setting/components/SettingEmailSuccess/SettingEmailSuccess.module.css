@@ -1,2 +1,15 @@
 .block {
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  padding-right: 12px;
+  color: var(--teal6);
+  white-space: pre;
+  .icon {
+    margin-right: 10px;
+  }
+  .description {
+    font-size: 14px;
+    text-align: center;
+  }
 }

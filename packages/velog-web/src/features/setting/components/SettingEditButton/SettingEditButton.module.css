@@ -1,2 +1,16 @@
 .block {
+  outline: none;
+  padding: 0;
+  border: none;
+  display: inline;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--primary1);
+  text-decoration: underline;
+  background: none;
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    color: var(--teal4);
+  }
 }

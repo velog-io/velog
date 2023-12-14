@@ -1,2 +1,17 @@
 .block {
+  display: block;
+  border: 1px solid var(--border3);
+  background: var(--bg-element1);
+  padding: 0.5rem;
+  color: var(--text2);
+  font-size: 1rem;
+  line-height: 1rem;
+  outline: none;
+  border-radius: 4px;
+  &:focus {
+    border: 1px solid var(--border1);
+  }
+  &.fullWitdth {
+    width: 100%;
+  }
 }
