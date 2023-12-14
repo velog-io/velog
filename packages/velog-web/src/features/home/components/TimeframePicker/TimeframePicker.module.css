@@ -6,10 +6,18 @@
   transform-origin: top right;
 
   .block {
-    margin-top: 0.5rem;
-    width: 12rem;
+    margin-top: 8px;
+    width: 192px;
     box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.1);
     background: var(--bg-element1);
+
+    @media screen and (max-width: 768px) {
+      width: 180px;
+    }
+
+    @media screen and (max-width: 425px) {
+      width: 160px;
+    }
 
     ul {
       padding-left: 0;
@@ -39,6 +47,7 @@
         }
       }
     }
+
     li + li {
       border-top: 1px solid var(--border4);
     }
