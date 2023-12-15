@@ -1,4 +1,4 @@
-import { asConst } from 'json-schema-to-ts'
+import { FromSchema, asConst } from 'json-schema-to-ts'
 
 export const createUrlBodySchema = asConst({
   type: 'object',
@@ -13,12 +13,8 @@ export const createUrlBodySchema = asConst({
     filename: {
       type: 'string',
     },
+    payload: true,
   },
-  additionalProperties: false,
 })
 
-export type CreateUrlBody = {
-  type: string
-  refId?: any
-  filename: string
-}
+export type CreateUrlBody = FromSchema<typeof createUrlBodySchema>
