@@ -1,22 +1,21 @@
-import { FastifySchema } from 'fastify'
+import { asConst } from 'json-schema-to-ts'
 
-export const createUrlSchema: FastifySchema = {
-  body: {
-    type: 'object',
-    required: ['type', 'filename'],
-    properties: {
-      type: {
-        type: 'string',
-      },
-      refId: {
-        type: 'string' || undefined,
-      },
-      filename: {
-        type: 'string',
-      },
+export const createUrlBodySchema = asConst({
+  type: 'object',
+  required: ['type', 'filename'],
+  properties: {
+    type: {
+      type: 'string',
+    },
+    refId: {
+      type: 'string',
+    },
+    filename: {
+      type: 'string',
     },
   },
-} as const
+  additionalProperties: false,
+})
 
 export type CreateUrlBody = {
   type: string

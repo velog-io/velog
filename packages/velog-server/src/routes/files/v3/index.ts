@@ -1,22 +1,17 @@
-import { FastifyPluginCallback, FastifyRequest } from 'fastify'
-import { createUrlSchema } from './schema.js'
+import { FastifyPluginCallback } from 'fastify'
+import { createUrlBodySchema } from './schema.js'
+import { FromSchema } from 'json-schema-to-ts'
 
 const v3: FastifyPluginCallback = (fastify, opts, done) => {
-  fastify.post(
+  fastify.post<{ Body: FromSchema<typeof createUrlBodySchema> }>(
     '/create-url',
     {
-      schema: createUrlSchema,
+      schema: {
+        body: createUrlBodySchema,
+      },
     },
-    async (
-      request: FastifyRequest<{
-        Body: {
-          type: string
-          refId?: any
-          filename: string
-        }
-      }>,
-      reply,
-    ) => {
+    async (request, reply) => {
+      console.log(request.body)
       reply.status(201).send({ message: 'hello' })
     },
   )

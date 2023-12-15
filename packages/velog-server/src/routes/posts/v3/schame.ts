@@ -8,7 +8,7 @@ export const PostScoreSchema = {
       },
     },
   },
-}
+} as const
 
 export type PostScoreParams = {
   Params: {
