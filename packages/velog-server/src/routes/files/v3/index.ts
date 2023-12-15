@@ -1,13 +1,21 @@
 import { FastifyPluginCallback } from 'fastify'
-import { createUrlBodySchema } from './schema.js'
 import { FromSchema } from 'json-schema-to-ts'
-import { FilesController } from './filesController.js'
 import { container } from 'tsyringe'
+import multer from 'fastify-multer'
+import { CreateUrlBody, UploadBody, createUrlBodySchema } from './schema.js'
+import { FilesController } from './filesController.js'
+import authGuardPlugin from '@plugins/encapsulated/authGuardPlugin.js'
 
 const v3: FastifyPluginCallback = (fastify, opts, done) => {
   const controller = container.resolve(FilesController)
+  const upload = multer({
+    limits: {
+      fileSize: 1024 * 1024 * 30,
+    },
+  })
 
-  fastify.post<{ Body: FromSchema<typeof createUrlBodySchema> }>(
+  // fastify.register(authGuardPlugin)
+  fastify.post<{ Body: CreateUrlBody }>(
     '/create-url',
     {
       schema: {
@@ -32,6 +40,18 @@ const v3: FastifyPluginCallback = (fastify, opts, done) => {
       }
     },
   )
+
+  fastify.post<{ Body: UploadBody }>(
+    '/upload',
+    {
+      preHandler: upload.single('image'),
+    },
+    (request, relpy) => {
+      console.log(request.file)
+      relpy.send({ message: 'hello' })
+    },
+  )
+
   done()
 }
 

@@ -1,12 +1,14 @@
 import Axios from 'axios'
 import { injectable, singleton } from 'tsyringe'
-import { AwsService } from '@lib/aws/AwsService'
-import { CreateUrlBody } from './schema'
-import { UnauthorizedError } from '@errors/UnauthorizedError'
-import { UserService } from '@services/UserService'
-import { DbService } from '@lib/db/DbService'
-import { FileService } from '@lib/file/FileService'
+import { AwsService } from '@lib/aws/AwsService.js'
+import { CreateUrlBody, UploadBody } from './schema'
+import { UnauthorizedError } from '@errors/UnauthorizedError.js'
+import { UserService } from '@services/UserService/index.js'
+import { DbService } from '@lib/db/DbService.js'
+import { FileService } from '@lib/file/FileService.js'
 import { ENV } from '@env'
+import { File } from 'fastify-multer/lib/interfaces'
+import { BadRequestError } from '@errors/BadRequestErrors.js'
 
 interface Controller {
   createUrl({ body, ipaddr, signedUserId, ip }: CreateUrlArgs): Promise<CreateUrlResult>
@@ -70,6 +72,19 @@ export class FilesController implements Controller {
       throw error
     }
   }
+  public async upload({ body, file, signedUserId }: UploadArgs): Promise<UploadResult> {
+    const { type, ref_id } = body
+
+    if (!['post', 'profile'].includes(type)) {
+      throw new BadRequestError('Invalid type')
+    }
+
+    const user = await this.userService.findById(signedUserId)
+
+    if (!user) {
+      throw new UnauthorizedError('Invalid User')
+    }
+  }
 }
 
 type CreateUrlArgs = {
@@ -82,4 +97,14 @@ type CreateUrlArgs = {
 type CreateUrlResult = {
   image_path: string
   signed_url: string
+}
+
+type UploadArgs = {
+  body: UploadBody
+  file: File
+  signedUserId: string
+}
+
+type UploadResult = {
+  path: string
 }

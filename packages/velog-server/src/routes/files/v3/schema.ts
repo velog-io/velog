@@ -18,3 +18,18 @@ export const createUrlBodySchema = asConst({
 })
 
 export type CreateUrlBody = FromSchema<typeof createUrlBodySchema>
+
+export const uploadBodySchema = asConst({
+  type: 'object',
+  required: ['type'],
+  properties: {
+    type: {
+      type: 'string',
+    },
+    ref_id: {
+      type: 'string',
+    },
+  },
+})
+
+export type UploadBody = FromSchema<typeof uploadBodySchema>

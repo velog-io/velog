@@ -52,6 +52,8 @@
     "date-fns-tz": "^2.0.0",
     "dotenv": "^16.1.4",
     "fastify": "^4.18.0",
+    "fastify-multer": "^2.0.3",
+    "fastify-plugin": "^4.5.1",
     "googleapis": "^124.0.0",
     "graphql": "^16.7.1",
     "graphql-scalars": "^1.22.2",
