@@ -9,10 +9,18 @@
   .block {
     border: 1px solid var(--border3);
     margin-top: 0.5rem;
-    width: 12rem;
+    width: 192px;
     box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.1);
     background: var(--bg-element1);
     color: var(--text1);
+
+    @media screen and (max-width: 768px) {
+      width: 180px;
+    }
+
+    @media screen and (max-width: 425px) {
+      width: 160px;
+    }
 
     ul {
       list-style: none;

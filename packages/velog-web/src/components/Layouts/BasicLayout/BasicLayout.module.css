@@ -19,6 +19,14 @@
     padding-left: 16px;
     padding-right: 16px;
   }
+
+  @media screen and (max-width: 768px) {
+    margin-top: 16px;
+  }
+
+  @media screen and (max-width: 425px) {
+    margin-top: 0;
+  }
   main {
     width: 100%;
   }

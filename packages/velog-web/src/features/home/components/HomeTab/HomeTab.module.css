@@ -34,27 +34,40 @@
       white-space: nowrap;
       color: var(--text3);
 
+      &.active {
+        color: var(--text1);
+        font-weight: bold;
+      }
+
       svg {
         font-size: 24px;
         margin-right: 8px;
       }
 
-      @media screen and (max-width: 944px) {
-        font-size: 16px;
-        width: 80px;
+      @media screen and (max-width: 768px) {
+        width: 70px;
         svg {
-          font-size: 20px;
+          font-size: 18px;
+        }
+      }
+
+      @media screen and (max-width: 425px) {
+        width: 60px;
+        svg {
+          font-size: 16px;
         }
       }
     }
 
     a + a {
       margin-left: 20px;
-    }
+      @media screen and (max-width: 768px) {
+        margin-left: 8px;
+      }
 
-    .active {
-      color: var(--text1);
-      font-weight: bold;
+      @media screen and (max-width: 425px) {
+        margin-left: 5px;
+      }
     }
 
     .indicator {
@@ -63,11 +76,17 @@
       height: 2px;
       background: var(--border1);
       bottom: -10px;
+
+      @media screen and (max-width: 425px) {
+        width: 29%;
+        margin-left: 3px;
+      }
     }
   }
 }
 
 .right {
+  position: relative;
   display: flex;
   .selector {
     background: var(--bg-element1);
@@ -85,6 +104,17 @@
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.05);
     user-select: none;
 
+    @media screen and (max-width: 1024px) {
+      width: 84px;
+      font-size: 12px;
+    }
+
+    @media screen and (max-width: 375px) {
+      padding-left: 4px;
+      padding-right: 4px;
+      width: 70px;
+    }
+
     svg {
       width: 24px;
       height: 24px;
@@ -95,11 +125,6 @@
       &:hover {
         opacity: 0.75;
       }
-    }
-
-    @media screen and (max-width: 1024px) {
-      width: 84px;
-      font-size: 12px;
     }
   }
 
