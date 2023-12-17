@@ -34,6 +34,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       cronTime: '0 5 * * *', // every day at 05:00 (5:00 AM)
       jobService: generateTrendingWritersJob,
       param: undefined,
+      isImmediate: true,
     },
   ]
 
