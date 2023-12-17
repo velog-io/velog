@@ -1,5 +1,4 @@
 import { FastifyPluginCallback } from 'fastify'
-import { FromSchema } from 'json-schema-to-ts'
 import { container } from 'tsyringe'
 import multer from 'fastify-multer'
 import { CreateUrlBody, UploadBody, createUrlBodySchema } from './schema.js'
@@ -14,7 +13,8 @@ const v3: FastifyPluginCallback = (fastify, opts, done) => {
     },
   })
 
-  // fastify.register(authGuardPlugin)
+  fastify.register(authGuardPlugin)
+
   fastify.post<{ Body: CreateUrlBody }>(
     '/create-url',
     {
@@ -46,9 +46,12 @@ const v3: FastifyPluginCallback = (fastify, opts, done) => {
     {
       preHandler: upload.single('image'),
     },
-    (request, relpy) => {
-      console.log(request.file)
-      relpy.send({ message: 'hello' })
+    async (request) => {
+      return await controller.upload({
+        body: request.body,
+        file: request.file,
+        signedUserId: request.user.id,
+      })
     },
   )
 

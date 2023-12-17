@@ -9,9 +9,16 @@ import { FileService } from '@lib/file/FileService.js'
 import { ENV } from '@env'
 import { File } from 'fastify-multer/lib/interfaces'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
+import { ImageService } from '@services/ImageService/index.js'
+import { HttpError } from '@errors/HttpError.js'
+import { PostService } from '@services/PostService/index.js'
+import { ForbiddenError } from '@errors/ForbiddenError.js'
+import { B2ManagerService } from '@lib/b2Manager/B2ManagerService.js'
+import { InternalServerError } from '@errors/InternalServerError.js'
 
 interface Controller {
   createUrl({ body, ipaddr, signedUserId, ip }: CreateUrlArgs): Promise<CreateUrlResult>
+  upload({ body, file, signedUserId }: UploadArgs): Promise<UploadResult>
 }
 
 @singleton()
@@ -21,7 +28,10 @@ export class FilesController implements Controller {
     private readonly db: DbService,
     private readonly file: FileService,
     private readonly aws: AwsService,
+    private readonly b2Manager: B2ManagerService,
     private readonly userService: UserService,
+    private readonly postService: PostService,
+    private readonly imageService: ImageService,
   ) {}
   public async createUrl({
     body,
@@ -73,6 +83,10 @@ export class FilesController implements Controller {
     }
   }
   public async upload({ body, file, signedUserId }: UploadArgs): Promise<UploadResult> {
+    if (!file) {
+      throw new BadRequestError('Not found file')
+    }
+
     const { type, ref_id } = body
 
     if (!['post', 'profile'].includes(type)) {
@@ -83,6 +97,66 @@ export class FilesController implements Controller {
 
     if (!user) {
       throw new UnauthorizedError('Invalid User')
+    }
+
+    const isAbuse = await this.imageService.detectAbuse(signedUserId)
+
+    if (isAbuse) {
+      throw new HttpError('Too many requests', 429)
+    }
+
+    if (type === 'post' && !!ref_id) {
+      const post = await this.postService.findById(ref_id)
+      if (post?.fk_user_id !== signedUserId) {
+        throw new ForbiddenError()
+      }
+    }
+
+    const userImage = await this.db.userImageNext.create({
+      data: {
+        filesize: file.size || 0,
+        ref_id: ref_id ?? null,
+        type,
+        fk_user_id: signedUserId,
+        tracked: type === 'profile' ? true : false,
+      },
+    })
+
+    const originalFileName = file.originalname
+    const extension = originalFileName.split('.').pop()
+    const filename = `image.${extension}`
+
+    const filepath = await this.file
+      .generateUploadPath({
+        type,
+        id: userImage.id,
+        username: user.username,
+      })
+      .concat(`/${encodeURIComponent(decodeURI(filename))}`)
+
+    if (type === 'profile') {
+      this.imageService.untrackPastImages(signedUserId).catch(console.error)
+    }
+
+    try {
+      const result = await this.b2Manager.upload(file.buffer!, filepath)
+
+      await this.db.userImageNext.update({
+        where: {
+          id: userImage.id,
+        },
+        data: {
+          path: filepath,
+          file_id: result.fileId,
+        },
+      })
+
+      return {
+        path: result.url,
+      }
+    } catch (error) {
+      console.log('Upload file error', error)
+      throw new InternalServerError()
     }
   }
 }
@@ -101,7 +175,7 @@ type CreateUrlResult = {
 
 type UploadArgs = {
   body: UploadBody
-  file: File
+  file?: File
   signedUserId: string
 }
 

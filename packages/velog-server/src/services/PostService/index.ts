@@ -25,7 +25,8 @@ import { Time } from '@constants/TimeConstants.js'
 import { TagService } from '@services/TagService/index.js'
 
 interface Service {
-  getPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
+  findById(id: string): Promise<Post | null>
+  findPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
   getPost(input: ReadPostInput, signedUserId?: string): Promise<Post | null>
   getReadingList(input: ReadingListInput, signedUserId?: string): Promise<Post[]>
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
@@ -49,7 +50,14 @@ export class PostService implements Service {
     private readonly elsaticSearch: ElasticSearchService,
     private readonly tagService: TagService,
   ) {}
-  public async getPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]> {
+  public async findById(postId: string) {
+    return await this.db.post.findUnique({
+      where: {
+        id: postId,
+      },
+    })
+  }
+  public async findPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]> {
     const posts = await this.db.post.findMany({
       where: {
         id: {
@@ -296,7 +304,7 @@ export class PostService implements Service {
       this.cache.lruCache.set(cacheKey, postIds)
     }
 
-    const posts = await this.getPostsByIds(postIds, { user: { include: { profile: true } } })
+    const posts = await this.findPostsByIds(postIds, { user: { include: { profile: true } } })
     const normalized = this.utils.normalize(posts)
     const ordered = postIds.map((id) => normalized[id])
     return ordered
@@ -459,7 +467,7 @@ export class PostService implements Service {
 
         this.redis.set(cacheKey, postIds.join(','), 'EX', Time.ONE_DAY_S)
       }
-      const posts = await this.getPostsByIds(postIds)
+      const posts = await this.findPostsByIds(postIds)
       const normalized = this.utils.normalize(posts)
       const ordered = postIds.map((id) => normalized[id])
       return ordered.filter((post) => post)

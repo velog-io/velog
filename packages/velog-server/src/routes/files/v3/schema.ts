@@ -15,6 +15,7 @@ export const createUrlBodySchema = asConst({
     },
     payload: true,
   },
+  additionalProperties: false,
 })
 
 export type CreateUrlBody = FromSchema<typeof createUrlBodySchema>
@@ -25,11 +26,13 @@ export const uploadBodySchema = asConst({
   properties: {
     type: {
       type: 'string',
+      enum: ['post', 'profile'],
     },
     ref_id: {
       type: 'string',
     },
   },
+  additionalProperties: false,
 })
 
 export type UploadBody = FromSchema<typeof uploadBodySchema>

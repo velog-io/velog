@@ -1,8 +1,8 @@
 import { ENV } from '@env'
-import { DbService } from '@lib/db/DbService'
-import { SlackService } from '@lib/slack/SlackService'
+import { DbService } from '@lib/db/DbService.js'
+import { SlackService } from '@lib/slack/SlackService.js'
 import { UserImageNext } from '@prisma/client'
-import { UserService } from '@services/UserService'
+import { UserService } from '@services/UserService/index.js'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
