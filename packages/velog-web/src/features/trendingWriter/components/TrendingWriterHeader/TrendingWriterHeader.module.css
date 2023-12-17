@@ -1,0 +1,6 @@
+.block {
+  margin-top: 24px;
+  padding-top: 8px;
+  font-size: 32px;
+  color: var(--text1);
+}
