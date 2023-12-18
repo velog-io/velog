@@ -8,7 +8,7 @@ const cx = bindClassNames(styles)
 function VelogFollowListSkeleton() {
   return (
     <div className={cx('block')}>
-      {Array.from({ length: 2 }).map((_, i) => (
+      {Array.from({ length: 5 }).map((_, i) => (
         <VelogFollowItemSkeleton key={i} />
       ))}
     </div>
