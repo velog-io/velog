@@ -1,0 +1,15 @@
+.block {
+  padding-top: 90px;
+  width: 100%;
+  max-width: 1200px;
+  padding-bottom: 64px;
+  margin: 0 auto;
+
+  @media screen and (max-width: 1056px) {
+    width: 100%;
+    padding-top: 0px;
+    padding-bottom: 32px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

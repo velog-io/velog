@@ -1,9 +1,14 @@
-import ResponsiveLayout from '@/components/Layouts/ResponsiveLayout'
+import BasicLayout from '@/components/Layouts/BasicLayout'
+import TrendingWriterLayout from '@/components/Layouts/TrendingWriterLayout'
 
 type Props = {
   children: React.ReactNode
 }
 
 export default function SettingLayout({ children }: Props) {
-  return <ResponsiveLayout>{children}</ResponsiveLayout>
+  return (
+    <BasicLayout>
+      <TrendingWriterLayout>{children}</TrendingWriterLayout>
+    </BasicLayout>
+  )
 }

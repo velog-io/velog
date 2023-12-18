@@ -1,7 +1,7 @@
-import BasicLayout from '@/components/Layouts/BasicLayout'
+import HomeLayout from '@/components/Layouts/HomeLayout'
 
 type Props = {}
 
 export default function SearchPage({}: Props) {
-  return <BasicLayout />
+  return <HomeLayout />
 }

@@ -1,4 +1,4 @@
-import BasicLayout from '@/components/Layouts/BasicLayout'
+import HomeLayout from '@/components/Layouts/HomeLayout'
 import { Viewport } from 'next'
 
 type Props = {
@@ -13,5 +13,5 @@ export const viewport: Viewport = {
 }
 
 export default function Layout({ children }: Props) {
-  return <BasicLayout>{children}</BasicLayout>
+  return <HomeLayout>{children}</HomeLayout>
 }

@@ -5,6 +5,7 @@ import { UserLogo } from '@/state/header'
 import { notFound } from 'next/navigation'
 import getUserFollowInfo from '@/prefetch/getUserFollowInfo'
 import UserProfile from '@/components/UserProfile'
+import BasicLayout from '@/components/Layouts/BasicLayout'
 
 type Props = {
   params: { username: string }
@@ -26,21 +27,20 @@ export default async function VelogPageLayout({ children, params }: Props) {
   }
 
   return (
-    <VelogLayout
-      username={username}
-      userLogo={userLogo}
-      userProfile={
-        <UserProfile
-          userId={user.id}
-          username={username}
-          followersCount={user.followers_count}
-          followingsCount={user.followings_count}
-          isFollowed={user.is_followed}
-          profile={user.profile}
-        />
-      }
-    >
-      {children}
-    </VelogLayout>
+    <BasicLayout isCustomHeader={true} userLogo={userLogo} username={username}>
+      <VelogLayout
+        userProfile={
+          <UserProfile
+            userId={user.id}
+            followersCount={user.followers_count}
+            followingsCount={user.followings_count}
+            isFollowed={user.is_followed}
+            profile={user.profile}
+          />
+        }
+      >
+        {children}
+      </VelogLayout>
+    </BasicLayout>
   )
 }

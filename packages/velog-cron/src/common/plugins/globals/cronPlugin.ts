@@ -47,23 +47,27 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     })
   }
 
-  // for test
-  if (ENV.dockerEnv !== 'production') {
-    const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediateExecute)
-    await Promise.all(immediateRunJobs.map(createTick))
-  }
+  try {
+    // for Test
+    if (ENV.dockerEnv !== 'production') {
+      const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediateExecute)
+      await Promise.all(immediateRunJobs.map(createTick))
+    }
 
-  if (ENV.dockerEnv === 'production') {
-    const crons = jobDescription.map(createJob)
-    await Promise.all(
-      crons.map((cron) => {
-        console.log(`${cron.name} is registered`)
-        cron.start()
-      }),
-    )
+    if (ENV.dockerEnv === 'production') {
+      const crons = jobDescription.map(createJob)
+      await Promise.all(
+        crons.map((cron) => {
+          console.log(`${cron.name} is registered`)
+          cron.start()
+        }),
+      )
+    }
+  } catch (error) {
+    console.error('Error initializing cron jobs:', error)
+  } finally {
+    done()
   }
-
-  done()
 }
 
 export default cronPlugin
