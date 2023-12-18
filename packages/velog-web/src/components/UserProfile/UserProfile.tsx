@@ -173,13 +173,7 @@ function UserProfile({ style, userId, profile, followersCount, followingsCount, 
               </div>
             )}
           </div>
-          {!isOwn && (
-            <FollowButton
-              username={username}
-              followingUserId={userId}
-              resetFollowCount={resetFollowCount}
-            />
-          )}
+          {!isOwn && <FollowButton followingUserId={userId} resetFollowCount={resetFollowCount} />}
         </div>
       </div>
     </div>

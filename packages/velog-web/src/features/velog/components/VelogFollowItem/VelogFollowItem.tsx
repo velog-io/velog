@@ -15,6 +15,7 @@ type Props = {
   isFollowed: boolean
   description: string
   username: string
+  displayName: string
 }
 
 const notoSansKr = Noto_Sans_KR({
@@ -23,7 +24,7 @@ const notoSansKr = Noto_Sans_KR({
   display: 'swap',
 })
 
-function VelogFollowItem({ userId, thumbnail, username, description }: Props) {
+function VelogFollowItem({ userId, thumbnail, username, description, displayName }: Props) {
   const velogUrl = `/@${username}/posts`
   return (
     <li className={cx('block')}>
@@ -31,16 +32,14 @@ function VelogFollowItem({ userId, thumbnail, username, description }: Props) {
         <Thumbnail className={cx('thumbnail')} src={thumbnail} />
       </Link>
       <div className={cx('content')}>
-        <div className={cx('info')}>
-          <span className={cx('text')}>Username</span>
-          <span className={cx('username')}>
-            <Link href={velogUrl}>{`@${username}`}</Link>
-          </span>
-        </div>
+        <Link href={velogUrl} className={cx('info')}>
+          <span className={cx('text')}>{displayName}</span>
+          <span className={cx('username')}>{`@${username}`}</span>
+        </Link>
         <div className={cx('description', notoSansKr.className)}>{description}</div>
       </div>
       <div className={cx('button')}>
-        <FollowButton username={username} followingUserId={userId} />
+        <FollowButton followingUserId={userId} />
       </div>
     </li>
   )

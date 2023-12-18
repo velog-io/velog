@@ -472,7 +472,7 @@ export type GetFollowersQuery = {
     userId: string
     username: string
     is_followed: boolean
-    profile: { short_bio: string; thumbnail: string | null }
+    profile: { short_bio: string; thumbnail: string | null; display_name: string }
   }>
 }
 
@@ -486,7 +486,7 @@ export type GetFollowingsQuery = {
     userId: string
     username: string
     is_followed: boolean
-    profile: { short_bio: string; thumbnail: string | null }
+    profile: { short_bio: string; thumbnail: string | null; display_name: string }
   }>
 }
 
@@ -887,6 +887,7 @@ export const GetFollowersDocument = `
     profile {
       short_bio
       thumbnail
+      display_name
     }
     is_followed
   }
@@ -1001,6 +1002,7 @@ export const GetFollowingsDocument = `
     profile {
       short_bio
       thumbnail
+      display_name
     }
     is_followed
   }

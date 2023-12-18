@@ -18,13 +18,12 @@ import { infiniteGetFollowersQueryKey } from '@/graphql/queryKey'
 const cx = bindClassNames(styles)
 
 type Props = {
-  username: string
   followingUserId: string
   className?: string
   resetFollowCount?: (param: 'follow' | 'unfollow') => void
 }
 
-function FollowButton({ username, followingUserId, className, resetFollowCount }: Props) {
+function FollowButton({ followingUserId, className, resetFollowCount }: Props) {
   const params = useParams()
   const {
     value: { currentUser },
@@ -35,7 +34,7 @@ function FollowButton({ username, followingUserId, className, resetFollowCount }
     isRefetching,
     isLoading: isFollowInfoLoading,
   } = useGetUserFollowInfoQuery(
-    { input: { username: username } },
+    { input: { id: followingUserId } },
     { gcTime: 1000 * 60 * 1, staleTime: 1000 },
   )
 

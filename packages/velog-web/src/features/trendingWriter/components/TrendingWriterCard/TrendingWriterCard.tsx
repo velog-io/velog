@@ -30,7 +30,7 @@ function TrendingWriterCard({ writerId, posts, thumbnail, displayName, username 
           </Link>
         </div>
         <div className={cx('right')}>
-          <FollowButton username={username} followingUserId={writerId} className={cx('button')} />
+          <FollowButton followingUserId={writerId} className={cx('button')} />
         </div>
       </div>
       <ul className={cx('content')}>
