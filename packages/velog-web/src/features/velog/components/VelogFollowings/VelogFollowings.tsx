@@ -20,7 +20,6 @@ function VelogFollowings({ username }: Props) {
   if (followings.length === 0) return <VelogFollowingsEmpty />
   return (
     <>
-      <div>hello</div>
       <VelogFollowList data={followings} />
       {isFetching && <VelogFollowListSkeleton />}
       <div ref={ref} />

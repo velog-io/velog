@@ -91,7 +91,7 @@
   .selector {
     background: var(--bg-element1);
     height: 32px;
-    width: 84px;
+    width: 100px;
     border-radius: 4px;
     display: flex;
     align-items: center;
