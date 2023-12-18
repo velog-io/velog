@@ -10,11 +10,6 @@ import {
 import { useAuth } from '@/state/auth'
 import { debounce } from 'throttle-debounce'
 import { useModal } from '@/state/modal'
-import { useQueryClient } from '@tanstack/react-query'
-import { useParams } from 'next/navigation'
-import { getUsernameFromParams } from '@/lib/utils'
-import { infiniteGetFollowersQueryKey } from '@/graphql/queryKey'
-
 const cx = bindClassNames(styles)
 
 type Props = {
@@ -25,7 +20,6 @@ type Props = {
 }
 
 function FollowButton({ followingUserId, className, resetFollowCount, onSuccess }: Props) {
-  const params = useParams()
   const {
     value: { currentUser },
   } = useAuth()
@@ -97,7 +91,8 @@ function FollowButton({ followingUserId, className, resetFollowCount, onSuccess 
         resetFollowCount(currentFollowState ? 'unfollow' : 'follow')
       }
     } catch (error) {
-      console.log(error)
+      console.log('follow error', error)
+      console.log('currentFollowState?', currentFollowState)
     }
   })
 

@@ -8,7 +8,8 @@ import Link from 'next/link'
 import { Noto_Sans_KR } from 'next/font/google'
 import { useQueryClient } from '@tanstack/react-query'
 import { useGetUserFollowInfoQuery } from '@/graphql/generated'
-import { infiniteGetFollowersQueryKey, infiniteGetFollowingsQueryKey } from '@/graphql/queryKey'
+import { useParams } from 'next/navigation'
+import { getUsernameFromParams } from '@/lib/utils'
 
 const cx = bindClassNames(styles)
 
@@ -28,20 +29,14 @@ const notoSansKr = Noto_Sans_KR({
 })
 
 function VelogFollowItem({ userId, thumbnail, username, description, displayName }: Props) {
-  const velogUrl = `/@${username}/posts`
+  const params = useParams()
   const queryClient = useQueryClient()
+  const velogUrl = `/@${username}/posts`
 
   const onSuccess = () => {
+    const targetUsername = getUsernameFromParams(params)
     queryClient.refetchQueries({
-      queryKey: useGetUserFollowInfoQuery.getKey({ input: { username } }),
-    })
-
-    queryClient.refetchQueries({
-      queryKey: infiniteGetFollowersQueryKey({ input: { username } }),
-    })
-
-    queryClient.refetchQueries({
-      queryKey: infiniteGetFollowingsQueryKey({ input: { username } }),
+      queryKey: useGetUserFollowInfoQuery.getKey({ input: { username: targetUsername } }),
     })
   }
 
