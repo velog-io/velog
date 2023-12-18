@@ -19,11 +19,11 @@ import { UtilsService } from '@lib/utils/UtilsService.js'
 import DataLoader from 'dataloader'
 import { AuthService } from '@services/AuthService/index.js'
 import { FastifyReply } from 'fastify'
-import { RedisService } from '@lib/redis/RedisService'
-import { changeEmailTemplate } from '@template/changeEmailTemplate'
+import { RedisService } from '@lib/redis/RedisService.js'
+import { changeEmailTemplate } from '@template/changeEmailTemplate.js'
 import { ENV } from '@env'
-import { MailService } from '@lib/mail/MailService'
-import { ChangeEmailDataType } from '@lib/redis/RedisInterface'
+import { MailService } from '@lib/mail/MailService.js'
+import { ChangeEmailDataType } from '@lib/redis/RedisInterface.js'
 
 interface Service {
   findById(userId: string): Promise<User | null>

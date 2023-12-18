@@ -8,8 +8,8 @@ import {} from '@prisma/client'
 import { UserService } from '@services/UserService/index.js'
 import { VelogConfigService } from '@services/VelogConfigService/index.js'
 import { container } from 'tsyringe'
-import { ExternalIntegrationService } from '@services/ExternalIntegrationService'
-import { JwtService } from '@lib/jwt/JwtService'
+import { ExternalIntegrationService } from '@services/ExternalIntegrationService/index.js'
+import { JwtService } from '@lib/jwt/JwtService.js'
 
 const userResolvers: Resolvers = {
   User: {
