@@ -38,7 +38,8 @@ export default function useFollowings(username: string, limit = 20) {
       }
     },
     retryDelay: 1000,
-    staleTime: 1000 * 60 * 1,
+    gcTime: 1000,
+    staleTime: 1000 * 60 * 0,
   })
 
   const followings = useMemo(() => {

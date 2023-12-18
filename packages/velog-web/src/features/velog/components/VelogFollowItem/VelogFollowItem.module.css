@@ -37,7 +37,7 @@
     }
 
     .info {
-      display: flex;
+      display: inline-flex;
       .text {
         color: var(--text2);
         font-size: 16px;

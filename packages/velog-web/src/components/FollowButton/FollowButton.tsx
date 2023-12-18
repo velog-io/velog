@@ -10,22 +10,15 @@ import {
 import { useAuth } from '@/state/auth'
 import { debounce } from 'throttle-debounce'
 import { useModal } from '@/state/modal'
-import { useQueryClient } from '@tanstack/react-query'
-import { useParams } from 'next/navigation'
-import { getUsernameFromParams } from '@/lib/utils'
-import { infiniteGetFollowersQueryKey } from '@/graphql/queryKey'
-
 const cx = bindClassNames(styles)
 
 type Props = {
-  username: string
   followingUserId: string
   className?: string
-  resetFollowCount?: (param: 'follow' | 'unfollow') => void
+  onSuccess?: () => void
 }
 
-function FollowButton({ username, followingUserId, className, resetFollowCount }: Props) {
-  const params = useParams()
+function FollowButton({ followingUserId, className, onSuccess }: Props) {
   const {
     value: { currentUser },
   } = useAuth()
@@ -33,9 +26,10 @@ function FollowButton({ username, followingUserId, className, resetFollowCount }
   const {
     data,
     isRefetching,
+    isFetching,
     isLoading: isFollowInfoLoading,
   } = useGetUserFollowInfoQuery(
-    { input: { username: username } },
+    { input: { id: followingUserId } },
     { gcTime: 1000 * 60 * 1, staleTime: 1000 },
   )
 
@@ -67,20 +61,6 @@ function FollowButton({ username, followingUserId, className, resetFollowCount }
     setCurrentFollowState(value)
   }, [])
 
-  const queryClient = useQueryClient()
-
-  const onSuccess = () => {
-    const targetUsername = getUsernameFromParams(params)
-
-    queryClient.refetchQueries({
-      queryKey: useGetUserFollowInfoQuery.getKey({ input: { username: targetUsername } }),
-    })
-
-    queryClient.refetchQueries({
-      queryKey: infiniteGetFollowersQueryKey({ input: { username: targetUsername } }),
-    })
-  }
-
   const onClick = debounce(300, async () => {
     try {
       if (!currentUser) {
@@ -107,11 +87,9 @@ function FollowButton({ username, followingUserId, className, resetFollowCount }
       }
 
       initialize(!currentFollowState)
-      if (resetFollowCount) {
-        resetFollowCount(currentFollowState ? 'unfollow' : 'follow')
-      }
     } catch (error) {
-      console.log(error)
+      console.log('follow error', error)
+      console.log('currentFollowState?', currentFollowState)
     }
   })
 
@@ -122,7 +100,7 @@ function FollowButton({ username, followingUserId, className, resetFollowCount }
     initialize(isFollowed)
   }, [data, isRefetching, initialize])
 
-  if (isFollowInfoLoading || isCurrentUserLoading) {
+  if (isFetching || isFollowInfoLoading || isCurrentUserLoading) {
     return <div className={cx('skeleton', className)} />
   }
 

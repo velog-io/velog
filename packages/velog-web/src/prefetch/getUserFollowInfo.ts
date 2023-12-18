@@ -1,7 +1,7 @@
 import { GetUserFollowInfoDocument, User } from '@/graphql/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
-export default async function getUserFollowerInfo(username: string) {
+export default async function getUserFollowInfo(username: string) {
   if (!username) return null
   try {
     const body: GraphqlRequestBody = {
@@ -25,7 +25,7 @@ export default async function getUserFollowerInfo(username: string) {
 
     return { ...user, profile: user.profile! }
   } catch (error) {
-    console.log('getUserFollowerInfo error', error)
+    console.log('getUserFollowInfo error', error)
     return null
   }
 }

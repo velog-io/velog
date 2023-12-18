@@ -12,19 +12,27 @@ export default function useCustomInfiniteQuery<
   TData = InfiniteData<TQueryFnData>,
   TError = Error,
 >({ document, initialPageParam, ...options }: Args<TQueryFnData, TData, TError, TVariables>) {
-  const { data, fetchNextPage, isFetching, hasNextPage, isError, isLoading, refetch } =
-    useInfiniteQuery<TQueryFnData, TError, TData>(
-      (() => {
-        const { queryKey, ...rest } = options
-        return {
-          ...rest,
-          queryKey,
-          queryFn: ({ pageParam }) =>
-            fetcher<TQueryFnData, TVariables>(document, { input: pageParam } as TVariables)(),
-          initialPageParam: initialPageParam.input,
-        }
-      })(),
-    )
+  const {
+    data,
+    fetchNextPage,
+    isFetching,
+    hasNextPage,
+    isError,
+    isLoading,
+    refetch,
+    isRefetching,
+  } = useInfiniteQuery<TQueryFnData, TError, TData>(
+    (() => {
+      const { queryKey, ...rest } = options
+      return {
+        ...rest,
+        queryKey,
+        queryFn: ({ pageParam }) =>
+          fetcher<TQueryFnData, TVariables>(document, { input: pageParam } as TVariables)(),
+        initialPageParam: initialPageParam.input,
+      }
+    })(),
+  )
 
   const fetchMore = () => {
     if (isFetching || isError) return
@@ -38,6 +46,7 @@ export default function useCustomInfiniteQuery<
     isFetching,
     refetch,
     fetchMore,
+    isRefetching,
   }
 }
 

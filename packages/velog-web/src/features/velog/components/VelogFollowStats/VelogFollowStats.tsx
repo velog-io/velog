@@ -45,9 +45,10 @@ function VelogFollowStats({
     const count = type === 'follower' ? data?.user?.followers_count : data?.user?.followings_count
     if (count === undefined) return
     setFollows(count)
-  }, [data, type])
+  }, [data, type, username])
 
   const velogUrl = `/@${username}/posts`
+
   return (
     <section className={cx('block')}>
       <div className={cx('header')}>

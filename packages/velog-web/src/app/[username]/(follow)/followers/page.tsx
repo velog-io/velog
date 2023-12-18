@@ -1,7 +1,7 @@
 import VelogFollowStats from '@/features/velog/components/VelogFollowStats'
 import VelogFollowers from '@/features/velog/components/VelogFollowers'
 import { getUsernameFromParams } from '@/lib/utils'
-import getUserFollowerInfo from '@/prefetch/getUserFollowerInfo'
+import getUserFollowInfo from '@/prefetch/getUserFollowInfo'
 import { notFound } from 'next/navigation'
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 
 export default async function VelogFollowersPage({ params }: Props) {
   const username = getUsernameFromParams(params)
-  const user = await getUserFollowerInfo(username)
+  const user = await getUserFollowInfo(username)
 
   const profile = user?.profile
 
