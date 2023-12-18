@@ -1,18 +1,15 @@
 .block {
   .mainWrapper {
     padding-top: 90px;
-    width: 768px;
+    width: 100%;
+    max-width: 1440px;
     padding-bottom: 64px;
     margin: 0 auto;
 
     @media screen and (max-width: 1056px) {
-      max-width: 768px;
       width: 100%;
+      padding-top: 0px;
       padding-bottom: 32px;
-    }
-
-    @media screen and (max-width: 768px) {
-      padding-top: 48px;
       padding-left: 16px;
       padding-right: 16px;
     }

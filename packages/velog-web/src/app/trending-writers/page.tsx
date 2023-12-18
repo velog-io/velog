@@ -1,5 +1,5 @@
-import TrendingWriterGrid from '@/features/TrendingWriter/components/TrendingWriterGrid'
-import TrendingWriterHeader from '@/features/TrendingWriter/components/TrendingWriterHeader'
+import TrendingWriterGrid from '@/features/trendingWriter/components/TrendingWriterGrid'
+import TrendingWriterHeader from '@/features/trendingWriter/components/TrendingWriterHeader'
 import getTrendingWriters from '@/prefetch/getTrendingWriters'
 
 type Props = {}
