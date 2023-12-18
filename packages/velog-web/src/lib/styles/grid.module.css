@@ -35,26 +35,26 @@
   grid-gap: 24px 16px;
 
   --row-gap: 16px;
-  --card-count: 2;
+  --card-count: 3;
   --spacer: calc(var(--card-count) - 1);
-  --width: 50%;
+  --width: 33.33%;
 
   grid-template-columns: repeat(
     var(--card-count),
     calc(var(--width) - (var(--row-gap) * var(--spacer) / var(--card-count)))
   );
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1024px) {
     --card-count: 2;
     --width: 50%;
     --row-gap: 24px;
-    grid-gap: 24px;
+    grid-gap: var(--row-gap);
   }
 
   @media screen and (max-width: 625px) {
     --card-count: 1;
     --width: 100%;
     --row-gap: 16px;
-    grid-gap: 16px;
+    grid-gap: var(--row-gap);
   }
 }

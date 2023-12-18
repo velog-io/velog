@@ -3,4 +3,8 @@
   margin: 0;
   margin-top: 56px;
   list-style: none;
+
+  @media screen and (max-width: 1024px) {
+    margin-top: 16px;
+  }
 }
