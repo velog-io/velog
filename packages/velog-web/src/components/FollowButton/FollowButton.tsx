@@ -15,11 +15,10 @@ const cx = bindClassNames(styles)
 type Props = {
   followingUserId: string
   className?: string
-  resetFollowCount?: (param: 'follow' | 'unfollow') => void
   onSuccess?: () => void
 }
 
-function FollowButton({ followingUserId, className, resetFollowCount, onSuccess }: Props) {
+function FollowButton({ followingUserId, className, onSuccess }: Props) {
   const {
     value: { currentUser },
   } = useAuth()
@@ -27,6 +26,7 @@ function FollowButton({ followingUserId, className, resetFollowCount, onSuccess 
   const {
     data,
     isRefetching,
+    isFetching,
     isLoading: isFollowInfoLoading,
   } = useGetUserFollowInfoQuery(
     { input: { id: followingUserId } },
@@ -87,9 +87,6 @@ function FollowButton({ followingUserId, className, resetFollowCount, onSuccess 
       }
 
       initialize(!currentFollowState)
-      if (resetFollowCount) {
-        resetFollowCount(currentFollowState ? 'unfollow' : 'follow')
-      }
     } catch (error) {
       console.log('follow error', error)
       console.log('currentFollowState?', currentFollowState)
@@ -103,7 +100,7 @@ function FollowButton({ followingUserId, className, resetFollowCount, onSuccess 
     initialize(isFollowed)
   }, [data, isRefetching, initialize])
 
-  if (isFollowInfoLoading || isCurrentUserLoading) {
+  if (isFetching || isFollowInfoLoading || isCurrentUserLoading) {
     return <div className={cx('skeleton', className)} />
   }
 

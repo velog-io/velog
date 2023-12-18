@@ -16,10 +16,11 @@ function VelogFollowings({ username }: Props) {
 
   useInfiniteScroll(ref, fetchMore)
 
-  if (isLoading) return <VelogFollowListSkeleton />
+  if (isLoading || isFetching) return <VelogFollowListSkeleton />
   if (followings.length === 0) return <VelogFollowingsEmpty />
   return (
     <>
+      <div>hello</div>
       <VelogFollowList data={followings} />
       {isFetching && <VelogFollowListSkeleton />}
       <div ref={ref} />
