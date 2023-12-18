@@ -357,6 +357,9 @@ importers:
       nanoid:
         specifier: ^4.0.2
         version: 4.0.2
+      nanoid-dictionary:
+        specifier: ^4.3.0
+        version: 4.3.0
       pino-pretty:
         specifier: ^10.0.0
         version: 10.0.0
@@ -424,6 +427,9 @@ importers:
       '@types/mime-types':
         specifier: ^2.1.1
         version: 2.1.1
+      '@types/nanoid-dictionary':
+        specifier: ^4.2.3
+        version: 4.2.3
       '@types/node':
         specifier: ^20.3.1
         version: 20.4.2
@@ -9270,6 +9276,10 @@ packages:
     resolution: {integrity: sha512-vXOTGVSLR2jMw440moWTC7H19iUyLtP3Z1YTj7cSsubOICinjMxFeb/V57v9QdyyPGbbWolUFSSmSiRSn94tFw==}
     dev: true
 
+  /@types/nanoid-dictionary@4.2.3:
+    resolution: {integrity: sha512-T98Halw1f2aJ802GtCNMHZgqX2q1LX85eMP+K7N+OXSLagdmAzooAEhB565FQXTiCxdF4wNijOBroAQJat4uig==}
+    dev: true
+
   /@types/node@20.4.2:
     resolution: {integrity: sha512-Dd0BYtWgnWJKwO1jkmTrzofjK2QXXcai0dmtzvIBhcA+RsG5h8R3xlyta0kGOZRNfL9GuRtb1knmPEhQrePCEw==}
     dev: true
@@ -15001,6 +15011,10 @@ packages:
       sourcemap-codec: 1.4.8
       stacktrace-js: 2.0.2
       stylis: 4.3.0
+    dev: false
+
+  /nanoid-dictionary@4.3.0:
+    resolution: {integrity: sha512-Xw1+/QnRGWO1KJ0rLfU1xR85qXmAHyLbE3TUkklu9gOIDburP6CsUnLmTaNECGpBh5SHb2uPFmx0VT8UPyoeyw==}
     dev: false
 
   /nanoid@3.3.6:

@@ -33,6 +33,10 @@ export type Scalars = {
   Void: { input: void; output: void }
 }
 
+export type CheckEmailExistsInput = {
+  email: Scalars['String']['input']
+}
+
 export type Comment = {
   created_at?: Maybe<Scalars['Date']['output']>
   deleted?: Maybe<Scalars['Boolean']['output']>
@@ -48,10 +52,6 @@ export type Comment = {
 
 export type ConfirmChangeEmailInput = {
   code: Scalars['String']['input']
-}
-
-export type EmailExistsInput = {
-  email: Scalars['Boolean']['input']
 }
 
 export type FeedPostsInput = {
@@ -239,8 +239,8 @@ export type PostHistory = {
 }
 
 export type Query = {
+  checkEmailExists?: Maybe<Scalars['Boolean']['output']>
   currentUser?: Maybe<User>
-  emailExists?: Maybe<Scalars['Boolean']['output']>
   feedPosts: Array<Post>
   followers: Array<FollowResult>
   followings: Array<FollowResult>
@@ -260,8 +260,8 @@ export type Query = {
   velogConfig?: Maybe<VelogConfig>
 }
 
-export type QueryEmailExistsArgs = {
-  input: EmailExistsInput
+export type QueryCheckEmailExistsArgs = {
+  input: CheckEmailExistsInput
 }
 
 export type QueryFeedPostsArgs = {
@@ -611,10 +611,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
+  CheckEmailExistsInput: CheckEmailExistsInput
   Comment: ResolverTypeWrapper<CommentModel>
   ConfirmChangeEmailInput: ConfirmChangeEmailInput
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
-  EmailExistsInput: EmailExistsInput
   FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
   FollowResult: ResolverTypeWrapper<
@@ -693,10 +693,10 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output']
+  CheckEmailExistsInput: CheckEmailExistsInput
   Comment: CommentModel
   ConfirmChangeEmailInput: ConfirmChangeEmailInput
   Date: Scalars['Date']['output']
-  EmailExistsInput: EmailExistsInput
   FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
   FollowResult: Omit<FollowResult, 'profile'> & { profile: ResolversParentTypes['UserProfile'] }
@@ -955,13 +955,13 @@ export type QueryResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
-  currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
-  emailExists?: Resolver<
+  checkEmailExists?: Resolver<
     Maybe<ResolversTypes['Boolean']>,
     ParentType,
     ContextType,
-    RequireFields<QueryEmailExistsArgs, 'input'>
+    RequireFields<QueryCheckEmailExistsArgs, 'input'>
   >
+  currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
   feedPosts?: Resolver<
     Array<ResolversTypes['Post']>,
     ParentType,

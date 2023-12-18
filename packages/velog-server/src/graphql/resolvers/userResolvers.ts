@@ -9,6 +9,7 @@ import { UserService } from '@services/UserService/index.js'
 import { VelogConfigService } from '@services/VelogConfigService/index.js'
 import { container } from 'tsyringe'
 import { ExternalIntegrationService } from '@services/ExternalIntegrationService'
+import { JwtService } from '@lib/jwt/JwtService'
 
 const userResolvers: Resolvers = {
   User: {
@@ -70,6 +71,15 @@ const userResolvers: Resolvers = {
     restoreToken: async (_, __, ctx) => {
       const userService = container.resolve(UserService)
       return await userService.restoreToken(ctx)
+    },
+    unregisterToken: async (_, __, ctx) => {
+      const jwtService = container.resolve(JwtService)
+      return jwtService.unregisterUserToken(ctx.user?.id)
+    },
+    checkEmailExists: async (_, { input }) => {
+      const userService = container.resolve(UserService)
+      const user = await userService.findByEmail(input.email)
+      return !!user
     },
   },
   Mutation: {

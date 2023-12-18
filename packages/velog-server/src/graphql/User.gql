@@ -48,7 +48,7 @@ type Query {
   currentUser: User
   restoreToken: UserToken
   unregisterToken: String
-  emailExists(input: EmailExistsInput!): Boolean
+  checkEmailExists(input: CheckEmailExistsInput!): Boolean
 }
 
 type Mutation {
@@ -112,6 +112,6 @@ input ConfirmChangeEmailInput {
   code: String!
 }
 
-input EmailExistsInput {
-  email: Boolean!
+input CheckEmailExistsInput {
+  email: String!
 }

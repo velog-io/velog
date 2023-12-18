@@ -5,7 +5,7 @@ import { Prisma, User } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { GraphQLContext } from '@interfaces/graphql'
 import { JwtService } from '@lib/jwt/JwtService.js'
-import { RefreshTokenData } from '@lib/jwt/Jwt.interface.js'
+import { RefreshTokenData } from '@lib/jwt/JwtInterface.js'
 import { Time } from '@constants/TimeConstants.js'
 import {
   UnauthorizedError,

@@ -3,12 +3,16 @@ import { injectable, singleton } from 'tsyringe'
 import { Time } from '@constants/TimeConstants.js'
 import { ENV } from '@env'
 import { DbService } from '@lib/db/DbService.js'
+import { UnauthorizedError } from '@errors/UnauthorizedError'
 
 @injectable()
 @singleton()
 export class JwtService {
   constructor(private readonly db: DbService) {}
-  public generateToken(payload: string | Buffer | object, options?: SignOptions): Promise<string> {
+  public generateToken(
+    payload: string | Buffer | Record<any, any>,
+    options?: SignOptions,
+  ): Promise<string> {
     const jwtOptions: SignOptions = {
       issuer: 'velog.io',
       expiresIn: '7d',
@@ -101,5 +105,15 @@ export class JwtService {
     )
 
     return { accessToken, refreshToken }
+  }
+  public unregisterUserToken(signedUserId?: string) {
+    if (!signedUserId) {
+      throw new UnauthorizedError('Not Logged In')
+    }
+
+    return this.generateToken(
+      { user_id: signedUserId },
+      { subject: 'unregister_token', expiresIn: '5m' },
+    )
   }
 }
