@@ -7,7 +7,7 @@ import {
   TrendingPostsQueryVariables,
   TrendingWritersQueryVariables,
   VelogPostsQueryVariables,
-} from '../generated'
+} from './generated'
 
 export const infiniteTrendingPostsQueryKey = (variables: TrendingPostsQueryVariables) => [
   'trendingPosts.infinite',
