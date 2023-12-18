@@ -34,7 +34,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       cronTime: '0 5 * * *', // every day at 05:00 (5:00 AM)
       jobService: generateTrendingWritersJob,
       param: undefined,
-      isImmediate: true,
+      isImmediateExecute: true,
     },
   ]
 
@@ -49,7 +49,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
 
   // for test
   if (ENV.dockerEnv !== 'production') {
-    const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediate)
+    const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediateExecute)
     await Promise.all(immediateRunJobs.map(createTick))
   }
 
@@ -86,7 +86,7 @@ type NeedParamJobService = {
   cronTime: string
   jobService: CalculatePostScoreJob
   param: number
-  isImmediate?: boolean
+  isImmediateExecute?: boolean
 }
 
 type NotNeedParamJobService = {
@@ -94,7 +94,7 @@ type NotNeedParamJobService = {
   cronTime: string
   jobService: GenerateFeedJob | GenerateTrendingWritersJob
   param: undefined
-  isImmediate?: boolean
+  isImmediateExecute?: boolean
 }
 
 async function createTick(description: JobDescription) {
