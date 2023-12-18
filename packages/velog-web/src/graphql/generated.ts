@@ -11,7 +11,7 @@ import {
   InfiniteData,
   UseSuspenseInfiniteQueryOptions,
 } from '@tanstack/react-query'
-import { fetcher } from './fetcher'
+import { fetcher } from './helpers/fetcher'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -36,6 +36,10 @@ export type Scalars = {
   Void: { input: void; output: void }
 }
 
+export type CheckEmailExistsInput = {
+  email: Scalars['String']['input']
+}
+
 export type Comment = {
   created_at: Maybe<Scalars['DateTimeISO']['output']>
   deleted: Maybe<Scalars['Boolean']['output']>
@@ -47,6 +51,10 @@ export type Comment = {
   replies_count: Maybe<Scalars['Int']['output']>
   text: Maybe<Scalars['String']['output']>
   user: Maybe<User>
+}
+
+export type ConfirmChangeEmailInput = {
+  code: Scalars['String']['input']
 }
 
 export type FeedPostsInput = {
@@ -106,6 +114,10 @@ export type GetVelogConfigInput = {
   username: Scalars['String']['input']
 }
 
+export type InitiateChangeEmailInput = {
+  email: Scalars['String']['input']
+}
+
 export type LikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
@@ -116,17 +128,34 @@ export type LinkedPosts = {
 }
 
 export type Mutation = {
+  acceptIntegration: Scalars['String']['output']
+  confirmChangeEmail: Maybe<Scalars['Void']['output']>
   follow: Maybe<Scalars['Boolean']['output']>
+  initiateChangeEmail: Maybe<Scalars['Void']['output']>
   likePost: Maybe<Post>
   logout: Maybe<Scalars['Void']['output']>
   sendMail: Maybe<SendMailResponse>
   unfollow: Maybe<Scalars['Boolean']['output']>
   unlikePost: Maybe<Post>
+  unregister: Maybe<Scalars['Void']['output']>
   updateAbout: Maybe<UserProfile>
+  updateEmailRules: Maybe<UserMeta>
+  updateProfile: Maybe<UserProfile>
+  updateSocialInfo: Maybe<UserProfile>
+  updateThumbnail: Maybe<UserProfile>
+  updateVelogTitle: Maybe<VelogConfig>
+}
+
+export type MutationConfirmChangeEmailArgs = {
+  input: ConfirmChangeEmailInput
 }
 
 export type MutationFollowArgs = {
   input: FollowInput
+}
+
+export type MutationInitiateChangeEmailArgs = {
+  input: InitiateChangeEmailInput
 }
 
 export type MutationLikePostArgs = {
@@ -145,8 +174,32 @@ export type MutationUnlikePostArgs = {
   input: UnlikePostInput
 }
 
+export type MutationUnregisterArgs = {
+  input: UnregisterInput
+}
+
 export type MutationUpdateAboutArgs = {
   input: UpdateAboutInput
+}
+
+export type MutationUpdateEmailRulesArgs = {
+  input: UpdateEmailRulesInput
+}
+
+export type MutationUpdateProfileArgs = {
+  input: UpdateProfileInput
+}
+
+export type MutationUpdateSocialInfoArgs = {
+  input: UpdateSocialInfoInput
+}
+
+export type MutationUpdateThumbnailArgs = {
+  input: UpdateThumbnailInput
+}
+
+export type MutationUpdateVelogTitleArgs = {
+  input: UpdateVelogTitleInput
 }
 
 export type Post = {
@@ -189,6 +242,7 @@ export type PostHistory = {
 }
 
 export type Query = {
+  checkEmailExists: Maybe<Scalars['Boolean']['output']>
   currentUser: Maybe<User>
   feedPosts: Array<Post>
   followers: Array<FollowResult>
@@ -203,9 +257,14 @@ export type Query = {
   seriesList: Array<Series>
   trendingPosts: Array<Post>
   trendingWriters: Array<TrendingWriter>
+  unregisterToken: Maybe<Scalars['String']['output']>
   user: Maybe<User>
   userTags: Maybe<UserTags>
   velogConfig: Maybe<VelogConfig>
+}
+
+export type QueryCheckEmailExistsArgs = {
+  input: CheckEmailExistsInput
 }
 
 export type QueryFeedPostsArgs = {
@@ -387,8 +446,34 @@ export type UnlikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
 
+export type UnregisterInput = {
+  token: Scalars['String']['input']
+}
+
 export type UpdateAboutInput = {
   about: Scalars['String']['input']
+}
+
+export type UpdateEmailRulesInput = {
+  notification: Scalars['Boolean']['input']
+  promotion: Scalars['Boolean']['input']
+}
+
+export type UpdateProfileInput = {
+  display_name: Scalars['String']['input']
+  short_bio: Scalars['String']['input']
+}
+
+export type UpdateSocialInfoInput = {
+  profile_links: Scalars['JSON']['input']
+}
+
+export type UpdateThumbnailInput = {
+  url: Scalars['String']['input']
+}
+
+export type UpdateVelogTitleInput = {
+  title: Scalars['String']['input']
 }
 
 export type User = {
@@ -762,10 +847,6 @@ export type CurrentUserQuery = {
   } | null
 }
 
-export type LogoutMutationVariables = Exact<{ [key: string]: never }>
-
-export type LogoutMutation = { logout: void | null }
-
 export type VelogConfigQueryVariables = Exact<{
   input: GetVelogConfigInput
 }>
@@ -801,11 +882,83 @@ export type GetUserSeriesListQuery = {
   } | null
 }
 
+export type UnregisterTokenQueryVariables = Exact<{ [key: string]: never }>
+
+export type UnregisterTokenQuery = { unregisterToken: string | null }
+
+export type CheckEmailExistsQueryVariables = Exact<{
+  input: CheckEmailExistsInput
+}>
+
+export type CheckEmailExistsQuery = { checkEmailExists: boolean | null }
+
 export type UpdateAboutMutationVariables = Exact<{
   input: UpdateAboutInput
 }>
 
 export type UpdateAboutMutation = { updateAbout: { id: string; about: string } | null }
+
+export type UpdateThumbnailMutationVariables = Exact<{
+  input: UpdateThumbnailInput
+}>
+
+export type UpdateThumbnailMutation = {
+  updateThumbnail: { id: string; thumbnail: string | null } | null
+}
+
+export type UpdateProfileMutationVariables = Exact<{
+  input: UpdateProfileInput
+}>
+
+export type UpdateProfileMutation = {
+  updateProfile: { id: string; display_name: string; short_bio: string } | null
+}
+
+export type UpdateVelogTitleMutationVariables = Exact<{
+  input: UpdateVelogTitleInput
+}>
+
+export type UpdateVelogTitleMutation = {
+  updateVelogTitle: { id: string; title: string | null } | null
+}
+
+export type UpdateSocialInfoMutationVariables = Exact<{
+  input: UpdateSocialInfoInput
+}>
+
+export type UpdateSocialInfoMutation = {
+  updateSocialInfo: { id: string; profile_links: JSON } | null
+}
+
+export type UpdateEmailRulesMutationVariables = Exact<{
+  input: UpdateEmailRulesInput
+}>
+
+export type UpdateEmailRulesMutation = {
+  updateEmailRules: { email_notification: boolean | null; email_promotion: boolean | null } | null
+}
+
+export type UnregisterMutationVariables = Exact<{
+  input: UnregisterInput
+}>
+
+export type UnregisterMutation = { unregister: void | null }
+
+export type InitiateChangeEmailMutationVariables = Exact<{
+  input: InitiateChangeEmailInput
+}>
+
+export type InitiateChangeEmailMutation = { initiateChangeEmail: void | null }
+
+export type ConfirmChangeEmailMutationVariables = Exact<{
+  input: ConfirmChangeEmailInput
+}>
+
+export type ConfirmChangeEmailMutation = { confirmChangeEmail: void | null }
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never }>
+
+export type LogoutMutation = { logout: void | null }
 
 export type TrendingWritersQueryVariables = Exact<{
   input: TrendingWritersInput
@@ -2349,25 +2502,6 @@ useSuspenseInfiniteCurrentUserQuery.getKey = (variables?: CurrentUserQueryVariab
     ? ['currentUser.infiniteSuspense']
     : ['currentUser.infiniteSuspense', variables]
 
-export const LogoutDocument = `
-    mutation logout {
-  logout
-}
-    `
-
-export const useLogoutMutation = <TError = unknown, TContext = unknown>(
-  options?: UseMutationOptions<LogoutMutation, TError, LogoutMutationVariables, TContext>,
-) => {
-  return useMutation<LogoutMutation, TError, LogoutMutationVariables, TContext>({
-    mutationKey: ['logout'],
-    mutationFn: (variables?: LogoutMutationVariables) =>
-      fetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables)(),
-    ...options,
-  })
-}
-
-useLogoutMutation.getKey = () => ['logout']
-
 export const VelogConfigDocument = `
     query velogConfig($input: GetVelogConfigInput!) {
   velogConfig(input: $input) {
@@ -2704,6 +2838,231 @@ useSuspenseInfiniteGetUserSeriesListQuery.getKey = (variables: GetUserSeriesList
   variables,
 ]
 
+export const UnregisterTokenDocument = `
+    query unregisterToken {
+  unregisterToken
+}
+    `
+
+export const useUnregisterTokenQuery = <TData = UnregisterTokenQuery, TError = unknown>(
+  variables?: UnregisterTokenQueryVariables,
+  options?: Omit<UseQueryOptions<UnregisterTokenQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<UnregisterTokenQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<UnregisterTokenQuery, TError, TData>({
+    queryKey: variables === undefined ? ['unregisterToken'] : ['unregisterToken', variables],
+    queryFn: fetcher<UnregisterTokenQuery, UnregisterTokenQueryVariables>(
+      UnregisterTokenDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useUnregisterTokenQuery.getKey = (variables?: UnregisterTokenQueryVariables) =>
+  variables === undefined ? ['unregisterToken'] : ['unregisterToken', variables]
+
+export const useSuspenseUnregisterTokenQuery = <TData = UnregisterTokenQuery, TError = unknown>(
+  variables?: UnregisterTokenQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<UnregisterTokenQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<UnregisterTokenQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<UnregisterTokenQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ['unregisterTokenSuspense']
+        : ['unregisterTokenSuspense', variables],
+    queryFn: fetcher<UnregisterTokenQuery, UnregisterTokenQueryVariables>(
+      UnregisterTokenDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSuspenseUnregisterTokenQuery.getKey = (variables?: UnregisterTokenQueryVariables) =>
+  variables === undefined ? ['unregisterTokenSuspense'] : ['unregisterTokenSuspense', variables]
+
+export const useInfiniteUnregisterTokenQuery = <
+  TData = InfiniteData<UnregisterTokenQuery>,
+  TError = unknown,
+>(
+  variables: UnregisterTokenQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<UnregisterTokenQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<UnregisterTokenQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<UnregisterTokenQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['unregisterToken.infinite']
+            : ['unregisterToken.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<UnregisterTokenQuery, UnregisterTokenQueryVariables>(UnregisterTokenDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteUnregisterTokenQuery.getKey = (variables?: UnregisterTokenQueryVariables) =>
+  variables === undefined ? ['unregisterToken.infinite'] : ['unregisterToken.infinite', variables]
+
+export const useSuspenseInfiniteUnregisterTokenQuery = <
+  TData = InfiniteData<UnregisterTokenQuery>,
+  TError = unknown,
+>(
+  variables: UnregisterTokenQueryVariables,
+  options: Omit<
+    UseSuspenseInfiniteQueryOptions<UnregisterTokenQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<UnregisterTokenQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<UnregisterTokenQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['unregisterToken.infiniteSuspense']
+            : ['unregisterToken.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<UnregisterTokenQuery, UnregisterTokenQueryVariables>(UnregisterTokenDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteUnregisterTokenQuery.getKey = (variables?: UnregisterTokenQueryVariables) =>
+  variables === undefined
+    ? ['unregisterToken.infiniteSuspense']
+    : ['unregisterToken.infiniteSuspense', variables]
+
+export const CheckEmailExistsDocument = `
+    query checkEmailExists($input: CheckEmailExistsInput!) {
+  checkEmailExists(input: $input)
+}
+    `
+
+export const useCheckEmailExistsQuery = <TData = CheckEmailExistsQuery, TError = unknown>(
+  variables: CheckEmailExistsQueryVariables,
+  options?: Omit<UseQueryOptions<CheckEmailExistsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<CheckEmailExistsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<CheckEmailExistsQuery, TError, TData>({
+    queryKey: ['checkEmailExists', variables],
+    queryFn: fetcher<CheckEmailExistsQuery, CheckEmailExistsQueryVariables>(
+      CheckEmailExistsDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useCheckEmailExistsQuery.getKey = (variables: CheckEmailExistsQueryVariables) => [
+  'checkEmailExists',
+  variables,
+]
+
+export const useSuspenseCheckEmailExistsQuery = <TData = CheckEmailExistsQuery, TError = unknown>(
+  variables: CheckEmailExistsQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<CheckEmailExistsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<CheckEmailExistsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<CheckEmailExistsQuery, TError, TData>({
+    queryKey: ['checkEmailExistsSuspense', variables],
+    queryFn: fetcher<CheckEmailExistsQuery, CheckEmailExistsQueryVariables>(
+      CheckEmailExistsDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSuspenseCheckEmailExistsQuery.getKey = (variables: CheckEmailExistsQueryVariables) => [
+  'checkEmailExistsSuspense',
+  variables,
+]
+
+export const useInfiniteCheckEmailExistsQuery = <
+  TData = InfiniteData<CheckEmailExistsQuery>,
+  TError = unknown,
+>(
+  variables: CheckEmailExistsQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<CheckEmailExistsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<CheckEmailExistsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<CheckEmailExistsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['checkEmailExists.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<CheckEmailExistsQuery, CheckEmailExistsQueryVariables>(CheckEmailExistsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteCheckEmailExistsQuery.getKey = (variables: CheckEmailExistsQueryVariables) => [
+  'checkEmailExists.infinite',
+  variables,
+]
+
+export const useSuspenseInfiniteCheckEmailExistsQuery = <
+  TData = InfiniteData<CheckEmailExistsQuery>,
+  TError = unknown,
+>(
+  variables: CheckEmailExistsQueryVariables,
+  options: Omit<
+    UseSuspenseInfiniteQueryOptions<CheckEmailExistsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<CheckEmailExistsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<CheckEmailExistsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['checkEmailExists.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<CheckEmailExistsQuery, CheckEmailExistsQueryVariables>(CheckEmailExistsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteCheckEmailExistsQuery.getKey = (variables: CheckEmailExistsQueryVariables) => [
+  'checkEmailExists.infiniteSuspense',
+  variables,
+]
+
 export const UpdateAboutDocument = `
     mutation updateAbout($input: UpdateAboutInput!) {
   updateAbout(input: $input) {
@@ -2725,6 +3084,265 @@ export const useUpdateAboutMutation = <TError = unknown, TContext = unknown>(
 }
 
 useUpdateAboutMutation.getKey = () => ['updateAbout']
+
+export const UpdateThumbnailDocument = `
+    mutation updateThumbnail($input: UpdateThumbnailInput!) {
+  updateThumbnail(input: $input) {
+    id
+    thumbnail
+  }
+}
+    `
+
+export const useUpdateThumbnailMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    UpdateThumbnailMutation,
+    TError,
+    UpdateThumbnailMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<UpdateThumbnailMutation, TError, UpdateThumbnailMutationVariables, TContext>({
+    mutationKey: ['updateThumbnail'],
+    mutationFn: (variables?: UpdateThumbnailMutationVariables) =>
+      fetcher<UpdateThumbnailMutation, UpdateThumbnailMutationVariables>(
+        UpdateThumbnailDocument,
+        variables,
+      )(),
+    ...options,
+  })
+}
+
+useUpdateThumbnailMutation.getKey = () => ['updateThumbnail']
+
+export const UpdateProfileDocument = `
+    mutation updateProfile($input: UpdateProfileInput!) {
+  updateProfile(input: $input) {
+    id
+    display_name
+    short_bio
+  }
+}
+    `
+
+export const useUpdateProfileMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    UpdateProfileMutation,
+    TError,
+    UpdateProfileMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<UpdateProfileMutation, TError, UpdateProfileMutationVariables, TContext>({
+    mutationKey: ['updateProfile'],
+    mutationFn: (variables?: UpdateProfileMutationVariables) =>
+      fetcher<UpdateProfileMutation, UpdateProfileMutationVariables>(
+        UpdateProfileDocument,
+        variables,
+      )(),
+    ...options,
+  })
+}
+
+useUpdateProfileMutation.getKey = () => ['updateProfile']
+
+export const UpdateVelogTitleDocument = `
+    mutation updateVelogTitle($input: UpdateVelogTitleInput!) {
+  updateVelogTitle(input: $input) {
+    id
+    title
+  }
+}
+    `
+
+export const useUpdateVelogTitleMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    UpdateVelogTitleMutation,
+    TError,
+    UpdateVelogTitleMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<UpdateVelogTitleMutation, TError, UpdateVelogTitleMutationVariables, TContext>(
+    {
+      mutationKey: ['updateVelogTitle'],
+      mutationFn: (variables?: UpdateVelogTitleMutationVariables) =>
+        fetcher<UpdateVelogTitleMutation, UpdateVelogTitleMutationVariables>(
+          UpdateVelogTitleDocument,
+          variables,
+        )(),
+      ...options,
+    },
+  )
+}
+
+useUpdateVelogTitleMutation.getKey = () => ['updateVelogTitle']
+
+export const UpdateSocialInfoDocument = `
+    mutation updateSocialInfo($input: UpdateSocialInfoInput!) {
+  updateSocialInfo(input: $input) {
+    id
+    profile_links
+  }
+}
+    `
+
+export const useUpdateSocialInfoMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    UpdateSocialInfoMutation,
+    TError,
+    UpdateSocialInfoMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<UpdateSocialInfoMutation, TError, UpdateSocialInfoMutationVariables, TContext>(
+    {
+      mutationKey: ['updateSocialInfo'],
+      mutationFn: (variables?: UpdateSocialInfoMutationVariables) =>
+        fetcher<UpdateSocialInfoMutation, UpdateSocialInfoMutationVariables>(
+          UpdateSocialInfoDocument,
+          variables,
+        )(),
+      ...options,
+    },
+  )
+}
+
+useUpdateSocialInfoMutation.getKey = () => ['updateSocialInfo']
+
+export const UpdateEmailRulesDocument = `
+    mutation updateEmailRules($input: UpdateEmailRulesInput!) {
+  updateEmailRules(input: $input) {
+    email_notification
+    email_promotion
+  }
+}
+    `
+
+export const useUpdateEmailRulesMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    UpdateEmailRulesMutation,
+    TError,
+    UpdateEmailRulesMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<UpdateEmailRulesMutation, TError, UpdateEmailRulesMutationVariables, TContext>(
+    {
+      mutationKey: ['updateEmailRules'],
+      mutationFn: (variables?: UpdateEmailRulesMutationVariables) =>
+        fetcher<UpdateEmailRulesMutation, UpdateEmailRulesMutationVariables>(
+          UpdateEmailRulesDocument,
+          variables,
+        )(),
+      ...options,
+    },
+  )
+}
+
+useUpdateEmailRulesMutation.getKey = () => ['updateEmailRules']
+
+export const UnregisterDocument = `
+    mutation unregister($input: UnregisterInput!) {
+  unregister(input: $input)
+}
+    `
+
+export const useUnregisterMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<UnregisterMutation, TError, UnregisterMutationVariables, TContext>,
+) => {
+  return useMutation<UnregisterMutation, TError, UnregisterMutationVariables, TContext>({
+    mutationKey: ['unregister'],
+    mutationFn: (variables?: UnregisterMutationVariables) =>
+      fetcher<UnregisterMutation, UnregisterMutationVariables>(UnregisterDocument, variables)(),
+    ...options,
+  })
+}
+
+useUnregisterMutation.getKey = () => ['unregister']
+
+export const InitiateChangeEmailDocument = `
+    mutation initiateChangeEmail($input: InitiateChangeEmailInput!) {
+  initiateChangeEmail(input: $input)
+}
+    `
+
+export const useInitiateChangeEmailMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    InitiateChangeEmailMutation,
+    TError,
+    InitiateChangeEmailMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<
+    InitiateChangeEmailMutation,
+    TError,
+    InitiateChangeEmailMutationVariables,
+    TContext
+  >({
+    mutationKey: ['initiateChangeEmail'],
+    mutationFn: (variables?: InitiateChangeEmailMutationVariables) =>
+      fetcher<InitiateChangeEmailMutation, InitiateChangeEmailMutationVariables>(
+        InitiateChangeEmailDocument,
+        variables,
+      )(),
+    ...options,
+  })
+}
+
+useInitiateChangeEmailMutation.getKey = () => ['initiateChangeEmail']
+
+export const ConfirmChangeEmailDocument = `
+    mutation confirmChangeEmail($input: ConfirmChangeEmailInput!) {
+  confirmChangeEmail(input: $input)
+}
+    `
+
+export const useConfirmChangeEmailMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    ConfirmChangeEmailMutation,
+    TError,
+    ConfirmChangeEmailMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<
+    ConfirmChangeEmailMutation,
+    TError,
+    ConfirmChangeEmailMutationVariables,
+    TContext
+  >({
+    mutationKey: ['confirmChangeEmail'],
+    mutationFn: (variables?: ConfirmChangeEmailMutationVariables) =>
+      fetcher<ConfirmChangeEmailMutation, ConfirmChangeEmailMutationVariables>(
+        ConfirmChangeEmailDocument,
+        variables,
+      )(),
+    ...options,
+  })
+}
+
+useConfirmChangeEmailMutation.getKey = () => ['confirmChangeEmail']
+
+export const LogoutDocument = `
+    mutation logout {
+  logout
+}
+    `
+
+export const useLogoutMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<LogoutMutation, TError, LogoutMutationVariables, TContext>,
+) => {
+  return useMutation<LogoutMutation, TError, LogoutMutationVariables, TContext>({
+    mutationKey: ['logout'],
+    mutationFn: (variables?: LogoutMutationVariables) =>
+      fetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables)(),
+    ...options,
+  })
+}
+
+useLogoutMutation.getKey = () => ['logout']
 
 export const TrendingWritersDocument = `
     query trendingWriters($input: TrendingWritersInput!) {

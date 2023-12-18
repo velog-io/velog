@@ -1,3 +1,4 @@
+# Query
 query getUser($input: GetUserInput!) {
   user(input: $input) {
     id
@@ -47,10 +48,6 @@ query currentUser {
   }
 }
 
-mutation logout {
-  logout
-}
-
 query velogConfig($input: GetVelogConfigInput!) {
   velogConfig(input: $input) {
     title
@@ -84,9 +81,70 @@ query getUserSeriesList($input: GetUserInput!) {
   }
 }
 
+query unregisterToken {
+  unregisterToken
+}
+
+query checkEmailExists($input: CheckEmailExistsInput!) {
+  checkEmailExists(input: $input)
+}
+
+# Mutation
 mutation updateAbout($input: UpdateAboutInput!) {
   updateAbout(input: $input) {
     id
     about
   }
+}
+
+mutation updateThumbnail($input: UpdateThumbnailInput!) {
+  updateThumbnail(input: $input) {
+    id
+    thumbnail
+  }
+}
+
+mutation updateProfile($input: UpdateProfileInput!) {
+  updateProfile(input: $input) {
+    id
+    display_name
+    short_bio
+  }
+}
+
+mutation updateVelogTitle($input: UpdateVelogTitleInput!) {
+  updateVelogTitle(input: $input) {
+    id
+    title
+  }
+}
+
+mutation updateSocialInfo($input: UpdateSocialInfoInput!) {
+  updateSocialInfo(input: $input) {
+    id
+    profile_links
+  }
+}
+
+mutation updateEmailRules($input: UpdateEmailRulesInput!) {
+  updateEmailRules(input: $input) {
+    email_notification
+    email_promotion
+  }
+}
+
+mutation unregister($input: UnregisterInput!) {
+  unregister(input: $input)
+}
+
+mutation initiateChangeEmail($input: InitiateChangeEmailInput!) {
+  initiateChangeEmail(input: $input)
+}
+
+mutation confirmChangeEmail($input: ConfirmChangeEmailInput!) {
+  confirmChangeEmail(input: $input)
+}
+
+mutation logout {
+  logout
 }

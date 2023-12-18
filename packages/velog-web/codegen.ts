@@ -21,7 +21,7 @@ const config: CodegenConfig = {
         maybeValue: 'T | null',
         inputMaybeValue: 'T | undefined',
         fetcher: {
-          func: './fetcher#fetcher',
+          func: './helpers/fetcher#fetcher',
         },
         avoidOptionals: {
           field: true,
