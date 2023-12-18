@@ -1,7 +1,7 @@
 import marked from 'marked'
 import { format } from 'date-fns'
 
-export const createCommentEmail = ({
+export const commentTemplate = ({
   postWriter,
   username,
   optimizeUserImage, // optimizeImage 함수를 적용 시킨 결과를 인자로 넘길 것
@@ -10,7 +10,7 @@ export const createCommentEmail = ({
   postTitle,
   comment,
   commentId,
-}: CreateCommentEmailParams) => {
+}: commentTemplateArgs) => {
   const commentHtml = marked.parse(comment.replace(/[\u200B\u200C\u200D\u200E\u200F\uFEFF]/g, ''))
   const postLink = `https://velog.io/@${postWriter}/${urlSlug}?comment_id=${commentId}`
   const unsubscribeUrl = `https://v2.velog.io/api/v2/common/email/unsubscribe?token=${unsubscribeToken}`
@@ -83,7 +83,7 @@ export const createCommentEmail = ({
   `
 }
 
-type CreateCommentEmailParams = {
+type commentTemplateArgs = {
   postWriter: string
   username: string
   optimizeUserImage: string | null

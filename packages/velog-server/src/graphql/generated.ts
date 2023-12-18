@@ -46,6 +46,14 @@ export type Comment = {
   user?: Maybe<User>
 }
 
+export type ConfirmChangeEmailInput = {
+  code: Scalars['String']['input']
+}
+
+export type EmailExistsInput = {
+  email: Scalars['Boolean']['input']
+}
+
 export type FeedPostsInput = {
   limit?: InputMaybe<Scalars['PositiveInt']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -103,6 +111,10 @@ export type GetVelogConfigInput = {
   username: Scalars['String']['input']
 }
 
+export type InitiateChangeEmailInput = {
+  email: Scalars['String']['input']
+}
+
 export type LikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
@@ -113,17 +125,34 @@ export type LinkedPosts = {
 }
 
 export type Mutation = {
+  acceptIntegration: Scalars['String']['output']
+  confirmChangeEmail?: Maybe<Scalars['Void']['output']>
   follow?: Maybe<Scalars['Boolean']['output']>
+  initiateChangeEmail?: Maybe<Scalars['Void']['output']>
   likePost?: Maybe<Post>
   logout?: Maybe<Scalars['Void']['output']>
   sendMail?: Maybe<SendMailResponse>
   unfollow?: Maybe<Scalars['Boolean']['output']>
   unlikePost?: Maybe<Post>
+  unregister?: Maybe<Scalars['Void']['output']>
   updateAbout?: Maybe<UserProfile>
+  updateEmailRules?: Maybe<UserMeta>
+  updateProfile?: Maybe<UserProfile>
+  updateSocialInfo?: Maybe<UserProfile>
+  updateThumbnail?: Maybe<UserProfile>
+  updateVelogTitle?: Maybe<VelogConfig>
+}
+
+export type MutationConfirmChangeEmailArgs = {
+  input: ConfirmChangeEmailInput
 }
 
 export type MutationFollowArgs = {
   input: FollowInput
+}
+
+export type MutationInitiateChangeEmailArgs = {
+  input: InitiateChangeEmailInput
 }
 
 export type MutationLikePostArgs = {
@@ -142,8 +171,32 @@ export type MutationUnlikePostArgs = {
   input: UnlikePostInput
 }
 
+export type MutationUnregisterArgs = {
+  input: UnregisterInput
+}
+
 export type MutationUpdateAboutArgs = {
   input: UpdateAboutInput
+}
+
+export type MutationUpdateEmailRulesArgs = {
+  input: UpdateEmailRulesInput
+}
+
+export type MutationUpdateProfileArgs = {
+  input: UpdateProfileInput
+}
+
+export type MutationUpdateSocialInfoArgs = {
+  input: UpdateSocialInfoInput
+}
+
+export type MutationUpdateThumbnailArgs = {
+  input: UpdateThumbnailInput
+}
+
+export type MutationUpdateVelogTitleArgs = {
+  input: UpdateVelogTitleInput
 }
 
 export type Post = {
@@ -187,6 +240,7 @@ export type PostHistory = {
 
 export type Query = {
   currentUser?: Maybe<User>
+  emailExists?: Maybe<Scalars['Boolean']['output']>
   feedPosts: Array<Post>
   followers: Array<FollowResult>
   followings: Array<FollowResult>
@@ -200,9 +254,14 @@ export type Query = {
   seriesList: Array<Series>
   trendingPosts: Array<Post>
   trendingWriters: Array<TrendingWriter>
+  unregisterToken?: Maybe<Scalars['String']['output']>
   user?: Maybe<User>
   userTags?: Maybe<UserTags>
   velogConfig?: Maybe<VelogConfig>
+}
+
+export type QueryEmailExistsArgs = {
+  input: EmailExistsInput
 }
 
 export type QueryFeedPostsArgs = {
@@ -384,8 +443,34 @@ export type UnlikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
 
+export type UnregisterInput = {
+  token: Scalars['String']['input']
+}
+
 export type UpdateAboutInput = {
   about: Scalars['String']['input']
+}
+
+export type UpdateEmailRulesInput = {
+  notification: Scalars['Boolean']['input']
+  promotion: Scalars['Boolean']['input']
+}
+
+export type UpdateProfileInput = {
+  display_name: Scalars['String']['input']
+  short_bio: Scalars['String']['input']
+}
+
+export type UpdateSocialInfoInput = {
+  profile_links: Scalars['JSON']['input']
+}
+
+export type UpdateThumbnailInput = {
+  url: Scalars['String']['input']
+}
+
+export type UpdateVelogTitleInput = {
+  title: Scalars['String']['input']
 }
 
 export type User = {
@@ -527,7 +612,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
   Comment: ResolverTypeWrapper<CommentModel>
+  ConfirmChangeEmailInput: ConfirmChangeEmailInput
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
+  EmailExistsInput: EmailExistsInput
   FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
   FollowResult: ResolverTypeWrapper<
@@ -541,6 +628,7 @@ export type ResolversTypes = {
   GetUserInput: GetUserInput
   GetVelogConfigInput: GetVelogConfigInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
+  InitiateChangeEmailInput: InitiateChangeEmailInput
   Int: ResolverTypeWrapper<Scalars['Int']['output']>
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
   LikePostInput: LikePostInput
@@ -585,7 +673,13 @@ export type ResolversTypes = {
   TrendingWritersInput: TrendingWritersInput
   UnfollowInput: UnfollowInput
   UnlikePostInput: UnlikePostInput
+  UnregisterInput: UnregisterInput
   UpdateAboutInput: UpdateAboutInput
+  UpdateEmailRulesInput: UpdateEmailRulesInput
+  UpdateProfileInput: UpdateProfileInput
+  UpdateSocialInfoInput: UpdateSocialInfoInput
+  UpdateThumbnailInput: UpdateThumbnailInput
+  UpdateVelogTitleInput: UpdateVelogTitleInput
   User: ResolverTypeWrapper<UserModel>
   UserMeta: ResolverTypeWrapper<UserMeta>
   UserProfile: ResolverTypeWrapper<UserProfileModel>
@@ -600,7 +694,9 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output']
   Comment: CommentModel
+  ConfirmChangeEmailInput: ConfirmChangeEmailInput
   Date: Scalars['Date']['output']
+  EmailExistsInput: EmailExistsInput
   FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
   FollowResult: Omit<FollowResult, 'profile'> & { profile: ResolversParentTypes['UserProfile'] }
@@ -612,6 +708,7 @@ export type ResolversParentTypes = {
   GetUserInput: GetUserInput
   GetVelogConfigInput: GetVelogConfigInput
   ID: Scalars['ID']['output']
+  InitiateChangeEmailInput: InitiateChangeEmailInput
   Int: Scalars['Int']['output']
   JSON: Scalars['JSON']['output']
   LikePostInput: LikePostInput
@@ -647,7 +744,13 @@ export type ResolversParentTypes = {
   TrendingWritersInput: TrendingWritersInput
   UnfollowInput: UnfollowInput
   UnlikePostInput: UnlikePostInput
+  UnregisterInput: UnregisterInput
   UpdateAboutInput: UpdateAboutInput
+  UpdateEmailRulesInput: UpdateEmailRulesInput
+  UpdateProfileInput: UpdateProfileInput
+  UpdateSocialInfoInput: UpdateSocialInfoInput
+  UpdateThumbnailInput: UpdateThumbnailInput
+  UpdateVelogTitleInput: UpdateVelogTitleInput
   User: UserModel
   UserMeta: UserMeta
   UserProfile: UserProfileModel
@@ -708,11 +811,24 @@ export type MutationResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
+  acceptIntegration?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  confirmChangeEmail?: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationConfirmChangeEmailArgs, 'input'>
+  >
   follow?: Resolver<
     Maybe<ResolversTypes['Boolean']>,
     ParentType,
     ContextType,
     RequireFields<MutationFollowArgs, 'input'>
+  >
+  initiateChangeEmail?: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationInitiateChangeEmailArgs, 'input'>
   >
   likePost?: Resolver<
     Maybe<ResolversTypes['Post']>,
@@ -739,11 +855,47 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationUnlikePostArgs, 'input'>
   >
+  unregister?: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUnregisterArgs, 'input'>
+  >
   updateAbout?: Resolver<
     Maybe<ResolversTypes['UserProfile']>,
     ParentType,
     ContextType,
     RequireFields<MutationUpdateAboutArgs, 'input'>
+  >
+  updateEmailRules?: Resolver<
+    Maybe<ResolversTypes['UserMeta']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateEmailRulesArgs, 'input'>
+  >
+  updateProfile?: Resolver<
+    Maybe<ResolversTypes['UserProfile']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateProfileArgs, 'input'>
+  >
+  updateSocialInfo?: Resolver<
+    Maybe<ResolversTypes['UserProfile']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateSocialInfoArgs, 'input'>
+  >
+  updateThumbnail?: Resolver<
+    Maybe<ResolversTypes['UserProfile']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateThumbnailArgs, 'input'>
+  >
+  updateVelogTitle?: Resolver<
+    Maybe<ResolversTypes['VelogConfig']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateVelogTitleArgs, 'input'>
   >
 }
 
@@ -804,6 +956,12 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
+  emailExists?: Resolver<
+    Maybe<ResolversTypes['Boolean']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryEmailExistsArgs, 'input'>
+  >
   feedPosts?: Resolver<
     Array<ResolversTypes['Post']>,
     ParentType,
@@ -877,6 +1035,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryTrendingWritersArgs, 'input'>
   >
+  unregisterToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   user?: Resolver<
     Maybe<ResolversTypes['User']>,
     ParentType,

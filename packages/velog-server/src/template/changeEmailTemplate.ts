@@ -1,4 +1,6 @@
-export const createChangeEmail: CreateChangeEmailType = (username, email, code) => {
+import { ENV } from '@env'
+
+export const changeEmailTemplate: ChangeEmailTemplateArgs = (username, email, code) => {
   const text = email ? '변경' : '설정'
   const subject = `Velog 이메일 ${text}하기`
   const body = `
@@ -9,7 +11,7 @@ export const createChangeEmail: CreateChangeEmailType = (username, email, code) 
       <b style="black">안녕하세요!</b>
       ${username}의 이메일을 ${email}로 ${text}하는 것을 승인하겠습니까?
     </div>
-    <a href="https://velog.io/email-change?code=${code}" style="text-decoration: none; width: 400px; text-align:center; display:block; margin: 0 auto; margin-top: 1rem; background: #845ef7; padding-top: 1rem; color: white; font-size: 1.25rem; padding-bottom: 1rem; font-weight: 600; border-radius: 4px;">
+    <a href="${ENV.clientV2Host}/email-change?code=${code}" style="text-decoration: none; width: 400px; text-align:center; display:block; margin: 0 auto; margin-top: 1rem; background: #845ef7; padding-top: 1rem; color: white; font-size: 1.25rem; padding-bottom: 1rem; font-weight: 600; border-radius: 4px;">
       ${text}하기
     </a>
     <div style="text-align: center; margin-top: 1rem; color: #868e96; font-size: 0.85rem;">
@@ -26,7 +28,7 @@ export const createChangeEmail: CreateChangeEmailType = (username, email, code) 
   }
 }
 
-type CreateChangeEmailType = (
+type ChangeEmailTemplateArgs = (
   usrename: string,
   email: string,
   code: string,

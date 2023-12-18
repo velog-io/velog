@@ -2,7 +2,7 @@ import { DbService } from '@lib/db/DbService.js'
 import { MailService } from '@lib/mail/MailService.js'
 import { injectable, singleton } from 'tsyringe'
 import { nanoid } from 'nanoid'
-import { createAuthEmail } from '@template/createAuthEmail.js'
+import { createAuthTemplate } from '@template/createAuthTemplate'
 import { ENV } from '@env'
 import { FastifyReply } from 'fastify'
 import { CookieService } from '@lib/cookie/CookieService.js'
@@ -38,7 +38,7 @@ export class AuthService implements Service {
       },
     })
 
-    const template = createAuthEmail(!!user, emailAuth.code!)
+    const template = createAuthTemplate(!!user, emailAuth.code!)
 
     if (ENV.appEnv === 'development') {
       console.log(

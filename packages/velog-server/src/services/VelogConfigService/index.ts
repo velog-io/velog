@@ -1,3 +1,6 @@
+import { BadRequestError } from '@errors/BadRequestErrors.js'
+import { NotFoundError } from '@errors/NotfoundError.js'
+import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { VelogConfig } from '@prisma/client'
@@ -7,6 +10,7 @@ import { injectable, singleton } from 'tsyringe'
 interface Service {
   velogConfigLoader(): DataLoader<string, VelogConfig>
   findByUsername(username: string): Promise<VelogConfig | null>
+  updateVelogConfig(title: string, signedUserId?: string): Promise<VelogConfig>
 }
 
 @injectable()
@@ -42,5 +46,37 @@ export class VelogConfigService implements Service {
       },
     })
     return config
+  }
+  public async updateVelogConfig(title: string, signedUserId?: string) {
+    if (!signedUserId) {
+      throw new UnauthorizedError('Not Logged In')
+    }
+
+    if (title === '' || this.utils.checkEmpty(title)) {
+      throw new BadRequestError('Title must not be empty')
+    }
+
+    if (title.length > 24) {
+      throw new BadRequestError('Title is too long')
+    }
+
+    const velogConfig = await this.db.velogConfig.findUnique({
+      where: {
+        fk_user_id: signedUserId,
+      },
+    })
+
+    if (!velogConfig) {
+      throw new NotFoundError('Failed to retrieve velog config')
+    }
+
+    return await this.db.velogConfig.update({
+      where: {
+        id: velogConfig.id,
+      },
+      data: {
+        title,
+      },
+    })
   }
 }

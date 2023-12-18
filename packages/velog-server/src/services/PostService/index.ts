@@ -436,7 +436,7 @@ export class PostService implements Service {
     const tags = await tagLoader.load(postId)
     Object.assign(post, { tags })
 
-    const cacheKey = this.redis.generateKey.recommendedPostKey(postId)
+    const cacheKey = this.redis.generateKey.recommendedPost(postId)
     let postIds: string[]
     try {
       const cachedPostIds = await this.redis.get(cacheKey)

@@ -4,10 +4,11 @@ import { FollowService } from '@services/FollowService/index.js'
 import { SeriesService } from '@services/SeriesService/index.js'
 import { UserMetaService } from '@services/UserMetaService/index.js'
 import { UserProfileService } from '@services/UserProfileService/index.js'
-
+import {} from '@prisma/client'
 import { UserService } from '@services/UserService/index.js'
 import { VelogConfigService } from '@services/VelogConfigService/index.js'
 import { container } from 'tsyringe'
+import { ExternalIntegrationService } from '@services/ExternalIntegrationService'
 
 const userResolvers: Resolvers = {
   User: {
@@ -23,7 +24,7 @@ const userResolvers: Resolvers = {
     },
     email: (parent, _, ctx) => {
       const userService = container.resolve(UserService)
-      userService.emailGuard(parent, ctx.user?.id)
+      userService.verifyEmailAccessPermission(parent, ctx.user?.id)
       return parent.email
     },
     series_list: async (parent) => {
@@ -32,7 +33,7 @@ const userResolvers: Resolvers = {
     },
     user_meta: async (parent, _, ctx) => {
       const userMetaService = container.resolve(UserMetaService)
-      return await userMetaService.findByUserId(parent, ctx.user?.id)
+      return await userMetaService.getMyMeta(parent, ctx.user?.id)
     },
     followers_count: async (parent) => {
       const { username } = parent
@@ -78,7 +79,58 @@ const userResolvers: Resolvers = {
     },
     updateAbout: async (_, { input }, ctx) => {
       const userProfileService = container.resolve(UserProfileService)
-      return await userProfileService.updateUserProfile({ ...input }, ctx.user?.id)
+      return await userProfileService.updateUserProfile({ about: input.about }, ctx.user?.id)
+    },
+    updateThumbnail: async (_, { input }, ctx) => {
+      const userProfileService = container.resolve(UserProfileService)
+      return await userProfileService.updateUserProfile({ thumbnail: input.url }, ctx.user?.id)
+    },
+    updateProfile: async (_, { input }, ctx) => {
+      const userProfileService = container.resolve(UserProfileService)
+      return await userProfileService.updateUserProfile(
+        { display_name: input.display_name, short_bio: input.short_bio },
+        ctx.user?.id,
+      )
+    },
+    updateVelogTitle: async (_, { input }, ctx) => {
+      const velogConfigService = container.resolve(VelogConfigService)
+      return await velogConfigService.updateVelogConfig(input.title, ctx.user?.id)
+    },
+    updateSocialInfo: async (_, { input }, ctx) => {
+      const userProfileService = container.resolve(UserProfileService)
+      const profileLinks: Record<string, any> = input.profile_links
+      return await userProfileService.updateUserProfile(
+        {
+          profile_links: profileLinks,
+        },
+        ctx.user?.id,
+      )
+    },
+    updateEmailRules: async (_, { input }, ctx) => {
+      const userMetaService = container.resolve(UserMetaService)
+      return await userMetaService.updateUserMeta(
+        {
+          email_notification: input.notification,
+          email_promotion: input.promotion,
+        },
+        ctx.user?.id,
+      )
+    },
+    unregister: async (_, { input }, ctx) => {
+      const userService = container.resolve(UserService)
+      return await userService.unregister(ctx.reply, input.token, ctx.user?.id)
+    },
+    acceptIntegration: async (_, __, ctx) => {
+      const externalIntegrationService = container.resolve(ExternalIntegrationService)
+      return await externalIntegrationService.createIntegrationCode(ctx.user?.id)
+    },
+    initiateChangeEmail: async (_, { input }, ctx) => {
+      const userService = container.resolve(UserService)
+      return await userService.initiateChangeEmail(input.email, ctx.user?.id)
+    },
+    confirmChangeEmail: async (_, { input }, ctx) => {
+      const userService = container.resolve(UserService)
+      return await userService.confirmChangeEmail(input.code, ctx.user?.id)
     },
   },
 }

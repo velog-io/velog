@@ -1,4 +1,4 @@
-export const createAuthEmail = (registered: boolean, code: string) => {
+export const createAuthTemplate = (registered: boolean, code: string) => {
   const keywords = registered
     ? {
         type: 'email-login',

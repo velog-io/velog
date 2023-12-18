@@ -3,6 +3,9 @@ import { dirname, join } from 'path'
 import { injectable, singleton } from 'tsyringe'
 import { fileURLToPath } from 'url'
 import { utcToZonedTime } from 'date-fns-tz'
+import { z } from 'zod'
+import { customAlphabet } from 'nanoid'
+import { alphanumeric } from 'nanoid-dictionary'
 
 interface Service {
   resolveDir(dir: string): string
@@ -19,6 +22,8 @@ interface Service {
   checkUnscore(text: string): boolean
   now: Date
   optimizeImage(url: string, width: number): string
+  validateEmail(email: string): boolean
+  alphanumeric(): string
 }
 
 @injectable()
@@ -122,5 +127,19 @@ export class UtilsService implements Service {
   public pickRandomItems<T>(array: T[], count: number) {
     const shuffled = this.shuffleArray(array)
     return shuffled.slice(0, count)
+  }
+  public validateEmail(email: string) {
+    const emailSchema = z.string().email()
+    try {
+      emailSchema.parse(email)
+
+      return true
+    } catch (_) {
+      return false
+    }
+  }
+  public alphanumeric(size = 10) {
+    const generateCode = customAlphabet(alphanumeric, size)
+    return generateCode()
   }
 }
