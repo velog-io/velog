@@ -1,6 +1,6 @@
 import VelogFollowLayout from '@/components/Layouts/VelogFollowLayout'
 import { getUsernameFromParams } from '@/lib/utils'
-import getUserFollowerInfo from '@/prefetch/getUserFollowerInfo'
+import getUserFollowInfo from '@/prefetch/getUserFollowInfo'
 import getVelogConfig from '@/prefetch/getVelogConfig'
 import { UserLogo } from '@/state/header'
 import { notFound } from 'next/navigation'
@@ -12,7 +12,7 @@ type Props = {
 
 export default async function Layout({ children, params }: Props) {
   const username = getUsernameFromParams(params)
-  const user = await getUserFollowerInfo(username)
+  const user = await getUserFollowInfo(username)
   const velogConfig = await getVelogConfig(username)
 
   if (!user || !velogConfig) {

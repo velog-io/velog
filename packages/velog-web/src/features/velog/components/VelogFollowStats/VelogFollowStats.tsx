@@ -42,7 +42,9 @@ function VelogFollowStats({
   const [follows, setFollows] = useState<number>(followCount)
 
   useEffect(() => {
+    console.log('isRefetching?')
     const count = type === 'follower' ? data?.user?.followers_count : data?.user?.followings_count
+    console.log('count', count)
     if (count === undefined) return
     setFollows(count)
   }, [data, type])

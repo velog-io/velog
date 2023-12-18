@@ -21,9 +21,10 @@ type Props = {
   followingUserId: string
   className?: string
   resetFollowCount?: (param: 'follow' | 'unfollow') => void
+  onSuccess?: () => void
 }
 
-function FollowButton({ followingUserId, className, resetFollowCount }: Props) {
+function FollowButton({ followingUserId, className, resetFollowCount, onSuccess }: Props) {
   const params = useParams()
   const {
     value: { currentUser },
@@ -65,20 +66,6 @@ function FollowButton({ followingUserId, className, resetFollowCount }: Props) {
     setInitialFollowState(value)
     setCurrentFollowState(value)
   }, [])
-
-  const queryClient = useQueryClient()
-
-  const onSuccess = () => {
-    const targetUsername = getUsernameFromParams(params)
-
-    queryClient.refetchQueries({
-      queryKey: useGetUserFollowInfoQuery.getKey({ input: { username: targetUsername } }),
-    })
-
-    queryClient.refetchQueries({
-      queryKey: infiniteGetFollowersQueryKey({ input: { username: targetUsername } }),
-    })
-  }
 
   const onClick = debounce(300, async () => {
     try {
