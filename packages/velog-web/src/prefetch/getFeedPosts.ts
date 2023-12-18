@@ -1,5 +1,5 @@
 import { ENV } from '@/env'
-import { FeedPostsDocument, Post } from '@/graphql/generated'
+import { FeedPostsDocument, Post } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getFeedPosts({ limit = ENV.defaultPostLimit, accessToken }: Args) {

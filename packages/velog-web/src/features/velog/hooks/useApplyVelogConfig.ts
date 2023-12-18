@@ -1,4 +1,4 @@
-import { useVelogConfigQuery } from '@/graphql/generated'
+import { useVelogConfigQuery } from '@/graphql/helpers/generated'
 import { UserLogo, useHeader } from '@/state/header'
 import { notFound } from 'next/navigation'
 import { useEffect, useState } from 'react'

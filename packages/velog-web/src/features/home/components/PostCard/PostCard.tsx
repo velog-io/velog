@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { LikeIcon } from '@/assets/icons/components'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
 import { PostCardSkeleton } from '@/features/home/components/PostCard/PostCardSkeleton'
-import { Post } from '@/graphql/generated'
+import { Post } from '@/graphql/helpers/generated'
 import VLink from '@/components/VLink'
 import Link from 'next/link'
 

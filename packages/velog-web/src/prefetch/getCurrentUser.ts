@@ -1,4 +1,4 @@
-import { CurrentUserDocument, User } from '@/graphql/generated'
+import { CurrentUserDocument, User } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 

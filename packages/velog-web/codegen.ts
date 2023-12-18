@@ -9,7 +9,7 @@ const config: CodegenConfig = {
     afterOneFileWrite: ['prettier --write'],
   },
   generates: {
-    'src/graphql/generated.ts': {
+    'src/graphql/helpers/generated.ts': {
       documents: 'string',
       config: {
         reactQueryVersion: 5,
@@ -21,7 +21,7 @@ const config: CodegenConfig = {
         maybeValue: 'T | null',
         inputMaybeValue: 'T | undefined',
         fetcher: {
-          func: './helpers/fetcher#fetcher',
+          func: './fetcher#fetcher',
         },
         avoidOptionals: {
           field: true,

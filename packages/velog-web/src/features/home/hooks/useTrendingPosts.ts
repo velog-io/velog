@@ -5,7 +5,7 @@ import {
   TrendingPostsDocument,
   TrendingPostsQuery,
   TrendingPostsQueryVariables,
-} from '@/graphql/generated'
+} from '@/graphql/helpers/generated'
 import { infiniteTrendingPostsQueryKey } from '@/graphql/helpers/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useParams } from 'next/navigation'

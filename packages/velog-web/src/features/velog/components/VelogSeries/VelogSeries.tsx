@@ -1,6 +1,6 @@
 'use client'
 
-import { useGetUserSeriesListQuery } from '@/graphql/generated'
+import { useGetUserSeriesListQuery } from '@/graphql/helpers/generated'
 import SeriesListSkeleton from '../SeriesList/SeriesListSkeleton'
 import SeriesList from '../SeriesList'
 

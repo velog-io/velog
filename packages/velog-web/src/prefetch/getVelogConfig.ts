@@ -1,4 +1,4 @@
-import { VelogConfig, VelogConfigDocument } from '@/graphql/generated'
+import { VelogConfig, VelogConfigDocument } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getVelogConfig(username: string) {

@@ -6,7 +6,7 @@ import PostCard from '@/features/home/components/PostCard/PostCard'
 import { Timeframe } from '@/features/home/state/timeframe'
 import { useParams, usePathname } from 'next/navigation'
 
-import { Post } from '@/graphql/generated'
+import { Post } from '@/graphql/helpers/generated'
 import PostCardSkeletonGrid from './PostCardSkeletonGrid'
 import { ENV } from '@/env'
 import { PostCardSkeleton } from '../PostCard/PostCardSkeleton'

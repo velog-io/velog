@@ -1,4 +1,4 @@
-import { TrendingWriter, TrendingWritersDocument } from '@/graphql/generated'
+import { TrendingWriter, TrendingWritersDocument } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getTrendingWriters() {

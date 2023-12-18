@@ -3,7 +3,7 @@ import {
   GetFollowersDocument,
   GetFollowersQuery,
   GetFollowersQueryVariables,
-} from '@/graphql/generated'
+} from '@/graphql/helpers/generated'
 import { infiniteGetFollowersQueryKey } from '@/graphql/helpers/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'

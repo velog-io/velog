@@ -1,4 +1,4 @@
-import { GetPostsInput, Post, VelogPostsDocument } from '@/graphql/generated'
+import { GetPostsInput, Post, VelogPostsDocument } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getVelogPosts({ username, tag }: GetPostsInput) {

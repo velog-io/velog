@@ -11,7 +11,7 @@ import { includeProtocol } from '@/lib/includeProtocol'
 import { MdHome } from 'react-icons/md'
 import FollowButton from '../FollowButton'
 import { useAuth } from '@/state/auth'
-import { UserProfile as Profile, useGetUserFollowInfoQuery } from '@/graphql/generated'
+import { UserProfile as Profile, useGetUserFollowInfoQuery } from '@/graphql/helpers/generated'
 
 const cx = bindClassNames(styles)
 

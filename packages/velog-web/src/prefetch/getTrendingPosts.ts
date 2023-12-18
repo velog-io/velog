@@ -1,5 +1,5 @@
 import { ENV } from '@/env'
-import { Post, TrendingPostsDocument, TrendingPostsInput } from '@/graphql/generated'
+import { Post, TrendingPostsDocument, TrendingPostsInput } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getTrendingPosts({

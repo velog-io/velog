@@ -1,6 +1,6 @@
 'use client'
 
-import { UserTags } from '@/graphql/generated'
+import { UserTags } from '@/graphql/helpers/generated'
 import VelogTag from '../VelogTag'
 import styles from './VelogSearchPosts.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'

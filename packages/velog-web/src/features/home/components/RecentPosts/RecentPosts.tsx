@@ -3,7 +3,7 @@
 import PostCardGrid from '@/features/home/components/PostCardGrid'
 import useRecentPosts from '@/features/home/hooks/useRecentPosts'
 import { useEffect, useRef, useState } from 'react'
-import { Post } from '@/graphql/generated'
+import { Post } from '@/graphql/helpers/generated'
 
 type Props = {
   data: Post[]

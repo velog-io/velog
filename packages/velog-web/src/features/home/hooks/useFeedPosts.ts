@@ -4,7 +4,7 @@ import {
   FeedPostsQuery,
   FeedPostsQueryVariables,
   Post,
-} from '@/graphql/generated'
+} from '@/graphql/helpers/generated'
 import { infiniteFeedPostsQueryKey } from '@/graphql/helpers/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'

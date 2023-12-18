@@ -1,4 +1,4 @@
-import { UserTags, UserTagsDocument } from '@/graphql/generated'
+import { UserTags, UserTagsDocument } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getUserTags(username: string) {

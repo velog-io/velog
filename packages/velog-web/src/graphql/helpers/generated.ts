@@ -11,7 +11,7 @@ import {
   InfiniteData,
   UseSuspenseInfiniteQueryOptions,
 } from '@tanstack/react-query'
-import { fetcher } from './helpers/fetcher'
+import { fetcher } from './fetcher'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
