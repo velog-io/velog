@@ -99,9 +99,10 @@ export default function useTrendingPosts(initialPost: (Post | AdsQueryResult)[] 
   }, [isFetching, actions])
 
   const posts = useMemo(() => {
-    return [...initialPost, ...(data?.pages?.flatMap((page) => page.trendingPosts) || [])] as
-      | Post[]
-      | Ad[]
+    return [...initialPost, ...(data?.pages?.flatMap((page) => page.trendingPosts) || [])] as (
+      | Post
+      | AdsQueryResult
+    )[]
   }, [data, initialPost])
 
   return {

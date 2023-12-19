@@ -10,11 +10,12 @@ import { useParams, usePathname } from 'next/navigation'
 import { InfiniteData } from '@tanstack/react-query'
 import { Ad, Post, RecentPostsQuery, TrendingPostsQuery } from '@/graphql/generated'
 import AdPostCard from '../PostCard/AdPostCard'
+import { AdsQueryResult } from '@/actions/getAds'
 
 const cx = bindClassNames(styles)
 
 type Props = {
-  posts: Post[] | Ad[]
+  posts: (Post | AdsQueryResult)[]
   forHome: boolean
   forPost: boolean
   originData?: InfiniteData<TrendingPostsQuery | RecentPostsQuery>
