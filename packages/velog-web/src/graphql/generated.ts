@@ -1,4 +1,4 @@
-import { useMutation, useQuery, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
+import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
 import { fetcher } from './fetcher'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = T | undefined
@@ -20,6 +20,25 @@ export type Scalars = {
   Float: { input: number; output: number }
   DateTimeISO: { input: any; output: any }
   JSON: { input: JSON; output: JSON }
+  Void: { input: any; output: any }
+}
+
+export type Ad = {
+  body: Scalars['String']['output']
+  end_date: Scalars['DateTimeISO']['output']
+  id: Scalars['ID']['output']
+  image: Scalars['String']['output']
+  is_disabled: Scalars['Boolean']['output']
+  start_date: Scalars['DateTimeISO']['output']
+  title: Scalars['String']['output']
+  type: Scalars['String']['output']
+  url: Scalars['String']['output']
+}
+
+export type AdsInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>
+  type: Scalars['String']['input']
+  writer_username?: InputMaybe<Scalars['String']['input']>
 }
 
 export type Comment = {
@@ -35,6 +54,10 @@ export type Comment = {
   user: Maybe<User>
 }
 
+export type FollowInput = {
+  followUserId?: InputMaybe<Scalars['ID']['input']>
+}
+
 export type LikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
@@ -45,10 +68,16 @@ export type LinkedPosts = {
 }
 
 export type Mutation = {
+  follow: Maybe<Scalars['Boolean']['output']>
   likePost: Maybe<Post>
-  logout: Scalars['Boolean']['output']
+  logout: Maybe<Scalars['Void']['output']>
   sendMail: Maybe<SendMailResponse>
+  unfollow: Maybe<Scalars['Boolean']['output']>
   unlikePost: Maybe<Post>
+}
+
+export type MutationFollowArgs = {
+  input: FollowInput
 }
 
 export type MutationLikePostArgs = {
@@ -57,6 +86,10 @@ export type MutationLikePostArgs = {
 
 export type MutationSendMailArgs = {
   input: SendMailInput
+}
+
+export type MutationUnfollowArgs = {
+  input: UnfollowInput
 }
 
 export type MutationUnlikePostArgs = {
@@ -69,6 +102,7 @@ export type Post = {
   comments_count: Maybe<Scalars['Int']['output']>
   created_at: Scalars['DateTimeISO']['output']
   fk_user_id: Scalars['String']['output']
+  followed: Maybe<Scalars['Boolean']['output']>
   id: Scalars['ID']['output']
   is_markdown: Maybe<Scalars['Boolean']['output']>
   is_private: Scalars['Boolean']['output']
@@ -102,12 +136,17 @@ export type PostHistory = {
 }
 
 export type Query = {
+  ads: Array<Ad>
   currentUser: Maybe<User>
   post: Maybe<Post>
   readingList: Maybe<Array<Maybe<Post>>>
   recentPosts: Maybe<Array<Maybe<Post>>>
   restoreToken: Maybe<UserToken>
   trendingPosts: Maybe<Array<Maybe<Post>>>
+}
+
+export type QueryAdsArgs = {
+  input: AdsInput
 }
 
 export type QueryPostArgs = {
@@ -196,13 +235,17 @@ export type TrendingPostsInput = {
   timeframe?: InputMaybe<Scalars['String']['input']>
 }
 
+export type UnfollowInput = {
+  followUserId?: InputMaybe<Scalars['ID']['input']>
+}
+
 export type UnlikePostInput = {
   postId?: InputMaybe<Scalars['ID']['input']>
 }
 
 export type User = {
   created_at: Scalars['DateTimeISO']['output']
-  email: Scalars['String']['output']
+  email: Maybe<Scalars['String']['output']>
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   profile: UserProfile
@@ -239,6 +282,21 @@ export type VelogConfig = {
   id: Scalars['ID']['output']
   logo_image: Maybe<Scalars['String']['output']>
   title: Maybe<Scalars['String']['output']>
+}
+
+export type AdsQueryVariables = Exact<{
+  input: AdsInput
+}>
+
+export type AdsQuery = {
+  ads: Array<{
+    id: string
+    title: string
+    body: string
+    image: string
+    url: string
+    start_date: any
+  }>
 }
 
 export type SendMailMutationVariables = Exact<{
@@ -369,15 +427,36 @@ export type CurrentUserQuery = {
   currentUser: {
     id: string
     username: string
-    email: string
+    email: string | null
     profile: { id: string; thumbnail: string | null; display_name: string }
   } | null
 }
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never }>
 
-export type LogoutMutation = { logout: boolean }
+export type LogoutMutation = { logout: any | null }
 
+export const AdsDocument = `
+    query ads($input: AdsInput!) {
+  ads(input: $input) {
+    id
+    title
+    body
+    image
+    url
+    start_date
+  }
+}
+    `
+export const useAdsQuery = <TData = AdsQuery, TError = unknown>(
+  variables: AdsQueryVariables,
+  options?: UseQueryOptions<AdsQuery, TError, TData>,
+) =>
+  useQuery<AdsQuery, TError, TData>(
+    ['ads', variables],
+    fetcher<AdsQuery, AdsQueryVariables>(AdsDocument, variables),
+    options,
+  )
 export const SendMailDocument = `
     mutation sendMail($input: SendMailInput!) {
   sendMail(input: $input) {

@@ -1,7 +1,9 @@
+import { AdsQueryResult } from '@/actions/getAds'
 import { ENV } from '@/env'
 import { Timeframe, useTimeframe } from '@/features/home/state/timeframe'
 import { fetcher } from '@/graphql/fetcher'
 import {
+  Ad,
   Post,
   TrendingPostsDocument,
   TrendingPostsQuery,
@@ -11,7 +13,7 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 
-export default function useTrendingPosts(initialPost: Post[] = []) {
+export default function useTrendingPosts(initialPost: (Post | AdsQueryResult)[] = []) {
   const params = useParams()
   const timeframe = (params.timeframe ?? 'week') as Timeframe
   const prevTimeframe = useRef<Timeframe>(timeframe)
@@ -97,7 +99,9 @@ export default function useTrendingPosts(initialPost: Post[] = []) {
   }, [isFetching, actions])
 
   const posts = useMemo(() => {
-    return [...initialPost, ...(data?.pages?.flatMap((page) => page.trendingPosts) || [])] as Post[]
+    return [...initialPost, ...(data?.pages?.flatMap((page) => page.trendingPosts) || [])] as
+      | Post[]
+      | Ad[]
   }, [data, initialPost])
 
   return {
