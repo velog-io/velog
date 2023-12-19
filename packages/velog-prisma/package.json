@@ -21,7 +21,7 @@
     "create-mock": "tsx ./scripts/createMock.ts",
     "prisma:format": "tsx ./scripts/formatter.ts && pnpm prisma generate",
     "prisma-migrate:dev": "pnpm env:copy --only-dev && pnpm prisma migrate dev --schema=./prisma/schema.prisma --create-only",
-    "prisma-migrate:deploy": " pnpm env:copy && dotenv -e .env -- tsx ./scripts/deploy"
+    "prisma-migrate:deploy": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/deploy"
   },
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.391.0",
