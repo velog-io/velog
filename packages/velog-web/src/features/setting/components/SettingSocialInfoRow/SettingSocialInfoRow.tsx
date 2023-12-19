@@ -5,7 +5,6 @@ import { EmailIcon, FacebookSquareIcon, GithubIcon, TwitterIcon } from '@/assets
 import styles from './SettingSocialInfoRow.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { MdHome } from 'react-icons/md'
-import { ProfileLinks } from '@/types/user'
 import { useState } from 'react'
 import SettingInput from '../SettingInput'
 import Button from '@/components/Button'
@@ -21,18 +20,21 @@ type Props = {
   twitter?: string
   facebook?: string
   url?: string
-  onUpdate: (profileLinks: ProfileLinks) => Promise<any>
 }
 
 const iconArray = [EmailIcon, GithubIcon, TwitterIcon, FacebookSquareIcon, MdHome]
 
-function SettingSocialInfoRow({ email, github, twitter, facebook, url, onUpdate }: Props) {
+function SettingSocialInfoRow({ email, github, twitter, facebook, url }: Props) {
   const infoArray = [email, github, twitter, facebook, url]
   const empty = infoArray.every((value) => !value)
   const [edit, setEdit] = useState(false)
   const [form, onChange] = useInputs({ email, github, twitter, facebook, url })
   const [facebookInputFocus, setFacebookInputFocus] = useState(false)
-  const onSubmit = async (e: React.FormEvent) => {}
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    setEdit(false)
+  }
 
   const onClickEdit = () => setEdit(true)
 
@@ -46,7 +48,7 @@ function SettingSocialInfoRow({ email, github, twitter, facebook, url, onUpdate 
             onChange={onChange}
             name="email"
             placeholder="이메일을 입력하세요."
-            fullWidth
+            fullWidth={true}
           />
         </li>
         <li>
@@ -96,11 +98,11 @@ function SettingSocialInfoRow({ email, github, twitter, facebook, url, onUpdate 
             onChange={onChange}
             name="url"
             placeholder="홈페이지 주소를 입력하세요."
-            fullWidth
+            fullWidth={true}
           />
         </li>
       </ul>
-      <div className="button-wrapper">
+      <div className={cx('buttonWrapper')}>
         <Button>저장</Button>
       </div>
     </form>
@@ -120,15 +122,17 @@ function SettingSocialInfoRow({ email, github, twitter, facebook, url, onUpdate 
   )
 
   return (
-    <SettingRow
-      title="소셜 정보"
-      description="포스트 및 블로그에서 보여지는 프로필에 공개되는 소셜 정보입니다."
-      editButton={!edit && !empty}
-      onClickEdit={onClickEdit}
-    >
-      {edit ? infoInputsList : infoValueList}
-      {!edit && empty && <SettingEditButton customText="정보 추가" onClick={onClickEdit} />}
-    </SettingRow>
+    <div className={cx('block')}>
+      <SettingRow
+        title="소셜 정보"
+        description="포스트 및 블로그에서 보여지는 프로필에 공개되는 소셜 정보입니다."
+        editButton={!edit && !empty}
+        onClickEdit={onClickEdit}
+      >
+        {edit ? infoInputsList : infoValueList}
+        {!edit && empty && <SettingEditButton customText="정보 추가" onClick={onClickEdit} />}
+      </SettingRow>
+    </div>
   )
 }
 

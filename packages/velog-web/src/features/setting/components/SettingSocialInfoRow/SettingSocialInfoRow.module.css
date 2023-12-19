@@ -1,72 +1,69 @@
 .block {
-}
+  border-top: 1px solid var(--border4);
 
-.form {
-  width: 25rem;
-  @media screen and (max-width: 768px) {
-    width: 100%;
-  }
-
-  li + li {
-    margin-top: 1rem;
-  }
-
-  .button-wrapper {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: flex-end;
-  }
-}
-
-.infoList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  li {
-    display: flex;
-    align-items: center;
-    svg {
-      width: 1rem;
-      height: 1rem;
-      font-size: 1rem;
-      margin-right: 0.5rem;
-      flex-shrink: 0;
+  .form {
+    width: 25rem;
+    @media screen and (max-width: 768px) {
+      width: 100%;
     }
-    span {
-      font-size: 1rem;
+
+    .buttonWrapper {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
     }
   }
-  li + li {
-    margin-top: 0.5rem;
-  }
-}
 
-.facebookInputBox {
-  flex: 1;
-  display: flex;
-  border: 1px solid var(--border3);
-  background: var(--bg-element1);
-  padding: 0.5rem;
-  color: var(--text2);
-  font-size: 1rem;
-  line-height: 1rem;
-  outline: none;
-  border-radius: 4px;
-  height: 2.25rem;
-  align-items: center;
-  span {
-    color: var(--text3);
-    margin-right: 0.25rem;
-  }
-  input {
+  .infoList {
+    list-style: none;
     padding: 0;
-    border: 0;
-    outline: none;
-    font-size: 1rem;
-    line-height: 1;
+    margin: 0;
+    li {
+      display: flex;
+      align-items: center;
+      svg {
+        width: 1rem;
+        height: 1rem;
+        font-size: 1rem;
+        margin-right: 0.5rem;
+        flex-shrink: 0;
+      }
+      span {
+        font-size: 1rem;
+      }
+    }
+    li + li {
+      margin-top: 1rem;
+    }
+  }
+
+  .facebookInputBox {
     flex: 1;
-    width: 100%;
-    background: transparent;
-    color: var(--text1);
+    display: flex;
+    border: 1px solid var(--border3);
+    background: var(--bg-element1);
+    padding: 0.5rem;
+    color: var(--text2);
+    font-size: 1rem;
+    line-height: 1rem;
+    outline: none;
+    border-radius: 4px;
+    height: 2.25rem;
+    align-items: center;
+    span {
+      color: var(--text3);
+      margin-right: 0.25rem;
+    }
+    input {
+      padding: 0;
+      border: 0;
+      outline: none;
+      font-size: 1rem;
+      line-height: 1;
+      flex: 1;
+      width: 100%;
+      background: transparent;
+      color: var(--text1);
+    }
   }
 }

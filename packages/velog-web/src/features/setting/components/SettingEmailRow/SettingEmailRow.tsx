@@ -13,11 +13,9 @@ const cx = bindClassNames(styles)
 
 type Props = {
   email: string
-  isEmailSent: boolean
-  onChangeEmail: (email: string) => Promise<void>
 }
 
-function SettingEmailRow({ email, isEmailSent, onChangeEmail }: Props) {
+function SettingEmailRow({ email }: Props) {
   const [edit, setEdit] = useState(false)
   const [value, onChange] = useInput(email ?? '')
 
@@ -28,7 +26,7 @@ function SettingEmailRow({ email, isEmailSent, onChangeEmail }: Props) {
       title="이메일 주소"
       description="회원 인증 또는 시스템에서 발송하는 이메일을 수신하는 주소입니다."
       editButton={!edit}
-      showEditButton={!isEmailSent}
+      showEditButton={true}
       onClickEdit={() => setEdit(true)}
       editButtonText="변경"
     >
@@ -42,7 +40,7 @@ function SettingEmailRow({ email, isEmailSent, onChangeEmail }: Props) {
           />
           <Button disabled={isLoading}>변경</Button>
         </div>
-      ) : isEmailSent ? (
+      ) : false ? (
         <SettingEmailSuccess />
       ) : (
         email

@@ -39,6 +39,8 @@ query currentUser {
       id
       thumbnail
       display_name
+      short_bio
+      profile_links
     }
     user_meta {
       id

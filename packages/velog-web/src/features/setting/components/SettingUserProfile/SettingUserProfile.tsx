@@ -12,24 +12,12 @@ import Thumbnail from '@/components/Thumbnail'
 const cx = bindClassNames(styles)
 
 type Props = {
-  onUpload: () => void
-  onClearThumbnail: () => void
-  onUpdate: (params: { shortBio: string; displayName: string }) => Promise<any>
   thumbnail: string | null
   displayName: string
   shortBio: string
-  loading: boolean
 }
 
-function SettingUserProfile({
-  onUpdate,
-  onUpload,
-  onClearThumbnail,
-  thumbnail,
-  displayName,
-  shortBio,
-  loading,
-}: Props) {
+function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
   const [edit, onToggleEdit] = useToggle(false)
   const [inputs, onChange] = useInputs({
     displayName,
@@ -37,28 +25,28 @@ function SettingUserProfile({
   })
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await onUpdate(inputs)
+    // await onUpdate(inputs)
     onToggleEdit()
   }
 
   return (
     <section className={cx('block')}>
-      <div className="thumbnail-area">
-        <Thumbnail src={thumbnail} alt="profile" />
-        <Button onClick={onUpload} disabled={loading}>
-          {loading ? '업로드중...' : '이미지 업로드'}
+      <div className={cx('thumbnailArea')}>
+        <Thumbnail src={thumbnail} alt="profile" className={cx('thumbnail')} />
+        <Button onClick={() => {}} disabled={false}>
+          {false ? '업로드중...' : '이미지 업로드'}
         </Button>
-        <Button color="transparent" onClick={onClearThumbnail}>
+        <Button color="transparent" onClick={() => {}}>
           이미지 제거
         </Button>
       </div>
-      <div className="info-area">
+      <div className={cx('infoArea')}>
         {edit ? (
           <form className={cx('form')} onSubmit={onSubmit}>
             <SettingInput
               placeholder="이름"
               fullWidth
-              className="display-name"
+              className={cx('displayName')}
               name="displayName"
               value={inputs.displayName}
               onChange={onChange}
@@ -71,7 +59,7 @@ function SettingUserProfile({
               onChange={onChange}
               autoFocus
             />
-            <div className="button-wrapper">
+            <div className={cx('buttonWrapper')}>
               <Button>저장</Button>
             </div>
           </form>

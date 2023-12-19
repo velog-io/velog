@@ -26,7 +26,7 @@ export type Scalars = {
   Int: { input: number; output: number }
   Float: { input: number; output: number }
   DateTimeISO: { input: any; output: any }
-  JSON: { input: JSON; output: JSON }
+  JSON: { input: Record<string, any>; output: Record<string, any> }
   PositiveInt: { input: number; output: number }
   Void: { input: void; output: void }
 }
@@ -599,7 +599,7 @@ export type ReadPostQuery = {
         display_name: string
         thumbnail: string | null
         short_bio: string
-        profile_links: JSON
+        profile_links: Record<string, any>
       }
       velog_config: { title: string | null } | null
     } | null
@@ -800,7 +800,7 @@ export type GetUserQuery = {
       display_name: string
       short_bio: string
       thumbnail: string | null
-      profile_links: JSON
+      profile_links: Record<string, any>
     }
   } | null
 }
@@ -821,7 +821,7 @@ export type GetUserFollowInfoQuery = {
       display_name: string
       short_bio: string
       thumbnail: string | null
-      profile_links: JSON
+      profile_links: Record<string, any>
     }
   } | null
 }
@@ -833,7 +833,13 @@ export type CurrentUserQuery = {
     id: string
     username: string
     email: string | null
-    profile: { id: string; thumbnail: string | null; display_name: string }
+    profile: {
+      id: string
+      thumbnail: string | null
+      display_name: string
+      short_bio: string
+      profile_links: Record<string, any>
+    }
     user_meta: {
       id: string
       email_notification: boolean | null
@@ -922,7 +928,7 @@ export type UpdateSocialInfoMutationVariables = Exact<{
 }>
 
 export type UpdateSocialInfoMutation = {
-  updateSocialInfo: { id: string; profile_links: JSON } | null
+  updateSocialInfo: { id: string; profile_links: Record<string, any> } | null
 }
 
 export type UpdateEmailRulesMutationVariables = Exact<{
@@ -1742,6 +1748,8 @@ export const CurrentUserDocument = `
       id
       thumbnail
       display_name
+      short_bio
+      profile_links
     }
     user_meta {
       id

@@ -31,7 +31,7 @@ const config: CodegenConfig = {
         maybeValue: 'T | null | undefined',
         scalars: {
           Date: 'Date',
-          JSON: 'JSON',
+          JSON: 'Record<string, any>',
           ID: 'string',
           Void: 'void',
           PositiveInt: 'number',

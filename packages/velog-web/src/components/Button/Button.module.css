@@ -75,7 +75,7 @@
     }
   }
 
-  &.trasnparent {
+  &.transparent {
     background: none;
     color: var(--primary1);
     &:focus,

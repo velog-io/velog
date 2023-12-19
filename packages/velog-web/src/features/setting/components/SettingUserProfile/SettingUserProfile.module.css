@@ -1,23 +1,22 @@
 .block {
   display: flex;
-  height: 13.75rem;
 
   @media screen and (max-width: 768px) {
     height: auto;
     flex-direction: column;
   }
-  .thumbnail-area {
-    padding-right: 1.5rem;
+
+  .thumbnailArea {
     display: flex;
     flex-direction: column;
-    img {
-      object-fit: cover;
-      width: 8rem;
-      height: 8rem;
-      border-radius: 50%;
-      display: block;
+    padding-right: 1.5rem;
+
+    .thumbnail {
+      width: 128px;
+      height: 128px;
       margin-bottom: 1.25rem;
     }
+
     button + button {
       margin-top: 0.5rem;
       margin-left: 0;
@@ -38,7 +37,7 @@
       padding-right: 0;
     }
   }
-  .info-area {
+  .infoArea {
     flex: 1;
     padding-left: 1.5rem;
 
@@ -79,11 +78,11 @@
   input + input {
     margin-top: 1rem;
   }
-  .display-name {
+  .displayName {
     font-size: 1.5rem;
     font-weight: 600;
   }
-  .button-wrapper {
+  .buttonWrapper {
     display: flex;
     margin-top: 1.5rem;
     justify-content: flex-end;

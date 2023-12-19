@@ -28,7 +28,7 @@ export type Scalars = {
   Int: { input: number; output: number }
   Float: { input: number; output: number }
   Date: { input: Date; output: Date }
-  JSON: { input: JSON; output: JSON }
+  JSON: { input: Record<string, any>; output: Record<string, any> }
   PositiveInt: { input: number; output: number }
   Void: { input: void; output: void }
 }

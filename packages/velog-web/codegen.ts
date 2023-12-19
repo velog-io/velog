@@ -30,7 +30,7 @@ const config: CodegenConfig = {
         },
         scalars: {
           Date: 'Date',
-          JSON: 'JSON',
+          JSON: 'Record<string, any>',
           ID: 'string',
           Void: 'void',
           PositiveInt: 'number',

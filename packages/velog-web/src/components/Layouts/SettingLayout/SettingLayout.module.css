@@ -1,2 +1,16 @@
 .block {
+  padding-top: 48px;
+  width: 768px;
+  padding-bottom: 80px;
+  margin: 0 auto;
+
+  @media screen and (max-width: 1056px) {
+    max-width: 768px;
+    width: 100%;
+    padding-bottom: 32px;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding-top: 48px;
+  }
 }

@@ -12,7 +12,7 @@ export type SettingInputProps = {
 } & Omit<HTMLProps<HTMLInputElement>, 'ref' | 'as' | 'onChange'>
 
 function SettingInput({ fullWidth, ...props }: SettingInputProps) {
-  return <input className={cx('block', { fullWidth })} {...props} />
+  return <input className={cx('input', { fullWidth })} {...props} />
 }
 
 export default SettingInput

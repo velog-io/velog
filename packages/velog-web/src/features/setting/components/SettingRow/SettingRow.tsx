@@ -27,20 +27,20 @@ function SettingRow({
 }: Props) {
   return (
     <div className={cx('block')}>
-      <div className="wrapper">
-        <div className="title-wrapper">
+      <div className={cx('wrapper')}>
+        <div className={cx('titleWrapper')}>
           <h3>{title}</h3>
         </div>
-        <div className="block-for-mobile">
-          <div className="contents">{children}</div>
+        <div className={cx('blockForMobile')}>
+          <div className={cx('contents')}>{children}</div>
           {editButton && showEditButton && (
-            <div className="edit-wrapper">
+            <div className={cx('editWrapper')}>
               <SettingEditButton onClick={onClickEdit} customText={editButtonText} />
             </div>
           )}
         </div>
       </div>
-      {description && <div className="description">{description}</div>}
+      {description && <div className={cx('description')}>{description}</div>}
     </div>
   )
 }

@@ -1,14 +1,14 @@
-'use client'
-
 import styles from './SettingLayout.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 
 const cx = bindClassNames(styles)
 
-type Props = {}
+type Props = {
+  children: React.ReactNode
+}
 
-function SettingLayout({}: Props) {
-  return <div className={cx('block')}></div>
+function SettingLayout({ children }: Props) {
+  return <div className={cx('block')}>{children}</div>
 }
 
 export default SettingLayout

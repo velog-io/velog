@@ -9,7 +9,7 @@
     }
   }
 
-  .title-wrapper {
+  .titleWrapper {
     width: 9.5rem;
     flex-shrink: 0;
     h3 {
@@ -23,7 +23,7 @@
       }
     }
   }
-  .block-for-mobile {
+  .blockForMobile {
     flex: 1;
     display: flex;
     align-items: center;
@@ -39,7 +39,7 @@
     color: var(--text3);
     font-size: 0.875rem;
   }
-  .edit-wrapper {
+  .editrapper {
     display: flex;
     align-items: center;
     margin-left: 1rem;

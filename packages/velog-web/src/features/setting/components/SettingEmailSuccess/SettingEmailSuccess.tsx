@@ -11,7 +11,7 @@ type Props = {}
 function SettingEmailSuccess({}: Props) {
   return (
     <div className={cx('block')}>
-      <MdCheck className="icon" />
+      <MdCheck className={cx('icon')} />
       <div className="text">메일이 전송되었습니다. 받은 편지함을 확인하세요.</div>
     </div>
   )
