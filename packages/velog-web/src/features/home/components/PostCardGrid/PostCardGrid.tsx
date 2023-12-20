@@ -60,7 +60,7 @@ function PostCardGrid({
 
   useEffect(() => {
     if (hasChecked.current) return
-    hasChecked.current = false
+    hasChecked.current = true
     gtag('event', 'ads_feed_view')
   }, [])
 
