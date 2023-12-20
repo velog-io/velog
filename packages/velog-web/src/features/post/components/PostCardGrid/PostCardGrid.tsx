@@ -33,7 +33,7 @@ function PostCardGrid({
   const params = useParams()
   const pathname = usePathname()
   const timeframe = (params.timeframe ?? 'week') as Timeframe
-  const hasChecked = useRef<boolean>(false)
+  const hasLoaded = useRef<boolean>(false)
   const hasClicked = useRef<boolean>(false)
 
   // TODO: remove
@@ -54,8 +54,8 @@ function PostCardGrid({
   }
 
   useEffect(() => {
-    if (hasChecked.current) return
-    hasChecked.current = false
+    if (hasLoaded.current) return
+    hasLoaded.current = true
     gtag('event', 'ads_feed_view')
   }, [])
 
