@@ -43,7 +43,6 @@ export class AdService implements Service {
       take: limit,
     })
 
-    console.log('ads', ads)
     return ads
   }
 }
