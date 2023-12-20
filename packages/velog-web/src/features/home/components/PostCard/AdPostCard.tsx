@@ -3,9 +3,10 @@
 import styles from './PostCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import RatioImage from '@/components/RatioImage/RatioImage'
-import { AdsQueryResult } from '@/prefetch/getAds'
+
 import { useTimeFormat } from '@/hooks/useTimeFormat'
-import { PostCardSkeleton } from '@/features/home/components/PostCard/PostCardSkeleton'
+import { PostCardSkeleton } from './PostCardSkeleton'
+import { AdsQueryResult } from '@/prefetch/getAds'
 
 const cx = bindClassNames(styles)
 

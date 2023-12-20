@@ -1,15 +1,15 @@
 import {
-  useMutation,
   useQuery,
   useSuspenseQuery,
   useInfiniteQuery,
   useSuspenseInfiniteQuery,
-  UseMutationOptions,
+  useMutation,
   UseQueryOptions,
   UseSuspenseQueryOptions,
   UseInfiniteQueryOptions,
   InfiniteData,
   UseSuspenseInfiniteQueryOptions,
+  UseMutationOptions,
 } from '@tanstack/react-query'
 import { fetcher } from './fetcher'
 export type Maybe<T> = T | null
@@ -173,7 +173,6 @@ export type Post = {
   comments_count: Maybe<Scalars['Int']['output']>
   created_at: Scalars['DateTimeISO']['output']
   fk_user_id: Scalars['String']['output']
-  followed: Maybe<Scalars['Boolean']['output']>
   id: Scalars['ID']['output']
   is_followed: Maybe<Scalars['Boolean']['output']>
   is_liked: Maybe<Scalars['Boolean']['output']>
@@ -226,6 +225,10 @@ export type Query = {
   user: Maybe<User>
   userTags: Maybe<UserTags>
   velogConfig: Maybe<VelogConfig>
+}
+
+export type QueryAdsArgs = {
+  input: AdsInput
 }
 
 export type QueryFeedPostsArgs = {
@@ -853,6 +856,100 @@ export type TrendingWritersQuery = {
     posts: Array<{ title: string; url_slug: string }>
   }>
 }
+
+export const AdsDocument = `
+    query ads($input: AdsInput!) {
+  ads(input: $input) {
+    id
+    title
+    body
+    image
+    url
+    start_date
+  }
+}
+    `
+
+export const useAdsQuery = <TData = AdsQuery, TError = unknown>(
+  variables: AdsQueryVariables,
+  options?: Omit<UseQueryOptions<AdsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<AdsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<AdsQuery, TError, TData>({
+    queryKey: ['ads', variables],
+    queryFn: fetcher<AdsQuery, AdsQueryVariables>(AdsDocument, variables),
+    ...options,
+  })
+}
+
+useAdsQuery.getKey = (variables: AdsQueryVariables) => ['ads', variables]
+
+export const useSuspenseAdsQuery = <TData = AdsQuery, TError = unknown>(
+  variables: AdsQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<AdsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<AdsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<AdsQuery, TError, TData>({
+    queryKey: ['adsSuspense', variables],
+    queryFn: fetcher<AdsQuery, AdsQueryVariables>(AdsDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseAdsQuery.getKey = (variables: AdsQueryVariables) => ['adsSuspense', variables]
+
+export const useInfiniteAdsQuery = <TData = InfiniteData<AdsQuery>, TError = unknown>(
+  variables: AdsQueryVariables,
+  options: Omit<UseInfiniteQueryOptions<AdsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseInfiniteQueryOptions<AdsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<AdsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['ads.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<AdsQuery, AdsQueryVariables>(AdsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteAdsQuery.getKey = (variables: AdsQueryVariables) => ['ads.infinite', variables]
+
+export const useSuspenseInfiniteAdsQuery = <TData = InfiniteData<AdsQuery>, TError = unknown>(
+  variables: AdsQueryVariables,
+  options: Omit<UseSuspenseInfiniteQueryOptions<AdsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseInfiniteQueryOptions<AdsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseInfiniteQuery<AdsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['ads.infiniteSuspense', variables],
+        queryFn: (metaData) =>
+          fetcher<AdsQuery, AdsQueryVariables>(AdsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useSuspenseInfiniteAdsQuery.getKey = (variables: AdsQueryVariables) => [
+  'ads.infiniteSuspense',
+  variables,
+]
 
 export const SendMailDocument = `
     mutation sendMail($input: SendMailInput!) {

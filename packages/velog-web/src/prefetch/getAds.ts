@@ -21,7 +21,7 @@ export default async function getAds({ type, limit }: AdsInput) {
 
     return ads.map((ad) => ({ ...ad, is_ad: true }))
   } catch (error) {
-    console.log('getAds error', error)
+    console.log('getAds errore', error)
     return []
   }
 }

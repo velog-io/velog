@@ -224,6 +224,10 @@ export type Query = {
   velogConfig?: Maybe<VelogConfig>
 }
 
+export type QueryAdsArgs = {
+  input: AdsInput
+}
+
 export type QueryFeedPostsArgs = {
   input: FeedPostsInput
 }
@@ -234,10 +238,6 @@ export type QueryFollowersArgs = {
 
 export type QueryFollowingsArgs = {
   input: GetFollowInput
-}
-
-export type QueryAdsArgs = {
-  input: AdsInput
 }
 
 export type QueryPostArgs = {

@@ -1,7 +1,6 @@
 import { ENV } from '@/env'
 import { Timeframe, useTimeframe } from '@/features/home/state/timeframe'
 import {
-  Post,
   TrendingPostsDocument,
   TrendingPostsQuery,
   TrendingPostsQueryVariables,
@@ -10,8 +9,12 @@ import { infiniteTrendingPostsQueryKey } from '@/graphql/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
+import { TrendingPost } from '../interface/post'
 
-export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.defaultPostLimit) {
+export default function useTrendingPosts(
+  initialPost: TrendingPost[] = [],
+  limit = ENV.defaultPostLimit,
+) {
   const params = useParams()
   const timeframe = (params.timeframe ?? 'week') as Timeframe
   const prevTimeframe = useRef<Timeframe>(timeframe)
@@ -68,7 +71,10 @@ export default function useTrendingPosts(initialPost: Post[] = [], limit = ENV.d
   }, [isFetching, actions])
 
   const posts = useMemo(() => {
-    return [...initialPost, ...(data?.pages?.flatMap((page) => page.trendingPosts) || [])] as Post[]
+    return [
+      ...initialPost,
+      ...(data?.pages?.flatMap((page) => page.trendingPosts) || []),
+    ] as TrendingPost[]
   }, [data, initialPost])
 
   return {

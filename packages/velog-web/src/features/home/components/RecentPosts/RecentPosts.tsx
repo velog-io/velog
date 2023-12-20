@@ -1,6 +1,6 @@
 'use client'
 
-import PostCardGrid from '@/features/home/components/PostCardGrid'
+import PostCardGrid from '@/features/home/components/PostCardGrid/PostCardGrid'
 import useRecentPosts from '@/features/home/hooks/useRecentPosts'
 import { useEffect, useRef, useState } from 'react'
 import { Post } from '@/graphql/generated'
