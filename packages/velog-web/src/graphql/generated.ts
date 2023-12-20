@@ -36,6 +36,24 @@ export type Scalars = {
   Void: { input: void; output: void }
 }
 
+export type Ad = {
+  body: Scalars['String']['output']
+  end_date: Scalars['DateTimeISO']['output']
+  id: Scalars['ID']['output']
+  image: Scalars['String']['output']
+  is_disabled: Scalars['Boolean']['output']
+  start_date: Scalars['DateTimeISO']['output']
+  title: Scalars['String']['output']
+  type: Scalars['String']['output']
+  url: Scalars['String']['output']
+}
+
+export type AdsInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>
+  type: Scalars['String']['input']
+  writer_username?: InputMaybe<Scalars['String']['input']>
+}
+
 export type Comment = {
   created_at: Maybe<Scalars['DateTimeISO']['output']>
   deleted: Maybe<Scalars['Boolean']['output']>
@@ -155,6 +173,7 @@ export type Post = {
   comments_count: Maybe<Scalars['Int']['output']>
   created_at: Scalars['DateTimeISO']['output']
   fk_user_id: Scalars['String']['output']
+  followed: Maybe<Scalars['Boolean']['output']>
   id: Scalars['ID']['output']
   is_followed: Maybe<Scalars['Boolean']['output']>
   is_liked: Maybe<Scalars['Boolean']['output']>
@@ -189,6 +208,7 @@ export type PostHistory = {
 }
 
 export type Query = {
+  ads: Array<Ad>
   currentUser: Maybe<User>
   feedPosts: Array<Post>
   followers: Array<FollowResult>
@@ -442,6 +462,21 @@ export type VelogConfig = {
   id: Scalars['ID']['output']
   logo_image: Maybe<Scalars['String']['output']>
   title: Maybe<Scalars['String']['output']>
+}
+
+export type AdsQueryVariables = Exact<{
+  input: AdsInput
+}>
+
+export type AdsQuery = {
+  ads: Array<{
+    id: string
+    title: string
+    body: string
+    image: string
+    url: string
+    start_date: any
+  }>
 }
 
 export type SendMailMutationVariables = Exact<{

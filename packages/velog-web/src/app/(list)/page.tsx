@@ -1,4 +1,6 @@
-import getTrendingPosts from '@/prefetch/getTrendingPosts'
+import getAds from '@/actions/getAds'
+import getTrendingPosts from '@/actions/getTrendingPost'
+import { ENV } from '@/env'
 import TrendingPosts from '@/features/home/components/TrendingPosts'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -13,11 +15,10 @@ export const metadata: Metadata = {
 
 export default async function TrendingHome({ params }: Props) {
   const { timeframe = 'week' } = params
-  const data = await getTrendingPosts({ timeframe, limit: 50 })
+  const data = await getTrendingPosts({ timeframe, limit: ENV.defaultPostLimit })
+  const ad = await getAds({ limit: 1, type: 'feed' })
 
-  if (!data) {
-    notFound()
-  }
+  const insertedData = [...data.slice(0, 3), ad[0], ...data.slice(3)].filter(Boolean)
 
-  return <TrendingPosts data={data} />
+  return <TrendingPosts data={insertedData} />
 }

@@ -6,9 +6,10 @@ import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
 import { Post } from '@/graphql/generated'
 import { useParams } from 'next/navigation'
 import { Timeframe } from '../../state/timeframe'
+import { AdsQueryResult } from '@/actions/getAds'
 
 type Props = {
-  data: Post[]
+  data: (Post | AdsQueryResult)[]
 }
 
 function TrendingPosts({ data }: Props) {
