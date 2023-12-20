@@ -17,7 +17,6 @@ export default async function Home({ params }: Props) {
   const data = await getTrendingPosts({ timeframe, limit: ENV.defaultPostLimit })
   const ad = await getAds({ limit: 1, type: 'feed' })
 
-  console.log('ad', ad)
   const insertedData = [...data.slice(0, 3), ad[0], ...data.slice(3)].filter(Boolean)
 
   return <TrendingPosts data={insertedData} />
