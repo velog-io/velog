@@ -30,6 +30,24 @@ export type Scalars = {
   Void: { input: void; output: void }
 }
 
+export type Ad = {
+  body: Scalars['String']['output']
+  end_date: Scalars['Date']['output']
+  id: Scalars['ID']['output']
+  image: Scalars['String']['output']
+  is_disabled: Scalars['Boolean']['output']
+  start_date: Scalars['Date']['output']
+  title: Scalars['String']['output']
+  type: Scalars['String']['output']
+  url: Scalars['String']['output']
+}
+
+export type AdsInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>
+  type: Scalars['String']['input']
+  writer_username?: InputMaybe<Scalars['String']['input']>
+}
+
 export type Comment = {
   created_at?: Maybe<Scalars['Date']['output']>
   deleted?: Maybe<Scalars['Boolean']['output']>
@@ -125,12 +143,17 @@ export type PostHistory = {
 }
 
 export type Query = {
+  ads: Array<Ad>
   currentUser?: Maybe<User>
   post?: Maybe<Post>
   readingList?: Maybe<Array<Maybe<Post>>>
   recentPosts?: Maybe<Array<Maybe<Post>>>
   restoreToken?: Maybe<UserToken>
   trendingPosts?: Maybe<Array<Maybe<Post>>>
+}
+
+export type QueryAdsArgs = {
+  input: AdsInput
 }
 
 export type QueryPostArgs = {
@@ -352,6 +375,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Ad: ResolverTypeWrapper<Ad>
+  AdsInput: AdsInput
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
   Comment: ResolverTypeWrapper<
     Omit<Comment, 'replies' | 'user'> & {
@@ -409,6 +434,8 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Ad: Ad
+  AdsInput: AdsInput
   Boolean: Scalars['Boolean']['output']
   Comment: Omit<Comment, 'replies' | 'user'> & {
     replies?: Maybe<Array<Maybe<ResolversParentTypes['Comment']>>>
@@ -451,6 +478,22 @@ export type ResolversParentTypes = {
   UserToken: UserToken
   VelogConfig: VelogConfig
   Void: Scalars['Void']['output']
+}
+
+export type AdResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['Ad'] = ResolversParentTypes['Ad'],
+> = {
+  body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  end_date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  image?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  is_disabled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  start_date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
 export type CommentResolvers<
@@ -575,6 +618,12 @@ export type QueryResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  ads?: Resolver<
+    Array<ResolversTypes['Ad']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryAdsArgs, 'input'>
+  >
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
   post?: Resolver<
     Maybe<ResolversTypes['Post']>,
@@ -741,6 +790,7 @@ export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type Resolvers<ContextType = GraphQLContext> = {
+  Ad?: AdResolvers<ContextType>
   Comment?: CommentResolvers<ContextType>
   Date?: GraphQLScalarType
   JSON?: GraphQLScalarType

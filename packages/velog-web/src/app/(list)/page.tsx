@@ -1,3 +1,4 @@
+import getAds from '@/actions/getAds'
 import getTrendingPosts from '@/actions/getTrendingPost'
 import { ENV } from '@/env'
 import TrendingPosts from '@/features/home/components/TrendingPosts'
@@ -14,5 +15,9 @@ export const metadata: Metadata = {
 export default async function Home({ params }: Props) {
   const { timeframe = 'week' } = params
   const data = await getTrendingPosts({ timeframe, limit: ENV.defaultPostLimit })
-  return <TrendingPosts data={data} />
+  const ad = await getAds({ limit: 1, type: 'feed' })
+
+  const insertedData = [...data.slice(0, 3), ad[0], ...data.slice(3)].filter(Boolean)
+
+  return <TrendingPosts data={insertedData} />
 }

@@ -9,11 +9,13 @@ import { Timeframe } from '@/features/home/state/timeframe'
 import { useParams, usePathname } from 'next/navigation'
 import { InfiniteData } from '@tanstack/react-query'
 import { Post, RecentPostsQuery, TrendingPostsQuery } from '@/graphql/generated'
+import AdPostCard from '../PostCard/AdPostCard'
+import { AdsQueryResult } from '@/actions/getAds'
 
 const cx = bindClassNames(styles)
 
 type Props = {
-  posts: Post[]
+  posts: (Post | AdsQueryResult)[]
   forHome: boolean
   forPost: boolean
   originData?: InfiniteData<TrendingPostsQuery | RecentPostsQuery>
@@ -43,18 +45,27 @@ function PostCardGrid({
     localStorage.setItem(`${prefix}/scrollPosition`, scrollHeight)
   }
 
+  function isPost(args: any): args is Post {
+    if (args.thumbnail) return true
+    return false
+  }
+
   return (
     <div className={cx('block')}>
       {posts.map((post) => {
-        return (
-          <PostCard
-            key={post.id}
-            post={post}
-            forHome={forHome}
-            forPost={forPost}
-            onClick={onPostCardClick}
-          />
-        )
+        if (isPost(post)) {
+          return (
+            <PostCard
+              key={post.id}
+              post={post}
+              forHome={forHome}
+              forPost={forPost}
+              onClick={onPostCardClick}
+            />
+          )
+        } else {
+          return <AdPostCard key={post.id} post={post} forHome={forHome} forPost={forPost} />
+        }
       })}
       {loading &&
         Array(ENV.defaultPostLimit)

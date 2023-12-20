@@ -3,9 +3,7 @@
   background: var(--bg-element1);
   border-radius: 4px;
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.04);
-  transition:
-    0.25s box-shadow ease-in,
-    0.25s transform ease-in;
+  transition: 0.25s box-shadow ease-in, 0.25s transform ease-in;
   &:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 20px 0 rgba(0, 0, 0, 0.08);
@@ -106,7 +104,7 @@
   padding: 0.625rem 1rem;
   border-top: 1px solid var(--border4);
   display: flex;
-  font-size: 0.75rem;
+  font-size: 12px;
   line-height: 1.5;
   justify-content: space-between;
   .userInfo {
@@ -163,6 +161,18 @@
     }
     .line + .line {
       margin-top: 0.3rem;
+    }
+  }
+}
+
+.ad {
+  .footer {
+    height: 45px;
+    display: flex;
+    justify-content: flex-end;
+    .text {
+      color: var(--text3);
+      font-size: 12px;
     }
   }
 }

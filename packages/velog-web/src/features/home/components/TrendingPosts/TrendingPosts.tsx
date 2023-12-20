@@ -5,9 +5,10 @@ import { useRef } from 'react'
 import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { Post } from '@/graphql/generated'
+import { AdsQueryResult } from '@/actions/getAds'
 
 type Props = {
-  data: Post[]
+  data: (Post | AdsQueryResult)[]
 }
 
 function TrendingPosts({ data }: Props) {

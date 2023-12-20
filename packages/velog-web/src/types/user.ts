@@ -33,10 +33,10 @@ export type User = {
 export type CurrentUser = {
   id: string
   username: string
+  email: string | null
   profile: {
     id: string
     thumbnail: string | null
-    display_name: string | null
+    display_name: string
   }
-  email: string
 }
