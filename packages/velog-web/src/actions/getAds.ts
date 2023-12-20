@@ -1,4 +1,4 @@
-import { AdsDocument, AdsInput, AdsQuery } from '@/graphql/generated'
+import { AdsDocument, AdsInput } from '@/graphql/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getAds({ type, limit }: AdsInput) {
@@ -19,7 +19,7 @@ export default async function getAds({ type, limit }: AdsInput) {
       body,
     })
 
-    return ads
+    return ads.map((ad) => ({ ...ad, is_ad: true }))
   } catch (error) {
     console.log('getAds error', error)
     return []
@@ -33,4 +33,5 @@ export type AdsQueryResult = {
   image: string
   url: string
   start_date: string
+  is_ad: boolean
 }
