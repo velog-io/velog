@@ -3,7 +3,6 @@ import { ENV } from '@/env'
 import { Timeframe, useTimeframe } from '@/features/home/state/timeframe'
 import { fetcher } from '@/graphql/fetcher'
 import {
-  Ad,
   Post,
   TrendingPostsDocument,
   TrendingPostsQuery,
