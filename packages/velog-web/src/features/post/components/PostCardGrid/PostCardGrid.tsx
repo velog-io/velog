@@ -11,6 +11,7 @@ import { InfiniteData } from '@tanstack/react-query'
 import { Post, RecentPostsQuery, TrendingPostsQuery } from '@/graphql/generated'
 import AdPostCard from '../PostCard/AdPostCard'
 import { AdsQueryResult } from '@/actions/getAds'
+import { useEffect, useRef } from 'react'
 
 const cx = bindClassNames(styles)
 
@@ -32,6 +33,8 @@ function PostCardGrid({
   const params = useParams()
   const pathname = usePathname()
   const timeframe = (params.timeframe ?? 'week') as Timeframe
+  const hasChecked = useRef<boolean>(false)
+  const hasClicked = useRef<boolean>(false)
 
   // TODO: remove
   const onPostCardClick = () => {
@@ -50,11 +53,31 @@ function PostCardGrid({
     return false
   }
 
+  useEffect(() => {
+    if (hasChecked.current) return
+    hasChecked.current = false
+    gtag('event', 'ads_feed_view')
+  }, [])
+
+  const onClick = () => {
+    if (hasClicked.current) return
+    hasClicked.current = true
+    gtag('event', 'ads_feed_click')
+  }
+
   return (
     <div className={cx('block')}>
       {posts.map((post) => {
         if (isAd(post)) {
-          return <AdPostCard key={post.id} post={post} forHome={forHome} forPost={forPost} />
+          return (
+            <AdPostCard
+              key={post.id}
+              post={post}
+              forHome={forHome}
+              forPost={forPost}
+              onClick={onClick}
+            />
+          )
         } else {
           return (
             <PostCard

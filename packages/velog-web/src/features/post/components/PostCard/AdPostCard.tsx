@@ -13,14 +13,18 @@ type Props = {
   post: AdsQueryResult
   forHome: boolean
   forPost: boolean
+  onClick?: () => void
 }
 
-function AdPostCard({ post, forHome = false, forPost = false }: Props) {
+function AdPostCard({ post, forHome = false, forPost = false, onClick }: Props) {
   const { loading } = useTimeFormat(post.start_date || new Date().toISOString())
   if (loading) return <PostCardSkeleton forHome={forHome} forPost={forPost} />
 
   return (
-    <div className={cx('ad', 'block', { isNotHomeAndPost: !forHome && !forPost })}>
+    <div
+      className={cx('ad', 'block', { isNotHomeAndPost: !forHome && !forPost })}
+      onClick={onClick}
+    >
       {post.image && (
         <a href={post.url} target="_blank" className={cx('styleLink')}>
           <RatioImage
