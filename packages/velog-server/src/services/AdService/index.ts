@@ -22,7 +22,6 @@ export class AdService implements Service {
     }
 
     const now = this.utils.now
-
     const whereInput: Prisma.AdWhereInput = {
       type,
       is_disabled: false,
@@ -30,7 +29,7 @@ export class AdService implements Service {
         lte: now,
       },
       end_date: {
-        gt: now,
+        gte: now,
       },
     }
 
@@ -44,6 +43,7 @@ export class AdService implements Service {
       take: limit,
     })
 
+    console.log('ads', ads)
     return ads
   }
 }
