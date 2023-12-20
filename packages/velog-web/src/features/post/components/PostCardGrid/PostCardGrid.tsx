@@ -45,15 +45,17 @@ function PostCardGrid({
     localStorage.setItem(`${prefix}/scrollPosition`, scrollHeight)
   }
 
-  function isPost(args: any): args is Post {
-    if (args.thumbnail) return true
+  function isAd(args: any): args is AdsQueryResult {
+    if (args.is_ad) return true
     return false
   }
 
   return (
     <div className={cx('block')}>
       {posts.map((post) => {
-        if (isPost(post)) {
+        if (isAd(post)) {
+          return <AdPostCard key={post.id} post={post} forHome={forHome} forPost={forPost} />
+        } else {
           return (
             <PostCard
               key={post.id}
@@ -63,8 +65,6 @@ function PostCardGrid({
               onClick={onPostCardClick}
             />
           )
-        } else {
-          return <AdPostCard key={post.id} post={post} forHome={forHome} forPost={forPost} />
         }
       })}
       {loading &&
