@@ -1,14 +1,15 @@
 'use client'
 
-import PostCardGrid from '@/features/home/components/PostCardGrid'
+import PostCardGrid from '@/features/home/components/PostCardGrid/PostCardGrid'
 import { useEffect, useRef, useState } from 'react'
 import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
 import { Post } from '@/graphql/helpers/generated'
 import { useParams } from 'next/navigation'
 import { Timeframe } from '../../state/timeframe'
+import { TrendingPost } from '../../interface/post'
 
 type Props = {
-  data: Post[]
+  data: TrendingPost[]
 }
 
 function TrendingPosts({ data }: Props) {
@@ -17,7 +18,7 @@ function TrendingPosts({ data }: Props) {
   const timeframe = (params.timeframe ?? 'week') as Timeframe
   const hasEffectRun = useRef<boolean>(false)
 
-  const [initialData, setInitialData] = useState<Post[]>([])
+  const [initialData, setInitialData] = useState<TrendingPost[]>([])
   const { posts, isFetching, fetchMore, isLoading } = useTrendingPosts(initialData)
 
   useEffect(() => {
@@ -33,7 +34,7 @@ function TrendingPosts({ data }: Props) {
         return
       }
 
-      const parsed: Post[] = JSON.parse(infiniteData) || []
+      const parsed: TrendingPost[] = JSON.parse(infiniteData) || []
       const savedPosts = parsed?.slice(data.length) || []
       setInitialData([...data, ...savedPosts])
 

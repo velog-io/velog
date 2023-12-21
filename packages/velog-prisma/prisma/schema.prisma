@@ -602,3 +602,17 @@ model Feed {
   @@index([created_at], map: "feeds_created_at")
   @@map("feeds")
 }
+
+model Ad {
+  id String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title String  @db.VarChar(255) 
+  body String @db.Text
+  image String @db.VarChar(500)
+  type String @db.VarChar(50)
+  start_date DateTime @db.Timestamptz(6)
+  end_date DateTime @db.Timestamptz(6)
+  is_disabled Boolean @default(false)
+  url String @db.VarChar(512)
+
+  @@map("ads")
+}

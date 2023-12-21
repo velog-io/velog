@@ -2,7 +2,6 @@ import { ENV } from '@env'
 import { dirname, join } from 'path'
 import { injectable, singleton } from 'tsyringe'
 import { fileURLToPath } from 'url'
-import { utcToZonedTime } from 'date-fns-tz'
 import { z } from 'zod'
 import { customAlphabet } from 'nanoid'
 import nanoidDictionary from 'nanoid-dictionary'
@@ -109,9 +108,7 @@ export class UtilsService implements Service {
     return isUnscoredCategory && hasUnscoredWords
   }
   public get now() {
-    const utcTime = new Date()
-    const timezone = 'Asia/Seoul'
-    return utcToZonedTime(utcTime, timezone)
+    return new Date()
   }
   public optimizeImage(url: string, width: number): string {
     if (!url.includes('https://images.velog.io')) return url

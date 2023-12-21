@@ -1,0 +1,21 @@
+type Ad {
+  id: ID!
+  title: String!
+  body: String!
+  image: String!
+  type: String!
+  url: String!
+  start_date: Date!
+  end_date: Date!
+  is_disabled: Boolean!
+}
+
+type Query {
+  ads(input: AdsInput!): [Ad!]!
+}
+
+input AdsInput {
+  type: String!
+  writer_username: String
+  limit: Int
+}

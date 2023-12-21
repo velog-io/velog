@@ -2,21 +2,22 @@
 
 import styles from './PostCardGrid.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import PostCard from '@/features/home/components/PostCard/PostCard'
+
+import { ENV } from '@/env'
 import { Timeframe } from '@/features/home/state/timeframe'
 import { useParams, usePathname } from 'next/navigation'
+import { Post } from '@/graphql/generated'
+import AdPostCard from '../PostCard/AdPostCard'
 
+import { Fragment, useEffect, useRef } from 'react'
 import { Post } from '@/graphql/helpers/generated'
 import PostCardSkeletonGrid from './PostCardSkeletonGrid'
-import { ENV } from '@/env'
-import { PostCardSkeleton } from '../PostCard/PostCardSkeleton'
-import { nanoid } from 'nanoid'
-import { Fragment } from 'react'
+import { TrendingPost } from '../../interface/post'
 
 const cx = bindClassNames(styles)
 
 type Props = {
-  posts: Post[]
+  posts: TrendingPost[]
   forHome: boolean
   forPost: boolean
   isFetching: boolean
@@ -35,6 +36,8 @@ function PostCardGrid({
   const params = useParams()
   const pathname = usePathname()
   const timeframe = (params.timeframe ?? 'week') as Timeframe
+  const hasLoaded = useRef<boolean>(false)
+  const hasClicked = useRef<boolean>(false)
 
   const isFeed = pathname === '/feed'
   const isRecent = pathname === '/recent'
@@ -49,23 +52,54 @@ function PostCardGrid({
     localStorage.setItem(`${prefix}/scrollPosition`, scrollHeight)
   }
 
+  function isPost(args: any): args is Post {
+    if (!args.is_ad) return true
+    return false
+  }
+
+  useEffect(() => {
+    if (hasLoaded.current) return
+    hasLoaded.current = true
+    gtag('event', 'ads_feed_view')
+  }, [])
+
+  const onClick = () => {
+    if (hasClicked.current) return
+    hasClicked.current = true
+    gtag('event', 'ads_feed_click')
+  }
+
   if (isLoading) return <PostCardSkeletonGrid forHome={forHome} forPost={forPost} />
 
   return (
-    <ul className={cx('block', 'homeGrid')}>
-      {posts.map((post, i) => (
-        <Fragment key={post.id}>
-          <PostCard post={post} forHome={forHome} forPost={forPost} onClick={onPostCardClick} />
-          {posts.length - 1 === i && !isFeed && (
-            <PostCardSkeleton forHome={forHome} forPost={forPost} fetchMore={fetchMore} />
-          )}
-        </Fragment>
-      ))}
+    <div className={cx('block')}>
+      {posts.map((post, i) => {
+        if (isPost(post)) {
+          return (
+            <Fragment key={post.id}>
+              <PostCard post={post} forHome={forHome} forPost={forPost} onClick={onPostCardClick} />
+              {posts.length - 1 === i && !isFeed && (
+                <PostCardSkeleton forHome={forHome} forPost={forPost} fetchMore={fetchMore} />
+              )}
+            </Fragment>
+          )
+        } else {
+          return (
+            <AdPostCard
+              key={post.id}
+              post={post}
+              forHome={forHome}
+              forPost={forPost}
+              onClick={onClick}
+            />
+          )
+        }
+      })}
       {isFetching &&
         Array(ENV.defaultPostLimit)
           .fill(0)
-          .map(() => <PostCardSkeleton key={nanoid()} forHome={forHome} forPost={forPost} />)}
-    </ul>
+          .map((_, index) => <PostCardSkeleton key={index} forHome={forHome} forPost={forPost} />)}
+    </div>
   )
 }
 

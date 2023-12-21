@@ -1,0 +1,10 @@
+query ads($input: AdsInput!) {
+  ads(input: $input) {
+    id
+    title
+    body
+    image
+    url
+    start_date
+  }
+}

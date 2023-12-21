@@ -33,6 +33,24 @@ export type Scalars = {
   Void: { input: void; output: void }
 }
 
+export type Ad = {
+  body: Scalars['String']['output']
+  end_date: Scalars['Date']['output']
+  id: Scalars['ID']['output']
+  image: Scalars['String']['output']
+  is_disabled: Scalars['Boolean']['output']
+  start_date: Scalars['Date']['output']
+  title: Scalars['String']['output']
+  type: Scalars['String']['output']
+  url: Scalars['String']['output']
+}
+
+export type AdsInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>
+  type: Scalars['String']['input']
+  writer_username?: InputMaybe<Scalars['String']['input']>
+}
+
 export type CheckEmailExistsInput = {
   email: Scalars['String']['input']
 }
@@ -239,6 +257,7 @@ export type PostHistory = {
 }
 
 export type Query = {
+  ads: Array<Ad>
   checkEmailExists?: Maybe<Scalars['Boolean']['output']>
   currentUser?: Maybe<User>
   feedPosts: Array<Post>
@@ -258,6 +277,10 @@ export type Query = {
   user?: Maybe<User>
   userTags?: Maybe<UserTags>
   velogConfig?: Maybe<VelogConfig>
+}
+
+export type QueryAdsArgs = {
+  input: AdsInput
 }
 
 export type QueryCheckEmailExistsArgs = {
@@ -610,6 +633,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Ad: ResolverTypeWrapper<Ad>
+  AdsInput: AdsInput
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
   CheckEmailExistsInput: CheckEmailExistsInput
   Comment: ResolverTypeWrapper<CommentModel>
@@ -692,6 +717,8 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Ad: Ad
+  AdsInput: AdsInput
   Boolean: Scalars['Boolean']['output']
   CheckEmailExistsInput: CheckEmailExistsInput
   Comment: CommentModel
@@ -759,6 +786,22 @@ export type ResolversParentTypes = {
   UserToken: UserToken
   VelogConfig: VelogConfig
   Void: Scalars['Void']['output']
+}
+
+export type AdResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['Ad'] = ResolversParentTypes['Ad'],
+> = {
+  body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  end_date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  image?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  is_disabled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  start_date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
 export type CommentResolvers<
@@ -955,6 +998,12 @@ export type QueryResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  ads?: Resolver<
+    Array<ResolversTypes['Ad']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryAdsArgs, 'input'>
+  >
   checkEmailExists?: Resolver<
     Maybe<ResolversTypes['Boolean']>,
     ParentType,
@@ -1262,6 +1311,7 @@ export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type Resolvers<ContextType = GraphQLContext> = {
+  Ad?: AdResolvers<ContextType>
   Comment?: CommentResolvers<ContextType>
   Date?: GraphQLScalarType
   FollowResult?: FollowResultResolvers<ContextType>
