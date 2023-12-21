@@ -28,7 +28,8 @@ export const getECRRepository = async (type: PackageType): Promise<Repository> =
       repoUri: `${repo.registryId}.dkr.ecr.ap-northeast-2.amazonaws.com/${repo.repositoryName}`,
     }))
     .find(
-      (v) => v.repositoryName?.includes('velog') && v.repositoryName?.includes(option.ecrRepoName),
+      (v) =>
+        v.repositoryName?.includes('velog-stage') && v.repositoryName?.includes(option.ecrRepoName),
     )
 
   if (!existsRepo) {
