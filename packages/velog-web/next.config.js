@@ -8,8 +8,8 @@ const nextConfig = {
     domains: ['velog.velcdn.com', 'images.velog.io', 'media.vlpt.us'],
     unoptimized: true,
   },
-  // assetPrefix: isProd ? 'https://assets.velcdn.com' : undefined,
-  assetPrefix: isProd ? 'https://assets-stage.velcdn.com' : undefined,
+  assetPrefix: isProd ? 'https://assets.velcdn.com' : undefined,
+  // assetPrefix: isProd ? 'https://assets-stage.velcdn.com' : undefined,
 }
 
 module.exports = nextConfig
