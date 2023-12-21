@@ -5,7 +5,6 @@ import PostCardGrid from '../PostCardGrid'
 import { useEffect, useState } from 'react'
 import useFeedPosts from '../../hooks/useFeedPosts'
 import FeedPostsEmpty from './FeedPostsEmpty'
-import PostCardGrid from '../PostCardGrid/PostCardGrid'
 
 type Props = {
   data: Post[]

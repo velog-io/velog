@@ -7,26 +7,26 @@ import HeaderCustomLogo from '@/components/Header/HeaderCustomLogo'
 
 const cx = bindClassNames(styles)
 
-type DefaultProps = {
+export type DefaultHeaderProps = {
   children: React.ReactNode
   isCustomHeader?: false
 }
 
-type CustomLogoHeaderProps = {
+export type CustomLogoHeaderProps = {
   children: React.ReactNode
   username: string
   userLogo: UserLogo
   isCustomHeader?: true
 }
 
-type Props = DefaultProps | CustomLogoHeaderProps
+type Props = DefaultHeaderProps | CustomLogoHeaderProps
 
-function isDefaultProps(props: Props): props is DefaultProps {
+function isDefaultHeaderProps(props: Props): props is DefaultHeaderProps {
   return !props.isCustomHeader
 }
 
 function BasicLayout(props: Props) {
-  const header = isDefaultProps(props) ? (
+  const header = isDefaultHeaderProps(props) ? (
     <Header />
   ) : (
     <Header logo={<HeaderCustomLogo username={props.username} userLogo={props.userLogo} />} />
