@@ -37,7 +37,7 @@ function PostCardGrid({
   const params = useParams()
   const pathname = usePathname()
   const timeframe = (params.timeframe ?? 'week') as Timeframe
-  const hasChecked = useRef<boolean>(false)
+  const hasLoaded = useRef<boolean>(false)
   const hasClicked = useRef<boolean>(false)
 
   const isFeed = pathname === '/feed'
@@ -59,8 +59,8 @@ function PostCardGrid({
   }
 
   useEffect(() => {
-    if (hasChecked.current) return
-    hasChecked.current = true
+    if (hasLoaded.current) return
+    hasLoaded.current = true
     gtag('event', 'ads_feed_view')
   }, [])
 
