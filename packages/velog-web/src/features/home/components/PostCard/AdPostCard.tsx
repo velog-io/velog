@@ -22,10 +22,7 @@ function AdPostCard({ post, forHome = false, forPost = false, onClick }: Props) 
   if (isLoading) return <PostCardSkeleton forHome={forHome} forPost={forPost} />
 
   return (
-    <div
-      className={cx('ad', 'block', { isNotHomeAndPost: !forHome && !forPost })}
-      onClick={onClick}
-    >
+    <li className={cx('ad', 'block', { isNotHomeAndPost: !forHome && !forPost })} onClick={onClick}>
       {post.image && (
         <a href={post.url} target="_blank" className={cx('styleLink')}>
           <RatioImage
@@ -52,7 +49,7 @@ function AdPostCard({ post, forHome = false, forPost = false, onClick }: Props) 
       <div className={cx('footer')}>
         <span className={cx('text')}>광고</span>
       </div>
-    </div>
+    </li>
   )
 }
 

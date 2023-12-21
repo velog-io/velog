@@ -73,7 +73,7 @@ function PostCardGrid({
   if (isLoading) return <PostCardSkeletonGrid forHome={forHome} forPost={forPost} />
 
   return (
-    <div className={cx('block')}>
+    <ul className={cx('block', 'homeGrid')}>
       {posts.map((post, i) => {
         if (isPost(post)) {
           return (
@@ -100,7 +100,7 @@ function PostCardGrid({
         Array(ENV.defaultPostLimit)
           .fill(0)
           .map((_, index) => <PostCardSkeleton key={index} forHome={forHome} forPost={forPost} />)}
-    </div>
+    </ul>
   )
 }
 
