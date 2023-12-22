@@ -29,6 +29,7 @@ function SettingEmailRow({ email }: Props) {
       showEditButton={true}
       onClickEdit={() => setEdit(true)}
       editButtonText="변경"
+      className={cx('block')}
     >
       {edit ? (
         <div className={cx('form')} onSubmit={onSubmit}>

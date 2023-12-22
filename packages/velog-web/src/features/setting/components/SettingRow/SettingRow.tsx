@@ -14,6 +14,7 @@ type Props = {
   description?: string
   showEditButton?: boolean
   editButtonText?: string
+  className?: string
 }
 
 function SettingRow({
@@ -24,9 +25,10 @@ function SettingRow({
   showEditButton = true,
   onClickEdit,
   editButtonText,
+  className,
 }: Props) {
   return (
-    <div className={cx('block')}>
+    <div className={cx('block', className)}>
       <div className={cx('wrapper')}>
         <div className={cx('titleWrapper')}>
           <h3>{title}</h3>

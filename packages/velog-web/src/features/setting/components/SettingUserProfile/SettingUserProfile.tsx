@@ -32,7 +32,7 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
   return (
     <section className={cx('block')}>
       <div className={cx('thumbnailArea')}>
-        <Thumbnail src={thumbnail} alt="profile" className={cx('thumbnail')} />
+        <Thumbnail src={thumbnail} alt="profile" className={cx('thumbnail')} priority={true} />
         <Button onClick={() => {}} disabled={false}>
           {false ? '업로드중...' : '이미지 업로드'}
         </Button>
