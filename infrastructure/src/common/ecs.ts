@@ -44,6 +44,7 @@ export const createECSfargateService = ({
           roleArn: ecsTaskExecutionRole.arn,
         },
         container: {
+          // name: withPrefix(`${packageType}-container`),
           image: imageUri,
           cpu: option.cpu,
           memory: option.memory,
