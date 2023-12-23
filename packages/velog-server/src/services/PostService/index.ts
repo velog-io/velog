@@ -384,7 +384,7 @@ export class PostService implements Service {
   private serialize(post: SerializeArgs): SerializePost {
     return {
       id: post.id,
-      url: `${ENV.apiHost}/@${post.user.username}/${encodeURI(post.url_slug ?? '')}`,
+      url: `${ENV.clientV2Host}/@${post.user.username}/${encodeURI(post.url_slug ?? '')}`,
       title: post.title,
       thumbnail: post.thumbnail,
       released_at: post.released_at,
@@ -469,7 +469,7 @@ export class PostService implements Service {
     }
   }
   public async getPosts(input: GetPostsInput, signedUserId?: string): Promise<Post[]> {
-    const { cursor, limit = 1, username, temp_only, tag } = input
+    const { cursor, limit = 10, username, temp_only = false, tag } = input
 
     if (limit > 100) {
       throw new BadRequestError('Max limit is 100')
@@ -482,11 +482,20 @@ export class PostService implements Service {
     })
 
     if (tag) {
-      return this.findPostsWithTag({
+      return this.findPostsByTag({
         cursor,
         tagName: tag,
         userId: user?.id,
-        isSelf: !!(user && user.id === signedUserId),
+        isSelf: user?.id === signedUserId,
+      })
+    }
+
+    if (user && !temp_only) {
+      return this.findPostsByUserId({
+        userId: user.id,
+        size: limit,
+        cursor: cursor,
+        isUserSelf: user.id === signedUserId,
       })
     }
 
@@ -567,7 +576,7 @@ export class PostService implements Service {
 
     return posts
   }
-  private async findPostsWithTag({
+  private async findPostsByTag({
     cursor,
     tagName,
     userId,
@@ -622,6 +631,45 @@ export class PostService implements Service {
     })
 
     return postTags.filter((tags) => tags.post).map((tags) => tags.post!)
+  }
+  private async findPostsByUserId({
+    userId,
+    size,
+    cursor,
+    isUserSelf = false,
+  }: FindPostByUserIdArgs) {
+    const cursorPost = cursor
+      ? await this.db.post.findUnique({
+          where: {
+            id: cursor,
+          },
+        })
+      : null
+
+    const limitedSize = Math.min(50, size)
+
+    const posts = await this.db.post.findMany({
+      where: {
+        fk_user_id: userId,
+        ...(isUserSelf ? {} : { is_private: false }),
+        is_temp: false,
+        released_at: cursorPost?.released_at ? { lt: cursorPost.released_at } : undefined,
+      },
+      orderBy: {
+        released_at: 'desc',
+      },
+      take: limitedSize,
+      include: {
+        postTags: {
+          include: {
+            tag: true,
+          },
+        },
+        user: true,
+      },
+    })
+
+    return posts
   }
   public async getSeachPost(
     input: GetSearchPostsInput,
@@ -705,4 +753,11 @@ export type FindPostsByTagArgs = {
   limit?: number
   userId?: string
   isSelf: boolean
+}
+
+type FindPostByUserIdArgs = {
+  userId: string
+  size: number
+  cursor?: string
+  isUserSelf?: boolean
 }
