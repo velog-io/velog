@@ -12,6 +12,8 @@ import { MdHome } from 'react-icons/md'
 import FollowButton from '../FollowButton'
 import { useAuth } from '@/state/auth'
 import { UserProfile as Profile, useGetUserFollowInfoQuery } from '@/graphql/generated'
+import { useQueryClient } from '@tanstack/react-query'
+import { infiniteGetFollowersQueryKey } from '@/graphql/queryKey'
 
 const cx = bindClassNames(styles)
 
@@ -26,6 +28,7 @@ type Props = {
 }
 
 function UserProfile({ style, userId, profile, followersCount, followingsCount, username }: Props) {
+  const queryClient = useQueryClient()
   const {
     value: { currentUser },
   } = useAuth()
@@ -56,6 +59,9 @@ function UserProfile({ style, userId, profile, followersCount, followingsCount, 
   const getSocialId = (link: string) => link.split('/').reverse()[0]
 
   const onSuccess = () => {
+    queryClient.refetchQueries({
+      queryKey: infiniteGetFollowersQueryKey({ input: { username, limit: 10 } }),
+    })
     refetch()
   }
 
