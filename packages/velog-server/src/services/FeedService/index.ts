@@ -1,6 +1,6 @@
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { subWeeks } from 'date-fns'
+import { subMonths } from 'date-fns'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
@@ -16,15 +16,15 @@ export class FeedService implements Service {
     private readonly utils: UtilsService,
   ) {}
   async createFeedByFollow({ followingUserId, followerUserId }: CreateFeedByFollowArgs) {
-    // 2주 동안 만들어진 post를 새롭게 Feed로 생성함
-    console.log('followingUserId', followingUserId)
+    // 1개월 동안 만들어진 post를 새롭게 Feed로 생성함
     const posts = await this.db.post.findMany({
       where: {
         fk_user_id: followingUserId,
         created_at: {
-          gte: subWeeks(this.utils.now, 2),
+          gte: subMonths(this.utils.now, 1),
         },
       },
+      take: 10,
     })
 
     console.log('posts', posts)
