@@ -598,7 +598,8 @@ model Feed {
   updated_at DateTime @default(now()) @db.Timestamptz(6)
   post       Post     @relation(fields: [fk_post_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
   user       User     @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-
+  
+  // @@unique([fk_post_id, fk_user_id])
   @@index([created_at], map: "feeds_created_at")
   @@map("feeds")
 }

@@ -7,7 +7,7 @@ import { DbService } from '@lib/db/DbService.js'
 import { FollowUser, Prisma, UserProfile } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
-import { RedisService } from '@lib/redis/RedisService.js'
+import { FeedService } from '@services/FeedService/index.js'
 
 interface Service {
   findFollowRelationship({
@@ -25,11 +25,11 @@ interface Service {
 
 @injectable()
 @singleton()
-export class FollowService implements Service {
+export class UserFollowService implements Service {
   constructor(
     private readonly db: DbService,
-    private readonly redis: RedisService,
     private readonly userService: UserService,
+    private readonly feedService: FeedService,
   ) {}
   public async isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean> {
     if (!followingUserId || !followerUserId) return false
@@ -80,12 +80,15 @@ export class FollowService implements Service {
       throw new ConfilctError('Already relationship')
     }
 
+    console.log('hello')
     await this.db.followUser.create({
       data: {
         fk_following_user_id: followingUserId,
         fk_follower_user_id: followerUserId,
       },
     })
+
+    await this.feedService.createFeedByFollow({ followerUserId, followingUserId })
   }
   public async unfollow({ followingUserId, followerUserId }: FollowArgs): Promise<void> {
     if (!followingUserId) {
