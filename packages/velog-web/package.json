@@ -17,7 +17,7 @@
   "scripts": {
     "dev": "pnpm env:copy -e development && next dev -p 3001 --turbo",
     "stage": "pnpm env:copy -e stage && pnpm start",
-    "prod": "pnpm env:copy -e development && pnpm start",
+    "prod": "pnpm env:copy -e production && pnpm start",
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p 3001",
     "lint": "next lint",
