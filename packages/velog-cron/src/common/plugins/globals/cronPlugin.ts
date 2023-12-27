@@ -18,7 +18,6 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       name: 'generate trending writers every day',
       cronTime: '0 5 * * *', // every day at 05:00 (5:00 AM)
       jobService: generateTrendingWritersJob,
-      param: undefined,
     },
     {
       name: 'posts score calculation in every day',
@@ -30,7 +29,6 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       name: 'delete feed in every hour',
       cronTime: '10 * * * *', // every hour at 10 minutes
       jobService: deleteFeedJob,
-      param: undefined,
     },
     {
       name: 'generate feeds in every 1 minute',
@@ -96,16 +94,16 @@ type JobDescription = NeedParamJobService | NotNeedParamJobService
 type NeedParamJobService = {
   name: string
   cronTime: string
-  param: number
-  isImmediate?: boolean
+  param: any
+  isImmediateExecute?: boolean
   jobService: CalculatePostScoreJob
 }
 
 type NotNeedParamJobService = {
   name: string
   cronTime: string
-  param: undefined
-  isImmediate?: boolean
+  param?: undefined
+  isImmediateExecute?: boolean
   jobService: GenerateFeedJob | GenerateTrendingWritersJob | DeleteFeedJob
 }
 

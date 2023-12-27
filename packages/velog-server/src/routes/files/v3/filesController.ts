@@ -102,7 +102,7 @@ export class FilesController implements Controller {
     const isAbuse = await this.imageService.detectAbuse(signedUserId)
 
     if (isAbuse) {
-      throw new HttpError('Too many requests', 429)
+      throw new HttpError('Too many requests', 'is abused user', 429)
     }
 
     if (type === 'post' && !!ref_id) {

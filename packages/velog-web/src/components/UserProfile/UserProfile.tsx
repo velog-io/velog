@@ -15,7 +15,7 @@ import { UserProfile as Profile, useGetUserFollowInfoQuery } from '@/graphql/hel
 import { useParams } from 'next/navigation'
 import { getUsernameFromParams } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
-import { infiniteGetFollowersQueryKey } from '@/graphql/queryKey'
+import { infiniteGetFollowersQueryKey } from '@/graphql/helpers/queryKey'
 
 const cx = bindClassNames(styles)
 
@@ -28,7 +28,7 @@ type Props = {
   isFollowed: boolean
 }
 
-function UserProfile({ style, userId, profile, followersCount, followingsCount, username }: Props) {
+function UserProfile({ style, userId, profile, followersCount, followingsCount }: Props) {
   const queryClient = useQueryClient()
   const {
     value: { currentUser },

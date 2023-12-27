@@ -2,6 +2,6 @@ import { HttpError } from './HttpError.js'
 
 export class ConfilctError extends HttpError {
   constructor(message = 'CONFILCT') {
-    super(message, 409, 'Confilct')
+    super('confilct', message, 409)
   }
 }
