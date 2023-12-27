@@ -2,7 +2,6 @@ import removeMd from 'remove-markdown'
 import { Post, PostTag, Prisma, Tag, User } from '@prisma/client'
 import { container, injectable, singleton } from 'tsyringe'
 import {
-  FeedPostsInput,
   GetPostsInput,
   GetSearchPostsInput,
   ReadPostInput,
@@ -30,7 +29,6 @@ interface Service {
   getReadingList(input: ReadingListInput, signedUserId?: string): Promise<Post[]>
   getTrendingPosts(input: TrendingPostsInput, ip: string | null): Promise<Post[]>
   getRecentPosts(input: RecentPostsInput, signedUserId?: string): Promise<Post[]>
-  getFeedPosts(input: FeedPostsInput, singedUserId?: string): Promise<Post[]>
   updatePostScore(postId: string): Promise<void>
   shortDescription(post: Post): string
   recommendedPosts(post: Post): Promise<Post[]>
@@ -690,38 +688,6 @@ export class PostService implements Service {
     })
 
     return result
-  }
-  async getFeedPosts(input: FeedPostsInput, singedUserId?: string): Promise<Post[]> {
-    if (!singedUserId) {
-      return []
-    }
-
-    const { offset = 0, limit = 20 } = input
-
-    if (limit < 0 || offset < 0) {
-      throw new BadRequestError('Invalid value')
-    }
-
-    if (limit > 100) {
-      throw new BadRequestError('Limit is too high')
-    }
-
-    const feeds = await this.db.feed.findMany({
-      where: {
-        fk_user_id: singedUserId,
-      },
-      include: {
-        post: true,
-      },
-      take: limit,
-      skip: offset,
-      orderBy: {
-        created_at: 'desc',
-      },
-    })
-
-    const posts = feeds.map((feed) => feed.post)
-    return posts
   }
 }
 

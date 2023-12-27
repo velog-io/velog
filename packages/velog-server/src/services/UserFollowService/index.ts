@@ -14,9 +14,9 @@ interface Service {
     followingUserId,
     followerUserId,
   }: FollowArgs): Promise<FollowUser | null>
-  isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean>
+  isFollowed({ followingUserId, followerUserId }: isFollowedArgs): Promise<boolean>
   follow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
-  unfollow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
+  unfollow({ followingUserId, followerUserId }: UnfollowArgs): Promise<void>
   getFollowers(input: GetFollowInput): Promise<FollowResult[]>
   getFollowersCount(username: string): Promise<number>
   getFollowings(input: GetFollowInput): Promise<FollowResult[]>
@@ -80,7 +80,6 @@ export class UserFollowService implements Service {
       throw new ConfilctError('Already relationship')
     }
 
-    console.log('hello')
     await this.db.followUser.create({
       data: {
         fk_following_user_id: followingUserId,
@@ -128,6 +127,11 @@ export class UserFollowService implements Service {
       where: {
         id: follow.id,
       },
+    })
+
+    await this.feedService.deleteFeedByUnfollow({
+      followerUserId,
+      followingUserId,
     })
   }
   public async getFollowers(input: GetFollowInput, signedUserId?: string): Promise<FollowResult[]> {
@@ -303,10 +307,14 @@ export class UserFollowService implements Service {
   }
 }
 
+type isFollowedArgs = FollowArgs
+
 type FollowArgs = {
   followingUserId?: string
   followerUserId?: string
 }
+
+type UnfollowArgs = FollowArgs
 
 type FollowResult = {
   id: string

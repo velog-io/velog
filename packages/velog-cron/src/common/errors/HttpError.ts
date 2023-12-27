@@ -7,6 +7,10 @@ export class HttpError extends Error {
     this.message = message
     this.statusCode = statusCode
     this.name = name
+    // Ensure the stack trace is captured
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor)
+    }
   }
 }
 

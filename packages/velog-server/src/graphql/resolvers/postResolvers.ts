@@ -11,6 +11,7 @@ import { DbService } from '@lib/db/DbService.js'
 import { SeriesService } from '@services/SeriesService/index.js'
 import { TagService } from '@services/TagService/index.js'
 import { UserFollowService } from '@services/UserFollowService/index.js'
+import { FeedService } from '@services/FeedService/index.js'
 
 const postResolvers: Resolvers = {
   Post: {
@@ -89,8 +90,8 @@ const postResolvers: Resolvers = {
       return await postService.getRecentPosts(input, ctx.user?.id)
     },
     feedPosts: async (_, { input }, ctx) => {
-      const postService = container.resolve(PostService)
-      return await postService.getFeedPosts(input, ctx.user?.id)
+      const feedService = container.resolve(FeedService)
+      return await feedService.getFeedPosts(input, ctx.user?.id)
     },
     readingList: async (_, { input }, ctx) => {
       const postService = container.resolve(PostService)
