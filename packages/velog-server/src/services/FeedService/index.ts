@@ -3,7 +3,7 @@ import { FeedPostsInput } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Post } from '@prisma/client'
-import { subMonths } from 'date-fns'
+import { subMonths, subYears } from 'date-fns'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
@@ -45,7 +45,9 @@ export class FeedService implements Service {
       take: limit,
       skip: offset,
       orderBy: {
-        created_at: 'desc',
+        post: {
+          created_at: 'desc',
+        },
       },
     })
 
@@ -64,6 +66,9 @@ export class FeedService implements Service {
         },
       },
       take: 10,
+      orderBy: {
+        created_at: 'asc',
+      },
     })
 
     const data = posts.map(({ id }) => ({ fk_post_id: id, fk_user_id: followerUserId }))
@@ -79,6 +84,9 @@ export class FeedService implements Service {
         is_deleted: true,
         post: {
           fk_user_id: followingUserId,
+        },
+        created_at: {
+          gte: subYears(this.utils.now, 1),
         },
       },
       data: {
