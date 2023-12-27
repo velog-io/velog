@@ -31,7 +31,7 @@ function HeaderUserMenu({ isVisible, onClose }: Props) {
   return (
     <div className={cx('block')} ref={ref}>
       <div className={cx('menu-wrapper')}>
-        <HeaderUserMenuItem to={`/@${currentUser?.username}`} isMigrated={true}>
+        <HeaderUserMenuItem to={`/@${currentUser?.username}/posts`} isMigrated={true}>
           내 벨로그
         </HeaderUserMenuItem>
         <div className={cx('mobile-only')}>

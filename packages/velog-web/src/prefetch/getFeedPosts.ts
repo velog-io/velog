@@ -12,14 +12,18 @@ export default async function getFeedPosts({ limit = ENV.defaultPostLimit, acces
       },
     },
   }
+
+  const headers = {}
+  if (accessToken) {
+    Object.assign(headers, { authorization: `Bearer ${accessToken}` })
+  }
+
   try {
     const { feedPosts } = await graphqlFetch<{ feedPosts: Post[] }>({
       method: 'GET',
       body,
-      cache: 'no-cache',
-      headers: {
-        authorization: `Bearer ${accessToken}`,
-      },
+      next: { revalidate: 0 },
+      headers,
     })
 
     return feedPosts

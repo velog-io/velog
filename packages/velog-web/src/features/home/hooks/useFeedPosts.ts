@@ -38,8 +38,8 @@ export default function useFeedPosts(initialPosts: Post[] = [], limit = ENV.defa
       }
     },
     retry: 1000 * 1,
-    gcTime: 1000 * 60,
-    staleTime: 1000 * 30,
+    gcTime: 1000 * 10,
+    staleTime: 1000 * 10,
   })
 
   const posts = useMemo(() => {

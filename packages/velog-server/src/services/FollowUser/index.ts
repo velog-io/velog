@@ -7,16 +7,16 @@ import { DbService } from '@lib/db/DbService.js'
 import { FollowUser, Prisma, UserProfile } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
-import { RedisService } from '@lib/redis/RedisService.js'
+import { FeedService } from '@services/FeedService/index.js'
 
 interface Service {
   findFollowRelationship({
     followingUserId,
     followerUserId,
   }: FollowArgs): Promise<FollowUser | null>
-  isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean>
+  isFollowed({ followingUserId, followerUserId }: isFollowedArgs): Promise<boolean>
   follow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
-  unfollow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
+  unfollow({ followingUserId, followerUserId }: UnfollowArgs): Promise<void>
   getFollowers(input: GetFollowInput): Promise<FollowResult[]>
   getFollowersCount(username: string): Promise<number>
   getFollowings(input: GetFollowInput): Promise<FollowResult[]>
@@ -25,11 +25,11 @@ interface Service {
 
 @injectable()
 @singleton()
-export class FollowService implements Service {
+export class FollowUserService implements Service {
   constructor(
     private readonly db: DbService,
-    private readonly redis: RedisService,
     private readonly userService: UserService,
+    private readonly feedService: FeedService,
   ) {}
   public async isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean> {
     if (!followingUserId || !followerUserId) return false
@@ -86,6 +86,8 @@ export class FollowService implements Service {
         fk_follower_user_id: followerUserId,
       },
     })
+
+    await this.feedService.createFeedByFollow({ followerUserId, followingUserId })
   }
   public async unfollow({ followingUserId, followerUserId }: FollowArgs): Promise<void> {
     if (!followingUserId) {
@@ -125,6 +127,11 @@ export class FollowService implements Service {
       where: {
         id: follow.id,
       },
+    })
+
+    await this.feedService.deleteFeedByUnfollow({
+      followerUserId,
+      followingUserId,
     })
   }
   public async getFollowers(input: GetFollowInput, signedUserId?: string): Promise<FollowResult[]> {
@@ -300,10 +307,14 @@ export class FollowService implements Service {
   }
 }
 
+type isFollowedArgs = FollowArgs
+
 type FollowArgs = {
   followingUserId?: string
   followerUserId?: string
 }
+
+type UnfollowArgs = FollowArgs
 
 type FollowResult = {
   id: string

@@ -1,6 +1,6 @@
 import { Resolvers } from '@graphql/generated'
 import { AuthService } from '@services/AuthService/index.js'
-import { FollowService } from '@services/FollowService/index.js'
+import { FollowUserService } from '@services/FollowUser/index.js'
 import { SeriesService } from '@services/SeriesService/index.js'
 import { UserMetaService } from '@services/UserMetaService/index.js'
 import { UserProfileService } from '@services/UserProfileService/index.js'
@@ -38,17 +38,17 @@ const userResolvers: Resolvers = {
     },
     followers_count: async (parent) => {
       const { username } = parent
-      const followService = container.resolve(FollowService)
-      return await followService.getFollowersCount(username)
+      const followUserService = container.resolve(FollowUserService)
+      return await followUserService.getFollowersCount(username)
     },
     followings_count: async (parent) => {
       const { username } = parent
-      const followService = container.resolve(FollowService)
-      return await followService.getFollowingsCount(username)
+      const followUserService = container.resolve(FollowUserService)
+      return await followUserService.getFollowingsCount(username)
     },
     is_followed: async (parent, _, ctx) => {
-      const followService = container.resolve(FollowService)
-      return await followService.isFollowed({
+      const followUserService = container.resolve(FollowUserService)
+      return await followUserService.isFollowed({
         followingUserId: parent.id,
         followerUserId: ctx.user?.id,
       })

@@ -1,23 +1,32 @@
 import { ENV } from '@env'
-import { FastifyPluginAsync } from 'fastify'
+import { isHttpError } from '@errors/HttpError.js'
+import { FastifyPluginCallback } from 'fastify'
 
-const errorHandlerPlugin: FastifyPluginAsync = async (fastify) => {
-  fastify.setErrorHandler((error, _, reply) => {
-    if (ENV.appEnv === 'development') {
-      console.log('fastify error:', error)
-    }
-    if (error?.statusCode) {
-      reply.status(error.statusCode)
-    } else {
-      reply.status(500)
-    }
-
-    reply.send({
-      message: error.message || 'Unknown Error',
-      name: error.name || 'Error',
-      stack: ENV.appEnv === 'development' ? error.stack : undefined,
-    })
+const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
+  fastify.addHook('onError', (request, reply, error) => {
+    console.log('fastify hook error:', error)
   })
+  fastify.setErrorHandler((error, _, reply) => {
+    if (isHttpError(error)) {
+      reply.status(error.statusCode).send({
+        message: error.message,
+        name: error.name,
+        stack: ENV.appEnv === 'development' ? error.stack : undefined,
+      })
+    } else {
+      reply.status(500).send({
+        message: error.message || 'Internal Server Error',
+        name: error.name || 'Error',
+        stack: ENV.appEnv === 'development' ? error.stack : undefined,
+      })
+    }
+
+    if (ENV.appEnv === 'development') {
+      console.error(error)
+    }
+  })
+
+  done()
 }
 
 export default errorHandlerPlugin

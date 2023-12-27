@@ -88,6 +88,7 @@
 .right {
   position: relative;
   display: flex;
+
   .selector {
     background: var(--bg-element1);
     height: 32px;
@@ -98,6 +99,7 @@
     justify-content: space-between;
     padding-left: 8px;
     padding-right: 8px;
+    margin-right: 10px;
     font-weight: 600;
     color: var(--text2);
     font-size: 14px;

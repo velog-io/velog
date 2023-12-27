@@ -5,7 +5,7 @@ on:
     branches: ['main', 'development', 'hotfix']
     paths:
       - 'packages/velog-server/**'
-      - '.github/workflows/velog-server-test.yml'
+      - '.github/workflows/velog-server-build.yml'
 jobs:
   server-build:
     runs-on: ubuntu-latest
@@ -31,7 +31,7 @@ jobs:
       - run: pnpm prisma:copy
       - run: npx prisma generate
 
-      - run: pnpm ssm pull -e test
+      - run: pnpm ssm pull -e stage
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

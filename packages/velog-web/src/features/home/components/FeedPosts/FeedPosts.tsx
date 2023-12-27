@@ -11,14 +11,9 @@ type Props = {
 }
 
 function FeedPosts({ data }: Props) {
-  const [initialData, setInitialData] = useState<Post[]>([])
-  const { posts, isFetching, fetchMore, isLoading } = useFeedPosts(initialData)
+  const { posts, isFetching, fetchMore, isLoading } = useFeedPosts(data)
 
-  useEffect(() => {
-    setInitialData(data)
-  }, [data])
-
-  if (posts.length === 0) return <FeedPostsEmpty />
+  if (data.length === 0 && posts.length === 0) return <FeedPostsEmpty />
   return (
     <PostCardGrid
       posts={posts}

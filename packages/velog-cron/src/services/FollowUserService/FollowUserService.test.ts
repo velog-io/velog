@@ -1,8 +1,8 @@
 import { container } from 'tsyringe'
-import { FollowService } from './index.js'
+import { FollowUserService } from './index.js'
 
 describe('FollowUserService', () => {
-  const service = container.resolve(FollowService)
+  const service = container.resolve(FollowUserService)
   it('should be defined', () => {
     expect(service).toBeDefined()
   })

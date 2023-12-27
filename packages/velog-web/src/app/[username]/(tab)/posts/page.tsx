@@ -7,6 +7,7 @@ import VelogSearchPosts from '@/features/velog/components/VelogSearchPosts'
 import VelogPosts from '@/features/velog/components/VelogPosts'
 import getVelogPosts from '@/prefetch/getVelogPosts'
 import { notFound } from 'next/navigation'
+import { cookies } from 'next/headers'
 
 interface Props {
   params: { username: string }
@@ -14,10 +15,11 @@ interface Props {
 }
 
 export default async function VelogPostsPage({ params, searchParams }: Props) {
+  const token = cookies().get('access_token') || cookies().get('refresh_token')
   const tag = getTagByKey(searchParams, 'tag')
   const query = getTagByKey(searchParams, 'q')
   const username = getUsernameFromParams(params)
-  const posts = await getVelogPosts({ username, tag })
+  const posts = await getVelogPosts({ username, tag, accessToken: token?.value })
   const userTags = await getUserTags(username)
 
   if (!posts || !userTags) {
