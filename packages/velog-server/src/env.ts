@@ -66,6 +66,7 @@ const env = z.object({
   codenaryApiKey: z.string(),
   codenaryCallback: z.string(),
   redisHost: z.string(),
+  adFreeWritersUsername: z.array(z.string()),
 })
 
 export const ENV = env.parse({
@@ -96,4 +97,5 @@ export const ENV = env.parse({
   codenaryApiKey: process.env.CODENARY_API_KEY,
   codenaryCallback: process.env.CODENARY_CALLBACK,
   redisHost: process.env.REDIS_HOST,
+  adFreeWritersUsername: process.env.AD_FREE_WRITERS_USERNAME?.split(','),
 })
