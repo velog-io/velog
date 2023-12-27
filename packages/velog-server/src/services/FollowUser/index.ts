@@ -25,7 +25,7 @@ interface Service {
 
 @injectable()
 @singleton()
-export class UserFollowService implements Service {
+export class FollowUserService implements Service {
   constructor(
     private readonly db: DbService,
     private readonly userService: UserService,

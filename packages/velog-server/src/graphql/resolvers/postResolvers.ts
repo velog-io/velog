@@ -10,7 +10,7 @@ import { DbService } from '@lib/db/DbService.js'
 
 import { SeriesService } from '@services/SeriesService/index.js'
 import { TagService } from '@services/TagService/index.js'
-import { UserFollowService } from '@services/UserFollowService/index.js'
+import { FollowUserService } from '@services/FollowUser/index.js'
 import { FeedService } from '@services/FeedService/index.js'
 
 const postResolvers: Resolvers = {
@@ -65,8 +65,8 @@ const postResolvers: Resolvers = {
     },
     is_followed: async (parent: Post, _, ctx) => {
       if (!ctx.user) return false
-      const userFollowService = container.resolve(UserFollowService)
-      return await userFollowService.isFollowed({
+      const followUserService = container.resolve(FollowUserService)
+      return await followUserService.isFollowed({
         followingUserId: parent.fk_user_id,
         followerUserId: ctx.user.id,
       })
