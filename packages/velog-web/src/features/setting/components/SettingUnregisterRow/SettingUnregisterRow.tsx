@@ -1,13 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import styles from './SettingUnregisterRow.module.css'
-import { bindClassNames } from '@/lib/styles/bindClassNames'
 import SettingRow from '../SettingRow'
 import Button from '@/components/Button'
 import PopupOKCancel from '@/components/PopupOKCancel'
-
-const cx = bindClassNames(styles)
 
 type Props = {}
 

@@ -20,8 +20,8 @@ function PopupOKCancel({ isVisible, title, children, onConfirm, onCancel }: Prop
     <PopupBase isVisible={isVisible}>
       <div className={cx('block')}>
         {title && <h3>{title}</h3>}
-        <div className="message">{children}</div>
-        <div className="button-area">
+        <div className={cx('message')}>{children}</div>
+        <div className={cx('buttonArea')}>
           {onCancel && (
             <Button color="transparent" onClick={onCancel}>
               취소

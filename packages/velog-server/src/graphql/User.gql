@@ -79,7 +79,7 @@ input UpdateAboutInput {
 }
 
 input UpdateThumbnailInput {
-  url: String!
+  url: String
 }
 
 input UpdateProfileInput {

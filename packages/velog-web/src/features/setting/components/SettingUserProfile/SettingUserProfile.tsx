@@ -8,6 +8,10 @@ import Button from '@/components/Button'
 import SettingInput from '../SettingInput'
 import SettingEditButton from '../SettingEditButton'
 import Thumbnail from '@/components/Thumbnail'
+import useUpload from '@/hooks/useUpload'
+import { useState } from 'react'
+import { useCFUpload } from '@/hooks/useCFUpload'
+import { useUpdateThumbnailMutation } from '@/graphql/helpers/generated'
 
 const cx = bindClassNames(styles)
 
@@ -18,11 +22,42 @@ type Props = {
 }
 
 function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
+  const [upload] = useUpload()
+  const { mutate: updateThumbnailMutation } = useUpdateThumbnailMutation()
+  const { upload: cfUpload } = useCFUpload()
   const [edit, onToggleEdit] = useToggle(false)
   const [inputs, onChange] = useInputs({
     displayName,
     shortBio,
   })
+
+  const [imageBlobUrl, setImageBlobUrl] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  const uploadThumbnail = async () => {
+    const file = await upload()
+    if (!file) return
+    setLoading(true)
+    setImageBlobUrl(URL.createObjectURL(file))
+    const image = await cfUpload(file, { type: 'profile' })
+    setLoading(false)
+    if (!image) return
+    updateThumbnailMutation({
+      input: {
+        url: image,
+      },
+    })
+  }
+
+  const clearThumbnail = () => {
+    updateThumbnailMutation({
+      input: {
+        url: null,
+      },
+    })
+    setImageBlobUrl(null)
+  }
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     // await onUpdate(inputs)

@@ -2,6 +2,7 @@ import SettingEmailRow from '@/features/setting/components/SettingEmailRow'
 import SettingEmailRulesRow from '@/features/setting/components/SettingEmailRulesRow'
 import SettingSocialInfoRow from '@/features/setting/components/SettingSocialInfoRow'
 import SettingTitleRow from '@/features/setting/components/SettingTitleRow'
+import SettingUnregisterRow from '@/features/setting/components/SettingUnregisterRow'
 import SettingUserProfile from '@/features/setting/components/SettingUserProfile'
 import getCurrentUser from '@/prefetch/getCurrentUser'
 import getVelogConfig from '@/prefetch/getVelogConfig'
@@ -13,7 +14,6 @@ export default async function SettingPage() {
   const token = cookieStore.get('access_token') || cookieStore.get('refresh_token')
 
   const user = await getCurrentUser(token)
-
   if (!user) {
     notFound()
   }
@@ -34,10 +34,13 @@ export default async function SettingPage() {
       <SettingTitleRow title={velogConfig.title || `${user.username}.log`} />
       <SettingSocialInfoRow {...user.profile.profile_links} />
       <SettingEmailRow email={user.email!} />
-      <SettingEmailRulesRow
-        notification={user.user_meta?.email_notification || false}
-        promotion={user.user_meta?.email_promotion || false}
-      />
+      {user.user_meta && (
+        <SettingEmailRulesRow
+          notification={user.user_meta?.email_notification || false}
+          promotion={user.user_meta?.email_promotion || false}
+        />
+      )}
+      <SettingUnregisterRow />
     </>
   )
 }

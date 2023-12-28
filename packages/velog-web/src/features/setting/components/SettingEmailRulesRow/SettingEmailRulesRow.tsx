@@ -26,15 +26,25 @@ function SettingEmailRulesRow({ notification, promotion }: Props) {
   }, [])
 
   return (
-    <SettingRow title="이메일 수신 설정">
+    <SettingRow title="이메일 수신 설정" className={cx('block')}>
       <ul className={cx('rules')}>
         <li>
           <span>댓글 알림</span>
-          <ToggleSwitch value={values.notification} name="notification" onChange={onChange} />
+          <ToggleSwitch
+            className={cx('toggle')}
+            value={values.notification}
+            name="notification"
+            onChange={onChange}
+          />
         </li>
         <li>
           <span>벨로그 업데이트 소식</span>
-          <ToggleSwitch value={values.promotion} name="promotion" onChange={onChange} />
+          <ToggleSwitch
+            className={cx('toggle')}
+            value={values.promotion}
+            name="promotion"
+            onChange={onChange}
+          />
         </li>
       </ul>
     </SettingRow>

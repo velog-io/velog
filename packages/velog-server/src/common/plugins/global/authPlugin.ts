@@ -33,6 +33,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
         await userService.restoreToken({ request, reply })
       }
     } catch (e) {
+      console.log('authPlugin error', e)
       const cookie = container.resolve(CookieService)
       cookie.clearCookie(reply, 'access_token')
       cookie.clearCookie(reply, 'refresh_token')
