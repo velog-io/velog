@@ -1,3 +1,4 @@
+import { ENV } from '@env'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { AdsInput } from '@graphql/generated'
 import { DbService } from '@lib/db/DbService.js'
@@ -16,7 +17,7 @@ export class AdService implements Service {
     private readonly db: DbService,
     private readonly utils: UtilsService,
   ) {}
-  public async getAds({ type, writer_username, limit = 2 }: AdsInput): Promise<Ad[]> {
+  public async getAds({ type, writer_username = '', limit = 2 }: AdsInput): Promise<Ad[]> {
     if (!['feed', 'banner'].includes(type)) {
       throw new BadRequestError('Invalid type')
     }
@@ -33,8 +34,7 @@ export class AdService implements Service {
       },
     }
 
-    if (type === 'banner' && writer_username) {
-      // handle where input
+    if (ENV.adFreeWritersUsername.includes(writer_username)) {
       return []
     }
 

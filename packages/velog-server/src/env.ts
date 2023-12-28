@@ -71,6 +71,7 @@ const env = z.object({
   blacklistUsername: z.array(z.string()),
   blacklistIp: z.array(z.string()),
   bucketName: z.string(),
+  adFreeWritersUsername: z.array(z.string()),
 })
 
 export const ENV = env.parse({
@@ -106,4 +107,5 @@ export const ENV = env.parse({
   blacklistUsername: (process.env.BLACKLIST_USERNAME ?? '').split(','),
   blacklistIp: (process.env.BLACKLIST_IP ?? '').split(','),
   bucketName: process.env.BUCKET_NAME,
+  adFreeWritersUsername: process.env.AD_FREE_WRITERS_USERNAME?.split(','),
 })
