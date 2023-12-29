@@ -9,9 +9,10 @@ import SettingInput from '../SettingInput'
 import SettingEditButton from '../SettingEditButton'
 import Thumbnail from '@/components/Thumbnail'
 import useUpload from '@/hooks/useUpload'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useCFUpload } from '@/hooks/useCFUpload'
-import { useUpdateThumbnailMutation } from '@/graphql/helpers/generated'
+import { useUpdateProfileMutation, useUpdateThumbnailMutation } from '@/graphql/helpers/generated'
+import JazzbarContext from '@/providers/JazzbarProvider'
 
 const cx = bindClassNames(styles)
 
@@ -23,34 +24,49 @@ type Props = {
 
 function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
   const [upload] = useUpload()
-  const { mutate: updateThumbnailMutation } = useUpdateThumbnailMutation()
+  const { mutateAsync: updateThumbnailMutate } = useUpdateThumbnailMutation()
+  const { mutateAsync: updateProfileMutateAsync } = useUpdateProfileMutation()
   const { upload: cfUpload } = useCFUpload()
   const [edit, onToggleEdit] = useToggle(false)
+
   const [inputs, onChange] = useInputs({
     displayName,
     shortBio,
   })
 
+  const { setValue } = useContext(JazzbarContext)
+
   const [imageBlobUrl, setImageBlobUrl] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const uploadThumbnail = async () => {
     const file = await upload()
     if (!file) return
-    setLoading(true)
+    setValue(30)
     setImageBlobUrl(URL.createObjectURL(file))
-    const image = await cfUpload(file, { type: 'profile' })
-    setLoading(false)
+    setIsLoading(true)
+    let i = 1
+    const intervalTime = setInterval(() => {
+      const add = i * 2
+      if (add + 30 > 100) return
+      setValue(30 + add)
+      i++
+    }, 100)
+
+    const image = await cfUpload({ file, info: { type: 'profile' } })
+    setIsLoading(false)
     if (!image) return
-    updateThumbnailMutation({
+    updateThumbnailMutate({
       input: {
         url: image,
       },
     })
+    setValue(100)
+    clearTimeout(intervalTime)
   }
 
   const clearThumbnail = () => {
-    updateThumbnailMutation({
+    updateThumbnailMutate({
       input: {
         url: null,
       },
@@ -60,18 +76,25 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // await onUpdate(inputs)
+    await updateProfileMutateAsync({
+      input: { display_name: inputs.displayName, short_bio: inputs.shortBio },
+    })
     onToggleEdit()
   }
 
   return (
     <section className={cx('block')}>
       <div className={cx('thumbnailArea')}>
-        <Thumbnail src={thumbnail} alt="profile" className={cx('thumbnail')} priority={true} />
-        <Button onClick={() => {}} disabled={false}>
-          {false ? '업로드중...' : '이미지 업로드'}
+        <Thumbnail
+          src={imageBlobUrl || thumbnail}
+          alt="profile"
+          className={cx('thumbnail')}
+          priority={true}
+        />
+        <Button onClick={uploadThumbnail} disabled={isLoading}>
+          {isLoading ? '업로드중...' : '이미지 업로드'}
         </Button>
-        <Button color="transparent" onClick={() => {}}>
+        <Button color="transparent" onClick={clearThumbnail}>
           이미지 제거
         </Button>
       </div>

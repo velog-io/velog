@@ -108,7 +108,7 @@ export class FilesController implements Controller {
     if (type === 'post' && !!ref_id) {
       const post = await this.postService.findById(ref_id)
       if (post?.fk_user_id !== signedUserId) {
-        throw new ForbiddenError()
+        throw new ForbiddenError("Can't access the post")
       }
     }
 
@@ -126,7 +126,7 @@ export class FilesController implements Controller {
     const extension = originalFileName.split('.').pop()
     const filename = `image.${extension}`
 
-    const filepath = await this.file
+    const filepath = this.file
       .generateUploadPath({
         type,
         id: userImage.id,
@@ -139,7 +139,7 @@ export class FilesController implements Controller {
     }
 
     try {
-      const result = await this.b2Manager.upload(file.buffer!, filepath)
+      const result = await this.b2Manager.upload(file.buffer!, filepath, file.size)
 
       await this.db.userImageNext.update({
         where: {

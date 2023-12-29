@@ -1,6 +1,8 @@
 import { injectable, singleton } from 'tsyringe'
 import B2 from 'backblaze-b2'
 import { ENV } from '@env'
+import { finished } from 'stream/promises'
+import { Readable } from 'stream'
 
 interface Service {
   authorize(): Promise<boolean>
@@ -51,21 +53,32 @@ export class B2ManagerService implements Service {
     return { authorizationToken, uploadUrl }
   }
 
-  public async upload(buffer: Buffer, path: string) {
+  public async streamUpload(stream: Readable, fileName: string, contentLength?: number) {
+    const chunks: any[] = []
+    stream.on('data', (chunk) => chunks.push(chunk))
+    await finished(stream)
+
+    const buffer = Buffer.concat(chunks)
+    return this.upload(buffer, fileName, contentLength)
+  }
+
+  public async upload(buffer: Buffer, fileName: string, contentLength?: number) {
     await this.authorize()
     const { authorizationToken, uploadUrl } = await this.getUploadUrl()
     const result = await this.b2.uploadFile({
       uploadUrl,
       uploadAuthToken: authorizationToken,
-      fileName: path,
+      fileName,
       data: buffer,
-      axios: {
-        timeout: 250000,
+      contentLength,
+      onUploadProgress: (e) => {
+        console.log('onUploadProgress', e)
       },
     })
     const fileId: string = result.data.fileId
+
     return {
-      url: `https://velog.velcdn.com/${path}`,
+      url: `https://velog.velcdn.com/${fileName}`,
       fileId,
     }
   }

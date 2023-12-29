@@ -1,3 +1,4 @@
+import { AxiosProgressEvent } from 'axios'
 import apiClient from './apiClient'
 
 export interface PreuploadInfo {
@@ -24,16 +25,14 @@ export async function uploadImage({ file, info, onUploadProgress }: UploadImageA
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    onUploadProgress(e) {
-      console.log('onUploadProgress', e)
-    },
+    onUploadProgress,
   })
 
   return response.data
 }
 
-type UploadImageArgs = {
+export type UploadImageArgs = {
   file: File
   info: { type: 'post' | 'profile'; refId?: string }
-  onUploadProgress?: (value: number) => void
+  onUploadProgress?: (event: AxiosProgressEvent) => void
 }

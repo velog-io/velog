@@ -7,6 +7,7 @@ import authGuardPlugin from '@plugins/encapsulated/authGuardPlugin.js'
 
 const v3: FastifyPluginCallback = (fastify, opts, done) => {
   const controller = container.resolve(FilesController)
+
   const upload = multer({
     limits: {
       fileSize: 1024 * 1024 * 30,

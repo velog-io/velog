@@ -16,7 +16,7 @@ function Jazzbar({}: Props) {
   const [hiding, setHiding] = useState(false)
   const [zero, setZero] = useState(false)
 
-  const { value, set } = jazzbar
+  const { value, setValue } = jazzbar
 
   const hide = useCallback(() => {
     setHiding(true)
@@ -45,9 +45,9 @@ function Jazzbar({}: Props) {
   useEffect(() => {
     if (zero) {
       setZero(false)
-      set(0)
+      setValue(0)
     }
-  }, [set, zero])
+  }, [setValue, zero])
 
   return <div className={cx('jazzbar', { hiding, zero })} style={{ width: `${value}%` }} />
 }

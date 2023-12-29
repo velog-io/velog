@@ -2,7 +2,7 @@
 
 import * as Sentry from '@sentry/browser'
 import { useNetworkState } from 'react-use'
-import apiClient from '@/lib/apiClient'
+import apiClient from '@/lib/api/apiClient'
 import { useEffect, useState } from 'react'
 import ErrorScreenTemplate from '@/components/Error/ErrorScreenTemplate'
 import { UndrawBugFixing, UndrawServerDown, UndrawUpdate } from '@/assets/vectors/components'

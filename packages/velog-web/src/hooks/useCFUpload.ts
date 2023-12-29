@@ -1,20 +1,15 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 
-import { uploadImage } from '@/lib/api/files'
-import useJazzbar from '@/components/Jazzbar/hooks/useJazzbar'
+import { UploadImageArgs, uploadImage } from '@/lib/api/files'
 
 export function useCFUpload() {
-  const [setProgress] = useJazzbar()
   const [image, setImage] = useState<string | null>(null)
 
-  const upload = useCallback(
-    async (file: File, info: { type: 'post' | 'profile'; refId?: string }) => {
-      const data = await uploadImage({ file, info, onUploadProgress: setProgress })
-      setImage(data.path)
-      return data.path
-    },
-    [setProgress],
-  )
+  const upload = async (args: UploadImageArgs) => {
+    const data = await uploadImage(args)
+    setImage(data.path)
+    return data.path
+  }
 
   return {
     image,

@@ -14,6 +14,7 @@ export default async function SettingPage() {
   const token = cookieStore.get('access_token') || cookieStore.get('refresh_token')
 
   const user = await getCurrentUser(token)
+
   if (!user) {
     notFound()
   }
