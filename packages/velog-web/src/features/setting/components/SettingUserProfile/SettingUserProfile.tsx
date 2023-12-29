@@ -11,7 +11,11 @@ import Thumbnail from '@/components/Thumbnail'
 import useUpload from '@/hooks/useUpload'
 import { useContext, useState } from 'react'
 import { useCFUpload } from '@/hooks/useCFUpload'
-import { useUpdateProfileMutation, useUpdateThumbnailMutation } from '@/graphql/helpers/generated'
+import {
+  useCurrentUserQuery,
+  useUpdateProfileMutation,
+  useUpdateThumbnailMutation,
+} from '@/graphql/helpers/generated'
 import JazzbarContext from '@/providers/JazzbarProvider'
 
 const cx = bindClassNames(styles)
@@ -24,12 +28,13 @@ type Props = {
 
 function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
   const [upload] = useUpload()
-  const { mutateAsync: updateThumbnailMutate } = useUpdateThumbnailMutation()
+  const { mutateAsync: updateThumbnailMutateAsync } = useUpdateThumbnailMutation()
   const { mutateAsync: updateProfileMutateAsync } = useUpdateProfileMutation()
+  const { refetch } = useCurrentUserQuery()
   const { upload: cfUpload } = useCFUpload()
   const [edit, onToggleEdit] = useToggle(false)
 
-  const [inputs, onChange] = useInputs({
+  const [inputs, onInputChange] = useInputs({
     displayName,
     shortBio,
   })
@@ -43,35 +48,48 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
     const file = await upload()
     if (!file) return
     setValue(30)
-    setImageBlobUrl(URL.createObjectURL(file))
+    const objectURL = URL.createObjectURL(file)
+    setImageBlobUrl(objectURL)
     setIsLoading(true)
+
     let i = 1
+    const initValue = 20
     const intervalTime = setInterval(() => {
       const add = i * 2
-      if (add + 30 > 100) return
-      setValue(30 + add)
+
+      if (add + initValue > 90) {
+        clearInterval(intervalTime)
+      }
+
+      setValue(initValue + add)
       i++
     }, 100)
 
-    const image = await cfUpload({ file, info: { type: 'profile' } })
-    setIsLoading(false)
-    if (!image) return
-    updateThumbnailMutate({
-      input: {
-        url: image,
-      },
-    })
-    setValue(100)
-    clearTimeout(intervalTime)
+    try {
+      const image = await cfUpload({ file, info: { type: 'profile' } })
+      setIsLoading(false)
+      if (!image) return
+      await updateThumbnailMutateAsync({
+        input: {
+          url: image,
+        },
+      })
+      refetch()
+    } finally {
+      setValue(100)
+      URL.revokeObjectURL(objectURL)
+      clearInterval(intervalTime)
+    }
   }
 
-  const clearThumbnail = () => {
-    updateThumbnailMutate({
+  const clearThumbnail = async () => {
+    await updateThumbnailMutateAsync({
       input: {
         url: null,
       },
     })
     setImageBlobUrl(null)
+    refetch()
   }
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -79,6 +97,7 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
     await updateProfileMutateAsync({
       input: { display_name: inputs.displayName, short_bio: inputs.shortBio },
     })
+    refetch()
     onToggleEdit()
   }
 
@@ -107,14 +126,14 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
               className={cx('displayName')}
               name="displayName"
               value={inputs.displayName}
-              onChange={onChange}
+              onChange={onInputChange}
             />
             <SettingInput
               placeholder="한 줄 소개"
               fullWidth
               name="shortBio"
               value={inputs.shortBio}
-              onChange={onChange}
+              onChange={onInputChange}
               autoFocus
             />
             <div className={cx('buttonWrapper')}>
@@ -123,8 +142,8 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
           </form>
         ) : (
           <>
-            <h2>{displayName}</h2>
-            <p>{shortBio}</p>
+            <h2>{inputs.displayName}</h2>
+            <p>{inputs.shortBio}</p>
             <SettingEditButton onClick={onToggleEdit} />
           </>
         )}

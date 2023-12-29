@@ -15,6 +15,8 @@
       width: 128px;
       height: 128px;
       margin-bottom: 1.25rem;
+      border-radius: 50%;
+      overflow: hidden;
     }
 
     button + button {

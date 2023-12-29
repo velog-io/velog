@@ -12,16 +12,6 @@
   padding-bottom: 0;
   user-select: none;
 
-  &:disabled {
-    cursor: not-allowed;
-    background: var(--bg-element4);
-    color: var(--text3);
-    &:hover {
-      background: var(--bg-element4);
-      color: var(--text3);
-    }
-  }
-
   &.medium {
     height: 32px;
     padding-left: 20px;
@@ -90,6 +80,16 @@
     &:focus,
     &:hover {
       background: var(--destructive2);
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    background: var(--bg-element4);
+    color: var(--text3);
+    &:hover {
+      background: var(--bg-element4);
+      color: var(--text3);
     }
   }
 
