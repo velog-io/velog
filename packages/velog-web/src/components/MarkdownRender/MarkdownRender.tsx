@@ -60,6 +60,7 @@ function MarkdownRender({ markdown, codeTheme = 'atom-one', onConvertFinish, isE
           if (err) {
             console.log('markdown-render error', err)
           }
+
           const lines = text.split(/\r\n|\r|\n/).length
           const nextDelay = Math.max(Math.min(Math.floor(lines * 0.5), 1500), 22)
 
@@ -68,7 +69,6 @@ function MarkdownRender({ markdown, codeTheme = 'atom-one', onConvertFinish, isE
           }
           const pureHtml = String(file)
 
-          console.log('pureHtml', pureHtml)
           if (onConvertFinish) {
             onConvertFinish(htmlFilter(pureHtml))
           }
