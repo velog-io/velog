@@ -1,4 +1,3 @@
-import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { DbService } from '@lib/db/DbService.js'
 import { Prisma, User, UserMeta } from '@prisma/client'
@@ -35,7 +34,7 @@ export class UserMetaService implements Service {
       },
     })
   }
-  public async updateUserMeta(patch: Prisma.UserMetaUpdateInput, signedUserId?: string) {
+  public async updateUserMeta(patch: UpdateUserMetaArgs, signedUserId?: string): Promise<UserMeta> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not Logged In')
     }
@@ -43,7 +42,13 @@ export class UserMetaService implements Service {
     const userMeta = await this.findByUserId(signedUserId)
 
     if (!userMeta) {
-      throw new NotFoundError('Could not find user_meta')
+      return await this.db.userMeta.create({
+        data: {
+          fk_user_id: signedUserId,
+          email_notification: patch.email_notification,
+          email_promotion: patch.email_promotion,
+        },
+      })
     }
 
     return await this.db.userMeta.update({
@@ -55,4 +60,9 @@ export class UserMetaService implements Service {
       },
     })
   }
+}
+
+type UpdateUserMetaArgs = {
+  email_notification: boolean
+  email_promotion: boolean
 }
