@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { visit } from 'unist-util-visit'
-import Prism, { Languages } from 'prismjs'
+import visit from 'unist-util-visit'
+import Prism from 'prismjs'
 
 import 'prismjs/components/prism-bash.min'
 import 'prismjs/components/prism-typescript.min'

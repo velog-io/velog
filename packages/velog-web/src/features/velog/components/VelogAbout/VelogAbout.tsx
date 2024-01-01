@@ -42,6 +42,7 @@ function VelogAbout({ username }: Props) {
   }
 
   if (isLoading) return <VelogAboutContentSkeleton />
+
   return (
     <div className={cx('block')}>
       {isOwn && (getUserAboutData?.user?.profile.about || isEdit) && (
