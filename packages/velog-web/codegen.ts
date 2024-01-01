@@ -17,7 +17,7 @@ const config: CodegenConfig = {
         exposeQueryKeys: true,
         exposeMutationKeys: true,
         skipTypename: true,
-        inputMaybeValue: 'T | undefined',
+        inputMaybeValue: 'T | null | undefined',
         maybeValue: 'T | null',
         fetcher: {
           func: './fetcher#fetcher',

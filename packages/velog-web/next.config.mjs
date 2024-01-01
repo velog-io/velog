@@ -15,7 +15,8 @@ const nextConfig = {
     ? 'https://assets-stage.velcdn.com'
     : undefined,
   experimental: {
-    esmExternals: true,
+    esmExternals: true, // support esm
+    taint: true, // for security
   },
 }
 

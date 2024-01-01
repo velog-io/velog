@@ -1,5 +1,6 @@
-import { GetPostsInput, Post, VelogPostsDocument } from '@/graphql/helpers/generated'
+import { Post, VelogPostsDocument } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 
 export default async function getVelogPosts({ username, tag, accessToken }: GetVelogPostsArgs) {
   try {
@@ -16,14 +17,15 @@ export default async function getVelogPosts({ username, tag, accessToken }: GetV
     }
 
     const headers = {}
-
     if (accessToken) {
-      Object.assign(headers, { authorization: `Bearer ${accessToken}` })
+      Object.assign(headers, {
+        authorization: `Bearer ${accessToken.value}`,
+      })
     }
 
     const { posts } = await graphqlFetch<{ posts: Post[] }>({
       body,
-      cache: 'no-cache',
+      next: { revalidate: 0 },
       headers,
     })
 
@@ -37,5 +39,5 @@ export default async function getVelogPosts({ username, tag, accessToken }: GetV
 type GetVelogPostsArgs = {
   username: string
   tag?: string
-  accessToken?: string
+  accessToken?: RequestCookie
 }

@@ -1,15 +1,45 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SettingRow from '../SettingRow'
 import Button from '@/components/Button'
 import PopupOKCancel from '@/components/PopupOKCancel'
+import { useUnregisterMutation, useUnregisterTokenQuery } from '@/graphql/helpers/generated'
+import { toast } from 'react-toastify'
 
 type Props = {}
 
 function SettingUnregisterRow({}: Props) {
   const [ask, setAsk] = useState(false)
-  const onUnregister = () => {}
+  const [isQueryEnable, setIsQueryEnable] = useState(false)
+  const { data: unregisterTokenData } = useUnregisterTokenQuery(undefined, {
+    enabled: isQueryEnable,
+  })
+  const { mutateAsync } = useUnregisterMutation()
+
+  useEffect(() => {
+    if (!ask) return
+    setIsQueryEnable(true)
+  }, [ask])
+
+  const onUnregister = async () => {
+    const token = unregisterTokenData?.unregisterToken
+
+    if (!token) {
+      toast.error('회원 탈퇴 중 오류가 발생하였습니다.\n잠시후 다시 실행해주세요.')
+      return
+    }
+
+    console.log('token', token)
+
+    await mutateAsync({
+      input: { token },
+    })
+
+    localStorage.clear()
+    window.location.href = '/'
+  }
+
   return (
     <>
       <SettingRow
