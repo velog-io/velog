@@ -5,6 +5,7 @@ import SettingRow from '../SettingRow'
 import styles from './SettingEmailRulesRow.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useUpdateEmailRulesMutation } from '@/graphql/helpers/generated'
 
 const cx = bindClassNames(styles)
 
@@ -14,8 +15,9 @@ type Props = {
 }
 
 function SettingEmailRulesRow({ notification, promotion }: Props) {
-  const mounted = useRef(false)
+  const mounted = useRef<boolean>(false)
   const [values, setValues] = useState({ promotion, notification })
+  const { mutate } = useUpdateEmailRulesMutation()
 
   const onChange = useCallback(({ name, value }: { name: string; value: boolean }) => {
     setValues((prev) => ({ ...prev, [name]: value }))
@@ -23,7 +25,8 @@ function SettingEmailRulesRow({ notification, promotion }: Props) {
 
   useEffect(() => {
     mounted.current = true
-  }, [])
+    mutate({ input: values })
+  }, [values, mutate])
 
   return (
     <SettingRow title="이메일 수신 설정" className={cx('block')}>

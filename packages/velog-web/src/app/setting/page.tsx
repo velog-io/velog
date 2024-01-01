@@ -35,12 +35,10 @@ export default async function SettingPage() {
       <SettingTitleRow title={velogConfig.title || `${user.username}.log`} />
       <SettingSocialInfoRow {...user.profile.profile_links} />
       <SettingEmailRow email={user.email!} />
-      {user.user_meta && (
-        <SettingEmailRulesRow
-          notification={user.user_meta?.email_notification || false}
-          promotion={user.user_meta?.email_promotion || false}
-        />
-      )}
+      <SettingEmailRulesRow
+        notification={user.user_meta?.email_notification || false}
+        promotion={user.user_meta?.email_promotion || false}
+      />
       <SettingUnregisterRow />
     </>
   )
