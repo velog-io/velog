@@ -3,7 +3,7 @@ import { ENV } from '@env'
 export const changeEmailTemplate: ChangeEmailTemplateArgs = (username, email, code) => {
   const text = email ? '변경' : '설정'
   const subject = `Velog 이메일 ${text}하기`
-  const endpoint = ENV.clientV2Host
+  const endpoint = ENV.clientV3Host
   const body = `
   <div class="wrapper" style="max-width: 400px; margin: 0 auto;">
   <a href="https://velog.io">

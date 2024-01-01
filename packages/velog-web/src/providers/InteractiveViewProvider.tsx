@@ -1,5 +1,6 @@
 'use client'
 
+import CommonPopup from '@/components/CommonPopup'
 import AuthModal from '@/features/auth/components/AuthModal/AuthModal'
 import { ToastContainer, Flip } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -13,6 +14,7 @@ function InteractiveViewProvider({ children }: Props) {
     <>
       {children}
       <AuthModal />
+      <CommonPopup />
       <ToastContainer
         transition={Flip}
         position="top-right"
