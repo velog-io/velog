@@ -97,7 +97,6 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
     await updateProfileMutateAsync({
       input: { display_name: inputs.displayName, short_bio: inputs.shortBio },
     })
-    refetch()
     onToggleEdit()
   }
 

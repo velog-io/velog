@@ -37,7 +37,7 @@ export class VelogConfigService implements Service {
       return userIds.map((id) => normalized[id])
     })
   }
-  public async findByUsername(username: string): Promise<VelogConfig | null> {
+  public async findByUsername(username: string): Promise<VelogConfig> {
     const config = await this.db.velogConfig.findFirst({
       where: {
         user: {
@@ -45,7 +45,12 @@ export class VelogConfigService implements Service {
         },
       },
     })
-    return config
+
+    if (!config) {
+      throw new NotFoundError('Not found User config')
+    }
+
+    return config!
   }
   public async updateVelogConfig(title: string, signedUserId?: string) {
     if (!signedUserId) {

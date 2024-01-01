@@ -16,7 +16,7 @@ export default async function getCurrentUser(accessToken: RequestCookie | undefi
     const { currentUser } = await graphqlFetch<{ currentUser: User }>({
       method: 'POST',
       body,
-      cache: 'no-cache',
+      next: { revalidate: 0 },
       headers: {
         authorization: `Bearer ${accessToken.value}`,
       },

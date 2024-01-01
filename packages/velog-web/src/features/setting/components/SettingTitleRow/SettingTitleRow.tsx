@@ -7,6 +7,7 @@ import { useState } from 'react'
 import SettingRow from '../SettingRow'
 import SettingInput from '../SettingInput'
 import Button from '@/components/Button'
+import { useUpdateVelogTitleMutation } from '@/graphql/helpers/generated'
 
 const cx = bindClassNames(styles)
 
@@ -17,9 +18,11 @@ type Props = {
 function SettingTitleRow({ title }: Props) {
   const [edit, setEdit] = useState(false)
   const [value, onChange] = useInput(title)
+  const { mutateAsync: updateVelogTitleMutateAsync } = useUpdateVelogTitleMutation()
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
+    await updateVelogTitleMutateAsync({ input: { title: value } })
     setEdit(false)
   }
 
@@ -37,7 +40,7 @@ function SettingTitleRow({ title }: Props) {
             <Button>저장</Button>
           </form>
         ) : (
-          title
+          <>{value}</>
         )}
       </SettingRow>
     </div>

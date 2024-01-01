@@ -15,7 +15,7 @@ export default async function getVelogConfig(username: string) {
 
     const { velogConfig } = await graphqlFetch<{ velogConfig: VelogConfig }>({
       body,
-      next: { revalidate: 30 },
+      next: { revalidate: 0 },
     })
 
     if (!velogConfig) {

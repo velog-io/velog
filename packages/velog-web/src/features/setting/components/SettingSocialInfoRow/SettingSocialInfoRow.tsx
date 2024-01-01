@@ -11,6 +11,7 @@ import Button from '@/components/Button'
 import SettingRow from '../SettingRow'
 import SettingEditButton from '../SettingEditButton'
 import useInputs from '@/hooks/useInputs'
+import { useUpdateSocialInfoMutation } from '@/graphql/helpers/generated'
 
 const cx = bindClassNames(styles)
 
@@ -30,9 +31,11 @@ function SettingSocialInfoRow({ email, github, twitter, facebook, url }: Props) 
   const [edit, setEdit] = useState(false)
   const [form, onChange] = useInputs({ email, github, twitter, facebook, url })
   const [facebookInputFocus, setFacebookInputFocus] = useState(false)
+  const { mutateAsync: updateSocialInfoMutateAsync } = useUpdateSocialInfoMutation()
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
+    await updateSocialInfoMutateAsync({ input: { profile_links: form } })
     setEdit(false)
   }
 
@@ -110,7 +113,7 @@ function SettingSocialInfoRow({ email, github, twitter, facebook, url }: Props) 
 
   const infoValueList = !edit && (
     <ul className={cx('infoList')}>
-      {infoArray.map((value, i) =>
+      {Object.values(form).map((value, i) =>
         value ? (
           <li key={i}>
             {React.createElement(iconArray[i])}

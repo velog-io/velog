@@ -44,11 +44,11 @@ type UserToken {
 
 type Query {
   user(input: GetUserInput!): User
-  velogConfig(input: GetVelogConfigInput!): VelogConfig
+  velogConfig(input: GetVelogConfigInput!): VelogConfig!
   currentUser: User
-  restoreToken: UserToken
-  unregisterToken: String
-  checkEmailExists(input: CheckEmailExistsInput!): Boolean
+  restoreToken: UserToken!
+  unregisterToken: String!
+  checkEmailExists(input: CheckEmailExistsInput!): Boolean!
 }
 
 type Mutation {

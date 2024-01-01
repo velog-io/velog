@@ -7,8 +7,8 @@ import {
   Comment as CommentModel,
 } from '@prisma/client'
 import { GraphQLContext } from './../common/interfaces/graphql'
-export type Maybe<T> = T | null
-export type InputMaybe<T> = T | null
+export type Maybe<T> = T | null | undefined
+export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
@@ -258,7 +258,7 @@ export type PostHistory = {
 
 export type Query = {
   ads: Array<Ad>
-  checkEmailExists?: Maybe<Scalars['Boolean']['output']>
+  checkEmailExists: Scalars['Boolean']['output']
   currentUser?: Maybe<User>
   feedPosts: Array<Post>
   followers: Array<FollowResult>
@@ -267,16 +267,16 @@ export type Query = {
   posts: Array<Post>
   readingList: Array<Post>
   recentPosts: Array<Post>
-  restoreToken?: Maybe<UserToken>
+  restoreToken: UserToken
   searchPosts: SearchResult
   series?: Maybe<Series>
   seriesList: Array<Series>
   trendingPosts: Array<Post>
   trendingWriters: Array<TrendingWriter>
-  unregisterToken?: Maybe<Scalars['String']['output']>
+  unregisterToken: Scalars['String']['output']
   user?: Maybe<User>
   userTags?: Maybe<UserTags>
-  velogConfig?: Maybe<VelogConfig>
+  velogConfig: VelogConfig
 }
 
 export type QueryAdsArgs = {
@@ -1005,7 +1005,7 @@ export type QueryResolvers<
     RequireFields<QueryAdsArgs, 'input'>
   >
   checkEmailExists?: Resolver<
-    Maybe<ResolversTypes['Boolean']>,
+    ResolversTypes['Boolean'],
     ParentType,
     ContextType,
     RequireFields<QueryCheckEmailExistsArgs, 'input'>
@@ -1053,7 +1053,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryRecentPostsArgs, 'input'>
   >
-  restoreToken?: Resolver<Maybe<ResolversTypes['UserToken']>, ParentType, ContextType>
+  restoreToken?: Resolver<ResolversTypes['UserToken'], ParentType, ContextType>
   searchPosts?: Resolver<
     ResolversTypes['SearchResult'],
     ParentType,
@@ -1084,7 +1084,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryTrendingWritersArgs, 'input'>
   >
-  unregisterToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  unregisterToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   user?: Resolver<
     Maybe<ResolversTypes['User']>,
     ParentType,
@@ -1098,7 +1098,7 @@ export type QueryResolvers<
     RequireFields<QueryUserTagsArgs, 'input'>
   >
   velogConfig?: Resolver<
-    Maybe<ResolversTypes['VelogConfig']>,
+    ResolversTypes['VelogConfig'],
     ParentType,
     ContextType,
     RequireFields<QueryVelogConfigArgs, 'input'>

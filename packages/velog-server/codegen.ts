@@ -27,8 +27,8 @@ const config: CodegenConfig = {
           Post: '@prisma/client#Post as PostModel',
           Comment: '@prisma/client#Comment as CommentModel',
         },
-        inputMaybeValue: 'T | null',
-        maybeValue: 'T | null',
+        inputMaybeValue: 'T | undefined',
+        maybeValue: 'T | null | undefined',
         scalars: {
           Date: 'Date',
           JSON: 'Record<string, any>',
