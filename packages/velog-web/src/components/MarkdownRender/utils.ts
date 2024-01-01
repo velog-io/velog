@@ -1,8 +1,13 @@
 import katexWhitelist from '@/lib/katexWhiteList'
 import sanitize from 'sanitize-html'
 
+function sanitizeEventScript(htmlString: string) {
+  return htmlString.replace(/ on\w+="[^"]*"/g, '')
+}
+
 export function htmlFilter(html: string) {
-  return sanitize(html, {
+  const presanitized = sanitizeEventScript(html)
+  return sanitize(presanitized, {
     allowedTags: [
       'h1',
       'h2',
