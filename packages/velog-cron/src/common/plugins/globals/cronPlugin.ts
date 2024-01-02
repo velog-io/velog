@@ -37,6 +37,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       cronTime: '*/1 * * * *', // every 1 minute
       jobService: generateFeedJob,
       param: undefined,
+      isImmediate: true,
     },
     {
       name: 'posts score calculation in every 5 minutes',
