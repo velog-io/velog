@@ -3,7 +3,6 @@
 import PostCardGrid from '@/features/home/components/PostCardGrid/PostCardGrid'
 import { useEffect, useRef, useState } from 'react'
 import useTrendingPosts from '@/features/home/hooks/useTrendingPosts'
-import { Post } from '@/graphql/helpers/generated'
 import { useParams } from 'next/navigation'
 import { Timeframe } from '../../state/timeframe'
 import { TrendingPost } from '../../interface/post'

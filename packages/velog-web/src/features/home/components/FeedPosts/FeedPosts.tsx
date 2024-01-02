@@ -2,7 +2,6 @@
 
 import { Post } from '@/graphql/helpers/generated'
 import PostCardGrid from '../PostCardGrid'
-import { useEffect, useState } from 'react'
 import useFeedPosts from '../../hooks/useFeedPosts'
 import FeedPostsEmpty from './FeedPostsEmpty'
 

@@ -1,0 +1,42 @@
+.block {
+  .selector {
+    display: flex;
+    padding: 0;
+
+    .list {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 132px;
+      height: 72px;
+      user-select: none;
+      border-radius: 2px;
+      border: 1px solid var(--border4);
+      cursor: pointer;
+
+      &.active {
+        border: 1px solid var(--primary2);
+      }
+    }
+
+    .list + .list {
+      margin-left: 16px;
+    }
+
+    .light {
+      background-color: white;
+    }
+
+    .dark {
+      background-color: black;
+    }
+
+    .system {
+      display: flex;
+      div {
+        width: 50%;
+        height: 100%;
+      }
+    }
+  }
+}

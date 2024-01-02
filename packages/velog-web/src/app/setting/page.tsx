@@ -1,6 +1,7 @@
 import SettingEmailRow from '@/features/setting/components/SettingEmailRow'
 import SettingEmailRulesRow from '@/features/setting/components/SettingEmailRulesRow'
 import SettingSocialInfoRow from '@/features/setting/components/SettingSocialInfoRow'
+import SettingThemeRow from '@/features/setting/components/SettingThemeRow'
 import SettingTitleRow from '@/features/setting/components/SettingTitleRow'
 import SettingUnregisterRow from '@/features/setting/components/SettingUnregisterRow'
 import SettingUserProfile from '@/features/setting/components/SettingUserProfile'
@@ -39,6 +40,7 @@ export default async function SettingPage() {
         notification={user.user_meta?.email_notification || false}
         promotion={user.user_meta?.email_promotion || false}
       />
+      <SettingThemeRow />
       <SettingUnregisterRow />
     </>
   )

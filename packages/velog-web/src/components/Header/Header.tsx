@@ -3,9 +3,7 @@
 import styles from './Header.module.css'
 import RoundButton from '@/components/RoundButton'
 import { useAuth } from '@/state/auth'
-import { useTheme } from '@/state/theme'
 import HeaderSearchButton from '@/components/Header/HeaderSearchButton'
-import ThemeToggleButton from '@/components/Header/ThemeToggleButton'
 import { useModal } from '@/state/modal'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useEffect, useRef } from 'react'
@@ -25,9 +23,6 @@ type Props = {
 }
 
 function Header({ logo }: Props) {
-  const {
-    value: { systemTheme },
-  } = useTheme()
   const params = useParams()
   const [userMenu, toggleUserMenu] = useToggle(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -35,8 +30,6 @@ function Header({ logo }: Props) {
   const {
     actions: { update },
   } = useAuth()
-
-  const themeReady = systemTheme !== 'not-ready'
 
   const { isLoading, data, isFetching } = useCurrentUserQuery()
   const user = data?.currentUser || null
@@ -54,7 +47,6 @@ function Header({ logo }: Props) {
       <div className={cx('innerBlock')}>
         {logo || <HeaderLogo />}
         <div className={cx('right')}>
-          {themeReady && <ThemeToggleButton />}
           <HeaderSearchButton to={urlForSearch} />
           {user && (
             <>
