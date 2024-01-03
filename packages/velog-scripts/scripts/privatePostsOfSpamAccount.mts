@@ -20,7 +20,7 @@ class Runner implements IRunner {
   public async run(names: string[]) {
     await this.init()
 
-    const handledUser: PrivatedUserInfo[] = []
+    const handledUser: BlackUserInfo[] = []
     for (const username of names) {
       try {
         const user = await this.findUsersByUsername(username)
@@ -31,25 +31,31 @@ class Runner implements IRunner {
           continue
         }
 
-        const askResult = await this.askDeletePosts(
+        const askResult = await this.askUpdatePrivatePosts(
           posts,
           user.id,
           username,
           user.profile?.display_name || null,
         )
 
+        const postIds = posts.map(({ id }) => id!)
+
         if (!askResult.is_set_private) continue
-        await this.setIsPrivatePost(askResult.posts.map(({ id }) => id!))
+        // set private = true
+        await this.setIsPrivatePost(postIds)
+
+        // add black list
         await this.redis.addBlackList(username)
 
-        const privatedUesrInfo: PrivatedUserInfo = {
+        const blackUesrInfo: BlackUserInfo = {
           id: user.id,
           username: user.username,
           displayName: user.profile?.display_name || null,
           email: user.email,
+          postIds,
         }
 
-        handledUser.push(privatedUesrInfo)
+        handledUser.push(blackUesrInfo)
       } catch (error) {
         console.log(error)
       }
@@ -111,14 +117,13 @@ class Runner implements IRunner {
         },
         is_private: false,
       },
-      take: 5,
       orderBy: {
         created_at: 'desc',
       },
     })
     return posts
   }
-  private async askDeletePosts(
+  private async askUpdatePrivatePosts(
     posts: Post[],
     userId: string,
     username: string,
@@ -135,7 +140,8 @@ class Runner implements IRunner {
       id: userId,
       username: username,
       displayName: displayName ?? '',
-      '작성된 글': posts.map((post) => ({
+      '업데이트 될 글 개수': posts.length,
+      '최근 작성된 글': posts.slice(0, 5).map((post) => ({
         title: post.title,
         body: post.body?.trim().slice(0, 150),
       })),
@@ -157,9 +163,8 @@ class Runner implements IRunner {
 
     return { posts, is_set_private: answer === 'yes' }
   }
-
   private async setIsPrivatePost(postIds: string[]) {
-    await this.db.post.updateMany({
+    return await this.db.post.updateMany({
       where: {
         id: {
           in: postIds,
@@ -173,11 +178,12 @@ class Runner implements IRunner {
 }
 
 type AskDeletePostsResult = { posts: Partial<Post>[]; is_set_private: boolean }
-type PrivatedUserInfo = {
+type BlackUserInfo = {
   id: string
   username: string
   displayName: string | null
   email: string | null
+  postIds: string[]
 }
 ;(function excute() {
   const runner = container.resolve(Runner)
