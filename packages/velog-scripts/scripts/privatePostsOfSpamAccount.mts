@@ -146,7 +146,7 @@ class Runner implements IRunner {
         type: 'list',
         name: 'answer',
         message: `${username} 유저의 모든 게시글을 비공개 설정하고, 영구적으로 blackList에 등록하시겠습니까?`,
-        choices: ['no', 'yes'],
+        choices: ['yes', 'no'],
         default: 'yes',
       },
     ])
