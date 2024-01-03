@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { Post, User } from '@prisma/client'
+import { Post, User, UserProfile } from '@prisma/client'
 import { DbService } from '../lib/db/DbService.mjs'
 import { container, injectable } from 'tsyringe'
 import inquirer from 'inquirer'
@@ -10,22 +10,48 @@ interface IRunner {}
 @injectable()
 class Runner implements IRunner {
   constructor(private readonly db: DbService) {}
-  private async findUsersByName(displayName: string): Promise<User> {
+  public async run(names: string[]) {
+    const handledUser: PrivatedUserInfo[] = []
+    for (const name of names) {
+      try {
+        const user = await this.findUsersByUsername(name)
+        const posts = await this.findWritenPostsByUserId(user.id)
+        const askResult = await this.askDeletePosts(posts, name)
+
+        if (!askResult.is_set_private) continue
+        await this.setIsPrivatePost(askResult.posts.map(({ id }) => id!))
+
+        const privatedUesrInfo: PrivatedUserInfo = {
+          id: user.id,
+          username: user.username,
+          displayName: user.profile?.display_name || null,
+          email: user.email,
+        }
+
+        handledUser.push(privatedUesrInfo)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+  private async findUsersByUsername(
+    username: string,
+  ): Promise<User & { profile: UserProfile | null }> {
     const user = await this.db.user.findFirst({
       where: {
-        profile: {
-          display_name: displayName,
-        },
+        username,
+      },
+      include: {
+        profile: true,
       },
     })
 
-    if (!user) {
-      throw new Error(`Not found User, profile display_name: ${displayName}`)
+    if (!user || !user.profile) {
+      throw new Error(`Not found User, username: ${username}`)
     }
 
     return user
   }
-
   private async findWritenPostsByUserId(userId: string) {
     const posts = await this.db.post.findMany({
       where: {
@@ -40,7 +66,6 @@ class Runner implements IRunner {
     })
     return posts
   }
-
   private async askDeletePosts(posts: Post[], displayName: string): Promise<AskDeletePostsResult> {
     console.log({
       displayName: displayName,
@@ -65,23 +90,26 @@ class Runner implements IRunner {
   }
 
   private async setIsPrivatePost(postIds: string[]) {
-    console.log('target PostId', postIds)
-  }
-
-  public async run(names: string[]) {
-    for (const name of names) {
-      const user = await this.findUsersByName(name)
-      const posts = await this.findWritenPostsByUserId(user.id)
-      const askResult = await this.askDeletePosts(posts, name)
-
-      if (!askResult.is_set_private) continue
-
-      await this.setIsPrivatePost(askResult.posts.map(({ id }) => id!))
-    }
+    await this.db.post.updateMany({
+      where: {
+        id: {
+          in: postIds,
+        },
+      },
+      data: {
+        is_private: true,
+      },
+    })
   }
 }
 
 type AskDeletePostsResult = { posts: Partial<Post>[]; is_set_private: boolean }
+type PrivatedUserInfo = {
+  id: string
+  username: string
+  displayName: string | null
+  email: string | null
+}
 ;(function excute() {
   const runner = container.resolve(Runner)
   runner.run(ENV.spamAccountDisplayName)

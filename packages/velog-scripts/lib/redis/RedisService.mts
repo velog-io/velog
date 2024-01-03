@@ -4,7 +4,6 @@ import { injectable, singleton } from 'tsyringe'
 
 interface Service {
   get generateKey(): GenerateRedisKey
-  get queueName(): Record<QueueName, string>
 }
 
 @injectable()
@@ -24,30 +23,11 @@ export class RedisService extends Redis implements Service {
 
   get generateKey(): GenerateRedisKey {
     return {
-      recommendedPost: (postId: string) => `${postId}:recommend`,
-      postCache: (username: string, postUrlSlug: string) => `ssr:/@${username}/${postUrlSlug}`,
-      userCache: (username: string) => `ssr:/@${username}`,
-      postSeries: (username: string, seriesUrlSlug: string) =>
-        `ssr:/@${username}/series/${seriesUrlSlug}`,
-      changeEmail: (code: string) => `changeEmailCode:${code}`,
-      trendingWriters: () => `trending:writers`,
-    }
-  }
-
-  get queueName(): Record<QueueName, string> {
-    return {
-      feed: 'queue:feed',
+      privatePosts: (now: string) => `privatePosts:${now}`,
     }
   }
 }
 
 type GenerateRedisKey = {
-  recommendedPost: (postId: string) => string
-  postCache: (username: string, postUrlSlug: string) => string
-  userCache: (username: string) => string
-  postSeries: (username: string, seriesUrlSlug: string) => string
-  changeEmail: (code: string) => string
-  trendingWriters: () => string
+  privatePosts: (now: string) => string
 }
-
-type QueueName = 'feed'
