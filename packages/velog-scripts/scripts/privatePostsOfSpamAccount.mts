@@ -15,11 +15,18 @@ class Runner implements IRunner {
     private readonly discord: DiscordService,
   ) {}
   public async run(names: string[]) {
+    await this.discord.connection()
     const handledUser: PrivatedUserInfo[] = []
     for (const name of names) {
       try {
         const user = await this.findUsersByUsername(name)
         const posts = await this.findWritenPostsByUserId(user.id)
+
+        if (posts.length === 0) {
+          console.log(`${user.username} 유저의 비공개 처리 할 게시글이 없습니다.`)
+          continue
+        }
+
         const askResult = await this.askDeletePosts(posts, name)
 
         if (!askResult.is_set_private) continue
@@ -38,7 +45,25 @@ class Runner implements IRunner {
       }
     }
 
-    await this.discord.sendMessage(ENV.discordPrivatePostsChannelId, 'hello')
+    if (handledUser.length === 0) {
+      console.log('게시글 비공개 처리된 유저가 존재하지 않습니다.')
+      process.exit(0)
+    }
+
+    try {
+      const result = await this.discord.sendMessage(
+        ENV.discordPrivatePostsChannelId,
+        JSON.stringify({
+          title: '해당 유저의 글들이 비공개 처리 되었습니다.',
+          userInfo: handledUser,
+        }),
+      )
+
+      console.log(result)
+      process.exit(0)
+    } catch (error) {
+      console.log(error)
+    }
   }
   private async findUsersByUsername(
     username: string,
@@ -64,7 +89,7 @@ class Runner implements IRunner {
         user: {
           id: userId,
         },
-        is_private: false,
+        is_private: true,
       },
       take: 5,
       orderBy: {

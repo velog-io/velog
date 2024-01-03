@@ -7,7 +7,7 @@
   },
   "type": "module",
   "scripts": {
-    "delete:posts": "pnpm env:copy -e development && ts-node ./scripts/deletePostsOfSpamAccount.mts",
+    "private:posts": "pnpm env:copy -e development && ts-node ./scripts/privatePostsOfSpamAccount.mts",
     "env:copy": "tsx ./scripts/copyEnv.ts",
     "prisma:copy": "tsx ./scripts/copyPrisma.ts",
     "build": "tsc",
