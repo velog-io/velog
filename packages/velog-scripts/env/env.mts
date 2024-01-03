@@ -9,10 +9,11 @@ if (process.env.NODE_ENV === 'production') {
 dotenv.config({ path: path.resolve(process.cwd(), '.env') })
 
 const env = z.object({
-  spamAccountDisplayName: z.array(z.string()),
+  spamAccountDisplayName: z.array(z.string()).min(1),
   databaseUrl: z.string(),
   discordBotToken: z.string(),
   discordPrivatePostsChannelId: z.string(),
+  redisHost: z.string(),
 })
 
 export const ENV = env.parse({
@@ -20,4 +21,5 @@ export const ENV = env.parse({
   databaseUrl: process.env.DATABASE_URL,
   discordBotToken: process.env.DISCORD_BOT_TOKEN,
   discordPrivatePostsChannelId: process.env.DISCORD_PRIVATE_POSTS_CHANNEL_ID,
+  redisHost: process.env.REDIS_HOST,
 })

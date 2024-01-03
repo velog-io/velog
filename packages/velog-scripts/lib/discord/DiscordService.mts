@@ -31,8 +31,9 @@ export class DiscordService {
         }
 
         const channel = await this.client.channels.fetch(channelId)
+
         if (channel?.isTextBased()) {
-          channel.send(message)
+          await channel.send(message)
         } else {
           throw new Error('Wrong channel type')
         }

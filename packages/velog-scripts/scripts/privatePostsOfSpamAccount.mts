@@ -5,21 +5,25 @@ import { container, injectable } from 'tsyringe'
 import inquirer from 'inquirer'
 import { ENV } from '../env/env.mjs'
 import { DiscordService } from '../lib/discord/DiscordService.mjs'
+import { RedisService } from '../lib/redis/RedisService.mjs'
 
 interface IRunner {}
 
 @injectable()
 class Runner implements IRunner {
+  blackList!: string[]
   constructor(
     private readonly db: DbService,
     private readonly discord: DiscordService,
+    private readonly redis: RedisService,
   ) {}
   public async run(names: string[]) {
-    await this.discord.connection()
+    await this.init()
+
     const handledUser: PrivatedUserInfo[] = []
-    for (const name of names) {
+    for (const username of names) {
       try {
-        const user = await this.findUsersByUsername(name)
+        const user = await this.findUsersByUsername(username)
         const posts = await this.findWritenPostsByUserId(user.id)
 
         if (posts.length === 0) {
@@ -27,10 +31,16 @@ class Runner implements IRunner {
           continue
         }
 
-        const askResult = await this.askDeletePosts(posts, name)
+        const askResult = await this.askDeletePosts(
+          posts,
+          user.id,
+          username,
+          user.profile?.display_name || null,
+        )
 
         if (!askResult.is_set_private) continue
         await this.setIsPrivatePost(askResult.posts.map(({ id }) => id!))
+        await this.redis.addBlackList(username)
 
         const privatedUesrInfo: PrivatedUserInfo = {
           id: user.id,
@@ -65,6 +75,16 @@ class Runner implements IRunner {
       console.log(error)
     }
   }
+  private async init() {
+    try {
+      await this.discord.connection()
+      await this.redis.connection()
+
+      this.blackList = await this.redis.readBlackList()
+    } catch (error) {
+      throw error
+    }
+  }
   private async findUsersByUsername(
     username: string,
   ): Promise<User & { profile: UserProfile | null }> {
@@ -89,7 +109,7 @@ class Runner implements IRunner {
         user: {
           id: userId,
         },
-        is_private: true,
+        is_private: false,
       },
       take: 5,
       orderBy: {
@@ -98,9 +118,23 @@ class Runner implements IRunner {
     })
     return posts
   }
-  private async askDeletePosts(posts: Post[], displayName: string): Promise<AskDeletePostsResult> {
+  private async askDeletePosts(
+    posts: Post[],
+    userId: string,
+    username: string,
+    displayName: string | null,
+  ): Promise<AskDeletePostsResult> {
+    if (this.blackList.includes(username)) {
+      return {
+        posts,
+        is_set_private: true,
+      }
+    }
+
     console.log({
-      displayName: displayName,
+      id: userId,
+      username: username,
+      displayName: displayName ?? '',
       '작성된 글': posts.map((post) => ({
         title: post.title,
         body: post.body?.trim().slice(0, 150),
@@ -111,9 +145,9 @@ class Runner implements IRunner {
       {
         type: 'list',
         name: 'answer',
-        message: '해당 유저의 모든 게시글을 비공개 설정하시겠습니까?',
+        message: `${username} 유저의 모든 게시글을 비공개 설정하고, 영구적으로 blackList에 등록하시겠습니까?`,
         choices: ['no', 'yes'],
-        default: 'no',
+        default: 'yes',
       },
     ])
 
@@ -132,7 +166,7 @@ class Runner implements IRunner {
         },
       },
       data: {
-        is_private: false,
+        is_private: true,
       },
     })
   }
