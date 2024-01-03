@@ -4,12 +4,16 @@ import { DbService } from '../lib/db/DbService.mjs'
 import { container, injectable } from 'tsyringe'
 import inquirer from 'inquirer'
 import { ENV } from '../env/env.mjs'
+import { DiscordService } from '../lib/discord/DiscordService.mjs'
 
 interface IRunner {}
 
 @injectable()
 class Runner implements IRunner {
-  constructor(private readonly db: DbService) {}
+  constructor(
+    private readonly db: DbService,
+    private readonly discord: DiscordService,
+  ) {}
   public async run(names: string[]) {
     const handledUser: PrivatedUserInfo[] = []
     for (const name of names) {
@@ -33,6 +37,8 @@ class Runner implements IRunner {
         console.log(error)
       }
     }
+
+    await this.discord.sendMessage(ENV.discordPrivatePostsChannelId, 'hello')
   }
   private async findUsersByUsername(
     username: string,
@@ -60,6 +66,7 @@ class Runner implements IRunner {
         },
         is_private: false,
       },
+      take: 5,
       orderBy: {
         created_at: 'desc',
       },
@@ -69,7 +76,10 @@ class Runner implements IRunner {
   private async askDeletePosts(posts: Post[], displayName: string): Promise<AskDeletePostsResult> {
     console.log({
       displayName: displayName,
-      '작성된 글': posts.map((post) => ({ title: post.title, body: post.body?.slice(0, 200) })),
+      '작성된 글': posts.map((post) => ({
+        title: post.title,
+        body: post.body?.trim().slice(0, 150),
+      })),
     })
 
     const { answer } = await inquirer.prompt([
@@ -97,7 +107,7 @@ class Runner implements IRunner {
         },
       },
       data: {
-        is_private: true,
+        is_private: false,
       },
     })
   }

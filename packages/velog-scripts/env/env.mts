@@ -12,10 +12,14 @@ const env = z.object({
   spamAccountDisplayName: z.array(z.string()),
   redisHost: z.string(),
   databaseUrl: z.string(),
+  discordBotToken: z.string(),
+  discordPrivatePostsChannelId: z.string(),
 })
 
 export const ENV = env.parse({
   spamAccountDisplayName: (process.env.SPAM_ACCOUNT_DISPLAY_NAME ?? '')?.split(','),
   redisHost: process.env.REDIS_HOST,
   databaseUrl: process.env.DATABASE_URL,
+  discordBotToken: process.env.DISCORD_BOT_TOKEN,
+  discordPrivatePostsChannelId: process.env.DISCORD_PRIVATE_POSTS_CHANNEL_ID,
 })

@@ -10,7 +10,8 @@
     "delete:posts": "pnpm env:copy -e development && ts-node ./scripts/deletePostsOfSpamAccount.mts",
     "env:copy": "tsx ./scripts/copyEnv.ts",
     "prisma:copy": "tsx ./scripts/copyPrisma.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "ssm": "tsx ./scripts/ssm/index.ts"
   },
   "engines": {
     "node": ">=18.16"
@@ -21,8 +22,10 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-ssm": "^3.484.0",
     "@prisma/client": "^5.2.0",
     "date-fns": "^2.30.0",
+    "discord.js": "^14.14.1",
     "dotenv": "^16.3.1",
     "inquirer": "^9.2.12",
     "ioredis": "^5.3.2",
