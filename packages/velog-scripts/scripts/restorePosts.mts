@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { container, injectable, singleton } from 'tsyringe'
-import { data } from '../data/data.mjs'
+// import { data } from '../data/data.mjs'
 import { Prisma } from '@prisma/client'
 import { DbService } from '../lib/db/DbService.mjs'
 import { ENV } from '../env/env.mjs'
@@ -10,6 +10,10 @@ import { ENV } from '../env/env.mjs'
 class Runner {
   constructor(private readonly db: DbService) {}
   public async run(data: Data, username: string) {
+    if (!data) {
+      throw new Error('Not found posts data')
+    }
+
     const user = await this.db.user.findUnique({
       where: {
         username,
@@ -70,7 +74,63 @@ class Runner {
   }
 
   const runner = container.resolve(Runner)
-  await runner.run(data, username)
+  // await runner.run(data, username)
 })()
 
-type Data = typeof data
+type Data = DataResponse | null
+
+type UserData = {
+  id: string
+  username: string
+  profile: {
+    id: string
+    display_name: string
+    thumbnail: null | string
+  }
+}
+
+type PostSource = {
+  id: string
+  title: string
+  body: string
+  thumbnail: null | string
+  user: UserData
+  is_private: boolean
+  released_at: string
+  likes: number
+  views: number
+  meta: {
+    short_description: string
+  }
+  tags: string[]
+  url_slug: string
+}
+
+type PostHit = {
+  _index: string
+  _type: string
+  _id: string
+  _score: number
+  _source: PostSource
+}
+
+type Hits = {
+  total: {
+    value: number
+    relation: string
+  }
+  max_score: number
+  hits: PostHit[]
+}
+
+type DataResponse = {
+  took: number
+  timed_out: boolean
+  _shards: {
+    total: number
+    successful: number
+    skipped: number
+    failed: number
+  }
+  hits: Hits
+}
