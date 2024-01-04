@@ -1,2 +1,4 @@
 /prisma
 
+/data/*
+!/data/.gitkeep

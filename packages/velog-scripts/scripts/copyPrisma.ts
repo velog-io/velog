@@ -9,7 +9,7 @@ function main() {
   setTimeout(() => {
     exec('cp -r ../velog-prisma/prisma/* ./prisma/', (error, stdout, _stderr) => {
       if (error) {
-        console.log(_stderr)
+        console.log('prisma:copy error', _stderr)
       }
     })
   }, 0)

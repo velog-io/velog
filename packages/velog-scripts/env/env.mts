@@ -14,6 +14,7 @@ const env = z.object({
   discordBotToken: z.string(),
   discordPrivatePostsChannelId: z.string(),
   redisHost: z.string(),
+  restorePostsUsername: z.string().optional(),
 })
 
 export const ENV = env.parse({
@@ -22,4 +23,5 @@ export const ENV = env.parse({
   discordBotToken: process.env.DISCORD_BOT_TOKEN,
   discordPrivatePostsChannelId: process.env.DISCORD_PRIVATE_POSTS_CHANNEL_ID,
   redisHost: process.env.REDIS_HOST,
+  restorePostsUsername: process.env.RESTORE_POSTS_USERNAME,
 })
