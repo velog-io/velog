@@ -11,7 +11,6 @@ class Runner {
     this.validateTargetPath()
 
     Object.entries(this.target)
-      .slice(2, 3)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .map(([_, { ext, path }]) => {
         if (ext === 'gql') {
