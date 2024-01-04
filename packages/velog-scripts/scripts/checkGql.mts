@@ -3,32 +3,57 @@ import path from 'path'
 import fs from 'fs'
 
 class Runner {
-  resolver!: string[]
-  constructor(resolver: string[]) {
-    this.resolver = resolver
+  whiteList!: string[]
+  constructor(whiteList: string[]) {
+    this.whiteList = whiteList
   }
   public async run() {
-    this.validateTargetPath()
+    const cwd = process.cwd()
+    const target: Record<string, Target> = {
+      client: {
+        v3: {
+          ext: 'gql',
+          path: path.resolve(cwd, '../velog-web/src/graphql'),
+        },
+        v2: {
+          ext: 'ts',
+          path: path.resolve(cwd, '../../../velog-v2/velog-client/src/lib/graphql'),
+          exclude: ['types.d.ts'],
+        },
+      },
+      server: {
+        v3: {
+          ext: 'gql',
+          path: path.resolve(cwd, '../velog-server/src/graphql'),
+        },
+        v2: {
+          ext: 'ts',
+          path: path.resolve(cwd, '../../../velog-v2/velog-server/src/graphql'),
+        },
+      },
+    }
+    this.validateTargetPath(target)
+    this.setWhiteList(target.server)
 
-    Object.entries(this.target)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .map(([_, { ext, path }]) => {
+    Object.keys(target.client)
+      .map((key) => target.client[key])
+      .forEach(({ ext, path }) => {
         if (ext === 'gql') {
-          const keys = this.readGqlFileKeys(path)
+          const keys = this.extractKeysFromGql(path)
           this.validateKey(keys)
+          return
         }
-
         if (ext === 'ts') {
-          const keys = this.readTsFileKeys(path)
+          const keys = this.extractKeyFromTs(path)
           this.validateKey(keys)
+          return
         }
-
         throw new Error(`Not allow extname: ${ext}`)
       })
 
     console.log('Checked all gql file keys')
   }
-  private readTsFileKeys(dirpath: string) {
+  private extractKeyFromTs(dirpath: string) {
     const keys = new Set<string>()
     fs.readdirSync(dirpath)
       .filter((file) => path.extname(file) === '.ts')
@@ -58,7 +83,7 @@ class Runner {
     // Set을 배열로 변환하여 반환
     return Array.from(keys)
   }
-  private readGqlFileKeys(dirpath: string) {
+  private extractKeysFromGql(dirpath: string) {
     const keys = new Set<string>()
     fs.readdirSync(dirpath)
       .filter((file) => path.extname(file) === '.gql')
@@ -99,33 +124,11 @@ class Runner {
     })
     return Array.from(columnNames)
   }
-  private get target() {
-    const cwd = process.cwd()
-    const target: Record<string, Target> = {
-      v3Web: {
-        ext: 'gql',
-        path: path.resolve(cwd, '../velog-web/src/graphql'),
-      },
-      v3Server: {
-        ext: 'gql',
-        path: path.resolve(cwd, '../velog-server/src/graphql'),
-      },
-      v2Client: {
-        ext: 'ts',
-        path: path.resolve(cwd, '../../../velog-v2/velog-client/src/lib/graphql'),
-        exclude: ['types.d.ts'],
-      },
-      v2Server: {
-        ext: 'ts',
-        path: path.resolve(cwd, '../../../velog-v2/velog-server/src/graphql'),
-      },
-    }
-    return target
-  }
-  private validateTargetPath() {
-    const validatePath = Object.keys(this.target).map((key) =>
-      this.checkPathExists(this.target[key].path),
-    )
+  private validateTargetPath(target: Record<string, Target>) {
+    const validatePath = Object.values(target)
+      .map((type) => Object.keys(type).map((key) => (type as any)[key].path))
+      .flat()
+      .map((path) => fs.existsSync(path))
 
     if (!validatePath.every) {
       throw new Error(
@@ -133,43 +136,113 @@ class Runner {
       )
     }
   }
-  private checkPathExists(path: string) {
-    return fs.existsSync(path)
-  }
   private validateKey(keys: string[]) {
     const columnNames = this.readDatabaseColumn()
     keys.map((key) => {
-      if (!columnNames.includes(key) && !this.resolver.includes(key)) {
+      if (!columnNames.includes(key) && !this.whiteList.includes(key)) {
         console.log(`"${key}", Not found key in columns and resolver query or mutation`)
       }
     })
   }
+
+  private setWhiteList(target: Target) {
+    const whiteList = new Set<string>()
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Object.keys(target)
+      .map((key) => target[key])
+      .map(({ ext, path }) => {
+        if (ext === 'gql') {
+          const keys = this.extractKeyFromGqlForWhiteList(path)
+          for (const key of keys) {
+            whiteList.add(key)
+          }
+        }
+
+        if (ext === 'ts') {
+          const keys = this.extractKeyFromTsForWhiteList(path)
+          for (const key of keys) {
+            whiteList.add(key)
+          }
+        }
+      })
+    this.whiteList = this.whiteList.concat(Array.from(whiteList))
+  }
+  private extractKeyFromGqlForWhiteList(dirpath: string) {
+    const keys = new Set<string>()
+    fs.readdirSync(dirpath)
+      .filter((file) => path.extname(file) === '.gql')
+      .forEach((file) => {
+        const query = fs.readFileSync(`${dirpath}/${file}`, { encoding: 'utf-8' })
+        // 모든 type 정의 추출 (type Query와 type Mutation 제외)
+        const typeDefs = query.match(/type\s+(?!Query|Mutation)(\w+)\s*{[^}]*}/g)
+        if (typeDefs) {
+          typeDefs.forEach((typeDef) => {
+            // 각 type 정의 내부의 블록을 추출
+            const blocks = typeDef.match(/{[^{}]+}/g)
+            if (blocks) {
+              blocks.forEach((block) => {
+                // 각 블록 내부의 내용을 줄별로 분리
+                block.split(/[\r\n]+/).forEach((line) => {
+                  // 콜론 앞의 단어를 필드 이름으로 추출
+                  const match = line.match(/^\s*(\w+)/)
+                  if (match) {
+                    keys.add(match[1])
+                  }
+                })
+              })
+            }
+          })
+        }
+      })
+
+    return Array.from(keys)
+  }
+  private extractKeyFromTsForWhiteList(dirpath: string) {
+    const keys = new Set<string>()
+    fs.readdirSync(dirpath)
+      .filter((file) => path.extname(file) === '.ts')
+      .forEach((file) => {
+        const query = fs.readFileSync(`${dirpath}/${file}`, { encoding: 'utf-8' })
+        const typeDefs = query.match(/type\s+(?!Query|Mutation)(\w+)\s*{[^}]*}/g)
+
+        if (typeDefs) {
+          typeDefs.forEach((typeDef) => {
+            // 각 type 정의 내부의 블록을 추출
+            const blocks = typeDef.match(/{[^{}]+}/g)
+            if (blocks) {
+              blocks.forEach((block) => {
+                // 각 블록 내부의 내용을 줄별로 분리
+                block.split(/[\r\n]+/).forEach((line) => {
+                  // 콜론 앞의 단어를 필드 이름으로 추출
+                  const match = line.match(/^\s*(\w+)/)
+                  if (match) {
+                    keys.add(match[1])
+                  }
+                })
+              })
+            }
+          })
+        }
+      })
+
+    return Array.from(keys)
+  }
 }
 
 ;(function () {
-  const resolver = getResolver()
-  const runner = new Runner(resolver)
+  const defaultWhiteList = whiteList()
+  const runner = new Runner(defaultWhiteList)
   runner.run()
 })()
 
-type Target = {
+type TargetInfo = {
   ext: 'gql' | 'ts'
   path: string
   exclude?: string[]
 }
 
-function getResolver(): string[] {
-  return [
-    'registered',
-    'profile_links',
-    'posts_count',
-    'unregisterToken',
-    'logout',
-    'comments_count',
-    'liked',
-    'count',
-    'day',
-    'acceptIntegration',
-    'is_followed',
-  ]
+type Target = Record<string, TargetInfo>
+
+function whiteList() {
+  return ['logout', 'unregisterToken', 'acceptIntegration']
 }
