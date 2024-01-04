@@ -23,6 +23,8 @@ class Runner {
           const keys = this.readTsFileKeys(path)
           this.validateKey(keys)
         }
+
+        throw new Error(`Not allow extname: ${ext}`)
       })
 
     console.log('Checked all gql file keys')
