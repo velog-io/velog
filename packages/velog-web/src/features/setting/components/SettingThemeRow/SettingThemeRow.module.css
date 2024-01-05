@@ -17,10 +17,26 @@
       &.active {
         border: 1px solid var(--primary2);
       }
+
+      @media screen and (max-width: 425px) {
+        width: 120px;
+      }
+
+      @media screen and (max-width: 375px) {
+        width: 107px;
+      }
+
+      @media screen and (max-width: 325px) {
+        width: 89px;
+      }
     }
 
     .list + .list {
       margin-left: 16px;
+
+      @media screen and (max-width: 375px) {
+        margin-left: 10px;
+      }
     }
 
     .light {
