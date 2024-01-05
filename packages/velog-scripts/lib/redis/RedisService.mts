@@ -3,7 +3,7 @@ import Redis from 'ioredis'
 import { ENV } from '../../env/env.mjs'
 
 interface Service {
-  get setKeyname(): SetKeyname
+  get setName(): SetName
 }
 
 @injectable()
@@ -21,7 +21,7 @@ export class RedisService extends Redis implements Service {
     })
   }
 
-  get setKeyname() {
+  get setName() {
     return {
       blackList: 'set:blackList',
     }
@@ -29,7 +29,7 @@ export class RedisService extends Redis implements Service {
 
   public async addBlackList(username: string) {
     try {
-      const keyname = this.setKeyname.blackList
+      const keyname = this.setName.blackList
       await this.sadd(keyname, username)
     } catch (error) {
       throw error
@@ -38,7 +38,7 @@ export class RedisService extends Redis implements Service {
 
   public async readBlackList() {
     try {
-      const keyname = this.setKeyname.blackList
+      const keyname = this.setName.blackList
       return await this.smembers(keyname)
     } catch (error) {
       throw error
@@ -46,6 +46,6 @@ export class RedisService extends Redis implements Service {
   }
 }
 
-type SetKeyname = {
+type SetName = {
   blackList: string
 }
