@@ -22,13 +22,3 @@ export const setLightThemeColor = (theme: Theme, isHome: boolean) => {
   metaThemeColor.setAttribute('media', `(prefers-color-scheme: ${theme})`)
   metaThemeColor.setAttribute('content', color)
 }
-
-export const setColorScheme = (theme: Theme) => {
-  const colorScheme = document.querySelector('meta[name="color-scheme"]')
-  // if (!colorScheme) {
-  //   colorScheme = document.createElement('meta')
-  //   colorScheme.setAttribute('name', 'color-scheme')
-  //   document.head.appendChild(colorScheme)
-  // }
-  colorScheme!.setAttribute('content', theme)
-}

@@ -35,15 +35,6 @@ const themeScript = `
       
       // set data-theme in body
       document.body.setAttribute('data-theme', isTheme ? theme : 'light')
-
-      // set scrollbar-scheme
-      let colorScheme = document.querySelector('meta[name="color-scheme"]')
-      if (!colorScheme) {
-        colorScheme = document.createElement('meta')
-        colorScheme.setAttribute('name', 'color-scheme')
-        document.head.appendChild(colorScheme)
-      }
-      colorScheme.setAttribute('content', theme)
     } catch (error) {
       console.log('setTheme error', error);
     }

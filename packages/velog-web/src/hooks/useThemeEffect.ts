@@ -1,6 +1,6 @@
 'use client'
 
-import { saveThemeToStorage, setLightThemeColor, setColorScheme } from '@/lib/themeHelpers'
+import { saveThemeToStorage, setLightThemeColor } from '@/lib/themeHelpers'
 import { useTheme } from '@/state/theme'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
@@ -45,6 +45,5 @@ export function useThemeEffect() {
     document.body.dataset.theme = currentTheme
     saveThemeToStorage(currentTheme)
     setLightThemeColor(currentTheme, isHome)
-    setColorScheme(currentTheme)
   }, [actions, currentTheme, pathname])
 }
