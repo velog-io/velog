@@ -1,7 +1,7 @@
 'use client'
 
 import { checkIsHome } from '@/lib/checkIsHome'
-import { saveThemeToStorage, setLightThemeColor, setMobileHeaderColor } from '@/lib/themeHelpers'
+import { saveThemeToStorage, setMobileHeaderColor } from '@/lib/themeHelpers'
 import { useTheme } from '@/state/theme'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
@@ -48,7 +48,6 @@ export function useThemeEffect() {
     const color = currentTheme === 'light' ? (isHome ? '#f8f9fa' : '#ffffff') : '#1e1e1e'
 
     saveThemeToStorage(currentTheme)
-    setLightThemeColor(currentTheme, color)
     setMobileHeaderColor(color)
   }, [actions, currentTheme, pathname])
 }

@@ -14,25 +14,22 @@ const themeScript = `
 
     const isSystemPrefer = !!systemPrefer
 
-    const storageTheme = window.localStorage.getItem('theme') || ''
-    const isTheme = storageTheme.includes('light') || storageTheme.includes('dark') // leagcy velog save theme data using JSON.stringify 
-    const currentTheme = storageTheme.includes('light') ? 'light' : 'dark'
-    const theme = isSystemPrefer ? systemPrefersDark ? 'dark' : 'light' : currentTheme
+    const getThemeFromStorage = window.localStorage.getItem('theme') || ''
+    const isTheme = getThemeFromStorage.includes('light') || getThemeFromStorage.includes('dark') // leagcy velog save theme data using JSON.stringify 
+    const storageTheme = getThemeFromStorage.includes('light') ? 'light' : 'dark'
+    const theme = isSystemPrefer ? systemPrefersDark ? 'dark' : 'light' : storageTheme
 
     if (!isTheme) {
       window.localStorage.removeItem('theme')
     }
+
+    if (!['light', 'dark'].includes(theme)) return
 
     const isHome = ['/recent','/trending', '/feed'].includes(window.location.pathname) || window.location.pathname === '/'
     const homeColor = isHome ? '#f8f9fa' : '#ffffff'
     const color = theme === 'light' ? homeColor : '#1e1e1e'
 
     try {
-      // set main page ('/', 'trending', '/recent') theme color
-      const themeMetaTag = document.querySelector('meta[name="theme-color"]')
-      themeMetaTag.setAttribute('media', \`(prefers-color-scheme: \${theme})\`)
-      themeMetaTag.setAttribute('content', color)
-      
       // set data-theme in body
       document.body.setAttribute('data-theme', isTheme ? theme : 'light')
       
