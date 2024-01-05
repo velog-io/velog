@@ -6,6 +6,7 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { getScrollTop } from '@/lib/utils'
 import HomeTab from '@/features/home/components/HomeTab/HomeTab'
 import { usePathname } from 'next/navigation'
+import { checkIsHome } from '@/lib/checkIsHome'
 
 const cx = bindClassNames(styles)
 
@@ -68,7 +69,7 @@ function FloatingHeader({ header }: Props) {
     }
   }, [onScroll])
 
-  const isHome = pathname === '/' || ['/recent', '/trending'].includes(pathname)
+  const isHome = checkIsHome(pathname)
   return (
     <div
       className={cx('block')}

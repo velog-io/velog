@@ -49,6 +49,7 @@ export const metadata: Metadata = {
     'fb:app_id': '203040656938507',
     'og:image': 'https://images.velog.io/velog.png',
     'format-detection': 'telephone=no, date=no, email=no, address=no',
+    'mobile-web-app-capable': 'yes',
   },
 }
 

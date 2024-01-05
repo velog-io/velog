@@ -1,6 +1,7 @@
 'use client'
 
-import { saveThemeToStorage, setLightThemeColor } from '@/lib/themeHelpers'
+import { checkIsHome } from '@/lib/checkIsHome'
+import { saveThemeToStorage, setLightThemeColor, setMobileHeaderColor } from '@/lib/themeHelpers'
 import { useTheme } from '@/state/theme'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
@@ -41,9 +42,13 @@ export function useThemeEffect() {
 
   useEffect(() => {
     if (!currentTheme) return
-    const isHome = ['/recent', '/trending'].includes(pathname) || pathname === '/'
+    const isHome = checkIsHome(pathname)
     document.body.dataset.theme = currentTheme
+
+    const color = currentTheme === 'light' ? (isHome ? '#f8f9fa' : '#ffffff') : '#1e1e1e'
+
     saveThemeToStorage(currentTheme)
-    setLightThemeColor(currentTheme, isHome)
+    setLightThemeColor(currentTheme, color)
+    setMobileHeaderColor(color)
   }, [actions, currentTheme, pathname])
 }

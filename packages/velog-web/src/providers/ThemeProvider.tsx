@@ -23,18 +23,24 @@ const themeScript = `
       window.localStorage.removeItem('theme')
     }
 
+    const isHome = ['/recent','/trending', '/feed'].includes(window.location.pathname) || window.location.pathname === '/'
+    const homeColor = isHome ? '#f8f9fa' : '#ffffff'
+    const color = theme === 'light' ? homeColor : '#1e1e1e'
+
     try {
       // set main page ('/', 'trending', '/recent') theme color
-      if (theme === 'light') {    
-        const isHome = ['/recent','/trending'].includes(window.location.pathname) || window.location.pathname === '/'
-        const color = isHome ? '#f8f9fa' : '#ffffff'
-        const themeMetaTag = document.querySelector('meta[name="theme-color"]')
-        themeMetaTag.setAttribute('media', \`(prefers-color-scheme: \${theme})\`)
-        themeMetaTag.setAttribute('content', color)
-      }
+      const themeMetaTag = document.querySelector('meta[name="theme-color"]')
+      themeMetaTag.setAttribute('media', \`(prefers-color-scheme: \${theme})\`)
+      themeMetaTag.setAttribute('content', color)
       
       // set data-theme in body
       document.body.setAttribute('data-theme', isTheme ? theme : 'light')
+      
+      // set Theme color for mobile header
+      const metaTag = document.createElement('meta')
+      metaTag.setAttribute('name', 'theme-color')
+      metaTag.setAttribute('content', color)
+      document.head.appendChild(metaTag)
     } catch (error) {
       console.log('setTheme error', error);
     }
