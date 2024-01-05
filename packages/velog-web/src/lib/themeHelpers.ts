@@ -13,8 +13,15 @@ export const removeSystemPrefer = () => {
   localStorage.removeItem('system_prefer')
 }
 
-export const setMobileHeaderColor = (color: string) => {
-  const meta = document.querySelector('meta[name="theme-color"]')
-  if (!meta) return
-  meta.setAttribute('content', color)
+export const changeThemeColor = (color: string) => {
+  const tag = document.querySelector('meta[name="theme-color"]')
+  if (!tag) return
+  tag.setAttribute('content', color)
+}
+
+export const changeAppleMobileStatus = (color: string) => {
+  const tag = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')
+  console.log('tag', tag)
+  if (!tag) return
+  tag.setAttribute('content', color)
 }

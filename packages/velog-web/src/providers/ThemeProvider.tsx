@@ -34,10 +34,16 @@ const themeScript = `
       document.body.setAttribute('data-theme', isTheme ? theme : 'light')
       
       // set Theme color for mobile header
-      const metaTag = document.createElement('meta')
-      metaTag.setAttribute('name', 'theme-color')
-      metaTag.setAttribute('content', color)
-      document.head.appendChild(metaTag)
+      const themeColorMetaTag = document.createElement('meta')
+      themeColorMetaTag.setAttribute('name', 'theme-color')
+      themeColorMetaTag.setAttribute('content', color)
+      document.head.appendChild(themeColorMetaTag)
+
+      // set Safari theme color
+      const appleMobileStatusMetaTag = document.createElement('meta')
+      themeColorMetaTag.setAttribute('name', 'apple-mobile-web-app-status-bar-style')
+      themeColorMetaTag.setAttribute('content', color)
+      document.head.appendChild(themeColorMetaTag)
     } catch (error) {
       console.log('setTheme error', error);
     }
