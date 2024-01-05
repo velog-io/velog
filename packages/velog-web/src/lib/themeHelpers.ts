@@ -19,9 +19,9 @@ export const changeThemeColor = (color: string) => {
   tag.setAttribute('content', color)
 }
 
-export const changeAppleMobileStatus = (color: string) => {
+export const changeAppleMobileStatus = (theme: Theme) => {
   const tag = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')
-  console.log('tag', tag)
   if (!tag) return
+  const color = theme === 'light' ? 'default' : 'black-translucent'
   tag.setAttribute('content', color)
 }

@@ -49,6 +49,6 @@ export function useThemeEffect() {
 
     saveThemeToStorage(currentTheme)
     changeThemeColor(color)
-    changeAppleMobileStatus(color)
+    changeAppleMobileStatus(currentTheme)
   }, [actions, currentTheme, pathname])
 }
