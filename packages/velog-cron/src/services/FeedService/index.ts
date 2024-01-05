@@ -18,12 +18,14 @@ export class FeedService implements Service {
     const followers = await this.followUserService.getFollowers(followingId)
     const followerIds = followers.map((user) => user.id)
     for (const userId of followerIds) {
-      await this.db.feed.create({
-        data: {
-          fk_user_id: userId,
-          fk_post_id: postId,
-        },
-      })
+      try {
+        await this.db.feed.create({
+          data: {
+            fk_user_id: userId,
+            fk_post_id: postId,
+          },
+        })
+      } catch (_) {}
     }
   }
   public async deleteFeed() {

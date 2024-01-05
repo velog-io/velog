@@ -1,4 +1,4 @@
 config:
   aws:region: ap-northeast-2
   velog:DOCKER_ENV: production
-  velog:target: web,server
+  velog:target: web
