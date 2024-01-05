@@ -2,6 +2,7 @@
   .selector {
     display: flex;
     padding: 0;
+    margin: 0;
 
     .list {
       display: flex;
