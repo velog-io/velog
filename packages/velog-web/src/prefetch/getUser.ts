@@ -15,7 +15,7 @@ export default async function getUser(username: string) {
 
     const { user } = await graphqlFetch<{ user: User }>({
       body,
-      next: { revalidate: 100 },
+      next: { revalidate: 0 },
     })
 
     if (!user) {

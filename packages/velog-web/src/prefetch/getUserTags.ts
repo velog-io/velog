@@ -15,7 +15,7 @@ export default async function getUserTags(username: string) {
 
     const { userTags } = await graphqlFetch<{ userTags: UserTags }>({
       body,
-      next: { revalidate: 20 },
+      next: { revalidate: 0 },
     })
 
     return userTags

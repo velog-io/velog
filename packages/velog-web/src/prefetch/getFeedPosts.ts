@@ -1,6 +1,7 @@
 import { ENV } from '@/env'
 import { FeedPostsDocument, Post } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 
 export default async function getFeedPosts({ limit = ENV.defaultPostLimit, accessToken }: Args) {
   const body: GraphqlRequestBody = {
@@ -35,5 +36,5 @@ export default async function getFeedPosts({ limit = ENV.defaultPostLimit, acces
 
 type Args = {
   limit: number
-  accessToken: any
+  accessToken: RequestCookie
 }

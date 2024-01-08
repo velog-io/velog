@@ -1,4 +1,5 @@
 import SmallLayout from '@/components/Layouts/SmallLayout'
+import { getAccessToken } from '@/lib/getAccessToken'
 import { getUsernameFromParams } from '@/lib/utils'
 import getUserFollowInfo from '@/prefetch/getUserFollowInfo'
 import getVelogConfig from '@/prefetch/getVelogConfig'
@@ -11,9 +12,10 @@ type Props = {
 }
 
 export default async function Layout({ children, params }: Props) {
+  const token = getAccessToken()
   const username = getUsernameFromParams(params)
   const user = await getUserFollowInfo(username)
-  const velogConfig = await getVelogConfig(username)
+  const velogConfig = await getVelogConfig({ username, accessToken: token })
 
   if (!user || !velogConfig) {
     notFound()

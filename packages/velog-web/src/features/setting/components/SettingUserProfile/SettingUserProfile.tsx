@@ -17,6 +17,7 @@ import {
   useUpdateThumbnailMutation,
 } from '@/graphql/helpers/generated'
 import JazzbarContext from '@/providers/JazzbarProvider'
+import { revalidatePath } from 'next/cache'
 
 const cx = bindClassNames(styles)
 
@@ -97,7 +98,9 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
     await updateProfileMutateAsync({
       input: { display_name: inputs.displayName, short_bio: inputs.shortBio },
     })
+    revalidatePath('/', 'layout')
     onToggleEdit()
+    refetch()
   }
 
   return (

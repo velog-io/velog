@@ -5,22 +5,27 @@ import SettingThemeRow from '@/features/setting/components/SettingThemeRow'
 import SettingTitleRow from '@/features/setting/components/SettingTitleRow'
 import SettingUnregisterRow from '@/features/setting/components/SettingUnregisterRow'
 import SettingUserProfile from '@/features/setting/components/SettingUserProfile'
+import { getAccessToken } from '@/lib/getAccessToken'
 import getCurrentUser from '@/prefetch/getCurrentUser'
 import getVelogConfig from '@/prefetch/getVelogConfig'
-import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 
 export default async function SettingPage() {
-  const cookieStore = cookies()
-  const token = cookieStore.get('access_token') || cookieStore.get('refresh_token')
+  const token = getAccessToken()
 
-  const user = await getCurrentUser(token)
+  if (!token) {
+    notFound()
+  }
+
+  const user = await getCurrentUser({
+    accessToken: token,
+  })
 
   if (!user) {
     notFound()
   }
 
-  const velogConfig = await getVelogConfig(user.username)
+  const velogConfig = await getVelogConfig({ username: user.username, accessToken: token })
 
   if (!velogConfig) {
     notFound()

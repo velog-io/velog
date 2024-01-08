@@ -15,7 +15,7 @@ type Props = {
 export default async function VelogPageLayout({ children, params }: Props) {
   const username = getUsernameFromParams(params)
   const user = await getUserFollowInfo(username)
-  const velogConfig = await getVelogConfig(username)
+  const velogConfig = await getVelogConfig({ username })
 
   if (!user || !velogConfig) {
     notFound()
