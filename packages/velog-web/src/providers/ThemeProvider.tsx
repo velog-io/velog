@@ -42,7 +42,7 @@ const themeScript = `
       // set Safari theme color
       const appleMobileStatusMetaTag = document.createElement('meta')
       appleMobileStatusMetaTag.setAttribute('name', 'apple-mobile-web-app-status-bar-style')
-      const appleMobileStatusColor = theme === 'light' ? 'default' : 'black-translucent'
+      const appleMobileStatusColor = theme === 'light' ? 'default' : 'black'
       appleMobileStatusMetaTag.setAttribute('content', appleMobileStatusColor)
       document.head.appendChild(themeColorMetaTag)
     } catch (error) {
