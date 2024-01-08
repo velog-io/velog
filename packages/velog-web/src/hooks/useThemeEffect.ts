@@ -4,20 +4,14 @@ import { checkIsHome } from '@/lib/checkIsHome'
 import { saveThemeToStorage, changeThemeColor, changeAppleMobileStatus } from '@/lib/themeHelpers'
 import { useTheme } from '@/state/theme'
 import { usePathname } from 'next/navigation'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 
 export function useThemeEffect() {
-  const isMounted = useRef<boolean>(false)
   const { actions, theme: currentTheme } = useTheme()
   const pathname = usePathname()
 
-  useEffect(() => {
-    isMounted.current = true
-  }, [isMounted])
-
   const handleTheme = useCallback(
     (theme = 'light') => {
-      if (isMounted.current) return
       if (theme === 'dark') {
         actions.enableDarkMode()
       }
@@ -29,15 +23,13 @@ export function useThemeEffect() {
   )
 
   useEffect(() => {
-    if (isMounted.current) return
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
     actions.setSystemTheme(systemPrefersDark ? 'dark' : 'light')
     handleTheme(systemPrefersDark ? 'dark' : 'light')
   }, [actions, handleTheme])
 
   useEffect(() => {
-    if (isMounted.current) return
-    const systemPrefer = localStorage.getItem('system_prefer')
+    const systemPrefer = localStorage.getItem('system-prefer')
     if (!!systemPrefer) {
       actions.setSystemThemePrefer(true)
     } else {
@@ -49,8 +41,6 @@ export function useThemeEffect() {
   }, [actions, handleTheme])
 
   useEffect(() => {
-    if (isMounted.current) return
-    console.log('useEffect, Home')
     if (!currentTheme) return
     const isHome = checkIsHome(pathname)
     document.body.dataset.theme = currentTheme

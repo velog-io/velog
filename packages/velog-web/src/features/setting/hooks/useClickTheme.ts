@@ -30,6 +30,7 @@ export function useClickTheme() {
       if (target === 'dark') {
         actions.enableDarkMode()
       }
+      // Not system theme prefers case
       actions.setSystemThemePrefer(false)
       removeSystemPrefer()
     },

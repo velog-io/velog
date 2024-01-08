@@ -6,11 +6,11 @@ export const saveThemeToStorage = (theme: Theme) => {
 }
 
 export const saveSystemPrefer = () => {
-  localStorage.setItem('system_prefer', 'system')
+  localStorage.setItem('system-prefer', 'system')
 }
 
 export const removeSystemPrefer = () => {
-  localStorage.removeItem('system_prefer')
+  localStorage.removeItem('system-prefer')
 }
 
 export const changeThemeColor = (color: string) => {

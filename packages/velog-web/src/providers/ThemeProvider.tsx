@@ -10,7 +10,7 @@ const themeScript = `
   (function() {
     // set data-theme attirubute in body tag
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const systemPrefer = localStorage.getItem('system_prefer')
+    const systemPrefer = localStorage.getItem('system-prefer')
 
     const isSystemPrefer = !!systemPrefer
 
