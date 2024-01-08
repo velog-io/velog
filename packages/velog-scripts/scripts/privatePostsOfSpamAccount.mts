@@ -11,7 +11,7 @@ interface IRunner {}
 
 @injectable()
 class Runner implements IRunner {
-  blackList!: string[]
+  blockList!: string[]
   constructor(
     private readonly db: DbService,
     private readonly discord: DiscordService,
@@ -20,7 +20,7 @@ class Runner implements IRunner {
   public async run(names: string[]) {
     await this.init()
 
-    const handledUser: BlackUserInfo[] = []
+    const handledUser: BlockUserInfo[] = []
     for (const username of names) {
       try {
         const user = await this.findUsersByUsername(username)
@@ -44,10 +44,10 @@ class Runner implements IRunner {
         // set private = true
         await this.setIsPrivatePost(postIds)
 
-        // add black list
-        await this.redis.addBlackList(username)
+        // add block list
+        await this.redis.addBlockList(username)
 
-        const blackUesrInfo: BlackUserInfo = {
+        const blockUesrInfo: BlockUserInfo = {
           id: user.id,
           username: user.username,
           displayName: user.profile?.display_name || null,
@@ -55,7 +55,7 @@ class Runner implements IRunner {
           postIds,
         }
 
-        handledUser.push(blackUesrInfo)
+        handledUser.push(blockUesrInfo)
       } catch (error) {
         console.log(error)
       }
@@ -87,7 +87,7 @@ class Runner implements IRunner {
       await this.discord.connection()
       await this.redis.connection()
 
-      this.blackList = await this.redis.readBlackList()
+      this.blockList = await this.redis.readBlockList()
     } catch (error) {
       throw error
     }
@@ -130,7 +130,7 @@ class Runner implements IRunner {
     username: string,
     displayName: string | null,
   ): Promise<AskDeletePostsResult> {
-    if (this.blackList.includes(username)) {
+    if (this.blockList.includes(username)) {
       return {
         posts,
         is_set_private: true,
@@ -152,7 +152,7 @@ class Runner implements IRunner {
       {
         type: 'list',
         name: 'answer',
-        message: `${username} 유저의 모든 게시글을 비공개 설정하고, 영구적으로 blackList에 등록하시겠습니까?`,
+        message: `${username} 유저의 모든 게시글을 비공개 설정하고, 영구적으로 blockList에 등록하시겠습니까?`,
         choices: ['yes', 'no'],
         default: 'yes',
       },
@@ -179,7 +179,7 @@ class Runner implements IRunner {
 }
 
 type AskDeletePostsResult = { posts: Partial<Post>[]; is_set_private: boolean }
-type BlackUserInfo = {
+type BlockUserInfo = {
   id: string
   username: string
   displayName: string | null

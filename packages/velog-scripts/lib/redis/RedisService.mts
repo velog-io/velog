@@ -23,22 +23,22 @@ export class RedisService extends Redis implements Service {
 
   get setName() {
     return {
-      blackList: 'set:blackList',
+      blockList: 'set:blockList',
     }
   }
 
-  public async addBlackList(username: string) {
+  public async addBlockList(username: string) {
     try {
-      const keyname = this.setName.blackList
+      const keyname = this.setName.blockList
       await this.sadd(keyname, username)
     } catch (error) {
       throw error
     }
   }
 
-  public async readBlackList() {
+  public async readBlockList() {
     try {
-      const keyname = this.setName.blackList
+      const keyname = this.setName.blockList
       return await this.smembers(keyname)
     } catch (error) {
       throw error
@@ -47,5 +47,5 @@ export class RedisService extends Redis implements Service {
 }
 
 type SetName = {
-  blackList: string
+  blockList: string
 }
