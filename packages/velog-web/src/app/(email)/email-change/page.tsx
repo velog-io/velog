@@ -34,7 +34,7 @@ export default function Page({ searchParams }: Props) {
         router.push('/setting')
       } catch (error: any) {
         if (error?.status === 404) {
-          toast.error('존재하지 않는 CODE 입니다.')
+          toast.error('이메일 변경 code가 존재하지 않습니다.')
         } else {
           toast.error('잘못된 접근 입니다.')
         }

@@ -239,7 +239,7 @@ export class UserService implements Service {
 
     try {
       if (ENV.dockerEnv === 'development') {
-        console.log(`Login URL: ${ENV.clientV2Host}/email-change?code=${code}`)
+        console.log(`Login URL: ${ENV.clientV3Host}/email-change?code=${code}`)
       }
 
       await this.mail.sendMail({
