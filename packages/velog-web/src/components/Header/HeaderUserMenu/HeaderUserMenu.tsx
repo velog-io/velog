@@ -16,16 +16,14 @@ type Props = {
 function HeaderUserMenu({ isVisible, onClose }: Props) {
   const {
     value: { currentUser },
-    actions: { update },
   } = useAuth()
   const { ref } = useOutsideClick<HTMLDivElement>(onClose)
-  const { mutate } = useLogoutMutation()
+  const { mutateAsync } = useLogoutMutation()
 
-  const onLogout = useCallback(() => {
-    mutate({})
-    update(null)
+  const onLogout = useCallback(async () => {
     location.href = '/'
-  }, [mutate, update])
+    await mutateAsync({})
+  }, [mutateAsync])
 
   if (!isVisible) return null
   return (

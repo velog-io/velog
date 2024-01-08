@@ -17,7 +17,6 @@ import {
   useUpdateThumbnailMutation,
 } from '@/graphql/helpers/generated'
 import JazzbarContext from '@/providers/JazzbarProvider'
-import { revalidatePath } from 'next/cache'
 
 const cx = bindClassNames(styles)
 
@@ -31,7 +30,7 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
   const [upload] = useUpload()
   const { mutateAsync: updateThumbnailMutateAsync } = useUpdateThumbnailMutation()
   const { mutateAsync: updateProfileMutateAsync } = useUpdateProfileMutation()
-  const { refetch } = useCurrentUserQuery()
+  const { refetch: currentUserRefetch } = useCurrentUserQuery() // for header profile image
   const { upload: cfUpload } = useCFUpload()
   const [edit, onToggleEdit] = useToggle(false)
 
@@ -40,7 +39,7 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
     shortBio,
   })
 
-  const { setValue } = useContext(JazzbarContext)
+  const { setValue, fakeProgress } = useContext(JazzbarContext)
 
   const [imageBlobUrl, setImageBlobUrl] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -52,19 +51,7 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
     const objectURL = URL.createObjectURL(file)
     setImageBlobUrl(objectURL)
     setIsLoading(true)
-
-    let i = 1
-    const initValue = 20
-    const intervalTime = setInterval(() => {
-      const add = i * 2
-
-      if (add + initValue > 90) {
-        clearInterval(intervalTime)
-      }
-
-      setValue(initValue + add)
-      i++
-    }, 100)
+    const intervalTime = fakeProgress()
 
     try {
       const image = await cfUpload({ file, info: { type: 'profile' } })
@@ -75,11 +62,11 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
           url: image,
         },
       })
-      refetch()
+      currentUserRefetch()
     } finally {
       setValue(100)
       URL.revokeObjectURL(objectURL)
-      clearInterval(intervalTime)
+      clearInterval(intervalTime!)
     }
   }
 
@@ -90,7 +77,7 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
       },
     })
     setImageBlobUrl(null)
-    refetch()
+    currentUserRefetch()
   }
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -98,9 +85,8 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
     await updateProfileMutateAsync({
       input: { display_name: inputs.displayName, short_bio: inputs.shortBio },
     })
-    revalidatePath('/', 'layout')
     onToggleEdit()
-    refetch()
+    currentUserRefetch()
   }
 
   return (

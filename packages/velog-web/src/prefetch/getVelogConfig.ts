@@ -1,8 +1,7 @@
 import { VelogConfig, VelogConfigDocument } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
-import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 
-export default async function getVelogConfig({ username, accessToken }: Args) {
+export default async function getVelogConfig({ username }: Args) {
   try {
     const body: GraphqlRequestBody = {
       operationName: 'velogConfig',
@@ -14,17 +13,9 @@ export default async function getVelogConfig({ username, accessToken }: Args) {
       },
     }
 
-    const headers = {}
-    if (accessToken) {
-      Object.assign(headers, {
-        authorization: `Bearer ${accessToken.value}`,
-      })
-    }
-
     const { velogConfig } = await graphqlFetch<{ velogConfig: VelogConfig }>({
       body,
       next: { revalidate: 0 },
-      headers,
     })
 
     if (!velogConfig) {
@@ -40,5 +31,4 @@ export default async function getVelogConfig({ username, accessToken }: Args) {
 
 type Args = {
   username: string
-  accessToken?: RequestCookie
 }

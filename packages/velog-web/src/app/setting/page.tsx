@@ -25,7 +25,7 @@ export default async function SettingPage() {
     notFound()
   }
 
-  const velogConfig = await getVelogConfig({ username: user.username, accessToken: token })
+  const velogConfig = await getVelogConfig({ username: user.username })
 
   if (!velogConfig) {
     notFound()

@@ -5,7 +5,7 @@ import ReactQueryProvider from '@/providers/ReactQueryProvider'
 import SangteContextProvider from '@/providers/SangteContextProvider'
 import ThemeProvider from '@/providers/ThemeProvider'
 import SentryProvider from './SentryProvider'
-import { JazzbarProvide } from './JazzbarProvider'
+import { JazzbarProvider } from './JazzbarProvider'
 
 type Props = {
   children: React.ReactNode
@@ -22,9 +22,9 @@ function CoreProvider({ children }: Props) {
         <ReactQueryProvider>
           <SangteContextProvider>
             <ThemeProvider>
-              <JazzbarProvide>
+              <JazzbarProvider>
                 <InteractiveViewProvider>{children}</InteractiveViewProvider>
-              </JazzbarProvide>
+              </JazzbarProvider>
             </ThemeProvider>
           </SangteContextProvider>
         </ReactQueryProvider>

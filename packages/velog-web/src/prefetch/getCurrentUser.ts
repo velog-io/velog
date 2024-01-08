@@ -13,8 +13,6 @@ export default async function getCurrentUser({ accessToken }: GetCurrentUserArgs
       query: CurrentUserDocument,
     }
 
-    if (!accessToken) return null
-
     const headers = {
       authorization: `Bearer ${accessToken.value}`,
     }
@@ -22,7 +20,7 @@ export default async function getCurrentUser({ accessToken }: GetCurrentUserArgs
     const { currentUser } = await graphqlFetch<{ currentUser: User }>({
       method: 'GET',
       body,
-      next: { revalidate: 60 * 10 },
+      next: { revalidate: 0 },
       headers,
     })
 

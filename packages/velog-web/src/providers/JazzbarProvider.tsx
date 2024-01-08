@@ -1,33 +1,48 @@
 'use client'
 
 import Jazzbar from '@/components/Jazzbar'
-import { AxiosProgressEvent } from 'axios'
 import React, { createContext, useState } from 'react'
 
 interface JazzbarContextValue {
   value: number
   setValue: (value: number) => void
-  progress(event: AxiosProgressEvent): void
+  progress(event: ProgressEvent): void
+  fakeProgress(): void | NodeJS.Timer
+}
+
+type Props = {
+  children: React.ReactNode
 }
 
 const JazzbarContext = createContext<JazzbarContextValue>({
   value: 0,
   setValue: () => {},
   progress: () => {},
+  fakeProgress: () => {},
 })
 
-type Props = {
-  children: React.ReactNode
-}
-
-export const JazzbarProvide = ({ children }: Props) => {
+export const JazzbarProvider = ({ children }: Props) => {
   const [value, setValue] = useState(0)
 
-  const onProgress = (event: AxiosProgressEvent) => {
+  const progress = (event: ProgressEvent) => {
     if (!event.total) return
     const percentage = (event.loaded * 100) / event.total
-    const value = Math.round(percentage) // alwayls 100%
+    const value = Math.round(percentage)
     setValue(value)
+  }
+
+  const fakeProgress = () => {
+    let i = 1
+    const initValue = 20
+    const intervalTime = setInterval(() => {
+      const add = i * 2
+      if (add + initValue > 90) {
+        clearInterval(intervalTime)
+      }
+      setValue(initValue + add)
+      i++
+    }, 100)
+    return intervalTime
   }
 
   return (
@@ -35,7 +50,8 @@ export const JazzbarProvide = ({ children }: Props) => {
       value={{
         value,
         setValue,
-        progress: onProgress,
+        progress,
+        fakeProgress,
       }}
     >
       <Jazzbar />
