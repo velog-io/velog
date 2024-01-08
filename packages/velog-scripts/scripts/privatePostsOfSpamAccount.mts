@@ -75,6 +75,7 @@ class Runner implements IRunner {
         }),
       )
 
+      handledUser.map((u) => console.log(`${u.username} 유저가 처리 되었습니다.`))
       console.log(result)
       process.exit(0)
     } catch (error) {
