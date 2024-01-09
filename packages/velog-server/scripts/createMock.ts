@@ -1,11 +1,12 @@
 import 'reflect-metadata'
-import { DbService } from '@lib/db/DbService'
-import { UtilsService } from '@lib/utils/UtilsService'
+import { DbService } from '@lib/db/DbService.js'
+import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Post, Prisma, User } from '@prisma/client'
-import { ENV } from '@env'
 import { mockComment } from 'test/mock/mockComment'
 import { MockPostsType, mockPosts } from 'test/mock/mockPost'
 import { mockUserWithProfile, MockUserWithProfileType } from 'test/mock/mockUser'
+
+import { ENV } from '@env'
 
 const MAX_COMMENTS_PER_POST = 5
 

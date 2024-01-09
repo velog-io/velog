@@ -25,7 +25,7 @@
     "codegen": "graphql-codegen --config codegen.ts",
     "test": "pnpm jest --detectOpenHandles",
     "create-service": "tsx ./scripts/createService.ts",
-    "create-mock": "tsx ./scripts/createMock.ts",
+    "create-mock": "NODE_ENV=development tsx ./scripts/createMock.ts",
     "ssm": "tsx ./scripts/ssm/index.ts"
   },
   "dependencies": {

@@ -2,7 +2,8 @@ import dotenv from 'dotenv'
 import { existsSync } from 'fs'
 import { z } from 'zod'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { container } from 'tsyringe'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 
 type DockerEnv = 'development' | 'stage' | 'production'
 type AppEnvironment = 'development' | 'production'
@@ -28,8 +29,14 @@ const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
 const envFile = envFiles[dockerEnv]
 const prefix = dockerEnv === 'development' ? './env' : '../env'
 
-const utils = container.resolve(UtilsService)
-const configPath = utils.resolveDir(`${prefix}/${envFile}`)
+function resolveDir(dir: string): string {
+  const __filename = fileURLToPath(import.meta.url)
+  const splited = dirname(__filename).split('/src')
+  const cwd = splited.slice(0, -1).join('/src')
+  return join(cwd, dir)
+}
+
+const configPath = resolveDir(`${prefix}/${envFile}`)
 
 if (!existsSync(configPath)) {
   console.log(`Read target: ${configPath}`)
