@@ -51,7 +51,7 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
     const objectURL = URL.createObjectURL(file)
     setImageBlobUrl(objectURL)
     setIsLoading(true)
-    const intervalTime = fakeProgress()
+    const timerId = fakeProgress()
 
     try {
       const image = await cfUpload({ file, info: { type: 'profile' } })
@@ -66,7 +66,7 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
     } finally {
       setValue(100)
       URL.revokeObjectURL(objectURL)
-      clearInterval(intervalTime!)
+      clearInterval(timerId!)
     }
   }
 

@@ -7,7 +7,7 @@ interface JazzbarContextValue {
   value: number
   setValue: (value: number) => void
   progress(event: ProgressEvent): void
-  fakeProgress(): void | NodeJS.Timer
+  fakeProgress(): void | NodeJS.Timeout
 }
 
 type Props = {
@@ -34,15 +34,15 @@ export const JazzbarProvider = ({ children }: Props) => {
   const fakeProgress = () => {
     let i = 1
     const initValue = 20
-    const intervalTime = setInterval(() => {
+    const timerId = setInterval(() => {
       const add = i * 2
       if (add + initValue > 90) {
-        clearInterval(intervalTime)
+        clearInterval(timerId)
       }
       setValue(initValue + add)
       i++
     }, 100)
-    return intervalTime
+    return timerId
   }
 
   return (
