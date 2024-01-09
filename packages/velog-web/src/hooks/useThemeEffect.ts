@@ -42,11 +42,10 @@ export function useThemeEffect() {
 
   useEffect(() => {
     if (!currentTheme) return
+    console.log('hello!!')
     const isHome = checkIsHome(pathname)
     document.body.dataset.theme = currentTheme
-
     const color = currentTheme === 'light' ? (isHome ? '#f8f9fa' : '#ffffff') : '#1e1e1e'
-
     saveThemeToStorage(currentTheme)
     changeThemeColor(color)
     changeAppleMobileStatus(currentTheme)
