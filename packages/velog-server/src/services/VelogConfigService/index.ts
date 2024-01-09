@@ -47,10 +47,9 @@ export class VelogConfigService implements Service {
     })
 
     if (!config) {
-      throw new NotFoundError('Not found User config')
+      throw new NotFoundError(`Not found User config, username: ${username}`)
     }
-
-    return config!
+    return config
   }
   public async updateVelogConfig(title: string, signedUserId?: string) {
     if (!signedUserId) {
