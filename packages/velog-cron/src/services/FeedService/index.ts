@@ -1,5 +1,7 @@
 import { DbService } from '@lib/db/DbService.js'
+import { UtilsService } from '@lib/utils/UtilsService'
 import { FollowUserService } from '@services/FollowUserService/index.js'
+import { subHours } from 'date-fns'
 
 import { injectable, singleton } from 'tsyringe'
 
@@ -12,6 +14,7 @@ interface Service {
 export class FeedService implements Service {
   constructor(
     private readonly db: DbService,
+    private readonly utils: UtilsService,
     private readonly followUserService: FollowUserService,
   ) {}
   public async createFeed({ followingId, postId }: CreateFeedArgs): Promise<void> {
@@ -32,6 +35,9 @@ export class FeedService implements Service {
     return await this.db.feed.deleteMany({
       where: {
         is_deleted: true,
+        created_at: {
+          lte: subHours(this.utils.now, 1),
+        },
       },
     })
   }
