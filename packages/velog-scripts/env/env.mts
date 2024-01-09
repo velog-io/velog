@@ -18,7 +18,7 @@ const env = z.object({
 })
 
 export const ENV = env.parse({
-  spamAccountDisplayName: (process.env.SPAM_ACCOUNT_DISPLAY_NAME ?? '')?.split(','),
+  spamAccountDisplayName: (process.env.SPAM_ACCOUNT_DISPLAY_NAME ?? '')?.split(',').filter(Boolean),
   databaseUrl: process.env.DATABASE_URL,
   discordBotToken: process.env.DISCORD_BOT_TOKEN,
   discordPrivatePostsChannelId: process.env.DISCORD_PRIVATE_POSTS_CHANNEL_ID,

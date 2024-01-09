@@ -7,7 +7,7 @@
   },
   "type": "module",
   "scripts": {
-    "private:posts": "pnpm env:copy -e development && ts-node ./scripts/privatePostsOfSpamAccount.mts && pnpm ssm push -e development",
+    "private:posts": "pnpm env:copy -e development && ts-node ./scripts/privatePostsOfSpamAccount.mts",
     "check:gql": "pnpm prisma:copy && pnpm env:copy -e development && ts-node ./scripts/checkGql.mts",
     "restore:posts": "pnpm env:copy -e development && pnpm prisma:copy && ts-node ./scripts/restorePosts.mts",
     "env:copy": "tsx ./scripts/copyEnv.ts",
