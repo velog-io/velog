@@ -68,6 +68,16 @@ export type Comment = {
   user?: Maybe<User>
 }
 
+export type CommentNotificationAction = {
+  created_at: Scalars['Date']['output']
+  fk_user_id: Scalars['String']['output']
+  id: Scalars['ID']['output']
+  post_id: Scalars['ID']['output']
+  post_title: Scalars['String']['output']
+  text: Scalars['String']['output']
+  type: NotificationType
+}
+
 export type ConfirmChangeEmailInput = {
   code: Scalars['String']['input']
 }
@@ -87,6 +97,14 @@ export type FollowResult = {
   profile: UserProfile
   userId: Scalars['ID']['output']
   username: Scalars['String']['output']
+}
+
+export type FollowerNotificationAction = {
+  created_at: Scalars['Date']['output']
+  display_name: Scalars['String']['output']
+  fk_user_id: Scalars['String']['output']
+  id: Scalars['ID']['output']
+  type: NotificationType
 }
 
 export type GetFollowInput = {
@@ -149,6 +167,7 @@ export type Mutation = {
   initiateChangeEmail?: Maybe<Scalars['Void']['output']>
   likePost?: Maybe<Post>
   logout?: Maybe<Scalars['Void']['output']>
+  readNotification?: Maybe<Scalars['Void']['output']>
   sendMail?: Maybe<SendMailResponse>
   unfollow?: Maybe<Scalars['Boolean']['output']>
   unlikePost?: Maybe<Post>
@@ -175,6 +194,10 @@ export type MutationInitiateChangeEmailArgs = {
 
 export type MutationLikePostArgs = {
   input: LikePostInput
+}
+
+export type MutationReadNotificationArgs = {
+  input: ReadNotificationInput
 }
 
 export type MutationSendMailArgs = {
@@ -217,6 +240,29 @@ export type MutationUpdateVelogTitleArgs = {
   input: UpdateVelogTitleInput
 }
 
+export type Notification = {
+  action: NotificationAction
+  action_id: Scalars['ID']['output']
+  created_at: Scalars['Date']['output']
+  fk_user_id: Scalars['String']['output']
+  id: Scalars['ID']['output']
+  is_deleted: Scalars['Boolean']['output']
+  is_read: Scalars['Boolean']['output']
+  message: Scalars['String']['output']
+  type: NotificationType
+}
+
+export type NotificationAction =
+  | CommentNotificationAction
+  | FollowerNotificationAction
+  | PostLikeNotificationAction
+
+export enum NotificationType {
+  Comment = 'comment',
+  Follower = 'follower',
+  PostLike = 'postLike',
+}
+
 export type Post = {
   body?: Maybe<Scalars['String']['output']>
   comments: Array<Comment>
@@ -256,6 +302,16 @@ export type PostHistory = {
   title?: Maybe<Scalars['String']['output']>
 }
 
+export type PostLikeNotificationAction = {
+  created_at: Scalars['Date']['output']
+  display_name: Scalars['String']['output']
+  fk_user_id: Scalars['String']['output']
+  id: Scalars['ID']['output']
+  title: Scalars['String']['output']
+  type: NotificationType
+  url_slug: Scalars['String']['output']
+}
+
 export type Query = {
   ads: Array<Ad>
   checkEmailExists: Scalars['Boolean']['output']
@@ -263,6 +319,8 @@ export type Query = {
   feedPosts: Array<Post>
   followers: Array<FollowResult>
   followings: Array<FollowResult>
+  notificationCount: Scalars['Int']['output']
+  notifications: Array<Notification>
   post?: Maybe<Post>
   posts: Array<Post>
   readingList: Array<Post>
@@ -350,6 +408,10 @@ export type QueryVelogConfigArgs = {
 export type ReadCountByDay = {
   count?: Maybe<Scalars['Int']['output']>
   day?: Maybe<Scalars['Date']['output']>
+}
+
+export type ReadNotificationInput = {
+  notification_ids: Array<Scalars['String']['input']>
 }
 
 export type ReadPostInput = {
@@ -631,6 +693,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>
 
+/** Mapping of union types */
+export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
+  NotificationAction:
+    | CommentNotificationAction
+    | FollowerNotificationAction
+    | PostLikeNotificationAction
+}
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Ad: ResolverTypeWrapper<Ad>
@@ -638,6 +708,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
   CheckEmailExistsInput: CheckEmailExistsInput
   Comment: ResolverTypeWrapper<CommentModel>
+  CommentNotificationAction: ResolverTypeWrapper<CommentNotificationAction>
   ConfirmChangeEmailInput: ConfirmChangeEmailInput
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
   FeedPostsInput: FeedPostsInput
@@ -645,6 +716,7 @@ export type ResolversTypes = {
   FollowResult: ResolverTypeWrapper<
     Omit<FollowResult, 'profile'> & { profile: ResolversTypes['UserProfile'] }
   >
+  FollowerNotificationAction: ResolverTypeWrapper<FollowerNotificationAction>
   GetFollowInput: GetFollowInput
   GetPostsInput: GetPostsInput
   GetSearchPostsInput: GetSearchPostsInput
@@ -664,11 +736,18 @@ export type ResolversTypes = {
     }
   >
   Mutation: ResolverTypeWrapper<{}>
+  Notification: ResolverTypeWrapper<
+    Omit<Notification, 'action'> & { action: ResolversTypes['NotificationAction'] }
+  >
+  NotificationAction: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['NotificationAction']>
+  NotificationType: NotificationType
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Post: ResolverTypeWrapper<PostModel>
   PostHistory: ResolverTypeWrapper<PostHistory>
+  PostLikeNotificationAction: ResolverTypeWrapper<PostLikeNotificationAction>
   Query: ResolverTypeWrapper<{}>
   ReadCountByDay: ResolverTypeWrapper<ReadCountByDay>
+  ReadNotificationInput: ReadNotificationInput
   ReadPostInput: ReadPostInput
   ReadingListInput: ReadingListInput
   ReadingListOption: ReadingListOption
@@ -722,11 +801,13 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output']
   CheckEmailExistsInput: CheckEmailExistsInput
   Comment: CommentModel
+  CommentNotificationAction: CommentNotificationAction
   ConfirmChangeEmailInput: ConfirmChangeEmailInput
   Date: Scalars['Date']['output']
   FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
   FollowResult: Omit<FollowResult, 'profile'> & { profile: ResolversParentTypes['UserProfile'] }
+  FollowerNotificationAction: FollowerNotificationAction
   GetFollowInput: GetFollowInput
   GetPostsInput: GetPostsInput
   GetSearchPostsInput: GetSearchPostsInput
@@ -744,11 +825,17 @@ export type ResolversParentTypes = {
     previous?: Maybe<ResolversParentTypes['Post']>
   }
   Mutation: {}
+  Notification: Omit<Notification, 'action'> & {
+    action: ResolversParentTypes['NotificationAction']
+  }
+  NotificationAction: ResolversUnionTypes<ResolversParentTypes>['NotificationAction']
   PositiveInt: Scalars['PositiveInt']['output']
   Post: PostModel
   PostHistory: PostHistory
+  PostLikeNotificationAction: PostLikeNotificationAction
   Query: {}
   ReadCountByDay: ReadCountByDay
+  ReadNotificationInput: ReadNotificationInput
   ReadPostInput: ReadPostInput
   ReadingListInput: ReadingListInput
   RecentPostsInput: RecentPostsInput
@@ -821,6 +908,21 @@ export type CommentResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
+export type CommentNotificationActionResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['CommentNotificationAction'] = ResolversParentTypes['CommentNotificationAction'],
+> = {
+  created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  post_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  post_title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  type?: Resolver<ResolversTypes['NotificationType'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date'
 }
@@ -834,6 +936,19 @@ export type FollowResultResolvers<
   profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>
   userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
+export type FollowerNotificationActionResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['FollowerNotificationAction'] = ResolversParentTypes['FollowerNotificationAction'],
+> = {
+  created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  type?: Resolver<ResolversTypes['NotificationType'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -880,6 +995,12 @@ export type MutationResolvers<
     RequireFields<MutationLikePostArgs, 'input'>
   >
   logout?: Resolver<Maybe<ResolversTypes['Void']>, ParentType, ContextType>
+  readNotification?: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationReadNotificationArgs, 'input'>
+  >
   sendMail?: Resolver<
     Maybe<ResolversTypes['SendMailResponse']>,
     ParentType,
@@ -942,6 +1063,34 @@ export type MutationResolvers<
   >
 }
 
+export type NotificationResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification'],
+> = {
+  action?: Resolver<ResolversTypes['NotificationAction'], ParentType, ContextType>
+  action_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  is_deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  is_read?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  type?: Resolver<ResolversTypes['NotificationType'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
+export type NotificationActionResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['NotificationAction'] = ResolversParentTypes['NotificationAction'],
+> = {
+  __resolveType: TypeResolveFn<
+    'CommentNotificationAction' | 'FollowerNotificationAction' | 'PostLikeNotificationAction',
+    ParentType,
+    ContextType
+  >
+}
+
 export interface PositiveIntScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['PositiveInt'], any> {
   name: 'PositiveInt'
@@ -994,6 +1143,21 @@ export type PostHistoryResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
+export type PostLikeNotificationActionResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['PostLikeNotificationAction'] = ResolversParentTypes['PostLikeNotificationAction'],
+> = {
+  created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  type?: Resolver<ResolversTypes['NotificationType'], ParentType, ContextType>
+  url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
 export type QueryResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
@@ -1029,6 +1193,8 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryFollowingsArgs, 'input'>
   >
+  notificationCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  notifications?: Resolver<Array<ResolversTypes['Notification']>, ParentType, ContextType>
   post?: Resolver<
     Maybe<ResolversTypes['Post']>,
     ParentType,
@@ -1313,14 +1479,19 @@ export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export type Resolvers<ContextType = GraphQLContext> = {
   Ad?: AdResolvers<ContextType>
   Comment?: CommentResolvers<ContextType>
+  CommentNotificationAction?: CommentNotificationActionResolvers<ContextType>
   Date?: GraphQLScalarType
   FollowResult?: FollowResultResolvers<ContextType>
+  FollowerNotificationAction?: FollowerNotificationActionResolvers<ContextType>
   JSON?: GraphQLScalarType
   LinkedPosts?: LinkedPostsResolvers<ContextType>
   Mutation?: MutationResolvers<ContextType>
+  Notification?: NotificationResolvers<ContextType>
+  NotificationAction?: NotificationActionResolvers<ContextType>
   PositiveInt?: GraphQLScalarType
   Post?: PostResolvers<ContextType>
   PostHistory?: PostHistoryResolvers<ContextType>
+  PostLikeNotificationAction?: PostLikeNotificationActionResolvers<ContextType>
   Query?: QueryResolvers<ContextType>
   ReadCountByDay?: ReadCountByDayResolvers<ContextType>
   SearchResult?: SearchResultResolvers<ContextType>
