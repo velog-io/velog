@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
+import { NotificationType } from './enums'
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import {
   User as UserModel,
@@ -6,7 +7,7 @@ import {
   Post as PostModel,
   Comment as CommentModel,
 } from '@prisma/client'
-import { GraphQLContext } from './../common/interfaces/graphql'
+import { GraphQLContext } from './../../common/interfaces/graphql'
 export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -20,6 +21,7 @@ export type Incremental<T> =
   | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never }
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> }
+export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string }
@@ -257,11 +259,7 @@ export type NotificationAction =
   | FollowerNotificationAction
   | PostLikeNotificationAction
 
-export enum NotificationType {
-  Comment = 'comment',
-  Follower = 'follower',
-  PostLike = 'postLike',
-}
+export { NotificationType }
 
 export type Post = {
   body?: Maybe<Scalars['String']['output']>
@@ -1091,6 +1089,11 @@ export type NotificationActionResolvers<
   >
 }
 
+export type NotificationTypeResolvers = EnumResolverSignature<
+  { comment?: any; follower?: any; postLike?: any },
+  ResolversTypes['NotificationType']
+>
+
 export interface PositiveIntScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['PositiveInt'], any> {
   name: 'PositiveInt'
@@ -1488,6 +1491,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Mutation?: MutationResolvers<ContextType>
   Notification?: NotificationResolvers<ContextType>
   NotificationAction?: NotificationActionResolvers<ContextType>
+  NotificationType?: NotificationTypeResolvers
   PositiveInt?: GraphQLScalarType
   Post?: PostResolvers<ContextType>
   PostHistory?: PostHistoryResolvers<ContextType>

@@ -14,7 +14,7 @@ import {
   ForbiddenError,
   ConfilctError,
 } from '@errors/index.js'
-import { UserToken } from '@graphql/generated'
+import { UserToken } from '@graphql/helpers/generated'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import DataLoader from 'dataloader'
 import { AuthService } from '@services/AuthService/index.js'

@@ -8,7 +8,7 @@ import {
   ReadingListInput,
   RecentPostsInput,
   TrendingPostsInput,
-} from '@graphql/generated.js'
+} from '@graphql/helpers/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { BadRequestError, ConfilctError, NotFoundError, UnauthorizedError } from '@errors/index.js'
 import { GetPostsByTypeParams, Timeframe } from './PostServiceInterface'

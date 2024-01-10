@@ -1,5 +1,5 @@
 import { BadRequestError } from '@errors/BadRequestErrors.js'
-import { FeedPostsInput } from '@graphql/generated'
+import { FeedPostsInput } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Post } from '@prisma/client'
