@@ -2,8 +2,6 @@
 CREATE TABLE "notifications" (
     "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "type" VARCHAR(50) NOT NULL,
-    "message" VARCHAR(512) NOT NULL,
-    "link" VARCHAR(512) NOT NULL,
     "fk_user_id" UUID NOT NULL,
     "action" JSONB NOT NULL DEFAULT '{}',
     "action_id" UUID NOT NULL,
