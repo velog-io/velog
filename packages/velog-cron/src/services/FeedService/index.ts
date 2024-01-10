@@ -1,5 +1,5 @@
 import { DbService } from '@lib/db/DbService.js'
-import { UtilsService } from '@lib/utils/UtilsService'
+import { UtilsService } from '@lib/utils/UtilsService.js'
 import { FollowUserService } from '@services/FollowUserService/index.js'
 import { subHours } from 'date-fns'
 
