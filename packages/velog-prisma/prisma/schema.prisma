@@ -623,8 +623,6 @@ model Ad {
 model Notification {
   id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   type       String    @db.VarChar(50)
-  message    String    @db.VarChar(512)
-  link       String    @db.VarChar(512)
   fk_user_id String    @db.Uuid
   action     Json      @default("{}")
   action_id  String    @db.Uuid

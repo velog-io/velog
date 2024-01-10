@@ -22,6 +22,7 @@ interface Service {
   now: Date
   optimizeImage(url: string, width: number): string
   validateEmail(email: string): boolean
+
   alphanumeric(): string
 }
 
@@ -130,6 +131,17 @@ export class UtilsService implements Service {
     try {
       emailSchema.parse(email)
 
+      return true
+    } catch (_) {
+      return false
+    }
+  }
+  public validateBody(
+    schema: z.ZodObject<any, 'strip', z.ZodTypeAny, any>,
+    body: Record<string, any>,
+  ): boolean {
+    try {
+      schema.parse(body)
       return true
     } catch (_) {
       return false

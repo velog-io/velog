@@ -1,10 +1,10 @@
 type Notification {
   id: ID!
   type: NotificationType!
-  message: String!
+  link: String
   fk_user_id: String!
   action: NotificationAction!
-  action_id: ID!
+  action_id: ID
   is_read: Boolean!
   is_deleted: Boolean!
   created_at: Date!
@@ -21,32 +21,28 @@ union NotificationAction =
   | CommentNotificationAction
   | PostLikeNotificationAction
 
-type PostLikeNotificationAction {
-  type: NotificationType!
-  id: ID!
-  title: String!
-  display_name: String!
-  fk_user_id: String!
-  url_slug: String!
-  created_at: Date!
-}
-
 type FollowerNotificationAction {
-  type: NotificationType!
   id: ID!
-  display_name: String!
   fk_user_id: String!
-  created_at: Date!
+  display_name: String!
 }
 
 type CommentNotificationAction {
-  type: NotificationType!
   id: ID!
   fk_user_id: String!
-  post_id: ID!
-  post_title: String!
+  title: String!
+  url_slug: String!
+  writer_username: String!
   text: String!
-  created_at: Date!
+}
+
+type PostLikeNotificationAction {
+  id: ID!
+  fk_user_id: String!
+  display_name: String!
+  title: String!
+  url_slug: String!
+  writer_username: String!
 }
 
 type Query {
@@ -55,7 +51,46 @@ type Query {
 }
 
 type Mutation {
+  createNofication(input: CreateNotificationInput!): Notification!
   readNotification(input: ReadNotificationInput!): Void
+}
+
+input CreateNotificationInput {
+  type: NotificationType!
+  link: String
+  fk_user_id: String!
+  action: NotificationActionInput!
+  action_id: String!
+}
+
+input NotificationActionInput {
+  follower: FollowerNotificationActionInput
+  comment: CommentNotificationActionInput
+  postLike: PostLikeNotificationActionInput
+}
+
+input FollowerNotificationActionInput {
+  id: ID!
+  fk_user_id: String!
+  display_name: String!
+}
+
+input CommentNotificationActionInput {
+  id: ID!
+  fk_user_id: String!
+  title: String!
+  url_slug: String!
+  writer_username: String!
+  text: String!
+}
+
+input PostLikeNotificationActionInput {
+  id: ID!
+  fk_user_id: String!
+  display_name: String!
+  title: String!
+  url_slug: String!
+  writer_username: String!
 }
 
 input ReadNotificationInput {

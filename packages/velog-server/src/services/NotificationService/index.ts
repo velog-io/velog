@@ -1,14 +1,25 @@
+import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
-import { Notification } from '@graphql/helpers/generated'
+import {
+  Notification,
+  NotificationType,
+  PostLikeNotificationAction,
+  FollowerNotificationAction,
+  CommentNotificationAction,
+} from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { UserService } from '@services/UserService/index.js'
 import { injectable, singleton } from 'tsyringe'
+import { z } from 'zod'
 
 interface Service {
   getNotifications(signedUserId?: string): Promise<Notification[]>
   getNotificationCount(signedUserId?: string): Promise<number>
+  createNotification<T extends NotificationType>(
+    args: CreateNotificationArgs<T>,
+  ): Promise<Notification>
   markNotificationsAsRead(notificationIds: string[], signedUserId?: string): Promise<void>
 }
 
@@ -42,15 +53,14 @@ export class NotificationService implements Service {
   }
   public async getNotificationCount(signedUserId?: string): Promise<number> {
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     const user = await this.userService.findById(signedUserId)
 
     if (!user) {
-      throw new NotFoundError('Not Found User')
+      throw new NotFoundError('Not found user')
     }
-
     return await this.db.notification.count({
       where: {
         fk_user_id: signedUserId,
@@ -59,19 +69,103 @@ export class NotificationService implements Service {
       },
     })
   }
+  public async createNotification<T extends NotificationType>({
+    type,
+    fk_user_id,
+    action_id,
+    action,
+    link,
+  }: CreateNotificationArgs<T>): Promise<Notification> {
+    const validate = this.createNotificationValidate(type, action)
+    if (!validate) {
+      throw new BadRequestError('Wrong action payload')
+    }
 
+    const user = await this.userService.findById(fk_user_id)
+
+    if (!user) {
+      throw new NotFoundError('Notification failed: Target user not found')
+    }
+
+    if (!action) {
+      throw new Error()
+    }
+
+    const notification = await this.db.notification.create({
+      data: {
+        type,
+        message: 'hekl',
+        fk_user_id,
+        action_id,
+        action,
+        link,
+      },
+    })
+
+    return notification as unknown as Notification
+  }
+  private createNotificationValidate(type: NotificationType, args: any) {
+    const schemaSelector = {
+      follower: z.object({
+        id: z.string().uuid(),
+        fk_user_id: z.string().uuid(),
+        display_name: z.string(),
+      }),
+      comment: z.object({
+        id: z.string(),
+        fk_user_id: z.string().uuid(),
+        title: z.string().uuid(),
+        url_slug: z.string(),
+        writer_username: z.string(),
+        text: z.string(),
+      }),
+      postLike: z.object({
+        id: z.string().uuid(),
+        fk_user_id: z.string().uuid(),
+        display_name: z.string(),
+        title: z.string(),
+        url_slug: z.string(),
+        writer_username: z.string(),
+      }),
+    }
+
+    try {
+      const schema = schemaSelector[type]
+
+      if (!schema) {
+        throw new BadRequestError('Invalid create action type')
+      }
+
+      if (this.utils.validateBody(schema, args)) return true
+      return false
+    } catch (error) {
+      return false
+    }
+  }
+  private isCommentAction(args: any): args is CommentNotificationAction {
+    if (args.type === 'comment') return true
+    return false
+  }
+  private isPostLikeAction(args: any): args is PostLikeNotificationAction {
+    if (args.type === 'postLike') return true
+    return false
+  }
+  private isFollowerAction(args: any): args is FollowerNotificationAction {
+    if (args.type === 'follower') return true
+    return false
+  }
   public async markNotificationsAsRead(
     notificationIds: string[],
     signedUserId?: string,
   ): Promise<void> {
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     const user = await this.userService.findById(signedUserId)
 
     if (!user) {
-      throw new NotFoundError('Not Found User')
+      throw new NotFoundError('Not found user')
     }
 
     await this.db.notification.updateMany({
@@ -88,4 +182,18 @@ export class NotificationService implements Service {
       },
     })
   }
+}
+
+export type CreateNotificationArgs<T = NotificationType> = {
+  type: NotificationType
+  link: string
+  fk_user_id: string
+  action_id: string
+  action: T extends 'comment'
+    ? CommentNotificationAction
+    : NotificationType extends 'follower'
+    ? FollowerNotificationAction
+    : NotificationType extends 'postLike'
+    ? PostLikeNotificationAction
+    : Record<string, any> & { type: T }
 }

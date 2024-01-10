@@ -71,17 +71,33 @@ export type Comment = {
 }
 
 export type CommentNotificationAction = {
-  created_at: Scalars['Date']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
-  post_id: Scalars['ID']['output']
-  post_title: Scalars['String']['output']
   text: Scalars['String']['output']
-  type: NotificationType
+  title: Scalars['String']['output']
+  url_slug: Scalars['String']['output']
+  writer_username: Scalars['String']['output']
+}
+
+export type CommentNotificationActionInput = {
+  fk_user_id: Scalars['String']['input']
+  id: Scalars['ID']['input']
+  text: Scalars['String']['input']
+  title: Scalars['String']['input']
+  url_slug: Scalars['String']['input']
+  writer_username: Scalars['String']['input']
 }
 
 export type ConfirmChangeEmailInput = {
   code: Scalars['String']['input']
+}
+
+export type CreateNotificationInput = {
+  action: NotificationActionInput
+  action_id: Scalars['String']['input']
+  fk_user_id: Scalars['String']['input']
+  link?: InputMaybe<Scalars['String']['input']>
+  type: NotificationType
 }
 
 export type FeedPostsInput = {
@@ -102,11 +118,15 @@ export type FollowResult = {
 }
 
 export type FollowerNotificationAction = {
-  created_at: Scalars['Date']['output']
   display_name: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
-  type: NotificationType
+}
+
+export type FollowerNotificationActionInput = {
+  display_name: Scalars['String']['input']
+  fk_user_id: Scalars['String']['input']
+  id: Scalars['ID']['input']
 }
 
 export type GetFollowInput = {
@@ -165,6 +185,7 @@ export type LinkedPosts = {
 export type Mutation = {
   acceptIntegration: Scalars['String']['output']
   confirmChangeEmail?: Maybe<Scalars['Void']['output']>
+  createNofication: Notification
   follow?: Maybe<Scalars['Boolean']['output']>
   initiateChangeEmail?: Maybe<Scalars['Void']['output']>
   likePost?: Maybe<Post>
@@ -184,6 +205,10 @@ export type Mutation = {
 
 export type MutationConfirmChangeEmailArgs = {
   input: ConfirmChangeEmailInput
+}
+
+export type MutationCreateNoficationArgs = {
+  input: CreateNotificationInput
 }
 
 export type MutationFollowArgs = {
@@ -244,13 +269,13 @@ export type MutationUpdateVelogTitleArgs = {
 
 export type Notification = {
   action: NotificationAction
-  action_id: Scalars['ID']['output']
+  action_id?: Maybe<Scalars['ID']['output']>
   created_at: Scalars['Date']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
   is_deleted: Scalars['Boolean']['output']
   is_read: Scalars['Boolean']['output']
-  message: Scalars['String']['output']
+  link?: Maybe<Scalars['String']['output']>
   type: NotificationType
 }
 
@@ -258,6 +283,12 @@ export type NotificationAction =
   | CommentNotificationAction
   | FollowerNotificationAction
   | PostLikeNotificationAction
+
+export type NotificationActionInput = {
+  comment?: InputMaybe<CommentNotificationActionInput>
+  follower?: InputMaybe<FollowerNotificationActionInput>
+  postLike?: InputMaybe<PostLikeNotificationActionInput>
+}
 
 export { NotificationType }
 
@@ -301,13 +332,21 @@ export type PostHistory = {
 }
 
 export type PostLikeNotificationAction = {
-  created_at: Scalars['Date']['output']
   display_name: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
   title: Scalars['String']['output']
-  type: NotificationType
   url_slug: Scalars['String']['output']
+  writer_username: Scalars['String']['output']
+}
+
+export type PostLikeNotificationActionInput = {
+  display_name: Scalars['String']['input']
+  fk_user_id: Scalars['String']['input']
+  id: Scalars['ID']['input']
+  title: Scalars['String']['input']
+  url_slug: Scalars['String']['input']
+  writer_username: Scalars['String']['input']
 }
 
 export type Query = {
@@ -707,7 +746,9 @@ export type ResolversTypes = {
   CheckEmailExistsInput: CheckEmailExistsInput
   Comment: ResolverTypeWrapper<CommentModel>
   CommentNotificationAction: ResolverTypeWrapper<CommentNotificationAction>
+  CommentNotificationActionInput: CommentNotificationActionInput
   ConfirmChangeEmailInput: ConfirmChangeEmailInput
+  CreateNotificationInput: CreateNotificationInput
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
   FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
@@ -715,6 +756,7 @@ export type ResolversTypes = {
     Omit<FollowResult, 'profile'> & { profile: ResolversTypes['UserProfile'] }
   >
   FollowerNotificationAction: ResolverTypeWrapper<FollowerNotificationAction>
+  FollowerNotificationActionInput: FollowerNotificationActionInput
   GetFollowInput: GetFollowInput
   GetPostsInput: GetPostsInput
   GetSearchPostsInput: GetSearchPostsInput
@@ -738,11 +780,13 @@ export type ResolversTypes = {
     Omit<Notification, 'action'> & { action: ResolversTypes['NotificationAction'] }
   >
   NotificationAction: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['NotificationAction']>
+  NotificationActionInput: NotificationActionInput
   NotificationType: NotificationType
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Post: ResolverTypeWrapper<PostModel>
   PostHistory: ResolverTypeWrapper<PostHistory>
   PostLikeNotificationAction: ResolverTypeWrapper<PostLikeNotificationAction>
+  PostLikeNotificationActionInput: PostLikeNotificationActionInput
   Query: ResolverTypeWrapper<{}>
   ReadCountByDay: ResolverTypeWrapper<ReadCountByDay>
   ReadNotificationInput: ReadNotificationInput
@@ -800,12 +844,15 @@ export type ResolversParentTypes = {
   CheckEmailExistsInput: CheckEmailExistsInput
   Comment: CommentModel
   CommentNotificationAction: CommentNotificationAction
+  CommentNotificationActionInput: CommentNotificationActionInput
   ConfirmChangeEmailInput: ConfirmChangeEmailInput
+  CreateNotificationInput: CreateNotificationInput
   Date: Scalars['Date']['output']
   FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
   FollowResult: Omit<FollowResult, 'profile'> & { profile: ResolversParentTypes['UserProfile'] }
   FollowerNotificationAction: FollowerNotificationAction
+  FollowerNotificationActionInput: FollowerNotificationActionInput
   GetFollowInput: GetFollowInput
   GetPostsInput: GetPostsInput
   GetSearchPostsInput: GetSearchPostsInput
@@ -827,10 +874,12 @@ export type ResolversParentTypes = {
     action: ResolversParentTypes['NotificationAction']
   }
   NotificationAction: ResolversUnionTypes<ResolversParentTypes>['NotificationAction']
+  NotificationActionInput: NotificationActionInput
   PositiveInt: Scalars['PositiveInt']['output']
   Post: PostModel
   PostHistory: PostHistory
   PostLikeNotificationAction: PostLikeNotificationAction
+  PostLikeNotificationActionInput: PostLikeNotificationActionInput
   Query: {}
   ReadCountByDay: ReadCountByDay
   ReadNotificationInput: ReadNotificationInput
@@ -911,13 +960,12 @@ export type CommentNotificationActionResolvers<
   ParentType extends
     ResolversParentTypes['CommentNotificationAction'] = ResolversParentTypes['CommentNotificationAction'],
 > = {
-  created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  post_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  post_title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  type?: Resolver<ResolversTypes['NotificationType'], ParentType, ContextType>
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  writer_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -942,11 +990,9 @@ export type FollowerNotificationActionResolvers<
   ParentType extends
     ResolversParentTypes['FollowerNotificationAction'] = ResolversParentTypes['FollowerNotificationAction'],
 > = {
-  created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  type?: Resolver<ResolversTypes['NotificationType'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -973,6 +1019,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationConfirmChangeEmailArgs, 'input'>
+  >
+  createNofication?: Resolver<
+    ResolversTypes['Notification'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateNoficationArgs, 'input'>
   >
   follow?: Resolver<
     Maybe<ResolversTypes['Boolean']>,
@@ -1066,13 +1118,13 @@ export type NotificationResolvers<
   ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification'],
 > = {
   action?: Resolver<ResolversTypes['NotificationAction'], ParentType, ContextType>
-  action_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  action_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   is_read?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  link?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   type?: Resolver<ResolversTypes['NotificationType'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
@@ -1151,13 +1203,12 @@ export type PostLikeNotificationActionResolvers<
   ParentType extends
     ResolversParentTypes['PostLikeNotificationAction'] = ResolversParentTypes['PostLikeNotificationAction'],
 > = {
-  created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  type?: Resolver<ResolversTypes['NotificationType'], ParentType, ContextType>
   url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  writer_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
