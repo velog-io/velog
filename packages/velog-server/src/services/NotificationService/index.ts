@@ -76,7 +76,11 @@ export class NotificationService implements Service {
     action,
     link,
   }: CreateNotificationArgs<T>): Promise<Notification> {
-    const validate = this.createNotificationValidate(type, action)
+    if (!action) {
+      throw new BadRequestError('Not found action')
+    }
+
+    const validate = this.notificationActionValidate(type, action)
     if (!validate) {
       throw new BadRequestError('Wrong action payload')
     }
@@ -85,10 +89,6 @@ export class NotificationService implements Service {
 
     if (!user) {
       throw new NotFoundError('Notification failed: Target user not found')
-    }
-
-    if (!action) {
-      throw new Error()
     }
 
     const notification = await this.db.notification.create({
@@ -104,7 +104,7 @@ export class NotificationService implements Service {
 
     return notification as unknown as Notification
   }
-  private createNotificationValidate(type: NotificationType, args: any) {
+  private notificationActionValidate(type: NotificationType, action: any) {
     const schemaSelector = {
       follower: z.object({
         id: z.string().uuid(),
@@ -136,8 +136,7 @@ export class NotificationService implements Service {
         throw new BadRequestError('Invalid create action type')
       }
 
-      if (this.utils.validateBody(schema, args)) return true
-      return false
+      return this.utils.validateBody(schema, action)
     } catch (error) {
       return false
     }
@@ -195,5 +194,5 @@ export type CreateNotificationArgs<T = NotificationType> = {
     ? FollowerNotificationAction
     : NotificationType extends 'postLike'
     ? PostLikeNotificationAction
-    : Record<string, any> & { type: T }
+    : unknown
 }
