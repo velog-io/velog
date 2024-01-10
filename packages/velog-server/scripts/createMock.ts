@@ -7,6 +7,12 @@ import { MockPostsType, mockPosts } from 'test/mock/mockPost'
 import { mockUserWithProfile, MockUserWithProfileType } from 'test/mock/mockUser'
 
 import { ENV } from '@env'
+import {
+  CommentNotificationAction,
+  FollowerNotificationAction,
+  NotificationAction,
+  PostLikeNotificationAction,
+} from '@graphql/helpers/generated'
 
 const MAX_COMMENTS_PER_POST = 5
 
@@ -72,6 +78,75 @@ class Seeder {
           },
         })
       })
+  }
+  public async createNotification(users: User[]) {
+    return users.map(async (u) => {
+      const user = await this.db.user.findUnique({
+        where: {
+          id: u.id,
+        },
+        select: {
+          profile: true,
+        },
+      })
+
+      if (!user) {
+        throw new Error('Not found User')
+      }
+
+      const actionDataUser = await this.db.user.findFirst({
+        where: {
+          id: {
+            not: u.id,
+          },
+        },
+        include: {
+          profile: true,
+        },
+      })
+
+      if (!actionDataUser) {
+        throw new Error('Not found Action Data User')
+      }
+
+      const post = await this.db.post.findFirst({
+        where: {
+          fk_user_id: actionDataUser.id,
+        },
+        include: {
+          user: {
+            include: {
+              profile: true,
+            },
+          },
+        },
+      })
+
+      if (!post) return null
+
+      const postLikeAction: PostLikeNotificationAction = {
+        display_name: actionDataUser?.profile?.display_name || '',
+        title: 'Test post',
+        url_slug: post.url_slug || '',
+        fk_user_id: actionDataUser.id,
+        id: 'post like action UUID',
+        writer_username: post.user.username,
+      }
+
+      const commentAction: CommentNotificationAction = {
+        id: 'comment action uuid',
+        fk_user_id: 'uuid',
+        text: '안녕하세요. Velog 좋아요.',
+        url_slug: post.url_slug || '',
+        title: post.title || 'Post Title',
+        writer_username: post.user.username,
+      }
+      const followerAction: FollowerNotificationAction = {
+        id: 'follower action uuid',
+        display_name: actionDataUser.profile?.display_name || '',
+        fk_user_id: actionDataUser.id,
+      }
+    })
   }
 }
 
