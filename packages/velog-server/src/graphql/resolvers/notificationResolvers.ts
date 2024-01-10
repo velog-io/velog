@@ -1,5 +1,5 @@
 import { Resolvers } from '@graphql/helpers/generated'
-import { NotificationService } from '@services/NotificationService'
+import { NotificationService } from '@services/NotificationService/index.js'
 import { container } from 'tsyringe'
 
 const notificationResolvers: Resolvers = {

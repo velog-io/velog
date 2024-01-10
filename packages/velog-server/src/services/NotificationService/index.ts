@@ -1,9 +1,9 @@
-import { NotFoundError } from '@errors/NotfoundError'
-import { UnauthorizedError } from '@errors/UnauthorizedError'
+import { NotFoundError } from '@errors/NotfoundError.js'
+import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { Notification } from '@graphql/helpers/generated'
-import { DbService } from '@lib/db/DbService'
-import { UtilsService } from '@lib/utils/UtilsService'
-import { UserService } from '@services/UserService'
+import { DbService } from '@lib/db/DbService.js'
+import { UtilsService } from '@lib/utils/UtilsService.js'
+import { UserService } from '@services/UserService/index.js'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {

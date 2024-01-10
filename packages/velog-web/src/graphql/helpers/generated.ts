@@ -66,6 +66,16 @@ export type Comment = {
   user: Maybe<User>
 }
 
+export type CommentNotificationAction = {
+  created_at: Scalars['DateTimeISO']['output']
+  fk_user_id: Scalars['String']['output']
+  id: Scalars['ID']['output']
+  post_id: Scalars['ID']['output']
+  post_title: Scalars['String']['output']
+  text: Scalars['String']['output']
+  type: NotificationType
+}
+
 export type ConfirmChangeEmailInput = {
   code: Scalars['String']['input']
 }
@@ -85,6 +95,14 @@ export type FollowResult = {
   profile: UserProfile
   userId: Scalars['ID']['output']
   username: Scalars['String']['output']
+}
+
+export type FollowerNotificationAction = {
+  created_at: Scalars['DateTimeISO']['output']
+  display_name: Scalars['String']['output']
+  fk_user_id: Scalars['String']['output']
+  id: Scalars['ID']['output']
+  type: NotificationType
 }
 
 export type GetFollowInput = {
@@ -147,6 +165,7 @@ export type Mutation = {
   initiateChangeEmail: Maybe<Scalars['Void']['output']>
   likePost: Maybe<Post>
   logout: Maybe<Scalars['Void']['output']>
+  readNotification: Maybe<Scalars['Void']['output']>
   sendMail: Maybe<SendMailResponse>
   unfollow: Maybe<Scalars['Boolean']['output']>
   unlikePost: Maybe<Post>
@@ -173,6 +192,10 @@ export type MutationInitiateChangeEmailArgs = {
 
 export type MutationLikePostArgs = {
   input: LikePostInput
+}
+
+export type MutationReadNotificationArgs = {
+  input: ReadNotificationInput
 }
 
 export type MutationSendMailArgs = {
@@ -215,6 +238,29 @@ export type MutationUpdateVelogTitleArgs = {
   input: UpdateVelogTitleInput
 }
 
+export type Notification = {
+  action: NotificationAction
+  action_id: Scalars['ID']['output']
+  created_at: Scalars['DateTimeISO']['output']
+  fk_user_id: Scalars['String']['output']
+  id: Scalars['ID']['output']
+  is_deleted: Scalars['Boolean']['output']
+  is_read: Scalars['Boolean']['output']
+  message: Scalars['String']['output']
+  type: NotificationType
+}
+
+export type NotificationAction =
+  | CommentNotificationAction
+  | FollowerNotificationAction
+  | PostLikeNotificationAction
+
+export enum NotificationType {
+  Comment = 'comment',
+  Follower = 'follower',
+  PostLike = 'postLike',
+}
+
 export type Post = {
   body: Maybe<Scalars['String']['output']>
   comments: Array<Comment>
@@ -254,6 +300,16 @@ export type PostHistory = {
   title: Maybe<Scalars['String']['output']>
 }
 
+export type PostLikeNotificationAction = {
+  created_at: Scalars['DateTimeISO']['output']
+  display_name: Scalars['String']['output']
+  fk_user_id: Scalars['String']['output']
+  id: Scalars['ID']['output']
+  title: Scalars['String']['output']
+  type: NotificationType
+  url_slug: Scalars['String']['output']
+}
+
 export type Query = {
   ads: Array<Ad>
   checkEmailExists: Scalars['Boolean']['output']
@@ -261,6 +317,8 @@ export type Query = {
   feedPosts: Array<Post>
   followers: Array<FollowResult>
   followings: Array<FollowResult>
+  notificationCount: Scalars['Int']['output']
+  notifications: Array<Notification>
   post: Maybe<Post>
   posts: Array<Post>
   readingList: Array<Post>
@@ -348,6 +406,10 @@ export type QueryVelogConfigArgs = {
 export type ReadCountByDay = {
   count: Maybe<Scalars['Int']['output']>
   day: Maybe<Scalars['DateTimeISO']['output']>
+}
+
+export type ReadNotificationInput = {
+  notification_ids: Array<Scalars['String']['input']>
 }
 
 export type ReadPostInput = {
