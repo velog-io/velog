@@ -21,7 +21,7 @@ export default async function VelogPostsPage({ params, searchParams }: Props) {
   const username = getUsernameFromParams(params)
   const posts = await getVelogPosts({ username, tag, accessToken: token?.value })
 
-  const userTags = await getUserTags(username)
+  const userTags = await getUserTags({ username, accessToken: token?.value })
 
   if (!posts || !userTags) {
     notFound()

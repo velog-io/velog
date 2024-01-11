@@ -16,7 +16,6 @@ export default async function getVelogPosts({ username, tag, accessToken }: GetV
     }
 
     const headers = {}
-
     if (accessToken) {
       Object.assign(headers, { authorization: `Bearer ${accessToken}` })
     }
