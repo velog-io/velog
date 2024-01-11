@@ -5,15 +5,13 @@ import { Post, Prisma, User } from '@prisma/client'
 import { mockComment } from 'test/mock/mockComment'
 import { MockPostsType, mockPosts } from 'test/mock/mockPost'
 import { mockUserWithProfile, MockUserWithProfileType } from 'test/mock/mockUser'
-
+import { v4 as uuidv4 } from 'uuid'
 import { ENV } from '@env'
 import {
   CommentNotificationAction,
   FollowerNotificationAction,
-  NotificationAction,
   PostLikeNotificationAction,
 } from '@graphql/helpers/generated'
-import { nanoid } from 'nanoid'
 
 const MAX_COMMENTS_PER_POST = 5
 
@@ -150,13 +148,13 @@ class Seeder {
       }
 
       const actionSelector = [postLikeAction, commentAction, followerAction]
-      const notificationMocks = Array(200).map(() => actionSelector[this.utils.randomNumber(2)])
+      const notificationMocks = Array(200).fill(actionSelector[this.utils.randomNumber(2)])
 
       const promises = notificationMocks.map((action) => {
         return this.db.notification.create({
           data: {
             fk_user_id: u.id,
-            action_id: nanoid(),
+            action_id: uuidv4(),
             action,
             type: action.id.includes('comment')
               ? 'comment'
@@ -187,7 +185,8 @@ async function main() {
     const createComments = seeder.createComment(posts, mockComment, users)
     await Promise.all(createComments)
 
-    await seeder.createNotification(users)
+    const createnotifications = await seeder.createNotification(users)
+    await Promise.all(createnotifications)
   } catch (error) {
     throw error
   }
