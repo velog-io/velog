@@ -97,7 +97,7 @@ export class TagService implements Service {
     const user = await this.userService.findByUsername(username)
 
     if (!user) {
-      throw new NotFoundError('Invalid username')
+      throw new NotFoundError('Not found User')
     }
 
     const isSelf = user.id === signedUserId
