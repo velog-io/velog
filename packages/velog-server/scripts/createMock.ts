@@ -13,6 +13,7 @@ import {
   NotificationAction,
   PostLikeNotificationAction,
 } from '@graphql/helpers/generated'
+import { nanoid } from 'nanoid'
 
 const MAX_COMMENTS_PER_POST = 5
 
@@ -125,11 +126,11 @@ class Seeder {
       if (!post) return null
 
       const postLikeAction: PostLikeNotificationAction = {
+        id: 'post like action UUID',
         display_name: actionDataUser?.profile?.display_name || '',
         title: 'Test post',
         url_slug: post.url_slug || '',
         fk_user_id: actionDataUser.id,
-        id: 'post like action UUID',
         writer_username: post.user.username,
       }
 
@@ -141,11 +142,32 @@ class Seeder {
         title: post.title || 'Post Title',
         writer_username: post.user.username,
       }
+
       const followerAction: FollowerNotificationAction = {
         id: 'follower action uuid',
         display_name: actionDataUser.profile?.display_name || '',
         fk_user_id: actionDataUser.id,
       }
+
+      const actionSelector = [postLikeAction, commentAction, followerAction]
+      const notificationMocks = Array(200).map(() => actionSelector[this.utils.randomNumber(2)])
+
+      const promises = notificationMocks.map((action) => {
+        return this.db.notification.create({
+          data: {
+            fk_user_id: u.id,
+            action_id: nanoid(),
+            action,
+            type: action.id.includes('comment')
+              ? 'comment'
+              : action.id.includes('like')
+              ? 'postLike'
+              : 'follower',
+          },
+        })
+      })
+
+      await Promise.all(promises)
     })
   }
 }
@@ -164,6 +186,8 @@ async function main() {
 
     const createComments = seeder.createComment(posts, mockComment, users)
     await Promise.all(createComments)
+
+    await seeder.createNotification(users)
   } catch (error) {
     throw error
   }

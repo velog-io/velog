@@ -74,7 +74,6 @@ export class NotificationService implements Service {
     fk_user_id,
     action_id,
     action,
-    link,
   }: CreateNotificationArgs<T>): Promise<Notification> {
     if (!action) {
       throw new BadRequestError('Not found action')
@@ -94,11 +93,9 @@ export class NotificationService implements Service {
     const notification = await this.db.notification.create({
       data: {
         type,
-        message: 'hekl',
         fk_user_id,
         action_id,
         action,
-        link,
       },
     })
 
@@ -185,7 +182,6 @@ export class NotificationService implements Service {
 
 export type CreateNotificationArgs<T = NotificationType> = {
   type: NotificationType
-  link: string
   fk_user_id: string
   action_id: string
   action: T extends 'comment'

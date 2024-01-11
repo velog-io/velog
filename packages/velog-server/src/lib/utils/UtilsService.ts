@@ -22,8 +22,8 @@ interface Service {
   now: Date
   optimizeImage(url: string, width: number): string
   validateEmail(email: string): boolean
-
   alphanumeric(): string
+  randomNumber(max: number): number
 }
 
 @injectable()
@@ -150,5 +150,8 @@ export class UtilsService implements Service {
   public alphanumeric(size = 10) {
     const generateCode = customAlphabet(nanoidDictionary.alphanumeric, size)
     return generateCode()
+  }
+  public randomNumber(max: number) {
+    return Math.floor(Math.random() * (max + 1))
   }
 }
