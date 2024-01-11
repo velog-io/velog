@@ -1,7 +1,6 @@
 import dotenv from 'dotenv'
 import { existsSync } from 'fs'
 import { z } from 'zod'
-import { UtilsService } from '@lib/utils/UtilsService.js'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 
