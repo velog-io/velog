@@ -11,6 +11,14 @@
     position: relative;
     height: 40px;
 
+    a + a {
+      margin-left: 4px;
+    }
+
+    .button {
+      margin-left: 8px;
+    }
+
     .writeButton {
       user-select: none;
       margin-right: 20px;

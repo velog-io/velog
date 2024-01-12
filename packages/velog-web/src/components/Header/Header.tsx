@@ -3,7 +3,6 @@
 import styles from './Header.module.css'
 import RoundButton from '@/components/RoundButton'
 import { useAuth } from '@/state/auth'
-import HeaderSearchButton from '@/components/Header/HeaderSearchButton'
 import { useModal } from '@/state/modal'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useEffect, useRef } from 'react'
@@ -15,6 +14,10 @@ import { useCurrentUserQuery } from '@/graphql/helpers/generated'
 import HeaderLogo from './HeaderLogo'
 import { useParams } from 'next/navigation'
 import { getUsernameFromParams } from '@/lib/utils'
+import Link from 'next/link'
+import { NotificationIcon, SearchIcon } from '@/assets/icons/components'
+import VLink from '../VLink'
+import HeaderIcon from './HeaderIcon'
 
 const cx = bindClassNames(styles)
 
@@ -47,10 +50,24 @@ function Header({ logo }: Props) {
       <div className={cx('innerBlock')}>
         {logo || <HeaderLogo />}
         <div className={cx('right')}>
-          <HeaderSearchButton to={urlForSearch} />
+          <Link href="/notification">
+            <HeaderIcon>
+              <NotificationIcon />
+            </HeaderIcon>
+          </Link>
+          <VLink href={urlForSearch}>
+            <HeaderIcon>
+              <SearchIcon />
+            </HeaderIcon>
+          </VLink>
           {user && (
             <>
-              <RoundButton color="darkGray" border={true} to="/write" className={cx('writeButton')}>
+              <RoundButton
+                color="darkGray"
+                border={true}
+                to="/write"
+                className={cx('writeButton', 'button')}
+              >
                 새 글 작성
               </RoundButton>
               <div ref={ref}>
@@ -63,6 +80,7 @@ function Header({ logo }: Props) {
             <RoundButton
               color="darkGray"
               border={false}
+              className={cx('button')}
               onClick={() => {
                 actions.showModal('login')
               }}
