@@ -13,8 +13,11 @@
 
   svg {
     flex-shrink: 0;
-    fill: red;
     width: 24px;
     height: 24px;
+
+    path {
+      fill: var(--text1);
+    }
   }
 }
