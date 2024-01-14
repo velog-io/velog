@@ -285,10 +285,6 @@ export type NotificationActionInput = {
   postLike?: InputMaybe<PostLikeNotificationActionInput>
 }
 
-export type NotificationCountResult = {
-  count: Scalars['Int']['output']
-}
-
 export enum NotificationType {
   Comment = 'comment',
   Follower = 'follower',
@@ -359,7 +355,7 @@ export type Query = {
   feedPosts: Array<Post>
   followers: Array<FollowResult>
   followings: Array<FollowResult>
-  notificationCount: NotificationCountResult
+  notificationCount: Scalars['Int']['output']
   notifications: Array<Notification>
   post: Maybe<Post>
   posts: Array<Post>
@@ -743,7 +739,7 @@ export type NotificationQuery = {
 
 export type NotificationCountQueryVariables = Exact<{ [key: string]: never }>
 
-export type NotificationCountQuery = { notificationCount: { count: number } }
+export type NotificationCountQuery = { notificationCount: number }
 
 export type ReadPostQueryVariables = Exact<{
   input: ReadPostInput
@@ -1441,9 +1437,7 @@ useSuspenseNotificationQuery.getKey = (variables?: NotificationQueryVariables) =
 
 export const NotificationCountDocument = `
     query notificationCount {
-  notificationCount {
-    count
-  }
+  notificationCount
 }
     `
 

@@ -13,17 +13,11 @@ export default async function getFeedPosts({ limit = ENV.defaultPostLimit }: Arg
     },
   }
 
-  // const headers = {}
-  // if (accessToken) {
-  //   Object.assign(headers, { authorization: `Bearer ${accessToken}` })
-  // }
-
   try {
     const { feedPosts } = await graphqlFetch<{ feedPosts: Post[] }>({
       method: 'GET',
       body,
       next: { revalidate: 0 },
-      // headers,
     })
 
     return feedPosts

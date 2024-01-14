@@ -31,7 +31,5 @@ query notification {
 }
 
 query notificationCount {
-  notificationCount {
-    count
-  }
+  notificationCount
 }

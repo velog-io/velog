@@ -4,6 +4,7 @@ import FloatingHeader from '@/features/home/components/FloatingHeader'
 import Header from '@/components/Header'
 import { UserLogo } from '@/state/header'
 import HeaderCustomLogo from '@/components/Header/HeaderCustomLogo'
+import getNotificationCount from '@/prefetch/getNotificationCount'
 
 const cx = bindClassNames(styles)
 
@@ -25,11 +26,16 @@ function isDefaultHeaderProps(props: Props): props is DefaultHeaderProps {
   return !props.isCustomHeader
 }
 
-function BasicLayout(props: Props) {
+async function BasicLayout(props: Props) {
+  const notificationCount = await getNotificationCount()
+
   const header = isDefaultHeaderProps(props) ? (
-    <Header />
+    <Header notificationCount={notificationCount} />
   ) : (
-    <Header logo={<HeaderCustomLogo username={props.username} userLogo={props.userLogo} />} />
+    <Header
+      notificationCount={notificationCount}
+      logo={<HeaderCustomLogo username={props.username} userLogo={props.userLogo} />}
+    />
   )
 
   return (

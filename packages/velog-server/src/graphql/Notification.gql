@@ -46,11 +46,7 @@ type PostLikeNotificationAction {
 
 type Query {
   notifications: [Notification!]!
-  notificationCount: NotificationCountResult!
-}
-
-type NotificationCountResult {
-  count: Int!
+  notificationCount: Int!
 }
 
 type Mutation {

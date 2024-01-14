@@ -289,10 +289,6 @@ export type NotificationActionInput = {
   postLike?: InputMaybe<PostLikeNotificationActionInput>
 }
 
-export type NotificationCountResult = {
-  count: Scalars['Int']['output']
-}
-
 export { NotificationType }
 
 export type Post = {
@@ -359,7 +355,7 @@ export type Query = {
   feedPosts: Array<Post>
   followers: Array<FollowResult>
   followings: Array<FollowResult>
-  notificationCount: NotificationCountResult
+  notificationCount: Scalars['Int']['output']
   notifications: Array<Notification>
   post?: Maybe<Post>
   posts: Array<Post>
@@ -784,7 +780,6 @@ export type ResolversTypes = {
   >
   NotificationAction: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['NotificationAction']>
   NotificationActionInput: NotificationActionInput
-  NotificationCountResult: ResolverTypeWrapper<NotificationCountResult>
   NotificationType: NotificationType
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Post: ResolverTypeWrapper<PostModel>
@@ -879,7 +874,6 @@ export type ResolversParentTypes = {
   }
   NotificationAction: ResolversUnionTypes<ResolversParentTypes>['NotificationAction']
   NotificationActionInput: NotificationActionInput
-  NotificationCountResult: NotificationCountResult
   PositiveInt: Scalars['PositiveInt']['output']
   Post: PostModel
   PostHistory: PostHistory
@@ -1145,15 +1139,6 @@ export type NotificationActionResolvers<
   >
 }
 
-export type NotificationCountResultResolvers<
-  ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['NotificationCountResult'] = ResolversParentTypes['NotificationCountResult'],
-> = {
-  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
-}
-
 export type NotificationTypeResolvers = EnumResolverSignature<
   { comment?: any; follower?: any; postLike?: any },
   ResolversTypes['NotificationType']
@@ -1260,7 +1245,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryFollowingsArgs, 'input'>
   >
-  notificationCount?: Resolver<ResolversTypes['NotificationCountResult'], ParentType, ContextType>
+  notificationCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   notifications?: Resolver<Array<ResolversTypes['Notification']>, ParentType, ContextType>
   post?: Resolver<
     Maybe<ResolversTypes['Post']>,
@@ -1555,7 +1540,6 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Mutation?: MutationResolvers<ContextType>
   Notification?: NotificationResolvers<ContextType>
   NotificationAction?: NotificationActionResolvers<ContextType>
-  NotificationCountResult?: NotificationCountResultResolvers<ContextType>
   NotificationType?: NotificationTypeResolvers
   PositiveInt?: GraphQLScalarType
   Post?: PostResolvers<ContextType>

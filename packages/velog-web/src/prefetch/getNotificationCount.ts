@@ -14,10 +14,11 @@ export default async function getNotificationCount(): Promise<number> {
       operationName: 'notificationCount',
       query: NotificationCountDocument,
     }
-    const { count } = await graphqlFetch<{ count: number }>({ body })
+    const { notificationCount } = await graphqlFetch<{ notificationCount: number }>({
+      body,
+    })
 
-    return count
-    return 0
+    return notificationCount
   } catch (error) {
     console.log('getNotificationCount error', error)
     return 0

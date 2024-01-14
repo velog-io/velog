@@ -16,7 +16,7 @@ import { z } from 'zod'
 
 interface Service {
   getNotifications(signedUserId?: string): Promise<Notification[]>
-  getNotificationCount(signedUserId?: string): Promise<NotificationCountResult>
+  getNotificationCount(signedUserId?: string): Promise<number>
   createNotification<T extends NotificationType>(
     args: CreateNotificationArgs<T>,
   ): Promise<Notification>
@@ -51,7 +51,7 @@ export class NotificationService implements Service {
     })
     return notifications as unknown as Notification[]
   }
-  public async getNotificationCount(signedUserId?: string): Promise<NotificationCountResult> {
+  public async getNotificationCount(signedUserId?: string): Promise<number> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')
     }
@@ -61,15 +61,13 @@ export class NotificationService implements Service {
     if (!user) {
       throw new NotFoundError('Not found user')
     }
-    const count = await this.db.notification.count({
+    return await this.db.notification.count({
       where: {
         fk_user_id: signedUserId,
         is_deleted: false,
         is_read: false,
       },
     })
-
-    return { count }
   }
   public async createNotification<T extends NotificationType>({
     type,
@@ -193,8 +191,4 @@ export type CreateNotificationArgs<T = NotificationType> = {
     : NotificationType extends 'postLike'
     ? PostLikeNotificationAction
     : unknown
-}
-
-type NotificationCountResult = {
-  count: number
 }

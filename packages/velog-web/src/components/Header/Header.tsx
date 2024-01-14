@@ -23,9 +23,10 @@ const cx = bindClassNames(styles)
 
 type Props = {
   logo?: React.ReactNode
+  notificationCount: number
 }
 
-function Header({ logo }: Props) {
+function Header({ logo, notificationCount }: Props) {
   const params = useParams()
   const [userMenu, toggleUserMenu] = useToggle(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -52,6 +53,7 @@ function Header({ logo }: Props) {
         <div className={cx('right')}>
           <Link href="/notification">
             <HeaderIcon>
+              <div className={cx('notificationCount')}>{notificationCount}</div>
               <NotificationIcon />
             </HeaderIcon>
           </Link>
