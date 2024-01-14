@@ -588,9 +588,10 @@ export class PostService implements Service {
     userId,
     isSelf,
   }: FindPostsByTagArgs): Promise<Post[]> {
-    const originTag = await this.tagService.getOriginTag(tagName)
-    if (!originTag) {
-      throw new ConfilctError('Invalid tag')
+    const tag = await this.tagService.findByName(tagName)
+
+    if (!tag) {
+      throw new ConfilctError('Invalid tag name')
     }
 
     const cursorPost = cursor
@@ -601,7 +602,7 @@ export class PostService implements Service {
 
     const postTags = await this.db.postTag.findMany({
       where: {
-        fk_tag_id: originTag.id,
+        fk_tag_id: tag.id,
         post: {
           is_temp: false,
           ...(cursorPost
