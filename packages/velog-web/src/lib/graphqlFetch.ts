@@ -1,15 +1,22 @@
 import { ENV } from '@/env'
+import { getAccessToken } from './auth'
 
 export default async function graphqlFetch<T>({
   url = `${ENV.graphqlHost}/graphql`,
   method = 'POST',
   body,
-  headers,
+  headers = {},
   next,
   cache,
   ...init
 }: Parameter): Promise<T> {
   let targetUrl = url
+  const token = getAccessToken()
+
+  if (token) {
+    Object.assign(headers, { authorization: `Bearer ${token.value}` })
+  }
+
   if (method === 'GET' && body) {
     const queryString = convertToQueryString(body)
     targetUrl = `${url}?${queryString}`

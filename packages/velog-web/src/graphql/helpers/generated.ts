@@ -67,17 +67,33 @@ export type Comment = {
 }
 
 export type CommentNotificationAction = {
-  created_at: Scalars['DateTimeISO']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
-  post_id: Scalars['ID']['output']
-  post_title: Scalars['String']['output']
   text: Scalars['String']['output']
-  type: NotificationType
+  title: Scalars['String']['output']
+  url_slug: Scalars['String']['output']
+  writer_username: Scalars['String']['output']
+}
+
+export type CommentNotificationActionInput = {
+  fk_user_id: Scalars['String']['input']
+  id: Scalars['ID']['input']
+  text: Scalars['String']['input']
+  title: Scalars['String']['input']
+  url_slug: Scalars['String']['input']
+  writer_username: Scalars['String']['input']
 }
 
 export type ConfirmChangeEmailInput = {
   code: Scalars['String']['input']
+}
+
+export type CreateNotificationInput = {
+  action: NotificationActionInput
+  action_id: Scalars['String']['input']
+  fk_user_id: Scalars['String']['input']
+  link?: InputMaybe<Scalars['String']['input']>
+  type: NotificationType
 }
 
 export type FeedPostsInput = {
@@ -98,11 +114,15 @@ export type FollowResult = {
 }
 
 export type FollowerNotificationAction = {
-  created_at: Scalars['DateTimeISO']['output']
   display_name: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
-  type: NotificationType
+}
+
+export type FollowerNotificationActionInput = {
+  display_name: Scalars['String']['input']
+  fk_user_id: Scalars['String']['input']
+  id: Scalars['ID']['input']
 }
 
 export type GetFollowInput = {
@@ -161,6 +181,7 @@ export type LinkedPosts = {
 export type Mutation = {
   acceptIntegration: Scalars['String']['output']
   confirmChangeEmail: Maybe<Scalars['Void']['output']>
+  createNofication: Notification
   follow: Maybe<Scalars['Boolean']['output']>
   initiateChangeEmail: Maybe<Scalars['Void']['output']>
   likePost: Maybe<Post>
@@ -180,6 +201,10 @@ export type Mutation = {
 
 export type MutationConfirmChangeEmailArgs = {
   input: ConfirmChangeEmailInput
+}
+
+export type MutationCreateNoficationArgs = {
+  input: CreateNotificationInput
 }
 
 export type MutationFollowArgs = {
@@ -240,13 +265,12 @@ export type MutationUpdateVelogTitleArgs = {
 
 export type Notification = {
   action: NotificationAction
-  action_id: Scalars['ID']['output']
+  action_id: Maybe<Scalars['ID']['output']>
   created_at: Scalars['DateTimeISO']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
   is_deleted: Scalars['Boolean']['output']
   is_read: Scalars['Boolean']['output']
-  message: Scalars['String']['output']
   type: NotificationType
 }
 
@@ -254,6 +278,16 @@ export type NotificationAction =
   | CommentNotificationAction
   | FollowerNotificationAction
   | PostLikeNotificationAction
+
+export type NotificationActionInput = {
+  comment?: InputMaybe<CommentNotificationActionInput>
+  follower?: InputMaybe<FollowerNotificationActionInput>
+  postLike?: InputMaybe<PostLikeNotificationActionInput>
+}
+
+export type NotificationCountResult = {
+  count: Scalars['Int']['output']
+}
 
 export enum NotificationType {
   Comment = 'comment',
@@ -301,13 +335,21 @@ export type PostHistory = {
 }
 
 export type PostLikeNotificationAction = {
-  created_at: Scalars['DateTimeISO']['output']
   display_name: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
   title: Scalars['String']['output']
-  type: NotificationType
   url_slug: Scalars['String']['output']
+  writer_username: Scalars['String']['output']
+}
+
+export type PostLikeNotificationActionInput = {
+  display_name: Scalars['String']['input']
+  fk_user_id: Scalars['String']['input']
+  id: Scalars['ID']['input']
+  title: Scalars['String']['input']
+  url_slug: Scalars['String']['input']
+  writer_username: Scalars['String']['input']
 }
 
 export type Query = {
@@ -317,7 +359,7 @@ export type Query = {
   feedPosts: Array<Post>
   followers: Array<FollowResult>
   followings: Array<FollowResult>
-  notificationCount: Scalars['Int']['output']
+  notificationCount: NotificationCountResult
   notifications: Array<Notification>
   post: Maybe<Post>
   posts: Array<Post>
@@ -669,6 +711,39 @@ export type GetFollowingsQuery = {
     profile: { short_bio: string; thumbnail: string | null; display_name: string }
   }>
 }
+
+export type NotificationQueryVariables = Exact<{ [key: string]: never }>
+
+export type NotificationQuery = {
+  notifications: Array<{
+    id: string
+    type: NotificationType
+    action_id: string | null
+    is_read: boolean
+    action:
+      | {
+          id: string
+          fk_user_id: string
+          title: string
+          url_slug: string
+          writer_username: string
+          text: string
+        }
+      | { id: string; fk_user_id: string; display_name: string }
+      | {
+          id: string
+          fk_user_id: string
+          display_name: string
+          title: string
+          url_slug: string
+          writer_username: string
+        }
+  }>
+}
+
+export type NotificationCountQueryVariables = Exact<{ [key: string]: never }>
+
+export type NotificationCountQuery = { notificationCount: { count: number } }
 
 export type ReadPostQueryVariables = Exact<{
   input: ReadPostInput
@@ -1290,6 +1365,128 @@ useSuspenseGetFollowingsQuery.getKey = (variables: GetFollowingsQueryVariables) 
   'getFollowingsSuspense',
   variables,
 ]
+
+export const NotificationDocument = `
+    query notification {
+  notifications {
+    id
+    type
+    action {
+      ... on FollowerNotificationAction {
+        id
+        fk_user_id
+        display_name
+      }
+      ... on CommentNotificationAction {
+        id
+        fk_user_id
+        title
+        url_slug
+        writer_username
+        text
+      }
+      ... on PostLikeNotificationAction {
+        id
+        fk_user_id
+        display_name
+        title
+        url_slug
+        writer_username
+      }
+    }
+    action_id
+    is_read
+  }
+}
+    `
+
+export const useNotificationQuery = <TData = NotificationQuery, TError = unknown>(
+  variables?: NotificationQueryVariables,
+  options?: Omit<UseQueryOptions<NotificationQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<NotificationQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<NotificationQuery, TError, TData>({
+    queryKey: variables === undefined ? ['notification'] : ['notification', variables],
+    queryFn: fetcher<NotificationQuery, NotificationQueryVariables>(
+      NotificationDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useNotificationQuery.getKey = (variables?: NotificationQueryVariables) =>
+  variables === undefined ? ['notification'] : ['notification', variables]
+
+export const useSuspenseNotificationQuery = <TData = NotificationQuery, TError = unknown>(
+  variables?: NotificationQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<NotificationQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<NotificationQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<NotificationQuery, TError, TData>({
+    queryKey:
+      variables === undefined ? ['notificationSuspense'] : ['notificationSuspense', variables],
+    queryFn: fetcher<NotificationQuery, NotificationQueryVariables>(
+      NotificationDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSuspenseNotificationQuery.getKey = (variables?: NotificationQueryVariables) =>
+  variables === undefined ? ['notificationSuspense'] : ['notificationSuspense', variables]
+
+export const NotificationCountDocument = `
+    query notificationCount {
+  notificationCount {
+    count
+  }
+}
+    `
+
+export const useNotificationCountQuery = <TData = NotificationCountQuery, TError = unknown>(
+  variables?: NotificationCountQueryVariables,
+  options?: Omit<UseQueryOptions<NotificationCountQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<NotificationCountQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<NotificationCountQuery, TError, TData>({
+    queryKey: variables === undefined ? ['notificationCount'] : ['notificationCount', variables],
+    queryFn: fetcher<NotificationCountQuery, NotificationCountQueryVariables>(
+      NotificationCountDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useNotificationCountQuery.getKey = (variables?: NotificationCountQueryVariables) =>
+  variables === undefined ? ['notificationCount'] : ['notificationCount', variables]
+
+export const useSuspenseNotificationCountQuery = <TData = NotificationCountQuery, TError = unknown>(
+  variables?: NotificationCountQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<NotificationCountQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<NotificationCountQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<NotificationCountQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ['notificationCountSuspense']
+        : ['notificationCountSuspense', variables],
+    queryFn: fetcher<NotificationCountQuery, NotificationCountQueryVariables>(
+      NotificationCountDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSuspenseNotificationCountQuery.getKey = (variables?: NotificationCountQueryVariables) =>
+  variables === undefined ? ['notificationCountSuspense'] : ['notificationCountSuspense', variables]
 
 export const ReadPostDocument = `
     query readPost($input: ReadPostInput!) {

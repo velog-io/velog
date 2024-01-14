@@ -275,7 +275,6 @@ export type Notification = {
   id: Scalars['ID']['output']
   is_deleted: Scalars['Boolean']['output']
   is_read: Scalars['Boolean']['output']
-  link?: Maybe<Scalars['String']['output']>
   type: NotificationType
 }
 
@@ -288,6 +287,10 @@ export type NotificationActionInput = {
   comment?: InputMaybe<CommentNotificationActionInput>
   follower?: InputMaybe<FollowerNotificationActionInput>
   postLike?: InputMaybe<PostLikeNotificationActionInput>
+}
+
+export type NotificationCountResult = {
+  count: Scalars['Int']['output']
 }
 
 export { NotificationType }
@@ -356,7 +359,7 @@ export type Query = {
   feedPosts: Array<Post>
   followers: Array<FollowResult>
   followings: Array<FollowResult>
-  notificationCount: Scalars['Int']['output']
+  notificationCount: NotificationCountResult
   notifications: Array<Notification>
   post?: Maybe<Post>
   posts: Array<Post>
@@ -781,6 +784,7 @@ export type ResolversTypes = {
   >
   NotificationAction: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['NotificationAction']>
   NotificationActionInput: NotificationActionInput
+  NotificationCountResult: ResolverTypeWrapper<NotificationCountResult>
   NotificationType: NotificationType
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Post: ResolverTypeWrapper<PostModel>
@@ -875,6 +879,7 @@ export type ResolversParentTypes = {
   }
   NotificationAction: ResolversUnionTypes<ResolversParentTypes>['NotificationAction']
   NotificationActionInput: NotificationActionInput
+  NotificationCountResult: NotificationCountResult
   PositiveInt: Scalars['PositiveInt']['output']
   Post: PostModel
   PostHistory: PostHistory
@@ -1124,7 +1129,6 @@ export type NotificationResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   is_read?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
-  link?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   type?: Resolver<ResolversTypes['NotificationType'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
@@ -1139,6 +1143,15 @@ export type NotificationActionResolvers<
     ParentType,
     ContextType
   >
+}
+
+export type NotificationCountResultResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['NotificationCountResult'] = ResolversParentTypes['NotificationCountResult'],
+> = {
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
 export type NotificationTypeResolvers = EnumResolverSignature<
@@ -1247,7 +1260,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryFollowingsArgs, 'input'>
   >
-  notificationCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  notificationCount?: Resolver<ResolversTypes['NotificationCountResult'], ParentType, ContextType>
   notifications?: Resolver<Array<ResolversTypes['Notification']>, ParentType, ContextType>
   post?: Resolver<
     Maybe<ResolversTypes['Post']>,
@@ -1542,6 +1555,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Mutation?: MutationResolvers<ContextType>
   Notification?: NotificationResolvers<ContextType>
   NotificationAction?: NotificationActionResolvers<ContextType>
+  NotificationCountResult?: NotificationCountResultResolvers<ContextType>
   NotificationType?: NotificationTypeResolvers
   PositiveInt?: GraphQLScalarType
   Post?: PostResolvers<ContextType>

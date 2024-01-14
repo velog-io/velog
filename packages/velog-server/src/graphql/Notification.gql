@@ -1,7 +1,6 @@
 type Notification {
   id: ID!
   type: NotificationType!
-  link: String
   fk_user_id: String!
   action: NotificationAction!
   action_id: ID
@@ -47,7 +46,11 @@ type PostLikeNotificationAction {
 
 type Query {
   notifications: [Notification!]!
-  notificationCount: Int!
+  notificationCount: NotificationCountResult!
+}
+
+type NotificationCountResult {
+  count: Int!
 }
 
 type Mutation {
