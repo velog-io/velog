@@ -37,6 +37,13 @@ export class TagService implements Service {
       },
     })
   }
+  public async findByName(name: string): Promise<Tag | null> {
+    return await this.db.tag.findUnique({
+      where: {
+        name,
+      },
+    })
+  }
   public tagLoader() {
     return this.createTagsLoader()
   }
@@ -71,6 +78,7 @@ export class TagService implements Service {
   }
   public async getOriginTag(tagname: string): Promise<Tag | null> {
     const filtered = this.utils.escapeForUrl(tagname).toLowerCase()
+
     const tag = await this.db.tag.findFirst({
       where: {
         name_filtered: filtered,
