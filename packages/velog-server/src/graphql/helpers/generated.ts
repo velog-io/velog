@@ -355,6 +355,7 @@ export type Query = {
   feedPosts: Array<Post>
   followers: Array<FollowResult>
   followings: Array<FollowResult>
+  isLogged?: Maybe<Scalars['Boolean']['output']>
   notificationCount: Scalars['Int']['output']
   notifications: Array<Notification>
   post?: Maybe<Post>
@@ -1245,6 +1246,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryFollowingsArgs, 'input'>
   >
+  isLogged?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   notificationCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   notifications?: Resolver<Array<ResolversTypes['Notification']>, ParentType, ContextType>
   post?: Resolver<

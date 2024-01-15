@@ -1,15 +1,17 @@
-import { NotificationCountDocument } from '@/graphql/helpers/generated'
-import { isLogged } from '@/lib/auth'
+import { IsLoggedDocument, NotificationCountDocument } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getNotificationCount(): Promise<number> {
-  const isLogin = isLogged()
-
-  if (!isLogin) {
-    return 0
-  }
-
   try {
+    const result = await graphqlFetch({
+      body: {
+        operationName: 'isLogged',
+        query: IsLoggedDocument,
+      },
+    })
+
+    console.log('result', result)
+
     const body: GraphqlRequestBody = {
       operationName: 'notificationCount',
       query: NotificationCountDocument,

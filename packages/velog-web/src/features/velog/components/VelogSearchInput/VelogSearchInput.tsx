@@ -3,11 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styles from './VelogSearchInput.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { Search2Icon } from '@/assets/icons/components'
+
 import useToggle from '@/hooks/useToggle'
 import useInput from '@/hooks/useInput'
 import { debounce } from 'throttle-debounce'
 import { useRouter } from 'next/navigation'
+import SvgSearch2Icon from '@/assets/icons/components/Search2Icon'
 
 const cx = bindClassNames(styles)
 
@@ -56,7 +57,7 @@ function VelogSearchInput({ query, username }: Props) {
   return (
     <div className={cx('block')}>
       <div className={cx('search', { focus })} onClick={onClick}>
-        <Search2Icon />
+        <SvgSearch2Icon />
         <input
           placeholder="검색어를 입력하세요"
           onFocus={toggleFocus}

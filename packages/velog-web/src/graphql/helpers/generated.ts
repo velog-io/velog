@@ -355,6 +355,7 @@ export type Query = {
   feedPosts: Array<Post>
   followers: Array<FollowResult>
   followings: Array<FollowResult>
+  isLogged: Maybe<Scalars['Boolean']['output']>
   notificationCount: Scalars['Int']['output']
   notifications: Array<Notification>
   post: Maybe<Post>
@@ -661,6 +662,10 @@ export type AdsQuery = {
     start_date: any
   }>
 }
+
+export type IsLoggedQueryVariables = Exact<{ [key: string]: never }>
+
+export type IsLoggedQuery = { isLogged: boolean | null }
 
 export type SendMailMutationVariables = Exact<{
   input: SendMailInput
@@ -1189,6 +1194,44 @@ export const useSuspenseAdsQuery = <TData = AdsQuery, TError = unknown>(
 }
 
 useSuspenseAdsQuery.getKey = (variables: AdsQueryVariables) => ['adsSuspense', variables]
+
+export const IsLoggedDocument = `
+    query isLogged {
+  isLogged
+}
+    `
+
+export const useIsLoggedQuery = <TData = IsLoggedQuery, TError = unknown>(
+  variables?: IsLoggedQueryVariables,
+  options?: Omit<UseQueryOptions<IsLoggedQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<IsLoggedQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<IsLoggedQuery, TError, TData>({
+    queryKey: variables === undefined ? ['isLogged'] : ['isLogged', variables],
+    queryFn: fetcher<IsLoggedQuery, IsLoggedQueryVariables>(IsLoggedDocument, variables),
+    ...options,
+  })
+}
+
+useIsLoggedQuery.getKey = (variables?: IsLoggedQueryVariables) =>
+  variables === undefined ? ['isLogged'] : ['isLogged', variables]
+
+export const useSuspenseIsLoggedQuery = <TData = IsLoggedQuery, TError = unknown>(
+  variables?: IsLoggedQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<IsLoggedQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<IsLoggedQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<IsLoggedQuery, TError, TData>({
+    queryKey: variables === undefined ? ['isLoggedSuspense'] : ['isLoggedSuspense', variables],
+    queryFn: fetcher<IsLoggedQuery, IsLoggedQueryVariables>(IsLoggedDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseIsLoggedQuery.getKey = (variables?: IsLoggedQueryVariables) =>
+  variables === undefined ? ['isLoggedSuspense'] : ['isLoggedSuspense', variables]
 
 export const SendMailDocument = `
     mutation sendMail($input: SendMailInput!) {
