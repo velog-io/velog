@@ -35,7 +35,7 @@ function Header({ logo, notificationCount }: Props) {
     actions: { update },
   } = useAuth()
 
-  const { isLoading, data, isFetching } = useCurrentUserQuery()
+  const { data, isLoading, isFetching } = useCurrentUserQuery()
   const user = data?.currentUser || null
 
   useEffect(() => {
@@ -51,12 +51,14 @@ function Header({ logo, notificationCount }: Props) {
       <div className={cx('innerBlock')}>
         {logo || <HeaderLogo />}
         <div className={cx('right')}>
-          <Link href="/notification">
-            <HeaderIcon>
-              <div className={cx('notificationCount')}>{notificationCount}</div>
-              <NotificationIcon />
-            </HeaderIcon>
-          </Link>
+          {user && (
+            <Link href="/notification">
+              <HeaderIcon>
+                <div className={cx('notificationCount')}>{Math.min(99, notificationCount)}</div>
+                <NotificationIcon />
+              </HeaderIcon>
+            </Link>
+          )}
           <VLink href={urlForSearch}>
             <HeaderIcon>
               <SearchIcon />

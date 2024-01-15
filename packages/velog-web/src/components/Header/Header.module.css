@@ -17,9 +17,11 @@
 
     .notificationCount {
       position: absolute;
-      top: 0;
-      right: 0;
+      top: 3px;
+      right: -3px;
       padding: 1px 4px;
+      font-weight: 500;
+      font-size: 11px;
       background-color: var(--primary1);
       color: var(--button-text);
       border-radius: 100px;

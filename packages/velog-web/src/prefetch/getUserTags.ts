@@ -1,9 +1,15 @@
 import { UserTags, UserTagsDocument } from '@/graphql/helpers/generated'
+import { getAccessToken } from '@/lib/auth'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
-import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 
-export default async function getUserTags({ username, accessToken }: GetUserTagsArgs) {
+export default async function getUserTags(username: string) {
   try {
+    const headers = {}
+    const token = getAccessToken()
+    if (token) {
+      Object.assign(headers, { authorization: `Bearer ${token.value}` })
+    }
+
     const body: GraphqlRequestBody = {
       operationName: 'userTags',
       query: UserTagsDocument,
@@ -14,15 +20,10 @@ export default async function getUserTags({ username, accessToken }: GetUserTags
       },
     }
 
-    const headers = {}
-    if (accessToken) {
-      Object.assign(headers, { authorization: `Bearer ${accessToken.value}` })
-    }
-
     const { userTags } = await graphqlFetch<{ userTags: UserTags }>({
       body,
-      next: { revalidate: 20 },
       headers,
+      next: { revalidate: 20 },
     })
 
     return userTags
@@ -30,9 +31,4 @@ export default async function getUserTags({ username, accessToken }: GetUserTags
     console.log(error)
     throw new Error('Get user tags error')
   }
-}
-
-type GetUserTagsArgs = {
-  username: string
-  accessToken?: RequestCookie
 }

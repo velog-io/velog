@@ -1,5 +1,4 @@
 import { ENV } from '@/env'
-import { getAccessToken } from './auth'
 
 export default async function graphqlFetch<T>({
   url = `${ENV.graphqlHost}/graphql`,
@@ -11,11 +10,6 @@ export default async function graphqlFetch<T>({
   ...init
 }: Parameter): Promise<T> {
   let targetUrl = url
-  const token = getAccessToken()
-
-  if (token) {
-    Object.assign(headers, { authorization: `Bearer ${token.value}` })
-  }
 
   if (method === 'GET' && body) {
     const queryString = convertToQueryString(body)
@@ -25,11 +19,11 @@ export default async function graphqlFetch<T>({
   const res = await fetch(targetUrl, {
     method,
     body: method.toUpperCase() === 'POST' ? JSON.stringify(body) : undefined,
-    headers: new Headers({
+    headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       ...headers,
-    }),
+    },
     credentials: 'include',
     next,
     cache,
