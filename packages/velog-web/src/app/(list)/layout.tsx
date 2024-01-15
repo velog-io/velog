@@ -7,6 +7,5 @@ type Props = {
 
 export default async function HomeListLayout({ children }: Props) {
   const notificationCount = await getNotificationCount()
-  console.log('notificationCount', notificationCount)
   return <HomeLayout notificationCount={notificationCount}>{children}</HomeLayout>
 }

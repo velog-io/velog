@@ -12,7 +12,7 @@ import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
 import HeaderSkeleton from '@/components/Header/HeaderSkeleton'
 import { useCurrentUserQuery } from '@/graphql/helpers/generated'
 import HeaderLogo from './HeaderLogo'
-import { useParams } from 'next/navigation'
+import { useParams, usePathname } from 'next/navigation'
 import { getUsernameFromParams } from '@/lib/utils'
 import Link from 'next/link'
 import { NotificationIcon, SearchIcon } from '@/assets/icons/components'
@@ -28,6 +28,7 @@ type Props = {
 
 function Header({ logo, notificationCount }: Props) {
   const params = useParams()
+  const pathname = usePathname()
   const [userMenu, toggleUserMenu] = useToggle(false)
   const ref = useRef<HTMLDivElement>(null)
   const { actions } = useModal()
@@ -44,6 +45,7 @@ function Header({ logo, notificationCount }: Props) {
 
   const username = getUsernameFromParams(params)
   const urlForSearch = username ? `/search?username=${username}` : '/search'
+  const isNotificationPage = pathname.includes('/notification')
 
   if (isLoading || isFetching) return <HeaderSkeleton logo={logo || <HeaderLogo />} />
   return (
@@ -53,7 +55,7 @@ function Header({ logo, notificationCount }: Props) {
         <div className={cx('right')}>
           {user && notificationCount !== 0 && (
             <Link href="/notification">
-              <HeaderIcon>
+              <HeaderIcon className={cx({ isNotificationPage })}>
                 <div
                   className={cx('notificationCount', {
                     isSingle: Math.floor(notificationCount / 10) === 0,
