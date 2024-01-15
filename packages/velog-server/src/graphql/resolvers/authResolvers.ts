@@ -5,7 +5,8 @@ import { container } from 'tsyringe'
 const authResolvers: Resolvers = {
   Query: {
     isLogged: (_, __, ctx) => {
-      return !!ctx?.user
+      console.log('ctx', ctx.user)
+      return !!ctx.user?.id
     },
   },
   Mutation: {

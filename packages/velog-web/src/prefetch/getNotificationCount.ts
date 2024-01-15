@@ -3,14 +3,15 @@ import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getNotificationCount(): Promise<number> {
   try {
-    const result = await graphqlFetch({
+    const { isLogged } = await graphqlFetch<{ isLogged: boolean }>({
       body: {
         operationName: 'isLogged',
         query: IsLoggedDocument,
       },
+      next: { revalidate: 0 },
     })
 
-    console.log('result', result)
+    if (!isLogged) return 0
 
     const body: GraphqlRequestBody = {
       operationName: 'notificationCount',
