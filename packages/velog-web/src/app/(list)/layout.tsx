@@ -1,5 +1,4 @@
 import HomeLayout from '@/components/Layouts/HomeLayout'
-import { getAccessToken } from '@/lib/auth'
 import getNotificationCount from '@/prefetch/getNotificationCount'
 
 type Props = {
@@ -7,8 +6,7 @@ type Props = {
 }
 
 export default async function HomeListLayout({ children }: Props) {
-  const token = getAccessToken()
-  const notificationCount = await getNotificationCount(token)
+  const notificationCount = await getNotificationCount()
   console.log('notificationCount', notificationCount)
   return <HomeLayout notificationCount={notificationCount}>{children}</HomeLayout>
 }

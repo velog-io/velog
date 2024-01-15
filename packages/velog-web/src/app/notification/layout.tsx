@@ -1,5 +1,4 @@
 import SmallLayout from '@/components/Layouts/SmallLayout'
-import { getAccessToken } from '@/lib/auth'
 import getNotificationCount from '@/prefetch/getNotificationCount'
 
 type Props = {
@@ -7,7 +6,6 @@ type Props = {
 }
 
 export default async function NotificationLayout({ children }: Props) {
-  const token = getAccessToken()
-  const notificationCount = await getNotificationCount(token)
+  const notificationCount = await getNotificationCount()
   return <SmallLayout notificationCount={notificationCount}>{children}</SmallLayout>
 }

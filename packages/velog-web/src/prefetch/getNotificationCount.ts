@@ -1,10 +1,11 @@
 import { IsLoggedDocument, NotificationCountDocument } from '@/graphql/helpers/generated'
+import { getAccessToken } from '@/lib/auth'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
-import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 
-export default async function getNotificationCount(token?: RequestCookie): Promise<number> {
+export default async function getNotificationCount(): Promise<number> {
   try {
     const headers = {}
+    const token = getAccessToken()
     if (token) {
       Object.assign(headers, { authorization: `Bearer ${token.value}` })
     }

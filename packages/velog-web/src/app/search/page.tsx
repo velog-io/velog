@@ -5,7 +5,6 @@ import getNotificationCount from '@/prefetch/getNotificationCount'
 type Props = {}
 
 export default async function SearchPage({}: Props) {
-  const token = getAccessToken()
-  const notificationCount = await getNotificationCount(token)
+  const notificationCount = await getNotificationCount()
   return <HomeLayout notificationCount={notificationCount} />
 }
