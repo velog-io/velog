@@ -1,16 +1,18 @@
+'use client'
+
 import styles from './BasicLayout.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import FloatingHeader from '@/features/home/components/FloatingHeader'
 import Header from '@/components/Header'
 import { UserLogo } from '@/state/header'
 import HeaderCustomLogo from '@/components/Header/HeaderCustomLogo'
-import getNotificationCount from '@/prefetch/getNotificationCount'
 
 const cx = bindClassNames(styles)
 
 export type DefaultHeaderProps = {
   children: React.ReactNode
   isCustomHeader?: false
+  notificationCount: number
 }
 
 export type CustomLogoHeaderProps = {
@@ -18,6 +20,7 @@ export type CustomLogoHeaderProps = {
   username: string
   userLogo: UserLogo
   isCustomHeader?: true
+  notificationCount: number
 }
 
 type Props = DefaultHeaderProps | CustomLogoHeaderProps
@@ -26,14 +29,12 @@ function isDefaultHeaderProps(props: Props): props is DefaultHeaderProps {
   return !props.isCustomHeader
 }
 
-async function BasicLayout(props: Props) {
-  const notificationCount = await getNotificationCount()
-
+function BasicLayout(props: Props) {
   const header = isDefaultHeaderProps(props) ? (
-    <Header notificationCount={notificationCount} />
+    <Header notificationCount={props.notificationCount} />
   ) : (
     <Header
-      notificationCount={notificationCount}
+      notificationCount={props.notificationCount}
       logo={<HeaderCustomLogo username={props.username} userLogo={props.userLogo} />}
     />
   )

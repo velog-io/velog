@@ -25,6 +25,10 @@
       background-color: var(--primary1);
       color: var(--button-text);
       border-radius: 100px;
+
+      &.isSingle {
+        right: 4px;
+      }
     }
     .button {
       margin-left: 8px;

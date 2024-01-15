@@ -51,10 +51,16 @@ function Header({ logo, notificationCount }: Props) {
       <div className={cx('innerBlock')}>
         {logo || <HeaderLogo />}
         <div className={cx('right')}>
-          {user && (
+          {user && notificationCount !== 0 && (
             <Link href="/notification">
               <HeaderIcon>
-                <div className={cx('notificationCount')}>{Math.min(99, notificationCount)}</div>
+                <div
+                  className={cx('notificationCount', {
+                    isSingle: Math.floor(notificationCount / 10) === 0,
+                  })}
+                >
+                  {Math.min(99, notificationCount)}
+                </div>
                 <NotificationIcon />
               </HeaderIcon>
             </Link>

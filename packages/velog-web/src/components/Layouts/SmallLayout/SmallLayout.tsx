@@ -15,11 +15,16 @@ function isDefaultHeaderProps(props: Props): props is DefaultHeaderProps {
 
 function SmallLayout(props: Props) {
   const layout = isDefaultHeaderProps(props) ? (
-    <BasicLayout isCustomHeader={false}>
+    <BasicLayout notificationCount={props.notificationCount} isCustomHeader={false}>
       <div className={cx('block')}>{props.children}</div>
     </BasicLayout>
   ) : (
-    <BasicLayout isCustomHeader={true} username={props.username} userLogo={props.userLogo}>
+    <BasicLayout
+      notificationCount={props.notificationCount}
+      isCustomHeader={true}
+      username={props.username}
+      userLogo={props.userLogo}
+    >
       <div className={cx('block')}>{props.children}</div>
     </BasicLayout>
   )

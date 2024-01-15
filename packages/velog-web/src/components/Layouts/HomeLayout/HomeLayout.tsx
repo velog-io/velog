@@ -3,15 +3,14 @@ import styles from './HomeLayout.module.css'
 import HomeTab from '@/features/home/components/HomeTab/HomeTab'
 import FloatingHeader from '@/features/home/components/FloatingHeader/FloatingHeader'
 import Header from '@/components/Header'
-import getNotificationCount from '@/prefetch/getNotificationCount'
 const cx = bindClassNames(styles)
 
 interface Props {
   children?: React.ReactNode
+  notificationCount: number
 }
 
-async function HomeLayout({ children }: Props) {
-  const notificationCount = await getNotificationCount()
+function HomeLayout({ children, notificationCount }: Props) {
   return (
     <div className={cx('block')}>
       <FloatingHeader header={<Header notificationCount={notificationCount} />} />
