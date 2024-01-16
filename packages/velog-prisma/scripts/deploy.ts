@@ -14,6 +14,8 @@ const main = async () => {
   const diff = filenames.filter((filename) => !appliedMigrationNames.includes(filename))
 
   const message = getMessage(diff)
+  console.log(`Target Database Info: ${process.env.DATABASE_URL}\n`)
+
   const { answer } = await inquirer.prompt([
     {
       type: 'list',

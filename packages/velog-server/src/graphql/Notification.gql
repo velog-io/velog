@@ -21,27 +21,25 @@ union NotificationAction =
   | PostLikeNotificationAction
 
 type FollowerNotificationAction {
-  id: ID!
   fk_user_id: String!
   display_name: String!
 }
 
 type CommentNotificationAction {
-  id: ID!
+  fk_post_id: String!
   fk_user_id: String!
   title: String!
   url_slug: String!
-  writer_username: String!
+  display_name: String!
   text: String!
 }
 
 type PostLikeNotificationAction {
-  id: ID!
+  fk_post_id: String!
   fk_user_id: String!
   display_name: String!
   title: String!
   url_slug: String!
-  writer_username: String!
 }
 
 type Query {

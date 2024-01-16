@@ -71,8 +71,8 @@ export type Comment = {
 }
 
 export type CommentNotificationAction = {
+  fk_post_id: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
-  id: Scalars['ID']['output']
   text: Scalars['String']['output']
   title: Scalars['String']['output']
   url_slug: Scalars['String']['output']
@@ -120,7 +120,6 @@ export type FollowResult = {
 export type FollowerNotificationAction = {
   display_name: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
-  id: Scalars['ID']['output']
 }
 
 export type FollowerNotificationActionInput = {
@@ -332,8 +331,8 @@ export type PostHistory = {
 
 export type PostLikeNotificationAction = {
   display_name: Scalars['String']['output']
+  fk_post_id: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
-  id: Scalars['ID']['output']
   title: Scalars['String']['output']
   url_slug: Scalars['String']['output']
   writer_username: Scalars['String']['output']
@@ -956,8 +955,8 @@ export type CommentNotificationActionResolvers<
   ParentType extends
     ResolversParentTypes['CommentNotificationAction'] = ResolversParentTypes['CommentNotificationAction'],
 > = {
+  fk_post_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
@@ -988,7 +987,6 @@ export type FollowerNotificationActionResolvers<
 > = {
   display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -1129,7 +1127,7 @@ export type NotificationActionResolvers<
   ParentType extends
     ResolversParentTypes['NotificationAction'] = ResolversParentTypes['NotificationAction'],
 > = {
-  __resolveType?: TypeResolveFn<
+  __resolveType: TypeResolveFn<
     'CommentNotificationAction' | 'FollowerNotificationAction' | 'PostLikeNotificationAction',
     ParentType,
     ContextType
@@ -1199,8 +1197,8 @@ export type PostLikeNotificationActionResolvers<
     ResolversParentTypes['PostLikeNotificationAction'] = ResolversParentTypes['PostLikeNotificationAction'],
 > = {
   display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  fk_post_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   writer_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>

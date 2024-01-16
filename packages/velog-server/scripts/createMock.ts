@@ -1,15 +1,16 @@
 import 'reflect-metadata'
+import { getMockUserWithProfile, MockUserWithProfileType } from 'test/mock/mockUser'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Post, Prisma, User } from '@prisma/client'
 import { mockComment } from 'test/mock/mockComment'
 import { MockPostsType, mockPosts } from 'test/mock/mockPost'
-import { mockUserWithProfile, MockUserWithProfileType } from 'test/mock/mockUser'
 import { v4 as uuidv4 } from 'uuid'
 import { ENV } from '@env'
 import {
   CommentNotificationAction,
   FollowerNotificationAction,
+  NotificationAction,
   PostLikeNotificationAction,
 } from '@graphql/helpers/generated'
 
@@ -123,12 +124,12 @@ class Seeder {
 
       if (!post) return null
 
-      const postActionId = [uuidv4(), uuidv4(), uuidv4()]
-      const commentActionId = [uuidv4(), uuidv4(), uuidv4()]
+      const postLikeActionId = [uuidv4(), uuidv4(), uuidv4()]
+      const commentActionId = [...postLikeActionId]
       const followerActionId = [uuidv4(), uuidv4(), uuidv4()]
 
       const postLikeAction: () => PostLikeNotificationAction & { type: string } = () => ({
-        id: postActionId[this.utils.randomNumber(4)] ?? uuidv4(),
+        fk_post_id: postLikeActionId[this.utils.randomNumber(3)] ?? uuidv4(),
         display_name: actionDataUser?.profile?.display_name || '',
         title: 'Test post',
         url_slug: post.url_slug || '',
@@ -138,7 +139,7 @@ class Seeder {
       })
 
       const commentAction: () => CommentNotificationAction & { type: string } = () => ({
-        id: commentActionId[this.utils.randomNumber(4)] ?? uuidv4(),
+        fk_post_id: commentActionId[this.utils.randomNumber(3)] ?? uuidv4(),
         fk_user_id: 'uuid',
         text: '안녕하세요. Velog 좋아요.',
         url_slug: post.url_slug || '',
@@ -148,23 +149,26 @@ class Seeder {
       })
 
       const followerAction: () => FollowerNotificationAction & { type: string } = () => ({
-        id: followerActionId[this.utils.randomNumber(4)] ?? uuidv4(),
+        fk_user_id: followerActionId[this.utils.randomNumber(3)] ?? uuidv4(),
         display_name: actionDataUser.profile?.display_name || '',
-        fk_user_id: actionDataUser.id,
         type: 'follower',
       })
 
-      const actionSelector = [postLikeAction, commentAction, followerAction]
-      const notificationMocks = Array(200)
-        .fill(0)
-        .map(() => actionSelector[this.utils.randomNumber(2)])
+      const actionSelector: (() => NotificationAction & { type: string })[] = [
+        commentAction,
+        postLikeAction,
+        followerAction,
+      ]
 
-      const promises = notificationMocks.map((mock) => {
-        const action = mock()
+      const notificationMocks = Array(500)
+        .fill(0)
+        .map(() => actionSelector[this.utils.randomNumber(2)]())
+
+      const promises = notificationMocks.map((action: any) => {
         return this.db.notification.create({
           data: {
             fk_user_id: u.id,
-            action_id: action.id,
+            action_id: action?.fk_post_id || action?.fk_user_id,
             action,
             type: action.type,
           },
@@ -182,6 +186,7 @@ async function main() {
     const utils = new UtilsService()
     const seeder = new Seeder(db, utils)
 
+    const mockUserWithProfile = getMockUserWithProfile(10)
     const createUsers = seeder.createUser(mockUserWithProfile)
     const users = await Promise.all(createUsers)
 

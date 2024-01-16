@@ -33,7 +33,6 @@ export class NotificationService implements Service {
   ) {}
   public async getNotifications(signedUserId?: string): Promise<Notification[]> {
     if (!signedUserId) {
-      console.log('signedUserId', signedUserId)
       throw new UnauthorizedError('Not Logged In')
     }
 
