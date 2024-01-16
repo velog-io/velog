@@ -35,6 +35,7 @@ export class NotificationService implements Service {
     if (!signedUserId) {
       throw new UnauthorizedError('Not Logged In')
     }
+
     const user = await this.userService.findById(signedUserId)
 
     if (!user) {
