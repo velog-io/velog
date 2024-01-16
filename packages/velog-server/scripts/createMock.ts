@@ -148,7 +148,9 @@ class Seeder {
       }
 
       const actionSelector = [postLikeAction, commentAction, followerAction]
-      const notificationMocks = Array(200).fill(actionSelector[this.utils.randomNumber(2)])
+      const notificationMocks = Array(200)
+        .fill(0)
+        .map(() => actionSelector[this.utils.randomNumber(2)])
 
       const promises = notificationMocks.map((action) => {
         return this.db.notification.create({

@@ -268,7 +268,7 @@ export type MutationUpdateVelogTitleArgs = {
 }
 
 export type Notification = {
-  action: NotificationAction
+  action: Scalars['JSON']['output']
   action_id?: Maybe<Scalars['ID']['output']>
   created_at: Scalars['Date']['output']
   fk_user_id: Scalars['String']['output']
@@ -776,9 +776,7 @@ export type ResolversTypes = {
     }
   >
   Mutation: ResolverTypeWrapper<{}>
-  Notification: ResolverTypeWrapper<
-    Omit<Notification, 'action'> & { action: ResolversTypes['NotificationAction'] }
-  >
+  Notification: ResolverTypeWrapper<Notification>
   NotificationAction: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['NotificationAction']>
   NotificationActionInput: NotificationActionInput
   NotificationType: NotificationType
@@ -870,9 +868,7 @@ export type ResolversParentTypes = {
     previous?: Maybe<ResolversParentTypes['Post']>
   }
   Mutation: {}
-  Notification: Omit<Notification, 'action'> & {
-    action: ResolversParentTypes['NotificationAction']
-  }
+  Notification: Notification
   NotificationAction: ResolversUnionTypes<ResolversParentTypes>['NotificationAction']
   NotificationActionInput: NotificationActionInput
   PositiveInt: Scalars['PositiveInt']['output']
@@ -1117,7 +1113,7 @@ export type NotificationResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification'],
 > = {
-  action?: Resolver<ResolversTypes['NotificationAction'], ParentType, ContextType>
+  action?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>
   action_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
@@ -1133,7 +1129,7 @@ export type NotificationActionResolvers<
   ParentType extends
     ResolversParentTypes['NotificationAction'] = ResolversParentTypes['NotificationAction'],
 > = {
-  __resolveType: TypeResolveFn<
+  __resolveType?: TypeResolveFn<
     'CommentNotificationAction' | 'FollowerNotificationAction' | 'PostLikeNotificationAction',
     ParentType,
     ContextType

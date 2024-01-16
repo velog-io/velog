@@ -33,6 +33,7 @@ export class NotificationService implements Service {
   ) {}
   public async getNotifications(signedUserId?: string): Promise<Notification[]> {
     if (!signedUserId) {
+      console.log('signedUserId', signedUserId)
       throw new UnauthorizedError('Not Logged In')
     }
 
@@ -41,6 +42,7 @@ export class NotificationService implements Service {
     if (!user) {
       throw new NotFoundError('Not Found User')
     }
+
     const notifications = await this.db.notification.findMany({
       where: {
         fk_user_id: signedUserId,

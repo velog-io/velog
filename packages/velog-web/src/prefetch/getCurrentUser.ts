@@ -1,9 +1,11 @@
 import { CurrentUserDocument, User } from '@/graphql/helpers/generated'
+import { getAccessToken } from '@/lib/auth'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
-import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 
-export default async function getCurrentUser({ accessToken }: GetCurrentUserArgs) {
-  if (!accessToken) {
+export default async function getCurrentUser() {
+  const token = getAccessToken()
+
+  if (!token) {
     return null
   }
 
@@ -14,7 +16,7 @@ export default async function getCurrentUser({ accessToken }: GetCurrentUserArgs
     }
 
     const headers = {
-      authorization: `Bearer ${accessToken.value}`,
+      authorization: `Bearer ${token.value}`,
     }
 
     const { currentUser } = await graphqlFetch<{ currentUser: User }>({
@@ -29,8 +31,4 @@ export default async function getCurrentUser({ accessToken }: GetCurrentUserArgs
     console.log('get Current user error', error)
     return null
   }
-}
-
-type GetCurrentUserArgs = {
-  accessToken: RequestCookie
 }

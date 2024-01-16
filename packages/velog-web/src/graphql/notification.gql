@@ -2,29 +2,7 @@ query notification {
   notifications {
     id
     type
-    action {
-      ... on FollowerNotificationAction {
-        id
-        fk_user_id
-        display_name
-      }
-      ... on CommentNotificationAction {
-        id
-        fk_user_id
-        title
-        url_slug
-        writer_username
-        text
-      }
-      ... on PostLikeNotificationAction {
-        id
-        fk_user_id
-        display_name
-        title
-        url_slug
-        writer_username
-      }
-    }
+    action
     action_id
     is_read
   }

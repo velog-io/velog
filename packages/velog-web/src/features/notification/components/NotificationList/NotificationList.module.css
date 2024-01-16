@@ -1,2 +1,10 @@
 .block {
+  padding: 0;
+  margin: 0;
+  padding-top: 32px;
+  padding-bottom: 32px;
+
+  @media screen and (max-width: 768px) {
+    padding: 0;
+  }
 }

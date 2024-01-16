@@ -2,7 +2,7 @@ type Notification {
   id: ID!
   type: NotificationType!
   fk_user_id: String!
-  action: NotificationAction!
+  action: JSON!
   action_id: ID
   is_read: Boolean!
   is_deleted: Boolean!

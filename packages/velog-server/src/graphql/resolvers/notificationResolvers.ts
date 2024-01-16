@@ -6,6 +6,7 @@ const notificationResolvers: Resolvers = {
   Query: {
     notifications: async (_, __, ctx) => {
       const notificationService = container.resolve(NotificationService)
+      console.log('ctx,', ctx.user?.id)
       return await notificationService.getNotifications(ctx.user?.id)
     },
     notificationCount: async (_, __, ctx) => {

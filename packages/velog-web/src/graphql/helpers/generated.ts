@@ -264,7 +264,7 @@ export type MutationUpdateVelogTitleArgs = {
 }
 
 export type Notification = {
-  action: NotificationAction
+  action: Scalars['JSON']['output']
   action_id: Maybe<Scalars['ID']['output']>
   created_at: Scalars['DateTimeISO']['output']
   fk_user_id: Scalars['String']['output']
@@ -719,26 +719,9 @@ export type NotificationQuery = {
   notifications: Array<{
     id: string
     type: NotificationType
+    action: Record<string, any>
     action_id: string | null
     is_read: boolean
-    action:
-      | {
-          id: string
-          fk_user_id: string
-          title: string
-          url_slug: string
-          writer_username: string
-          text: string
-        }
-      | { id: string; fk_user_id: string; display_name: string }
-      | {
-          id: string
-          fk_user_id: string
-          display_name: string
-          title: string
-          url_slug: string
-          writer_username: string
-        }
   }>
 }
 
@@ -1410,29 +1393,7 @@ export const NotificationDocument = `
   notifications {
     id
     type
-    action {
-      ... on FollowerNotificationAction {
-        id
-        fk_user_id
-        display_name
-      }
-      ... on CommentNotificationAction {
-        id
-        fk_user_id
-        title
-        url_slug
-        writer_username
-        text
-      }
-      ... on PostLikeNotificationAction {
-        id
-        fk_user_id
-        display_name
-        title
-        url_slug
-        writer_username
-      }
-    }
+    action
     action_id
     is_read
   }

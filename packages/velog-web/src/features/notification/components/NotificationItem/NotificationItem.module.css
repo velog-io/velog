@@ -1,2 +1,44 @@
 .block {
+  padding: 8px 16px;
+  display: flex;
+}
+
+.skeleton {
+  .content {
+    width: 70%;
+    margin-left: 24px;
+
+    @media screen and (max-width: 768px) {
+      max-width: 60%;
+      margin-bottom: 18px;
+    }
+
+    @media screen and (max-width: 425px) {
+      max-width: 50%;
+      margin-left: 12px;
+    }
+
+    .info {
+      display: flex;
+      margin-top: 10px;
+    }
+  }
+
+  .button {
+    width: 96px;
+    height: 32px;
+    border-radius: 16px;
+    background-color: var(--bg-element4);
+    margin-left: auto;
+
+    @media screen and (max-width: 768px) {
+      width: 80px;
+      height: 24px;
+    }
+
+    @media screen and (max-width: 425px) {
+      width: 68px;
+      height: 24px;
+    }
+  }
 }
