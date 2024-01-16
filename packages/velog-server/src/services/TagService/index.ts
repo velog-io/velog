@@ -38,9 +38,10 @@ export class TagService implements Service {
     })
   }
   public async findByName(name: string): Promise<Tag | null> {
-    return await this.db.tag.findUnique({
+    const filtered = this.utils.escapeForUrl(name).toLowerCase()
+    return await this.db.tag.findFirst({
       where: {
-        name,
+        OR: [{ name_filtered: filtered }, { name: name }],
       },
     })
   }
