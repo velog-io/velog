@@ -123,46 +123,50 @@ class Seeder {
 
       if (!post) return null
 
-      const postLikeAction: PostLikeNotificationAction = {
-        id: 'post like action UUID',
+      const postActionId = [uuidv4(), uuidv4(), uuidv4()]
+      const commentActionId = [uuidv4(), uuidv4(), uuidv4()]
+      const followerActionId = [uuidv4(), uuidv4(), uuidv4()]
+
+      const postLikeAction: () => PostLikeNotificationAction & { type: string } = () => ({
+        id: postActionId[this.utils.randomNumber(4)] ?? uuidv4(),
         display_name: actionDataUser?.profile?.display_name || '',
         title: 'Test post',
         url_slug: post.url_slug || '',
         fk_user_id: actionDataUser.id,
         writer_username: post.user.username,
-      }
+        type: 'postLike',
+      })
 
-      const commentAction: CommentNotificationAction = {
-        id: 'comment action uuid',
+      const commentAction: () => CommentNotificationAction & { type: string } = () => ({
+        id: commentActionId[this.utils.randomNumber(4)] ?? uuidv4(),
         fk_user_id: 'uuid',
         text: '안녕하세요. Velog 좋아요.',
         url_slug: post.url_slug || '',
         title: post.title || 'Post Title',
         writer_username: post.user.username,
-      }
+        type: 'comment',
+      })
 
-      const followerAction: FollowerNotificationAction = {
-        id: 'follower action uuid',
+      const followerAction: () => FollowerNotificationAction & { type: string } = () => ({
+        id: followerActionId[this.utils.randomNumber(4)] ?? uuidv4(),
         display_name: actionDataUser.profile?.display_name || '',
         fk_user_id: actionDataUser.id,
-      }
+        type: 'follower',
+      })
 
       const actionSelector = [postLikeAction, commentAction, followerAction]
       const notificationMocks = Array(200)
         .fill(0)
         .map(() => actionSelector[this.utils.randomNumber(2)])
 
-      const promises = notificationMocks.map((action) => {
+      const promises = notificationMocks.map((mock) => {
+        const action = mock()
         return this.db.notification.create({
           data: {
             fk_user_id: u.id,
-            action_id: uuidv4(),
+            action_id: action.id,
             action,
-            type: action.id.includes('comment')
-              ? 'comment'
-              : action.id.includes('like')
-              ? 'postLike'
-              : 'follower',
+            type: action.type,
           },
         })
       })
@@ -189,9 +193,7 @@ async function main() {
 
     const createnotifications = await seeder.createNotification(users)
     await Promise.all(createnotifications)
-  } catch (error) {
-    throw error
-  }
+  } catch (error) {}
 }
 
 function checkAppEnv() {
