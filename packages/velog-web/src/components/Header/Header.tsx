@@ -27,7 +27,6 @@ type Props = {
 }
 
 function Header({ logo, notificationCount }: Props) {
-  console.log('notificationCount', notificationCount)
   const params = useParams()
   const pathname = usePathname()
   const [userMenu, toggleUserMenu] = useToggle(false)

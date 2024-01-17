@@ -63,6 +63,7 @@ export class NotificationService implements Service {
     if (!user) {
       throw new NotFoundError('Not found user')
     }
+
     return await this.db.notification.count({
       where: {
         fk_user_id: signedUserId,

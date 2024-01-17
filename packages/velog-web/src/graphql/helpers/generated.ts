@@ -67,12 +67,12 @@ export type Comment = {
 }
 
 export type CommentNotificationAction = {
+  display_name: Scalars['String']['output']
   fk_post_id: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
   text: Scalars['String']['output']
   title: Scalars['String']['output']
   url_slug: Scalars['String']['output']
-  writer_username: Scalars['String']['output']
 }
 
 export type CommentNotificationActionInput = {
@@ -335,7 +335,6 @@ export type PostLikeNotificationAction = {
   fk_user_id: Scalars['String']['output']
   title: Scalars['String']['output']
   url_slug: Scalars['String']['output']
-  writer_username: Scalars['String']['output']
 }
 
 export type PostLikeNotificationActionInput = {

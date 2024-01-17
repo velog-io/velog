@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import getUserFollowInfo from '@/prefetch/getUserFollowInfo'
 import UserProfile from '@/components/UserProfile'
 import BasicLayout from '@/components/Layouts/BasicLayout'
+import getNotificationCount from '@/prefetch/getNotificationCount'
 
 type Props = {
   params: { username: string }
@@ -16,6 +17,7 @@ export default async function VelogPageLayout({ children, params }: Props) {
   const username = getUsernameFromParams(params)
   const user = await getUserFollowInfo(username)
   const velogConfig = await getVelogConfig({ username })
+  const notificationCount = await getNotificationCount()
 
   if (!user || !velogConfig) {
     notFound()
@@ -27,7 +29,12 @@ export default async function VelogPageLayout({ children, params }: Props) {
   }
 
   return (
-    <BasicLayout isCustomHeader={true} userLogo={userLogo} username={username}>
+    <BasicLayout
+      isCustomHeader={true}
+      userLogo={userLogo}
+      username={username}
+      notificationCount={notificationCount}
+    >
       <VelogLayout
         userProfile={
           <UserProfile
