@@ -1,21 +1,26 @@
 import { Notification } from '@/graphql/helpers/generated'
+import { useMemo } from 'react'
 
-export default function useNotificationMerge(notifications: Partial<Notification>[] = []) {
+export default function useNotificationMerge(notifications: NotificationQueryData[] = []) {
   const generateKey = (notification: Partial<Notification>) =>
     `${notification.type}_${notification.action_target_id}`
 
-  const mergeByTargetId = notifications.reduce<Map<string, Notification[]>>((map, notification) => {
-    if (!notification.action_target_id) return map
-    if (notification.type === 'follower') return map
-    const key = generateKey(notification)
-    if (map.has(key)) {
-      const value = map.get(key)
-      value?.push(notification as Notification)
-    } else {
-      map.set(key, [notification as Notification])
-    }
-    return map
-  }, new Map())
+  const mergeByTargetId = useMemo(
+    () =>
+      notifications.reduce<Map<string, Notification[]>>((map, notification) => {
+        if (!notification.action_target_id) return map
+        if (notification.type === 'follower') return map
+        const key = generateKey(notification)
+        if (map.has(key)) {
+          const value = map.get(key)
+          value?.push(notification as Notification)
+        } else {
+          map.set(key, [notification as Notification])
+        }
+        return map
+      }, new Map()),
+    [notifications],
+  )
 
   const mapperKeys = Array.from(mergeByTargetId.keys())
   const usedMap = mapperKeys.reduce<Map<string, boolean>>(
@@ -23,34 +28,48 @@ export default function useNotificationMerge(notifications: Partial<Notification
     new Map(),
   )
 
-  const merged = notifications
-    .map((notification) => {
-      if (notification.type === 'follower') return notification
-      const key = generateKey(notification)
-      const isMerged = mapperKeys.includes(key)
+  const merged = useMemo(
+    () =>
+      notifications
+        .map((notification) => {
+          if (notification.type === 'follower')
+            return {
+              ...notification,
+              displayNames: [],
+              actionCount: 0,
+              isMerged: false,
+            }
+          const key = generateKey(notification)
 
-      if (!isMerged) return { ...notification }
+          const isMerged = mapperKeys.includes(key)
 
-      const isUsed = usedMap.get(key)
+          if (!isMerged)
+            return { ...notification, displayNames: [], actionCount: 0, isMerged: false }
 
-      if (isUsed) return null
+          const isUsed = usedMap.get(key)
 
-      const mergedData = mergeByTargetId.get(key)
+          if (isUsed) return null
 
-      if (!mergedData) return null
-      const displayNames = mergedData.map((data) => data.action.display_name).slice(0, 2)
-      const actionCount = mergedData.length
+          const mergedData = mergeByTargetId.get(key)
 
-      usedMap.set(key, true)
+          if (!mergedData) return null
+          const displayNames = mergedData
+            .map((data) => data.action.display_name as string)
+            .slice(0, 2)
+          const actionCount = mergedData.length
 
-      return {
-        ...notification,
-        displayNames,
-        actionCount,
-        isMerged: true,
-      }
-    })
-    .filter(Boolean)
+          usedMap.set(key, true)
+
+          return {
+            ...notification,
+            displayNames,
+            actionCount,
+            isMerged: true,
+          }
+        })
+        .filter(Boolean),
+    [mapperKeys, mergeByTargetId, notifications, usedMap],
+  ) as NotificationMergedType[]
 
   return { merged }
 }
@@ -60,3 +79,5 @@ export type NotificationMergedType = {
   actionCount: number
   isMerged: boolean
 } & Notification
+
+type NotificationQueryData = Omit<Notification, 'fk_user_id' | 'is_deleted'>
