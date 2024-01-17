@@ -2,8 +2,9 @@ type Notification {
   id: ID!
   type: NotificationType!
   fk_user_id: String!
+  actor_id: ID
   action: JSON!
-  action_id: ID
+  action_target_id: ID
   is_read: Boolean!
   is_deleted: Boolean!
   created_at: Date!

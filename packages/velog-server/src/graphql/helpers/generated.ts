@@ -268,7 +268,8 @@ export type MutationUpdateVelogTitleArgs = {
 
 export type Notification = {
   action: Scalars['JSON']['output']
-  action_id?: Maybe<Scalars['ID']['output']>
+  action_target_id?: Maybe<Scalars['ID']['output']>
+  actor_id?: Maybe<Scalars['ID']['output']>
   created_at: Scalars['Date']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
@@ -1111,7 +1112,8 @@ export type NotificationResolvers<
   ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification'],
 > = {
   action?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>
-  action_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
+  action_target_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
+  actor_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>

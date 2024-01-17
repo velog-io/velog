@@ -161,11 +161,12 @@ class Seeder {
           ]
 
           const notificationMocks = actionSelector.map((v) => v())
-          const promises = notificationMocks.map((action) => {
+          const promises = notificationMocks.map((action: any) => {
             return this.db.notification.create({
               data: {
                 fk_user_id: u.id,
-                actor_id: action.fk_user_id,
+                action_target_id: action?.fk_post_id || action.fk_user_id,
+                actor_id: actor.id,
                 action,
                 type: action.type,
               },

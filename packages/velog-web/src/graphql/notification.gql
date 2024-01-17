@@ -3,8 +3,10 @@ query notification {
     id
     type
     action
-    action_id
+    actor_id
+    action_target_id
     is_read
+    created_at
   }
 }
 

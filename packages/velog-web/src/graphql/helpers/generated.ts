@@ -264,7 +264,8 @@ export type MutationUpdateVelogTitleArgs = {
 
 export type Notification = {
   action: Scalars['JSON']['output']
-  action_id: Maybe<Scalars['ID']['output']>
+  action_target_id: Maybe<Scalars['ID']['output']>
+  actor_id: Maybe<Scalars['ID']['output']>
   created_at: Scalars['DateTimeISO']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
@@ -718,8 +719,10 @@ export type NotificationQuery = {
     id: string
     type: NotificationType
     action: Record<string, any>
-    action_id: string | null
+    actor_id: string | null
+    action_target_id: string | null
     is_read: boolean
+    created_at: any
   }>
 }
 
@@ -1392,8 +1395,10 @@ export const NotificationDocument = `
     id
     type
     action
-    action_id
+    actor_id
+    action_target_id
     is_read
+    created_at
   }
 }
     `
