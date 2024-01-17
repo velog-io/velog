@@ -8,7 +8,7 @@ import { isCommentAction, isFollowerAction, isPostLikeAction } from '../../utils
 import CommentActionItem from '../NotificationItem/CommentActionItem'
 import PostLikeActionItem from '../NotificationItem/PostLikeActionItem'
 import FollowerActionItem from '../NotificationItem/FollowerActionItem'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 
 const cx = bindClassNames(styles)
 
