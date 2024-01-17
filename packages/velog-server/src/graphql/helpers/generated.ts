@@ -71,12 +71,12 @@ export type Comment = {
 }
 
 export type CommentNotificationAction = {
+  display_name: Scalars['String']['output']
   fk_post_id: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
   text: Scalars['String']['output']
   title: Scalars['String']['output']
   url_slug: Scalars['String']['output']
-  writer_username: Scalars['String']['output']
 }
 
 export type CommentNotificationActionInput = {
@@ -335,7 +335,6 @@ export type PostLikeNotificationAction = {
   fk_user_id: Scalars['String']['output']
   title: Scalars['String']['output']
   url_slug: Scalars['String']['output']
-  writer_username: Scalars['String']['output']
 }
 
 export type PostLikeNotificationActionInput = {
@@ -955,12 +954,12 @@ export type CommentNotificationActionResolvers<
   ParentType extends
     ResolversParentTypes['CommentNotificationAction'] = ResolversParentTypes['CommentNotificationAction'],
 > = {
+  display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   fk_post_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  writer_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -1201,7 +1200,6 @@ export type PostLikeNotificationActionResolvers<
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  writer_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 

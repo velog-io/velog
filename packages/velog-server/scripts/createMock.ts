@@ -23,13 +23,17 @@ class Seeder {
   ) {}
   public createUser(mockUser: MockUserWithProfileType[]) {
     return mockUser.map((user) => {
-      const { profile, ...rest } = user
+      const { profile, username, email, is_certified } = user
       return this.db.user.create({
         data: {
-          ...rest,
+          username,
+          email,
+          is_certified,
           profile: {
             create: {
-              ...profile,
+              display_name: profile.display_name,
+              short_bio: profile.short_bio,
+              thumbnail: profile.thumbnail,
             },
           },
           velogConfig: {
@@ -80,7 +84,7 @@ class Seeder {
       })
   }
   public async createNotification(users: User[]) {
-    return users.map(async (u) => {
+    return users.slice(0, 3).map(async (u) => {
       const user = await this.db.user.findUnique({
         where: {
           id: u.id,
@@ -94,7 +98,7 @@ class Seeder {
         throw new Error('Not found User')
       }
 
-      const actionDataUser = await this.db.user.findFirst({
+      const actionDataUsers = await this.db.user.findMany({
         where: {
           id: {
             not: u.id,
@@ -103,15 +107,12 @@ class Seeder {
         include: {
           profile: true,
         },
+        take: 20,
       })
 
-      if (!actionDataUser) {
-        throw new Error('Not found Action Data User')
-      }
-
-      const post = await this.db.post.findFirst({
+      const posts = await this.db.post.findMany({
         where: {
-          fk_user_id: actionDataUser.id,
+          fk_user_id: u.id,
         },
         include: {
           user: {
@@ -122,60 +123,60 @@ class Seeder {
         },
       })
 
-      if (!post) return null
-
-      const postLikeActionId = [uuidv4(), uuidv4(), uuidv4()]
+      const postLikeActionId = posts.map((post) => post.id)
       const commentActionId = [...postLikeActionId]
       const followerActionId = [uuidv4(), uuidv4(), uuidv4()]
 
-      const postLikeAction: () => PostLikeNotificationAction & { type: string } = () => ({
-        fk_post_id: postLikeActionId[this.utils.randomNumber(3)] ?? uuidv4(),
-        display_name: actionDataUser?.profile?.display_name || '',
-        title: 'Test post',
-        url_slug: post.url_slug || '',
-        fk_user_id: actionDataUser.id,
-        writer_username: post.user.username,
-        type: 'postLike',
-      })
-
-      const commentAction: () => CommentNotificationAction & { type: string } = () => ({
-        fk_post_id: commentActionId[this.utils.randomNumber(3)] ?? uuidv4(),
-        fk_user_id: 'uuid',
-        text: '안녕하세요. Velog 좋아요.',
-        url_slug: post.url_slug || '',
-        title: post.title || 'Post Title',
-        writer_username: post.user.username,
-        type: 'comment',
-      })
-
-      const followerAction: () => FollowerNotificationAction & { type: string } = () => ({
-        fk_user_id: followerActionId[this.utils.randomNumber(3)] ?? uuidv4(),
-        display_name: actionDataUser.profile?.display_name || '',
-        type: 'follower',
-      })
-
-      const actionSelector: (() => NotificationAction & { type: string })[] = [
-        commentAction,
-        postLikeAction,
-        followerAction,
-      ]
-
-      const notificationMocks = Array(500)
-        .fill(0)
-        .map(() => actionSelector[this.utils.randomNumber(2)]())
-
-      const promises = notificationMocks.map((action: any) => {
-        return this.db.notification.create({
-          data: {
-            fk_user_id: u.id,
-            action_id: action?.fk_post_id || action?.fk_user_id,
-            action,
-            type: action.type,
-          },
+      for (let i = 0; i < actionDataUsers.length; i++) {
+        const actionDataUser = actionDataUsers[i]
+        const postLikeAction: () => PostLikeNotificationAction & { type: string } = () => ({
+          fk_post_id: postLikeActionId[this.utils.randomNumber(3)] ?? uuidv4(),
+          display_name: actionDataUser?.profile?.display_name || '',
+          title: 'Test post',
+          url_slug: posts[0].url_slug || '',
+          fk_user_id: actionDataUser.id,
+          type: 'postLike',
         })
-      })
 
-      await Promise.all(promises)
+        const commentAction: () => CommentNotificationAction & { type: string } = () => ({
+          fk_post_id: commentActionId[this.utils.randomNumber(3)] ?? uuidv4(),
+          fk_user_id: 'uuid',
+          display_name: actionDataUser.profile?.display_name || '',
+          text: '안녕하세요. Velog 좋아요.',
+          url_slug: posts[2].url_slug || '',
+          title: posts[2].title || 'Post Title',
+          type: 'comment',
+        })
+
+        const followerAction: () => FollowerNotificationAction & { type: string } = () => ({
+          fk_user_id: followerActionId[this.utils.randomNumber(3)] ?? uuidv4(),
+          display_name: actionDataUser.profile?.display_name || '',
+          type: 'follower',
+        })
+
+        const actionSelector: (() => NotificationAction & { type: string })[] = [
+          commentAction,
+          postLikeAction,
+          followerAction,
+        ]
+
+        const notificationMocks = Array(500)
+          .fill(0)
+          .map(() => actionSelector[this.utils.randomNumber(2)]())
+
+        const promises = notificationMocks.map((action: any) => {
+          return this.db.notification.create({
+            data: {
+              fk_user_id: u.id,
+              action_id: action?.fk_post_id || action?.fk_user_id,
+              action,
+              type: action.type,
+            },
+          })
+        })
+
+        await Promise.all(promises)
+      }
     })
   }
 }
@@ -186,7 +187,7 @@ async function main() {
     const utils = new UtilsService()
     const seeder = new Seeder(db, utils)
 
-    const mockUserWithProfile = getMockUserWithProfile(10)
+    const mockUserWithProfile = getMockUserWithProfile(1000)
     const createUsers = seeder.createUser(mockUserWithProfile)
     const users = await Promise.all(createUsers)
 

@@ -38,12 +38,12 @@ export const mockUserWithProfile = [
 export const getMockUserWithProfile = (count = 100) => {
   for (let i = 0; i < count; i++) {
     mockUserWithProfile.push({
-      username: faker.internet.userName(),
-      email: faker.internet.email(),
+      username: faker.internet.userName().slice(0, 200),
+      email: faker.internet.email().slice(0, 200),
       is_certified: faker.datatype.boolean(),
       profile: {
-        display_name: faker.internet.displayName(),
-        short_bio: faker.lorem.sentence({ min: 0, max: 100 }),
+        display_name: faker.internet.displayName().slice(0, 200),
+        short_bio: faker.lorem.sentence(50).slice(0, 200),
         thumbnail: faker.image.avatar(),
       },
     })
