@@ -75,7 +75,7 @@ export class NotificationService implements Service {
   public async createNotification<T extends NotificationType>({
     type,
     fk_user_id,
-    action_id,
+    actor_id,
     action,
   }: CreateNotificationArgs<T>): Promise<Notification> {
     if (!action) {
@@ -97,7 +97,7 @@ export class NotificationService implements Service {
       data: {
         type,
         fk_user_id,
-        action_id,
+        actor_id: actor_id || null,
         action,
       },
     })
@@ -186,7 +186,7 @@ export class NotificationService implements Service {
 export type CreateNotificationArgs<T = NotificationType> = {
   type: NotificationType
   fk_user_id: string
-  action_id: string
+  actor_id?: string
   action: T extends 'comment'
     ? CommentNotificationAction
     : NotificationType extends 'follower'

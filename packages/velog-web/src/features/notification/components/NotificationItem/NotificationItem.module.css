@@ -3,6 +3,10 @@
   display: flex;
 }
 
+.item {
+  list-style: none;
+}
+
 .skeleton {
   .content {
     width: 70%;

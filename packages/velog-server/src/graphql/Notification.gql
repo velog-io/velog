@@ -22,25 +22,31 @@ union NotificationAction =
   | PostLikeNotificationAction
 
 type FollowerNotificationAction {
-  fk_user_id: String!
-  display_name: String!
+  follower_id: ID!
+  actor_display_name: String!
+  actor_username: String!
+  actor_thumbnail: String!
 }
 
 type CommentNotificationAction {
-  fk_post_id: String!
-  fk_user_id: String!
-  title: String!
-  url_slug: String!
-  display_name: String!
-  text: String!
+  comment_id: ID!
+  post_title: String!
+  post_url_slug: String!
+  post_writer_username: String!
+  comment_text: String!
+  actor_display_name: String!
+  actor_username: String!
+  actor_thumbnail: String!
 }
 
 type PostLikeNotificationAction {
-  fk_post_id: String!
-  fk_user_id: String!
-  display_name: String!
-  title: String!
-  url_slug: String!
+  post_like_id: ID!
+  post_title: String!
+  post_url_slug: String!
+  post_writer_username: String!
+  actor_display_name: String!
+  actor_username: String!
+  actor_thumbnail: String!
 }
 
 type Query {
@@ -68,27 +74,37 @@ input NotificationActionInput {
 }
 
 input FollowerNotificationActionInput {
-  id: ID!
-  fk_user_id: String!
-  display_name: String!
+  follower_id: ID!
+  follower_user_id: ID!
+  actor_display_name: String!
+  actor_username: String!
+  actor_thumbnail: String!
+  type: NotificationType!
 }
 
 input CommentNotificationActionInput {
-  id: ID!
-  fk_user_id: String!
-  title: String!
-  url_slug: String!
-  writer_username: String!
-  text: String!
+  comment_id: ID!
+  post_id: String!
+  post_title: String!
+  post_url_slug: String!
+  post_writer_username: String!
+  comment_text: String!
+  actor_display_name: String!
+  actor_username: String!
+  actor_thumbnail: String!
+  type: NotificationType!
 }
 
 input PostLikeNotificationActionInput {
-  id: ID!
-  fk_user_id: String!
-  display_name: String!
-  title: String!
-  url_slug: String!
-  writer_username: String!
+  post_id: ID!
+  post_like_id: ID!
+  post_title: String!
+  post_url_slug: String!
+  post_writer_username: String!
+  actor_display_name: String!
+  actor_username: String!
+  actor_thumbnail: String!
+  type: NotificationType!
 }
 
 input ReadNotificationInput {

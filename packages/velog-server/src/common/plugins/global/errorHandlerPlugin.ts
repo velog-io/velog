@@ -4,6 +4,7 @@ import { FastifyPluginCallback } from 'fastify'
 
 const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
   fastify.addHook('onError', (request, reply, error) => {
+    console.log('request', request)
     console.log('fastify hook error:', error)
   })
   fastify.setErrorHandler((error, _, reply) => {

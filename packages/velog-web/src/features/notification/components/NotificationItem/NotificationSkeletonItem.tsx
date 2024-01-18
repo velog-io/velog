@@ -9,7 +9,7 @@ const cx = bindClassNames(styles)
 
 type Props = { index: number }
 
-function NotificationSkeletonItem({ index }: Props) {
+function NotificationSkeletonItem({ index = 0 }: Props) {
   return (
     <li className={cx('block', 'skeleton')}>
       <div>

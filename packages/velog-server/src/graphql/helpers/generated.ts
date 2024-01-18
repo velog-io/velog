@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NotificationType } from './enums'
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import {
@@ -71,21 +72,26 @@ export type Comment = {
 }
 
 export type CommentNotificationAction = {
-  display_name: Scalars['String']['output']
-  fk_post_id: Scalars['String']['output']
-  fk_user_id: Scalars['String']['output']
-  text: Scalars['String']['output']
-  title: Scalars['String']['output']
-  url_slug: Scalars['String']['output']
+  actor_display_name: Scalars['String']['output']
+  actor_thumbnail: Scalars['String']['output']
+  actor_username: Scalars['String']['output']
+  comment_id: Scalars['ID']['output']
+  comment_text: Scalars['String']['output']
+  post_title: Scalars['String']['output']
+  post_url_slug: Scalars['String']['output']
+  post_writer_username: Scalars['String']['output']
 }
 
 export type CommentNotificationActionInput = {
-  fk_user_id: Scalars['String']['input']
-  id: Scalars['ID']['input']
-  text: Scalars['String']['input']
-  title: Scalars['String']['input']
-  url_slug: Scalars['String']['input']
-  writer_username: Scalars['String']['input']
+  actor_display_name: Scalars['String']['input']
+  actor_thumbnail: Scalars['String']['input']
+  actor_username: Scalars['String']['input']
+  comment_id: Scalars['ID']['input']
+  comment_text: Scalars['String']['input']
+  post_title: Scalars['String']['input']
+  post_url_slug: Scalars['String']['input']
+  post_writer_username: Scalars['String']['input']
+  type: NotificationType
 }
 
 export type ConfirmChangeEmailInput = {
@@ -118,14 +124,18 @@ export type FollowResult = {
 }
 
 export type FollowerNotificationAction = {
-  display_name: Scalars['String']['output']
-  fk_user_id: Scalars['String']['output']
+  actor_display_name: Scalars['String']['output']
+  actor_thumbnail: Scalars['String']['output']
+  actor_username: Scalars['String']['output']
+  follower_id: Scalars['ID']['output']
 }
 
 export type FollowerNotificationActionInput = {
-  display_name: Scalars['String']['input']
-  fk_user_id: Scalars['String']['input']
-  id: Scalars['ID']['input']
+  actor_display_name: Scalars['String']['input']
+  actor_thumbnail: Scalars['String']['input']
+  actor_username: Scalars['String']['input']
+  follower_id: Scalars['ID']['input']
+  type: NotificationType
 }
 
 export type GetFollowInput = {
@@ -331,20 +341,24 @@ export type PostHistory = {
 }
 
 export type PostLikeNotificationAction = {
-  display_name: Scalars['String']['output']
-  fk_post_id: Scalars['String']['output']
-  fk_user_id: Scalars['String']['output']
-  title: Scalars['String']['output']
-  url_slug: Scalars['String']['output']
+  actor_display_name: Scalars['String']['output']
+  actor_thumbnail: Scalars['String']['output']
+  actor_username: Scalars['String']['output']
+  post_like_id: Scalars['ID']['output']
+  post_title: Scalars['String']['output']
+  post_url_slug: Scalars['String']['output']
+  post_writer_username: Scalars['String']['output']
 }
 
 export type PostLikeNotificationActionInput = {
-  display_name: Scalars['String']['input']
-  fk_user_id: Scalars['String']['input']
-  id: Scalars['ID']['input']
-  title: Scalars['String']['input']
-  url_slug: Scalars['String']['input']
-  writer_username: Scalars['String']['input']
+  actor_display_name: Scalars['String']['input']
+  actor_thumbnail: Scalars['String']['input']
+  actor_username: Scalars['String']['input']
+  post_like_id: Scalars['ID']['input']
+  post_title: Scalars['String']['input']
+  post_url_slug: Scalars['String']['input']
+  post_writer_username: Scalars['String']['input']
+  type: NotificationType
 }
 
 export type Query = {
@@ -955,12 +969,14 @@ export type CommentNotificationActionResolvers<
   ParentType extends
     ResolversParentTypes['CommentNotificationAction'] = ResolversParentTypes['CommentNotificationAction'],
 > = {
-  display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  fk_post_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  actor_display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  actor_thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  actor_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  comment_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  comment_text?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  post_title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  post_url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  post_writer_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -985,8 +1001,10 @@ export type FollowerNotificationActionResolvers<
   ParentType extends
     ResolversParentTypes['FollowerNotificationAction'] = ResolversParentTypes['FollowerNotificationAction'],
 > = {
-  display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  actor_display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  actor_thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  actor_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  follower_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -1197,11 +1215,13 @@ export type PostLikeNotificationActionResolvers<
   ParentType extends
     ResolversParentTypes['PostLikeNotificationAction'] = ResolversParentTypes['PostLikeNotificationAction'],
 > = {
-  display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  fk_post_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  actor_display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  actor_thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  actor_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  post_like_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  post_title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  post_url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  post_writer_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 

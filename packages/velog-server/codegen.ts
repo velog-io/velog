@@ -14,7 +14,8 @@ const config: CodegenConfig = {
         'typescript-resolvers',
         {
           add: {
-            content: '/* eslint-disable @typescript-eslint/ban-types */',
+            content: `/* eslint-disable @typescript-eslint/ban-types */
+            /* eslint-disable @typescript-eslint/no-unused-vars */`,
           },
         },
       ],

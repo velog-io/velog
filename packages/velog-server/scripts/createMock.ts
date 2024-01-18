@@ -129,29 +129,42 @@ class Seeder {
       for (let i = 0; i < actors.length; i++) {
         try {
           const actor = actors[i]
-          const postLikeAction: () => PostLikeNotificationAction & { type: string } = () => ({
-            fk_post_id: postIds[this.utils.randomNumber(postIds.length - 1)],
-            display_name: actor?.profile?.display_name || '',
-            title: 'Test post',
-            url_slug: posts[0]?.url_slug || '',
-            fk_user_id: actor.id,
-            type: 'postLike',
+
+          const followerAction: () => FollowerNotificationAction & { type: string } = () => ({
+            follower_id: followerActionId[this.utils.randomNumber(2)] ?? uuidv4(),
+            actor_display_name: actor.profile?.display_name || '',
+            actor_username: actor.username || '',
+            actor_thumbnail: actor.profile?.thumbnail || '',
+            type: 'follower',
+            fk_user_id: u.id,
           })
 
           const commentAction: () => CommentNotificationAction & { type: string } = () => ({
-            fk_post_id: postIds[this.utils.randomNumber(postIds.length - 1)],
-            fk_user_id: actor.id,
-            display_name: actor.profile?.display_name || '',
-            text: '안녕하세요. Velog 좋아요.',
-            url_slug: posts[2]?.url_slug || '',
-            title: posts[2]?.title || 'Post Title',
+            comment_id: uuidv4(),
+            post_title: posts[2]?.title || '',
+            post_url_slug: posts[2]?.url_slug || '',
+            post_writer_username: u.username,
+            comment_text: '안녕하세요. Velog 좋아요.',
+            actor_display_name: actor.profile?.display_name || '',
+            actor_username: actor.username,
+            actor_thumbnail: actor.profile?.thumbnail || '',
             type: 'comment',
+            fk_post_id: posts[2]?.id,
           })
 
-          const followerAction: () => FollowerNotificationAction & { type: string } = () => ({
-            fk_user_id: followerActionId[this.utils.randomNumber(2)] ?? uuidv4(),
-            display_name: actor.profile?.display_name || '',
-            type: 'follower',
+          const postLikeAction: () => PostLikeNotificationAction & { type: string } = () => ({
+            post_like_id: uuidv4(),
+            post_title: posts[2]?.title || '',
+            post_url_slug: posts[2]?.url_slug || '',
+            post_writer_username: u.username,
+            actor_username: actor?.username || '',
+            actor_display_name: actor?.profile?.display_name || '',
+            actor_thumbnail: actor.profile?.thumbnail || '',
+            url_slug: posts[0]?.url_slug || '',
+            fk_user_id: actor.id,
+
+            type: 'postLike',
+            fk_post_id: postIds[this.utils.randomNumber(posts.length - 1)] ?? uuidv4(),
           })
 
           const actionSelector: (() => NotificationAction & { type: string })[] = [
@@ -188,7 +201,7 @@ async function main() {
     const utils = new UtilsService()
     const seeder = new Seeder(db, utils)
 
-    const mockUserWithProfile = getMockUserWithProfile(1000)
+    const mockUserWithProfile = getMockUserWithProfile(20)
     const createUsers = seeder.createUser(mockUserWithProfile)
     const users = await Promise.all(createUsers)
 
