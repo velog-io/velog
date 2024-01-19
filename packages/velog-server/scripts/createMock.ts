@@ -1,4 +1,5 @@
 import 'reflect-metadata'
+import { faker } from '@faker-js/faker'
 import { getMockUserWithProfile, MockUserWithProfileType } from 'test/mock/mockUser'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
@@ -141,10 +142,10 @@ class Seeder {
 
           const commentAction: () => CommentNotificationAction & { type: string } = () => ({
             comment_id: uuidv4(),
-            post_title: posts[2]?.title || '',
+            post_title: faker.lorem.sentence(5),
             post_url_slug: posts[2]?.url_slug || '',
             post_writer_username: u.username,
-            comment_text: '안녕하세요. Velog 좋아요.',
+            comment_text: faker.lorem.sentence(8),
             actor_display_name: actor.profile?.display_name || '',
             actor_username: actor.username,
             actor_thumbnail: actor.profile?.thumbnail || '',
@@ -154,7 +155,7 @@ class Seeder {
 
           const postLikeAction: () => PostLikeNotificationAction & { type: string } = () => ({
             post_like_id: uuidv4(),
-            post_title: posts[2]?.title || '',
+            post_title: faker.lorem.sentence(5) || '',
             post_url_slug: posts[2]?.url_slug || '',
             post_writer_username: u.username,
             actor_username: actor?.username || '',
