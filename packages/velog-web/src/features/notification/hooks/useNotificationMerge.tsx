@@ -79,13 +79,17 @@ export default function useNotificationMerge(notifications: NotificationQueryDat
   return { merged }
 }
 
-export type NotificationMerged = {
+export type NotificationMerged<T = Record<string, any>> = {
   displayNames: string[]
   actionCount: number
   isMerged: true
   thumbnails: string[]
+  action: T
 } & Notification
 
-export type NotificationNotMerged = { isMerged: false } & Notification
+export type NotificationNotMerged<T = Record<string, any>> = {
+  isMerged: false
+  action: T
+} & Notification
 
 type NotificationQueryData = Omit<Notification, 'fk_user_id' | 'is_deleted'>
