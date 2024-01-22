@@ -58,6 +58,8 @@ type Query {
 type Mutation {
   createNofication(input: CreateNotificationInput!): Notification!
   readNotification(input: ReadNotificationInput!): Void
+  readAllNotifications: Void
+  removeAllNotifications: Void
 }
 
 input CreateNotificationInput {

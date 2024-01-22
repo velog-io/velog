@@ -22,7 +22,9 @@ interface Service {
   createNotification<T extends NotificationType>(
     args: CreateNotificationArgs<T>,
   ): Promise<Notification>
-  markNotificationsAsRead(notificationIds: string[], signedUserId?: string): Promise<void>
+  readNotification(notificationIds: string[], signedUserId?: string): Promise<void>
+  readAllNotification(signedUserId?: string): Promise<void>
+  removeAllNotifications(signedUserId?: string): Promise<void>
 }
 
 @injectable()
@@ -166,10 +168,7 @@ export class NotificationService implements Service {
     if (args.type === 'follower') return true
     return false
   }
-  public async markNotificationsAsRead(
-    notificationIds: string[],
-    signedUserId?: string,
-  ): Promise<void> {
+  public async readNotification(notificationIds: string[], signedUserId?: string): Promise<void> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')
     }
@@ -191,6 +190,47 @@ export class NotificationService implements Service {
       data: {
         is_read: true,
         read_at: this.utils.now,
+      },
+    })
+  }
+  async readAllNotification(signedUserId?: string): Promise<void> {
+    if (!signedUserId) {
+      throw new UnauthorizedError('Not logged in')
+    }
+
+    const user = await this.userService.findById(signedUserId)
+
+    if (!user) {
+      throw new NotFoundError('Not found user')
+    }
+
+    await this.db.notification.updateMany({
+      where: {
+        fk_user_id: signedUserId,
+      },
+      data: {
+        is_read: true,
+        read_at: this.utils.now,
+      },
+    })
+  }
+  async removeAllNotifications(signedUserId?: string): Promise<void> {
+    if (!signedUserId) {
+      throw new UnauthorizedError('Not logged in')
+    }
+
+    const user = await this.userService.findById(signedUserId)
+
+    if (!user) {
+      throw new NotFoundError('Not found user')
+    }
+
+    await this.db.notification.updateMany({
+      where: {
+        fk_user_id: signedUserId,
+      },
+      data: {
+        is_deleted: true,
       },
     })
   }

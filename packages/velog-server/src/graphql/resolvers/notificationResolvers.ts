@@ -16,7 +16,15 @@ const notificationResolvers: Resolvers = {
   Mutation: {
     readNotification: async (_, { input }, ctx) => {
       const notificationService = container.resolve(NotificationService)
-      return await notificationService.markNotificationsAsRead(input.notification_ids, ctx.user?.id)
+      return await notificationService.readNotification(input.notification_ids, ctx.user?.id)
+    },
+    readAllNotifications: async (_, __, ctx) => {
+      const notificationService = container.resolve(NotificationService)
+      return await notificationService.readAllNotification(ctx.user?.id)
+    },
+    removeAllNotifications: async (_, __, ctx) => {
+      const notificationService = container.resolve(NotificationService)
+      return await notificationService.removeAllNotifications(ctx.user?.id)
     },
   },
 }

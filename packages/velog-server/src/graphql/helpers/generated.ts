@@ -202,7 +202,9 @@ export type Mutation = {
   initiateChangeEmail?: Maybe<Scalars['Void']['output']>
   likePost?: Maybe<Post>
   logout?: Maybe<Scalars['Void']['output']>
+  readAllNotifications?: Maybe<Scalars['Void']['output']>
   readNotification?: Maybe<Scalars['Void']['output']>
+  removeAllNotifications?: Maybe<Scalars['Void']['output']>
   sendMail?: Maybe<SendMailResponse>
   unfollow?: Maybe<Scalars['Boolean']['output']>
   unlikePost?: Maybe<Post>
@@ -1072,12 +1074,14 @@ export type MutationResolvers<
     RequireFields<MutationLikePostArgs, 'input'>
   >
   logout?: Resolver<Maybe<ResolversTypes['Void']>, ParentType, ContextType>
+  readAllNotifications?: Resolver<Maybe<ResolversTypes['Void']>, ParentType, ContextType>
   readNotification?: Resolver<
     Maybe<ResolversTypes['Void']>,
     ParentType,
     ContextType,
     RequireFields<MutationReadNotificationArgs, 'input'>
   >
+  removeAllNotifications?: Resolver<Maybe<ResolversTypes['Void']>, ParentType, ContextType>
   sendMail?: Resolver<
     Maybe<ResolversTypes['SendMailResponse']>,
     ParentType,
