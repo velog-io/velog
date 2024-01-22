@@ -7,16 +7,15 @@ const cx = bindClassNames(styles)
 
 interface Props {
   children?: React.ReactNode
-  notificationCount: number
 }
 
-function HomeLayout({ children, notificationCount }: Props) {
+function HomeLayout({ children }: Props) {
   return (
     <div className={cx('block')}>
-      <FloatingHeader header={<Header notificationCount={notificationCount} />} />
+      <FloatingHeader header={<Header />} />
       <div className={cx('mainResponsive')}>
         <div className={cx('innerBlock')}>
-          <Header notificationCount={notificationCount} />
+          <Header />
           <HomeTab />
           <div className={cx('mainWrapper')}>
             <main>{children}</main>

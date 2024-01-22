@@ -88,7 +88,11 @@ function PostLikeMergedItem(props: Props) {
               </Link>
             )
           })}
-          <span>님 {rest_action_count > 0 && <span>외 {rest_action_count}명</span>}이</span>
+          <span>
+            {' '}
+            {rest_action_count > 0 && <>님 외 {rest_action_count}명이</>}
+            {rest_action_count <= 0 && <>님이</>}
+          </span>
           <span className={cx('spacer')} />
           <span className={cx('postTitle', 'bold')}>
             <Link href={`/@${post_writer_username}/${post_url_slug}`}>

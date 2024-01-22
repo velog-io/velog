@@ -1,0 +1,19 @@
+.block {
+  .button {
+    padding: 8px 16px;
+    font-size: 16px;
+    border-radius: 16px;
+    color: var(--text3);
+    background-color: var(--bg-element2);
+
+    &.isActive {
+      color: var(--primary1);
+      background: linear-gradient(0deg, rgba(18, 184, 134, 0.08) 0%, rgba(18, 184, 134, 0.08) 100%),
+        var(--bg-element2, #f8f9fa);
+    }
+  }
+
+  .button + .button {
+    margin-left: 12px;
+  }
+}

@@ -37,6 +37,7 @@
       white-space: pre;
       word-wrap: break-word;
       word-break: break-all;
+      color: var(--text2);
     }
 
     span {
@@ -50,7 +51,6 @@
     .bold {
       font-size: 16px;
       font-weight: 600;
-      color: var(--text2);
     }
 
     .time {

@@ -38,7 +38,7 @@ function HomeTab({ isFloatingHeader = false }: Props) {
 
   return (
     <div className={cx('wrapper', 'mainHeaderResponsive', { isFloating: isFloatingHeader })}>
-      <div className={cx('left')}>
+      <nav className={cx('left')}>
         <div className={cx('tab')}>
           <ActiveLink
             href="/trending/week"
@@ -65,7 +65,7 @@ function HomeTab({ isFloatingHeader = false }: Props) {
             className={cx('indicator')}
           />
         </div>
-      </div>
+      </nav>
       <div className={cx('right')}>
         {(pathname === '/' || pathname.includes('/trending')) && (
           <>

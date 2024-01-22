@@ -12,7 +12,6 @@ const cx = bindClassNames(styles)
 export type DefaultHeaderProps = {
   children: React.ReactNode
   isCustomHeader?: false
-  notificationCount: number
 }
 
 export type CustomLogoHeaderProps = {
@@ -20,7 +19,6 @@ export type CustomLogoHeaderProps = {
   username: string
   userLogo: UserLogo
   isCustomHeader?: true
-  notificationCount: number
 }
 
 type Props = DefaultHeaderProps | CustomLogoHeaderProps
@@ -31,12 +29,9 @@ function isDefaultHeaderProps(props: Props): props is DefaultHeaderProps {
 
 function BasicLayout(props: Props) {
   const header = isDefaultHeaderProps(props) ? (
-    <Header notificationCount={props.notificationCount} />
+    <Header />
   ) : (
-    <Header
-      notificationCount={props.notificationCount}
-      logo={<HeaderCustomLogo username={props.username} userLogo={props.userLogo} />}
-    />
+    <Header logo={<HeaderCustomLogo username={props.username} userLogo={props.userLogo} />} />
   )
 
   return (

@@ -1,5 +1,6 @@
 import NotificationList from '@/features/notification/components/NotificationList'
 import NotificationSkeletonList from '@/features/notification/components/NotificationList/NotificationSkeletonList'
+import NotificationSelector from '@/features/notification/components/NotificationSelector'
 import NotificationTitle from '@/features/notification/components/NotificationTitle'
 import getCurrentUser from '@/prefetch/getCurrentUser'
 import { redirect } from 'next/navigation'
@@ -11,9 +12,11 @@ export default async function NotificationPage() {
   if (!user) {
     redirect('/')
   }
+
   return (
     <>
       <NotificationTitle />
+      <NotificationSelector />
       <Suspense fallback={<NotificationSkeletonList />}>
         <NotificationList />
       </Suspense>

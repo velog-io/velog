@@ -7,15 +7,17 @@ import {
   PostLikeNotificationAction,
   FollowerNotificationAction,
   CommentNotificationAction,
+  NotificationsInput,
 } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
+import { Prisma } from '@prisma/client'
 import { UserService } from '@services/UserService/index.js'
 import { injectable, singleton } from 'tsyringe'
 import { z } from 'zod'
 
 interface Service {
-  getNotifications(signedUserId?: string): Promise<Notification[]>
+  getNotifications(query?: NotificationsInput, signedUserId?: string): Promise<Notification[]>
   getNotificationCount(signedUserId?: string): Promise<number>
   createNotification<T extends NotificationType>(
     args: CreateNotificationArgs<T>,
@@ -31,10 +33,15 @@ export class NotificationService implements Service {
     private readonly utils: UtilsService,
     private readonly userService: UserService,
   ) {}
-  public async getNotifications(signedUserId?: string): Promise<Notification[]> {
+  public async getNotifications(
+    query: NotificationsInput = {},
+    signedUserId?: string,
+  ): Promise<Notification[]> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not Logged In')
     }
+
+    console.log('query', query)
 
     const user = await this.userService.findById(signedUserId)
 
@@ -42,11 +49,17 @@ export class NotificationService implements Service {
       throw new NotFoundError('Not Found User')
     }
 
+    const whereQuery: Prisma.NotificationWhereInput = {
+      fk_user_id: signedUserId,
+      is_deleted: false,
+    }
+
+    if (Object.hasOwn(query, 'is_read')) {
+      Object.assign(whereQuery, { is_read: query.is_read })
+    }
+
     const notifications = await this.db.notification.findMany({
-      where: {
-        fk_user_id: signedUserId,
-        is_deleted: false,
-      },
+      where: whereQuery,
       orderBy: {
         created_at: 'desc',
       },

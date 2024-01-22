@@ -303,6 +303,10 @@ export enum NotificationType {
   PostLike = 'postLike',
 }
 
+export type NotificationsInput = {
+  is_read?: InputMaybe<Scalars['Boolean']['input']>
+}
+
 export type Post = {
   body: Maybe<Scalars['String']['output']>
   comments: Array<Comment>
@@ -408,6 +412,10 @@ export type QueryFollowersArgs = {
 
 export type QueryFollowingsArgs = {
   input: GetFollowInput
+}
+
+export type QueryNotificationsArgs = {
+  input: NotificationsInput
 }
 
 export type QueryPostArgs = {
@@ -729,7 +737,9 @@ export type GetFollowingsQuery = {
   }>
 }
 
-export type NotificationQueryVariables = Exact<{ [key: string]: never }>
+export type NotificationQueryVariables = Exact<{
+  input: NotificationsInput
+}>
 
 export type NotificationQuery = {
   notifications: Array<{
@@ -1407,8 +1417,8 @@ useSuspenseGetFollowingsQuery.getKey = (variables: GetFollowingsQueryVariables) 
 ]
 
 export const NotificationDocument = `
-    query notification {
-  notifications {
+    query notification($input: NotificationsInput!) {
+  notifications(input: $input) {
     id
     type
     action
@@ -1421,13 +1431,13 @@ export const NotificationDocument = `
     `
 
 export const useNotificationQuery = <TData = NotificationQuery, TError = unknown>(
-  variables?: NotificationQueryVariables,
+  variables: NotificationQueryVariables,
   options?: Omit<UseQueryOptions<NotificationQuery, TError, TData>, 'queryKey'> & {
     queryKey?: UseQueryOptions<NotificationQuery, TError, TData>['queryKey']
   },
 ) => {
   return useQuery<NotificationQuery, TError, TData>({
-    queryKey: variables === undefined ? ['notification'] : ['notification', variables],
+    queryKey: ['notification', variables],
     queryFn: fetcher<NotificationQuery, NotificationQueryVariables>(
       NotificationDocument,
       variables,
@@ -1436,18 +1446,16 @@ export const useNotificationQuery = <TData = NotificationQuery, TError = unknown
   })
 }
 
-useNotificationQuery.getKey = (variables?: NotificationQueryVariables) =>
-  variables === undefined ? ['notification'] : ['notification', variables]
+useNotificationQuery.getKey = (variables: NotificationQueryVariables) => ['notification', variables]
 
 export const useSuspenseNotificationQuery = <TData = NotificationQuery, TError = unknown>(
-  variables?: NotificationQueryVariables,
+  variables: NotificationQueryVariables,
   options?: Omit<UseSuspenseQueryOptions<NotificationQuery, TError, TData>, 'queryKey'> & {
     queryKey?: UseSuspenseQueryOptions<NotificationQuery, TError, TData>['queryKey']
   },
 ) => {
   return useSuspenseQuery<NotificationQuery, TError, TData>({
-    queryKey:
-      variables === undefined ? ['notificationSuspense'] : ['notificationSuspense', variables],
+    queryKey: ['notificationSuspense', variables],
     queryFn: fetcher<NotificationQuery, NotificationQueryVariables>(
       NotificationDocument,
       variables,
@@ -1456,8 +1464,10 @@ export const useSuspenseNotificationQuery = <TData = NotificationQuery, TError =
   })
 }
 
-useSuspenseNotificationQuery.getKey = (variables?: NotificationQueryVariables) =>
-  variables === undefined ? ['notificationSuspense'] : ['notificationSuspense', variables]
+useSuspenseNotificationQuery.getKey = (variables: NotificationQueryVariables) => [
+  'notificationSuspense',
+  variables,
+]
 
 export const NotificationCountDocument = `
     query notificationCount {

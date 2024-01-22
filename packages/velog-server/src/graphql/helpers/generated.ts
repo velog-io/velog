@@ -304,6 +304,10 @@ export type NotificationActionInput = {
 
 export { NotificationType }
 
+export type NotificationsInput = {
+  is_read?: InputMaybe<Scalars['Boolean']['input']>
+}
+
 export type Post = {
   body?: Maybe<Scalars['String']['output']>
   comments: Array<Comment>
@@ -409,6 +413,10 @@ export type QueryFollowersArgs = {
 
 export type QueryFollowingsArgs = {
   input: GetFollowInput
+}
+
+export type QueryNotificationsArgs = {
+  input: NotificationsInput
 }
 
 export type QueryPostArgs = {
@@ -797,6 +805,7 @@ export type ResolversTypes = {
   NotificationAction: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['NotificationAction']>
   NotificationActionInput: NotificationActionInput
   NotificationType: NotificationType
+  NotificationsInput: NotificationsInput
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Post: ResolverTypeWrapper<PostModel>
   PostHistory: ResolverTypeWrapper<PostHistory>
@@ -888,6 +897,7 @@ export type ResolversParentTypes = {
   Notification: Notification
   NotificationAction: ResolversUnionTypes<ResolversParentTypes>['NotificationAction']
   NotificationActionInput: NotificationActionInput
+  NotificationsInput: NotificationsInput
   PositiveInt: Scalars['PositiveInt']['output']
   Post: PostModel
   PostHistory: PostHistory
@@ -1267,7 +1277,12 @@ export type QueryResolvers<
   >
   isLogged?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   notificationCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-  notifications?: Resolver<Array<ResolversTypes['Notification']>, ParentType, ContextType>
+  notifications?: Resolver<
+    Array<ResolversTypes['Notification']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryNotificationsArgs, 'input'>
+  >
   post?: Resolver<
     Maybe<ResolversTypes['Post']>,
     ParentType,

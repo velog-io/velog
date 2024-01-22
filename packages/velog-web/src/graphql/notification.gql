@@ -1,5 +1,5 @@
-query notification {
-  notifications {
+query notification($input: NotificationsInput!) {
+  notifications(input: $input) {
     id
     type
     action

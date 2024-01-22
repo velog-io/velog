@@ -51,7 +51,7 @@ type PostLikeNotificationAction {
 }
 
 type Query {
-  notifications: [Notification!]!
+  notifications(input: NotificationsInput!): [Notification!]!
   notificationCount: Int!
 }
 
@@ -106,6 +106,10 @@ input PostLikeNotificationActionInput {
   actor_username: String!
   actor_thumbnail: String!
   type: NotificationType!
+}
+
+input NotificationsInput {
+  is_read: Boolean
 }
 
 input ReadNotificationInput {

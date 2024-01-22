@@ -4,9 +4,9 @@ import { container } from 'tsyringe'
 
 const notificationResolvers: Resolvers = {
   Query: {
-    notifications: async (_, __, ctx) => {
+    notifications: async (_, { input }, ctx) => {
       const notificationService = container.resolve(NotificationService)
-      return await notificationService.getNotifications(ctx.user?.id)
+      return await notificationService.getNotifications(input, ctx.user?.id)
     },
     notificationCount: async (_, __, ctx) => {
       const notificationService = container.resolve(NotificationService)

@@ -14,10 +14,13 @@ type Props = {
 export default async function VelogFollowLayout({ children, params }: Props) {
   const username = getUsernameFromParams(params)
   const user = await getUserFollowInfo(username)
-  const velogConfig = await getVelogConfig({ username })
-  const notificationCount = await getNotificationCount()
 
-  if (!user || !velogConfig) {
+  if (!user) {
+    notFound()
+  }
+
+  const velogConfig = await getVelogConfig({ username })
+  if (!velogConfig) {
     notFound()
   }
 
@@ -27,12 +30,7 @@ export default async function VelogFollowLayout({ children, params }: Props) {
   }
 
   return (
-    <SmallLayout
-      isCustomHeader={true}
-      username={username}
-      userLogo={userLogo}
-      notificationCount={notificationCount}
-    >
+    <SmallLayout isCustomHeader={true} username={username} userLogo={userLogo}>
       {children}
     </SmallLayout>
   )

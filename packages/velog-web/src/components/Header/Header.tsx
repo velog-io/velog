@@ -10,7 +10,7 @@ import useToggle from '@/hooks/useToggle'
 import HeaderUserIcon from '@/components/Header/HeaderUserIcon'
 import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
 import HeaderSkeleton from '@/components/Header/HeaderSkeleton'
-import { useCurrentUserQuery } from '@/graphql/helpers/generated'
+import { useCurrentUserQuery, useNotificationCountQuery } from '@/graphql/helpers/generated'
 import HeaderLogo from './HeaderLogo'
 import { useParams, usePathname } from 'next/navigation'
 import { getUsernameFromParams } from '@/lib/utils'
@@ -23,10 +23,10 @@ const cx = bindClassNames(styles)
 
 type Props = {
   logo?: React.ReactNode
-  notificationCount: number
 }
 
-function Header({ logo, notificationCount }: Props) {
+function Header({ logo }: Props) {
+  const { data: notificationCountData } = useNotificationCountQuery()
   const params = useParams()
   const pathname = usePathname()
   const [userMenu, toggleUserMenu] = useToggle(false)
@@ -46,6 +46,7 @@ function Header({ logo, notificationCount }: Props) {
   const username = getUsernameFromParams(params)
   const urlForSearch = username ? `/search?username=${username}` : '/search'
   const isNotificationPage = pathname.includes('/notification')
+  const notificationCount = notificationCountData?.notificationCount ?? 0
 
   if (isLoading || isFetching) return <HeaderSkeleton logo={logo || <HeaderLogo />} />
   return (
@@ -54,7 +55,7 @@ function Header({ logo, notificationCount }: Props) {
         {logo || <HeaderLogo />}
         <div className={cx('right')}>
           {user && notificationCount !== 0 && (
-            <Link href="/notification">
+            <Link href="/notifications">
               <HeaderIcon className={cx({ isNotificationPage })}>
                 <div
                   className={cx('notificationCount', {

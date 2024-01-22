@@ -1,6 +1,9 @@
 'use client'
 
-import { useSuspenseNotificationQuery } from '@/graphql/helpers/generated'
+import {
+  NotificationQueryVariables,
+  useSuspenseNotificationQuery,
+} from '@/graphql/helpers/generated'
 import styles from './NotificationList.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import useNotificationMerge from '../../hooks/useNotificationMerge'
@@ -8,11 +11,20 @@ import { isCommentAction, isFollowerAction, isPostLikeAction } from '../../utils
 import CommentActionItem from '../NotificationItem/CommentActionItem'
 import PostLikeActionItem from '../NotificationItem/PostLikeActionItem'
 import FollowerActionItem from '../NotificationItem/FollowerActionItem'
+import { usePathname } from 'next/navigation'
 
 const cx = bindClassNames(styles)
 
 function NotificationList() {
-  const { data } = useSuspenseNotificationQuery()
+  const input: Record<string, any> = {}
+
+  const pathname = usePathname()
+
+  if (pathname.includes('/not-read')) {
+    Object.assign(input, { is_read: false })
+  }
+
+  const { data } = useSuspenseNotificationQuery({ input })
 
   const { merged } = useNotificationMerge(data?.notifications)
 
