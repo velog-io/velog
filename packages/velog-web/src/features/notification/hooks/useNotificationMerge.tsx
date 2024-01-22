@@ -53,22 +53,24 @@ export default function useNotificationMerge(notifications: NotificationQueryDat
         }
 
         const isUsed = usedTargetIdMap.get(key)
-
         if (isUsed) return null
 
         const mergedData = targetIdMap.get(key)
-
         if (!mergedData) return null
+
         const actorInfo = mergedData.slice(0, 2).map((data) => ({
           display_name: data.action.actor_display_name,
           username: data.action.actor_username,
           thumbnail: data.action.actor_thumbnail,
         }))
 
+        const notificationIds = mergedData.map((data) => data.id)
+
         usedTargetIdMap.set(key, true)
 
         return {
           ...notification,
+          notificationIds,
           actor_info: actorInfo,
           action_count: mergedData.length,
           is_merged: true,
@@ -83,6 +85,7 @@ export default function useNotificationMerge(notifications: NotificationQueryDat
 }
 
 export type NotificationMerged<T = Record<string, any>> = {
+  notificationIds: string[]
   actor_info: { display_name: string; username: string; thumbnail: string }[]
   action_count: number
   is_merged: true

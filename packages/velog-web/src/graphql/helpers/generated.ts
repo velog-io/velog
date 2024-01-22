@@ -767,6 +767,12 @@ export type RemoveAllNotificationsMutationVariables = Exact<{ [key: string]: nev
 
 export type RemoveAllNotificationsMutation = { removeAllNotifications: void | null }
 
+export type ReadNoticationMutationVariables = Exact<{
+  input: ReadNotificationInput
+}>
+
+export type ReadNoticationMutation = { readNotification: void | null }
+
 export type ReadPostQueryVariables = Exact<{
   input: ReadPostInput
 }>
@@ -1589,6 +1595,33 @@ export const useRemoveAllNotificationsMutation = <TError = unknown, TContext = u
 }
 
 useRemoveAllNotificationsMutation.getKey = () => ['removeAllNotifications']
+
+export const ReadNoticationDocument = `
+    mutation readNotication($input: ReadNotificationInput!) {
+  readNotification(input: $input)
+}
+    `
+
+export const useReadNoticationMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    ReadNoticationMutation,
+    TError,
+    ReadNoticationMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<ReadNoticationMutation, TError, ReadNoticationMutationVariables, TContext>({
+    mutationKey: ['readNotication'],
+    mutationFn: (variables?: ReadNoticationMutationVariables) =>
+      fetcher<ReadNoticationMutation, ReadNoticationMutationVariables>(
+        ReadNoticationDocument,
+        variables,
+      )(),
+    ...options,
+  })
+}
+
+useReadNoticationMutation.getKey = () => ['readNotication']
 
 export const ReadPostDocument = `
     query readPost($input: ReadPostInput!) {

@@ -21,3 +21,7 @@ mutation readAllNotifications {
 mutation removeAllNotifications {
   removeAllNotifications
 }
+
+mutation readNotication($input: ReadNotificationInput!) {
+  readNotification(input: $input)
+}

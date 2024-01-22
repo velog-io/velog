@@ -9,19 +9,30 @@ import { useTimeFormat } from '@/hooks/useTimeFormat'
 import Link from 'next/link'
 import Thumbnail from '@/components/Thumbnail'
 import FollowButton from '@/components/FollowButton'
+import { useState } from 'react'
 
 const cx = bindClassNames({ ...itemStyles, ...styles })
 
-type Props = { action: FollowerNotificationAction } & NotificationNotMerged
+type Props = {
+  action: FollowerNotificationAction
+  onClickNotification: (notificationIds: string[]) => Promise<void>
+} & NotificationNotMerged
 
-function FollowerActionItem({ action, created_at, is_read }: Props) {
+function FollowerActionItem({ id, action, created_at, is_read, onClickNotification }: Props) {
   const { actor_display_name, actor_thumbnail, actor_username, actor_user_id } = action
 
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
 
+  const [isClick, setClick] = useState(false)
+
+  const onClick = () => {
+    onClickNotification([id])
+    setClick(true)
+  }
+
   return (
-    <li className={cx('block', 'item', { isRead: is_read })}>
+    <li className={cx('block', 'item', { isRead: is_read || isClick })} onClick={onClick}>
       <Link href={velogUrl}>
         <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
       </Link>

@@ -8,19 +8,32 @@ import { NotificationMerged } from '@/features/notification/hooks/useNotificatio
 import Thumbnail from '@/components/Thumbnail'
 import Link from 'next/link'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
+import React, { useState } from 'react'
 
 const cx = bindClassNames({ ...itemStyles, ...styles })
 
-type Props = { action: PostLikeNotificationAction } & NotificationMerged
+type Props = {
+  action: PostLikeNotificationAction
+  onClickNotification: (notificationIds: string[]) => Promise<void>
+} & NotificationMerged
+
+type ItemProps = {
+  onListClick: (notificationIds: string[]) => void
+} & Props
 
 function PostLikeActionItem(props: Props) {
-  const { is_merged } = props
-  if (is_merged) return <PostLikeMergedItem {...props} />
-  return <PostLikeNotMergedItem {...props} />
+  const { is_merged, onClickNotification } = props
+
+  const onListClick = (notificationIds: string[]) => {
+    onClickNotification(notificationIds)
+  }
+
+  if (is_merged) return <PostLikeMergedItem {...props} onListClick={onListClick} />
+  return <PostLikeNotMergedItem {...props} onListClick={onListClick} />
 }
 
-function PostLikeNotMergedItem(props: Props) {
-  const { action, created_at, is_read } = props
+function PostLikeNotMergedItem(props: ItemProps) {
+  const { id, action, created_at, is_read, onListClick } = props
   const {
     actor_username,
     actor_display_name,
@@ -31,8 +44,15 @@ function PostLikeNotMergedItem(props: Props) {
   } = action
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
+  const [isClick, setClick] = useState(false)
+
+  const onClick = () => {
+    onListClick([id])
+    setClick(true)
+  }
+
   return (
-    <li className={cx('block', 'item', { isRead: is_read })}>
+    <li className={cx('block', 'item', { isRead: is_read || isClick })} onClick={onClick}>
       <Link href={velogUrl}>
         <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
       </Link>
@@ -56,14 +76,21 @@ function PostLikeNotMergedItem(props: Props) {
   )
 }
 
-function PostLikeMergedItem(props: Props) {
-  const { action, created_at, actor_info, action_count, is_read } = props
+function PostLikeMergedItem(props: ItemProps) {
+  const { action, created_at, actor_info, action_count, is_read, onListClick, notificationIds } =
+    props
   const rest_action_count = action_count - 2
   const { post_title, post_writer_username, post_url_slug } = action
   const { time } = useTimeFormat(created_at)
+  const [isClick, setClick] = useState(false)
+
+  const onClick = () => {
+    onListClick(notificationIds)
+    setClick(true)
+  }
 
   return (
-    <li className={cx('block', 'item', { isRead: is_read })}>
+    <li className={cx('block', 'item', { isRead: is_read || isClick })} onClick={onClick}>
       <div className={cx('thumbanils')}>
         {actor_info.map((info, i) => {
           return (

@@ -8,14 +8,18 @@ import { NotificationNotMerged } from '@/features/notification/hooks/useNotifica
 import Link from 'next/link'
 import Thumbnail from '@/components/Thumbnail'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
+import { useState } from 'react'
 
 const cx = bindClassNames({ ...styles, ...itemStyles })
 
 type Props = {
   action: CommentNotificationAction
+  onClickNotification: (notificationIds: string[]) => Promise<void>
 } & NotificationNotMerged
 
-function CommentActionItem({ action, created_at, is_read }: Props) {
+function CommentActionItem({ id, action, created_at, is_read, onClickNotification }: Props) {
+  const [isClick, setClick] = useState(false)
+
   const {
     post_title,
     comment_text,
@@ -29,8 +33,13 @@ function CommentActionItem({ action, created_at, is_read }: Props) {
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
 
+  const onClick = () => {
+    onClickNotification([id])
+    setClick(true)
+  }
+
   return (
-    <li className={cx('block', 'item', { isRead: is_read })}>
+    <li className={cx('block', 'item', { isRead: is_read || isClick })} onClick={onClick}>
       <Link href={velogUrl}>
         <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
       </Link>
