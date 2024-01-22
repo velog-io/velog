@@ -20,7 +20,7 @@ function PostLikeActionItem(props: Props) {
 }
 
 function PostLikeNotMergedItem(props: Props) {
-  const { action, created_at } = props
+  const { action, created_at, is_read } = props
   const {
     actor_username,
     actor_display_name,
@@ -32,7 +32,7 @@ function PostLikeNotMergedItem(props: Props) {
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
   return (
-    <li className={cx('block', 'item')}>
+    <li className={cx('block', 'item', { isRead: is_read })}>
       <Link href={velogUrl}>
         <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
       </Link>
@@ -57,13 +57,13 @@ function PostLikeNotMergedItem(props: Props) {
 }
 
 function PostLikeMergedItem(props: Props) {
-  const { action, created_at, actor_info, action_count } = props
+  const { action, created_at, actor_info, action_count, is_read } = props
   const rest_action_count = action_count - 2
   const { post_title, post_writer_username, post_url_slug } = action
   const { time } = useTimeFormat(created_at)
 
   return (
-    <li className={cx('block', 'item')}>
+    <li className={cx('block', 'item', { isRead: is_read })}>
       <div className={cx('thumbanils')}>
         {actor_info.map((info, i) => {
           return (

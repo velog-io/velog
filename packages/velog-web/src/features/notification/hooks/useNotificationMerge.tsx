@@ -90,7 +90,7 @@ export type NotificationMerged<T = Record<string, any>> = {
 } & Notification
 
 export type NotificationNotMerged<T = Record<string, any>> = {
-  isMerged: false
+  is_merged: false
   action: T
 } & Notification
 

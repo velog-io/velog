@@ -1,9 +1,6 @@
 'use client'
 
-import {
-  NotificationQueryVariables,
-  useSuspenseNotificationQuery,
-} from '@/graphql/helpers/generated'
+import { useSuspenseNotificationQuery } from '@/graphql/helpers/generated'
 import styles from './NotificationList.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import useNotificationMerge from '../../hooks/useNotificationMerge'

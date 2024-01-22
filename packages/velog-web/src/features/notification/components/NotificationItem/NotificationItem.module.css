@@ -64,6 +64,11 @@
       padding-left: 5px;
     }
   }
+
+  &.isRead {
+    background-color: var(--bg-element2);
+    color: var(--text4);
+  }
 }
 
 .skeleton {

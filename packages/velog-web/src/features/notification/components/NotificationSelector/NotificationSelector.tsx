@@ -25,6 +25,10 @@ function NotificationSelector() {
           읽지 않음
         </Link>
       </div>
+      <div className={cx('right')}>
+        <div className={cx('handler')}>모두 읽음</div>
+        <div className={cx('handler')}>모두 삭제</div>
+      </div>
     </div>
   )
 }

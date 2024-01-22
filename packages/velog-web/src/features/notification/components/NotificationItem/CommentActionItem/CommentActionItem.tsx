@@ -15,14 +15,22 @@ type Props = {
   action: CommentNotificationAction
 } & NotificationNotMerged
 
-function CommentActionItem({ action, created_at }: Props) {
-  const { post_title, comment_text, actor_display_name, actor_thumbnail, actor_username } = action
+function CommentActionItem({ action, created_at, is_read }: Props) {
+  const {
+    post_title,
+    comment_text,
+    actor_display_name,
+    actor_thumbnail,
+    actor_username,
+    post_writer_username,
+    post_url_slug,
+  } = action
 
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
 
   return (
-    <li className={cx('block', 'item')}>
+    <li className={cx('block', 'item', { isRead: is_read })}>
       <Link href={velogUrl}>
         <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
       </Link>
@@ -35,7 +43,9 @@ function CommentActionItem({ action, created_at }: Props) {
           <span>님이</span>
           <span className={cx('spacer')} />
           <span className={cx('postTitle', 'bold')}>
-            {post_title.length > 20 ? `${post_title.slice(0, 20)}...` : post_title}
+            <Link href={`/@${post_writer_username}/${post_url_slug}`}>
+              {post_title.length > 20 ? `${post_title.slice(0, 20)}...` : post_title}
+            </Link>
           </span>
           <span className={cx('spacer')} />
           <span>

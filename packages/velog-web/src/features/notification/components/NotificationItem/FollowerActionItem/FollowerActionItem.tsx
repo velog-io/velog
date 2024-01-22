@@ -14,14 +14,14 @@ const cx = bindClassNames({ ...itemStyles, ...styles })
 
 type Props = { action: FollowerNotificationAction } & NotificationNotMerged
 
-function FollowerActionItem({ action, created_at }: Props) {
+function FollowerActionItem({ action, created_at, is_read }: Props) {
   const { actor_display_name, actor_thumbnail, actor_username, actor_user_id } = action
 
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
 
   return (
-    <li className={cx('block', 'item')}>
+    <li className={cx('block', 'item', { isRead: is_read })}>
       <Link href={velogUrl}>
         <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
       </Link>
