@@ -133,6 +133,7 @@ class Seeder {
 
           const followerAction: () => FollowerNotificationAction & { type: string } = () => ({
             follower_id: followerActionId[this.utils.randomNumber(2)] ?? uuidv4(),
+            actor_user_id: actor.id,
             actor_display_name: actor.profile?.display_name || '',
             actor_username: actor.username || '',
             actor_thumbnail: actor.profile?.thumbnail || '',

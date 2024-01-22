@@ -23,6 +23,7 @@ union NotificationAction =
 
 type FollowerNotificationAction {
   follower_id: ID!
+  actor_user_id: String!
   actor_display_name: String!
   actor_username: String!
   actor_thumbnail: String!

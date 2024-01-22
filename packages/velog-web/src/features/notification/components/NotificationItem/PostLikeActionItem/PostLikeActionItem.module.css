@@ -1,2 +1,38 @@
-.block {
+.thumbanils {
+  position: relative;
+  width: 40px;
+  height: 40px;
+
+  a {
+    display: block;
+    width: 25px;
+    height: 25px;
+
+    &:nth-child(1) {
+      position: absolute;
+      display: block;
+      top: 10px;
+      left: 10px;
+      z-index: 2;
+    }
+
+    &:nth-child(2) {
+      position: absolute;
+      display: block;
+      top: 0px;
+      left: 0px;
+      z-index: 1;
+    }
+  }
+
+  .thumbanil {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+
+    img {
+      border-radius: 50%;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+    }
+  }
 }

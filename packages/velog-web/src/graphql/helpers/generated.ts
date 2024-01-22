@@ -122,6 +122,7 @@ export type FollowResult = {
 export type FollowerNotificationAction = {
   actor_display_name: Scalars['String']['output']
   actor_thumbnail: Scalars['String']['output']
+  actor_user_id: Scalars['String']['output']
   actor_username: Scalars['String']['output']
   follower_id: Scalars['ID']['output']
 }

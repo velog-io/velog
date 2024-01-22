@@ -1,6 +1,6 @@
 .block {
-  padding: 8px 16px;
   display: flex;
+  padding: 8px 16px;
 }
 
 .item {
@@ -23,16 +23,28 @@
 
   .content {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-direction: row;
     flex-wrap: wrap;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
     margin-left: 19px;
     font-size: 14px;
     font-weight: 400;
+    max-width: 100%;
+
+    p {
+      white-space: pre;
+      word-wrap: break-word;
+      word-break: break-all;
+    }
 
     span {
-      display: inline-flex;
+      display: inline;
+    }
+
+    .wrap {
+      white-space: normal;
     }
 
     .bold {
@@ -45,6 +57,7 @@
       padding-left: 5px;
       font-size: 12px;
       color: var(--text3);
+      white-space: nowrap;
     }
 
     .spacer {

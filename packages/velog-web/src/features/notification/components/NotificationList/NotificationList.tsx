@@ -13,6 +13,7 @@ const cx = bindClassNames(styles)
 
 function NotificationList() {
   const { data } = useSuspenseNotificationQuery()
+
   const { merged } = useNotificationMerge(data?.notifications)
 
   const commentActions = merged

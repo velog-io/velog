@@ -25,5 +25,3 @@ export const isPostLikeAction = (
   if (args.type === 'postLike') return true
   return false
 }
-
-type NotificationByAction<T> = { action: T } & NotificationMerged
