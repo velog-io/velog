@@ -48,8 +48,9 @@
       }
 
       &:hover {
-        border-bottom: 1px solid var(--text3);
+        color: var(--text2);
         cursor: pointer;
+        transition: 0.125s color ease-in-out;
       }
     }
 

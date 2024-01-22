@@ -197,7 +197,9 @@ export type Mutation = {
   initiateChangeEmail: Maybe<Scalars['Void']['output']>
   likePost: Maybe<Post>
   logout: Maybe<Scalars['Void']['output']>
+  readAllNotifications: Maybe<Scalars['Void']['output']>
   readNotification: Maybe<Scalars['Void']['output']>
+  removeAllNotifications: Maybe<Scalars['Void']['output']>
   sendMail: Maybe<SendMailResponse>
   unfollow: Maybe<Scalars['Boolean']['output']>
   unlikePost: Maybe<Post>
@@ -756,6 +758,14 @@ export type NotificationQuery = {
 export type NotificationCountQueryVariables = Exact<{ [key: string]: never }>
 
 export type NotificationCountQuery = { notificationCount: number }
+
+export type ReadAllNotificationsMutationVariables = Exact<{ [key: string]: never }>
+
+export type ReadAllNotificationsMutation = { readAllNotifications: void | null }
+
+export type RemoveAllNotificationsMutationVariables = Exact<{ [key: string]: never }>
+
+export type RemoveAllNotificationsMutation = { removeAllNotifications: void | null }
 
 export type ReadPostQueryVariables = Exact<{
   input: ReadPostInput
@@ -1515,6 +1525,70 @@ export const useSuspenseNotificationCountQuery = <TData = NotificationCountQuery
 
 useSuspenseNotificationCountQuery.getKey = (variables?: NotificationCountQueryVariables) =>
   variables === undefined ? ['notificationCountSuspense'] : ['notificationCountSuspense', variables]
+
+export const ReadAllNotificationsDocument = `
+    mutation readAllNotifications {
+  readAllNotifications
+}
+    `
+
+export const useReadAllNotificationsMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    ReadAllNotificationsMutation,
+    TError,
+    ReadAllNotificationsMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<
+    ReadAllNotificationsMutation,
+    TError,
+    ReadAllNotificationsMutationVariables,
+    TContext
+  >({
+    mutationKey: ['readAllNotifications'],
+    mutationFn: (variables?: ReadAllNotificationsMutationVariables) =>
+      fetcher<ReadAllNotificationsMutation, ReadAllNotificationsMutationVariables>(
+        ReadAllNotificationsDocument,
+        variables,
+      )(),
+    ...options,
+  })
+}
+
+useReadAllNotificationsMutation.getKey = () => ['readAllNotifications']
+
+export const RemoveAllNotificationsDocument = `
+    mutation removeAllNotifications {
+  removeAllNotifications
+}
+    `
+
+export const useRemoveAllNotificationsMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    RemoveAllNotificationsMutation,
+    TError,
+    RemoveAllNotificationsMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<
+    RemoveAllNotificationsMutation,
+    TError,
+    RemoveAllNotificationsMutationVariables,
+    TContext
+  >({
+    mutationKey: ['removeAllNotifications'],
+    mutationFn: (variables?: RemoveAllNotificationsMutationVariables) =>
+      fetcher<RemoveAllNotificationsMutation, RemoveAllNotificationsMutationVariables>(
+        RemoveAllNotificationsDocument,
+        variables,
+      )(),
+    ...options,
+  })
+}
+
+useRemoveAllNotificationsMutation.getKey = () => ['removeAllNotifications']
 
 export const ReadPostDocument = `
     query readPost($input: ReadPostInput!) {

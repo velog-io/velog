@@ -66,8 +66,11 @@
   }
 
   &.isRead {
-    background-color: var(--bg-element2);
-    color: var(--text4);
+    .content {
+      * {
+        color: var(--text3) !important;
+      }
+    }
   }
 }
 

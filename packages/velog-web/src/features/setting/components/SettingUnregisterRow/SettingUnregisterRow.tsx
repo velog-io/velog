@@ -30,8 +30,6 @@ function SettingUnregisterRow({}: Props) {
       return
     }
 
-    console.log('token', token)
-
     await mutateAsync({
       input: { token },
     })

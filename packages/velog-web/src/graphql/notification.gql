@@ -13,3 +13,11 @@ query notification($input: NotificationsInput!) {
 query notificationCount {
   notificationCount
 }
+
+mutation readAllNotifications {
+  readAllNotifications
+}
+
+mutation removeAllNotifications {
+  removeAllNotifications
+}
