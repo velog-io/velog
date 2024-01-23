@@ -117,7 +117,7 @@ export const createECSfargateService = ({
         predefinedMetricSpecification: {
           predefinedMetricType: 'ECSServiceAverageMemoryUtilization',
         },
-        targetValue: 50,
+        targetValue: 70,
         scaleInCooldown: 60,
         scaleOutCooldown: 60,
       },
