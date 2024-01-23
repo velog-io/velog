@@ -1,6 +1,5 @@
 import SmallLayout from '@/components/Layouts/SmallLayout'
 import { getUsernameFromParams } from '@/lib/utils'
-import getNotificationCount from '@/prefetch/getNotificationCount'
 import getUserFollowInfo from '@/prefetch/getUserFollowInfo'
 import getVelogConfig from '@/prefetch/getVelogConfig'
 import { UserLogo } from '@/state/header'

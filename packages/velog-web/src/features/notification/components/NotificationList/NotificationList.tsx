@@ -16,10 +16,8 @@ import { usePathname } from 'next/navigation'
 const cx = bindClassNames(styles)
 
 function NotificationList() {
-  const input: Record<string, any> = {}
-
   const pathname = usePathname()
-
+  const input: Record<string, any> = {}
   if (pathname.includes('/not-read')) {
     Object.assign(input, { is_read: false })
   }

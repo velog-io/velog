@@ -16,7 +16,9 @@ export default async function NotificationPage() {
   return (
     <>
       <NotificationTitle />
-      <NotificationSelector />
+      <Suspense>
+        <NotificationSelector />
+      </Suspense>
       <Suspense fallback={<NotificationSkeletonList />}>
         <NotificationList />
       </Suspense>

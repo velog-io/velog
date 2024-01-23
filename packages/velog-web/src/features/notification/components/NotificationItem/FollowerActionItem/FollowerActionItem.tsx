@@ -4,7 +4,7 @@ import { NotificationNotMerged } from '@/features/notification/hooks/useNotifica
 import itemStyles from '../NotificationItem.module.css'
 import styles from './FollowerActionItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { FollowerNotificationAction } from '@/graphql/helpers/generated'
+import { FollowerNotificationAction, useNotificationCountQuery } from '@/graphql/helpers/generated'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
 import Link from 'next/link'
 import Thumbnail from '@/components/Thumbnail'
@@ -20,6 +20,7 @@ type Props = {
 
 function FollowerActionItem({ id, action, created_at, is_read, onClickNotification }: Props) {
   const { actor_display_name, actor_thumbnail, actor_username, actor_user_id } = action
+  const { refetch } = useNotificationCountQuery()
 
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
@@ -29,6 +30,7 @@ function FollowerActionItem({ id, action, created_at, is_read, onClickNotificati
   const onClick = () => {
     onClickNotification([id])
     setClick(true)
+    refetch()
   }
 
   return (

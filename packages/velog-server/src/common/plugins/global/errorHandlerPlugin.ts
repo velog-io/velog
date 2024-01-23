@@ -3,6 +3,12 @@ import { isHttpError } from '@errors/HttpError.js'
 import { FastifyPluginCallback } from 'fastify'
 
 const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
+  fastify.addHook('preHandler', function (req, reply, done) {
+    if (req.body) {
+      req.log.info({ body: req.body }, 'parsed body')
+    }
+    done()
+  })
   fastify.addHook('onError', (request, reply, error) => {
     console.log('request', request)
     console.log('fastify hook error:', error)

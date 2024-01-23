@@ -5,8 +5,10 @@ import styles from './NotificationSelector.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { usePathname } from 'next/navigation'
 import {
+  useNotificationCountQuery,
   useReadAllNotificationsMutation,
   useRemoveAllNotificationsMutation,
+  useSuspenseNotificationQuery,
 } from '@/graphql/helpers/generated'
 import PopupOKCancel from '@/components/PopupOKCancel'
 import { useState } from 'react'
@@ -15,17 +17,38 @@ const cx = bindClassNames(styles)
 
 function NotificationSelector() {
   const pathname = usePathname()
+  const input: Record<string, any> = {}
+  if (pathname.includes('/not-read')) {
+    Object.assign(input, { is_read: false })
+  }
+  const { data: notificationQueryData, refetch } = useSuspenseNotificationQuery({ input })
+  const { data: notificationCountData } = useNotificationCountQuery()
   const { mutateAsync: readAllMutateAsync } = useReadAllNotificationsMutation()
   const { mutateAsync: removeAllMutateAsync } = useRemoveAllNotificationsMutation()
 
   const [readAsk, setReadAsk] = useState(false)
   const [removeAsk, setRemoveAsk] = useState(false)
 
+  const ask = (type: 'read' | 'remove') => {
+    if (notificationQueryData?.notifications.length === 0) return
+
+    if (type === 'read') {
+      if (notificationCountData?.notificationCount === 0) return
+      setReadAsk(true)
+    } else {
+      setRemoveAsk(true)
+    }
+  }
   const onRead = async () => {
     await readAllMutateAsync({})
+    setReadAsk(false)
+    refetch()
   }
+
   const onRemove = async () => {
     await removeAllMutateAsync({})
+    setRemoveAsk(false)
+    refetch()
   }
 
   return (
@@ -45,10 +68,10 @@ function NotificationSelector() {
         </Link>
       </div>
       <div className={cx('right')}>
-        <div onClick={() => setReadAsk(true)} className={cx('handler')}>
+        <div onClick={() => ask('read')} className={cx('handler')}>
           모두 읽음
         </div>
-        <div onClick={() => setRemoveAsk(true)} className={cx('handler')}>
+        <div onClick={() => ask('remove')} className={cx('handler')}>
           모두 삭제
         </div>
         <PopupOKCancel

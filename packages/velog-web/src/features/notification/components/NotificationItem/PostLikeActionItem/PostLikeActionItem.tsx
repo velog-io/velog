@@ -1,6 +1,6 @@
 'use client'
 
-import { PostLikeNotificationAction } from '@/graphql/helpers/generated'
+import { PostLikeNotificationAction, useNotificationCountQuery } from '@/graphql/helpers/generated'
 import itemStyles from '../NotificationItem.module.css'
 import styles from './PostLikeActionItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
@@ -23,9 +23,12 @@ type ItemProps = {
 
 function PostLikeActionItem(props: Props) {
   const { is_merged, onClickNotification } = props
+  const { refetch } = useNotificationCountQuery()
 
   const onListClick = (notificationIds: string[]) => {
     onClickNotification(notificationIds)
+    console.log('refetch')
+    refetch()
   }
 
   if (is_merged) return <PostLikeMergedItem {...props} onListClick={onListClick} />
