@@ -3,7 +3,7 @@
 import styles from './CommentActionItem.module.css'
 import itemStyles from '../NotificationItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { CommentNotificationAction, useNotificationCountQuery } from '@/graphql/helpers/generated'
+import { CommentNotificationAction } from '@/graphql/helpers/generated'
 import { NotificationNotMerged } from '@/features/notification/hooks/useNotificationMerge'
 import Link from 'next/link'
 import Thumbnail from '@/components/Thumbnail'
@@ -18,7 +18,6 @@ type Props = {
 } & NotificationNotMerged
 
 function CommentActionItem({ id, action, created_at, is_read, onClickNotification }: Props) {
-  const { refetch } = useNotificationCountQuery()
   const [isClick, setClick] = useState(false)
   const {
     post_title,
@@ -36,7 +35,6 @@ function CommentActionItem({ id, action, created_at, is_read, onClickNotificatio
   const onClick = () => {
     onClickNotification([id])
     setClick(true)
-    refetch()
   }
 
   return (

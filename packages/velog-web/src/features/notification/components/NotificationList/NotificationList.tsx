@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  useNotificationCountQuery,
   useReadNoticationMutation,
   useSuspenseNotificationQuery,
 } from '@/graphql/helpers/generated'
@@ -12,6 +13,7 @@ import CommentActionItem from '../NotificationItem/CommentActionItem'
 import PostLikeActionItem from '../NotificationItem/PostLikeActionItem'
 import FollowerActionItem from '../NotificationItem/FollowerActionItem'
 import { usePathname } from 'next/navigation'
+import NotificationEmpty from '../NotificationEmpty'
 
 const cx = bindClassNames(styles)
 
@@ -22,6 +24,7 @@ function NotificationList() {
     Object.assign(input, { is_read: false })
   }
 
+  const { refetch } = useNotificationCountQuery({})
   const { data } = useSuspenseNotificationQuery({ input })
   const { merged } = useNotificationMerge(data?.notifications)
   const { mutateAsync: readNotificationMutateAsync } = useReadNoticationMutation()
@@ -32,6 +35,8 @@ function NotificationList() {
         notification_ids: notificationIds,
       },
     })
+    console.log('refetch3')
+    refetch()
   }
 
   const commentActions = merged
@@ -68,6 +73,7 @@ function NotificationList() {
     (a, b) => dateToTime(b.props.created_at) - dateToTime(a.props.created_at),
   )
 
+  if (data.notifications.length === 0) return <NotificationEmpty />
   return <ul className={cx('block')}>{result}</ul>
 }
 

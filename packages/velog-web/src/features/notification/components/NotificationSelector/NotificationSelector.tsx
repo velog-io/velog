@@ -21,6 +21,7 @@ function NotificationSelector() {
   if (pathname.includes('/not-read')) {
     Object.assign(input, { is_read: false })
   }
+
   const { data: notificationQueryData, refetch } = useSuspenseNotificationQuery({ input })
   const { data: notificationCountData } = useNotificationCountQuery()
   const { mutateAsync: readAllMutateAsync } = useReadAllNotificationsMutation()
@@ -39,6 +40,7 @@ function NotificationSelector() {
       setRemoveAsk(true)
     }
   }
+
   const onRead = async () => {
     await readAllMutateAsync({})
     setReadAsk(false)
@@ -51,6 +53,7 @@ function NotificationSelector() {
     refetch()
   }
 
+  if (notificationQueryData.notifications.length === 0) return null
   return (
     <div className={cx('block')}>
       <div className={cx('left')}>

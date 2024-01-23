@@ -12,9 +12,8 @@ import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
 import HeaderSkeleton from '@/components/Header/HeaderSkeleton'
 import { useCurrentUserQuery, useNotificationCountQuery } from '@/graphql/helpers/generated'
 import HeaderLogo from './HeaderLogo'
-import { useParams, usePathname } from 'next/navigation'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 import { getUsernameFromParams } from '@/lib/utils'
-import Link from 'next/link'
 import { NotificationIcon, SearchIcon } from '@/assets/icons/components'
 import VLink from '../VLink'
 import HeaderIcon from './HeaderIcon'
@@ -26,18 +25,19 @@ type Props = {
 }
 
 function Header({ logo }: Props) {
-  const { data: notificationCountData } = useNotificationCountQuery()
   const params = useParams()
   const pathname = usePathname()
+  const router = useRouter()
   const [userMenu, toggleUserMenu] = useToggle(false)
   const ref = useRef<HTMLDivElement>(null)
   const { actions } = useModal()
   const {
     actions: { update },
   } = useAuth()
-
   const { data, isLoading, isFetching } = useCurrentUserQuery()
   const user = data?.currentUser || null
+
+  const { data: notificationCountData } = useNotificationCountQuery({}, { enabled: !!user })
 
   useEffect(() => {
     update(user)
@@ -48,15 +48,24 @@ function Header({ logo }: Props) {
   const isNotificationPage = pathname.includes('/notification')
   const notificationCount = notificationCountData?.notificationCount ?? 0
 
+  const onClickNotification = () => {
+    if (user) {
+      router.push('/notifications')
+      return
+    }
+
+    actions.showModal('login', '/notifications')
+  }
+
   if (isLoading || isFetching) return <HeaderSkeleton logo={logo || <HeaderLogo />} />
   return (
     <header className={cx('block', 'mainHeaderResponsive')}>
       <div className={cx('innerBlock')}>
         {logo || <HeaderLogo />}
         <div className={cx('right')}>
-          {user && notificationCount !== 0 && (
-            <Link href="/notifications">
-              <HeaderIcon className={cx({ isNotificationPage })}>
+          <div onClick={onClickNotification}>
+            <HeaderIcon className={cx({ isNotificationPage })}>
+              {user && notificationCount !== 0 && (
                 <div
                   className={cx('notificationCount', {
                     isSingle: Math.floor(notificationCount / 10) === 0,
@@ -64,10 +73,10 @@ function Header({ logo }: Props) {
                 >
                   {Math.min(99, notificationCount)}
                 </div>
-                <NotificationIcon />
-              </HeaderIcon>
-            </Link>
-          )}
+              )}
+              <NotificationIcon />
+            </HeaderIcon>
+          </div>
           <VLink href={urlForSearch}>
             <HeaderIcon>
               <SearchIcon />

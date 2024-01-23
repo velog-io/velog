@@ -1,0 +1,23 @@
+.block {
+  .svg {
+    margin-top: 120px;
+    width: 322px;
+    height: 335px;
+
+    @media screen and (max-width: 768px) {
+      margin-top: 100px;
+      width: 264px;
+      height: 206px;
+    }
+  }
+}
+
+.title {
+  text-align: center;
+  color: var(--text2);
+  font-size: 32px;
+
+  @media screen and (max-width: 768px) {
+    font-size: 28px;
+  }
+}
