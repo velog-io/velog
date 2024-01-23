@@ -31,8 +31,11 @@ export default async function graphqlFetch<T>({
 
   if (!res.ok) {
     const errors = await res.json()
-    console.log('graphqlFetch errors', errors)
-    console.log('body', body)
+    const allowOperationList = ['userTags']
+    if (!allowOperationList.includes(body?.operationName || '')) {
+      console.log('graphqlFetch errors', errors)
+      console.log('body', body)
+    }
     throw res
   }
 

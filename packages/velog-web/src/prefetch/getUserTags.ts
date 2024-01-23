@@ -20,7 +20,6 @@ export default async function getUserTags(username: string) {
 
     return userTags
   } catch (error) {
-    console.log(error)
-    throw new Error('Get user tags error')
+    return null
   }
 }
