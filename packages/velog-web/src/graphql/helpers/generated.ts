@@ -83,7 +83,7 @@ export type CommentNotificationActionInput = {
   actor_username: Scalars['String']['input']
   comment_id: Scalars['ID']['input']
   comment_text: Scalars['String']['input']
-  post_id: Scalars['String']['input']
+  post_id: Scalars['ID']['input']
   post_title: Scalars['String']['input']
   post_url_slug: Scalars['String']['input']
   post_writer_username: Scalars['String']['input']

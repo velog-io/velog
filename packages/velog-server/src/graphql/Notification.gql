@@ -87,7 +87,7 @@ input FollowerNotificationActionInput {
 
 input CommentNotificationActionInput {
   comment_id: ID!
-  post_id: String!
+  post_id: ID!
   post_title: String!
   post_url_slug: String!
   post_writer_username: String!
@@ -99,8 +99,8 @@ input CommentNotificationActionInput {
 }
 
 input PostLikeNotificationActionInput {
-  post_id: ID!
   post_like_id: ID!
+  post_id: ID!
   post_title: String!
   post_url_slug: String!
   post_writer_username: String!
