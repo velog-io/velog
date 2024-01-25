@@ -143,7 +143,8 @@ export class UtilsService implements Service {
     try {
       schema.parse(body)
       return true
-    } catch (_) {
+    } catch (e) {
+      console.log('validateBody error', e)
       return false
     }
   }

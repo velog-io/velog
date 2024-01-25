@@ -96,9 +96,9 @@ export type ConfirmChangeEmailInput = {
 
 export type CreateNotificationInput = {
   action: NotificationActionInput
-  action_id: Scalars['String']['input']
+  action_id?: InputMaybe<Scalars['String']['input']>
+  actor_id?: InputMaybe<Scalars['String']['input']>
   fk_user_id: Scalars['String']['input']
-  link?: InputMaybe<Scalars['String']['input']>
   type: NotificationType
 }
 
@@ -192,7 +192,7 @@ export type LinkedPosts = {
 export type Mutation = {
   acceptIntegration: Scalars['String']['output']
   confirmChangeEmail: Maybe<Scalars['Void']['output']>
-  createNofication: Notification
+  createNotification: Notification
   follow: Maybe<Scalars['Boolean']['output']>
   initiateChangeEmail: Maybe<Scalars['Void']['output']>
   likePost: Maybe<Post>
@@ -216,7 +216,7 @@ export type MutationConfirmChangeEmailArgs = {
   input: ConfirmChangeEmailInput
 }
 
-export type MutationCreateNoficationArgs = {
+export type MutationCreateNotificationArgs = {
   input: CreateNotificationInput
 }
 
@@ -278,7 +278,7 @@ export type MutationUpdateVelogTitleArgs = {
 
 export type Notification = {
   action: Scalars['JSON']['output']
-  action_target_id: Maybe<Scalars['ID']['output']>
+  action_id: Maybe<Scalars['ID']['output']>
   actor_id: Maybe<Scalars['ID']['output']>
   created_at: Scalars['DateTimeISO']['output']
   fk_user_id: Scalars['String']['output']
@@ -749,7 +749,7 @@ export type NotificationQuery = {
     type: NotificationType
     action: Record<string, any>
     actor_id: string | null
-    action_target_id: string | null
+    action_id: string | null
     is_read: boolean
     created_at: any
   }>
@@ -1439,7 +1439,7 @@ export const NotificationDocument = `
     type
     action
     actor_id
-    action_target_id
+    action_id
     is_read
     created_at
   }

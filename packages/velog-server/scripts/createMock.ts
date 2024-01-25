@@ -180,8 +180,8 @@ class Seeder {
             return this.db.notification.create({
               data: {
                 fk_user_id: u.id,
-                action_target_id: action?.fk_post_id || action.fk_user_id,
                 actor_id: actor.id,
+                action_id: action?.follower_id || action?.comment_id || action?.post_like_id,
                 action,
                 type: action.type,
               },

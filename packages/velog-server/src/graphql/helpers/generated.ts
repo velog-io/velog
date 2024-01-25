@@ -101,9 +101,9 @@ export type ConfirmChangeEmailInput = {
 
 export type CreateNotificationInput = {
   action: NotificationActionInput
-  action_id: Scalars['String']['input']
+  action_id?: InputMaybe<Scalars['String']['input']>
+  actor_id?: InputMaybe<Scalars['String']['input']>
   fk_user_id: Scalars['String']['input']
-  link?: InputMaybe<Scalars['String']['input']>
   type: NotificationType
 }
 
@@ -197,7 +197,7 @@ export type LinkedPosts = {
 export type Mutation = {
   acceptIntegration: Scalars['String']['output']
   confirmChangeEmail?: Maybe<Scalars['Void']['output']>
-  createNofication: Notification
+  createNotification: Notification
   follow?: Maybe<Scalars['Boolean']['output']>
   initiateChangeEmail?: Maybe<Scalars['Void']['output']>
   likePost?: Maybe<Post>
@@ -221,7 +221,7 @@ export type MutationConfirmChangeEmailArgs = {
   input: ConfirmChangeEmailInput
 }
 
-export type MutationCreateNoficationArgs = {
+export type MutationCreateNotificationArgs = {
   input: CreateNotificationInput
 }
 
@@ -283,7 +283,7 @@ export type MutationUpdateVelogTitleArgs = {
 
 export type Notification = {
   action: Scalars['JSON']['output']
-  action_target_id?: Maybe<Scalars['ID']['output']>
+  action_id?: Maybe<Scalars['ID']['output']>
   actor_id?: Maybe<Scalars['ID']['output']>
   created_at: Scalars['Date']['output']
   fk_user_id: Scalars['String']['output']
@@ -1049,11 +1049,11 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationConfirmChangeEmailArgs, 'input'>
   >
-  createNofication?: Resolver<
+  createNotification?: Resolver<
     ResolversTypes['Notification'],
     ParentType,
     ContextType,
-    RequireFields<MutationCreateNoficationArgs, 'input'>
+    RequireFields<MutationCreateNotificationArgs, 'input'>
   >
   follow?: Resolver<
     Maybe<ResolversTypes['Boolean']>,
@@ -1149,7 +1149,7 @@ export type NotificationResolvers<
   ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification'],
 > = {
   action?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>
-  action_target_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
+  action_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   actor_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>

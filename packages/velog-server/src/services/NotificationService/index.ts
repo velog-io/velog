@@ -89,20 +89,36 @@ export class NotificationService implements Service {
     type,
     fk_user_id,
     actor_id,
-    action,
+    action_id,
+    action: actionInfo,
+    signedUserId,
   }: CreateNotificationArgs<T>): Promise<Notification> {
-    if (!action) {
+    if (!signedUserId) {
+      throw new UnauthorizedError('Not logged in')
+    }
+
+    const user = await this.userService.findById(signedUserId)
+
+    if (!user) {
+      throw new NotFoundError('Not found user')
+    }
+
+    if (!actionInfo) {
       throw new BadRequestError('Not found action')
     }
 
+    const action = (actionInfo as any)[type]
+
+    console.log('action', action)
     const validate = this.notificationActionValidate(type, action)
+    console.log('validate', validate)
     if (!validate) {
       throw new BadRequestError('Wrong action payload')
     }
 
-    const user = await this.userService.findById(fk_user_id)
+    const targetUser = await this.userService.findById(fk_user_id)
 
-    if (!user) {
+    if (!targetUser) {
       throw new NotFoundError('Notification failed: Target user not found')
     }
 
@@ -110,6 +126,7 @@ export class NotificationService implements Service {
       data: {
         type,
         fk_user_id,
+        action_id,
         actor_id: actor_id || null,
         action,
       },
@@ -130,7 +147,7 @@ export class NotificationService implements Service {
       comment: z.object({
         comment_id: z.string().uuid(),
         post_id: z.string().uuid(),
-        post_title: z.string().uuid(),
+        post_title: z.string(),
         post_url_slug: z.string(),
         post_writer_username: z.string(),
         comment_text: z.string(),
@@ -152,17 +169,13 @@ export class NotificationService implements Service {
       }),
     }
 
-    try {
-      const schema = schemaSelector[type]
+    const schema = schemaSelector[type]
 
-      if (!schema) {
-        throw new BadRequestError('Invalid create action type')
-      }
-
-      return this.utils.validateBody(schema, action)
-    } catch (error) {
-      return false
+    if (!schema) {
+      throw new BadRequestError('Invalid create action type')
     }
+
+    return this.utils.validateBody(schema, action)
   }
   private isCommentAction(args: any): args is CommentNotificationAction {
     if (args.type === 'comment') return true
@@ -248,6 +261,8 @@ export type CreateNotificationArgs<T = NotificationType> = {
   type: NotificationType
   fk_user_id: string
   actor_id?: string
+  action_id?: string
+  signedUserId?: string
   action: T extends 'comment'
     ? CommentNotificationAction
     : NotificationType extends 'follower'

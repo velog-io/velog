@@ -14,6 +14,10 @@ const notificationResolvers: Resolvers = {
     },
   },
   Mutation: {
+    createNotification: async (_, { input }, ctx) => {
+      const notificationService = container.resolve(NotificationService)
+      return await notificationService.createNotification({ ...input, signedUserId: ctx.user?.id })
+    },
     readNotification: async (_, { input }, ctx) => {
       const notificationService = container.resolve(NotificationService)
       return await notificationService.readNotification(input.notification_ids, ctx.user?.id)

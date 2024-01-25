@@ -4,7 +4,7 @@ query notification($input: NotificationsInput!) {
     type
     action
     actor_id
-    action_target_id
+    action_id
     is_read
     created_at
   }

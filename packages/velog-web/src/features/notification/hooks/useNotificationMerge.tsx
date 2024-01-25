@@ -3,12 +3,12 @@ import { useMemo } from 'react'
 
 export default function useNotificationMerge(notifications: NotificationQueryData[] = []) {
   const generateKey = (notification: Partial<Notification>) =>
-    `${notification.type}_${notification.action_target_id}`
+    `${notification.type}_${notification.action_id}`
 
   const merged = useMemo(() => {
     const targetIdMap = notifications.reduce<Map<string, NotificationQueryData[]>>(
       (map, notification) => {
-        if (!notification.action_target_id) return map
+        if (!notification.action_id) return map
         if (['follower', 'comment'].includes(notification.type)) return map
         const key = generateKey(notification)
         if (map.has(key)) {
