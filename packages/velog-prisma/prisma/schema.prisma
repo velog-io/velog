@@ -636,5 +636,6 @@ model Notification {
   @@unique([fk_user_id, type, actor_id, action_id])
   @@index([actor_id])
   @@index([action_id])
+  @@index([fk_user_id])
   @@map("notifications")
 }

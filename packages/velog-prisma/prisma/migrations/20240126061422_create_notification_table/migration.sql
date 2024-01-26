@@ -21,6 +21,9 @@ CREATE INDEX "notifications_actor_id_idx" ON "notifications"("actor_id");
 CREATE INDEX "notifications_action_id_idx" ON "notifications"("action_id");
 
 -- CreateIndex
+CREATE INDEX "notifications_fk_user_id_idx" ON "notifications"("fk_user_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "notifications_fk_user_id_type_actor_id_action_id_key" ON "notifications"("fk_user_id", "type", "actor_id", "action_id");
 
 -- AddForeignKey
