@@ -9,6 +9,7 @@ import {
   Comment as CommentModel,
 } from '@prisma/client'
 import { GraphQLContext } from './../../common/interfaces/graphql'
+import { JsonValue } from '@prisma/client/runtime/library'
 export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -31,7 +32,7 @@ export type Scalars = {
   Int: { input: number; output: number }
   Float: { input: number; output: number }
   Date: { input: Date; output: Date }
-  JSON: { input: Record<string, any>; output: Record<string, any> }
+  JSON: { input: Record<any, any> | JsonValue; output: Record<any, any> | JsonValue }
   PositiveInt: { input: number; output: number }
   Void: { input: void; output: void }
 }
@@ -69,17 +70,6 @@ export type Comment = {
   replies_count?: Maybe<Scalars['Int']['output']>
   text?: Maybe<Scalars['String']['output']>
   user?: Maybe<User>
-}
-
-export type CommentNotificationAction = {
-  actor_display_name: Scalars['String']['output']
-  actor_thumbnail: Scalars['String']['output']
-  actor_username: Scalars['String']['output']
-  comment_id: Scalars['ID']['output']
-  comment_text: Scalars['String']['output']
-  post_title: Scalars['String']['output']
-  post_url_slug: Scalars['String']['output']
-  post_writer_username: Scalars['String']['output']
 }
 
 export type CommentNotificationActionInput = {
@@ -122,14 +112,6 @@ export type FollowResult = {
   profile: UserProfile
   userId: Scalars['ID']['output']
   username: Scalars['String']['output']
-}
-
-export type FollowerNotificationAction = {
-  actor_display_name: Scalars['String']['output']
-  actor_thumbnail: Scalars['String']['output']
-  actor_user_id: Scalars['String']['output']
-  actor_username: Scalars['String']['output']
-  follower_id: Scalars['ID']['output']
 }
 
 export type FollowerNotificationActionInput = {
@@ -293,11 +275,6 @@ export type Notification = {
   type: NotificationType
 }
 
-export type NotificationAction =
-  | CommentNotificationAction
-  | FollowerNotificationAction
-  | PostLikeNotificationAction
-
 export type NotificationActionInput = {
   comment?: InputMaybe<CommentNotificationActionInput>
   follower?: InputMaybe<FollowerNotificationActionInput>
@@ -347,16 +324,6 @@ export type PostHistory = {
   id?: Maybe<Scalars['ID']['output']>
   is_markdown?: Maybe<Scalars['Boolean']['output']>
   title?: Maybe<Scalars['String']['output']>
-}
-
-export type PostLikeNotificationAction = {
-  actor_display_name: Scalars['String']['output']
-  actor_thumbnail: Scalars['String']['output']
-  actor_username: Scalars['String']['output']
-  post_like_id: Scalars['ID']['output']
-  post_title: Scalars['String']['output']
-  post_url_slug: Scalars['String']['output']
-  post_writer_username: Scalars['String']['output']
 }
 
 export type PostLikeNotificationActionInput = {
@@ -757,14 +724,6 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>
 
-/** Mapping of union types */
-export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
-  NotificationAction:
-    | CommentNotificationAction
-    | FollowerNotificationAction
-    | PostLikeNotificationAction
-}
-
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Ad: ResolverTypeWrapper<Ad>
@@ -772,7 +731,6 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
   CheckEmailExistsInput: CheckEmailExistsInput
   Comment: ResolverTypeWrapper<CommentModel>
-  CommentNotificationAction: ResolverTypeWrapper<CommentNotificationAction>
   CommentNotificationActionInput: CommentNotificationActionInput
   ConfirmChangeEmailInput: ConfirmChangeEmailInput
   CreateNotificationInput: CreateNotificationInput
@@ -782,7 +740,6 @@ export type ResolversTypes = {
   FollowResult: ResolverTypeWrapper<
     Omit<FollowResult, 'profile'> & { profile: ResolversTypes['UserProfile'] }
   >
-  FollowerNotificationAction: ResolverTypeWrapper<FollowerNotificationAction>
   FollowerNotificationActionInput: FollowerNotificationActionInput
   GetFollowInput: GetFollowInput
   GetPostsInput: GetPostsInput
@@ -804,14 +761,12 @@ export type ResolversTypes = {
   >
   Mutation: ResolverTypeWrapper<{}>
   Notification: ResolverTypeWrapper<Notification>
-  NotificationAction: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['NotificationAction']>
   NotificationActionInput: NotificationActionInput
   NotificationType: NotificationType
   NotificationsInput: NotificationsInput
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Post: ResolverTypeWrapper<PostModel>
   PostHistory: ResolverTypeWrapper<PostHistory>
-  PostLikeNotificationAction: ResolverTypeWrapper<PostLikeNotificationAction>
   PostLikeNotificationActionInput: PostLikeNotificationActionInput
   Query: ResolverTypeWrapper<{}>
   ReadCountByDay: ResolverTypeWrapper<ReadCountByDay>
@@ -869,7 +824,6 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output']
   CheckEmailExistsInput: CheckEmailExistsInput
   Comment: CommentModel
-  CommentNotificationAction: CommentNotificationAction
   CommentNotificationActionInput: CommentNotificationActionInput
   ConfirmChangeEmailInput: ConfirmChangeEmailInput
   CreateNotificationInput: CreateNotificationInput
@@ -877,7 +831,6 @@ export type ResolversParentTypes = {
   FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
   FollowResult: Omit<FollowResult, 'profile'> & { profile: ResolversParentTypes['UserProfile'] }
-  FollowerNotificationAction: FollowerNotificationAction
   FollowerNotificationActionInput: FollowerNotificationActionInput
   GetFollowInput: GetFollowInput
   GetPostsInput: GetPostsInput
@@ -897,13 +850,11 @@ export type ResolversParentTypes = {
   }
   Mutation: {}
   Notification: Notification
-  NotificationAction: ResolversUnionTypes<ResolversParentTypes>['NotificationAction']
   NotificationActionInput: NotificationActionInput
   NotificationsInput: NotificationsInput
   PositiveInt: Scalars['PositiveInt']['output']
   Post: PostModel
   PostHistory: PostHistory
-  PostLikeNotificationAction: PostLikeNotificationAction
   PostLikeNotificationActionInput: PostLikeNotificationActionInput
   Query: {}
   ReadCountByDay: ReadCountByDay
@@ -980,22 +931,6 @@ export type CommentResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
-export type CommentNotificationActionResolvers<
-  ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['CommentNotificationAction'] = ResolversParentTypes['CommentNotificationAction'],
-> = {
-  actor_display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  actor_thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  actor_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  comment_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  comment_text?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  post_title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  post_url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  post_writer_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
-}
-
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date'
 }
@@ -1009,19 +944,6 @@ export type FollowResultResolvers<
   profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>
   userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
-}
-
-export type FollowerNotificationActionResolvers<
-  ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['FollowerNotificationAction'] = ResolversParentTypes['FollowerNotificationAction'],
-> = {
-  actor_display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  actor_thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  actor_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  actor_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  follower_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -1160,18 +1082,6 @@ export type NotificationResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
-export type NotificationActionResolvers<
-  ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['NotificationAction'] = ResolversParentTypes['NotificationAction'],
-> = {
-  __resolveType: TypeResolveFn<
-    'CommentNotificationAction' | 'FollowerNotificationAction' | 'PostLikeNotificationAction',
-    ParentType,
-    ContextType
-  >
-}
-
 export type NotificationTypeResolvers = EnumResolverSignature<
   { comment?: any; follower?: any; postLike?: any },
   ResolversTypes['NotificationType']
@@ -1226,21 +1136,6 @@ export type PostHistoryResolvers<
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   is_markdown?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
-}
-
-export type PostLikeNotificationActionResolvers<
-  ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['PostLikeNotificationAction'] = ResolversParentTypes['PostLikeNotificationAction'],
-> = {
-  actor_display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  actor_thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  actor_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  post_like_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  post_title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  post_url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  post_writer_username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -1571,20 +1466,16 @@ export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export type Resolvers<ContextType = GraphQLContext> = {
   Ad?: AdResolvers<ContextType>
   Comment?: CommentResolvers<ContextType>
-  CommentNotificationAction?: CommentNotificationActionResolvers<ContextType>
   Date?: GraphQLScalarType
   FollowResult?: FollowResultResolvers<ContextType>
-  FollowerNotificationAction?: FollowerNotificationActionResolvers<ContextType>
   JSON?: GraphQLScalarType
   LinkedPosts?: LinkedPostsResolvers<ContextType>
   Mutation?: MutationResolvers<ContextType>
   Notification?: NotificationResolvers<ContextType>
-  NotificationAction?: NotificationActionResolvers<ContextType>
   NotificationType?: NotificationTypeResolvers
   PositiveInt?: GraphQLScalarType
   Post?: PostResolvers<ContextType>
   PostHistory?: PostHistoryResolvers<ContextType>
-  PostLikeNotificationAction?: PostLikeNotificationActionResolvers<ContextType>
   Query?: QueryResolvers<ContextType>
   ReadCountByDay?: ReadCountByDayResolvers<ContextType>
   SearchResult?: SearchResultResolvers<ContextType>

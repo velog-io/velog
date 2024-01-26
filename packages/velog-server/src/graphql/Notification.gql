@@ -16,40 +16,6 @@ enum NotificationType {
   postLike
 }
 
-union NotificationAction =
-    FollowerNotificationAction
-  | CommentNotificationAction
-  | PostLikeNotificationAction
-
-type FollowerNotificationAction {
-  follower_id: ID!
-  actor_user_id: String!
-  actor_display_name: String!
-  actor_username: String!
-  actor_thumbnail: String!
-}
-
-type CommentNotificationAction {
-  comment_id: ID!
-  post_title: String!
-  post_url_slug: String!
-  post_writer_username: String!
-  comment_text: String!
-  actor_display_name: String!
-  actor_username: String!
-  actor_thumbnail: String!
-}
-
-type PostLikeNotificationAction {
-  post_like_id: ID!
-  post_title: String!
-  post_url_slug: String!
-  post_writer_username: String!
-  actor_display_name: String!
-  actor_username: String!
-  actor_thumbnail: String!
-}
-
 type Query {
   notifications(input: NotificationsInput!): [Notification!]!
   notificationCount: Int!

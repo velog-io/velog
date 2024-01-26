@@ -4,10 +4,10 @@ import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import {
   Notification,
   NotificationType,
-  PostLikeNotificationAction,
-  FollowerNotificationAction,
-  CommentNotificationAction,
   NotificationsInput,
+  CommentNotificationActionInput,
+  FollowerNotificationActionInput,
+  PostLikeNotificationActionInput,
 } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
@@ -19,12 +19,11 @@ import { z } from 'zod'
 interface Service {
   getNotifications(query?: NotificationsInput, signedUserId?: string): Promise<Notification[]>
   getNotificationCount(signedUserId?: string): Promise<number>
-  createNotification<T extends NotificationType>(
-    args: CreateNotificationArgs<T>,
-  ): Promise<Notification>
+  createNotification(args: CreateNotificationArgs): Promise<Notification>
   readNotification(notificationIds: string[], signedUserId?: string): Promise<void>
   readAllNotification(signedUserId?: string): Promise<void>
   removeAllNotifications(signedUserId?: string): Promise<void>
+  findByAction(args: FindActionArgs): Promise<Notification | null>
 }
 
 @injectable()
@@ -85,14 +84,14 @@ export class NotificationService implements Service {
       },
     })
   }
-  public async createNotification<T extends NotificationType>({
+  public async createNotification({
     type,
-    fk_user_id,
-    actor_id,
-    action_id,
+    fkUserId,
+    actorId,
+    actionId,
     action: actionInfo,
     signedUserId,
-  }: CreateNotificationArgs<T>): Promise<Notification> {
+  }: CreateNotificationArgs): Promise<Notification> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')
     }
@@ -109,14 +108,13 @@ export class NotificationService implements Service {
 
     const action = (actionInfo as any)[type]
 
-    console.log('action', action)
     const validate = this.notificationActionValidate(type, action)
-    console.log('validate', validate)
+
     if (!validate) {
       throw new BadRequestError('Wrong action payload')
     }
 
-    const targetUser = await this.userService.findById(fk_user_id)
+    const targetUser = await this.userService.findById(fkUserId)
 
     if (!targetUser) {
       throw new NotFoundError('Notification failed: Target user not found')
@@ -125,9 +123,9 @@ export class NotificationService implements Service {
     const notification = await this.db.notification.create({
       data: {
         type,
-        fk_user_id,
-        action_id,
-        actor_id: actor_id || null,
+        fk_user_id: fkUserId,
+        action_id: actionId,
+        actor_id: actorId || null,
         action,
       },
     })
@@ -176,18 +174,6 @@ export class NotificationService implements Service {
     }
 
     return this.utils.validateBody(schema, action)
-  }
-  private isCommentAction(args: any): args is CommentNotificationAction {
-    if (args.type === 'comment') return true
-    return false
-  }
-  private isPostLikeAction(args: any): args is PostLikeNotificationAction {
-    if (args.type === 'postLike') return true
-    return false
-  }
-  private isFollowerAction(args: any): args is FollowerNotificationAction {
-    if (args.type === 'follower') return true
-    return false
   }
   public async readNotification(notificationIds: string[], signedUserId?: string): Promise<void> {
     if (!signedUserId) {
@@ -255,19 +241,41 @@ export class NotificationService implements Service {
       },
     })
   }
+  async findByAction({
+    fkUserId,
+    actorId,
+    type,
+    actionId,
+  }: FindActionArgs): Promise<Notification | null> {
+    const notification = await this.db.notification.findFirst({
+      where: {
+        fk_user_id: fkUserId,
+        actor_id: actorId,
+        action_id: actionId,
+        type,
+      },
+    })
+
+    return notification as unknown as Notification | null
+  }
 }
 
-export type CreateNotificationArgs<T = NotificationType> = {
+export type CreateNotificationArgs = {
   type: NotificationType
-  fk_user_id: string
-  actor_id?: string
-  action_id?: string
+  fkUserId: string
+  actorId?: string
+  actionId?: string
   signedUserId?: string
-  action: T extends 'comment'
-    ? CommentNotificationAction
-    : NotificationType extends 'follower'
-    ? FollowerNotificationAction
-    : NotificationType extends 'postLike'
-    ? PostLikeNotificationAction
-    : unknown
+  action: {
+    comment?: CommentNotificationActionInput
+    follower?: FollowerNotificationActionInput
+    postLike?: PostLikeNotificationActionInput
+  }
+}
+
+export type FindActionArgs = {
+  fkUserId: string
+  actorId: string
+  actionId: string
+  type: NotificationType
 }

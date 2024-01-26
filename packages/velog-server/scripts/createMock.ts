@@ -9,10 +9,9 @@ import { MockPostsType, mockPosts } from 'test/mock/mockPost'
 import { v4 as uuidv4 } from 'uuid'
 import { ENV } from '@env'
 import {
-  CommentNotificationAction,
-  FollowerNotificationAction,
-  NotificationAction,
-  PostLikeNotificationAction,
+  CommentNotificationActionInput,
+  FollowerNotificationActionInput,
+  PostLikeNotificationActionInput,
 } from '@graphql/helpers/generated'
 
 const MAX_COMMENTS_PER_POST = 5
@@ -131,18 +130,19 @@ class Seeder {
         try {
           const actor = actors[i]
 
-          const followerAction: () => FollowerNotificationAction & { type: string } = () => ({
+          const followerAction: () => FollowerNotificationActionInput = () => ({
             follower_id: followerActionId[this.utils.randomNumber(2)] ?? uuidv4(),
+            follower_user_id: u.id,
             actor_user_id: actor.id,
             actor_display_name: actor.profile?.display_name || '',
             actor_username: actor.username || '',
             actor_thumbnail: actor.profile?.thumbnail || '',
             type: 'follower',
-            fk_user_id: u.id,
           })
 
-          const commentAction: () => CommentNotificationAction & { type: string } = () => ({
+          const commentAction: () => CommentNotificationActionInput = () => ({
             comment_id: uuidv4(),
+            post_id: postIds[this.utils.randomNumber(posts.length - 1)] ?? uuidv4(),
             post_title: faker.lorem.sentence(5),
             post_url_slug: posts[2]?.url_slug || '',
             post_writer_username: u.username,
@@ -151,11 +151,11 @@ class Seeder {
             actor_username: actor.username,
             actor_thumbnail: actor.profile?.thumbnail || '',
             type: 'comment',
-            fk_post_id: posts[2]?.id,
           })
 
-          const postLikeAction: () => PostLikeNotificationAction & { type: string } = () => ({
+          const postLikeAction: () => PostLikeNotificationActionInput = () => ({
             post_like_id: uuidv4(),
+            post_id: postIds[this.utils.randomNumber(posts.length - 1)] ?? uuidv4(),
             post_title: faker.lorem.sentence(5) || '',
             post_url_slug: posts[2]?.url_slug || '',
             post_writer_username: u.username,
@@ -164,16 +164,10 @@ class Seeder {
             actor_thumbnail: actor.profile?.thumbnail || '',
             url_slug: posts[0]?.url_slug || '',
             fk_user_id: actor.id,
-
             type: 'postLike',
-            fk_post_id: postIds[this.utils.randomNumber(posts.length - 1)] ?? uuidv4(),
           })
 
-          const actionSelector: (() => NotificationAction & { type: string })[] = [
-            commentAction,
-            postLikeAction,
-            followerAction,
-          ]
+          const actionSelector = [commentAction, postLikeAction, followerAction]
 
           const notificationMocks = actionSelector.map((v) => v())
           const promises = notificationMocks.map((action: any) => {
