@@ -10,10 +10,6 @@ import { UserService } from '@services/UserService/index.js'
 import { FeedService } from '@services/FeedService/index.js'
 
 interface Service {
-  findFollowRelationship({
-    followingUserId,
-    followerUserId,
-  }: FollowArgs): Promise<FollowUser | null>
   isFollowed({ followingUserId, followerUserId }: isFollowedArgs): Promise<boolean>
   follow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
   unfollow({ followingUserId, followerUserId }: UnfollowArgs): Promise<void>
@@ -33,9 +29,16 @@ export class FollowUserService implements Service {
   ) {}
   public async isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean> {
     if (!followingUserId || !followerUserId) return false
+
+    const followingUser = await this.userService.findById(followingUserId)
+
+    if (!followingUser) {
+      throw new NotFoundError('Not fond following user')
+    }
+
     return !!(await this.findFollowRelationship({ followingUserId, followerUserId }))
   }
-  public async findFollowRelationship({
+  private async findFollowRelationship({
     followingUserId,
     followerUserId,
   }: FollowArgs): Promise<FollowUser | null> {

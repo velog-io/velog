@@ -19,7 +19,7 @@
       background-color: rgba(0, 0, 0, 0.1);
     }
 
-    .notificationCount {
+    .notificationCounter {
       position: absolute;
       top: 3px;
       right: -3px;

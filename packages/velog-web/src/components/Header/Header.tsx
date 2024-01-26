@@ -67,7 +67,7 @@ function Header({ logo }: Props) {
             <HeaderIcon className={cx({ isNotificationPage })}>
               {user && notificationCount !== 0 && (
                 <div
-                  className={cx('notificationCount', {
+                  className={cx('notificationCounter', {
                     isSingle: Math.floor(notificationCount / 10) === 0,
                   })}
                 >
