@@ -7,8 +7,8 @@ import { Post } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { PostService } from '@services/PostService/index.js'
 import { SearchService } from '@services/SearchService/index.js'
-import { NotificationService } from '@services/NotificationService'
-import { UserService } from '@services/UserService'
+import { NotificationService } from '@services/NotificationService/index.js'
+import { UserService } from '@services/UserService/index.js'
 
 interface Service {
   likePost(postId?: string, userId?: string): Promise<Post>
