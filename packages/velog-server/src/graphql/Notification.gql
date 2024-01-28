@@ -11,7 +11,7 @@ type Notification {
 }
 
 enum NotificationType {
-  follower
+  follow
   comment
   postLike
 }
@@ -37,14 +37,14 @@ input CreateNotificationInput {
 }
 
 input NotificationActionInput {
-  follower: FollowerNotificationActionInput
+  follow: FollowNotificationActionInput
   comment: CommentNotificationActionInput
   postLike: PostLikeNotificationActionInput
 }
 
-input FollowerNotificationActionInput {
-  follower_id: ID!
-  follower_user_id: ID!
+input FollowNotificationActionInput {
+  follow_id: ID!
+  actor_user_id: ID!
   actor_display_name: String!
   actor_username: String!
   actor_thumbnail: String!

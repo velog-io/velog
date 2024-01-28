@@ -9,7 +9,6 @@ import {
   Comment as CommentModel,
 } from '@prisma/client'
 import { GraphQLContext } from './../../common/interfaces/graphql'
-import { JsonValue } from '@prisma/client/runtime/library'
 export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -32,7 +31,7 @@ export type Scalars = {
   Int: { input: number; output: number }
   Float: { input: number; output: number }
   Date: { input: Date; output: Date }
-  JSON: { input: Record<any, any> | JsonValue; output: Record<any, any> | JsonValue }
+  JSON: { input: Record<string, any>; output: Record<string, any> }
   PositiveInt: { input: number; output: number }
   Void: { input: void; output: void }
 }
@@ -106,21 +105,21 @@ export type FollowInput = {
   followingUserId: Scalars['ID']['input']
 }
 
+export type FollowNotificationActionInput = {
+  actor_display_name: Scalars['String']['input']
+  actor_thumbnail: Scalars['String']['input']
+  actor_user_id: Scalars['ID']['input']
+  actor_username: Scalars['String']['input']
+  follow_id: Scalars['ID']['input']
+  type: NotificationType
+}
+
 export type FollowResult = {
   id: Scalars['ID']['output']
   is_followed: Scalars['Boolean']['output']
   profile: UserProfile
   userId: Scalars['ID']['output']
   username: Scalars['String']['output']
-}
-
-export type FollowerNotificationActionInput = {
-  actor_display_name: Scalars['String']['input']
-  actor_thumbnail: Scalars['String']['input']
-  actor_username: Scalars['String']['input']
-  follower_id: Scalars['ID']['input']
-  follower_user_id: Scalars['ID']['input']
-  type: NotificationType
 }
 
 export type GetFollowInput = {
@@ -277,7 +276,7 @@ export type Notification = {
 
 export type NotificationActionInput = {
   comment?: InputMaybe<CommentNotificationActionInput>
-  follower?: InputMaybe<FollowerNotificationActionInput>
+  follow?: InputMaybe<FollowNotificationActionInput>
   postLike?: InputMaybe<PostLikeNotificationActionInput>
 }
 
@@ -737,10 +736,10 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
   FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
+  FollowNotificationActionInput: FollowNotificationActionInput
   FollowResult: ResolverTypeWrapper<
     Omit<FollowResult, 'profile'> & { profile: ResolversTypes['UserProfile'] }
   >
-  FollowerNotificationActionInput: FollowerNotificationActionInput
   GetFollowInput: GetFollowInput
   GetPostsInput: GetPostsInput
   GetSearchPostsInput: GetSearchPostsInput
@@ -830,8 +829,8 @@ export type ResolversParentTypes = {
   Date: Scalars['Date']['output']
   FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
+  FollowNotificationActionInput: FollowNotificationActionInput
   FollowResult: Omit<FollowResult, 'profile'> & { profile: ResolversParentTypes['UserProfile'] }
-  FollowerNotificationActionInput: FollowerNotificationActionInput
   GetFollowInput: GetFollowInput
   GetPostsInput: GetPostsInput
   GetSearchPostsInput: GetSearchPostsInput
@@ -1083,7 +1082,7 @@ export type NotificationResolvers<
 }
 
 export type NotificationTypeResolvers = EnumResolverSignature<
-  { comment?: any; follower?: any; postLike?: any },
+  { comment?: any; follow?: any; postLike?: any },
   ResolversTypes['NotificationType']
 >
 

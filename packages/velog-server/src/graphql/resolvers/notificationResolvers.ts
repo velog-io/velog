@@ -1,4 +1,5 @@
 import { Resolvers } from '@graphql/helpers/generated'
+import { AuthService } from '@services/AuthService/index.js'
 import { NotificationService } from '@services/NotificationService/index.js'
 import { container } from 'tsyringe'
 
@@ -16,6 +17,8 @@ const notificationResolvers: Resolvers = {
   Mutation: {
     createNotification: async (_, { input }, ctx) => {
       const notificationService = container.resolve(NotificationService)
+      const authService = container.resolve(AuthService)
+      authService.isAuthenticated(ctx)
       return await notificationService.createNotification({
         fkUserId: input.fk_user_id,
         type: input.type,

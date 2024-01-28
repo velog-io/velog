@@ -94,11 +94,12 @@ export class PostLikeService implements Service {
       },
     })
 
-    const notification = await this.notificationService.findByAction({
+    // create notification
+    const notification = await this.notificationService.findByUniqueKey({
       fkUserId: post.fk_user_id,
       actorId: signedUserId,
-      type: 'postLike',
       actionId: postLike.id,
+      type: 'postLike',
     })
 
     if (notification) {
@@ -203,7 +204,8 @@ export class PostLikeService implements Service {
       },
     })
 
-    const notification = await this.notificationService.findByAction({
+    // delete notification
+    const notification = await this.notificationService.findByUniqueKey({
       fkUserId: post.fk_user_id,
       actorId: signedUserId,
       type: 'postLike',

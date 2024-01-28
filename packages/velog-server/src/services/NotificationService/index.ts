@@ -1,4 +1,5 @@
 import { BadRequestError } from '@errors/BadRequestErrors.js'
+import { ForbiddenError } from '@errors/ForbiddenError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import {
@@ -6,7 +7,7 @@ import {
   NotificationType,
   NotificationsInput,
   CommentNotificationActionInput,
-  FollowerNotificationActionInput,
+  FollowNotificationActionInput,
   PostLikeNotificationActionInput,
 } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
@@ -23,7 +24,7 @@ interface Service {
   readNotification(notificationIds: string[], signedUserId?: string): Promise<void>
   readAllNotification(signedUserId?: string): Promise<void>
   removeAllNotifications(signedUserId?: string): Promise<void>
-  findByAction(args: FindActionArgs): Promise<Notification | null>
+  findByUniqueKey(args: FindActionArgs): Promise<Notification | null>
 }
 
 @injectable()
@@ -87,19 +88,19 @@ export class NotificationService implements Service {
   public async createNotification({
     type,
     fkUserId,
-    actorId,
+    actorId = '',
     actionId,
     action: actionInfo,
     signedUserId,
   }: CreateNotificationArgs): Promise<Notification> {
-    if (!signedUserId) {
-      throw new UnauthorizedError('Not logged in')
+    if (signedUserId && signedUserId !== actorId) {
+      throw new ForbiddenError('Mismatch between logged in user and actor user')
     }
 
-    const user = await this.userService.findById(signedUserId)
+    const actor = await this.userService.findById(actorId)
 
-    if (!user) {
-      throw new NotFoundError('Not found user')
+    if (!actor) {
+      throw new NotFoundError('Not found actor')
     }
 
     if (!actionInfo) {
@@ -134,13 +135,13 @@ export class NotificationService implements Service {
   }
   private notificationActionValidate(type: NotificationType, action: any) {
     const schemaSelector = {
-      follower: z.object({
+      follow: z.object({
         follower_id: z.string().uuid(),
         follower_user_id: z.string().uuid(),
         actor_display_name: z.string(),
         actor_username: z.string(),
         actor_thumbnail: z.string(),
-        type: z.enum(['follower']),
+        type: z.enum(['follow']),
       }),
       comment: z.object({
         comment_id: z.string().uuid(),
@@ -241,7 +242,7 @@ export class NotificationService implements Service {
       },
     })
   }
-  async findByAction({
+  async findByUniqueKey({
     fkUserId,
     actorId,
     type,
@@ -268,7 +269,7 @@ export type CreateNotificationArgs = {
   signedUserId?: string
   action: {
     comment?: CommentNotificationActionInput
-    follower?: FollowerNotificationActionInput
+    follower?: FollowNotificationActionInput
     postLike?: PostLikeNotificationActionInput
   }
 }

@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { ENV } from '@env'
 import {
   CommentNotificationActionInput,
-  FollowerNotificationActionInput,
+  FollowNotificationActionInput,
   PostLikeNotificationActionInput,
 } from '@graphql/helpers/generated'
 
@@ -130,14 +130,13 @@ class Seeder {
         try {
           const actor = actors[i]
 
-          const followerAction: () => FollowerNotificationActionInput = () => ({
-            follower_id: followerActionId[this.utils.randomNumber(2)] ?? uuidv4(),
-            follower_user_id: u.id,
+          const followerAction: () => FollowNotificationActionInput = () => ({
+            follow_id: followerActionId[this.utils.randomNumber(2)] ?? uuidv4(),
             actor_user_id: actor.id,
             actor_display_name: actor.profile?.display_name || '',
             actor_username: actor.username || '',
             actor_thumbnail: actor.profile?.thumbnail || '',
-            type: 'follower',
+            type: 'follow',
           })
 
           const commentAction: () => CommentNotificationActionInput = () => ({

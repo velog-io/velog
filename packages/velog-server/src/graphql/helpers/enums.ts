@@ -1,1 +1,1 @@
-export type NotificationType = 'comment' | 'postLike' | 'follower'
+export type NotificationType = 'comment' | 'postLike' | 'follow'
