@@ -8,7 +8,6 @@ import { injectable, singleton } from 'tsyringe'
 import { PostService } from '@services/PostService/index.js'
 import { SearchService } from '@services/SearchService/index.js'
 import { NotificationService } from '@services/NotificationService/index.js'
-import { UserService } from '@services/UserService/index.js'
 
 interface Service {
   likePost(postId?: string, userId?: string): Promise<Post>
@@ -24,7 +23,6 @@ export class PostLikeService implements Service {
     private readonly searchService: SearchService,
     private readonly postService: PostService,
     private readonly notificationService: NotificationService,
-    private readonly userService: UserService,
   ) {}
   async likePost(postId?: string, signedUserId?: string): Promise<Post> {
     if (!postId) {
@@ -95,48 +93,25 @@ export class PostLikeService implements Service {
     })
 
     // create notification
-    const notification = await this.notificationService.findByUniqueKey({
+    await this.notificationService.createOrUpdate({
       fkUserId: post.fk_user_id,
       actorId: signedUserId,
       actionId: postLike.id,
       type: 'postLike',
-    })
-
-    if (notification) {
-      await this.db.notification.update({
-        where: {
-          id: notification.id,
-        },
-        data: {
-          is_deleted: false,
-        },
-      })
-    }
-
-    if (!notification) {
-      try {
-        await this.notificationService.createNotification({
-          fkUserId: post.fk_user_id,
+      action: {
+        postLike: {
+          post_like_id: postLike.id,
+          actor_display_name: signedUser.profile?.display_name || '',
+          actor_thumbnail: signedUser.profile?.thumbnail || '',
+          actor_username: signedUser.username,
+          post_id: likesPost.id,
+          post_title: likesPost.title || '',
+          post_url_slug: likesPost.url_slug || '',
+          post_writer_username: likesPost.user.username,
           type: 'postLike',
-          actionId: postLike.id,
-          actorId: signedUserId,
-          action: {
-            postLike: {
-              post_like_id: postLike.id,
-              actor_display_name: signedUser.profile?.display_name || '',
-              actor_thumbnail: signedUser.profile?.thumbnail || '',
-              actor_username: signedUser.username,
-              post_id: likesPost.id,
-              post_title: likesPost.title || '',
-              post_url_slug: likesPost.url_slug || '',
-              post_writer_username: likesPost.user.username,
-              type: 'postLike',
-            },
-          },
-          signedUserId,
-        })
-      } catch (_) {}
-    }
+        },
+      },
+    })
 
     const unscored = this.utils.checkUnscore(post.body!.concat(post.title || ''))
     if (!unscored) {
@@ -204,24 +179,13 @@ export class PostLikeService implements Service {
       },
     })
 
-    // delete notification
-    const notification = await this.notificationService.findByUniqueKey({
+    // remove notification
+    await this.notificationService.remove({
       fkUserId: post.fk_user_id,
       actorId: signedUserId,
       type: 'postLike',
       actionId: postLike.id,
     })
-
-    if (notification) {
-      await this.db.notification.update({
-        where: {
-          id: notification.id,
-        },
-        data: {
-          is_deleted: true,
-        },
-      })
-    }
 
     await this.postService.updatePostScore(postId)
     setTimeout(() => {

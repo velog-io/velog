@@ -105,44 +105,22 @@ export class FollowUserService implements Service {
     await this.feedService.createFeedByFollow({ followerUserId, followingUserId })
 
     // create notification
-    const notification = await this.notificationService.findByUniqueKey({
+    await this.notificationService.createOrUpdate({
       actionId: relationship.id,
       fkUserId: followingUserId,
       type: 'follow',
       actorId: followerUserId,
+      action: {
+        follower: {
+          actor_user_id: follower.id,
+          actor_display_name: follower.profile?.display_name || '',
+          actor_thumbnail: follower.profile?.thumbnail || '',
+          actor_username: follower.username,
+          follow_id: relationship.id,
+          type: 'follow',
+        },
+      },
     })
-
-    if (notification) {
-      await this.db.notification.update({
-        where: {
-          id: notification.id,
-          is_deleted: true,
-        },
-        data: {
-          is_deleted: false,
-        },
-      })
-    }
-
-    if (!notification) {
-      await this.notificationService.createNotification({
-        fkUserId: followingUserId,
-        actionId: relationship.id,
-        type: 'follow',
-        actorId: followerUserId,
-        action: {
-          follower: {
-            actor_user_id: follower.id,
-            actor_display_name: follower.profile?.display_name || '',
-            actor_thumbnail: follower.profile?.thumbnail || '',
-            actor_username: follower.username,
-            follow_id: relationship.id,
-            type: 'follow',
-          },
-        },
-        signedUserId: followerUserId,
-      })
-    }
   }
   public async unfollow({ followingUserId, followerUserId }: FollowArgs): Promise<void> {
     if (!followingUserId) {
@@ -190,24 +168,13 @@ export class FollowUserService implements Service {
       followingUserId,
     })
 
-    // delete notification
-    const notification = await this.notificationService.findByUniqueKey({
+    // remove notification
+    await this.notificationService.remove({
       actionId: relationship.id,
       actorId: followerUserId,
       fkUserId: followingUserId,
       type: 'follow',
     })
-
-    if (notification) {
-      await this.db.notification.update({
-        where: {
-          id: notification.id,
-        },
-        data: {
-          is_deleted: true,
-        },
-      })
-    }
   }
   public async getFollowers(input: GetFollowInput, signedUserId?: string): Promise<FollowResult[]> {
     const { username, cursor, limit = 10 } = input

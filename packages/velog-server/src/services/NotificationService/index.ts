@@ -18,13 +18,14 @@ import { injectable, singleton } from 'tsyringe'
 import { z } from 'zod'
 
 interface Service {
-  getNotifications(query?: NotificationsInput, signedUserId?: string): Promise<Notification[]>
-  getNotificationCount(signedUserId?: string): Promise<number>
-  createNotification(args: CreateNotificationArgs): Promise<Notification>
-  readNotification(notificationIds: string[], signedUserId?: string): Promise<void>
-  readAllNotification(signedUserId?: string): Promise<void>
-  removeAllNotifications(signedUserId?: string): Promise<void>
-  findByUniqueKey(args: FindActionArgs): Promise<Notification | null>
+  list(query?: NotificationsInput, signedUserId?: string): Promise<Notification[]>
+  getCount(signedUserId?: string): Promise<number>
+  create(args: CreateArgs): Promise<Notification>
+  read(notificationIds: string[], signedUserId?: string): Promise<void>
+  readAll(signedUserId?: string): Promise<void>
+  remove(args: RemoveArgs): Promise<void>
+  removeAll(signedUserId?: string): Promise<void>
+  createOrUpdate(args: CreateOrUpdate): Promise<void>
 }
 
 @injectable()
@@ -35,7 +36,7 @@ export class NotificationService implements Service {
     private readonly utils: UtilsService,
     private readonly userService: UserService,
   ) {}
-  public async getNotifications(
+  public async list(
     query: NotificationsInput = {},
     signedUserId?: string,
   ): Promise<Notification[]> {
@@ -66,7 +67,7 @@ export class NotificationService implements Service {
     })
     return notifications as unknown as Notification[]
   }
-  public async getNotificationCount(signedUserId?: string): Promise<number> {
+  public async getCount(signedUserId?: string): Promise<number> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')
     }
@@ -85,14 +86,14 @@ export class NotificationService implements Service {
       },
     })
   }
-  public async createNotification({
+  public async create({
     type,
     fkUserId,
     actorId = '',
     actionId,
     action: actionInfo,
     signedUserId,
-  }: CreateNotificationArgs): Promise<Notification> {
+  }: CreateArgs): Promise<Notification> {
     if (signedUserId && signedUserId !== actorId) {
       throw new ForbiddenError('Mismatch between logged in user and actor user')
     }
@@ -176,7 +177,7 @@ export class NotificationService implements Service {
 
     return this.utils.validateBody(schema, action)
   }
-  public async readNotification(notificationIds: string[], signedUserId?: string): Promise<void> {
+  public async read(notificationIds: string[], signedUserId?: string): Promise<void> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')
     }
@@ -201,7 +202,7 @@ export class NotificationService implements Service {
       },
     })
   }
-  async readAllNotification(signedUserId?: string): Promise<void> {
+  public async readAll(signedUserId?: string): Promise<void> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')
     }
@@ -222,7 +223,7 @@ export class NotificationService implements Service {
       },
     })
   }
-  async removeAllNotifications(signedUserId?: string): Promise<void> {
+  public async removeAll(signedUserId?: string): Promise<void> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')
     }
@@ -242,12 +243,62 @@ export class NotificationService implements Service {
       },
     })
   }
-  async findByUniqueKey({
+  public async createOrUpdate({ fkUserId, action, actionId, actorId, type }: CreateOrUpdate) {
+    const notification = await this.findByUniqueKey({
+      fkUserId,
+      actorId,
+      actionId,
+      type,
+    })
+
+    if (notification) {
+      await this.db.notification.update({
+        where: {
+          id: notification.id,
+        },
+        data: {
+          is_deleted: false,
+        },
+      })
+    }
+
+    if (!notification) {
+      try {
+        await this.create({
+          fkUserId,
+          type,
+          actionId,
+          actorId,
+          action,
+        })
+      } catch (_) {}
+    }
+  }
+  public async remove({ actionId, actorId, fkUserId, type }: RemoveArgs) {
+    const notification = await this.findByUniqueKey({
+      actionId,
+      actorId,
+      fkUserId,
+      type,
+    })
+
+    if (notification) {
+      await this.db.notification.update({
+        where: {
+          id: notification.id,
+        },
+        data: {
+          is_deleted: true,
+        },
+      })
+    }
+  }
+  private async findByUniqueKey({
     fkUserId,
     actorId,
     type,
     actionId,
-  }: FindActionArgs): Promise<Notification | null> {
+  }: FindByUniqueKey): Promise<Notification | null> {
     const notification = await this.db.notification.findFirst({
       where: {
         fk_user_id: fkUserId,
@@ -256,14 +307,13 @@ export class NotificationService implements Service {
         type,
       },
     })
-
     return notification as unknown as Notification | null
   }
 }
 
-export type CreateNotificationArgs = {
-  type: NotificationType
+type CreateArgs = {
   fkUserId: string
+  type: NotificationType
   actorId?: string
   actionId?: string
   signedUserId?: string
@@ -274,7 +324,26 @@ export type CreateNotificationArgs = {
   }
 }
 
-export type FindActionArgs = {
+type CreateOrUpdate = {
+  fkUserId: string
+  type: NotificationType
+  actionId: string
+  actorId: string
+  action: {
+    comment?: CommentNotificationActionInput
+    follower?: FollowNotificationActionInput
+    postLike?: PostLikeNotificationActionInput
+  }
+}
+
+type RemoveArgs = {
+  fkUserId: string
+  type: NotificationType
+  actionId: string
+  actorId: string
+}
+
+type FindByUniqueKey = {
   fkUserId: string
   actorId: string
   actionId: string
