@@ -66,17 +66,6 @@ export type Comment = {
   user: Maybe<User>
 }
 
-export type CommentNotificationAction = {
-  actor_display_name: Scalars['String']['output']
-  actor_thumbnail: Scalars['String']['output']
-  actor_username: Scalars['String']['output']
-  comment_id: Scalars['ID']['output']
-  comment_text: Scalars['String']['output']
-  post_title: Scalars['String']['output']
-  post_url_slug: Scalars['String']['output']
-  post_writer_username: Scalars['String']['output']
-}
-
 export type CommentNotificationActionInput = {
   actor_display_name: Scalars['String']['input']
   actor_thumbnail: Scalars['String']['input']
@@ -111,29 +100,21 @@ export type FollowInput = {
   followingUserId: Scalars['ID']['input']
 }
 
+export type FollowNotificationActionInput = {
+  actor_display_name: Scalars['String']['input']
+  actor_thumbnail: Scalars['String']['input']
+  actor_user_id: Scalars['ID']['input']
+  actor_username: Scalars['String']['input']
+  follow_id: Scalars['ID']['input']
+  type: NotificationType
+}
+
 export type FollowResult = {
   id: Scalars['ID']['output']
   is_followed: Scalars['Boolean']['output']
   profile: UserProfile
   userId: Scalars['ID']['output']
   username: Scalars['String']['output']
-}
-
-export type FollowerNotificationAction = {
-  actor_display_name: Scalars['String']['output']
-  actor_thumbnail: Scalars['String']['output']
-  actor_user_id: Scalars['String']['output']
-  actor_username: Scalars['String']['output']
-  follower_id: Scalars['ID']['output']
-}
-
-export type FollowerNotificationActionInput = {
-  actor_display_name: Scalars['String']['input']
-  actor_thumbnail: Scalars['String']['input']
-  actor_username: Scalars['String']['input']
-  follower_id: Scalars['ID']['input']
-  follower_user_id: Scalars['ID']['input']
-  type: NotificationType
 }
 
 export type GetFollowInput = {
@@ -288,20 +269,15 @@ export type Notification = {
   type: NotificationType
 }
 
-export type NotificationAction =
-  | CommentNotificationAction
-  | FollowerNotificationAction
-  | PostLikeNotificationAction
-
 export type NotificationActionInput = {
   comment?: InputMaybe<CommentNotificationActionInput>
-  follower?: InputMaybe<FollowerNotificationActionInput>
+  follow?: InputMaybe<FollowNotificationActionInput>
   postLike?: InputMaybe<PostLikeNotificationActionInput>
 }
 
 export enum NotificationType {
   Comment = 'comment',
-  Follower = 'follower',
+  Follow = 'follow',
   PostLike = 'postLike',
 }
 
@@ -346,16 +322,6 @@ export type PostHistory = {
   id: Maybe<Scalars['ID']['output']>
   is_markdown: Maybe<Scalars['Boolean']['output']>
   title: Maybe<Scalars['String']['output']>
-}
-
-export type PostLikeNotificationAction = {
-  actor_display_name: Scalars['String']['output']
-  actor_thumbnail: Scalars['String']['output']
-  actor_username: Scalars['String']['output']
-  post_like_id: Scalars['ID']['output']
-  post_title: Scalars['String']['output']
-  post_url_slug: Scalars['String']['output']
-  post_writer_username: Scalars['String']['output']
 }
 
 export type PostLikeNotificationActionInput = {

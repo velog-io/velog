@@ -1,6 +1,6 @@
 'use client'
 
-import { PostLikeNotificationAction } from '@/graphql/helpers/generated'
+import { PostLikeNotificationActionInput } from '@/graphql/helpers/generated'
 import itemStyles from '../NotificationItem.module.css'
 import styles from './PostLikeActionItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
@@ -13,7 +13,7 @@ import React, { useState } from 'react'
 const cx = bindClassNames({ ...itemStyles, ...styles })
 
 type Props = {
-  action: PostLikeNotificationAction
+  action: PostLikeNotificationActionInput
   onClickNotification: (notificationIds: string[]) => Promise<void>
 } & NotificationMerged
 

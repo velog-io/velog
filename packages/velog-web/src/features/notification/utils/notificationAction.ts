@@ -1,27 +1,28 @@
 import {
-  CommentNotificationAction,
-  FollowerNotificationAction,
-  PostLikeNotificationAction,
+  CommentNotificationActionInput,
+  FollowNotificationActionInput,
+  NotificationType,
+  PostLikeNotificationActionInput,
 } from '@/graphql/helpers/generated'
 import { NotificationMerged, NotificationNotMerged } from '../hooks/useNotificationMerge'
 
-export const isFollowerAction = (
+export const isFollowAction = (
   args: any,
-): args is NotificationNotMerged<FollowerNotificationAction> => {
-  if (args.type === 'follower') return true
+): args is NotificationNotMerged<FollowNotificationActionInput> => {
+  if ((args.type as NotificationType) === 'follow') return true
   return false
 }
 
 export const isCommentAction = (
   args: any,
-): args is NotificationNotMerged<CommentNotificationAction> => {
-  if (args.type === 'comment') return true
+): args is NotificationNotMerged<CommentNotificationActionInput> => {
+  if ((args.type as NotificationType) === 'comment') return true
   return false
 }
 
 export const isPostLikeAction = (
   args: any,
-): args is NotificationMerged<PostLikeNotificationAction> => {
-  if (args.type === 'postLike') return true
+): args is NotificationMerged<PostLikeNotificationActionInput> => {
+  if ((args.type as NotificationType) === 'postLike') return true
   return false
 }

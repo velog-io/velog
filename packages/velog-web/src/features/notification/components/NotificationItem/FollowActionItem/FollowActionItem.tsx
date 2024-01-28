@@ -2,9 +2,9 @@
 
 import { NotificationNotMerged } from '@/features/notification/hooks/useNotificationMerge'
 import itemStyles from '../NotificationItem.module.css'
-import styles from './FollowerActionItem.module.css'
+import styles from './FollowActionItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { FollowerNotificationAction } from '@/graphql/helpers/generated'
+import { FollowNotificationActionInput } from '@/graphql/helpers/generated'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
 import Link from 'next/link'
 import Thumbnail from '@/components/Thumbnail'
@@ -14,11 +14,11 @@ import { useState } from 'react'
 const cx = bindClassNames({ ...itemStyles, ...styles })
 
 type Props = {
-  action: FollowerNotificationAction
+  action: FollowNotificationActionInput
   onClickNotification: (notificationIds: string[]) => Promise<void>
 } & NotificationNotMerged
 
-function FollowerActionItem({ id, action, created_at, is_read, onClickNotification }: Props) {
+function FollowActionItem({ id, action, created_at, is_read, onClickNotification }: Props) {
   const { actor_display_name, actor_thumbnail, actor_username, actor_user_id } = action
 
   const velogUrl = `/@${actor_username}/posts`
@@ -54,4 +54,4 @@ function FollowerActionItem({ id, action, created_at, is_read, onClickNotificati
   )
 }
 
-export default FollowerActionItem
+export default FollowActionItem

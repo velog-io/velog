@@ -3,7 +3,7 @@
 import styles from './CommentActionItem.module.css'
 import itemStyles from '../NotificationItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { CommentNotificationAction } from '@/graphql/helpers/generated'
+import { CommentNotificationActionInput } from '@/graphql/helpers/generated'
 import { NotificationNotMerged } from '@/features/notification/hooks/useNotificationMerge'
 import Link from 'next/link'
 import Thumbnail from '@/components/Thumbnail'
@@ -13,7 +13,7 @@ import { useState } from 'react'
 const cx = bindClassNames({ ...styles, ...itemStyles })
 
 type Props = {
-  action: CommentNotificationAction
+  action: CommentNotificationActionInput
   onClickNotification: (notificationIds: string[]) => Promise<void>
 } & NotificationNotMerged
 
