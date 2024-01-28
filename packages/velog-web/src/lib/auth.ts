@@ -1,7 +1,11 @@
-import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
-import { cookies } from 'next/headers'
+import { type RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 
-export const getAccessToken = (): RequestCookie | undefined => {
+export const getAccessToken = async (): Promise<RequestCookie | undefined> => {
+  if (typeof window !== 'undefined') {
+    return undefined
+  }
+
+  const { cookies } = (await import('next/headers')).default
   const cookieStore = cookies()
   return cookieStore.get('access_token') || cookieStore.get('refresh_token')
 }

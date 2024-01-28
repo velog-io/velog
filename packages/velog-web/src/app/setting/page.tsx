@@ -5,21 +5,12 @@ import SettingThemeRow from '@/features/setting/components/SettingThemeRow'
 import SettingTitleRow from '@/features/setting/components/SettingTitleRow'
 import SettingUnregisterRow from '@/features/setting/components/SettingUnregisterRow'
 import SettingUserProfile from '@/features/setting/components/SettingUserProfile'
-import { getAccessToken } from '@/lib/auth'
 import getCurrentUser from '@/prefetch/getCurrentUser'
 import getVelogConfig from '@/prefetch/getVelogConfig'
 import { notFound } from 'next/navigation'
 
 export default async function SettingPage() {
-  const token = getAccessToken()
-
-  if (!token) {
-    notFound()
-  }
-
-  const user = await getCurrentUser({
-    accessToken: token,
-  })
+  const user = await getCurrentUser()
 
   if (!user) {
     notFound()

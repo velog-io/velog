@@ -14,7 +14,7 @@ export default async function graphqlFetch<T>({
 
   // this block only work in server side
   try {
-    const token = getAccessToken()
+    const token = await getAccessToken()
     if (token) {
       Object.assign(headers, { authorization: `Bearer ${token.value}` })
     }
