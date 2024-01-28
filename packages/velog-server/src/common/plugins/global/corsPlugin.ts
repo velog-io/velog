@@ -7,7 +7,7 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
   const corsWhitelist: RegExp[] = [
     /^https:\/\/velog.io$/,
     /^https:\/\/(.*).velog.io$/,
-    /^https:\/\/(.*)\.velog.io$/,
+    /^https:\/\/(.*\.velog\.io)$/,
     /https:\/\/(.*)--velog.netlify.com/,
     /https:\/\/velog.graphcdn.app/,
   ]
