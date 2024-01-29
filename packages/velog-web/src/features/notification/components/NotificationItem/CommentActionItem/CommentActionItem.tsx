@@ -18,7 +18,7 @@ type Props = {
 } & NotificationNotMerged
 
 function CommentActionItem({ id, action, created_at, is_read, onClickNotification }: Props) {
-  const [isClick, setClick] = useState(false)
+  const [isRead, setRead] = useState(false)
   const {
     post_title,
     comment_text,
@@ -34,11 +34,11 @@ function CommentActionItem({ id, action, created_at, is_read, onClickNotificatio
 
   const onClick = () => {
     onClickNotification([id])
-    setClick(true)
+    setRead(true)
   }
 
   return (
-    <li className={cx('block', 'item', { isRead: is_read || isClick })} onClick={onClick}>
+    <li className={cx('block', 'item', { isRead: is_read || isRead })} onClick={onClick}>
       <Link href={velogUrl}>
         <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
       </Link>

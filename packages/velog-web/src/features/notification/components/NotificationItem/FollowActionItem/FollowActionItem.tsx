@@ -24,15 +24,15 @@ function FollowActionItem({ id, action, created_at, is_read, onClickNotification
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
 
-  const [isClick, setClick] = useState(false)
+  const [isRead, setRead] = useState(false)
 
   const onClick = () => {
     onClickNotification([id])
-    setClick(true)
+    setRead(true)
   }
 
   return (
-    <li className={cx('block', 'item', { isRead: is_read || isClick })} onClick={onClick}>
+    <li className={cx('block', 'item', { isRead: is_read || isRead })} onClick={onClick}>
       <Link href={velogUrl}>
         <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
       </Link>

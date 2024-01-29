@@ -81,7 +81,7 @@ export default function useNotificationMerge(notifications: NotificationQueryDat
     return result
   }, [notifications])
 
-  return { merged } as { merged: (NotificationMerged | NotificationNotMerged)[] }
+  return { merged } as { merged: MergedNotifications }
 }
 
 export type NotificationMerged<T = Record<string, any>> = {
@@ -98,3 +98,5 @@ export type NotificationNotMerged<T = Record<string, any>> = {
 } & Notification
 
 type NotificationQueryData = Omit<Notification, 'fk_user_id' | 'is_deleted'>
+
+export type MergedNotifications = (NotificationMerged | NotificationNotMerged)[]

@@ -2,10 +2,15 @@
   padding: 0;
   margin: 0;
   padding-top: 24px;
-  padding-bottom: 32px;
 
   @media screen and (max-width: 768px) {
     padding: 0;
     padding-top: 16px;
   }
+}
+
+.bottom {
+  width: 100%;
+  height: 32px;
+  background-color: transparent;
 }

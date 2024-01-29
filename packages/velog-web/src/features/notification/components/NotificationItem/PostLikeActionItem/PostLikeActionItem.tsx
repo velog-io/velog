@@ -44,15 +44,15 @@ function PostLikeNotMergedItem(props: ItemProps) {
   } = action
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
-  const [isClick, setClick] = useState(false)
+  const [isRead, setRead] = useState(false)
 
   const onClick = () => {
     onListClick([id])
-    setClick(true)
+    setRead(true)
   }
 
   return (
-    <li className={cx('block', 'item', { isRead: is_read || isClick })} onClick={onClick}>
+    <li className={cx('block', 'item', { isRead: is_read || isRead })} onClick={onClick}>
       <Link href={velogUrl}>
         <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
       </Link>
@@ -82,15 +82,15 @@ function PostLikeMergedItem(props: ItemProps) {
   const rest_action_count = action_count - 2
   const { post_title, post_writer_username, post_url_slug } = action
   const { time } = useTimeFormat(created_at)
-  const [isClick, setClick] = useState(false)
+  const [isRead, setRead] = useState(false)
 
   const onClick = () => {
     onListClick(notificationIds)
-    setClick(true)
+    setRead(true)
   }
 
   return (
-    <li className={cx('block', 'item', { isRead: is_read || isClick })} onClick={onClick}>
+    <li className={cx('block', 'item', { isRead: is_read || isRead })} onClick={onClick}>
       <div className={cx('thumbanils')}>
         {actor_info.map((info, i) => {
           return (
