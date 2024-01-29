@@ -97,7 +97,7 @@
     "husky": "^8.0.0",
     "husky-init": "^8.0.0",
     "prettier": "^2.8.8",
-    "typescript": "5.1.3",
+    "typescript": "^5.3.3",
     "typescript-plugin-css-modules": "^5.0.1"
   }
 }

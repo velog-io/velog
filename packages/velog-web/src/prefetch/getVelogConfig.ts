@@ -1,8 +1,15 @@
 import { VelogConfig, VelogConfigDocument } from '@/graphql/helpers/generated'
+import { getAccessToken } from '@/lib/auth'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getVelogConfig({ username }: Args) {
   try {
+    const headers = {}
+    const token = await getAccessToken()
+    if (token) {
+      Object.assign(headers, { authorization: `Bearer ${token.value}` })
+    }
+
     const body: GraphqlRequestBody = {
       operationName: 'velogConfig',
       query: VelogConfigDocument,
@@ -16,6 +23,7 @@ export default async function getVelogConfig({ username }: Args) {
     const { velogConfig } = await graphqlFetch<{ velogConfig: VelogConfig }>({
       body,
       next: { revalidate: 0 },
+      headers,
     })
 
     if (!velogConfig) {
