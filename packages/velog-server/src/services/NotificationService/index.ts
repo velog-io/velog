@@ -156,6 +156,18 @@ export class NotificationService implements Service {
         actor_thumbnail: z.string(),
         type: z.enum(['comment']),
       }),
+      commentReply: z.object({
+        comment_id: z.string().uuid(),
+        parent_comment_text: z.string(),
+        post_id: z.string().uuid(),
+        post_url_slug: z.string(),
+        post_writer_username: z.string(),
+        reply_comment_text: z.string(),
+        actor_display_name: z.string(),
+        actor_username: z.string(),
+        actor_thumbnail: z.string(),
+        type: z.enum(['commentReply']),
+      }),
       postLike: z.object({
         post_like_id: z.string().uuid(),
         post_id: z.string().uuid(),
