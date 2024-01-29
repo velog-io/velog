@@ -79,6 +79,19 @@ export type CommentNotificationActionInput = {
   type: NotificationType
 }
 
+export type CommentReplyNotifictionActionInput = {
+  actor_display_name: Scalars['String']['input']
+  actor_thumbnail: Scalars['String']['input']
+  actor_username: Scalars['String']['input']
+  comment_id: Scalars['ID']['input']
+  parent_comment_text: Scalars['String']['input']
+  post_id: Scalars['ID']['input']
+  post_url_slug: Scalars['String']['input']
+  post_writer_username: Scalars['String']['input']
+  reply_comment_text: Scalars['String']['input']
+  type: NotificationType
+}
+
 export type ConfirmChangeEmailInput = {
   code: Scalars['String']['input']
 }
@@ -271,12 +284,14 @@ export type Notification = {
 
 export type NotificationActionInput = {
   comment?: InputMaybe<CommentNotificationActionInput>
+  commentReply?: InputMaybe<CommentReplyNotifictionActionInput>
   follow?: InputMaybe<FollowNotificationActionInput>
   postLike?: InputMaybe<PostLikeNotificationActionInput>
 }
 
 export enum NotificationType {
   Comment = 'comment',
+  CommentReply = 'commentReply',
   Follow = 'follow',
   PostLike = 'postLike',
 }

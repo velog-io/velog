@@ -1,10 +1,16 @@
 import { useNotificationCountQuery, useReadNoticationMutation } from '@/graphql/helpers/generated'
 import { MergedNotifications } from './useNotificationMerge'
-import { isCommentAction, isFollowAction, isPostLikeAction } from '../utils/notificationAction'
+import {
+  isCommentAction,
+  isCommentReplyAction,
+  isFollowAction,
+  isPostLikeAction,
+} from '../utils/notificationAction'
 import CommentActionItem from '../components/NotificationItem/CommentActionItem'
 import PostLikeActionItem from '../components/NotificationItem/PostLikeActionItem'
 import FollowActionItem from '../components/NotificationItem/FollowActionItem'
 import { useCallback, useMemo } from 'react'
+import CommentReplyActionItem from '../components/NotificationItem/CommentReplyActionItem'
 
 export default function useNotificationReorder(merged: MergedNotifications = []) {
   const { refetch } = useNotificationCountQuery({})
@@ -37,6 +43,16 @@ export default function useNotificationReorder(merged: MergedNotifications = [])
         />
       ))
 
+    const commentReplyActions = merged
+      .filter(isCommentReplyAction)
+      .map((notification) => (
+        <CommentReplyActionItem
+          key={notification.id}
+          onClickNotification={onClickNotification}
+          {...notification}
+        />
+      ))
+
     const postLikeActions = merged
       .filter(isPostLikeAction)
       .map((notification) => (
@@ -46,6 +62,7 @@ export default function useNotificationReorder(merged: MergedNotifications = [])
           {...notification}
         />
       ))
+
     const followerActions = merged
       .filter(isFollowAction)
       .map((notification) => (
@@ -58,9 +75,12 @@ export default function useNotificationReorder(merged: MergedNotifications = [])
 
     const dateToTime = (date: string) => new Date(date).getTime()
 
-    const reorder = [...commentActions, ...postLikeActions, ...followerActions].sort(
-      (a, b) => dateToTime(b.props.created_at) - dateToTime(a.props.created_at),
-    )
+    const reorder = [
+      ...commentActions,
+      ...commentReplyActions,
+      ...postLikeActions,
+      ...followerActions,
+    ].sort((a, b) => dateToTime(b.props.created_at) - dateToTime(a.props.created_at))
 
     return reorder
   }, [merged, onClickNotification])

@@ -1,33 +1,33 @@
 'use client'
 
-import styles from './CommentActionItem.module.css'
+import { CommentReplyNotifictionActionInput } from '@/graphql/helpers/generated'
 import itemStyles from '../NotificationItem.module.css'
+import styles from './CommentReplyActionItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { CommentNotificationActionInput } from '@/graphql/helpers/generated'
 import { NotificationNotMerged } from '@/features/notification/hooks/useNotificationMerge'
-import Link from 'next/link'
-import Thumbnail from '@/components/Thumbnail'
-import { useTimeFormat } from '@/hooks/useTimeFormat'
 import { useState } from 'react'
+import { useTimeFormat } from '@/hooks/useTimeFormat'
+import Thumbnail from '@/components/Thumbnail'
+import Link from 'next/link'
 import VLink from '@/components/VLink'
 
 const cx = bindClassNames({ ...styles, ...itemStyles })
 
 type Props = {
-  action: CommentNotificationActionInput
+  action: CommentReplyNotifictionActionInput
   onClickNotification: (notificationIds: string[]) => Promise<void>
 } & NotificationNotMerged
 
-function CommentActionItem({ id, action, created_at, is_read, onClickNotification }: Props) {
+function CommentReplyActionItem({ id, action, created_at, is_read, onClickNotification }: Props) {
   const [isRead, setRead] = useState(is_read)
   const {
-    post_title,
-    comment_text,
     actor_display_name,
-    actor_thumbnail,
     actor_username,
-    post_writer_username,
+    actor_thumbnail,
+    reply_comment_text,
+    parent_comment_text,
     post_url_slug,
+    post_writer_username,
   } = action
 
   const velogUrl = `/@${actor_username}/posts`
@@ -39,7 +39,7 @@ function CommentActionItem({ id, action, created_at, is_read, onClickNotificatio
   }
 
   return (
-    <li className={cx('block', 'item', { isRead })} onClick={onClick}>
+    <div className={cx('block', 'item', { isRead })} onClick={onClick}>
       <Link href={velogUrl}>
         <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
       </Link>
@@ -51,24 +51,28 @@ function CommentActionItem({ id, action, created_at, is_read, onClickNotificatio
           <span className={cx('spacer')} />
           <span>님이</span>
           <span className={cx('spacer')} />
-          <span className={cx('postTitle', 'bold')}>
+          <span className={cx('bold')}>
             <VLink href={`/@${post_writer_username}/${post_url_slug}`}>
-              {post_title.length > 20 ? `${post_title.slice(0, 20)}...` : post_title}
+              {parent_comment_text.length > 20
+                ? `${parent_comment_text.slice(0, 20)}...`
+                : parent_comment_text}
             </VLink>
           </span>
           <span className={cx('spacer')} />
-          <span>포스트에 댓글을 작성하였습니다:</span>
+          <span>에 대한 답글을 작성하였습니다:</span>
           <span className={cx('spacer')} />
           <span className={cx('comment')}>
             <VLink href={`/@${post_writer_username}/${post_url_slug}`}>
-              {comment_text.length > 100 ? `${comment_text.slice(0, 100)}...` : comment_text}
+              {reply_comment_text.length > 100
+                ? `${reply_comment_text.slice(0, 100)}...`
+                : reply_comment_text}
             </VLink>
           </span>
           <span className={cx('time')}>{time}</span>
         </p>
       </div>
-    </li>
+    </div>
   )
 }
 
-export default CommentActionItem
+export default CommentReplyActionItem

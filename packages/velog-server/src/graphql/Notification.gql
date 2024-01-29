@@ -14,6 +14,7 @@ enum NotificationType {
   follow
   comment
   postLike
+  commentReply
 }
 
 type Query {
@@ -40,6 +41,7 @@ input NotificationActionInput {
   follow: FollowNotificationActionInput
   comment: CommentNotificationActionInput
   postLike: PostLikeNotificationActionInput
+  commentReply: CommentReplyNotifictionActionInput
 }
 
 input FollowNotificationActionInput {
@@ -58,6 +60,19 @@ input CommentNotificationActionInput {
   post_url_slug: String!
   post_writer_username: String!
   comment_text: String!
+  actor_display_name: String!
+  actor_username: String!
+  actor_thumbnail: String!
+  type: NotificationType!
+}
+
+input CommentReplyNotifictionActionInput {
+  comment_id: ID!
+  parent_comment_text: String!
+  post_id: ID!
+  post_url_slug: String!
+  post_writer_username: String!
+  reply_comment_text: String!
   actor_display_name: String!
   actor_username: String!
   actor_thumbnail: String!

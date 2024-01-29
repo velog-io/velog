@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { ENV } from '@env'
 import {
   CommentNotificationActionInput,
+  CommentReplyNotifictionActionInput,
   FollowNotificationActionInput,
   PostLikeNotificationActionInput,
 } from '@graphql/helpers/generated'
@@ -152,6 +153,20 @@ class Seeder {
             type: 'comment',
           })
 
+          const commentReplyAction: () => CommentReplyNotifictionActionInput = () => ({
+            comment_id: uuidv4(),
+            post_id: postIds[this.utils.randomNumber(posts.length - 1)] ?? uuidv4(),
+            parent_comment_text: faker.lorem.sentence(8),
+            post_title: faker.lorem.sentence(5),
+            post_url_slug: posts[2]?.url_slug || '',
+            post_writer_username: u.username,
+            actor_display_name: actor.profile?.display_name || '',
+            actor_username: actor.username,
+            actor_thumbnail: actor.profile?.thumbnail || '',
+            reply_comment_text: faker.lorem.sentence(8),
+            type: 'commentReply',
+          })
+
           const postLikeAction: () => PostLikeNotificationActionInput = () => ({
             post_like_id: uuidv4(),
             post_id: postIds[this.utils.randomNumber(posts.length - 1)] ?? uuidv4(),
@@ -166,7 +181,7 @@ class Seeder {
             type: 'postLike',
           })
 
-          const actionSelector = [commentAction, postLikeAction, followerAction]
+          const actionSelector = [commentAction, commentReplyAction, postLikeAction, followerAction]
 
           const notificationMocks = actionSelector.map((v) => v())
           const promises = notificationMocks.map((action: any) => {
@@ -174,7 +189,7 @@ class Seeder {
               data: {
                 fk_user_id: u.id,
                 actor_id: actor.id,
-                action_id: action?.follower_id || action?.comment_id || action?.post_like_id,
+                action_id: action?.follow_id || action?.comment_id || action?.post_like_id,
                 action,
                 type: action.type,
               },
@@ -190,13 +205,15 @@ class Seeder {
   }
 }
 
+const CREATE_USER_COUNT = 20
+
 async function main() {
   try {
     const db = new DbService()
     const utils = new UtilsService()
     const seeder = new Seeder(db, utils)
 
-    const mockUserWithProfile = getMockUserWithProfile(20)
+    const mockUserWithProfile = getMockUserWithProfile(CREATE_USER_COUNT)
     const createUsers = seeder.createUser(mockUserWithProfile)
     const users = await Promise.all(createUsers)
 

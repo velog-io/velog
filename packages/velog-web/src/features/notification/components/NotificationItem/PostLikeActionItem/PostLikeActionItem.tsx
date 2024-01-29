@@ -9,6 +9,7 @@ import Thumbnail from '@/components/Thumbnail'
 import Link from 'next/link'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
 import React, { useState } from 'react'
+import VLink from '@/components/VLink'
 
 const cx = bindClassNames({ ...itemStyles, ...styles })
 
@@ -44,7 +45,7 @@ function PostLikeNotMergedItem(props: ItemProps) {
   } = action
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
-  const [isRead, setRead] = useState(false)
+  const [isRead, setRead] = useState(is_read)
 
   const onClick = () => {
     onListClick([id])
@@ -52,7 +53,7 @@ function PostLikeNotMergedItem(props: ItemProps) {
   }
 
   return (
-    <li className={cx('block', 'item', { isRead: is_read || isRead })} onClick={onClick}>
+    <li className={cx('block', 'item', { isRead })} onClick={onClick}>
       <Link href={velogUrl}>
         <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
       </Link>
@@ -62,10 +63,12 @@ function PostLikeNotMergedItem(props: ItemProps) {
             <span className={cx('bold')}>{actor_display_name}</span>
           </Link>
           <span className={cx('spacer')} />
+          <span>님이</span>
+          <span className={cx('spacer')} />
           <span className={cx('postTitle', 'bold')}>
-            <Link href={`/@${post_writer_username}/${post_url_slug}`}>
+            <VLink href={`/@${post_writer_username}/${post_url_slug}`}>
               {post_title.length > 20 ? `${post_title.slice(0, 20)}...` : post_title}
-            </Link>
+            </VLink>
           </span>
           <span className={cx('spacer')} />
           <span>포스트를 좋아 합니다.</span>
@@ -82,7 +85,7 @@ function PostLikeMergedItem(props: ItemProps) {
   const rest_action_count = action_count - 2
   const { post_title, post_writer_username, post_url_slug } = action
   const { time } = useTimeFormat(created_at)
-  const [isRead, setRead] = useState(false)
+  const [isRead, setRead] = useState(is_read)
 
   const onClick = () => {
     onListClick(notificationIds)
@@ -90,7 +93,7 @@ function PostLikeMergedItem(props: ItemProps) {
   }
 
   return (
-    <li className={cx('block', 'item', { isRead: is_read || isRead })} onClick={onClick}>
+    <li className={cx('block', 'item', { isRead })} onClick={onClick}>
       <div className={cx('thumbanils')}>
         {actor_info.map((info, i) => {
           return (
@@ -116,15 +119,14 @@ function PostLikeMergedItem(props: ItemProps) {
             )
           })}
           <span>
-            {' '}
             {rest_action_count > 0 && <>님 외 {rest_action_count}명이</>}
             {rest_action_count <= 0 && <>님이</>}
           </span>
           <span className={cx('spacer')} />
           <span className={cx('postTitle', 'bold')}>
-            <Link href={`/@${post_writer_username}/${post_url_slug}`}>
+            <VLink href={`/@${post_writer_username}/${post_url_slug}`}>
               {post_title.length > 20 ? `${post_title.slice(0, 20)}...` : post_title}
-            </Link>
+            </VLink>
           </span>
           <span className={cx('spacer')} />
           <span>포스트를 좋아 합니다.</span>

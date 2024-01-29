@@ -5,6 +5,7 @@
 
 .item {
   list-style: none;
+  user-select: none;
 
   .thumbnail {
     width: 40px;
