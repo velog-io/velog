@@ -78,7 +78,7 @@ function NotificationSelector() {
           모두 삭제
         </div>
         <PopupOKCancel
-          title="읽음"
+          title="알림 읽음"
           isVisible={readAsk}
           onCancel={() => setReadAsk(false)}
           onConfirm={onRead}
@@ -86,7 +86,7 @@ function NotificationSelector() {
           모든 알림을 읽음 처리 하시겠습니까?
         </PopupOKCancel>
         <PopupOKCancel
-          title="삭제"
+          title="알림 삭제"
           isVisible={removeAsk}
           onCancel={() => setRemoveAsk(false)}
           onConfirm={onRemove}
