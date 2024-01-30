@@ -10,8 +10,6 @@ import {
   useNotificationQuery,
   useReadAllNotificationsMutation,
   useRemoveAllNotificationsMutation,
-  useSuspenseNotificationCountQuery,
-  useSuspenseNotificationQuery,
 } from '@/graphql/helpers/generated'
 import PopupOKCancel from '@/components/PopupOKCancel'
 import { useState } from 'react'
@@ -32,12 +30,12 @@ function NotificationSelector() {
   const [{ data: notificationQueryData, refetch }, { data: notificationCountData }] = useQueries({
     queries: [
       {
-        queryKey: useSuspenseNotificationQuery.getKey({ input }),
+        queryKey: useNotificationQuery.getKey({ input }),
         queryFn: useNotificationQuery.fetcher({ input }),
         enabled: !user,
       },
       {
-        queryKey: useSuspenseNotificationCountQuery.getKey(),
+        queryKey: useNotificationCountQuery.getKey(),
         queryFn: useNotificationCountQuery.fetcher(),
         enabled: !user,
       },
