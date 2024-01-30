@@ -23,6 +23,7 @@ const notificationResolvers: Resolvers = {
         fkUserId: input.fk_user_id,
         type: input.type,
         actionId: input.action_id,
+        actorId: input.actor_id,
         action: input.action,
         signedUserId: ctx.user?.id,
       })

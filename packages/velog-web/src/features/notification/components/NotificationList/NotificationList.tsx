@@ -20,13 +20,16 @@ function NotificationList() {
     Object.assign(input, { is_read: false })
   }
 
-  const { data: currentUserData } = useCurrentUserQuery()
+  const { data: currentUserData, isLoading: currentUserIsLoading } = useCurrentUserQuery()
   const user = currentUserData?.currentUser
 
-  const { data, isLoading } = useNotificationQuery({ input }, { enabled: !user })
+  const { data: notificationData, isLoading: notificationIsLoading } = useNotificationQuery(
+    { input },
+    { enabled: !!user },
+  )
 
   const ref = useRef<HTMLDivElement>(null)
-  const { merged } = useNotificationMerge(data?.notifications)
+  const { merged } = useNotificationMerge(notificationData?.notifications)
   const { jsx } = useNotificationReorder(merged)
 
   const [page, setPage] = useState(1)
@@ -42,8 +45,8 @@ function NotificationList() {
 
   useInfiniteScroll(ref, fetchMore)
 
-  if (isLoading) return <NotificationSkeletonList />
-  if (data?.notifications.length === 0) return <NotificationEmpty />
+  if (currentUserIsLoading || notificationIsLoading) return <NotificationSkeletonList />
+  if (notificationData?.notifications.length === 0) return <NotificationEmpty />
   return (
     <>
       <ul className={cx('block')}>{list}</ul>

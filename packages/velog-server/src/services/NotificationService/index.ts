@@ -23,7 +23,7 @@ interface Service {
   readAll(signedUserId?: string): Promise<void>
   remove(args: RemoveArgs): Promise<void>
   removeAll(signedUserId?: string): Promise<void>
-  createOrUpdate(args: CreateOrUpdate): Promise<void>
+  createOrUpdate(args: CreateOrUpdateArgs): Promise<void>
 }
 
 @injectable()
@@ -135,8 +135,8 @@ export class NotificationService implements Service {
   private notificationActionValidate(type: NotificationType, action: any) {
     const schemaSelector = {
       follow: z.object({
-        follower_id: z.string().uuid(),
-        follower_user_id: z.string().uuid(),
+        follow_id: z.string().uuid(),
+        actor_user_id: z.string().uuid(),
         actor_display_name: z.string(),
         actor_username: z.string(),
         actor_thumbnail: z.string(),
@@ -253,7 +253,7 @@ export class NotificationService implements Service {
       },
     })
   }
-  public async createOrUpdate({ fkUserId, action, actionId, actorId, type }: CreateOrUpdate) {
+  public async createOrUpdate({ fkUserId, action, actionId, actorId, type }: CreateOrUpdateArgs) {
     const notification = await this.findByUniqueKey({
       fkUserId,
       actorId,
@@ -281,7 +281,9 @@ export class NotificationService implements Service {
           actorId,
           action,
         })
-      } catch (_) {}
+      } catch (error) {
+        console.log('create notification error', error)
+      }
     }
   }
   public async remove({ actionId, actorId, fkUserId, type }: RemoveArgs) {
@@ -330,7 +332,7 @@ type CreateArgs = {
   action: NotificationActionInput
 }
 
-type CreateOrUpdate = {
+type CreateOrUpdateArgs = {
   fkUserId: string
   type: NotificationType
   actionId: string

@@ -1,4 +1,8 @@
-import { useNotificationCountQuery, useReadNoticationMutation } from '@/graphql/helpers/generated'
+import {
+  useNotificationCountQuery,
+  useNotificationQuery,
+  useReadNoticationMutation,
+} from '@/graphql/helpers/generated'
 import { MergedNotifications } from './useNotificationMerge'
 import {
   isCommentAction,
@@ -11,25 +15,30 @@ import PostLikeActionItem from '../components/NotificationItem/PostLikeActionIte
 import FollowActionItem from '../components/NotificationItem/FollowActionItem'
 import { useCallback, useMemo } from 'react'
 import CommentReplyActionItem from '../components/NotificationItem/CommentReplyActionItem'
+import { usePathname } from 'next/navigation'
 
 export default function useNotificationReorder(merged: MergedNotifications = []) {
-  const { refetch } = useNotificationCountQuery()
+  const pathname = usePathname()
+  const input: Record<string, any> = {}
+  if (pathname.includes('/not-read')) {
+    Object.assign(input, { is_read: false })
+  }
+
+  const { refetch: notificationCountRefetch } = useNotificationCountQuery()
+  const { refetch: notificationRefetch } = useNotificationQuery({ input })
   const { mutateAsync: readNotificationMutateAsync } = useReadNoticationMutation()
 
   const onClickNotification = useCallback(
     async (notificationIds: string[]) => {
-      try {
-        await readNotificationMutateAsync({
-          input: {
-            notification_ids: notificationIds,
-          },
-        })
-        refetch()
-      } catch (error) {
-        console.error('Error while updating notifications:', error)
-      }
+      await readNotificationMutateAsync({
+        input: {
+          notification_ids: notificationIds,
+        },
+      })
+      notificationRefetch()
+      notificationCountRefetch()
     },
-    [readNotificationMutateAsync, refetch],
+    [readNotificationMutateAsync, notificationCountRefetch, notificationRefetch],
   )
 
   const jsx = useMemo(() => {
