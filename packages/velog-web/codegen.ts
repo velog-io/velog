@@ -15,6 +15,7 @@ const config: CodegenConfig = {
         reactQueryVersion: 5,
         addSuspenseQuery: true,
         exposeQueryKeys: true,
+        exposeFetcher: true,
         exposeMutationKeys: true,
         skipTypename: true,
         inputMaybeValue: 'T | null | undefined',

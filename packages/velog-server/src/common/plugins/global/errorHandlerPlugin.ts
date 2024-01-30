@@ -3,17 +3,16 @@ import { isHttpError } from '@errors/HttpError.js'
 import { FastifyPluginCallback } from 'fastify'
 
 const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
-  fastify.addHook('preHandler', function (req, reply, done) {
-    if (req.body) {
-      req.log.info({ body: req.body }, 'parsed body')
+  fastify.addHook('preHandler', function (request, reply, done) {
+    if (request.body) {
+      request.log.info({ body: request.body }, 'parsed body')
     }
     done()
   })
   fastify.addHook('onError', (request, reply, error) => {
-    console.log('request', request)
-    console.log('fastify hook error:', error)
+    request.log.error(error, 'fastify onError')
   })
-  fastify.setErrorHandler((error, _, reply) => {
+  fastify.setErrorHandler((error, request, reply) => {
     if (isHttpError(error)) {
       reply.status(error.statusCode).send({
         message: error.message,
@@ -29,7 +28,7 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
     }
 
     if (ENV.appEnv === 'development') {
-      console.error(error)
+      request.log.error(error, 'fastify handleError')
     }
   })
 

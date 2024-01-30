@@ -76,5 +76,5 @@ type Parameter = {
 export type GraphqlRequestBody = {
   operationName?: string
   query: string
-  variables?: Record<any, any>
+  variables: Record<any, any>
 }

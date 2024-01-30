@@ -19,6 +19,7 @@ function NotificationList() {
     Object.assign(input, { is_read: false })
   }
 
+  const ref = useRef<HTMLDivElement>(null)
   const { data } = useSuspenseNotificationQuery({ input })
   const { merged } = useNotificationMerge(data?.notifications)
   const { jsx } = useNotificationReorder(merged)
@@ -27,7 +28,6 @@ function NotificationList() {
   const take = 20
   const [list, setList] = useState(jsx.slice(0, page * take))
 
-  const ref = useRef<HTMLDivElement>(null)
   const fetchMore = () => {
     if (jsx.length <= list.length) return
     const currentPage = page + 1

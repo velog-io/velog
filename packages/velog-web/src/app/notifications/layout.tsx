@@ -6,7 +6,7 @@ type Props = {
 }
 
 export const metadata: Metadata = {
-  title: 'notifications - velog',
+  title: '알림 - velog',
 }
 
 export default async function NotificationLayout({ children }: Props) {

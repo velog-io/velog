@@ -4,12 +4,16 @@ import graphqlFetch from '@/lib/graphqlFetch'
 export function fetcher<TData, TVariables extends Record<string, any>>(
   query: string,
   variables?: TVariables,
+  options?: RequestInit['headers'],
 ) {
   return async (): Promise<TData> => {
     const data = await graphqlFetch<TData>({
       url: `${ENV.graphqlHost}/graphql`,
       method: 'POST',
       body: { query, variables: variables ?? {} },
+      headers: {
+        ...options,
+      },
     })
 
     return data

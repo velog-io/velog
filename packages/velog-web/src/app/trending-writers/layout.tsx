@@ -7,7 +7,7 @@ type Props = {
 }
 
 export const metadata: Metadata = {
-  title: 'trending writers - velog',
+  title: '인기 작가 - velog',
 }
 
 export default function Layout({ children }: Props) {

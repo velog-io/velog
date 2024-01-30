@@ -1203,6 +1203,9 @@ export const useSuspenseAdsQuery = <TData = AdsQuery, TError = unknown>(
 
 useSuspenseAdsQuery.getKey = (variables: AdsQueryVariables) => ['adsSuspense', variables]
 
+useAdsQuery.fetcher = (variables: AdsQueryVariables, options?: RequestInit['headers']) =>
+  fetcher<AdsQuery, AdsQueryVariables>(AdsDocument, variables, options)
+
 export const IsLoggedDocument = `
     query isLogged {
   isLogged
@@ -1241,6 +1244,9 @@ export const useSuspenseIsLoggedQuery = <TData = IsLoggedQuery, TError = unknown
 useSuspenseIsLoggedQuery.getKey = (variables?: IsLoggedQueryVariables) =>
   variables === undefined ? ['isLoggedSuspense'] : ['isLoggedSuspense', variables]
 
+useIsLoggedQuery.fetcher = (variables?: IsLoggedQueryVariables, options?: RequestInit['headers']) =>
+  fetcher<IsLoggedQuery, IsLoggedQueryVariables>(IsLoggedDocument, variables, options)
+
 export const SendMailDocument = `
     mutation sendMail($input: SendMailInput!) {
   sendMail(input: $input) {
@@ -1262,6 +1268,11 @@ export const useSendMailMutation = <TError = unknown, TContext = unknown>(
 
 useSendMailMutation.getKey = () => ['sendMail']
 
+useSendMailMutation.fetcher = (
+  variables: SendMailMutationVariables,
+  options?: RequestInit['headers'],
+) => fetcher<SendMailMutation, SendMailMutationVariables>(SendMailDocument, variables, options)
+
 export const FollowDocument = `
     mutation follow($input: FollowInput!) {
   follow(input: $input)
@@ -1281,6 +1292,11 @@ export const useFollowMutation = <TError = unknown, TContext = unknown>(
 
 useFollowMutation.getKey = () => ['follow']
 
+useFollowMutation.fetcher = (
+  variables: FollowMutationVariables,
+  options?: RequestInit['headers'],
+) => fetcher<FollowMutation, FollowMutationVariables>(FollowDocument, variables, options)
+
 export const UnfollowDocument = `
     mutation unfollow($input: UnfollowInput!) {
   unfollow(input: $input)
@@ -1299,6 +1315,11 @@ export const useUnfollowMutation = <TError = unknown, TContext = unknown>(
 }
 
 useUnfollowMutation.getKey = () => ['unfollow']
+
+useUnfollowMutation.fetcher = (
+  variables: UnfollowMutationVariables,
+  options?: RequestInit['headers'],
+) => fetcher<UnfollowMutation, UnfollowMutationVariables>(UnfollowDocument, variables, options)
 
 export const GetFollowersDocument = `
     query getFollowers($input: GetFollowInput!) {
@@ -1354,6 +1375,12 @@ useSuspenseGetFollowersQuery.getKey = (variables: GetFollowersQueryVariables) =>
   'getFollowersSuspense',
   variables,
 ]
+
+useGetFollowersQuery.fetcher = (
+  variables: GetFollowersQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, variables, options)
 
 export const GetFollowingsDocument = `
     query getFollowings($input: GetFollowInput!) {
@@ -1413,6 +1440,16 @@ useSuspenseGetFollowingsQuery.getKey = (variables: GetFollowingsQueryVariables) 
   variables,
 ]
 
+useGetFollowingsQuery.fetcher = (
+  variables: GetFollowingsQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(
+    GetFollowingsDocument,
+    variables,
+    options,
+  )
+
 export const NotificationDocument = `
     query notification($input: NotificationsInput!) {
   notifications(input: $input) {
@@ -1466,6 +1503,12 @@ useSuspenseNotificationQuery.getKey = (variables: NotificationQueryVariables) =>
   variables,
 ]
 
+useNotificationQuery.fetcher = (
+  variables: NotificationQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<NotificationQuery, NotificationQueryVariables>(NotificationDocument, variables, options)
+
 export const NotificationCountDocument = `
     query notificationCount {
   notificationCount
@@ -1513,6 +1556,16 @@ export const useSuspenseNotificationCountQuery = <TData = NotificationCountQuery
 useSuspenseNotificationCountQuery.getKey = (variables?: NotificationCountQueryVariables) =>
   variables === undefined ? ['notificationCountSuspense'] : ['notificationCountSuspense', variables]
 
+useNotificationCountQuery.fetcher = (
+  variables?: NotificationCountQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<NotificationCountQuery, NotificationCountQueryVariables>(
+    NotificationCountDocument,
+    variables,
+    options,
+  )
+
 export const ReadAllNotificationsDocument = `
     mutation readAllNotifications {
   readAllNotifications
@@ -1544,6 +1597,16 @@ export const useReadAllNotificationsMutation = <TError = unknown, TContext = unk
 }
 
 useReadAllNotificationsMutation.getKey = () => ['readAllNotifications']
+
+useReadAllNotificationsMutation.fetcher = (
+  variables?: ReadAllNotificationsMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<ReadAllNotificationsMutation, ReadAllNotificationsMutationVariables>(
+    ReadAllNotificationsDocument,
+    variables,
+    options,
+  )
 
 export const RemoveAllNotificationsDocument = `
     mutation removeAllNotifications {
@@ -1577,6 +1640,16 @@ export const useRemoveAllNotificationsMutation = <TError = unknown, TContext = u
 
 useRemoveAllNotificationsMutation.getKey = () => ['removeAllNotifications']
 
+useRemoveAllNotificationsMutation.fetcher = (
+  variables?: RemoveAllNotificationsMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<RemoveAllNotificationsMutation, RemoveAllNotificationsMutationVariables>(
+    RemoveAllNotificationsDocument,
+    variables,
+    options,
+  )
+
 export const ReadNoticationDocument = `
     mutation readNotication($input: ReadNotificationInput!) {
   readNotification(input: $input)
@@ -1603,6 +1676,16 @@ export const useReadNoticationMutation = <TError = unknown, TContext = unknown>(
 }
 
 useReadNoticationMutation.getKey = () => ['readNotication']
+
+useReadNoticationMutation.fetcher = (
+  variables: ReadNoticationMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<ReadNoticationMutation, ReadNoticationMutationVariables>(
+    ReadNoticationDocument,
+    variables,
+    options,
+  )
 
 export const ReadPostDocument = `
     query readPost($input: ReadPostInput!) {
@@ -1727,6 +1810,9 @@ useSuspenseReadPostQuery.getKey = (variables: ReadPostQueryVariables) => [
   variables,
 ]
 
+useReadPostQuery.fetcher = (variables: ReadPostQueryVariables, options?: RequestInit['headers']) =>
+  fetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables, options)
+
 export const RecentPostsDocument = `
     query recentPosts($input: RecentPostsInput!) {
   recentPosts(input: $input) {
@@ -1785,6 +1871,11 @@ useSuspenseRecentPostsQuery.getKey = (variables: RecentPostsQueryVariables) => [
   'recentPostsSuspense',
   variables,
 ]
+
+useRecentPostsQuery.fetcher = (
+  variables: RecentPostsQueryVariables,
+  options?: RequestInit['headers'],
+) => fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, variables, options)
 
 export const TrendingPostsDocument = `
     query trendingPosts($input: TrendingPostsInput!) {
@@ -1854,6 +1945,16 @@ useSuspenseTrendingPostsQuery.getKey = (variables: TrendingPostsQueryVariables) 
   variables,
 ]
 
+useTrendingPostsQuery.fetcher = (
+  variables: TrendingPostsQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
+    TrendingPostsDocument,
+    variables,
+    options,
+  )
+
 export const FeedPostsDocument = `
     query feedPosts($input: FeedPostsInput!) {
   feedPosts(input: $input) {
@@ -1912,6 +2013,11 @@ useSuspenseFeedPostsQuery.getKey = (variables: FeedPostsQueryVariables) => [
   'feedPostsSuspense',
   variables,
 ]
+
+useFeedPostsQuery.fetcher = (
+  variables: FeedPostsQueryVariables,
+  options?: RequestInit['headers'],
+) => fetcher<FeedPostsQuery, FeedPostsQueryVariables>(FeedPostsDocument, variables, options)
 
 export const VelogPostsDocument = `
     query velogPosts($input: GetPostsInput!) {
@@ -1972,6 +2078,11 @@ useSuspenseVelogPostsQuery.getKey = (variables: VelogPostsQueryVariables) => [
   'velogPostsSuspense',
   variables,
 ]
+
+useVelogPostsQuery.fetcher = (
+  variables: VelogPostsQueryVariables,
+  options?: RequestInit['headers'],
+) => fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, variables, options)
 
 export const SearchPostsDocument = `
     query searchPosts($input: GetSearchPostsInput!) {
@@ -2034,6 +2145,11 @@ useSuspenseSearchPostsQuery.getKey = (variables: SearchPostsQueryVariables) => [
   variables,
 ]
 
+useSearchPostsQuery.fetcher = (
+  variables: SearchPostsQueryVariables,
+  options?: RequestInit['headers'],
+) => fetcher<SearchPostsQuery, SearchPostsQueryVariables>(SearchPostsDocument, variables, options)
+
 export const UserTagsDocument = `
     query userTags($input: UserTagsInput!) {
   userTags(input: $input) {
@@ -2081,6 +2197,9 @@ useSuspenseUserTagsQuery.getKey = (variables: UserTagsQueryVariables) => [
   'userTagsSuspense',
   variables,
 ]
+
+useUserTagsQuery.fetcher = (variables: UserTagsQueryVariables, options?: RequestInit['headers']) =>
+  fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables, options)
 
 export const GetUserDocument = `
     query getUser($input: GetUserInput!) {
@@ -2130,6 +2249,9 @@ useSuspenseGetUserQuery.getKey = (variables: GetUserQueryVariables) => [
   'getUserSuspense',
   variables,
 ]
+
+useGetUserQuery.fetcher = (variables: GetUserQueryVariables, options?: RequestInit['headers']) =>
+  fetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables, options)
 
 export const GetUserFollowInfoDocument = `
     query getUserFollowInfo($input: GetUserInput!) {
@@ -2192,6 +2314,16 @@ useSuspenseGetUserFollowInfoQuery.getKey = (variables: GetUserFollowInfoQueryVar
   variables,
 ]
 
+useGetUserFollowInfoQuery.fetcher = (
+  variables: GetUserFollowInfoQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
+    GetUserFollowInfoDocument,
+    variables,
+    options,
+  )
+
 export const CurrentUserDocument = `
     query currentUser {
   currentUser {
@@ -2247,6 +2379,11 @@ export const useSuspenseCurrentUserQuery = <TData = CurrentUserQuery, TError = u
 useSuspenseCurrentUserQuery.getKey = (variables?: CurrentUserQueryVariables) =>
   variables === undefined ? ['currentUserSuspense'] : ['currentUserSuspense', variables]
 
+useCurrentUserQuery.fetcher = (
+  variables?: CurrentUserQueryVariables,
+  options?: RequestInit['headers'],
+) => fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, variables, options)
+
 export const VelogConfigDocument = `
     query velogConfig($input: GetVelogConfigInput!) {
   velogConfig(input: $input) {
@@ -2288,6 +2425,11 @@ useSuspenseVelogConfigQuery.getKey = (variables: VelogConfigQueryVariables) => [
   'velogConfigSuspense',
   variables,
 ]
+
+useVelogConfigQuery.fetcher = (
+  variables: VelogConfigQueryVariables,
+  options?: RequestInit['headers'],
+) => fetcher<VelogConfigQuery, VelogConfigQueryVariables>(VelogConfigDocument, variables, options)
 
 export const GetUserAboutDocument = `
     query getUserAbout($input: GetUserInput!) {
@@ -2340,6 +2482,12 @@ useSuspenseGetUserAboutQuery.getKey = (variables: GetUserAboutQueryVariables) =>
   'getUserAboutSuspense',
   variables,
 ]
+
+useGetUserAboutQuery.fetcher = (
+  variables: GetUserAboutQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(GetUserAboutDocument, variables, options)
 
 export const GetUserSeriesListDocument = `
     query getUserSeriesList($input: GetUserInput!) {
@@ -2400,6 +2548,16 @@ useSuspenseGetUserSeriesListQuery.getKey = (variables: GetUserSeriesListQueryVar
   variables,
 ]
 
+useGetUserSeriesListQuery.fetcher = (
+  variables: GetUserSeriesListQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
+    GetUserSeriesListDocument,
+    variables,
+    options,
+  )
+
 export const UnregisterTokenDocument = `
     query unregisterToken {
   unregisterToken
@@ -2446,6 +2604,16 @@ export const useSuspenseUnregisterTokenQuery = <TData = UnregisterTokenQuery, TE
 
 useSuspenseUnregisterTokenQuery.getKey = (variables?: UnregisterTokenQueryVariables) =>
   variables === undefined ? ['unregisterTokenSuspense'] : ['unregisterTokenSuspense', variables]
+
+useUnregisterTokenQuery.fetcher = (
+  variables?: UnregisterTokenQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<UnregisterTokenQuery, UnregisterTokenQueryVariables>(
+    UnregisterTokenDocument,
+    variables,
+    options,
+  )
 
 export const CheckEmailExistsDocument = `
     query checkEmailExists($input: CheckEmailExistsInput!) {
@@ -2495,6 +2663,16 @@ useSuspenseCheckEmailExistsQuery.getKey = (variables: CheckEmailExistsQueryVaria
   variables,
 ]
 
+useCheckEmailExistsQuery.fetcher = (
+  variables: CheckEmailExistsQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<CheckEmailExistsQuery, CheckEmailExistsQueryVariables>(
+    CheckEmailExistsDocument,
+    variables,
+    options,
+  )
+
 export const UpdateAboutDocument = `
     mutation updateAbout($input: UpdateAboutInput!) {
   updateAbout(input: $input) {
@@ -2516,6 +2694,16 @@ export const useUpdateAboutMutation = <TError = unknown, TContext = unknown>(
 }
 
 useUpdateAboutMutation.getKey = () => ['updateAbout']
+
+useUpdateAboutMutation.fetcher = (
+  variables: UpdateAboutMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<UpdateAboutMutation, UpdateAboutMutationVariables>(
+    UpdateAboutDocument,
+    variables,
+    options,
+  )
 
 export const UpdateThumbnailDocument = `
     mutation updateThumbnail($input: UpdateThumbnailInput!) {
@@ -2547,6 +2735,16 @@ export const useUpdateThumbnailMutation = <TError = unknown, TContext = unknown>
 
 useUpdateThumbnailMutation.getKey = () => ['updateThumbnail']
 
+useUpdateThumbnailMutation.fetcher = (
+  variables: UpdateThumbnailMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<UpdateThumbnailMutation, UpdateThumbnailMutationVariables>(
+    UpdateThumbnailDocument,
+    variables,
+    options,
+  )
+
 export const UpdateProfileDocument = `
     mutation updateProfile($input: UpdateProfileInput!) {
   updateProfile(input: $input) {
@@ -2577,6 +2775,16 @@ export const useUpdateProfileMutation = <TError = unknown, TContext = unknown>(
 }
 
 useUpdateProfileMutation.getKey = () => ['updateProfile']
+
+useUpdateProfileMutation.fetcher = (
+  variables: UpdateProfileMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<UpdateProfileMutation, UpdateProfileMutationVariables>(
+    UpdateProfileDocument,
+    variables,
+    options,
+  )
 
 export const UpdateVelogTitleDocument = `
     mutation updateVelogTitle($input: UpdateVelogTitleInput!) {
@@ -2610,6 +2818,16 @@ export const useUpdateVelogTitleMutation = <TError = unknown, TContext = unknown
 
 useUpdateVelogTitleMutation.getKey = () => ['updateVelogTitle']
 
+useUpdateVelogTitleMutation.fetcher = (
+  variables: UpdateVelogTitleMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<UpdateVelogTitleMutation, UpdateVelogTitleMutationVariables>(
+    UpdateVelogTitleDocument,
+    variables,
+    options,
+  )
+
 export const UpdateSocialInfoDocument = `
     mutation updateSocialInfo($input: UpdateSocialInfoInput!) {
   updateSocialInfo(input: $input) {
@@ -2641,6 +2859,16 @@ export const useUpdateSocialInfoMutation = <TError = unknown, TContext = unknown
 }
 
 useUpdateSocialInfoMutation.getKey = () => ['updateSocialInfo']
+
+useUpdateSocialInfoMutation.fetcher = (
+  variables: UpdateSocialInfoMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<UpdateSocialInfoMutation, UpdateSocialInfoMutationVariables>(
+    UpdateSocialInfoDocument,
+    variables,
+    options,
+  )
 
 export const UpdateEmailRulesDocument = `
     mutation updateEmailRules($input: UpdateEmailRulesInput!) {
@@ -2674,6 +2902,16 @@ export const useUpdateEmailRulesMutation = <TError = unknown, TContext = unknown
 
 useUpdateEmailRulesMutation.getKey = () => ['updateEmailRules']
 
+useUpdateEmailRulesMutation.fetcher = (
+  variables: UpdateEmailRulesMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<UpdateEmailRulesMutation, UpdateEmailRulesMutationVariables>(
+    UpdateEmailRulesDocument,
+    variables,
+    options,
+  )
+
 export const UnregisterDocument = `
     mutation unregister($input: UnregisterInput!) {
   unregister(input: $input)
@@ -2692,6 +2930,12 @@ export const useUnregisterMutation = <TError = unknown, TContext = unknown>(
 }
 
 useUnregisterMutation.getKey = () => ['unregister']
+
+useUnregisterMutation.fetcher = (
+  variables: UnregisterMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<UnregisterMutation, UnregisterMutationVariables>(UnregisterDocument, variables, options)
 
 export const InitiateChangeEmailDocument = `
     mutation initiateChangeEmail($input: InitiateChangeEmailInput!) {
@@ -2725,6 +2969,16 @@ export const useInitiateChangeEmailMutation = <TError = unknown, TContext = unkn
 
 useInitiateChangeEmailMutation.getKey = () => ['initiateChangeEmail']
 
+useInitiateChangeEmailMutation.fetcher = (
+  variables: InitiateChangeEmailMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<InitiateChangeEmailMutation, InitiateChangeEmailMutationVariables>(
+    InitiateChangeEmailDocument,
+    variables,
+    options,
+  )
+
 export const ConfirmChangeEmailDocument = `
     mutation confirmChangeEmail($input: ConfirmChangeEmailInput!) {
   confirmChangeEmail(input: $input)
@@ -2757,6 +3011,16 @@ export const useConfirmChangeEmailMutation = <TError = unknown, TContext = unkno
 
 useConfirmChangeEmailMutation.getKey = () => ['confirmChangeEmail']
 
+useConfirmChangeEmailMutation.fetcher = (
+  variables: ConfirmChangeEmailMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<ConfirmChangeEmailMutation, ConfirmChangeEmailMutationVariables>(
+    ConfirmChangeEmailDocument,
+    variables,
+    options,
+  )
+
 export const LogoutDocument = `
     mutation logout {
   logout
@@ -2775,6 +3039,11 @@ export const useLogoutMutation = <TError = unknown, TContext = unknown>(
 }
 
 useLogoutMutation.getKey = () => ['logout']
+
+useLogoutMutation.fetcher = (
+  variables?: LogoutMutationVariables,
+  options?: RequestInit['headers'],
+) => fetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables, options)
 
 export const TrendingWritersDocument = `
     query trendingWriters($input: TrendingWritersInput!) {
@@ -2838,3 +3107,13 @@ useSuspenseTrendingWritersQuery.getKey = (variables: TrendingWritersQueryVariabl
   'trendingWritersSuspense',
   variables,
 ]
+
+useTrendingWritersQuery.fetcher = (
+  variables: TrendingWritersQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(
+    TrendingWritersDocument,
+    variables,
+    options,
+  )

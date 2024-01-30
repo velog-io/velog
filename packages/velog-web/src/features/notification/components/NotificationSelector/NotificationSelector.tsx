@@ -6,12 +6,15 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { usePathname } from 'next/navigation'
 import {
   useNotificationCountQuery,
+  useNotificationQuery,
   useReadAllNotificationsMutation,
   useRemoveAllNotificationsMutation,
+  useSuspenseNotificationCountQuery,
   useSuspenseNotificationQuery,
 } from '@/graphql/helpers/generated'
 import PopupOKCancel from '@/components/PopupOKCancel'
 import { useState } from 'react'
+import { useSuspenseQueries } from '@tanstack/react-query'
 
 const cx = bindClassNames(styles)
 
@@ -22,8 +25,20 @@ function NotificationSelector() {
     Object.assign(input, { is_read: false })
   }
 
-  const { data: notificationQueryData, refetch } = useSuspenseNotificationQuery({ input })
-  const { data: notificationCountData } = useNotificationCountQuery()
+  const [{ data: notificationQueryData, refetch }, { data: notificationCountData }] =
+    useSuspenseQueries({
+      queries: [
+        {
+          queryKey: useSuspenseNotificationQuery.getKey({ input }),
+          queryFn: useNotificationQuery.fetcher({ input }),
+        },
+        {
+          queryKey: useSuspenseNotificationCountQuery.getKey(),
+          queryFn: useNotificationCountQuery.fetcher(),
+        },
+      ],
+    })
+
   const { mutateAsync: readAllMutateAsync } = useReadAllNotificationsMutation()
   const { mutateAsync: removeAllMutateAsync } = useRemoveAllNotificationsMutation()
 

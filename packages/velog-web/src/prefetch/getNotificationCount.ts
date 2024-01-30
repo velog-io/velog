@@ -7,6 +7,7 @@ export default async function getNotificationCount(): Promise<number> {
       body: {
         operationName: 'isLogged',
         query: IsLoggedDocument,
+        variables: {},
       },
       next: { revalidate: 0 },
     })
@@ -16,6 +17,7 @@ export default async function getNotificationCount(): Promise<number> {
     const body: GraphqlRequestBody = {
       operationName: 'notificationCount',
       query: NotificationCountDocument,
+      variables: {},
     }
 
     const { notificationCount } = await graphqlFetch<{ notificationCount: number }>({
