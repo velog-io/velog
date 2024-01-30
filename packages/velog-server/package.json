@@ -50,6 +50,7 @@
     "dataloader": "^2.2.2",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
+    "discord.js": "^14.14.1",
     "dotenv": "^16.1.4",
     "fastify": "^4.18.0",
     "fastify-multer": "^2.0.3",

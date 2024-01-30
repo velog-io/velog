@@ -1,6 +1,8 @@
 import { ENV } from '@env'
 import { isHttpError } from '@errors/HttpError.js'
+import { DiscordService } from '@lib/discord/DiscordService.js'
 import { FastifyPluginCallback } from 'fastify'
+import { container } from 'tsyringe'
 
 const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
   fastify.addHook('preHandler', function (request, reply, done) {
@@ -11,8 +13,16 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
   })
   fastify.addHook('onError', (request, reply, error) => {
     request.log.error(error, 'fastify onError')
+    const discord = container.resolve(DiscordService)
+    discord.sendMessage(
+      'error',
+      JSON.stringify({
+        requestbody: request?.body,
+        error,
+      }),
+    )
   })
-  fastify.setErrorHandler((error, request, reply) => {
+  fastify.setErrorHandler(async (error, request, reply) => {
     if (isHttpError(error)) {
       reply.status(error.statusCode).send({
         message: error.message,
@@ -29,6 +39,15 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
 
     if (ENV.appEnv === 'development') {
       request.log.error(error, 'fastify handleError')
+    } else {
+      const discord = container.resolve(DiscordService)
+      await discord.sendMessage(
+        'error',
+        JSON.stringify({
+          requestbody: request?.body,
+          error,
+        }),
+      )
     }
   })
 

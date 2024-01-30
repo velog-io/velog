@@ -78,6 +78,8 @@ const env = z.object({
   blacklistIp: z.array(z.string()),
   bucketName: z.string(),
   adFreeWritersUsername: z.array(z.string()),
+  discordBotToken: z.string(),
+  discordErrorChannel: z.string(),
 })
 
 export const ENV = env.parse({
@@ -114,4 +116,6 @@ export const ENV = env.parse({
   blacklistIp: (process.env.BLACKLIST_IP ?? '').split(','),
   bucketName: process.env.BUCKET_NAME,
   adFreeWritersUsername: process.env.AD_FREE_WRITERS_USERNAME?.split(','),
+  discordBotToken: process.env.DISCORD_BOT_TOKEN,
+  discordErrorChannel: process.env.DISCORD_ERROR_CHANNEL,
 })
