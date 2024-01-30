@@ -111,7 +111,7 @@ export class FollowUserService implements Service {
       type: 'follow',
       actorId: followerUserId,
       action: {
-        follower: {
+        follow: {
           actor_user_id: follower.id,
           actor_display_name: follower.profile?.display_name || '',
           actor_thumbnail: follower.profile?.thumbnail || '',

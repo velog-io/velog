@@ -6,9 +6,7 @@ import {
   Notification,
   NotificationType,
   NotificationsInput,
-  CommentNotificationActionInput,
-  FollowNotificationActionInput,
-  PostLikeNotificationActionInput,
+  NotificationActionInput,
 } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
@@ -329,11 +327,7 @@ type CreateArgs = {
   actorId?: string
   actionId?: string
   signedUserId?: string
-  action: {
-    comment?: CommentNotificationActionInput
-    follower?: FollowNotificationActionInput
-    postLike?: PostLikeNotificationActionInput
-  }
+  action: NotificationActionInput
 }
 
 type CreateOrUpdate = {
@@ -341,11 +335,7 @@ type CreateOrUpdate = {
   type: NotificationType
   actionId: string
   actorId: string
-  action: {
-    comment?: CommentNotificationActionInput
-    follower?: FollowNotificationActionInput
-    postLike?: PostLikeNotificationActionInput
-  }
+  action: NotificationActionInput
 }
 
 type RemoveArgs = {
