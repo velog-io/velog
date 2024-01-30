@@ -11,8 +11,8 @@
     position: relative;
     height: 40px;
 
-    a + a {
-      margin-left: 4px;
+    .notification {
+      margin-right: 4px;
     }
 
     .isNotificationPage {

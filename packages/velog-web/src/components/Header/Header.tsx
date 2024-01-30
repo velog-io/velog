@@ -63,7 +63,7 @@ function Header({ logo }: Props) {
       <div className={cx('innerBlock')}>
         {logo || <HeaderLogo />}
         <div className={cx('right')}>
-          <div onClick={onClickNotification}>
+          <div className={cx('notification')} onClick={onClickNotification}>
             <HeaderIcon className={cx({ isNotificationPage })}>
               {user && notificationCount !== 0 && (
                 <div
