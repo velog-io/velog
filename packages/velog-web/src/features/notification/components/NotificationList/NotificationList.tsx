@@ -21,7 +21,6 @@ function NotificationList() {
   }
 
   const { data: currentUserData } = useCurrentUserQuery()
-
   const user = currentUserData?.currentUser
 
   const { data, isLoading } = useNotificationQuery({ input }, { enabled: !user })

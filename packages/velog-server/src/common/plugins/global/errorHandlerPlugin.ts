@@ -17,8 +17,10 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
     discord.sendMessage(
       'error',
       JSON.stringify({
+        type: 'fastify OnError',
         requestbody: request?.body,
         error,
+        user: request?.user,
       }),
     )
   })
@@ -44,8 +46,10 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
       discord.sendMessage(
         'error',
         JSON.stringify({
+          type: 'fastify handleError',
           requestbody: request?.body,
           error,
+          user: request?.user,
         }),
       )
     }

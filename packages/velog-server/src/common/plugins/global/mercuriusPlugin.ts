@@ -38,8 +38,10 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         discord.sendMessage(
           'error',
           JSON.stringify({
+            type: 'errorHandler',
             requestbody: request?.body,
             result,
+            user: request?.user,
           }),
         )
       }
@@ -53,8 +55,10 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         discord.sendMessage(
           'error',
           JSON.stringify({
+            type: 'errorFormat',
             requestbody: (ctx as any).request?.body,
             execution,
+            user: (ctx as any).request?.user,
           }),
         )
 
