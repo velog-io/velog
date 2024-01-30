@@ -226,6 +226,7 @@ export class NotificationService implements Service {
     await this.db.notification.updateMany({
       where: {
         fk_user_id: signedUserId,
+        is_read: false,
       },
       data: {
         is_read: true,
