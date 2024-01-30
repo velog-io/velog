@@ -5,6 +5,7 @@ import styles from './NotificationSelector.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { usePathname } from 'next/navigation'
 import {
+  useCurrentUserQuery,
   useNotificationCountQuery,
   useNotificationQuery,
   useReadAllNotificationsMutation,
@@ -14,7 +15,7 @@ import {
 } from '@/graphql/helpers/generated'
 import PopupOKCancel from '@/components/PopupOKCancel'
 import { useState } from 'react'
-import { useSuspenseQueries } from '@tanstack/react-query'
+import { useQueries } from '@tanstack/react-query'
 
 const cx = bindClassNames(styles)
 
@@ -25,19 +26,23 @@ function NotificationSelector() {
     Object.assign(input, { is_read: false })
   }
 
-  const [{ data: notificationQueryData, refetch }, { data: notificationCountData }] =
-    useSuspenseQueries({
-      queries: [
-        {
-          queryKey: useSuspenseNotificationQuery.getKey({ input }),
-          queryFn: useNotificationQuery.fetcher({ input }),
-        },
-        {
-          queryKey: useSuspenseNotificationCountQuery.getKey(),
-          queryFn: useNotificationCountQuery.fetcher(),
-        },
-      ],
-    })
+  const { data } = useCurrentUserQuery()
+  const user = data?.currentUser
+
+  const [{ data: notificationQueryData, refetch }, { data: notificationCountData }] = useQueries({
+    queries: [
+      {
+        queryKey: useSuspenseNotificationQuery.getKey({ input }),
+        queryFn: useNotificationQuery.fetcher({ input }),
+        enabled: !user,
+      },
+      {
+        queryKey: useSuspenseNotificationCountQuery.getKey(),
+        queryFn: useNotificationCountQuery.fetcher(),
+        enabled: !user,
+      },
+    ],
+  })
 
   const { mutateAsync: readAllMutateAsync } = useReadAllNotificationsMutation()
   const { mutateAsync: removeAllMutateAsync } = useRemoveAllNotificationsMutation()
@@ -68,7 +73,7 @@ function NotificationSelector() {
     refetch()
   }
 
-  if (notificationQueryData.notifications.length === 0) return null
+  if (notificationQueryData?.notifications.length === 0) return null
   return (
     <div className={cx('block')}>
       <div className={cx('left')}>

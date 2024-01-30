@@ -33,11 +33,23 @@ export default async function graphqlFetch<T>({
   if (!res.ok) {
     const errors = await res.json()
     const allowOperationList = ['userTags']
+
     if (!allowOperationList.includes(body?.operationName || '')) {
       console.log('graphqlFetch errors', errors)
       console.log('body', body)
     }
-    throw res
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log(res)
+    }
+
+    const message = {
+      operationName: body?.operationName,
+      status: res.status,
+      statusText: res.statusText,
+    }
+
+    throw new Error(JSON.stringify(message))
   }
 
   const json = await res.json()

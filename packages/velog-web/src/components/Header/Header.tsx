@@ -35,8 +35,8 @@ function Header({ logo }: Props) {
     actions: { update },
   } = useAuth()
   const { data, isLoading, isFetching } = useCurrentUserQuery()
-  const user = data?.currentUser || null
 
+  const user = data?.currentUser ?? null
   const { data: notificationCountData } = useNotificationCountQuery({}, { enabled: !!user })
 
   useEffect(() => {

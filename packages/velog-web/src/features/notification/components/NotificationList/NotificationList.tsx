@@ -1,6 +1,6 @@
 'use client'
 
-import { useSuspenseNotificationQuery } from '@/graphql/helpers/generated'
+import { useCurrentUserQuery, useNotificationQuery } from '@/graphql/helpers/generated'
 import styles from './NotificationList.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import useNotificationMerge from '../../hooks/useNotificationMerge'
@@ -9,6 +9,7 @@ import NotificationEmpty from '../NotificationEmpty'
 import useNotificationReorder from '../../hooks/useNotificationReorder'
 import { useRef, useState } from 'react'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import NotificationSkeletonList from './NotificationSkeletonList'
 
 const cx = bindClassNames(styles)
 
@@ -19,8 +20,13 @@ function NotificationList() {
     Object.assign(input, { is_read: false })
   }
 
+  const { data: currentUserData } = useCurrentUserQuery()
+
+  const user = currentUserData?.currentUser
+
+  const { data, isLoading } = useNotificationQuery({ input }, { enabled: !user })
+
   const ref = useRef<HTMLDivElement>(null)
-  const { data } = useSuspenseNotificationQuery({ input })
   const { merged } = useNotificationMerge(data?.notifications)
   const { jsx } = useNotificationReorder(merged)
 
@@ -37,7 +43,8 @@ function NotificationList() {
 
   useInfiniteScroll(ref, fetchMore)
 
-  if (data.notifications.length === 0) return <NotificationEmpty />
+  if (isLoading) return <NotificationSkeletonList />
+  if (data?.notifications.length === 0) return <NotificationEmpty />
   return (
     <>
       <ul className={cx('block')}>{list}</ul>

@@ -13,7 +13,7 @@ import { useCallback, useMemo } from 'react'
 import CommentReplyActionItem from '../components/NotificationItem/CommentReplyActionItem'
 
 export default function useNotificationReorder(merged: MergedNotifications = []) {
-  const { refetch } = useNotificationCountQuery({})
+  const { refetch } = useNotificationCountQuery()
   const { mutateAsync: readNotificationMutateAsync } = useReadNoticationMutation()
 
   const onClickNotification = useCallback(
