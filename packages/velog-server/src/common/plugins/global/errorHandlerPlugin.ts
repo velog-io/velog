@@ -22,7 +22,7 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
       }),
     )
   })
-  fastify.setErrorHandler(async (error, request, reply) => {
+  fastify.setErrorHandler((error, request, reply) => {
     if (isHttpError(error)) {
       reply.status(error.statusCode).send({
         message: error.message,
@@ -41,7 +41,7 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
       request.log.error(error, 'fastify handleError')
     } else {
       const discord = container.resolve(DiscordService)
-      await discord.sendMessage(
+      discord.sendMessage(
         'error',
         JSON.stringify({
           requestbody: request?.body,
