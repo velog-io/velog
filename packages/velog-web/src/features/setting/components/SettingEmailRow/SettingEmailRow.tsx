@@ -23,50 +23,59 @@ type Props = {
 
 function SettingEmailRow({ email }: Props) {
   const [edit, setEdit] = useState(false)
-  const [value, onChange] = useInput(email ?? '')
-  const [checkEmail, setCheckEmail] = useState(false)
+  const { input: value, onChange } = useInput(email ?? '')
+  const [isSubmit, setIsSubmit] = useState(false)
   const [isEmailSent, setEmailSent] = useState(false)
-  const { data: checkEmailExistsData, isLoading } = useCheckEmailExistsQuery(
+  const {
+    data: checkEmailExistsData,
+    isLoading,
+    isSuccess,
+  } = useCheckEmailExistsQuery(
     { input: { email: value.trim() } },
-    { networkMode: 'always', enabled: checkEmail },
+    { networkMode: 'always', enabled: isSubmit },
   )
 
-  const { mutateAsync } = useInitiateChangeEmailMutation()
+  const { mutate } = useInitiateChangeEmailMutation()
 
   useEffect(() => {
+    if (!isSuccess) return
     if (isLoading) return
-    if (checkEmail && checkEmailExistsData === undefined) {
+    if (checkEmailExistsData?.checkEmailExists === undefined) {
+      setIsSubmit(false)
       toast.error('이메일 확인 중입니다. 잠시 후 다시 시도해주세요.')
       return
     }
-  }, [checkEmail, checkEmailExistsData, isLoading])
+
+    if (checkEmailExistsData?.checkEmailExists) {
+      setIsSubmit(false)
+      toast.error('동일한 이메일이 존재합니다.')
+      return
+    }
+
+    setEmailSent(true)
+    mutate({ input: { email: value.trim() } })
+    setEdit(false)
+  }, [setIsSubmit, checkEmailExistsData, isLoading, mutate, value, isSuccess])
 
   const onSubmit = useCallback(
     async (event: React.FormEvent) => {
       event.preventDefault()
 
       if (!validateEmail(value)) {
+        setIsSubmit(false)
         toast.error('잘못된 이메일 형식입니다.')
         return
       }
 
       if (value === email) {
+        setIsSubmit(false)
         toast.error('새 이메일 주소가 현재 이메일과 동일합니다.')
         return
       }
 
-      setCheckEmail(true)
-      if (checkEmailExistsData?.checkEmailExists) {
-        toast.error('동일한 이메일이 존재합니다.')
-        return
-      }
-
-      setEmailSent(true)
-      await mutateAsync({ input: { email: value.trim() } })
-      setEdit(false)
-      setCheckEmail(false)
+      setIsSubmit(true)
     },
-    [email, checkEmailExistsData, mutateAsync, value],
+    [email, value],
   )
 
   return (

@@ -21,6 +21,7 @@ export default async function getVelogConfig({ username }: Args) {
     }
 
     const { velogConfig } = await graphqlFetch<{ velogConfig: VelogConfig }>({
+      method: 'GET',
       body,
       next: { revalidate: 0 },
       headers,

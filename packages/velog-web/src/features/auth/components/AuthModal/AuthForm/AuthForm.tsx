@@ -17,7 +17,7 @@ function AuthForm() {
     actions,
     value: { mode, isVisible },
   } = useModal()
-  const [email, onChangeEmail] = useInput('')
+  const { input: email, onChange: onChangeEmail } = useInput('')
   const [isSendEmail, setSendEmail] = useState(false)
 
   const { mutate, data, isPending } = useSendMailMutation({})

@@ -3,7 +3,7 @@
 import styles from './ToggleSwitch.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { motion } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const cx = bindClassNames(styles)
 
@@ -15,28 +15,19 @@ type Props = {
 }
 
 function ToggleSwitch({ value, name, onChange, className }: Props) {
-  const mounted = useRef<boolean>(false)
-  const [localValue, setLocalValue] = useState<boolean>(value)
+  const [localValue, setLocalValue] = useState<boolean>()
 
   const onToggle = () => {
+    onChange({
+      name: name || '',
+      value: !localValue,
+    })
     setLocalValue((v) => !v)
   }
 
   useEffect(() => {
     setLocalValue(value)
   }, [value])
-
-  useEffect(() => {
-    if (!mounted.current) return
-    onChange({
-      name: name || '',
-      value: localValue,
-    })
-  }, [localValue, name, onChange])
-
-  useEffect(() => {
-    mounted.current = true
-  }, [])
 
   const spring = {
     type: 'spring',
@@ -47,7 +38,7 @@ function ToggleSwitch({ value, name, onChange, className }: Props) {
   return (
     <div className={cx('block', className)}>
       <div className={cx('switch', { isActive: localValue })} onClick={onToggle}>
-        <motion.div className={cx('handle')} layout transition={spring} />
+        <motion.div className={cx('handle')} layout={true} initial={false} transition={spring} />
       </div>
     </div>
   )

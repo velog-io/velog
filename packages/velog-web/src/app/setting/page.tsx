@@ -29,12 +29,12 @@ export default async function SettingPage() {
         displayName={user.profile.display_name}
         shortBio={user.profile.short_bio}
       />
-      <SettingTitleRow title={velogConfig.title || `${user.username}.log`} />
+      <SettingTitleRow title={velogConfig.title} username={user.username} />
       <SettingSocialInfoRow {...user.profile.profile_links} />
       <SettingEmailRow email={user.email!} />
       <SettingEmailRulesRow
-        notification={user.user_meta?.email_notification || false}
-        promotion={user.user_meta?.email_promotion || false}
+        notification={user.user_meta?.email_notification ?? false}
+        promotion={user.user_meta?.email_promotion ?? false}
       />
       <SettingThemeRow />
       <SettingUnregisterRow />

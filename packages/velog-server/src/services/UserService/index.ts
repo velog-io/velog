@@ -80,7 +80,7 @@ export class UserService implements Service {
 
     return await this.db.user.findUnique({
       where: {
-        email: email.toLowerCase(),
+        email: email,
       },
     })
   }

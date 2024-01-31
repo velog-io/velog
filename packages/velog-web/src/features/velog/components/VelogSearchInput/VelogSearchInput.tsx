@@ -20,7 +20,7 @@ type Props = {
 function VelogSearchInput({ query, username }: Props) {
   const router = useRouter()
   const [focus, toggleFocus] = useToggle(false)
-  const [value, onChange] = useInput(query)
+  const { input: value, onChange } = useInput(query)
 
   const inputRef = useRef<HTMLInputElement>(null)
 

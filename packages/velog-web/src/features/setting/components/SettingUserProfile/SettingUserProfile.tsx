@@ -9,7 +9,7 @@ import SettingInput from '../SettingInput'
 import SettingEditButton from '../SettingEditButton'
 import Thumbnail from '@/components/Thumbnail'
 import useUpload from '@/hooks/useUpload'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useCFUpload } from '@/hooks/useCFUpload'
 import {
   useCurrentUserQuery,
@@ -26,15 +26,20 @@ type Props = {
   shortBio: string
 }
 
-function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
+function SettingUserProfile({ displayName, shortBio, thumbnail }: Props) {
   const [upload] = useUpload()
   const { mutateAsync: updateThumbnailMutateAsync } = useUpdateThumbnailMutation()
   const { mutateAsync: updateProfileMutateAsync } = useUpdateProfileMutation()
-  const { refetch: currentUserRefetch } = useCurrentUserQuery() // for header profile image
+  const { data, refetch: currentUserRefetch, isRefetching } = useCurrentUserQuery()
   const { upload: cfUpload } = useCFUpload()
   const [edit, onToggleEdit] = useToggle(false)
 
-  const [inputs, onInputChange] = useInputs({
+  const {
+    inputs,
+    onChange: onInputChange,
+    dispatch,
+  } = useInputs({
+    thumbnail,
     displayName,
     shortBio,
   })
@@ -43,6 +48,24 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
 
   const [imageBlobUrl, setImageBlobUrl] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    if (!data?.currentUser) return
+    const profile = data?.currentUser.profile
+    if (!profile) return
+    dispatch({
+      name: 'thumbnail',
+      value: profile.thumbnail ?? '',
+    })
+    dispatch({
+      name: 'displayName',
+      value: profile.display_name,
+    })
+    dispatch({
+      name: 'shortBio',
+      value: profile.short_bio,
+    })
+  }, [data, isRefetching, dispatch])
 
   const uploadThumbnail = async () => {
     const file = await upload()
@@ -93,7 +116,7 @@ function SettingUserProfile({ thumbnail, displayName, shortBio }: Props) {
     <section className={cx('block')}>
       <div className={cx('thumbnailArea')}>
         <Thumbnail
-          src={imageBlobUrl || thumbnail}
+          src={imageBlobUrl || inputs.thumbnail}
           alt="profile"
           className={cx('thumbnail')}
           priority={true}

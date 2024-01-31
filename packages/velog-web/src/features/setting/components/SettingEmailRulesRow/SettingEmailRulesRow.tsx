@@ -4,8 +4,8 @@ import ToggleSwitch from '@/components/ToggleSwitch'
 import SettingRow from '../SettingRow'
 import styles from './SettingEmailRulesRow.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useUpdateEmailRulesMutation } from '@/graphql/helpers/generated'
+import { useEffect, useState } from 'react'
+import { useCurrentUserQuery, useUpdateEmailRulesMutation } from '@/graphql/helpers/generated'
 
 const cx = bindClassNames(styles)
 
@@ -14,19 +14,26 @@ type Props = {
   promotion: boolean
 }
 
-function SettingEmailRulesRow({ notification, promotion }: Props) {
-  const mounted = useRef<boolean>(false)
-  const [values, setValues] = useState({ promotion, notification })
-  const { mutate } = useUpdateEmailRulesMutation()
+function SettingEmailRulesRow(props: Props) {
+  const [promotion, setPromotion] = useState<boolean>(props.promotion)
+  const [notification, setNotification] = useState<boolean>(props.notification)
 
-  const onChange = useCallback(({ name, value }: { name: string; value: boolean }) => {
-    setValues((prev) => ({ ...prev, [name]: value }))
-  }, [])
+  const { data, refetch: currentUserRefetch } = useCurrentUserQuery()
+  const { mutateAsync } = useUpdateEmailRulesMutation({ retryDelay: 1000 })
+
+  const onChange = async ({ name, value }: { name: string; value: boolean }) => {
+    const input = { promotion, notification, [name]: value }
+    await mutateAsync({ input })
+    currentUserRefetch()
+  }
 
   useEffect(() => {
-    mounted.current = true
-    mutate({ input: values })
-  }, [values, mutate])
+    if (!data?.currentUser) return
+    const userMeta = data?.currentUser.user_meta
+    if (!userMeta) return
+    setPromotion(userMeta.email_promotion ?? false)
+    setNotification(userMeta?.email_notification ?? false)
+  }, [data?.currentUser])
 
   return (
     <SettingRow title="이메일 수신 설정" className={cx('block')}>
@@ -35,7 +42,7 @@ function SettingEmailRulesRow({ notification, promotion }: Props) {
           <span>댓글 알림</span>
           <ToggleSwitch
             className={cx('toggle')}
-            value={values.notification}
+            value={notification}
             name="notification"
             onChange={onChange}
           />
@@ -44,7 +51,7 @@ function SettingEmailRulesRow({ notification, promotion }: Props) {
           <span>벨로그 업데이트 소식</span>
           <ToggleSwitch
             className={cx('toggle')}
-            value={values.promotion}
+            value={promotion}
             name="promotion"
             onChange={onChange}
           />
