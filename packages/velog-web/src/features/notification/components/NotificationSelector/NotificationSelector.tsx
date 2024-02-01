@@ -71,7 +71,6 @@ function NotificationSelector() {
     refetch()
   }
 
-  if (notificationQueryData?.notifications.length === 0) return null
   return (
     <div className={cx('block')}>
       <div className={cx('left')}>
