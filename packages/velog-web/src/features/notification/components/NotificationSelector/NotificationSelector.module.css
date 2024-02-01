@@ -12,6 +12,7 @@
       border-radius: 16px;
       color: var(--text3);
       background-color: var(--bg-element2);
+      user-select: none;
 
       @media screen and (max-width: 768px) {
         font-size: 14px;
@@ -42,6 +43,7 @@
       font-size: 14px;
       color: var(--text3);
       padding-bottom: 3px;
+      user-select: none;
 
       @media screen and (max-width: 768px) {
         font-size: 12px;
