@@ -7,7 +7,7 @@ import useNotificationMerge from '../../hooks/useNotificationMerge'
 import { usePathname } from 'next/navigation'
 import NotificationEmpty from '../NotificationEmpty'
 import useNotificationReorder from '../../hooks/useNotificationReorder'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import NotificationSkeletonList from './NotificationSkeletonList'
 
@@ -23,30 +23,34 @@ function NotificationList() {
   const { data: currentUserData, isLoading: currentUserIsLoading } = useCurrentUserQuery()
   const user = currentUserData?.currentUser
 
-  const { data: notificationData, isLoading: notificationIsLoading } = useNotificationQuery(
-    { input },
-    { enabled: !!user },
-  )
+  const {
+    data: notificationData,
+    isLoading: notificationIsLoading,
+    isRefetching,
+  } = useNotificationQuery({ input }, { enabled: !!user })
 
   const ref = useRef<HTMLDivElement>(null)
   const { merged } = useNotificationMerge(notificationData?.notifications)
   const { jsx } = useNotificationReorder(merged)
 
   const [page, setPage] = useState(1)
-  const take = 20
-  const [list, setList] = useState(jsx.slice(0, page * take))
+  const take = 10
+  const [list, setList] = useState<JSX.Element[]>([])
 
   const fetchMore = () => {
     if (jsx.length <= list.length) return
-    const currentPage = page + 1
-    setList(jsx.slice(0, currentPage * take))
-    setPage(currentPage)
+    setPage((prev) => prev + 1)
   }
+
+  useEffect(() => {
+    setList(jsx.slice(0, page * take))
+  }, [jsx, page])
 
   useInfiniteScroll(ref, fetchMore)
 
-  if (currentUserIsLoading || notificationIsLoading) return <NotificationSkeletonList />
-  if (notificationData?.notifications.length === 0) return <NotificationEmpty />
+  if (currentUserIsLoading || notificationIsLoading || isRefetching)
+    return <NotificationSkeletonList />
+  if (list.length === 0) return <NotificationEmpty />
   return (
     <>
       <ul className={cx('block')}>{list}</ul>

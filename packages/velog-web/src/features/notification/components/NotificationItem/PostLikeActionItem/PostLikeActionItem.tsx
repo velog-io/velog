@@ -8,7 +8,7 @@ import { NotificationMerged } from '@/features/notification/hooks/useNotificatio
 import Thumbnail from '@/components/Thumbnail'
 import Link from 'next/link'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import VLink from '@/components/VLink'
 
 const cx = bindClassNames({ ...itemStyles, ...styles })
@@ -45,7 +45,11 @@ function PostLikeNotMergedItem(props: ItemProps) {
   } = action
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
-  const [isRead, setRead] = useState(is_read)
+  const [isRead, setRead] = useState<boolean>()
+
+  useEffect(() => {
+    setRead(is_read)
+  }, [is_read])
 
   const onClick = () => {
     onListClick([id])
@@ -82,10 +86,15 @@ function PostLikeNotMergedItem(props: ItemProps) {
 function PostLikeMergedItem(props: ItemProps) {
   const { action, created_at, actor_info, action_count, is_read, onListClick, notificationIds } =
     props
+
   const rest_action_count = action_count - 2
   const { post_title, post_writer_username, post_url_slug } = action
   const { time } = useTimeFormat(created_at)
-  const [isRead, setRead] = useState(is_read)
+  const [isRead, setRead] = useState<boolean>()
+
+  useEffect(() => {
+    setRead(is_read)
+  }, [is_read])
 
   const onClick = () => {
     onListClick(notificationIds)

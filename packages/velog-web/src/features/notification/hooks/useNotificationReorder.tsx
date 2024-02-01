@@ -46,9 +46,9 @@ export default function useNotificationReorder(merged: MergedNotifications = [])
       .filter(isCommentAction)
       .map((notification) => (
         <CommentActionItem
+          {...notification}
           key={notification.id}
           onClickNotification={onClickNotification}
-          {...notification}
         />
       ))
 
@@ -56,9 +56,9 @@ export default function useNotificationReorder(merged: MergedNotifications = [])
       .filter(isCommentReplyAction)
       .map((notification) => (
         <CommentReplyActionItem
+          {...notification}
           key={notification.id}
           onClickNotification={onClickNotification}
-          {...notification}
         />
       ))
 
@@ -66,9 +66,9 @@ export default function useNotificationReorder(merged: MergedNotifications = [])
       .filter(isPostLikeAction)
       .map((notification) => (
         <PostLikeActionItem
+          {...notification}
           key={notification.id}
           onClickNotification={onClickNotification}
-          {...notification}
         />
       ))
 

@@ -96,7 +96,7 @@ export class PostLikeService implements Service {
     await this.notificationService.createOrUpdate({
       fkUserId: post.fk_user_id,
       actorId: signedUserId,
-      actionId: postLike.id,
+      actionId: post.id,
       type: 'postLike',
       action: {
         postLike: {
@@ -184,7 +184,7 @@ export class PostLikeService implements Service {
       fkUserId: post.fk_user_id,
       actorId: signedUserId,
       type: 'postLike',
-      actionId: postLike.id,
+      actionId: post.id,
     })
 
     await this.postService.updatePostScore(postId)
