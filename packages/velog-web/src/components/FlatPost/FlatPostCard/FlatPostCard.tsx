@@ -51,7 +51,10 @@ function FlatPostCard({ post, hideUser }: Props) {
       <VLink href={url}>
         <h2>{post.title}</h2>
       </VLink>
-      <p>{post.short_description}</p>
+      <p>
+        {post.short_description?.replace(/&#x3A;/g, ':')}
+        {post.short_description?.length === 150 && '...'}
+      </p>
       <div className={cx('tagsWrapper')}>
         {post.tags?.map((tag) => <TagItem key={tag} name={tag} link={true} />)}
       </div>
