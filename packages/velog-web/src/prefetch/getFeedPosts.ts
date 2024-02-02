@@ -1,3 +1,5 @@
+'use server'
+
 import { ENV } from '@/env'
 import { FeedPostsDocument, Post } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
