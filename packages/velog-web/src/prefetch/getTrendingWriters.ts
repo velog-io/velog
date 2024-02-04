@@ -1,3 +1,5 @@
+'use server'
+
 import { TrendingWriter, TrendingWritersDocument } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
