@@ -7,7 +7,7 @@ import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getFeedPosts({ limit = ENV.defaultPostLimit }: Args) {
   const headers = {}
-  const token = await getAccessToken()
+  const token = getAccessToken()
   if (token) {
     Object.assign(headers, { authorization: `Bearer ${token.value}` })
   }
