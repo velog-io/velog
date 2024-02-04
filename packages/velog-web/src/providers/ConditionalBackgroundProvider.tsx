@@ -1,5 +1,3 @@
-'use client'
-
 import ConditionalBackground from '@/components/ConditionalBackground'
 
 type Props = {

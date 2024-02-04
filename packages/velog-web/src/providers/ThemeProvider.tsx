@@ -2,9 +2,7 @@
 
 import { useThemeEffect } from '@/hooks/useThemeEffect'
 
-type Props = {
-  children: React.ReactNode
-}
+type Props = {}
 
 const themeScript = `
   (function() {
@@ -51,11 +49,10 @@ const themeScript = `
   })()
 `
 
-function ThemeProvider({ children }: Props) {
+function ThemeProvider({}: Props) {
   useThemeEffect()
   return (
     <>
-      {children}
       <script
         id="theme-provider"
         dangerouslySetInnerHTML={{

@@ -1,5 +1,3 @@
-'use client'
-
 import CommonPopup from '@/components/CommonPopup'
 import AuthModal from '@/features/auth/components/AuthModal/AuthModal'
 import { ToastContainer, Flip } from 'react-toastify'
