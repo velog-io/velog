@@ -1,3 +1,5 @@
+'use server'
+
 import { VelogConfig, VelogConfigDocument } from '@/graphql/helpers/generated'
 import { getAccessToken } from '@/lib/auth'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
@@ -5,7 +7,7 @@ import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 export default async function getVelogConfig({ username }: Args) {
   try {
     const headers = {}
-    const token = await getAccessToken()
+    const token = getAccessToken()
     if (token) {
       Object.assign(headers, { authorization: `Bearer ${token.value}` })
     }

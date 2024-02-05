@@ -1,3 +1,5 @@
+'use client'
+
 import styles from './PostCardGrid.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { PostCardSkeleton } from '@/features/home/components/PostCard/PostCardSkeleton'
