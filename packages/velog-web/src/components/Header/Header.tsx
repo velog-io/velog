@@ -5,7 +5,7 @@ import RoundButton from '@/components/RoundButton'
 import { useAuth } from '@/state/auth'
 import { useModal } from '@/state/modal'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { useEffect, useRef } from 'react'
+import { MouseEvent, MouseEventHandler, useEffect, useRef } from 'react'
 import useToggle from '@/hooks/useToggle'
 import HeaderUserIcon from '@/components/Header/HeaderUserIcon'
 import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
@@ -17,6 +17,7 @@ import { getUsernameFromParams } from '@/lib/utils'
 import { NotificationIcon, SearchIcon } from '@/assets/icons/components'
 import VLink from '../VLink'
 import HeaderIcon from './HeaderIcon'
+import Link from 'next/link'
 
 const cx = bindClassNames(styles)
 
@@ -34,7 +35,7 @@ function Header({ logo }: Props) {
   const {
     actions: { update },
   } = useAuth()
-  const { data, isLoading, isFetching } = useCurrentUserQuery()
+  const { data, isLoading } = useCurrentUserQuery()
 
   const user = data?.currentUser ?? null
   const { data: notificationCountData } = useNotificationCountQuery({}, { enabled: !!user })
@@ -48,22 +49,22 @@ function Header({ logo }: Props) {
   const isNotificationPage = pathname.includes('/notification')
   const notificationCount = notificationCountData?.notificationCount ?? 0
 
-  const onClickNotification = () => {
-    if (user) {
-      router.push('/notifications')
+  const onClickNotification = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    if (!user) {
+      actions.showModal('login', '/notifications')
       return
     }
-
-    actions.showModal('login', '/notifications')
+    router.push('/notifications')
   }
 
-  if (isLoading || isFetching) return <HeaderSkeleton logo={logo || <HeaderLogo />} />
+  if (isLoading) return <HeaderSkeleton logo={logo || <HeaderLogo />} />
   return (
     <header className={cx('block', 'mainHeaderResponsive')}>
       <div className={cx('innerBlock')}>
         {logo || <HeaderLogo />}
         <div className={cx('right')}>
-          <div className={cx('notification')} onClick={onClickNotification}>
+          <Link className={cx('notification')} href="/notifications" onClick={onClickNotification}>
             <HeaderIcon className={cx({ isNotificationPage })}>
               {user && notificationCount !== 0 && (
                 <div
@@ -76,7 +77,7 @@ function Header({ logo }: Props) {
               )}
               <NotificationIcon />
             </HeaderIcon>
-          </div>
+          </Link>
           <VLink href={urlForSearch}>
             <HeaderIcon>
               <SearchIcon />
