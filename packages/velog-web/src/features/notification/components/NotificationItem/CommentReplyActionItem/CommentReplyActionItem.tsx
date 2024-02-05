@@ -5,7 +5,7 @@ import itemStyles from '../NotificationItem.module.css'
 import styles from './CommentReplyActionItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { NotificationNotMerged } from '@/features/notification/hooks/useNotificationMerge'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
 import Thumbnail from '@/components/Thumbnail'
 import Link from 'next/link'
@@ -19,7 +19,7 @@ type Props = {
 } & NotificationNotMerged
 
 function CommentReplyActionItem({ id, action, created_at, is_read, onClickNotification }: Props) {
-  const [isRead, setRead] = useState(is_read)
+  const [isRead, setRead] = useState<boolean>()
   const {
     actor_display_name,
     actor_username,
@@ -32,6 +32,10 @@ function CommentReplyActionItem({ id, action, created_at, is_read, onClickNotifi
 
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
+
+  useEffect(() => {
+    setRead(is_read)
+  }, [is_read])
 
   const onClick = () => {
     onClickNotification([id])

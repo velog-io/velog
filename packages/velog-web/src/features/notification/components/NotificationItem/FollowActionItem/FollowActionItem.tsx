@@ -9,7 +9,7 @@ import { useTimeFormat } from '@/hooks/useTimeFormat'
 import Link from 'next/link'
 import Thumbnail from '@/components/Thumbnail'
 import FollowButton from '@/components/FollowButton'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const cx = bindClassNames({ ...itemStyles, ...styles })
 
@@ -24,7 +24,11 @@ function FollowActionItem({ id, action, created_at, is_read, onClickNotification
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
 
-  const [isRead, setRead] = useState(is_read)
+  const [isRead, setRead] = useState<boolean>()
+
+  useEffect(() => {
+    setRead(is_read)
+  }, [is_read])
 
   const onClick = () => {
     onClickNotification([id])
