@@ -12,6 +12,6 @@ export const metadata: Metadata = {
 // TODO: remove a line using react-query prefetch
 export const dynamic = 'force-dynamic'
 
-export default async function NotificationLayout({ children }: Props) {
+export default function NotificationLayout({ children }: Props) {
   return <SmallLayout>{children}</SmallLayout>
 }

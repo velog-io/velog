@@ -9,6 +9,6 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://velog.io/' },
 }
 
-export default async function Trending({ params }: Props) {
+export default function Trending({ params }: Props) {
   return <TrendingHome params={params} />
 }

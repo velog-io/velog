@@ -4,6 +4,6 @@ type Props = {
   children: React.ReactNode
 }
 
-export default async function HomeListLayout({ children }: Props) {
+export default function HomeListLayout({ children }: Props) {
   return <HomeLayout>{children}</HomeLayout>
 }
