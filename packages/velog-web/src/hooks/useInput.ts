@@ -8,5 +8,10 @@ export default function useInput(defaultValue: string) {
     setInput(e.target.value)
   }, [])
   const onReset = useCallback(() => setInput(''), [])
-  return [input, onChange, onReset] as [string, typeof onChange, typeof onReset]
+  return { input, onChange, onReset, setInput } as {
+    input: string
+    onChange: typeof onChange
+    onReset: typeof onReset
+    setInput: typeof setInput
+  }
 }

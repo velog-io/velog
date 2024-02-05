@@ -49,14 +49,16 @@ export const metadata: Metadata = {
     'fb:app_id': '203040656938507',
     'og:image': 'https://images.velog.io/velog.png',
     'format-detection': 'telephone=no, date=no, email=no, address=no',
+    'mobile-web-app-capable': 'yes',
   },
 }
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#1e1e1e' },
-  ],
+  colorScheme: 'light dark',
+  initialScale: 1.0,
+  userScalable: false,
+  maximumScale: 1,
+  width: 'device-width',
 }
 
 type Props = {

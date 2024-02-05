@@ -2,14 +2,17 @@ import { DbService } from '@lib/db/DbService.js'
 import { MailService } from '@lib/mail/MailService.js'
 import { injectable, singleton } from 'tsyringe'
 import { nanoid } from 'nanoid'
-import { createAuthEmail } from '@template/createAuthEmail.js'
+import { createAuthTemplate } from '@template/createAuthTemplate.js'
 import { ENV } from '@env'
 import { FastifyReply } from 'fastify'
 import { CookieService } from '@lib/cookie/CookieService.js'
+import { GraphQLContext } from '@interfaces/graphql'
+import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 
 interface Service {
   logout(reply: FastifyReply): Promise<void>
   sendMail(email: string): Promise<{ registered: boolean }>
+  isAuthenticated(ctx: GraphQLContext): void
 }
 
 @injectable()
@@ -38,7 +41,7 @@ export class AuthService implements Service {
       },
     })
 
-    const template = createAuthEmail(!!user, emailAuth.code!)
+    const template = createAuthTemplate(!!user, emailAuth.code!)
 
     if (ENV.appEnv === 'development') {
       console.log(
@@ -55,5 +58,10 @@ export class AuthService implements Service {
     }
 
     return { registered: !!user }
+  }
+  public isAuthenticated(ctx: GraphQLContext) {
+    if (!ctx.user) {
+      throw new UnauthorizedError('Not Logged In')
+    }
   }
 }

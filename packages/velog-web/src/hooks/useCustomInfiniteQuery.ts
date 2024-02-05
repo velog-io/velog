@@ -1,5 +1,5 @@
-import { fetcher } from '@/graphql/fetcher'
-import { Exact } from '@/graphql/generated'
+import { fetcher } from '@/graphql/helpers/fetcher'
+import { Exact } from '@/graphql/helpers/generated'
 import {
   InfiniteData,
   UndefinedInitialDataInfiniteOptions,

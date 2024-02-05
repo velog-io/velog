@@ -56,7 +56,11 @@ function MarkdownRender({ markdown, codeTheme = 'atom-one', onConvertFinish, isE
             crossOrigin: 'anonymous',
           },
         })
-        .process(text, (_: any, file: any) => {
+        .process(text, (err: any, file: any) => {
+          if (err) {
+            console.log('markdown-render error', err)
+          }
+
           const lines = text.split(/\r\n|\r|\n/).length
           const nextDelay = Math.max(Math.min(Math.floor(lines * 0.5), 1500), 22)
 
@@ -75,7 +79,7 @@ function MarkdownRender({ markdown, codeTheme = 'atom-one', onConvertFinish, isE
           }
 
           if (!isEdit) {
-            setHtml(htmlFilter(pureHtml))
+            setHtml(htmlFilter(pureHtml || text))
             return
           }
 

@@ -7,7 +7,7 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
   const corsWhitelist: RegExp[] = [
     /^https:\/\/velog.io$/,
     /^https:\/\/(.*).velog.io$/,
-    /^https:\/\/(.*)\.velog.io$/,
+    /^https:\/\/(.*\.velog\.io)$/,
     /https:\/\/(.*)--velog.netlify.com/,
     /https:\/\/velog.graphcdn.app/,
   ]
@@ -22,7 +22,7 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
       if (!origin || corsWhitelist.some((re) => re.test(origin))) {
         callback(null, true)
       } else {
-        callback(new ForbiddenError(), false)
+        callback(new ForbiddenError('Not allow origin'), false)
       }
     },
   })

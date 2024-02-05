@@ -8,7 +8,7 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import TrendingWriterGridSkeleton from './TrendingWriterGridSkeleton'
 import TrendingWriterCardSkeleton from '../TrendingWriterCard/TrendingWriterCardSkeleton'
 import TrendingWriterCard from '../TrendingWriterCard'
-import { TrendingWriter } from '@/graphql/generated'
+import { TrendingWriter } from '@/graphql/helpers/generated'
 
 const cx = bindClassNames(styles)
 

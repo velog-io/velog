@@ -5,7 +5,7 @@ import { injectable, singleton } from 'tsyringe'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { UserService } from '@services/UserService/index.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
-import { UserTags } from '@graphql/generated'
+import { UserTags } from '@graphql/helpers/generated'
 
 interface Service {
   findByNameFiltered(name: string): Promise<Tag | null>
@@ -106,7 +106,7 @@ export class TagService implements Service {
     const user = await this.userService.findByUsername(username)
 
     if (!user) {
-      throw new NotFoundError('Invalid username')
+      throw new NotFoundError('Not found User')
     }
 
     const isSelf = user.id === signedUserId

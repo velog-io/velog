@@ -4,8 +4,8 @@ import {
   RecentPostsDocument,
   RecentPostsQuery,
   RecentPostsQueryVariables,
-} from '@/graphql/generated'
-import { infiniteRecentPostsQueryKey } from '@/graphql/queryKey'
+} from '@/graphql/helpers/generated'
+import { infiniteRecentPostsQueryKey } from '@/graphql/helpers/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'
 

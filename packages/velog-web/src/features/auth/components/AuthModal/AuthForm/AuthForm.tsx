@@ -8,7 +8,7 @@ import { validateEmail } from '@/lib/validate'
 import { toast } from 'react-toastify'
 import AuthSocialButtonGroup from '@/features/auth/components/AuthModal/AuthSocialButtonGroup'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { useSendMailMutation } from '@/graphql/generated'
+import { useSendMailMutation } from '@/graphql/helpers/generated'
 
 const cx = bindClassNames(styles)
 
@@ -17,7 +17,7 @@ function AuthForm() {
     actions,
     value: { mode, isVisible },
   } = useModal()
-  const [email, onChangeEmail] = useInput('')
+  const { input: email, onChange: onChangeEmail } = useInput('')
   const [isSendEmail, setSendEmail] = useState(false)
 
   const { mutate, data, isPending } = useSendMailMutation({})

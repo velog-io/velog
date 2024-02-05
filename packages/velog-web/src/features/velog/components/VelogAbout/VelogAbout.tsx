@@ -4,7 +4,7 @@ import {
   useCurrentUserQuery,
   useGetUserAboutQuery,
   useUpdateAboutMutation,
-} from '@/graphql/generated'
+} from '@/graphql/helpers/generated'
 import styles from './VelogAbout.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { VelogAboutContent, VelogAboutContentSkeleton } from '../VelogAboutContent'
@@ -42,6 +42,7 @@ function VelogAbout({ username }: Props) {
   }
 
   if (isLoading) return <VelogAboutContentSkeleton />
+
   return (
     <div className={cx('block')}>
       {isOwn && (getUserAboutData?.user?.profile.about || isEdit) && (

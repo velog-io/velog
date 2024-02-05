@@ -1,0 +1,12 @@
+.block {
+  border-top: 1px solid var(--border4);
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  input {
+    flex: 1;
+    margin-right: 1rem;
+  }
+}

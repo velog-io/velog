@@ -1,4 +1,4 @@
-import { Resolvers } from '@graphql/generated'
+import { Resolvers } from '@graphql/helpers/generated'
 import { SeriesService } from '@services/SeriesService/index.js'
 import { UserService } from '@services/UserService/index.js'
 import { container } from 'tsyringe'

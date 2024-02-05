@@ -20,3 +20,7 @@ prisma
 # test
 !test/**/*
 !test/*
+
+# public
+public/images/*
+!public/images/.gitkeep

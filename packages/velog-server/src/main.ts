@@ -5,6 +5,7 @@ import { container } from 'tsyringe'
 import { startClosing } from '@plugins/global/keepAlivePlugin.js'
 import { DbService } from '@lib/db/DbService.js'
 import { RedisService } from '@lib/redis/RedisService.js'
+import { DiscordService } from '@lib/discord/DiscordService.js'
 
 async function main() {
   app.listen({ port: ENV.port, host: '::' })
@@ -15,7 +16,11 @@ async function main() {
   const redis = container.resolve(RedisService)
   await redis.connection().then((message) => console.log(message))
 
+  const discord = container.resolve(DiscordService)
+  await discord.connection()
+
   console.info(`INFO: Database connected to "${ENV.databaseUrl.split('@')[1]}"`)
+  console.info(`INFO: Redis connected to ${ENV.redisHost}`)
 
   process.send?.('ready')
   process.on('SIGINT', function () {

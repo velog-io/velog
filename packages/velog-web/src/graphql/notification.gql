@@ -1,0 +1,27 @@
+query notification($input: NotificationsInput!) {
+  notifications(input: $input) {
+    id
+    type
+    action
+    actor_id
+    action_id
+    is_read
+    created_at
+  }
+}
+
+query notificationCount {
+  notificationCount
+}
+
+mutation readAllNotifications {
+  readAllNotifications
+}
+
+mutation removeAllNotifications {
+  removeAllNotifications
+}
+
+mutation readNotication($input: ReadNotificationInput!) {
+  readNotification(input: $input)
+}

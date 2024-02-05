@@ -1,8 +1,15 @@
-import { Post, VelogPostsDocument } from '@/graphql/generated'
+import { Post, VelogPostsDocument } from '@/graphql/helpers/generated'
+import { getAccessToken } from '@/lib/auth'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
-export default async function getVelogPosts({ username, tag, accessToken }: GetVelogPostsArgs) {
+export default async function getVelogPosts({ username, tag }: GetVelogPostsArgs) {
   try {
+    const headers = {}
+    const token = await getAccessToken()
+    if (token) {
+      Object.assign(headers, { authorization: `Bearer ${token.value}` })
+    }
+
     const body: GraphqlRequestBody = {
       operationName: 'velogPosts',
       query: VelogPostsDocument,
@@ -15,15 +22,9 @@ export default async function getVelogPosts({ username, tag, accessToken }: GetV
       },
     }
 
-    const headers = {}
-
-    if (accessToken) {
-      Object.assign(headers, { authorization: `Bearer ${accessToken}` })
-    }
-
     const { posts } = await graphqlFetch<{ posts: Post[] }>({
       body,
-      cache: 'no-cache',
+      next: { revalidate: 0 },
       headers,
     })
 
@@ -37,5 +38,4 @@ export default async function getVelogPosts({ username, tag, accessToken }: GetV
 type GetVelogPostsArgs = {
   username: string
   tag?: string
-  accessToken?: string
 }

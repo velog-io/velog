@@ -1,3 +1,7 @@
+type Query {
+  isLogged: Boolean
+}
+
 type Mutation {
   sendMail(input: SendMailInput!): SendMailResponse
 }

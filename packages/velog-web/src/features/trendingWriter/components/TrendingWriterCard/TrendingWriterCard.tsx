@@ -1,4 +1,4 @@
-import { TrendingWriterPosts } from '@/graphql/generated'
+import { TrendingWriterPosts } from '@/graphql/helpers/generated'
 import styles from './TrendingWriterCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import Link from 'next/link'

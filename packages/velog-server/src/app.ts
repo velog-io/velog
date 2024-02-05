@@ -6,6 +6,8 @@ import { ENV } from '@env'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { container } from 'tsyringe'
 import routes from '@routes/index.js'
+import multer from 'fastify-multer'
+import validatorCompilerPlugin from '@plugins/global/validatorCompilerPlugin.js'
 
 const app = Fastify({
   logger: true,
@@ -21,6 +23,9 @@ app.register(autoload, {
   encapsulate: false,
   forceESM: true,
 })
+
+app.register(multer.contentParser)
+app.register(validatorCompilerPlugin)
 
 app.register(routes)
 

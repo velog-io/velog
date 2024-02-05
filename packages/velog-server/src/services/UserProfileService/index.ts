@@ -1,3 +1,4 @@
+import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { DbService } from '@lib/db/DbService.js'
@@ -44,6 +45,18 @@ export class UserProfileService implements Service {
   ): Promise<UserProfile> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged In')
+    }
+
+    if (patch.display_name && this.utils.checkEmpty(patch.display_name as string)) {
+      throw new BadRequestError('Display name should not be empty')
+    }
+
+    if (patch.profile_links) {
+      const allowedKeys = ['url', 'email', 'facebook', 'github', 'twitter']
+      const valid = Object.keys(patch.profile_links).every((key) => allowedKeys.includes(key))
+      if (!valid) {
+        throw new BadRequestError('Profile_links contains invalid key')
+      }
     }
 
     const profile = await this.db.userProfile.findUnique({

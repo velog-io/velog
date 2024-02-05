@@ -24,7 +24,7 @@ function AdPostCard({ post, forHome = false, forPost = false, onClick }: Props) 
   return (
     <li className={cx('ad', 'block', { isNotHomeAndPost: !forHome && !forPost })} onClick={onClick}>
       {post.image && (
-        <a href={post.url} target="_blank" className={cx('styleLink')}>
+        <a href={post.url} target="_blank" className={cx('styleLink')} rel="noopener noreferrer">
           <RatioImage
             widthRatio={1.916}
             heightRatio={1}
@@ -36,7 +36,7 @@ function AdPostCard({ post, forHome = false, forPost = false, onClick }: Props) 
         </a>
       )}
       <div className={cx('content')}>
-        <a href={post.url} target="_blank" className={cx('styleLink')}>
+        <a href={post.url} target="_blank" className={cx('styleLink')} rel="noopener noreferrer">
           <h4 className={cx('h4', 'ellipsis')}>{post.title}</h4>
           <div className={cx('descriptionWrapper')}>
             <p className={cx({ clamp: !!post.image })}>

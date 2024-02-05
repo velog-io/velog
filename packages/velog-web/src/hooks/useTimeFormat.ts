@@ -1,3 +1,5 @@
+'use client'
+
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import format from 'date-fns/format'
 import koLocale from 'date-fns/locale/ko'

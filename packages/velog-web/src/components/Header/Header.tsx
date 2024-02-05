@@ -3,9 +3,6 @@
 import styles from './Header.module.css'
 import RoundButton from '@/components/RoundButton'
 import { useAuth } from '@/state/auth'
-import { useTheme } from '@/state/theme'
-import HeaderSearchButton from '@/components/Header/HeaderSearchButton'
-import ThemeToggleButton from '@/components/Header/ThemeToggleButton'
 import { useModal } from '@/state/modal'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useEffect, useRef } from 'react'
@@ -13,10 +10,13 @@ import useToggle from '@/hooks/useToggle'
 import HeaderUserIcon from '@/components/Header/HeaderUserIcon'
 import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
 import HeaderSkeleton from '@/components/Header/HeaderSkeleton'
-import { useCurrentUserQuery } from '@/graphql/generated'
+import { useCurrentUserQuery, useNotificationCountQuery } from '@/graphql/helpers/generated'
 import HeaderLogo from './HeaderLogo'
-import { useParams } from 'next/navigation'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 import { getUsernameFromParams } from '@/lib/utils'
+import { NotificationIcon, SearchIcon } from '@/assets/icons/components'
+import VLink from '../VLink'
+import HeaderIcon from './HeaderIcon'
 
 const cx = bindClassNames(styles)
 
@@ -25,21 +25,19 @@ type Props = {
 }
 
 function Header({ logo }: Props) {
-  const {
-    value: { systemTheme },
-  } = useTheme()
   const params = useParams()
+  const pathname = usePathname()
+  const router = useRouter()
   const [userMenu, toggleUserMenu] = useToggle(false)
   const ref = useRef<HTMLDivElement>(null)
   const { actions } = useModal()
   const {
     actions: { update },
   } = useAuth()
+  const { data, isLoading, isFetching } = useCurrentUserQuery()
 
-  const themeReady = systemTheme !== 'not-ready'
-
-  const { isLoading, data, isFetching } = useCurrentUserQuery()
-  const user = data?.currentUser || null
+  const user = data?.currentUser ?? null
+  const { data: notificationCountData } = useNotificationCountQuery({}, { enabled: !!user })
 
   useEffect(() => {
     update(user)
@@ -47,6 +45,17 @@ function Header({ logo }: Props) {
 
   const username = getUsernameFromParams(params)
   const urlForSearch = username ? `/search?username=${username}` : '/search'
+  const isNotificationPage = pathname.includes('/notification')
+  const notificationCount = notificationCountData?.notificationCount ?? 0
+
+  const onClickNotification = () => {
+    if (user) {
+      router.push('/notifications')
+      return
+    }
+
+    actions.showModal('login', '/notifications')
+  }
 
   if (isLoading || isFetching) return <HeaderSkeleton logo={logo || <HeaderLogo />} />
   return (
@@ -54,11 +63,33 @@ function Header({ logo }: Props) {
       <div className={cx('innerBlock')}>
         {logo || <HeaderLogo />}
         <div className={cx('right')}>
-          {themeReady && <ThemeToggleButton />}
-          <HeaderSearchButton to={urlForSearch} />
+          <div className={cx('notification')} onClick={onClickNotification}>
+            <HeaderIcon className={cx({ isNotificationPage })}>
+              {user && notificationCount !== 0 && (
+                <div
+                  className={cx('notificationCounter', {
+                    isSingle: Math.floor(notificationCount / 10) === 0,
+                  })}
+                >
+                  {Math.min(99, notificationCount)}
+                </div>
+              )}
+              <NotificationIcon />
+            </HeaderIcon>
+          </div>
+          <VLink href={urlForSearch}>
+            <HeaderIcon>
+              <SearchIcon />
+            </HeaderIcon>
+          </VLink>
           {user && (
             <>
-              <RoundButton color="darkGray" border={true} to="/write" className={cx('writeButton')}>
+              <RoundButton
+                color="darkGray"
+                border={true}
+                to="/write"
+                className={cx('writeButton', 'button')}
+              >
                 새 글 작성
               </RoundButton>
               <div ref={ref}>
@@ -71,6 +102,7 @@ function Header({ logo }: Props) {
             <RoundButton
               color="darkGray"
               border={false}
+              className={cx('button')}
               onClick={() => {
                 actions.showModal('login')
               }}

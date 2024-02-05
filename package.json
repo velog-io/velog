@@ -24,7 +24,8 @@
     "email": "public.velopert@gmail.com"
   },
   "keywords": [
-    "velog"
+    "velog",
+    "blog"
   ],
   "devDependencies": {
     "husky": "^8.0.0",

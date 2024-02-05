@@ -1,4 +1,4 @@
-import { FollowResult } from '@/graphql/generated'
+import { FollowResult } from '@/graphql/helpers/generated'
 import styles from './VelogFollowList.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { VelogFollowItem } from '../VelogFollowItem'

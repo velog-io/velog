@@ -1,5 +1,5 @@
 import { JwtService } from '@lib/jwt/JwtService.js'
-import { AccessTokenData } from '@lib/jwt/Jwt.interface.js'
+import { AccessTokenData } from '@lib/jwt/JwtInterface.js'
 import { FastifyPluginAsync } from 'fastify'
 import { container } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
@@ -9,12 +9,11 @@ import { Time } from '@constants/TimeConstants.js'
 const authPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('user', null)
   fastify.addHook('preHandler', async (request, reply) => {
+    if (request.url.includes('/auth/logout')) return
+    let accessToken: string | undefined = request.cookies['access_token']
+    const refreshToken: string | undefined = request.cookies['refresh_token']
+    const authorization = request.headers['authorization']
     try {
-      if (request.url.includes('/auth/logout')) return
-      let accessToken: string | undefined = request.cookies['access_token']
-      const refreshToken: string | undefined = request.cookies['refresh_token']
-      const authorization = request.headers['authorization']
-
       if (!accessToken && authorization) {
         accessToken = authorization.split('Bearer ')[1]
       }
@@ -33,6 +32,8 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
         await userService.restoreToken({ request, reply })
       }
     } catch (e) {
+      console.log('accessToken', accessToken)
+      console.log('authPlugin error', e)
       const cookie = container.resolve(CookieService)
       cookie.clearCookie(reply, 'access_token')
       cookie.clearCookie(reply, 'refresh_token')

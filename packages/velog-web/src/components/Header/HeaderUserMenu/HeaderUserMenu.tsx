@@ -4,7 +4,7 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import HeaderUserMenuItem from '@/components/Header/HeaderUserMenuItem/HeaderUserMenuItem'
 import { useAuth } from '@/state/auth'
 import { useCallback } from 'react'
-import { useLogoutMutation } from '@/graphql/generated'
+import { useLogoutMutation } from '@/graphql/helpers/generated'
 
 const cx = bindClassNames(styles)
 
@@ -16,16 +16,14 @@ type Props = {
 function HeaderUserMenu({ isVisible, onClose }: Props) {
   const {
     value: { currentUser },
-    actions: { update },
   } = useAuth()
   const { ref } = useOutsideClick<HTMLDivElement>(onClose)
-  const { mutate } = useLogoutMutation()
+  const { mutateAsync } = useLogoutMutation()
 
-  const onLogout = useCallback(() => {
-    mutate({})
-    update(null)
+  const onLogout = useCallback(async () => {
     location.href = '/'
-  }, [mutate, update])
+    await mutateAsync({})
+  }, [mutateAsync])
 
   if (!isVisible) return null
   return (
@@ -39,7 +37,9 @@ function HeaderUserMenu({ isVisible, onClose }: Props) {
         </div>
         <HeaderUserMenuItem to="/saves">임시 글</HeaderUserMenuItem>
         <HeaderUserMenuItem to="/lists/liked">읽기 목록</HeaderUserMenuItem>
-        <HeaderUserMenuItem to="/setting">설정</HeaderUserMenuItem>
+        <HeaderUserMenuItem to="/setting" isMigrated={true}>
+          설정
+        </HeaderUserMenuItem>
         <HeaderUserMenuItem onClick={onLogout}>로그아웃</HeaderUserMenuItem>
       </div>
     </div>

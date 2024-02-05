@@ -2,64 +2,57 @@
 
 import { useThemeEffect } from '@/hooks/useThemeEffect'
 
-type Props = {
-  children: React.ReactNode
-}
+type Props = {}
 
 const themeScript = `
   (function() {
     // set data-theme attirubute in body tag
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const storageTheme = window.localStorage.getItem('theme') || ''
-    const isTheme = storageTheme.includes('light') || storageTheme.includes('dark') // leagcy velog save theme data using JSON.stringify 
-    const currentTheme = storageTheme.includes('light') ? 'light' : 'dark'
-    const theme = isTheme ? currentTheme : systemPrefersDark ? 'dark' : 'light'
+    const systemPrefer = localStorage.getItem('system-prefer')
+
+    const isSystemPrefer = !!systemPrefer
+
+    const getThemeFromStorage = window.localStorage.getItem('theme') || ''
+    const isTheme = getThemeFromStorage.includes('light') || getThemeFromStorage.includes('dark') // leagcy velog save theme data using JSON.stringify 
+    const storageTheme = getThemeFromStorage.includes('light') ? 'light' : 'dark'
+    const theme = isSystemPrefer ? systemPrefersDark ? 'dark' : 'light' : storageTheme
 
     if (!isTheme) {
       window.localStorage.removeItem('theme')
     }
 
+    if (!['light', 'dark'].includes(theme)) return
+
+    const isHome = ['/recent','/trending', '/feed'].includes(window.location.pathname) || window.location.pathname === '/'
+    const homeColor = isHome ? '#f8f9fa' : '#ffffff'
+    const color = theme === 'light' ? homeColor : '#1e1e1e'
+
     try {
+      // set data-theme in body
       document.body.setAttribute('data-theme', isTheme ? theme : 'light')
-    
-      const isHome = ['/recent','/trending'].includes(window.location.pathname) || window.location.pathname === '/'
       
-      // set data-theme
-      const colorMap = {
-        light: isHome ? '#f8f9fa' : '#ffffff',
-        dark: '#1e1e1e',
-      }
-      const color = colorMap[theme]
+      // set Theme color for mobile header
+      const themeColorMetaTag = document.createElement('meta')
+      themeColorMetaTag.setAttribute('name', 'theme-color')
+      themeColorMetaTag.setAttribute('content', color)
+      document.head.appendChild(themeColorMetaTag)
 
-      if (!color) return
-      let themeMetaTag = document.querySelector('meta[name="theme-color"]')
-      if (!themeMetaTag) {
-        themeMetaTag = document.createElement('meta')
-        themeMetaTag.setAttribute('name', 'theme-color')
-        document.head.appendChild(themeMetaTag)
-      }
-      themeMetaTag.setAttribute('media', \`(prefers-color-scheme: \${theme})\`)
-      themeMetaTag.setAttribute('content', color)
-
-      // set scrollbar-scheme
-      let scrollSchemeMetaTag = document.querySelector('meta[name="color-scheme"]')
-      if (!scrollSchemeMetaTag) {
-        scrollSchemeMetaTag = document.createElement('meta')
-        scrollSchemeMetaTag.setAttribute('name', 'color-scheme')
-        document.head.appendChild(scrollSchemeMetaTag)
-      }
-      scrollSchemeMetaTag.setAttribute('content', theme)
+      // set Safari theme color
+      const appleMobileStatusMetaTag = document.createElement('meta')
+      appleMobileStatusMetaTag.setAttribute('name', 'apple-mobile-web-app-status-bar-style')
+      const appleMobileStatusColor = theme === 'light' ? 'default' : 'black'
+      appleMobileStatusMetaTag.setAttribute('content', appleMobileStatusColor)
+      document.head.appendChild(themeColorMetaTag)
     } catch (error) {
       console.log('setTheme error', error);
     }
   })()
 `
 
-function ThemeProvider({ children }: Props) {
+function ThemeProvider({}: Props) {
   useThemeEffect()
   return (
     <>
-      {children}
       <script
         id="theme-provider"
         dangerouslySetInnerHTML={{

@@ -4,13 +4,14 @@ import { useMemo } from 'react'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { AuthProvider } from '@/types/auth'
 import { ENV } from '@/env'
+import useCurrentPath from '@/hooks/useCurrentPath'
+import { useModal } from '@/state/modal'
 
 const cx = bindClassNames(styles)
 
 type Props = {
   provider: AuthProvider
   tabIndex: number
-  currentPath: string
 }
 
 const providerMap = (currentPath: string) => {
@@ -36,8 +37,16 @@ const providerMap = (currentPath: string) => {
   }
 }
 
-function AuthSocialButton({ provider, tabIndex, currentPath }: Props) {
-  const info = useMemo(() => providerMap(currentPath)[provider], [provider, currentPath])
+function AuthSocialButton({ provider, tabIndex }: Props) {
+  const { currentPath } = useCurrentPath()
+  const {
+    value: { redirectPath },
+  } = useModal()
+
+  const info = useMemo(
+    () => providerMap(redirectPath || currentPath)[provider],
+    [provider, currentPath, redirectPath],
+  )
   const { icon: Icon, color, border, redirectTo } = info
 
   return (

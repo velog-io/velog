@@ -1,5 +1,5 @@
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
-import { GetSeriesInput } from '@graphql/generated'
+import { GetSeriesInput } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { SeriesPost, Series } from '@prisma/client'
 import DataLoader from 'dataloader'

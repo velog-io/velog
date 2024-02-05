@@ -24,12 +24,12 @@ export class RedisService extends Redis implements Service {
 
   get generateKey(): GenerateRedisKey {
     return {
-      recommendedPostKey: (postId: string) => `${postId}:recommend`,
-      postCacheKey: (username: string, postUrlSlug: string) => `ssr:/@${username}/${postUrlSlug}`,
-      userCacheKey: (username: string) => `ssr:/@${username}`,
-      postSeriesKey: (username: string, seriesUrlSlug: string) =>
+      recommendedPost: (postId: string) => `${postId}:recommend`,
+      postCache: (username: string, postUrlSlug: string) => `ssr:/@${username}/${postUrlSlug}`,
+      userCache: (username: string) => `ssr:/@${username}`,
+      postSeries: (username: string, seriesUrlSlug: string) =>
         `ssr:/@${username}/series/${seriesUrlSlug}`,
-      changeEmailKey: (code: string) => `changeEmailCode:${code}`,
+      changeEmail: (code: string) => `changeEmailCode:${code}`,
       trendingWriters: () => `trending:writers`,
     }
   }
@@ -42,11 +42,11 @@ export class RedisService extends Redis implements Service {
 }
 
 type GenerateRedisKey = {
-  recommendedPostKey: (postId: string) => string
-  postCacheKey: (username: string, postUrlSlug: string) => string
-  userCacheKey: (username: string) => string
-  postSeriesKey: (username: string, seriesUrlSlug: string) => string
-  changeEmailKey: (code: string) => string
+  recommendedPost: (postId: string) => string
+  postCache: (username: string, postUrlSlug: string) => string
+  userCache: (username: string) => string
+  postSeries: (username: string, seriesUrlSlug: string) => string
+  changeEmail: (code: string) => string
   trendingWriters: () => string
 }
 

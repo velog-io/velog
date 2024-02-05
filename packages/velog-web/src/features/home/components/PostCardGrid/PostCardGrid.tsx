@@ -6,14 +6,14 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { ENV } from '@/env'
 import { Timeframe } from '@/features/home/state/timeframe'
 import { useParams, usePathname } from 'next/navigation'
-import { Post } from '@/graphql/generated'
 import AdPostCard from '../PostCard/AdPostCard'
 
 import { Fragment, useEffect, useRef } from 'react'
-import PostCard from '../PostCard/PostCard'
-import { PostCardSkeleton } from '../PostCard/PostCardSkeleton'
+import { Post } from '@/graphql/helpers/generated'
 import PostCardSkeletonGrid from './PostCardSkeletonGrid'
 import { TrendingPost } from '../../interface/post'
+import PostCard from '../PostCard/PostCard'
+import { PostCardSkeleton } from '../PostCard/PostCardSkeleton'
 
 const cx = bindClassNames(styles)
 

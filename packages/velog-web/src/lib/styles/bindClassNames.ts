@@ -36,10 +36,9 @@ export function bindClassNames<T extends Styles>(styles: T) {
     return (classNames.filter((cn) => cn) as (keyof T)[])
       .map((className) => {
         if (typeof className === 'object') {
-          const keys = Object.keys(className) as (keyof T)[]
-          return keys
+          return Object.keys(className)
             .filter((key) => className[key])
-            .map((key) => styleUtils[key])
+            .map((key) => styleUtils[key] || key)
             .join(' ')
         }
         return styleUtils[className] ?? className

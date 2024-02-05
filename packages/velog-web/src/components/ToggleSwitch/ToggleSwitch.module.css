@@ -1,0 +1,25 @@
+.block {
+  .switch {
+    width: 46px;
+    height: 24px;
+    background-color: var(--gray6);
+    display: flex;
+    justify-content: flex-start;
+    border-radius: 18px;
+    padding: 2px;
+    cursor: pointer;
+
+    &.isActive {
+      justify-content: flex-end;
+      background-color: var(--primary2);
+    }
+
+    .handle {
+      width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      background-color: var(--bg-element1);
+      box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+    }
+  }
+}

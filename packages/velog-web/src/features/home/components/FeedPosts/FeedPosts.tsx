@@ -1,9 +1,9 @@
 'use client'
 
-import { Post } from '@/graphql/generated'
+import { Post } from '@/graphql/helpers/generated'
+import PostCardGrid from '../PostCardGrid'
 import useFeedPosts from '../../hooks/useFeedPosts'
 import FeedPostsEmpty from './FeedPostsEmpty'
-import PostCardGrid from '../PostCardGrid/PostCardGrid'
 
 type Props = {
   data: Post[]

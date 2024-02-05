@@ -1,6 +1,6 @@
 import { ENV } from '@env'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
-import { AdsInput } from '@graphql/generated'
+import { AdsInput } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Ad, Prisma } from '@prisma/client'

@@ -8,8 +8,12 @@ interface Props {
 }
 
 export default async function VelogPage({ params }: Props) {
-  const username = getUsernameFromParams(params)
-  redirect(`/@${username}/posts`)
+  const encodedSymbol = encodeURIComponent('@')
+  if (params.username.includes(encodedSymbol)) {
+    const username = getUsernameFromParams(params)
+    redirect(`/@${username}/posts`)
+  }
+  redirect(params.username)
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

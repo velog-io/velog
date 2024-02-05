@@ -2,18 +2,15 @@ import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { ConfilctError } from '@errors/ConfilctError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
-import { GetFollowInput } from '@graphql/generated'
+import { GetFollowInput } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { FollowUser, Prisma, UserProfile } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
 import { FeedService } from '@services/FeedService/index.js'
+import { NotificationService } from '@services/NotificationService/index.js'
 
 interface Service {
-  findFollowRelationship({
-    followingUserId,
-    followerUserId,
-  }: FollowArgs): Promise<FollowUser | null>
   isFollowed({ followingUserId, followerUserId }: isFollowedArgs): Promise<boolean>
   follow({ followingUserId, followerUserId }: FollowArgs): Promise<void>
   unfollow({ followingUserId, followerUserId }: UnfollowArgs): Promise<void>
@@ -30,12 +27,20 @@ export class FollowUserService implements Service {
     private readonly db: DbService,
     private readonly userService: UserService,
     private readonly feedService: FeedService,
+    private readonly notificationService: NotificationService,
   ) {}
   public async isFollowed({ followingUserId, followerUserId }: FollowArgs): Promise<boolean> {
     if (!followingUserId || !followerUserId) return false
+
+    const followingUser = await this.userService.findById(followingUserId)
+
+    if (!followingUser) {
+      throw new NotFoundError('Not fond following user')
+    }
+
     return !!(await this.findFollowRelationship({ followingUserId, followerUserId }))
   }
-  public async findFollowRelationship({
+  private async findFollowRelationship({
     followingUserId,
     followerUserId,
   }: FollowArgs): Promise<FollowUser | null> {
@@ -59,35 +64,63 @@ export class FollowUserService implements Service {
       throw new ConfilctError('Users cannot follow themselves')
     }
 
-    const following = await this.db.user.findUnique({
+    const following = await this.userService.findById(followingUserId)
+
+    if (!following) {
+      throw new NotFoundError('Not found following user')
+    }
+
+    const follower = await this.db.user.findUnique({
       where: {
-        id: followingUserId,
+        id: followerUserId,
+      },
+      include: {
+        profile: true,
       },
     })
 
-    if (!following) {
-      throw new NotFoundError('Not found following User')
+    if (!follower) {
+      throw new NotFoundError('Not found follower user')
     }
 
-    const relationship = await this.db.followUser.findFirst({
+    const exists = await this.db.followUser.findFirst({
       where: {
         fk_following_user_id: followingUserId,
         fk_follower_user_id: followerUserId,
       },
     })
 
-    if (relationship) {
+    if (exists) {
       throw new ConfilctError('Already relationship')
     }
 
-    await this.db.followUser.create({
+    const relationship = await this.db.followUser.create({
       data: {
         fk_following_user_id: followingUserId,
         fk_follower_user_id: followerUserId,
       },
     })
 
+    // create feed
     await this.feedService.createFeedByFollow({ followerUserId, followingUserId })
+
+    // create notification
+    await this.notificationService.createOrUpdate({
+      actionId: relationship.id,
+      fkUserId: followingUserId,
+      type: 'follow',
+      actorId: followerUserId,
+      action: {
+        follow: {
+          actor_user_id: follower.id,
+          actor_display_name: follower.profile?.display_name || '',
+          actor_thumbnail: follower.profile?.thumbnail || '',
+          actor_username: follower.username,
+          follow_id: relationship.id,
+          type: 'follow',
+        },
+      },
+    })
   }
   public async unfollow({ followingUserId, followerUserId }: FollowArgs): Promise<void> {
     if (!followingUserId) {
@@ -112,26 +145,35 @@ export class FollowUserService implements Service {
       throw new NotFoundError('Not found follower User')
     }
 
-    const follow = await this.db.followUser.findFirst({
+    const relationship = await this.db.followUser.findFirst({
       where: {
         fk_following_user_id: followingUserId,
         fk_follower_user_id: followerUserId,
       },
     })
 
-    if (!follow) {
+    if (!relationship) {
       throw new NotFoundError('Not found relationship')
     }
 
     await this.db.followUser.delete({
       where: {
-        id: follow.id,
+        id: relationship.id,
       },
     })
 
+    // delete feed
     await this.feedService.deleteFeedByUnfollow({
       followerUserId,
       followingUserId,
+    })
+
+    // remove notification
+    await this.notificationService.remove({
+      actionId: relationship.id,
+      actorId: followerUserId,
+      fkUserId: followingUserId,
+      type: 'follow',
     })
   }
   public async getFollowers(input: GetFollowInput, signedUserId?: string): Promise<FollowResult[]> {

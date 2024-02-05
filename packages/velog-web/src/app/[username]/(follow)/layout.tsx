@@ -1,4 +1,4 @@
-import VelogFollowLayout from '@/components/Layouts/VelogFollowLayout'
+import SmallLayout from '@/components/Layouts/SmallLayout'
 import { getUsernameFromParams } from '@/lib/utils'
 import getUserFollowInfo from '@/prefetch/getUserFollowInfo'
 import getVelogConfig from '@/prefetch/getVelogConfig'
@@ -10,12 +10,16 @@ type Props = {
   children: React.ReactNode
 }
 
-export default async function Layout({ children, params }: Props) {
+export default async function VelogFollowLayout({ children, params }: Props) {
   const username = getUsernameFromParams(params)
   const user = await getUserFollowInfo(username)
-  const velogConfig = await getVelogConfig(username)
 
-  if (!user || !velogConfig) {
+  if (!user) {
+    notFound()
+  }
+
+  const velogConfig = await getVelogConfig({ username })
+  if (!velogConfig) {
     notFound()
   }
 
@@ -25,8 +29,8 @@ export default async function Layout({ children, params }: Props) {
   }
 
   return (
-    <VelogFollowLayout username={username} userLogo={userLogo}>
+    <SmallLayout isCustomHeader={true} username={username} userLogo={userLogo}>
       {children}
-    </VelogFollowLayout>
+    </SmallLayout>
   )
 }

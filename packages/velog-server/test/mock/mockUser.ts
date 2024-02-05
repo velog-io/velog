@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker'
+
 export type MockUserWithProfileType = (typeof mockUserWithProfile)[0]
 export const mockUserWithProfile = [
   {
@@ -32,3 +34,20 @@ export const mockUserWithProfile = [
     },
   },
 ]
+
+export const getMockUserWithProfile = (count = 100) => {
+  for (let i = 0; i < count; i++) {
+    mockUserWithProfile.push({
+      username: faker.internet.userName().slice(0, 200),
+      email: faker.internet.email().slice(0, 200),
+      is_certified: faker.datatype.boolean(),
+      profile: {
+        display_name: faker.internet.displayName().slice(0, 200),
+        short_bio: faker.lorem.sentence(50).slice(0, 200),
+        thumbnail: faker.image.avatar(),
+      },
+    })
+  }
+
+  return mockUserWithProfile
+}

@@ -9,17 +9,17 @@ const config: CodegenConfig = {
     afterOneFileWrite: ['prettier --write'],
   },
   generates: {
-    'src/graphql/generated.ts': {
+    'src/graphql/helpers/generated.ts': {
       documents: 'string',
       config: {
         reactQueryVersion: 5,
-        addInfiniteQuery: true,
         addSuspenseQuery: true,
         exposeQueryKeys: true,
+        exposeFetcher: true,
         exposeMutationKeys: true,
         skipTypename: true,
+        inputMaybeValue: 'T | null | undefined',
         maybeValue: 'T | null',
-        inputMaybeValue: 'T | undefined',
         fetcher: {
           func: './fetcher#fetcher',
         },
@@ -31,7 +31,7 @@ const config: CodegenConfig = {
         },
         scalars: {
           Date: 'Date',
-          JSON: 'JSON',
+          JSON: 'Record<string, any>',
           ID: 'string',
           Void: 'void',
           PositiveInt: 'number',

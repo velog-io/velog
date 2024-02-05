@@ -4,12 +4,13 @@ export default async function graphqlFetch<T>({
   url = `${ENV.graphqlHost}/graphql`,
   method = 'POST',
   body,
-  headers,
+  headers = {},
   next,
   cache,
   ...init
 }: Parameter): Promise<T> {
   let targetUrl = url
+
   if (method === 'GET' && body) {
     const queryString = convertToQueryString(body)
     targetUrl = `${url}?${queryString}`
@@ -18,11 +19,11 @@ export default async function graphqlFetch<T>({
   const res = await fetch(targetUrl, {
     method,
     body: method.toUpperCase() === 'POST' ? JSON.stringify(body) : undefined,
-    headers: new Headers({
+    headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       ...headers,
-    }),
+    },
     credentials: 'include',
     next,
     cache,
@@ -32,11 +33,23 @@ export default async function graphqlFetch<T>({
   if (!res.ok) {
     const errors = await res.json()
     const allowOperationList = ['userTags']
+
     if (!allowOperationList.includes(body?.operationName || '')) {
       console.log('graphqlFetch errors', errors)
       console.log('body', body)
     }
-    throw res
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log(res)
+    }
+
+    const message = {
+      operationName: body?.operationName,
+      status: res.status,
+      statusText: res.statusText,
+    }
+
+    throw new Error(JSON.stringify(message))
   }
 
   const json = await res.json()
@@ -55,7 +68,7 @@ function convertToQueryString(body: GraphqlRequestBody): string {
     : ''
 
   // variables가 제공되지 않으면 빈 문자열을 반환
-  const variablesPart = body.variables
+  const variablesPart = body?.variables
     ? `&variables=${encodeURIComponent(JSON.stringify(body.variables))}`
     : ''
 
@@ -75,5 +88,5 @@ type Parameter = {
 export type GraphqlRequestBody = {
   operationName?: string
   query: string
-  variables?: Record<any, any>
+  variables: Record<any, any>
 }

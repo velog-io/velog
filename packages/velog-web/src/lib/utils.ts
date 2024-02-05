@@ -48,3 +48,5 @@ export const getTagByKey = <T extends Record<string, string | string[]>>(
     ? searchParams[key][0]
     : (searchParams[key] as string) || defaultValue
 }
+
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))

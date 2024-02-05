@@ -1,3 +1,5 @@
+'use client'
+
 import styles from './AuthModal.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useModal } from '@/state/modal'

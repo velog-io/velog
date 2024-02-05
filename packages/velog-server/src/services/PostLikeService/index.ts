@@ -7,6 +7,7 @@ import { Post } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import { PostService } from '@services/PostService/index.js'
 import { SearchService } from '@services/SearchService/index.js'
+import { NotificationService } from '@services/NotificationService/index.js'
 
 interface Service {
   likePost(postId?: string, userId?: string): Promise<Post>
@@ -21,14 +22,28 @@ export class PostLikeService implements Service {
     private readonly utils: UtilsService,
     private readonly searchService: SearchService,
     private readonly postService: PostService,
+    private readonly notificationService: NotificationService,
   ) {}
-  async likePost(postId?: string, userId?: string): Promise<Post> {
+  async likePost(postId?: string, signedUserId?: string): Promise<Post> {
     if (!postId) {
       throw new BadRequestError('PostId is required')
     }
 
-    if (!userId) {
+    if (!signedUserId) {
       throw new UnauthorizedError('Not Logged In')
+    }
+
+    const signedUser = await this.db.user.findUnique({
+      where: {
+        id: signedUserId,
+      },
+      include: {
+        profile: true,
+      },
+    })
+
+    if (!signedUser) {
+      throw new NotFoundError('Not found sigend user')
     }
 
     const post = await this.db.post.findUnique({
@@ -44,7 +59,7 @@ export class PostLikeService implements Service {
     const alreadyLiked = await this.db.postLike.findFirst({
       where: {
         fk_post_id: postId,
-        fk_user_id: userId,
+        fk_user_id: signedUserId,
       },
     })
 
@@ -52,10 +67,10 @@ export class PostLikeService implements Service {
       return post
     }
 
-    await this.db.postLike.create({
+    const postLike = await this.db.postLike.create({
       data: {
         fk_post_id: postId,
-        fk_user_id: userId,
+        fk_user_id: signedUserId,
       },
     })
 
@@ -69,8 +84,32 @@ export class PostLikeService implements Service {
       where: {
         id: postId,
       },
+      include: {
+        user: true,
+      },
       data: {
         likes: likesCount,
+      },
+    })
+
+    // create notification
+    await this.notificationService.createOrUpdate({
+      fkUserId: post.fk_user_id,
+      actorId: signedUserId,
+      actionId: post.id,
+      type: 'postLike',
+      action: {
+        postLike: {
+          post_like_id: postLike.id,
+          actor_display_name: signedUser.profile?.display_name || '',
+          actor_thumbnail: signedUser.profile?.thumbnail || '',
+          actor_username: signedUser.username,
+          post_id: likesPost.id,
+          post_title: likesPost.title || '',
+          post_url_slug: likesPost.url_slug || '',
+          post_writer_username: likesPost.user.username,
+          type: 'postLike',
+        },
       },
     })
 
@@ -89,12 +128,12 @@ export class PostLikeService implements Service {
 
     return likesPost
   }
-  async unlikePost(postId?: string, userId?: string): Promise<Post> {
+  async unlikePost(postId?: string, signedUserId?: string): Promise<Post> {
     if (!postId) {
       throw new BadRequestError('PostId is required')
     }
 
-    if (!userId) {
+    if (!signedUserId) {
       throw new UnauthorizedError('Not Logged In')
     }
 
@@ -111,7 +150,7 @@ export class PostLikeService implements Service {
     const postLike = await this.db.postLike.findFirst({
       where: {
         fk_post_id: postId,
-        fk_user_id: userId,
+        fk_user_id: signedUserId,
       },
     })
 
@@ -138,6 +177,14 @@ export class PostLikeService implements Service {
       data: {
         likes: likesCount,
       },
+    })
+
+    // remove notification
+    await this.notificationService.remove({
+      fkUserId: post.fk_user_id,
+      actorId: signedUserId,
+      type: 'postLike',
+      actionId: post.id,
     })
 
     await this.postService.updatePostScore(postId)

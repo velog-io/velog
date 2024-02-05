@@ -2,6 +2,9 @@ import { ENV } from '@env'
 import { dirname, join } from 'path'
 import { injectable, singleton } from 'tsyringe'
 import { fileURLToPath } from 'url'
+import { z } from 'zod'
+import { customAlphabet } from 'nanoid'
+import nanoidDictionary from 'nanoid-dictionary'
 
 interface Service {
   resolveDir(dir: string): string
@@ -18,6 +21,9 @@ interface Service {
   checkUnscore(text: string): boolean
   now: Date
   optimizeImage(url: string, width: number): string
+  validateEmail(email: string): boolean
+  alphanumeric(): string
+  randomNumber(max: number): number
 }
 
 @injectable()
@@ -119,5 +125,34 @@ export class UtilsService implements Service {
   public pickRandomItems<T>(array: T[], count: number) {
     const shuffled = this.shuffleArray(array)
     return shuffled.slice(0, count)
+  }
+  public validateEmail(email: string) {
+    const emailSchema = z.string().email()
+    try {
+      emailSchema.parse(email)
+
+      return true
+    } catch (_) {
+      return false
+    }
+  }
+  public validateBody(
+    schema: z.ZodObject<any, 'strip', z.ZodTypeAny, any>,
+    body: Record<string, any>,
+  ): boolean {
+    try {
+      schema.parse(body)
+      return true
+    } catch (e) {
+      console.log('validateBody error', e)
+      return false
+    }
+  }
+  public alphanumeric(size = 10) {
+    const generateCode = customAlphabet(nanoidDictionary.alphanumeric, size)
+    return generateCode()
+  }
+  public randomNumber(max: number) {
+    return Math.floor(Math.random() * (max + 1))
   }
 }

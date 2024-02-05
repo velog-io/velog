@@ -1,0 +1,100 @@
+type Notification {
+  id: ID!
+  type: NotificationType!
+  fk_user_id: String!
+  actor_id: ID
+  action: JSON!
+  action_id: ID
+  is_read: Boolean!
+  is_deleted: Boolean!
+  created_at: Date!
+}
+
+enum NotificationType {
+  follow
+  comment
+  postLike
+  commentReply
+}
+
+type Query {
+  notifications(input: NotificationsInput!): [Notification!]!
+  notificationCount: Int!
+}
+
+type Mutation {
+  createNotification(input: CreateNotificationInput!): Notification!
+  readNotification(input: ReadNotificationInput!): Void
+  readAllNotifications: Void
+  removeAllNotifications: Void
+}
+
+input CreateNotificationInput {
+  type: NotificationType!
+  fk_user_id: String!
+  actor_id: String
+  action_id: String
+  action: NotificationActionInput!
+}
+
+input NotificationActionInput {
+  follow: FollowNotificationActionInput
+  comment: CommentNotificationActionInput
+  postLike: PostLikeNotificationActionInput
+  commentReply: CommentReplyNotifictionActionInput
+}
+
+input FollowNotificationActionInput {
+  follow_id: ID!
+  actor_user_id: ID!
+  actor_display_name: String!
+  actor_username: String!
+  actor_thumbnail: String!
+  type: NotificationType!
+}
+
+input CommentNotificationActionInput {
+  comment_id: ID!
+  post_id: ID!
+  post_title: String!
+  post_url_slug: String!
+  post_writer_username: String!
+  comment_text: String!
+  actor_display_name: String!
+  actor_username: String!
+  actor_thumbnail: String!
+  type: NotificationType!
+}
+
+input CommentReplyNotifictionActionInput {
+  comment_id: ID!
+  parent_comment_text: String!
+  post_id: ID!
+  post_url_slug: String!
+  post_writer_username: String!
+  reply_comment_text: String!
+  actor_display_name: String!
+  actor_username: String!
+  actor_thumbnail: String!
+  type: NotificationType!
+}
+
+input PostLikeNotificationActionInput {
+  post_like_id: ID!
+  post_id: ID!
+  post_title: String!
+  post_url_slug: String!
+  post_writer_username: String!
+  actor_display_name: String!
+  actor_username: String!
+  actor_thumbnail: String!
+  type: NotificationType!
+}
+
+input NotificationsInput {
+  is_read: Boolean
+}
+
+input ReadNotificationInput {
+  notification_ids: [String!]!
+}

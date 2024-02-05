@@ -1,0 +1,9 @@
+.button {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+
+  @media screen and (max-width: 768px) {
+    padding-left: 16px;
+  }
+}

@@ -7,7 +7,7 @@ import FollowButton from '@/components/FollowButton'
 import Link from 'next/link'
 import { Noto_Sans_KR } from 'next/font/google'
 import { useQueryClient } from '@tanstack/react-query'
-import { useGetUserFollowInfoQuery } from '@/graphql/generated'
+import { useGetUserFollowInfoQuery } from '@/graphql/helpers/generated'
 import { useParams } from 'next/navigation'
 import { getUsernameFromParams } from '@/lib/utils'
 

@@ -8,12 +8,19 @@ type Props = {
   src?: string | null
   alt?: string
   className?: string
+  priority?: boolean
 }
 
-function Thumbnail({ src, alt = 'thumbnail', className }: Props) {
+function Thumbnail({ src, alt = 'thumbnail', className, priority = false }: Props) {
   return (
     <div className={cx('block', className)}>
-      <Image src={src || '/images/user-thumbnail.png'} alt={alt} fill={true} style={styles} />
+      <Image
+        src={src || '/images/user-thumbnail.png'}
+        alt={alt}
+        fill={true}
+        style={styles}
+        priority={priority}
+      />
     </div>
   )
 }

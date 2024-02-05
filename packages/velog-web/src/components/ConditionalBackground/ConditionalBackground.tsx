@@ -4,6 +4,7 @@ import { useEffect, useMemo } from 'react'
 import styles from './ConditionalBackground.module.css'
 import { usePathname } from 'next/navigation'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
+import { checkIsHome } from '@/lib/checkIsHome'
 
 const cx = bindClassNames(styles)
 
@@ -11,12 +12,7 @@ type Props = { children: React.ReactNode }
 
 function ConditionalBackground({ children }: Props) {
   const pathname = usePathname()
-  const isGray = useMemo(
-    () =>
-      pathname === '/' ||
-      ['/recent', '/lists', '/trending'].some((path) => pathname.includes(path)),
-    [pathname],
-  )
+  const isGray = useMemo(() => checkIsHome(pathname), [pathname])
 
   useEffect(() => {
     const body = document.body

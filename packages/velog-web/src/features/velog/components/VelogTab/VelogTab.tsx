@@ -1,14 +1,11 @@
-import { usePathname } from 'next/navigation'
+import { useParams, usePathname } from 'next/navigation'
 import styles from './VelogTab.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import ActiveLink from '@/components/ActiveLink'
 import { motion } from 'framer-motion'
+import { getUsernameFromParams } from '@/lib/utils'
 
 const cx = bindClassNames(styles)
-
-type Props = {
-  username: string
-}
 
 const tabIndexMap: Record<Tab, number> = {
   posts: 0,
@@ -16,8 +13,11 @@ const tabIndexMap: Record<Tab, number> = {
   about: 2,
 }
 
-function VelogTab({ username }: Props) {
+function VelogTab() {
+  const params = useParams()
   const pathname = usePathname()
+
+  const username = getUsernameFromParams(params)
   const url = `/@${username}`
   const tab = pathname.split('?')[0].split('/').reverse()[0] as Tab
   const tabIndex = tabIndexMap[tab]

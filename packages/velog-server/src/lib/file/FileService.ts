@@ -3,8 +3,12 @@ import { injectable, singleton } from 'tsyringe'
 import mimeTypes from 'mime-types'
 import tmp from 'tmp'
 import fs from 'fs'
+import path from 'path'
+import multer from 'fastify-multer'
+import { StorageEngine } from 'fastify-multer/lib/interfaces'
 
 interface Service {
+  get multerStorage(): StorageEngine
   downloadFile(url: string): Promise<DownloadFileResult>
   generateUploadPath(parmeter: GenerateUploadPathParameter): string
 }
@@ -12,6 +16,18 @@ interface Service {
 @injectable()
 @singleton()
 export class FileService implements Service {
+  get multerStorage() {
+    const storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, 'public/images')
+      },
+      filename: function (req, file, cb) {
+        const ext = path.extname(file.originalname)
+        cb(null, `${file.fieldname + '-' + Date.now()}.${ext}`)
+      },
+    })
+    return storage
+  }
   async downloadFile(url: string) {
     const response = await axios.get(encodeURI(url), {
       responseType: 'stream',

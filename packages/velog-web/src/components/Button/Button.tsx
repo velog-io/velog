@@ -25,18 +25,12 @@ function Button({
   size = 'medium',
   responsive = false,
   className,
+  disabled = false,
   ...rest
 }: Props) {
   return (
     <button
-      className={cx(
-        'block',
-        size,
-        color,
-        inline ? 'inline' : '',
-        responsive ? 'responsive' : '',
-        className,
-      )}
+      className={cx('block', size, color, className, { inline, responsive, disabled })}
       {...rest}
       onClick={(e) => {
         if (rest.onClick) {

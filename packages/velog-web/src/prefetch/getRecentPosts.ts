@@ -1,5 +1,5 @@
 import { ENV } from '@/env'
-import { Post, RecentPostsDocument, RecentPostsInput } from '@/graphql/generated'
+import { Post, RecentPostsDocument, RecentPostsInput } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getRecentPosts({ limit = ENV.defaultPostLimit }: RecentPostsInput) {

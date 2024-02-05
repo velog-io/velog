@@ -8,19 +8,23 @@ const config: CodegenConfig = {
     afterOneFileWrite: ['prettier --write'],
   },
   generates: {
-    'src/graphql/generated.ts': {
+    'src/graphql/helpers/generated.ts': {
       plugins: [
         'typescript',
         'typescript-resolvers',
         {
           add: {
-            content: '/* eslint-disable @typescript-eslint/ban-types */',
+            content: `/* eslint-disable @typescript-eslint/ban-types */
+            /* eslint-disable @typescript-eslint/no-unused-vars */`,
           },
         },
       ],
       config: {
         skipTypename: true,
-        contextType: './../common/interfaces/graphql#GraphQLContext',
+        contextType: './../../common/interfaces/graphql#GraphQLContext',
+        enumValues: {
+          NotificationType: './enums#NotificationType',
+        },
         mappers: {
           User: '@prisma/client#User as UserModel',
           UserProfile: '@prisma/client#UserProfile as UserProfileModel',
@@ -31,7 +35,7 @@ const config: CodegenConfig = {
         maybeValue: 'T | null | undefined',
         scalars: {
           Date: 'Date',
-          JSON: 'JSON',
+          JSON: 'Record<string, any>',
           ID: 'string',
           Void: 'void',
           PositiveInt: 'number',

@@ -6,6 +6,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
+    formats: ['image/avif', 'image/webp'],
     domains: ['velog.velcdn.com', 'images.velog.io', 'media.vlpt.us'],
     unoptimized: true,
   },
@@ -15,7 +16,8 @@ const nextConfig = {
     ? 'https://assets-stage.velcdn.com'
     : undefined,
   experimental: {
-    esmExternals: true,
+    esmExternals: true, // support esm
+    taint: true, // for security
   },
 }
 

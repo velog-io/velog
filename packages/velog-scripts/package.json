@@ -1,0 +1,46 @@
+{
+  "name": "velog-scripts",
+  "version": "1.0.0",
+  "author": {
+    "name": "velopert",
+    "email": "public.velopert@gmail.com"
+  },
+  "type": "module",
+  "scripts": {
+    "private:posts": "pnpm env:copy -e development && ts-node ./scripts/privatePostsOfSpamAccount.mts",
+    "check:gql": "pnpm prisma:copy && pnpm env:copy -e development && ts-node ./scripts/checkGql.mts",
+    "restore:posts": "pnpm env:copy -e development && pnpm prisma:copy && ts-node ./scripts/restorePosts.mts",
+    "env:copy": "tsx ./scripts/copyEnv.ts",
+    "prisma:copy": "tsx ./scripts/copyPrisma.ts",
+    "build": "tsc",
+    "ssm": "tsx ./scripts/ssm/index.ts"
+  },
+  "engines": {
+    "node": ">=18.16"
+  },
+  "keywords": [
+    "velog",
+    "blog"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.484.0",
+    "@prisma/client": "^5.8.1",
+    "date-fns": "^2.30.0",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "inquirer": "^9.2.12",
+    "ioredis": "^5.3.2",
+    "prisma": "^5.8.1",
+    "reflect-metadata": "^0.1.13",
+    "tsx": "^4.6.2",
+    "tsyringe": "^4.7.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.10.6",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.3"
+  }
+}

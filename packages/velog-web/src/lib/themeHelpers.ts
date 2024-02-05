@@ -2,32 +2,26 @@ import { Theme } from '@/state/theme'
 
 export const saveThemeToStorage = (theme: Theme) => {
   localStorage.setItem('theme', theme)
-  document.cookie = `theme=${theme}; path=/;` // FOR Legacy velog
+  document.cookie = `theme=${theme}; path=/;` // For Legacy velog
 }
 
-export const setThemeColor = (theme: Theme) => {
-  const colorMap = {
-    light: '#ffffff',
-    dark: '#1e1e1e',
-  }
-
-  const color = colorMap[theme]
-  let metaThemeColor = document.querySelector('meta[name="theme-color"]')
-  if (!metaThemeColor) {
-    metaThemeColor = document.createElement('meta')
-    metaThemeColor.setAttribute('name', 'theme-color')
-    document.head.appendChild(metaThemeColor)
-  }
-  metaThemeColor.setAttribute('media', `(prefers-color-scheme: ${theme})`)
-  metaThemeColor.setAttribute('content', color)
+export const saveSystemPrefer = () => {
+  localStorage.setItem('system-prefer', 'system')
 }
 
-export const setScrollBarSchemeColor = (theme: Theme) => {
-  let scrollBarSchemeMetaTag = document.querySelector('meta[name="color-scheme"]')
-  if (!scrollBarSchemeMetaTag) {
-    scrollBarSchemeMetaTag = document.createElement('meta')
-    scrollBarSchemeMetaTag.setAttribute('name', 'color-scheme')
-    document.head.appendChild(scrollBarSchemeMetaTag)
-  }
-  scrollBarSchemeMetaTag.setAttribute('content', theme)
+export const removeSystemPrefer = () => {
+  localStorage.removeItem('system-prefer')
+}
+
+export const changeThemeColor = (color: string) => {
+  const tag = document.querySelector('meta[name="theme-color"]')
+  if (!tag) return
+  tag.setAttribute('content', color)
+}
+
+export const changeAppleMobileStatus = (theme: Theme) => {
+  const tag = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')
+  if (!tag) return
+  const color = theme === 'light' ? 'default' : 'black'
+  tag.setAttribute('content', color)
 }

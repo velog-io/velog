@@ -1,7 +1,7 @@
-'use client'
-
+import CommonPopup from '@/components/CommonPopup'
 import AuthModal from '@/features/auth/components/AuthModal/AuthModal'
 import { ToastContainer, Flip } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 type Props = {
   children: React.ReactNode
@@ -12,12 +12,13 @@ function InteractiveViewProvider({ children }: Props) {
     <>
       {children}
       <AuthModal />
+      <CommonPopup />
       <ToastContainer
         transition={Flip}
         position="top-right"
         autoClose={2000}
-        closeOnClick
-        pauseOnHover
+        closeOnClick={true}
+        pauseOnHover={true}
       />
     </>
   )

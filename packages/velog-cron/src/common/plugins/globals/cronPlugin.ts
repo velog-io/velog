@@ -18,7 +18,6 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       name: 'generate trending writers every day',
       cronTime: '0 5 * * *', // every day at 05:00 (5:00 AM)
       jobService: generateTrendingWritersJob,
-      param: undefined,
     },
     {
       name: 'posts score calculation in every day',
@@ -30,13 +29,11 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       name: 'delete feed in every hour',
       cronTime: '10 * * * *', // every hour at 10 minutes
       jobService: deleteFeedJob,
-      param: undefined,
     },
     {
       name: 'generate feeds in every 1 minute',
       cronTime: '*/1 * * * *', // every 1 minute
       jobService: generateFeedJob,
-      param: undefined,
     },
     {
       name: 'posts score calculation in every 5 minutes',
@@ -55,23 +52,27 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     })
   }
 
-  // for test
-  if (ENV.dockerEnv !== 'production') {
-    const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediate)
-    await Promise.all(immediateRunJobs.map(createTick))
-  }
+  try {
+    // for Test
+    if (ENV.dockerEnv !== 'production') {
+      const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediateExecute)
+      await Promise.all(immediateRunJobs.map(createTick))
+    }
 
-  if (ENV.dockerEnv === 'production') {
-    const crons = jobDescription.map(createJob)
-    await Promise.all(
-      crons.map((cron) => {
-        console.log(`${cron.name} is registered`)
-        cron.start()
-      }),
-    )
+    if (ENV.dockerEnv === 'production') {
+      const crons = jobDescription.map(createJob)
+      await Promise.all(
+        crons.map((cron) => {
+          console.log(`${cron.name} is registered`)
+          cron.start()
+        }),
+      )
+    }
+  } catch (error) {
+    console.error('Error initializing cron jobs:', error)
+  } finally {
+    done()
   }
-
-  done()
 }
 
 export default cronPlugin
@@ -93,16 +94,16 @@ type JobDescription = NeedParamJobService | NotNeedParamJobService
 type NeedParamJobService = {
   name: string
   cronTime: string
-  param: number
-  isImmediate?: boolean
+  param: any
+  isImmediateExecute?: boolean
   jobService: CalculatePostScoreJob
 }
 
 type NotNeedParamJobService = {
   name: string
   cronTime: string
-  param: undefined
-  isImmediate?: boolean
+  param?: undefined
+  isImmediateExecute?: boolean
   jobService: GenerateFeedJob | GenerateTrendingWritersJob | DeleteFeedJob
 }
 

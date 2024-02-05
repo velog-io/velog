@@ -44,25 +44,25 @@ type UserToken {
 
 type Query {
   user(input: GetUserInput!): User
-  velogConfig(input: GetVelogConfigInput!): VelogConfig
+  velogConfig(input: GetVelogConfigInput!): VelogConfig!
   currentUser: User
-  restoreToken: UserToken
-  # unregister_token: String
-  # emailExists(email: String!): boolean
+  restoreToken: UserToken!
+  unregisterToken: String!
+  checkEmailExists(input: CheckEmailExistsInput!): Boolean!
 }
 
 type Mutation {
   updateAbout(input: UpdateAboutInput!): UserProfile
-  # update_thumbnail(url: String): UserProfile
-  # update_profile(display_name: String!, short_bio: String!): UserProfile
-  # update_velog_title(title: String!): VelogConfig
-  # update_social_info(profile_links: JSON!): UserProfile
-  # update_email_rules(notification: Boolean!, promotion: Boolean!): UserMeta
-  # unregister(token: String!): Boolean
+  updateThumbnail(input: UpdateThumbnailInput!): UserProfile
+  updateProfile(input: UpdateProfileInput!): UserProfile
+  updateVelogTitle(input: UpdateVelogTitleInput!): VelogConfig
+  updateSocialInfo(input: UpdateSocialInfoInput!): UserProfile
+  updateEmailRules(input: UpdateEmailRulesInput!): UserMeta
+  unregister(input: UnregisterInput!): Void
   logout: Void
-  # acceptIntegration: String!
-  # initiateChangeEmail(email: String!): Boolean
-  # confirmChangeEmail(code: String!): Boolean
+  acceptIntegration: String!
+  initiateChangeEmail(input: InitiateChangeEmailInput!): Void
+  confirmChangeEmail(input: ConfirmChangeEmailInput!): Void
 }
 
 input GetUserInput {
@@ -76,4 +76,42 @@ input GetVelogConfigInput {
 
 input UpdateAboutInput {
   about: String!
+}
+
+input UpdateThumbnailInput {
+  url: String
+}
+
+input UpdateProfileInput {
+  display_name: String!
+  short_bio: String!
+}
+
+input UpdateVelogTitleInput {
+  title: String!
+}
+
+input UpdateSocialInfoInput {
+  profile_links: JSON!
+}
+
+input UpdateEmailRulesInput {
+  notification: Boolean!
+  promotion: Boolean!
+}
+
+input UnregisterInput {
+  token: String!
+}
+
+input InitiateChangeEmailInput {
+  email: String!
+}
+
+input ConfirmChangeEmailInput {
+  code: String!
+}
+
+input CheckEmailExistsInput {
+  email: String!
 }

@@ -6,6 +6,7 @@ import { Time } from '@constants/TimeConstants.js'
 import { ENV } from '@env'
 import axios from 'axios'
 import { IntegrationTokenData, NotifyParams } from './ExternalIntegrationInterface.js'
+import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 
 interface Service {
   createIntegrationCode(userId: string): Promise<string>
@@ -22,20 +23,24 @@ export class ExternalIntegrationService implements Service {
     private readonly db: DbService,
     private readonly jwt: JwtService,
   ) {}
-  public async createIntegrationCode(userId: string): Promise<string> {
+  public async createIntegrationCode(signedUserId?: string): Promise<string> {
+    if (!signedUserId) {
+      throw new UnauthorizedError('Not Logged In')
+    }
+
     const code = nanoid()
     await this.db.externalIntegration.create({
       data: {
         app_identifier: 'codenary',
         code: code,
-        fk_user_id: userId,
+        fk_user_id: signedUserId,
         is_consumed: false,
       },
     })
 
-    const isIntegrated = await this.checkIntegrated(userId)
+    const isIntegrated = await this.checkIntegrated(signedUserId)
     if (!isIntegrated) {
-      await this.createIntegrationHistory(userId)
+      await this.createIntegrationHistory(signedUserId)
     }
     return code
   }

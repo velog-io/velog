@@ -1,3 +1,7 @@
+query isLogged {
+  isLogged
+}
+
 mutation sendMail($input: SendMailInput!) {
   sendMail(input: $input) {
     registered

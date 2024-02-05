@@ -3,8 +3,8 @@ import {
   SearchPostsDocument,
   SearchPostsQuery,
   SearchPostsQueryVariables,
-} from '@/graphql/generated'
-import { infiniteSearchPostsQueryKey } from '@/graphql/queryKey'
+} from '@/graphql/helpers/generated'
+import { infiniteSearchPostsQueryKey } from '@/graphql/helpers/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'
 
