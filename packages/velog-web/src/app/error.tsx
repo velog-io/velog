@@ -24,6 +24,7 @@ export default function Error({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  console.log('hello error')
   const [networkStatus, setNetworkStatus] = useState<'offline' | 'online' | null>(null)
 
   const network = useNetworkState()

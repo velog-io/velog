@@ -1,5 +1,5 @@
 import NotificationPage from '../page'
 
-export default async function NotificationNotReadPage() {
+export default function NotificationNotReadPage() {
   return <NotificationPage />
 }

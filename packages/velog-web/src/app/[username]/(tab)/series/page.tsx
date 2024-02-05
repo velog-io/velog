@@ -7,7 +7,7 @@ interface Props {
   params: { username: string }
 }
 
-export default async function VelogSeriesPage({ params }: Props) {
+export default function VelogSeriesPage({ params }: Props) {
   const username = getUsernameFromParams(params)
   return <VelogSeries username={username} />
 }
