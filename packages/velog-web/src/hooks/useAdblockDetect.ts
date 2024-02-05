@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-export default async function useAdblockDetect(): Promise<boolean> {
+export default function useAdblockDetect(): boolean {
   const [adBlockDetected, setAdBlockDetected] = useState(false)
 
   useEffect(() => {
