@@ -10,7 +10,9 @@ interface JazzbarContextValue {
   fakeProgress(): void | NodeJS.Timeout
 }
 
-type Props = {}
+type Props = {
+  children: React.ReactNode
+}
 
 const JazzbarContext = createContext<JazzbarContextValue>({
   value: 0,
@@ -19,7 +21,7 @@ const JazzbarContext = createContext<JazzbarContextValue>({
   fakeProgress: () => {},
 })
 
-export const JazzbarProvider = ({}: Props) => {
+export const JazzbarProvider = ({ children }: Props) => {
   const [value, setValue] = useState(0)
 
   const progress = (event: ProgressEvent) => {
@@ -53,6 +55,7 @@ export const JazzbarProvider = ({}: Props) => {
       }}
     >
       <Jazzbar />
+      {children}
     </JazzbarContext.Provider>
   )
 }
