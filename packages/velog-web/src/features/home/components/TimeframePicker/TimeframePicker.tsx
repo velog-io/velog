@@ -1,3 +1,5 @@
+'use client'
+
 import { Timeframe, useTimeframe } from '@/features/home/state/timeframe'
 import styles from './TimeframePicker.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
