@@ -12,6 +12,7 @@ type Props = {}
 function SettingUnregisterRow({}: Props) {
   const [ask, setAsk] = useState(false)
   const [isQueryEnable, setIsQueryEnable] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const { data: unregisterTokenData } = useUnregisterTokenQuery(undefined, {
     enabled: isQueryEnable,
   })
@@ -23,6 +24,7 @@ function SettingUnregisterRow({}: Props) {
   }, [ask])
 
   const onUnregister = async () => {
+    setIsLoading(true)
     const token = unregisterTokenData?.unregisterToken
 
     if (!token) {
@@ -53,6 +55,7 @@ function SettingUnregisterRow({}: Props) {
         isVisible={ask}
         onCancel={() => setAsk(false)}
         onConfirm={onUnregister}
+        isLoading={isLoading}
       >
         정말로 탈퇴 하시겠습니까?
       </PopupOKCancel>
