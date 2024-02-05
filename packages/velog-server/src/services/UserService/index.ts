@@ -199,7 +199,7 @@ export class UserService implements Service {
     }
 
     this.authService.logout(reply)
-    await this.db.user.delete({
+    await this.db.user.deleteMany({
       where: {
         id: signedUserId,
       },
