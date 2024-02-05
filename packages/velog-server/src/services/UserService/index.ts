@@ -199,11 +199,13 @@ export class UserService implements Service {
     }
 
     this.authService.logout(reply)
-    await this.db.user.deleteMany({
-      where: {
-        id: signedUserId,
-      },
-    })
+    try {
+      await this.db.user.delete({
+        where: {
+          id: signedUserId,
+        },
+      })
+    } catch (_) {}
   }
   public async initiateChangeEmail(email: string, signedUserId?: string): Promise<void> {
     if (!signedUserId) {
