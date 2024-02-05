@@ -8,7 +8,7 @@ import { NotificationNotMerged } from '@/features/notification/hooks/useNotifica
 import Link from 'next/link'
 import Thumbnail from '@/components/Thumbnail'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import VLink from '@/components/VLink'
 
 const cx = bindClassNames({ ...styles, ...itemStyles })
@@ -19,7 +19,7 @@ type Props = {
 } & NotificationNotMerged
 
 function CommentActionItem({ id, action, created_at, is_read, onClickNotification }: Props) {
-  const [isRead, setRead] = useState(is_read)
+  const [isRead, setRead] = useState<boolean>()
   const {
     post_title,
     comment_text,
@@ -32,6 +32,10 @@ function CommentActionItem({ id, action, created_at, is_read, onClickNotificatio
 
   const velogUrl = `/@${actor_username}/posts`
   const { time } = useTimeFormat(created_at)
+
+  useEffect(() => {
+    setRead(is_read)
+  }, [is_read])
 
   const onClick = () => {
     onClickNotification([id])

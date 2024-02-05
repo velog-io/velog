@@ -32,9 +32,12 @@ export default async function graphqlFetch<T>({
 
   if (!res.ok) {
     const errors = await res.json()
-    const allowOperationList = ['userTags']
-
-    if (!allowOperationList.includes(body?.operationName || '')) {
+    const allowOperationNameList = ['userTags', 'velogConfig']
+    const allowStatusCode = [404]
+    if (
+      !allowOperationNameList.includes(body?.operationName || '') &&
+      allowStatusCode.includes(res.status)
+    ) {
       console.log('graphqlFetch errors', errors)
       console.log('body', body)
     }
