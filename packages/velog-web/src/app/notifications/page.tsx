@@ -3,7 +3,6 @@ import NotificationSelector from '@/features/notification/components/Notificatio
 import NotificationTitle from '@/features/notification/components/NotificationTitle'
 import getCurrentUser from '@/prefetch/getCurrentUser'
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 
 export default async function NotificationPage() {
   const user = await getCurrentUser()
@@ -15,10 +14,8 @@ export default async function NotificationPage() {
   return (
     <>
       <NotificationTitle />
-      <Suspense>
-        <NotificationSelector />
-        <NotificationList />
-      </Suspense>
+      <NotificationSelector />
+      <NotificationList />
     </>
   )
 }

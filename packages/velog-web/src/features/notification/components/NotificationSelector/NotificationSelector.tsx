@@ -5,11 +5,11 @@ import styles from './NotificationSelector.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { usePathname } from 'next/navigation'
 import {
+  useCurrentUserQuery,
   useNotificationCountQuery,
   useNotificationQuery,
   useReadAllNotificationsMutation,
   useRemoveAllNotificationsMutation,
-  useSuspenseCurrentUserQuery,
 } from '@/graphql/helpers/generated'
 import PopupOKCancel from '@/components/PopupOKCancel'
 import { useState } from 'react'
@@ -24,8 +24,8 @@ function NotificationSelector() {
     Object.assign(input, { is_read: false })
   }
 
-  const { data } = useSuspenseCurrentUserQuery()
-  const user = data.currentUser
+  const { data } = useCurrentUserQuery()
+  const user = data?.currentUser
 
   const [{ data: notificationQueryData, refetch }, { data: notificationCountData }] = useQueries({
     queries: [
@@ -71,6 +71,7 @@ function NotificationSelector() {
     refetch()
   }
 
+  if (!user) return <div className={cx('loading')} />
   return (
     <div className={cx('block')}>
       <div className={cx('left')}>

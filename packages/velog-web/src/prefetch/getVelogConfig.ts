@@ -33,7 +33,7 @@ export default async function getVelogConfig({ username }: Args) {
 
     return velogConfig
   } catch (error) {
-    console.log('getVelogConfig error', error)
+    console.log(`getVelogConfig username: ${username}, error: ${error}`)
     return null
   }
 }
