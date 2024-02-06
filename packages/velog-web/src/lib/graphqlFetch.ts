@@ -42,8 +42,8 @@ export default async function graphqlFetch<T>({
       console.log('body', body)
     }
 
+    console.log(res)
     if (process.env.NODE_ENV === 'development') {
-      console.log(res)
     }
 
     const message = {

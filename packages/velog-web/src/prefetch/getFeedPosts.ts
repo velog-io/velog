@@ -1,5 +1,3 @@
-'use server'
-
 import { ENV } from '@/env'
 import { FeedPostsDocument, Post } from '@/graphql/helpers/generated'
 import { getAccessToken } from '@/lib/auth'

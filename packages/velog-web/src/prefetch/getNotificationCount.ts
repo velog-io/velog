@@ -1,5 +1,3 @@
-'use server'
-
 import { IsLoggedDocument, NotificationCountDocument } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 

@@ -1,5 +1,3 @@
-'use server'
-
 import { ENV } from '@/env'
 import { Post, RecentPostsDocument, RecentPostsInput } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
@@ -19,7 +17,7 @@ export default async function getRecentPosts({ limit = ENV.defaultPostLimit }: R
     const { recentPosts } = await graphqlFetch<{ recentPosts: Post[] }>({
       method: 'GET',
       body,
-      cache: 'no-cache',
+      next: { revalidate: 0 },
     })
 
     return recentPosts

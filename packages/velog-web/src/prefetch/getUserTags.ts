@@ -1,5 +1,3 @@
-'use server'
-
 import { UserTags, UserTagsDocument } from '@/graphql/helpers/generated'
 import { getAccessToken } from '@/lib/auth'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'

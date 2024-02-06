@@ -1,5 +1,3 @@
-'use server'
-
 import { GetUserFollowInfoDocument, User } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
