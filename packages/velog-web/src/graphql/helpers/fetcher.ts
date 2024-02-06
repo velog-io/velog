@@ -4,7 +4,7 @@ import graphqlFetch from '@/lib/graphqlFetch'
 export function fetcher<TData, TVariables extends Record<string, any>>(
   query: string,
   variables?: TVariables,
-  options?: RequestInit['headers'],
+  headers?: RequestInit['headers'],
 ) {
   return async (): Promise<TData> => {
     const data = await graphqlFetch<TData>({
@@ -12,7 +12,7 @@ export function fetcher<TData, TVariables extends Record<string, any>>(
       method: 'POST',
       body: { query, variables: variables ?? {} },
       headers: {
-        ...options,
+        ...headers,
       },
     })
 
