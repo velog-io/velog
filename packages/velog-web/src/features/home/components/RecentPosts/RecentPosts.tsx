@@ -6,14 +6,14 @@ import { useEffect, useRef, useState } from 'react'
 import { Post } from '@/graphql/helpers/generated'
 
 type Props = {
-  data: Post[]
+  data: any[]
 }
 
 function RecentPosts({ data }: Props) {
   const hasEffectRun = useRef<boolean>(false)
 
   const [initialData, setInitialData] = useState<Post[]>([])
-  const { posts, isFetching, fetchMore, isLoading } = useRecentPosts(initialData)
+  const { posts, isFetching, fetchMore, isLoading } = useRecentPosts(initialData as Post[])
 
   useEffect(() => {
     if (hasEffectRun.current) return
@@ -25,13 +25,13 @@ function RecentPosts({ data }: Props) {
       const infiniteData = localStorage.getItem(storageKey)
 
       if (!infiniteData) {
-        setInitialData(data)
+        setInitialData(data as any)
         return
       }
 
       const parsed: Post[] = JSON.parse(infiniteData) || []
       const savedPosts = parsed?.slice(data.length) || []
-      setInitialData([...data, ...savedPosts])
+      setInitialData([...data, ...savedPosts] as Post[])
 
       const position = Number(localStorage.getItem(`${storageKey}/scrollPosition`))
       if (!position) return
