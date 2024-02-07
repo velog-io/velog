@@ -14,6 +14,7 @@ import PostCardSkeletonGrid from './PostCardSkeletonGrid'
 import { TrendingPost } from '../../interface/post'
 import PostCard from '../PostCard/PostCard'
 import { PostCardSkeleton } from '../PostCard/PostCardSkeleton'
+import useGtag from '@/hooks/useGtag'
 
 const cx = bindClassNames(styles)
 
@@ -36,6 +37,7 @@ function PostCardGrid({
 }: Props) {
   const params = useParams()
   const pathname = usePathname()
+  const { gtag } = useGtag()
   const timeframe = (params.timeframe ?? 'week') as Timeframe
   const hasLoaded = useRef<boolean>(false)
   const hasClicked = useRef<boolean>(false)
@@ -61,13 +63,13 @@ function PostCardGrid({
   useEffect(() => {
     if (hasLoaded.current) return
     hasLoaded.current = true
-    gtag('event', 'ads_feed_view')
-  }, [])
+    gtag('ads_feed_view')
+  }, [gtag])
 
   const onClick = () => {
     if (hasClicked.current) return
     hasClicked.current = true
-    gtag('event', 'ads_feed_click')
+    gtag('ads_feed_click')
   }
 
   if (isLoading) return <PostCardSkeletonGrid forHome={forHome} forPost={forPost} />
