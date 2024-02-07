@@ -10,6 +10,7 @@ import useNotificationReorder from '../../hooks/useNotificationReorder'
 import { useEffect, useRef, useState } from 'react'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import NotificationSkeletonList from './NotificationSkeletonList'
+import { CurrentUser } from '@/types/user'
 
 const cx = bindClassNames(styles)
 
@@ -20,8 +21,13 @@ function NotificationList() {
     Object.assign(input, { is_read: false })
   }
 
+  const [user, setUser] = useState<CurrentUser>()
   const { data: currentUserData, isLoading: currentUserIsLoading } = useCurrentUserQuery()
-  const user = currentUserData?.currentUser
+
+  useEffect(() => {
+    if (!currentUserData?.currentUser) return
+    setUser(currentUserData.currentUser)
+  }, [currentUserData])
 
   const { data: notificationData, isLoading: notificationIsLoading } = useNotificationQuery(
     { input },

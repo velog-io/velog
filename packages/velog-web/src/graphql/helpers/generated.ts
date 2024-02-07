@@ -200,6 +200,7 @@ export type Mutation = {
   unregister: Maybe<Scalars['Void']['output']>
   updateAbout: Maybe<UserProfile>
   updateEmailRules: Maybe<UserMeta>
+  updateNotNoticeNotification: Maybe<Scalars['Void']['output']>
   updateProfile: Maybe<UserProfile>
   updateSocialInfo: Maybe<UserProfile>
   updateThumbnail: Maybe<UserProfile>
@@ -359,7 +360,7 @@ export type Query = {
   followers: Array<FollowResult>
   followings: Array<FollowResult>
   isLogged: Maybe<Scalars['Boolean']['output']>
-  notificationCount: Scalars['Int']['output']
+  notNoticeNotificationCount: Scalars['Int']['output']
   notifications: Array<Notification>
   post: Maybe<Post>
   posts: Array<Post>
@@ -736,9 +737,9 @@ export type NotificationQuery = {
   }>
 }
 
-export type NotificationCountQueryVariables = Exact<{ [key: string]: never }>
+export type NotNoticeNotificationCountQueryVariables = Exact<{ [key: string]: never }>
 
-export type NotificationCountQuery = { notificationCount: number }
+export type NotNoticeNotificationCountQuery = { notNoticeNotificationCount: number }
 
 export type ReadAllNotificationsMutationVariables = Exact<{ [key: string]: never }>
 
@@ -753,6 +754,10 @@ export type ReadNoticationMutationVariables = Exact<{
 }>
 
 export type ReadNoticationMutation = { readNotification: void | null }
+
+export type UpdateNotNoticeNotificationMutationVariables = Exact<{ [key: string]: never }>
+
+export type UpdateNotNoticeNotificationMutation = { updateNotNoticeNotification: void | null }
 
 export type ReadPostQueryVariables = Exact<{
   input: ReadPostInput
@@ -1509,59 +1514,79 @@ useNotificationQuery.fetcher = (
 ) =>
   fetcher<NotificationQuery, NotificationQueryVariables>(NotificationDocument, variables, options)
 
-export const NotificationCountDocument = `
-    query notificationCount {
-  notificationCount
+export const NotNoticeNotificationCountDocument = `
+    query notNoticeNotificationCount {
+  notNoticeNotificationCount
 }
     `
 
-export const useNotificationCountQuery = <TData = NotificationCountQuery, TError = unknown>(
-  variables?: NotificationCountQueryVariables,
-  options?: Omit<UseQueryOptions<NotificationCountQuery, TError, TData>, 'queryKey'> & {
-    queryKey?: UseQueryOptions<NotificationCountQuery, TError, TData>['queryKey']
+export const useNotNoticeNotificationCountQuery = <
+  TData = NotNoticeNotificationCountQuery,
+  TError = unknown,
+>(
+  variables?: NotNoticeNotificationCountQueryVariables,
+  options?: Omit<UseQueryOptions<NotNoticeNotificationCountQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<NotNoticeNotificationCountQuery, TError, TData>['queryKey']
   },
 ) => {
-  return useQuery<NotificationCountQuery, TError, TData>({
-    queryKey: variables === undefined ? ['notificationCount'] : ['notificationCount', variables],
-    queryFn: fetcher<NotificationCountQuery, NotificationCountQueryVariables>(
-      NotificationCountDocument,
-      variables,
-    ),
-    ...options,
-  })
-}
-
-useNotificationCountQuery.getKey = (variables?: NotificationCountQueryVariables) =>
-  variables === undefined ? ['notificationCount'] : ['notificationCount', variables]
-
-export const useSuspenseNotificationCountQuery = <TData = NotificationCountQuery, TError = unknown>(
-  variables?: NotificationCountQueryVariables,
-  options?: Omit<UseSuspenseQueryOptions<NotificationCountQuery, TError, TData>, 'queryKey'> & {
-    queryKey?: UseSuspenseQueryOptions<NotificationCountQuery, TError, TData>['queryKey']
-  },
-) => {
-  return useSuspenseQuery<NotificationCountQuery, TError, TData>({
+  return useQuery<NotNoticeNotificationCountQuery, TError, TData>({
     queryKey:
       variables === undefined
-        ? ['notificationCountSuspense']
-        : ['notificationCountSuspense', variables],
-    queryFn: fetcher<NotificationCountQuery, NotificationCountQueryVariables>(
-      NotificationCountDocument,
+        ? ['notNoticeNotificationCount']
+        : ['notNoticeNotificationCount', variables],
+    queryFn: fetcher<NotNoticeNotificationCountQuery, NotNoticeNotificationCountQueryVariables>(
+      NotNoticeNotificationCountDocument,
       variables,
     ),
     ...options,
   })
 }
 
-useSuspenseNotificationCountQuery.getKey = (variables?: NotificationCountQueryVariables) =>
-  variables === undefined ? ['notificationCountSuspense'] : ['notificationCountSuspense', variables]
+useNotNoticeNotificationCountQuery.getKey = (
+  variables?: NotNoticeNotificationCountQueryVariables,
+) =>
+  variables === undefined
+    ? ['notNoticeNotificationCount']
+    : ['notNoticeNotificationCount', variables]
 
-useNotificationCountQuery.fetcher = (
-  variables?: NotificationCountQueryVariables,
+export const useSuspenseNotNoticeNotificationCountQuery = <
+  TData = NotNoticeNotificationCountQuery,
+  TError = unknown,
+>(
+  variables?: NotNoticeNotificationCountQueryVariables,
+  options?: Omit<
+    UseSuspenseQueryOptions<NotNoticeNotificationCountQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseSuspenseQueryOptions<NotNoticeNotificationCountQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<NotNoticeNotificationCountQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ['notNoticeNotificationCountSuspense']
+        : ['notNoticeNotificationCountSuspense', variables],
+    queryFn: fetcher<NotNoticeNotificationCountQuery, NotNoticeNotificationCountQueryVariables>(
+      NotNoticeNotificationCountDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSuspenseNotNoticeNotificationCountQuery.getKey = (
+  variables?: NotNoticeNotificationCountQueryVariables,
+) =>
+  variables === undefined
+    ? ['notNoticeNotificationCountSuspense']
+    : ['notNoticeNotificationCountSuspense', variables]
+
+useNotNoticeNotificationCountQuery.fetcher = (
+  variables?: NotNoticeNotificationCountQueryVariables,
   options?: RequestInit['headers'],
 ) =>
-  fetcher<NotificationCountQuery, NotificationCountQueryVariables>(
-    NotificationCountDocument,
+  fetcher<NotNoticeNotificationCountQuery, NotNoticeNotificationCountQueryVariables>(
+    NotNoticeNotificationCountDocument,
     variables,
     options,
   )
@@ -1683,6 +1708,48 @@ useReadNoticationMutation.fetcher = (
 ) =>
   fetcher<ReadNoticationMutation, ReadNoticationMutationVariables>(
     ReadNoticationDocument,
+    variables,
+    options,
+  )
+
+export const UpdateNotNoticeNotificationDocument = `
+    mutation updateNotNoticeNotification {
+  updateNotNoticeNotification
+}
+    `
+
+export const useUpdateNotNoticeNotificationMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    UpdateNotNoticeNotificationMutation,
+    TError,
+    UpdateNotNoticeNotificationMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<
+    UpdateNotNoticeNotificationMutation,
+    TError,
+    UpdateNotNoticeNotificationMutationVariables,
+    TContext
+  >({
+    mutationKey: ['updateNotNoticeNotification'],
+    mutationFn: (variables?: UpdateNotNoticeNotificationMutationVariables) =>
+      fetcher<UpdateNotNoticeNotificationMutation, UpdateNotNoticeNotificationMutationVariables>(
+        UpdateNotNoticeNotificationDocument,
+        variables,
+      )(),
+    ...options,
+  })
+}
+
+useUpdateNotNoticeNotificationMutation.getKey = () => ['updateNotNoticeNotification']
+
+useUpdateNotNoticeNotificationMutation.fetcher = (
+  variables?: UpdateNotNoticeNotificationMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<UpdateNotNoticeNotificationMutation, UpdateNotNoticeNotificationMutationVariables>(
+    UpdateNotNoticeNotificationDocument,
     variables,
     options,
   )

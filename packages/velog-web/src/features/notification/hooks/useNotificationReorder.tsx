@@ -1,8 +1,4 @@
-import {
-  useNotificationCountQuery,
-  useNotificationQuery,
-  useReadNoticationMutation,
-} from '@/graphql/helpers/generated'
+import { useNotificationQuery, useReadNoticationMutation } from '@/graphql/helpers/generated'
 import { MergedNotifications } from './useNotificationMerge'
 import {
   isCommentAction,
@@ -24,7 +20,6 @@ export default function useNotificationReorder(merged: MergedNotifications = [])
     Object.assign(input, { is_read: false })
   }
 
-  const { refetch: notificationCountRefetch } = useNotificationCountQuery()
   const { refetch: notificationRefetch } = useNotificationQuery({ input })
   const { mutateAsync: readNotificationMutateAsync } = useReadNoticationMutation()
 
@@ -36,9 +31,8 @@ export default function useNotificationReorder(merged: MergedNotifications = [])
         },
       })
       notificationRefetch()
-      notificationCountRefetch()
     },
-    [readNotificationMutateAsync, notificationCountRefetch, notificationRefetch],
+    [readNotificationMutateAsync, notificationRefetch],
   )
 
   const jsx = useMemo(() => {

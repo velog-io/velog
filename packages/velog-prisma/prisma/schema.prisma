@@ -628,8 +628,9 @@ model Notification {
   action     Json      @default("{}")
   action_id  String?   @db.Uuid
   is_read    Boolean   @default(false)
-  is_deleted Boolean   @default(false)
   read_at    DateTime?
+  is_deleted Boolean   @default(false)
+  is_noticed Boolean   @default(false)
   created_at DateTime  @default(now()) @db.Timestamptz(6)
   user       User      @relation(fields: [fk_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
