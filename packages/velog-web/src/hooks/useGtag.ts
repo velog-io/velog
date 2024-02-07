@@ -2,6 +2,8 @@
 
 export default function useGtag() {
   function gtag(action: EventAction, eventOptions: EventOptions) {
+    const isProductionContainer = process.env.DOCKER_ENV === 'production'
+    if (!isProductionContainer) return
     if (!window.gtag) return
     window.gtag('event', action, eventOptions)
   }
