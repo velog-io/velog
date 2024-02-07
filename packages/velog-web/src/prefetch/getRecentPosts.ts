@@ -15,7 +15,7 @@ export default async function getRecentPosts({ limit = ENV.defaultPostLimit }: R
     }
 
     const { recentPosts } = await graphqlFetch<{ recentPosts: Post[] }>({
-      method: 'GET',
+      method: 'POST',
       body,
       next: { revalidate: 0 },
     })

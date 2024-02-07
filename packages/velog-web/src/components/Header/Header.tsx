@@ -10,7 +10,10 @@ import useToggle from '@/hooks/useToggle'
 import HeaderUserIcon from '@/components/Header/HeaderUserIcon'
 import HeaderUserMenu from '@/components/Header/HeaderUserMenu'
 import HeaderSkeleton from '@/components/Header/HeaderSkeleton'
-import { useCurrentUserQuery, useNotificationCountQuery } from '@/graphql/helpers/generated'
+import {
+  useCurrentUserQuery,
+  useNotNoticeNotificationCountQuery,
+} from '@/graphql/helpers/generated'
 import HeaderLogo from './HeaderLogo'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import { getUsernameFromParams } from '@/lib/utils'
@@ -38,7 +41,10 @@ function Header({ logo }: Props) {
   const { data, isLoading } = useCurrentUserQuery()
 
   const user = data?.currentUser ?? null
-  const { data: notificationCountData } = useNotificationCountQuery({}, { enabled: !!user })
+  const { data: notificationCountData } = useNotNoticeNotificationCountQuery(
+    {},
+    { enabled: !!user },
+  )
 
   useEffect(() => {
     update(user)
@@ -47,7 +53,7 @@ function Header({ logo }: Props) {
   const username = getUsernameFromParams(params)
   const urlForSearch = username ? `/search?username=${username}` : '/search'
   const isNotificationPage = pathname.includes('/notification')
-  const notificationCount = notificationCountData?.notificationCount ?? 0
+  const notificationCount = notificationCountData?.notNoticeNotificationCount ?? 0
 
   const onClickNotification = (e: MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
@@ -65,11 +71,12 @@ function Header({ logo }: Props) {
         {logo || <HeaderLogo />}
         <div className={cx('right')}>
           <Link className={cx('notification')} href="/notifications" onClick={onClickNotification}>
-            <HeaderIcon className={cx({ isNotificationPage })}>
+            <HeaderIcon className={cx({ active: isNotificationPage })}>
               {user && notificationCount !== 0 && (
                 <div
                   className={cx('notificationCounter', {
                     isSingle: Math.floor(notificationCount / 10) === 0,
+                    hide: isNotificationPage,
                   })}
                 >
                   {Math.min(99, notificationCount)}

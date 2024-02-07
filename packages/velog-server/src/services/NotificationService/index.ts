@@ -17,7 +17,8 @@ import { z } from 'zod'
 
 interface Service {
   list(query?: NotificationsInput, signedUserId?: string): Promise<Notification[]>
-  getCount(signedUserId?: string): Promise<number>
+  getNotNoticeCount(signedUserId?: string): Promise<number>
+  updateNotNotice(signedUserId?: string): Promise<void>
   create(args: CreateArgs): Promise<Notification>
   read(notificationIds: string[], signedUserId?: string): Promise<void>
   readAll(signedUserId?: string): Promise<void>
@@ -65,7 +66,7 @@ export class NotificationService implements Service {
     })
     return notifications as unknown as Notification[]
   }
-  public async getCount(signedUserId?: string): Promise<number> {
+  public async getNotNoticeCount(signedUserId?: string): Promise<number> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')
     }
@@ -80,7 +81,28 @@ export class NotificationService implements Service {
       where: {
         fk_user_id: signedUserId,
         is_deleted: false,
-        is_read: false,
+        is_noticed: false,
+      },
+    })
+  }
+  public async updateNotNotice(signedUserId?: string): Promise<void> {
+    if (!signedUserId) {
+      throw new UnauthorizedError('Not logged in')
+    }
+
+    const user = await this.userService.findById(signedUserId)
+
+    if (!user) {
+      throw new NotFoundError('Not found user')
+    }
+
+    await this.db.notification.updateMany({
+      where: {
+        fk_user_id: signedUserId,
+        is_noticed: false,
+      },
+      data: {
+        is_noticed: true,
       },
     })
   }

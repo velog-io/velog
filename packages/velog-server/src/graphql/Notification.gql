@@ -19,11 +19,12 @@ enum NotificationType {
 
 type Query {
   notifications(input: NotificationsInput!): [Notification!]!
-  notificationCount: Int!
+  notNoticeNotificationCount: Int!
 }
 
 type Mutation {
   createNotification(input: CreateNotificationInput!): Notification!
+  updateNotNoticeNotification: Void
   readNotification(input: ReadNotificationInput!): Void
   readAllNotifications: Void
   removeAllNotifications: Void

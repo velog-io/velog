@@ -9,9 +9,9 @@ const notificationResolvers: Resolvers = {
       const notificationService = container.resolve(NotificationService)
       return await notificationService.list(input, ctx.user?.id)
     },
-    notificationCount: async (_, __, ctx) => {
+    notNoticeNotificationCount: async (_, __, ctx) => {
       const notificationService = container.resolve(NotificationService)
-      return await notificationService.getCount(ctx.user?.id)
+      return await notificationService.getNotNoticeCount(ctx.user?.id)
     },
   },
   Mutation: {
@@ -27,6 +27,10 @@ const notificationResolvers: Resolvers = {
         action: input.action,
         signedUserId: ctx.user?.id,
       })
+    },
+    updateNotNoticeNotification: async (_, __, ctx) => {
+      const notificationService = container.resolve(NotificationService)
+      return await notificationService.updateNotNotice(ctx.user?.id)
     },
     readNotification: async (_, { input }, ctx) => {
       const notificationService = container.resolve(NotificationService)

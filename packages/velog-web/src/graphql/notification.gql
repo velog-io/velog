@@ -10,8 +10,8 @@ query notification($input: NotificationsInput!) {
   }
 }
 
-query notificationCount {
-  notificationCount
+query notNoticeNotificationCount {
+  notNoticeNotificationCount
 }
 
 mutation readAllNotifications {
@@ -24,4 +24,8 @@ mutation removeAllNotifications {
 
 mutation readNotication($input: ReadNotificationInput!) {
   readNotification(input: $input)
+}
+
+mutation updateNotNoticeNotification {
+  updateNotNoticeNotification
 }
