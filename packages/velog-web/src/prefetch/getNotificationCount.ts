@@ -15,7 +15,7 @@ export default async function getNotificationCount(): Promise<number> {
     if (!isLogged) return 0
 
     const body: GraphqlRequestBody = {
-      operationName: 'notificationCount',
+      operationName: 'notNoticeNotificationCount',
       query: NotNoticeNotificationCountDocument,
       variables: {},
     }
