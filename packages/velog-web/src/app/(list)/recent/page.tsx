@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 }
 
 export default async function RecentHome() {
-  // const data = await getRecentPosts({ limit: 50 })
+  const data = await getRecentPosts({ limit: 50 })
 
-  // if (!data) {
-  //   notFound()
-  // }
+  if (!data) {
+    notFound()
+  }
 
-  return <RecentPosts data={[]} />
+  return <RecentPosts data={data} />
 }

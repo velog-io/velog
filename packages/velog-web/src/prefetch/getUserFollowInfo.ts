@@ -15,6 +15,7 @@ export default async function getUserFollowInfo(username: string) {
     }
 
     const { user } = await graphqlFetch<{ user: User }>({
+      method: 'GET',
       body,
       next: { revalidate: 0 },
     })

@@ -23,6 +23,7 @@ export default async function getNotificationCount(): Promise<number> {
     const { notNoticeNotificationCount } = await graphqlFetch<{
       notNoticeNotificationCount: number
     }>({
+      method: 'GET',
       body,
       next: { revalidate: 0 },
     })

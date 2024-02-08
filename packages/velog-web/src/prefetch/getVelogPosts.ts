@@ -23,6 +23,7 @@ export default async function getVelogPosts({ username, tag }: GetVelogPostsArgs
     }
 
     const { posts } = await graphqlFetch<{ posts: Post[] }>({
+      method: 'GET',
       body,
       next: { revalidate: 0 },
       headers,
