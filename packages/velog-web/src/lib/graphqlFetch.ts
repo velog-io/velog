@@ -18,7 +18,6 @@ export default async function graphqlFetch<T>({
 
   const defaultHeaders = {
     'Content-Type': 'application/json',
-    Accept: 'application/json',
   }
 
   const combinedHeaders = new Headers({
