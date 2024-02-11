@@ -26,6 +26,9 @@ class Runner implements IRunner {
         const user = await this.findUsersByUsername(username)
         const posts = await this.findWritenPostsByUserId(user.id)
 
+        // add block list
+        await this.redis.addBlockList(username)
+
         if (posts.length === 0) {
           console.log(`${user.username} 유저의 비공개 처리 할 게시글이 없습니다.`)
           continue
@@ -44,9 +47,6 @@ class Runner implements IRunner {
         // set private = true
         await this.setIsPrivatePost(postIds)
 
-        // add block list
-        await this.redis.addBlockList(username)
-
         const blockUesrInfo: BlockUserInfo = {
           id: user.id,
           username: user.username,
@@ -62,7 +62,7 @@ class Runner implements IRunner {
     }
 
     if (handledUser.length === 0) {
-      console.log('게시글 비공개 처리된 유저가 존재하지 않습니다.')
+      console.log('비공개 게시글 처리된 유저가 존재하지 않습니다.')
       process.exit(0)
     }
 
