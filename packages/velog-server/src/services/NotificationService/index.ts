@@ -1,5 +1,5 @@
 import { BadRequestError } from '@errors/BadRequestErrors.js'
-import { ConfilctError } from '@errors/ConfilctError'
+import { ConfilctError } from '@errors/ConfilctError.js'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
