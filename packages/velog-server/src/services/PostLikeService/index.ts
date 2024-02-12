@@ -92,26 +92,28 @@ export class PostLikeService implements Service {
       },
     })
 
-    // create notification
-    await this.notificationService.createOrUpdate({
-      fkUserId: post.fk_user_id,
-      actorId: signedUserId,
-      actionId: post.id,
-      type: 'postLike',
-      action: {
-        postLike: {
-          post_like_id: postLike.id,
-          actor_display_name: signedUser.profile?.display_name || '',
-          actor_thumbnail: signedUser.profile?.thumbnail || '',
-          actor_username: signedUser.username,
-          post_id: likesPost.id,
-          post_title: likesPost.title || '',
-          post_url_slug: likesPost.url_slug || '',
-          post_writer_username: likesPost.user.username,
-          type: 'postLike',
+    if (post.fk_user_id !== signedUserId) {
+      // create notification
+      await this.notificationService.createOrUpdate({
+        fkUserId: post.fk_user_id,
+        actorId: signedUserId,
+        actionId: post.id,
+        type: 'postLike',
+        action: {
+          postLike: {
+            post_like_id: postLike.id,
+            actor_display_name: signedUser.profile?.display_name || '',
+            actor_thumbnail: signedUser.profile?.thumbnail || '',
+            actor_username: signedUser.username,
+            post_id: likesPost.id,
+            post_title: likesPost.title || '',
+            post_url_slug: likesPost.url_slug || '',
+            post_writer_username: likesPost.user.username,
+            type: 'postLike',
+          },
         },
-      },
-    })
+      })
+    }
 
     const unscored = this.utils.checkUnscore(post.body!.concat(post.title || ''))
     if (!unscored) {
