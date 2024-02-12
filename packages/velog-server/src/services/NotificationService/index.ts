@@ -1,4 +1,5 @@
 import { BadRequestError } from '@errors/BadRequestErrors.js'
+import { ConfilctError } from '@errors/ConfilctError'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
@@ -126,6 +127,10 @@ export class NotificationService implements Service {
 
     if (!actionInfo) {
       throw new BadRequestError('Not found action')
+    }
+
+    if (fkUserId === actor.id) {
+      throw new ConfilctError('Cannot target the same user as actor')
     }
 
     const action = (actionInfo as any)[type]
