@@ -38,22 +38,24 @@ function FollowActionItem({ id, action, created_at, is_read, onClickNotification
   return (
     <li className={cx('block', 'item', { isRead })} onClick={onClick}>
       <Link href={velogUrl}>
-        <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
+        <Link href={velogUrl}>
+          <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
+        </Link>
+        <div className={cx('content')}>
+          <p className={cx('wrap')}>
+            <Link href={velogUrl}>
+              <span className={cx('bold')}>{actor_display_name}</span>
+            </Link>
+            <span className={cx('spacer')} />
+            <span className={cx('wrap')}>님이 회원님을 팔로우 하였습니다.</span>
+            <span className={cx('spacer')} />
+            <span className={cx('time', 'nowrap')}>{time}</span>
+          </p>
+        </div>
+        <div className={cx('button')}>
+          <FollowButton followingUserId={actor_user_id} />
+        </div>
       </Link>
-      <div className={cx('content')}>
-        <p className={cx('wrap')}>
-          <Link href={velogUrl}>
-            <span className={cx('bold')}>{actor_display_name}</span>
-          </Link>
-          <span className={cx('spacer')} />
-          <span className={cx('wrap')}>님이 회원님을 팔로우 하였습니다.</span>
-          <span className={cx('spacer')} />
-          <span className={cx('time', 'nowrap')}>{time}</span>
-        </p>
-      </div>
-      <div className={cx('button')}>
-        <FollowButton followingUserId={actor_user_id} />
-      </div>
     </li>
   )
 }

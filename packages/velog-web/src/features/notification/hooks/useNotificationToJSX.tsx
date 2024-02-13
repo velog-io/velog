@@ -13,7 +13,7 @@ import { useCallback, useMemo } from 'react'
 import CommentReplyActionItem from '../components/NotificationItem/CommentReplyActionItem'
 import { usePathname } from 'next/navigation'
 
-export default function useNotificationReorder(merged: MergedNotifications = []) {
+export default function useNotificationToJSX(merged: MergedNotifications = []) {
   const pathname = usePathname()
   const input: Record<string, any> = {}
   if (pathname.includes('/not-read')) {

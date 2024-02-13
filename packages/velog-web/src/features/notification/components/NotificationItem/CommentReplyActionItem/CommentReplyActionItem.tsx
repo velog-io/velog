@@ -31,6 +31,7 @@ function CommentReplyActionItem({ id, action, created_at, is_read, onClickNotifi
   } = action
 
   const velogUrl = `/@${actor_username}/posts`
+  const postUrl = `/@${post_writer_username}/${post_url_slug}`
   const { time } = useTimeFormat(created_at)
 
   useEffect(() => {
@@ -43,39 +44,41 @@ function CommentReplyActionItem({ id, action, created_at, is_read, onClickNotifi
   }
 
   return (
-    <div className={cx('block', 'item', { isRead })} onClick={onClick}>
-      <Link href={velogUrl}>
-        <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
-      </Link>
-      <div className={cx('content')}>
-        <p className={cx('wrap')}>
-          <Link href={velogUrl}>
-            <span className={cx('bold')}>{actor_display_name}</span>
-          </Link>
-          <span className={cx('spacer')} />
-          <span>님이</span>
-          <span className={cx('spacer')} />
-          <span className={cx('bold')}>
-            <VLink href={`/@${post_writer_username}/${post_url_slug}`}>
-              {parent_comment_text.length > 20
-                ? `${parent_comment_text.slice(0, 20)}...`
-                : parent_comment_text}
-            </VLink>
-          </span>
-          <span className={cx('spacer')} />
-          <span>에 대한 답글을 작성하였습니다:</span>
-          <span className={cx('spacer')} />
-          <span className={cx('comment')}>
-            <VLink href={`/@${post_writer_username}/${post_url_slug}`}>
-              {reply_comment_text.length > 100
-                ? `${reply_comment_text.slice(0, 100)}...`
-                : reply_comment_text}
-            </VLink>
-          </span>
-          <span className={cx('time')}>{time}</span>
-        </p>
-      </div>
-    </div>
+    <li className={cx('block', 'item', { isRead })} onClick={onClick}>
+      <VLink href={postUrl}>
+        <Link href={velogUrl}>
+          <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
+        </Link>
+        <div className={cx('content')}>
+          <p className={cx('wrap')}>
+            <Link href={velogUrl}>
+              <span className={cx('bold')}>{actor_display_name}</span>
+            </Link>
+            <span className={cx('spacer')} />
+            <span>님이</span>
+            <span className={cx('spacer')} />
+            <span className={cx('bold')}>
+              <VLink href={postUrl}>
+                {parent_comment_text.length > 20
+                  ? `${parent_comment_text.slice(0, 20)}...`
+                  : parent_comment_text}
+              </VLink>
+            </span>
+            <span className={cx('spacer')} />
+            <span>에 대한 답글을 작성하였습니다:</span>
+            <span className={cx('spacer')} />
+            <span className={cx('comment')}>
+              <VLink href={postUrl}>
+                {reply_comment_text.length > 100
+                  ? `${reply_comment_text.slice(0, 100)}...`
+                  : reply_comment_text}
+              </VLink>
+            </span>
+            <span className={cx('time')}>{time}</span>
+          </p>
+        </div>
+      </VLink>
+    </li>
   )
 }
 
