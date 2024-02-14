@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.16]
+        node-version: [18.18.2s]
     defaults:
       run:
         working-directory: './packages/velog-web'
