@@ -628,7 +628,7 @@ model Notification {
   action     Json      @default("{}")
   action_id  String?   @db.Uuid
   is_read    Boolean   @default(false)
-  read_at    DateTime?
+  read_at    DateTime? @db.Timestamptz(6)
   is_deleted Boolean   @default(false)
   is_noticed Boolean   @default(false)
   created_at DateTime  @default(now()) @db.Timestamptz(6)
