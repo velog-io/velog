@@ -52,10 +52,10 @@ function FollowActionItem({ id, action, created_at, is_read, onClickNotification
             <span className={cx('time', 'nowrap')}>{time}</span>
           </p>
         </div>
-        <div className={cx('button')}>
-          <FollowButton followingUserId={actor_user_id} />
-        </div>
       </Link>
+      <div className={cx('button')}>
+        <FollowButton followingUserId={actor_user_id} />
+      </div>
     </li>
   )
 }
