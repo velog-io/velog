@@ -10,9 +10,11 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('user', null)
   fastify.addHook('preHandler', async (request, reply) => {
     if (request.url.includes('/auth/logout')) return
+
     let accessToken: string | undefined = request.cookies['access_token']
     const refreshToken: string | undefined = request.cookies['refresh_token']
     const authorization = request.headers['authorization']
+
     try {
       if (!accessToken && authorization) {
         accessToken = authorization.split('Bearer ')[1]

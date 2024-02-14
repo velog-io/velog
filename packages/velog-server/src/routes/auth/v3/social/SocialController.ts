@@ -131,7 +131,7 @@ export class SocialController implements Controller {
       if (user) {
         const tokens = await this.jwt.generateUserToken(user.id)
         this.cookie.setCookie(reply, 'access_token', tokens.accessToken, {
-          maxAge: Time.ONE_HOUR_IN_MS,
+          maxAge: Time.ONE_HOUR_IN_MS * 24,
         })
         this.cookie.setCookie(reply, 'refresh_token', tokens.refreshToken, {
           maxAge: Time.ONE_DAY_IN_MS * 30,
@@ -255,7 +255,7 @@ export class SocialController implements Controller {
 
     const tokens = await this.jwt.generateUserToken(user.id)
     this.cookie.setCookie(reply, 'access_token', tokens.accessToken, {
-      maxAge: Time.ONE_HOUR_IN_MS,
+      maxAge: Time.ONE_HOUR_IN_MS * 24,
     })
     this.cookie.setCookie(reply, 'refresh_token', tokens.refreshToken, {
       maxAge: Time.ONE_DAY_IN_MS * 30,
