@@ -6,14 +6,15 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { usePathname } from 'next/navigation'
 import {
   useCurrentUserQuery,
-  useNotificationCountQuery,
+  useNotNoticeNotificationCountQuery,
   useNotificationQuery,
   useReadAllNotificationsMutation,
   useRemoveAllNotificationsMutation,
 } from '@/graphql/helpers/generated'
 import PopupOKCancel from '@/components/PopupOKCancel'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQueries } from '@tanstack/react-query'
+import { CurrentUser } from '@/types/user'
 
 const cx = bindClassNames(styles)
 
@@ -24,8 +25,13 @@ function NotificationSelector() {
     Object.assign(input, { is_read: false })
   }
 
+  const [user, setUser] = useState<CurrentUser>()
   const { data } = useCurrentUserQuery()
-  const user = data?.currentUser
+
+  useEffect(() => {
+    if (!data?.currentUser) return
+    setUser(data.currentUser)
+  }, [data])
 
   const [{ data: notificationQueryData, refetch }, { data: notificationCountData }] = useQueries({
     queries: [
@@ -35,8 +41,8 @@ function NotificationSelector() {
         enabled: !user,
       },
       {
-        queryKey: useNotificationCountQuery.getKey(),
-        queryFn: useNotificationCountQuery.fetcher(),
+        queryKey: useNotNoticeNotificationCountQuery.getKey(),
+        queryFn: useNotNoticeNotificationCountQuery.fetcher(),
         enabled: !user,
       },
     ],
@@ -52,7 +58,7 @@ function NotificationSelector() {
     if (notificationQueryData?.notifications.length === 0) return
 
     if (type === 'read') {
-      if (notificationCountData?.notificationCount === 0) return
+      if (!notificationCountData || notificationCountData.notNoticeNotificationCount === 0) return
       setReadAsk(true)
     } else {
       setRemoveAsk(true)
@@ -71,6 +77,7 @@ function NotificationSelector() {
     refetch()
   }
 
+  if (!user) return <div className={cx('loading')} />
   return (
     <div className={cx('block')}>
       <div className={cx('left')}>

@@ -5,7 +5,7 @@ import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 export default async function getCurrentUser() {
   try {
     const headers = {}
-    const token = await getAccessToken()
+    const token = getAccessToken()
     if (token) {
       Object.assign(headers, { authorization: `Bearer ${token.value}` })
     }

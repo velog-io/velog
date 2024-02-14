@@ -205,6 +205,7 @@ export type Mutation = {
   unregister?: Maybe<Scalars['Void']['output']>
   updateAbout?: Maybe<UserProfile>
   updateEmailRules?: Maybe<UserMeta>
+  updateNotNoticeNotification?: Maybe<Scalars['Void']['output']>
   updateProfile?: Maybe<UserProfile>
   updateSocialInfo?: Maybe<UserProfile>
   updateThumbnail?: Maybe<UserProfile>
@@ -359,7 +360,7 @@ export type Query = {
   followers: Array<FollowResult>
   followings: Array<FollowResult>
   isLogged?: Maybe<Scalars['Boolean']['output']>
-  notificationCount: Scalars['Int']['output']
+  notNoticeNotificationCount: Scalars['Int']['output']
   notifications: Array<Notification>
   post?: Maybe<Post>
   posts: Array<Post>
@@ -1055,6 +1056,7 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationUpdateEmailRulesArgs, 'input'>
   >
+  updateNotNoticeNotification?: Resolver<Maybe<ResolversTypes['Void']>, ParentType, ContextType>
   updateProfile?: Resolver<
     Maybe<ResolversTypes['UserProfile']>,
     ParentType,
@@ -1190,7 +1192,7 @@ export type QueryResolvers<
     RequireFields<QueryFollowingsArgs, 'input'>
   >
   isLogged?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
-  notificationCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  notNoticeNotificationCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   notifications?: Resolver<
     Array<ResolversTypes['Notification']>,
     ParentType,

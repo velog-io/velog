@@ -16,6 +16,8 @@ function GtagProvider({
   defaultConsent = 'granted', // Set the status of Google Analytics's tracking consent
   nonce, // next/script nonce option, //TODO: Set nonce from headers
 }: Props) {
+  const isProductionContainer = process.env.DOCKER_ENV === 'production'
+  if (!isProductionContainer) return null
   const _gaMeasurementId = ENV.gaMeasurementId ?? gaMeasurementId
 
   if (!_gaMeasurementId) {

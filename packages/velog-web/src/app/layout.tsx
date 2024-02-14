@@ -56,8 +56,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   colorScheme: 'light dark',
   initialScale: 1.0,
-  userScalable: false,
-  maximumScale: 1,
   width: 'device-width',
 }
 
@@ -65,7 +63,7 @@ type Props = {
   children: React.ReactNode
 }
 
-export default async function RootLayout({ children }: Props) {
+export default function RootLayout({ children }: Props) {
   return (
     <html id="html" lang="ko">
       <body className="body" suppressHydrationWarning={true}>

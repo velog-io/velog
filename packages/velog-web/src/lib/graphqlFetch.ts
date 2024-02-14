@@ -16,14 +16,19 @@ export default async function graphqlFetch<T>({
     targetUrl = `${url}?${queryString}`
   }
 
+  const defaultHeaders = {
+    'Content-Type': 'application/json',
+  }
+
+  const combinedHeaders = new Headers({
+    ...defaultHeaders,
+    ...headers,
+  })
+
   const res = await fetch(targetUrl, {
     method,
     body: method.toUpperCase() === 'POST' ? JSON.stringify(body) : undefined,
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      ...headers,
-    },
+    headers: combinedHeaders,
     credentials: 'include',
     next,
     cache,
@@ -43,7 +48,7 @@ export default async function graphqlFetch<T>({
     }
 
     if (process.env.NODE_ENV === 'development') {
-      console.log(res)
+      console.log('fetch failed res:', res)
     }
 
     const message = {
@@ -52,7 +57,7 @@ export default async function graphqlFetch<T>({
       statusText: res.statusText,
     }
 
-    throw new Error(JSON.stringify(message))
+    throw new Error(message as any)
   }
 
   const json = await res.json()

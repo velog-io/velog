@@ -18,7 +18,8 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
       'error',
       JSON.stringify({
         type: 'fastify OnError',
-        requestbody: request?.body,
+        requestbody: request?.body || 'none',
+        query: request?.query || 'none',
         error,
         user: request?.user,
       }),

@@ -6,10 +6,11 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import useNotificationMerge from '../../hooks/useNotificationMerge'
 import { usePathname } from 'next/navigation'
 import NotificationEmpty from '../NotificationEmpty'
-import useNotificationReorder from '../../hooks/useNotificationReorder'
+import useNotificationToJSX from '../../hooks/useNotificationToJSX'
 import { useEffect, useRef, useState } from 'react'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import NotificationSkeletonList from './NotificationSkeletonList'
+import { CurrentUser } from '@/types/user'
 
 const cx = bindClassNames(styles)
 
@@ -20,8 +21,13 @@ function NotificationList() {
     Object.assign(input, { is_read: false })
   }
 
+  const [user, setUser] = useState<CurrentUser>()
   const { data: currentUserData, isLoading: currentUserIsLoading } = useCurrentUserQuery()
-  const user = currentUserData?.currentUser
+
+  useEffect(() => {
+    if (!currentUserData?.currentUser) return
+    setUser(currentUserData.currentUser)
+  }, [currentUserData])
 
   const { data: notificationData, isLoading: notificationIsLoading } = useNotificationQuery(
     { input },
@@ -30,10 +36,10 @@ function NotificationList() {
 
   const ref = useRef<HTMLDivElement>(null)
   const { merged } = useNotificationMerge(notificationData?.notifications)
-  const { jsx } = useNotificationReorder(merged)
+  const { jsx } = useNotificationToJSX(merged)
 
-  const [page, setPage] = useState(1)
   const take = 10
+  const [page, setPage] = useState(1)
   const [list, setList] = useState<JSX.Element[]>([])
 
   const fetchMore = () => {

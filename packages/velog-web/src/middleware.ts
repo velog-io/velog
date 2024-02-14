@@ -10,7 +10,3 @@ export function middleware() {
 
   return response
 }
-
-export const config = {
-  matcher: '/((?!api|static|.*\\..*|_next).*)',
-}

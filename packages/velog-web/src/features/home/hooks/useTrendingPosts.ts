@@ -1,3 +1,5 @@
+'use client'
+
 import { ENV } from '@/env'
 import { Timeframe, useTimeframe } from '@/features/home/state/timeframe'
 import {

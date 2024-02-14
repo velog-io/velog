@@ -1,3 +1,5 @@
+'use server'
+
 import { ENV } from '@/env'
 import { Post, TrendingPostsDocument, TrendingPostsInput } from '@/graphql/helpers/generated'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
@@ -23,7 +25,7 @@ export default async function getTrendingPosts({
     const { trendingPosts } = await graphqlFetch<{ trendingPosts: Post[] }>({
       method: 'GET',
       body,
-      cache: 'no-cache',
+      next: { revalidate: 10 },
     })
 
     return trendingPosts

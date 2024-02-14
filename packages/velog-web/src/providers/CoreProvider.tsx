@@ -21,9 +21,10 @@ function CoreProvider({ children }: Props) {
       <ConditionalBackgroundProvider>
         <ReactQueryProvider>
           <SangteContextProvider>
-            <InteractiveViewProvider>{children}</InteractiveViewProvider>
-            <ThemeProvider />
-            <JazzbarProvider />
+            <JazzbarProvider>
+              <InteractiveViewProvider>{children}</InteractiveViewProvider>
+              <ThemeProvider />
+            </JazzbarProvider>
           </SangteContextProvider>
         </ReactQueryProvider>
       </ConditionalBackgroundProvider>

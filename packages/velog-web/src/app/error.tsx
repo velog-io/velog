@@ -2,20 +2,11 @@
 
 import * as Sentry from '@sentry/browser'
 import { useNetworkState } from 'react-use'
-import apiClient from '@/lib/api/apiClient'
 import { useEffect, useState } from 'react'
 import ErrorScreenTemplate from '@/components/Error/ErrorScreenTemplate'
 import { UndrawBugFixing, UndrawServerDown, UndrawUpdate } from '@/assets/vectors/components'
 import { ENV } from '@/env'
-
-async function checkNetwork() {
-  try {
-    await apiClient.get('/api/check', { timeout: 5000 })
-    return true
-  } catch (_) {
-    return false
-  }
-}
+import checkNetwork from '@/lib/api/routes/check'
 
 export default function Error({
   error,

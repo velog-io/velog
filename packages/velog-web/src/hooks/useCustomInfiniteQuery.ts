@@ -1,3 +1,5 @@
+'use client'
+
 import { fetcher } from '@/graphql/helpers/fetcher'
 import { Exact } from '@/graphql/helpers/generated'
 import {

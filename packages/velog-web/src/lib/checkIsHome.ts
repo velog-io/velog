@@ -1,2 +1,2 @@
 export const checkIsHome = (pathname: string) =>
-  pathname === '/' || ['/recent', '/trending', '/feed'].includes(pathname)
+  pathname === '/' || ['/recent', '/trending', '/feed'].some((path) => pathname.includes(path))

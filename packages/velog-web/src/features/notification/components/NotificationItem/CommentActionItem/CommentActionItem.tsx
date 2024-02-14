@@ -31,6 +31,7 @@ function CommentActionItem({ id, action, created_at, is_read, onClickNotificatio
   } = action
 
   const velogUrl = `/@${actor_username}/posts`
+  const postUrl = `/@${post_writer_username}/${post_url_slug}`
   const { time } = useTimeFormat(created_at)
 
   useEffect(() => {
@@ -44,33 +45,35 @@ function CommentActionItem({ id, action, created_at, is_read, onClickNotificatio
 
   return (
     <li className={cx('block', 'item', { isRead })} onClick={onClick}>
-      <Link href={velogUrl}>
-        <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
-      </Link>
-      <div className={cx('content')}>
-        <p className={cx('wrap')}>
-          <Link href={velogUrl}>
-            <span className={cx('bold')}>{actor_display_name}</span>
-          </Link>
-          <span className={cx('spacer')} />
-          <span>님이</span>
-          <span className={cx('spacer')} />
-          <span className={cx('postTitle', 'bold')}>
-            <VLink href={`/@${post_writer_username}/${post_url_slug}`}>
-              {post_title.length > 20 ? `${post_title.slice(0, 20)}...` : post_title}
-            </VLink>
-          </span>
-          <span className={cx('spacer')} />
-          <span>포스트에 댓글을 작성하였습니다:</span>
-          <span className={cx('spacer')} />
-          <span className={cx('comment')}>
-            <VLink href={`/@${post_writer_username}/${post_url_slug}`}>
-              {comment_text.length > 100 ? `${comment_text.slice(0, 100)}...` : comment_text}
-            </VLink>
-          </span>
-          <span className={cx('time')}>{time}</span>
-        </p>
-      </div>
+      <VLink href={postUrl}>
+        <Link href={velogUrl}>
+          <Thumbnail className={cx('thumbnail')} src={actor_thumbnail} alt={actor_display_name} />
+        </Link>
+        <div className={cx('content')}>
+          <p className={cx('wrap')}>
+            <Link href={velogUrl}>
+              <span className={cx('bold')}>{actor_display_name}</span>
+            </Link>
+            <span className={cx('spacer')} />
+            <span>님이</span>
+            <span className={cx('spacer')} />
+            <span className={cx('postTitle', 'bold')}>
+              <VLink href={postUrl}>
+                {post_title.length > 20 ? `${post_title.slice(0, 20)}...` : post_title}
+              </VLink>
+            </span>
+            <span className={cx('spacer')} />
+            <span>포스트에 댓글을 작성하였습니다:</span>
+            <span className={cx('spacer')} />
+            <span className={cx('comment')}>
+              <VLink href={postUrl}>
+                {comment_text.length > 100 ? `${comment_text.slice(0, 100)}...` : comment_text}
+              </VLink>
+            </span>
+            <span className={cx('time')}>{time}</span>
+          </p>
+        </div>
+      </VLink>
     </li>
   )
 }

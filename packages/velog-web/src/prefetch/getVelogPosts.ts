@@ -5,7 +5,7 @@ import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 export default async function getVelogPosts({ username, tag }: GetVelogPostsArgs) {
   try {
     const headers = {}
-    const token = await getAccessToken()
+    const token = getAccessToken()
     if (token) {
       Object.assign(headers, { authorization: `Bearer ${token.value}` })
     }
@@ -23,6 +23,7 @@ export default async function getVelogPosts({ username, tag }: GetVelogPostsArgs
     }
 
     const { posts } = await graphqlFetch<{ posts: Post[] }>({
+      method: 'GET',
       body,
       next: { revalidate: 0 },
       headers,
