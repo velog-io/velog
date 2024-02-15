@@ -25,6 +25,14 @@ export class DiscordService {
   public sendMessage(type: MessageType, message: string) {
     this.isSending = true
     return new Promise(async (resolve, reject) => {
+      const frequentWord = ['connection pool', 'canceling statement due to user request']
+      const isFrequentWordIncluded = frequentWord.some((word) => message.includes(word))
+
+      if (isFrequentWordIncluded) {
+        resolve('Frequent word included skip sending message')
+        return
+      }
+
       try {
         const isReady = this.client.isReady()
 

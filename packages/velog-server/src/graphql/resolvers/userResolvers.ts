@@ -99,7 +99,7 @@ const userResolvers: Resolvers = {
     updateProfile: async (_, { input }, ctx) => {
       const userProfileService = container.resolve(UserProfileService)
       return await userProfileService.updateUserProfile(
-        { display_name: input.display_name, short_bio: input.short_bio },
+        { display_name: input.display_name, short_bio: input.short_bio.slice(0, 255) },
         ctx.user?.id,
       )
     },
