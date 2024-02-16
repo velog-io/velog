@@ -13,6 +13,7 @@ interface Service {
   tagLoader(): DataLoader<string, Tag[]>
   getOriginTag(tagname: string): Promise<Tag | null>
   getUserTags(username: string, signedUserId?: string): Promise<GetUserTagsResult>
+  findOrCreate(name: string): Promise<Tag>
 }
 
 @injectable()
@@ -151,6 +152,20 @@ export class TagService implements Service {
     )
 
     return rawData.map((data) => ({ ...data, posts_count: Number(data.posts_count) }))
+  }
+  public async findOrCreate(name: string): Promise<Tag> {
+    const tag = await this.findByName(name)
+    if (tag) return tag
+
+    const filtered = this.utils.escapeForUrl(name).toLowerCase()
+    const freshTag = await this.db.tag.create({
+      data: {
+        name,
+        name_filtered: filtered,
+      },
+    })
+
+    return freshTag
   }
 }
 

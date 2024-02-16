@@ -80,6 +80,10 @@ const env = z.object({
   adFreeWritersUsername: z.array(z.string()),
   discordBotToken: z.string(),
   discordErrorChannel: z.string(),
+  discordSpamChannel: z.string(),
+  turnstileSecretKey: z.string(),
+  bannedKeywords: z.array(z.string()),
+  bannedAltKeywords: z.array(z.string()),
 })
 
 export const ENV = env.parse({
@@ -118,4 +122,8 @@ export const ENV = env.parse({
   adFreeWritersUsername: process.env.AD_FREE_WRITERS_USERNAME?.split(','),
   discordBotToken: process.env.DISCORD_BOT_TOKEN,
   discordErrorChannel: process.env.DISCORD_ERROR_CHANNEL,
+  discordSpamChannel: process.env.DISCORD_SPAM_CHANNEL,
+  turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY,
+  bannedKeywords: process.env.BANNED_KEYWORDS?.split(','),
+  bannedAltKeywords: process.env.BANNED_ALT_KEYWORDS?.split(','),
 })

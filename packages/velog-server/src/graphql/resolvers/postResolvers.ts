@@ -103,6 +103,8 @@ const postResolvers: Resolvers = {
     },
   },
   Mutation: {
+    writePost: () => {},
+    editPost: () => {},
     likePost: async (_, { input }, ctx): Promise<Post> => {
       const postLikeService = container.resolve(PostLikeService)
       return await postLikeService.likePost(input.postId, ctx.user?.id)

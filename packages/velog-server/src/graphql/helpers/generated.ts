@@ -109,6 +109,21 @@ export type CreateNotificationInput = {
   type: NotificationType
 }
 
+export type EditPostInput = {
+  body: Scalars['String']['input']
+  id: Scalars['ID']['input']
+  is_markdown: Scalars['Boolean']['input']
+  is_private: Scalars['Boolean']['input']
+  is_temp: Scalars['Boolean']['input']
+  meta: Scalars['JSON']['input']
+  series_id?: InputMaybe<Scalars['ID']['input']>
+  tags: Array<Scalars['String']['input']>
+  thumbnail?: InputMaybe<Scalars['String']['input']>
+  title: Scalars['String']['input']
+  token?: InputMaybe<Scalars['String']['input']>
+  url_slug: Scalars['String']['input']
+}
+
 export type FeedPostsInput = {
   limit?: InputMaybe<Scalars['PositiveInt']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -192,16 +207,17 @@ export type Mutation = {
   acceptIntegration: Scalars['String']['output']
   confirmChangeEmail?: Maybe<Scalars['Void']['output']>
   createNotification: Notification
+  editPost: Post
   follow?: Maybe<Scalars['Boolean']['output']>
   initiateChangeEmail?: Maybe<Scalars['Void']['output']>
-  likePost?: Maybe<Post>
+  likePost: Post
   logout?: Maybe<Scalars['Void']['output']>
   readAllNotifications?: Maybe<Scalars['Void']['output']>
   readNotification?: Maybe<Scalars['Void']['output']>
   removeAllNotifications?: Maybe<Scalars['Void']['output']>
   sendMail?: Maybe<SendMailResponse>
   unfollow?: Maybe<Scalars['Boolean']['output']>
-  unlikePost?: Maybe<Post>
+  unlikePost: Post
   unregister?: Maybe<Scalars['Void']['output']>
   updateAbout?: Maybe<UserProfile>
   updateEmailRules?: Maybe<UserMeta>
@@ -210,6 +226,7 @@ export type Mutation = {
   updateSocialInfo?: Maybe<UserProfile>
   updateThumbnail?: Maybe<UserProfile>
   updateVelogTitle?: Maybe<VelogConfig>
+  writePost: Post
 }
 
 export type MutationConfirmChangeEmailArgs = {
@@ -218,6 +235,10 @@ export type MutationConfirmChangeEmailArgs = {
 
 export type MutationCreateNotificationArgs = {
   input: CreateNotificationInput
+}
+
+export type MutationEditPostArgs = {
+  input?: InputMaybe<EditPostInput>
 }
 
 export type MutationFollowArgs = {
@@ -274,6 +295,10 @@ export type MutationUpdateThumbnailArgs = {
 
 export type MutationUpdateVelogTitleArgs = {
   input: UpdateVelogTitleInput
+}
+
+export type MutationWritePostArgs = {
+  input: WritePostInput
 }
 
 export type Notification = {
@@ -656,6 +681,20 @@ export type VelogConfig = {
   title?: Maybe<Scalars['String']['output']>
 }
 
+export type WritePostInput = {
+  body: Scalars['String']['input']
+  is_markdown: Scalars['Boolean']['input']
+  is_private: Scalars['Boolean']['input']
+  is_temp: Scalars['Boolean']['input']
+  meta: Scalars['JSON']['input']
+  series_id?: InputMaybe<Scalars['ID']['input']>
+  tags: Array<Scalars['String']['input']>
+  thumbnail?: InputMaybe<Scalars['String']['input']>
+  title: Scalars['String']['input']
+  token?: InputMaybe<Scalars['String']['input']>
+  url_slug: Scalars['String']['input']
+}
+
 export type ResolverTypeWrapper<T> = Promise<T> | T
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
@@ -750,6 +789,7 @@ export type ResolversTypes = {
   ConfirmChangeEmailInput: ConfirmChangeEmailInput
   CreateNotificationInput: CreateNotificationInput
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
+  EditPostInput: EditPostInput
   FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
   FollowNotificationActionInput: FollowNotificationActionInput
@@ -830,6 +870,7 @@ export type ResolversTypes = {
   UserToken: ResolverTypeWrapper<UserToken>
   VelogConfig: ResolverTypeWrapper<VelogConfig>
   Void: ResolverTypeWrapper<Scalars['Void']['output']>
+  WritePostInput: WritePostInput
 }
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -844,6 +885,7 @@ export type ResolversParentTypes = {
   ConfirmChangeEmailInput: ConfirmChangeEmailInput
   CreateNotificationInput: CreateNotificationInput
   Date: Scalars['Date']['output']
+  EditPostInput: EditPostInput
   FeedPostsInput: FeedPostsInput
   FollowInput: FollowInput
   FollowNotificationActionInput: FollowNotificationActionInput
@@ -912,6 +954,7 @@ export type ResolversParentTypes = {
   UserToken: UserToken
   VelogConfig: VelogConfig
   Void: Scalars['Void']['output']
+  WritePostInput: WritePostInput
 }
 
 export type AdResolvers<
@@ -993,6 +1036,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationCreateNotificationArgs, 'input'>
   >
+  editPost?: Resolver<
+    ResolversTypes['Post'],
+    ParentType,
+    ContextType,
+    Partial<MutationEditPostArgs>
+  >
   follow?: Resolver<
     Maybe<ResolversTypes['Boolean']>,
     ParentType,
@@ -1006,7 +1055,7 @@ export type MutationResolvers<
     RequireFields<MutationInitiateChangeEmailArgs, 'input'>
   >
   likePost?: Resolver<
-    Maybe<ResolversTypes['Post']>,
+    ResolversTypes['Post'],
     ParentType,
     ContextType,
     RequireFields<MutationLikePostArgs, 'input'>
@@ -1033,7 +1082,7 @@ export type MutationResolvers<
     RequireFields<MutationUnfollowArgs, 'input'>
   >
   unlikePost?: Resolver<
-    Maybe<ResolversTypes['Post']>,
+    ResolversTypes['Post'],
     ParentType,
     ContextType,
     RequireFields<MutationUnlikePostArgs, 'input'>
@@ -1080,6 +1129,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationUpdateVelogTitleArgs, 'input'>
+  >
+  writePost?: Resolver<
+    ResolversTypes['Post'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationWritePostArgs, 'input'>
   >
 }
 
