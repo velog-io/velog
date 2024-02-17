@@ -50,7 +50,7 @@ export class FollowUserService implements Service {
     const following = await this.userService.findByUserId(fk_following_id)
 
     if (!following) {
-      throw new NotFoundError('Not found Follower')
+      return []
     }
 
     const relationship = await this.db.followUser.findMany({
