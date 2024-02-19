@@ -1,3 +1,4 @@
+import { ExternalIntegrationService } from '@services/ExternalIntegrationService/index.js'
 import removeMd from 'remove-markdown'
 import { Post, PostTag, Prisma, Tag, User } from '@prisma/client'
 import { container, injectable, singleton } from 'tsyringe'
@@ -8,6 +9,7 @@ import {
   ReadingListInput,
   RecentPostsInput,
   TrendingPostsInput,
+  WritePostInput,
 } from '@graphql/helpers/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { BadRequestError, ConfilctError, NotFoundError, UnauthorizedError } from '@errors/index.js'
@@ -22,6 +24,7 @@ import { RedisService } from '@lib/redis/RedisService.js'
 import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 import { Time } from '@constants/TimeConstants.js'
 import { TagService } from '@services/TagService/index.js'
+import { PostWriteService } from '@services/PostWriteService/index.js'
 
 interface Service {
   findById(id: string): Promise<Post | null>
@@ -35,6 +38,7 @@ interface Service {
   recommendedPosts(post: Post): Promise<Post[]>
   getPosts(input: GetPostsInput, signedUserId?: string): Promise<Post[]>
   getSeachPost(input: GetSearchPostsInput): Promise<{ count: number; posts: Post[] }>
+  write(input: WritePostInput, sigedUserId: string): Promise<Post>
 }
 
 @injectable()
@@ -47,6 +51,8 @@ export class PostService implements Service {
     private readonly redis: RedisService,
     private readonly elsaticSearch: ElasticSearchService,
     private readonly tagService: TagService,
+    private readonly PostWriteService: PostWriteService,
+    private readonly externalIntegrationService: ExternalIntegrationService,
   ) {}
   public async findById(postId: string) {
     return await this.db.post.findUnique({
@@ -698,6 +704,7 @@ export class PostService implements Service {
 
     return result
   }
+  public async write(input: WritePostInput, sigedUserId: string): Promise<Post> {}
 }
 
 export type SerializePost = {
