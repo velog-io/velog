@@ -254,7 +254,7 @@ export class UserService implements Service {
       throw error
     }
 
-    this.redis.set(key, data, 'EX', Time.ONE_MINUTE_S * 30)
+    this.redis.set(key, data, 'EX', Time.ONE_MINUTE_IN_S * 30)
   }
   public async confirmChangeEmail(code: string, signedUserId?: string): Promise<void> {
     if (!signedUserId) {
