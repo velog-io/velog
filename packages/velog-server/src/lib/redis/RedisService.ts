@@ -3,8 +3,10 @@ import Redis from 'ioredis'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
+  connection(): Promise<string>
   get generateKey(): GenerateRedisKey
   get queueName(): Record<QueueName, string>
+  get setName(): Record<SetName, string>
 }
 
 @injectable()
@@ -14,7 +16,7 @@ export class RedisService extends Redis implements Service {
     super({ port: 6379, host: ENV.redisHost })
   }
 
-  async connection(): Promise<string> {
+  public async connection(): Promise<string> {
     return new Promise((resolve) => {
       this.connect(() => {
         resolve(`Redis connection established to ${ENV.redisHost}`)
@@ -22,7 +24,7 @@ export class RedisService extends Redis implements Service {
     })
   }
 
-  get generateKey(): GenerateRedisKey {
+  public get generateKey(): GenerateRedisKey {
     return {
       recommendedPost: (postId: string) => `${postId}:recommend`,
       postCache: (username: string, postUrlSlug: string) => `ssr:/@${username}/${postUrlSlug}`,
@@ -34,10 +36,21 @@ export class RedisService extends Redis implements Service {
     }
   }
 
-  get queueName(): Record<QueueName, string> {
+  public get queueName(): Record<QueueName, string> {
     return {
       feed: 'queue:feed',
     }
+  }
+
+  public get setName(): Record<SetName, string> {
+    return {
+      blockList: 'set:blockList',
+    }
+  }
+
+  public async createFeed(data: CreateFeedArgs): Promise<number> {
+    const queueName = this.queueName.feed
+    return await this.lpush(queueName, JSON.stringify(data))
   }
 }
 
@@ -51,3 +64,10 @@ type GenerateRedisKey = {
 }
 
 type QueueName = 'feed'
+
+type SetName = 'blockList'
+
+type CreateFeedArgs = {
+  fk_following_id: string
+  fk_post_id: string
+}

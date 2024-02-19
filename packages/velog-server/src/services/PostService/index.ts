@@ -397,7 +397,7 @@ export class PostService implements Service {
       updated_at: post.updated_at,
       short_description: this.shortDescription(post),
       body: post.body,
-      tags: post.postTags.map((tags) => tags.tag!.name!),
+      tags: post.postTags.map((tags) => tags.tag!.name!) || [],
       fk_user_id: post.fk_user_id,
       url_slug: post.url_slug,
       likes: post.likes,

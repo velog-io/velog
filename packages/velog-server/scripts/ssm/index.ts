@@ -91,7 +91,9 @@ class ParameterService {
       const command = new PutParameterCommand(input)
       const response = await this.client.send(command)
       console.info(`Parameter upload successful! path: ${name}, version: ${response.Version}`)
-    } catch (_) {}
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 

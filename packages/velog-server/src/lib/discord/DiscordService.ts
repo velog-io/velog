@@ -42,6 +42,7 @@ export class DiscordService {
 
         const channelMapper: Record<MessageType, string> = {
           error: ENV.discordErrorChannel,
+          spam: ENV.discordSpamChannel,
         }
 
         const channelId = channelMapper[type]
@@ -69,4 +70,4 @@ export class DiscordService {
   }
 }
 
-type MessageType = 'error'
+type MessageType = 'error' | 'spam'

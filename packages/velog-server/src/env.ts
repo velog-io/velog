@@ -84,6 +84,7 @@ const env = z.object({
   turnstileSecretKey: z.string(),
   bannedKeywords: z.array(z.string()),
   bannedAltKeywords: z.array(z.string()),
+  graphcdnToken: z.string(),
 })
 
 export const ENV = env.parse({
@@ -126,4 +127,5 @@ export const ENV = env.parse({
   turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY,
   bannedKeywords: process.env.BANNED_KEYWORDS?.split(','),
   bannedAltKeywords: process.env.BANNED_ALT_KEYWORDS?.split(','),
+  graphcdnToken: process.env.GRAPHCDN_TOKEN,
 })

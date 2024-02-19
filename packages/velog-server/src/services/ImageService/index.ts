@@ -60,7 +60,7 @@ export class ImageService implements Service {
 
   public async trackImages(images: UserImageNext[], body: string) {
     const promises = images.map(async (image) => {
-      const tracked = body.includes(image.id) ? true : false
+      const tracked = body.includes(image.id)
       return await this.db.userImageNext.update({
         where: {
           id: image.id,

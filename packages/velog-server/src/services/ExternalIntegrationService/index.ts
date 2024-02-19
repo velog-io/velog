@@ -102,6 +102,7 @@ export class ExternalIntegrationService implements Service {
     return decoded
   }
   public notifyWebhook(params: NotifyParams): void {
+    // if (process.env.NODE_ENV !== 'production') return
     const webhook = ENV.codenaryWebhook
     if (!webhook) return
     axios

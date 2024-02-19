@@ -15,6 +15,7 @@ interface Service {
   getThumbnail(seriesId: string): Promise<string | null>
   getSeriesListByUsername(username: string): Promise<Series[]>
   getSeries(input: GetSeriesInput): Promise<Series | null>
+  appendToSeriesByPostId(seriesId: string, postId: string): Promise<void>
 }
 
 @injectable()
@@ -148,5 +149,29 @@ export class SeriesService implements Service {
     })
 
     return series
+  }
+  public async appendToSeriesByPostId(seriesId: string, postId: string): Promise<void> {
+    const postsCount = await this.db.seriesPost.count({
+      where: {
+        fk_series_id: seriesId,
+      },
+    })
+
+    const nextIndex = postsCount + 1
+    const series = await this.db.series.findUnique({
+      where: {
+        id: seriesId,
+      },
+    })
+
+    if (!series) return
+
+    await this.db.seriesPost.create({
+      data: {
+        fk_post_id: postId,
+        fk_series_id: seriesId,
+        index: nextIndex,
+      },
+    })
   }
 }

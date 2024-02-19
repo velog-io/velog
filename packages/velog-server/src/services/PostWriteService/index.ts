@@ -1,14 +1,20 @@
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
-import { EditPostInput, WritePostInput } from '@graphql/helpers/generated'
+import { EditPostInput, User, WritePostInput } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { injectable, singleton } from 'tsyringe'
-import geoIp from 'geoip-country'
 import { customAlphabet } from 'nanoid'
 import { TagService } from '@services/TagService/index.js'
-import { PostTagService } from '@services/PostTagService'
+import { PostTagService } from '@services/PostTagService/index.js'
+import { Time } from '@constants/TimeConstants.js'
+import { DiscordService } from '@lib/discord/DiscordService.js'
 
-interface Service {}
+interface Service {
+  checkAuthentication(userId: string): void
+  isIncludeSpamKeyword(args: IsIncludeSpamKeywordArgs): boolean
+  generateUrlSlug(args: GenerateUrlSlugArgs): Promise<string>
+  handleTags(input: PostInput, postId: string): Promise<void>
+}
 
 @injectable()
 @singleton()
@@ -18,32 +24,38 @@ export class PostWriteService implements Service {
     private readonly db: DbService,
     private readonly tagService: TagService,
     private readonly postTagService: PostTagService,
+    private readonly discordService: DiscordService,
   ) {}
-  private checkAuthentication(userId: string) {
+  public checkAuthentication(userId: string) {
     if (!userId) {
       throw new UnauthorizedError('Not logged in')
     }
   }
-  private isIncludeSpamWord(args: PostArgs, ctx: any, extraText: string): boolean {
+  public isIncludeSpamKeyword({ input, user, country, ip }: IsIncludeSpamKeywordArgs): boolean {
+    const extraText = input.tags
+      .join('')
+      .concat(user?.profile.short_bio ?? '', user?.profile.display_name ?? '')
+
     const allowList = ['KR', 'GB', '']
     const blockList = ['IN', 'PK', 'CN', 'VN', 'TH', 'PH']
-    const country = geoIp.lookup(ctx.ip)?.country ?? ''
     const isForeign = !allowList.includes(country)
 
     if (
       blockList.includes(country) ||
-      this.utils.spamFilter(args.body!.concat(extraText), isForeign) ||
-      this.utils.spamFilter(args.title!, isForeign, true)
+      this.utils.spamFilter(input.body!.concat(extraText), isForeign) ||
+      this.utils.spamFilter(input.title!, isForeign, true)
     ) {
-      // post.is_private = true
-      // const message = {
-      //   text: `Spam suspicion!\n*userId*: ${ctx.user_id}\ntitle: ${post.title}, ip: ${ctx.ip}, country: ${country}`,
-      // }
+      this.alertSpam({
+        userId: user.id,
+        title: input.title!,
+        ip,
+        country,
+      })
       return true
     }
     return false
   }
-  private async generateUrlSlug(args: PostArgs, urlSlug: string, userId: string) {
+  public async generateUrlSlug({ input, urlSlug, userId }: GenerateUrlSlugArgs) {
     let processedUrlSlug = this.utils.escapeForUrl(urlSlug)
     const urlSlugDuplicate = await this.db.post.findFirst({
       where: {
@@ -53,9 +65,9 @@ export class PostWriteService implements Service {
     })
 
     const generate = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 8)
-    const isEditArgs = this.isEditArgs(args)
+    const isEditArgs = this.isEditArgs(input)
 
-    if (isEditArgs && urlSlugDuplicate && urlSlugDuplicate.id !== args.id) {
+    if (isEditArgs && urlSlugDuplicate && urlSlugDuplicate.id !== input.id) {
       const randomString = generate(8)
       processedUrlSlug += `-${randomString}`
     }
@@ -75,10 +87,51 @@ export class PostWriteService implements Service {
     if (!args.id) return true
     return false
   }
-  async handleTags(args: PostArgs, postId: string) {
-    const tagsData = await Promise.all(args.tags.map(this.tagService.findOrCreate))
+  public async handleTags(input: PostInput, postId: string) {
+    const tagsData = await Promise.all(input.tags.map(this.tagService.findOrCreate))
     await this.postTagService.syncPostTags(postId, tagsData)
+  }
+  public async isPostLimitReached(signedUserId: string): Promise<boolean> {
+    const recentPostCount = await this.db.post.count({
+      where: {
+        fk_user_id: signedUserId,
+        is_private: false,
+        released_at: {
+          gt: new Date(Date.now() - Time.ONE_MINUTE_IN_MS * 5),
+        },
+      },
+    })
+
+    if (recentPostCount < 10) return false
+
+    return true
+  }
+  private async alertSpam({ userId, title, ip, country }: AlertSpam): Promise<void> {
+    const message = {
+      text: `스팸 의심 (수정) !\n *userId*: ${userId}\ntitle: ${title}, ip: ${ip}, country: ${country}`,
+    }
+    await this.discordService.sendMessage('spam', JSON.stringify(message))
   }
 }
 
-type PostArgs = WritePostInput | EditPostInput
+type PostInput = WritePostInput | EditPostInput
+
+type AlertSpam = {
+  userId: string
+  title: string
+  ip: string
+  country: string
+}
+
+type IsIncludeSpamKeywordArgs = {
+  input: PostInput
+  user: User
+  ip: string
+  country: string
+}
+
+type GenerateUrlSlugArgs = {
+  input: PostInput
+  urlSlug: string
+  userId: string
+}
