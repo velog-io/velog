@@ -63,7 +63,7 @@ export class JwtService {
       },
       {
         subject: 'access_token',
-        expiresIn: '24h',
+        expiresIn: '1d',
       },
     )
 

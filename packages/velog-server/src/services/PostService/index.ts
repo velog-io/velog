@@ -469,7 +469,7 @@ export class PostService implements Service {
           postIds = [...postIds, ...randomPostIds]
         }
 
-        this.redis.set(cacheKey, postIds.join(','), 'EX', Time.ONE_DAY_S)
+        this.redis.set(cacheKey, postIds.join(','), 'EX', Time.ONE_DAY_IN_S)
       }
       const posts = await this.findPostsByIds(postIds)
       const normalized = this.utils.normalize(posts)

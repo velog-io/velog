@@ -130,11 +130,12 @@ export class SocialController implements Controller {
 
       if (user) {
         const tokens = await this.jwt.generateUserToken(user.id)
+
         this.cookie.setCookie(reply, 'access_token', tokens.accessToken, {
-          maxAge: Time.ONE_HOUR_IN_MS * 24,
+          maxAge: Time.ONE_DAY_IN_S,
         })
         this.cookie.setCookie(reply, 'refresh_token', tokens.refreshToken, {
-          maxAge: Time.ONE_DAY_IN_MS * 30,
+          maxAge: Time.ONE_DAY_IN_S * 30,
         })
 
         const redirectUrl = ENV.clientV3Host
@@ -255,10 +256,10 @@ export class SocialController implements Controller {
 
     const tokens = await this.jwt.generateUserToken(user.id)
     this.cookie.setCookie(reply, 'access_token', tokens.accessToken, {
-      maxAge: Time.ONE_HOUR_IN_MS * 24,
+      maxAge: Time.ONE_DAY_IN_S,
     })
     this.cookie.setCookie(reply, 'refresh_token', tokens.refreshToken, {
-      maxAge: Time.ONE_DAY_IN_MS * 30,
+      maxAge: Time.ONE_DAY_IN_S * 30,
     })
 
     const profile = await this.db.userProfile.findFirst({

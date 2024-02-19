@@ -12,6 +12,8 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
     if (request.url.includes('/auth/logout')) return
 
     const userService = container.resolve(UserService)
+    const jwt = container.resolve(JwtService)
+
     let accessToken: string | undefined = request.cookies['access_token']
     const refreshToken: string | undefined = request.cookies['refresh_token']
     const authorization = request.headers['authorization']
@@ -21,12 +23,11 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
         accessToken = authorization.split('Bearer ')[1]
       }
 
-      const jwt = container.resolve(JwtService)
-
       if (!accessToken && !refreshToken) return
 
       if (accessToken && refreshToken) {
         const accessTokenData = await jwt.decodeToken<AccessTokenData>(accessToken)
+
         const diff = accessTokenData.exp * 1000 - new Date().getTime()
         // refresh token when life < 30mins
         if (diff < Time.ONE_MINUTE_IN_MS * 30 && refreshToken) {
@@ -46,9 +47,22 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
     } catch (e) {
       console.log('accessToken', accessToken)
       console.log('authPlugin error', e)
-      const cookie = container.resolve(CookieService)
-      cookie.clearCookie(reply, 'access_token')
-      cookie.clearCookie(reply, 'refresh_token')
+
+      try {
+        if (refreshToken) {
+          const tokens = await userService.restoreToken({ request, reply })
+          accessToken = tokens.accessToken
+
+          const accessTokenData = await jwt.decodeToken<AccessTokenData>(accessToken)
+          request.user = { id: accessTokenData.user_id }
+        } else {
+          throw new Error()
+        }
+      } catch (error) {
+        const cookie = container.resolve(CookieService)
+        cookie.clearCookie(reply, 'access_token')
+        cookie.clearCookie(reply, 'refresh_token')
+      }
     }
   })
 }
