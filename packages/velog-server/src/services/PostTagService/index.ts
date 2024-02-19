@@ -1,5 +1,5 @@
 import { DbService } from '@lib/db/DbService.js'
-import { UtilsService } from '@lib/utils/UtilsService'
+import { UtilsService } from '@lib/utils/UtilsService.js'
 import { Tag } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 
