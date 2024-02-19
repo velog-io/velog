@@ -144,10 +144,10 @@ export class UserService implements Service {
     )
 
     this.cookie.setCookie(ctx.reply, 'access_token', tokens.accessToken, {
-      maxAge: Time.ONE_HOUR_IN_MS * 24,
+      maxAge: Time.ONE_DAY_IN_S,
     })
     this.cookie.setCookie(ctx.reply, 'refresh_token', tokens.refreshToken, {
-      maxAge: Time.ONE_DAY_IN_MS * 30,
+      maxAge: Time.ONE_DAY_IN_S * 30,
     })
 
     return tokens
@@ -254,7 +254,7 @@ export class UserService implements Service {
       throw error
     }
 
-    this.redis.set(key, data, 'EX', Time.ONE_MINUTE_S * 30)
+    this.redis.set(key, data, 'EX', Time.ONE_MINUTE_IN_S * 30)
   }
   public async confirmChangeEmail(code: string, signedUserId?: string): Promise<void> {
     if (!signedUserId) {
