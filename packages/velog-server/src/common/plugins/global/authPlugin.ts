@@ -26,7 +26,17 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
       if (!accessToken && !refreshToken) return
 
       if (accessToken && refreshToken) {
-        const accessTokenData = await jwt.decodeToken<AccessTokenData>(accessToken)
+        const accessTokenData = await jwt
+          .decodeToken<AccessTokenData>(accessToken)
+          .catch(async () => {
+            if (refreshToken) {
+              const tokens = await userService.restoreToken({ request, reply })
+              return await jwt.decodeToken<AccessTokenData>(tokens.accessToken)
+            }
+          })
+
+        if (!accessTokenData) return
+
         const diff = accessTokenData.exp * 1000 - new Date().getTime()
         // refresh token when life < 30mins
         if (diff < Time.ONE_MINUTE_IN_MS * 30 && refreshToken) {
