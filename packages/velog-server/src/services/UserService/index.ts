@@ -144,7 +144,7 @@ export class UserService implements Service {
     )
 
     this.cookie.setCookie(ctx.reply, 'access_token', tokens.accessToken, {
-      maxAge: Time.ONE_HOUR_IN_MS,
+      maxAge: Time.ONE_HOUR_IN_MS * 24,
     })
     this.cookie.setCookie(ctx.reply, 'refresh_token', tokens.refreshToken, {
       maxAge: Time.ONE_DAY_IN_MS * 30,
