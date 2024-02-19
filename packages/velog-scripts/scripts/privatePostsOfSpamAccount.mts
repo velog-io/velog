@@ -62,21 +62,24 @@ class Runner implements IRunner {
     }
 
     if (handledUser.length === 0) {
-      console.log('비공개 게시글 처리된 유저가 존재하지 않습니다.')
+      console.log('비공개 게시글로 처리된 유저가 존재하지 않습니다.')
       process.exit(0)
     }
 
     try {
-      const result = await this.discord.sendMessage(
-        ENV.discordPrivatePostsChannelId,
-        JSON.stringify({
-          title: '해당 유저의 글들이 비공개 처리 되었습니다.',
-          userInfo: handledUser,
-        }),
-      )
+      const promises = handledUser.map(async (userInfo) => {
+        await this.discord.sendMessage(
+          ENV.discordPrivatePostsChannelId,
+          JSON.stringify({
+            title: '해당 유저의 글들이 비공개 처리 되었습니다.',
+            userInfo: userInfo,
+          }),
+        )
 
-      handledUser.map((u) => console.log(`${u.username} 유저가 처리 되었습니다.`))
-      console.log(result)
+        console.log(`${userInfo.username} 유저가 처리 되었습니다.`)
+      })
+
+      await Promise.all(promises)
       process.exit(0)
     } catch (error) {
       console.log(error)
