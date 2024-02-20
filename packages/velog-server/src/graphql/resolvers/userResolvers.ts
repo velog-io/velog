@@ -66,6 +66,7 @@ const userResolvers: Resolvers = {
     },
     currentUser: async (_, __, ctx) => {
       const userService = container.resolve(UserService)
+      await userService.updateLastAccessedAt(ctx.user?.id)
       return await userService.getCurrentUser(ctx.user?.id)
     },
     restoreToken: async (_, __, ctx) => {

@@ -61,7 +61,7 @@ export class AuthService implements Service {
   }
   public isAuthenticated(ctx: GraphQLContext) {
     if (!ctx.user) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
   }
 }

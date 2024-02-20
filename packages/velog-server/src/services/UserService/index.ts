@@ -32,6 +32,7 @@ interface Service {
   findByEmail(email: string): Promise<User | null>
   updateUser(patch: Prisma.UserUpdateInput, signedUserId?: string): Promise<User>
   getCurrentUser(userId: string | undefined): Promise<CurrentUser | null>
+  updateLastAccessedAt(userId: string): Promise<void>
   userLoader(): DataLoader<string, User>
   restoreToken(ctx: GraphQLContext): Promise<UserToken>
   verifyEmailAccessPermission(user: User, signedUserId?: string): void
@@ -86,7 +87,7 @@ export class UserService implements Service {
   }
   public async updateUser(patch: Prisma.UserUpdateInput, signedUserId?: string) {
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     return await this.db.user.update({
@@ -111,22 +112,23 @@ export class UserService implements Service {
     })
 
     if (!user) return null
-
+    return user
+  }
+  async updateLastAccessedAt(userId?: string): Promise<void> {
+    if (!userId) return
     await this.db.userProfile.update({
       where: {
-        fk_user_id: user.id,
+        fk_user_id: userId,
       },
       data: {
         last_accessed_at: this.utils.now,
       },
     })
-
-    return user
   }
   async restoreToken(ctx: Pick<GraphQLContext, 'request' | 'reply'>): Promise<UserToken> {
     const refreshToken: string | undefined = ctx.request.cookies['refresh_token']
     if (!refreshToken) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     const decoded = await this.jwt.decodeToken<RefreshTokenData>(refreshToken)
@@ -179,7 +181,7 @@ export class UserService implements Service {
     signedUserId?: string,
   ): Promise<void> {
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     const decoded = await this.jwt.decodeToken<{ user_id: string; sub: string }>(token)
@@ -209,7 +211,7 @@ export class UserService implements Service {
   }
   public async initiateChangeEmail(email: string, signedUserId?: string): Promise<void> {
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     const validate = this.utils.validateEmail(email)
@@ -258,7 +260,7 @@ export class UserService implements Service {
   }
   public async confirmChangeEmail(code: string, signedUserId?: string): Promise<void> {
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     const key = this.redis.generateKey.changeEmail(code)

@@ -108,7 +108,7 @@ export class JwtService {
   }
   public unregisterUserToken(signedUserId?: string) {
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     return this.generateToken(

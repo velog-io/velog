@@ -15,7 +15,7 @@ export class DiscordService {
       })
 
       this.client.on('ready', () => {
-        console.log('Discord Client ready!')
+        console.log('Discord Client ready')
         resolve(this.client)
       })
 

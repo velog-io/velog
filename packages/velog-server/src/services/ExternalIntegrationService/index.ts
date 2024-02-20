@@ -25,7 +25,7 @@ export class ExternalIntegrationService implements Service {
   ) {}
   public async createIntegrationCode(signedUserId?: string): Promise<string> {
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     const code = nanoid()

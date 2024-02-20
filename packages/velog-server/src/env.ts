@@ -14,9 +14,9 @@ const envFiles: EnvFiles = {
   stage: '.env.stage',
 }
 
-if (!process.env.DOCKER_ENV && process.env.NODE_ENV !== 'development') {
+if (!process.env.DOCKER_ENV && process.env.NODE_ENV !== undefined) {
   console.error(
-    'Development environment was initiated despite the absence of the Docker environment.',
+    'Development environment was initiated, despite the absence of the Docker environment.',
   )
 }
 
@@ -72,6 +72,7 @@ const env = z.object({
   codenaryApiKey: z.string(),
   codenaryCallback: z.string(),
   redisHost: z.string(),
+  redisPort: z.number(),
   slackUrl: z.string(),
   slackImage: z.string(),
   blacklistUsername: z.array(z.string()),
@@ -115,6 +116,7 @@ export const ENV = env.parse({
   codenaryApiKey: process.env.CODENARY_API_KEY,
   codenaryCallback: process.env.CODENARY_CALLBACK,
   redisHost: process.env.REDIS_HOST,
+  redisPort: Number(process.env.REDIS_PORT) || 6379,
   slackUrl: `https://hooks.slack.com/services/${process.env.SLACK_TOKEN}`,
   slackImage: process.env.SLACK_IMAGE,
   blacklistUsername: (process.env.BLACKLIST_USERNAME ?? '').split(','),

@@ -30,7 +30,7 @@ export class PostLikeService implements Service {
     }
 
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     const signedUser = await this.db.user.findUnique({
@@ -136,7 +136,7 @@ export class PostLikeService implements Service {
     }
 
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     const post = await this.db.post.findUnique({

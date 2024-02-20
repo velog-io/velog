@@ -1,4 +1,3 @@
-import { ExternalIntegrationService } from '@services/ExternalIntegrationService/index.js'
 import removeMd from 'remove-markdown'
 import { Post, PostTag, Prisma, Tag, User } from '@prisma/client'
 import { container, injectable, singleton } from 'tsyringe'
@@ -9,7 +8,6 @@ import {
   ReadingListInput,
   RecentPostsInput,
   TrendingPostsInput,
-  WritePostInput,
 } from '@graphql/helpers/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { BadRequestError, ConfilctError, NotFoundError, UnauthorizedError } from '@errors/index.js'
@@ -24,10 +22,8 @@ import { RedisService } from '@lib/redis/RedisService.js'
 import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 import { Time } from '@constants/TimeConstants.js'
 import { TagService } from '@services/TagService/index.js'
-import { PostWriteService } from '@services/PostWriteService/index.js'
-
 interface Service {
-  findById(id: string): Promise<Post | null>
+  findById(id: string, include?: Prisma.PostInclude): Promise<Post | null>
   findPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>
   getPost(input: ReadPostInput, signedUserId?: string): Promise<Post | null>
   getReadingList(input: ReadingListInput, signedUserId?: string): Promise<Post[]>
@@ -38,7 +34,7 @@ interface Service {
   recommendedPosts(post: Post): Promise<Post[]>
   getPosts(input: GetPostsInput, signedUserId?: string): Promise<Post[]>
   getSeachPost(input: GetSearchPostsInput): Promise<{ count: number; posts: Post[] }>
-  write(input: WritePostInput, sigedUserId: string): Promise<Post>
+  serialize(post: SerializeArgs): SerializePost
 }
 
 @injectable()
@@ -51,26 +47,23 @@ export class PostService implements Service {
     private readonly redis: RedisService,
     private readonly elsaticSearch: ElasticSearchService,
     private readonly tagService: TagService,
-    private readonly PostWriteService: PostWriteService,
-    private readonly externalIntegrationService: ExternalIntegrationService,
   ) {}
-  public async findById(postId: string) {
+  public async findById(postId: string, include: Prisma.PostInclude = {}) {
     return await this.db.post.findUnique({
       where: {
         id: postId,
       },
+      include,
     })
   }
-  public async findPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]> {
+  public async findPostsByIds(ids: string[], include: Prisma.PostInclude = {}): Promise<Post[]> {
     const posts = await this.db.post.findMany({
       where: {
         id: {
           in: ids,
         },
       },
-      include: {
-        ...(include || {}),
-      },
+      include,
     })
 
     return posts
@@ -86,7 +79,7 @@ export class PostService implements Service {
     }
 
     if (!userId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     const postGetter = {
@@ -393,7 +386,7 @@ export class PostService implements Service {
 
     return post
   }
-  private serialize(post: SerializeArgs): SerializePost {
+  public serialize(post: SerializeArgs): SerializePost {
     return {
       id: post.id,
       url: `${ENV.clientV2Host}/@${post.user.username}/${encodeURI(post.url_slug ?? '')}`,
@@ -403,13 +396,13 @@ export class PostService implements Service {
       updated_at: post.updated_at,
       short_description: this.shortDescription(post),
       body: post.body,
-      tags: post.postTags.map((tags) => tags.tag!.name!) || [],
+      tags: post.postTags.map((tags) => (tags && tags.tag?.name) ?? '').filter(Boolean) || [],
       fk_user_id: post.fk_user_id,
       url_slug: post.url_slug,
       likes: post.likes,
     }
   }
-  async updatePostScore(postId: string) {
+  public async updatePostScore(postId: string) {
     await axios.patch(
       `${ENV.cronHost}/api/posts/v1/score/${postId}`,
       {},
@@ -704,7 +697,6 @@ export class PostService implements Service {
 
     return result
   }
-  public async write(input: WritePostInput, sigedUserId: string): Promise<Post> {}
 }
 
 export type SerializePost = {
@@ -723,9 +715,12 @@ export type SerializePost = {
 }
 
 type SerializeArgs = Post & {
-  postTags: (PostTag & {
-    tag: Tag | null
-  })[]
+  postTags: (
+    | (PostTag & {
+        tag: Tag | null
+      })
+    | null
+  )[]
   user: User
 }
 

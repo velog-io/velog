@@ -15,7 +15,7 @@ interface Service {
   getThumbnail(seriesId: string): Promise<string | null>
   getSeriesListByUsername(username: string): Promise<Series[]>
   getSeries(input: GetSeriesInput): Promise<Series | null>
-  appendToSeriesByPostId(seriesId: string, postId: string): Promise<void>
+  appendToSeries(seriesId: string, postId: string): Promise<void>
 }
 
 @injectable()
@@ -32,7 +32,7 @@ export class SeriesService implements Service {
   }
   public async findByUserId(userId?: string): Promise<Series[]> {
     if (!userId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
     const seriesList = await this.db.series.findMany({
       where: {
@@ -150,7 +150,7 @@ export class SeriesService implements Service {
 
     return series
   }
-  public async appendToSeriesByPostId(seriesId: string, postId: string): Promise<void> {
+  public async appendToSeries(seriesId: string, postId: string): Promise<void> {
     const postsCount = await this.db.seriesPost.count({
       where: {
         fk_series_id: seriesId,

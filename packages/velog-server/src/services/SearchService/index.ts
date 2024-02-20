@@ -1,7 +1,6 @@
 import { pick } from 'rambda'
 import { DbService } from '@lib/db/DbService.js'
 import { injectable, singleton } from 'tsyringe'
-import { ENV } from '@env'
 import { Prisma, Tag } from '@prisma/client'
 import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 import { ApiResponse } from '@elastic/elasticsearch'
@@ -52,7 +51,7 @@ export class SearchService implements Service {
     const postWithTags = Object.assign(post, { tags })
     const serialized = this.serializePost(postWithTags)
 
-    if (ENV.appEnv === 'development') return
+    // if (ENV.appEnv === 'development') return
     return this.elasticSearch.client.index({
       id: postId,
       index: 'posts',
@@ -60,7 +59,7 @@ export class SearchService implements Service {
     })
   }
   private async searchSyncRemove(postId: string) {
-    if (ENV.appEnv === 'development') return
+    // if (ENV.appEnv === 'development') return
     return this.elasticSearch.client.delete({
       id: postId,
       index: 'posts',

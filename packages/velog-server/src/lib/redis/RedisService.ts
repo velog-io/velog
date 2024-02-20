@@ -7,13 +7,14 @@ interface Service {
   get generateKey(): GenerateRedisKey
   get queueName(): Record<QueueName, string>
   get setName(): Record<SetName, string>
+  createFeedQueue(data: CreateFeedArgs): Promise<number>
 }
 
 @injectable()
 @singleton()
 export class RedisService extends Redis implements Service {
   constructor() {
-    super({ port: 6379, host: ENV.redisHost })
+    super({ port: ENV.redisPort, host: ENV.redisHost })
   }
 
   public async connection(): Promise<string> {
@@ -48,7 +49,7 @@ export class RedisService extends Redis implements Service {
     }
   }
 
-  public async createFeed(data: CreateFeedArgs): Promise<number> {
+  public async createFeedQueue(data: CreateFeedArgs): Promise<number> {
     const queueName = this.queueName.feed
     return await this.lpush(queueName, JSON.stringify(data))
   }
