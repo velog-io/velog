@@ -1,8 +1,8 @@
 import { container } from 'tsyringe'
-import { PostWriteService } from './index.js'
+import { PostAPIService } from './index.js'
 
-describe('PostWriteService', () => {
-  const service = container.resolve(PostWriteService)
+describe('PostAPIService', () => {
+  const service = container.resolve(PostAPIService)
   it('should be defined', () => {
     expect(service).toBeDefined()
   })

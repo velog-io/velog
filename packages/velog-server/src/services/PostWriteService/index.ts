@@ -13,7 +13,6 @@ import { NotFoundError } from '@errors/NotfoundError.js'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
 import geoip from 'geoip-country'
 import { Post, Series, Tag } from '@prisma/client'
-import { RestrictionService } from '@services/RestrictionService/index.js'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
 import { SeriesService } from '@services/SeriesService/index.js'
 import { SearchService } from '@services/SearchService/index.js'
@@ -22,23 +21,25 @@ import { PostService } from '@services/PostService/index.js'
 import { RedisService } from '@lib/redis/RedisService.js'
 import { GraphcdnService } from '@lib/graphcdn/GraphcdnService.js'
 import { ImageService } from '@services/ImageService/index.js'
-import { UserService } from '@services/UserService'
-import { TurnstileService } from '@lib/cloudflare/turnstile/TurnstileService'
+import { UserService } from '@services/UserService/index.js'
+import { TurnstileService } from '@lib/cloudflare/turnstile/TurnstileService.js'
+import { DynamicConfigService } from '@services/DynamicConfigService/index.js'
 
 interface Service {
   write(input: WritePostInput, sigedUserId: string, ip: string): Promise<Post>
+  edit(input: EditPostInput, sigedUserId: string, ip: string): Promise<Post>
 }
 
 @injectable()
 @singleton()
-export class PostWriteService implements Service {
+export class PostAPIService implements Service {
   constructor(
     private readonly utils: UtilsService,
     private readonly db: DbService,
     private readonly discord: DiscordService,
     private readonly redis: RedisService,
     private readonly graphcdn: GraphcdnService,
-    private readonly restirctionService: RestrictionService,
+    private readonly dynamicConfigService: DynamicConfigService,
     private readonly tagService: TagService,
     private readonly postTagService: PostTagService,
     private readonly postService: PostService,
@@ -50,7 +51,7 @@ export class PostWriteService implements Service {
     private readonly turnstileService: TurnstileService,
   ) {}
   public async write(input: WritePostInput, signedUserId: string, ip: string): Promise<Post> {
-    const { token, ...postArgs } = input
+    const { token, ...data } = input
 
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')
@@ -73,12 +74,12 @@ export class PostWriteService implements Service {
       throw new BadRequestError('Title is empty')
     }
 
-    const isPublish = !postArgs.is_temp && !postArgs.is_private
+    const isPublish = !data.is_temp && !data.is_private
 
     const country = geoip.lookup(ip)?.country ?? ''
     const isIncludeSpam = this.isIncludeSpamKeyword({ input, user, country })
     const isPostLimitReached = await this.isPostLimitReached(signedUserId)
-    const isBlockedUser = await this.restirctionService.checkBlockedUser(user.username)
+    const isBlockedUser = await this.dynamicConfigService.checkBlockedUser(user.username)
 
     const checks = [
       { type: 'isSpam', value: isIncludeSpam },
@@ -95,7 +96,7 @@ export class PostWriteService implements Service {
     }
 
     if (checks.map(({ value }) => value).some((check) => check)) {
-      postArgs.is_private = true
+      data.is_private = true
       await this.alertIsSpam({
         userId: user.id,
         title: input.title!,
@@ -114,26 +115,26 @@ export class PostWriteService implements Service {
       userId: signedUserId,
     })
 
-    postArgs.url_slug = processedUrlSlug
+    data.url_slug = processedUrlSlug
 
-    if (postArgs.series_id && !postArgs.is_temp) {
-      await this.checkSeriesOwnership(postArgs.series_id, signedUserId)
+    if (data.series_id && !data.is_temp) {
+      await this.checkSeriesOwnership(data.series_id, signedUserId)
     }
 
     const post = await this.db.post.create({
       data: {
-        ...postArgs,
+        ...data,
         fk_user_id: signedUserId,
       },
     })
 
-    if (postArgs.series_id && !postArgs.is_temp) {
-      await this.seriesService.appendToSeries(postArgs.series_id, post.id)
+    if (data.series_id && !data.is_temp) {
+      await this.seriesService.appendToSeries(data.series_id, post.id)
     }
 
-    await this.handleTags(postArgs, post.id)
+    await this.handleTags(data, post.id)
 
-    if (!postArgs.is_temp) {
+    if (!data.is_temp) {
       await this.searchService.searchSync.update(post.id)
     }
 
@@ -175,10 +176,183 @@ export class PostWriteService implements Service {
 
     setTimeout(async () => {
       const images = await this.imageService.getImagesOf(post.id)
-      await this.imageService.trackImages(images, postArgs.body)
+      await this.imageService.trackImages(images, data.body)
     }, 0)
 
     return post
+  }
+  public async edit(input: EditPostInput, signedUserId: string, ip: string): Promise<Post> {
+    const { token, ...data } = input
+
+    if (!signedUserId) {
+      throw new UnauthorizedError('Not logged in')
+    }
+
+    const user = await this.db.user.findUnique({
+      where: {
+        id: signedUserId,
+      },
+      include: {
+        profile: true,
+      },
+    })
+
+    if (!user) {
+      throw new NotFoundError('Not found user')
+    }
+
+    const post = await this.postService.findById(data.id)
+    if (!post) {
+      throw new BadRequestError('Not found post')
+    }
+
+    if (post.fk_user_id !== signedUserId) {
+      throw new ForbiddenError('This post is not yours')
+    }
+
+    if (this.utils.checkEmpty(input.title)) {
+      throw new BadRequestError('Title is empty')
+    }
+
+    const isPublish = !data.is_temp && !data.is_private
+
+    const country = geoip.lookup(ip)?.country ?? ''
+    const isIncludeSpam = this.isIncludeSpamKeyword({ input, user, country })
+    const isPostLimitReached = await this.isPostLimitReached(signedUserId)
+    const isBlockedUser = await this.dynamicConfigService.checkBlockedUser(user.username)
+
+    const checks = [
+      { type: 'isSpam', value: isIncludeSpam },
+      { type: 'limit', value: isPostLimitReached },
+      { type: 'isBlock', value: isBlockedUser },
+    ]
+
+    if (isPublish) {
+      const isVerified = await this.verifyTurnstile(signedUserId, token)
+      checks.push({
+        type: 'turnstile',
+        value: isVerified,
+      })
+    }
+
+    if (checks.map(({ value }) => value).some((check) => check)) {
+      data.is_private = true
+      await this.alertIsSpam({
+        userId: user.id,
+        title: input.title!,
+        country,
+        ip,
+        type: checks
+          .filter(({ value }) => value)
+          .map(({ type }) => type)
+          .join(','),
+      })
+    }
+
+    const processedUrlSlug = await this.generateUrlSlug({
+      input,
+      urlSlug: input.url_slug,
+      userId: signedUserId,
+    })
+
+    data.url_slug = processedUrlSlug
+
+    const prevSeriesPost = await this.db.seriesPost.findUnique({
+      where: {
+        id: post.id,
+      },
+    })
+
+    if (!prevSeriesPost && data.series_id) {
+      await this.seriesService.appendToSeries(data.series_id, post.id)
+    }
+
+    if (prevSeriesPost && prevSeriesPost.fk_series_id !== data.series_id) {
+      if (data.series_id) {
+        await this.checkSeriesOwnership(data.series_id, signedUserId)
+        await this.seriesService.appendToSeries(data.series_id, post.id)
+      }
+
+      // remove series
+      await Promise.all([
+        this.seriesService.subtractIndexAfter(prevSeriesPost.fk_series_id!, prevSeriesPost.index!),
+        this.db.seriesPost.delete({
+          where: {
+            id: prevSeriesPost.id,
+          },
+        }),
+      ])
+    }
+
+    if (post.is_temp && !data.is_temp) {
+      Object.assign(data, { released_at: new Date() })
+    }
+
+    try {
+      await Promise.all([
+        data.is_temp ? null : this.searchService.searchSync.update(post.id),
+        this.graphcdn.purgePost(post.id),
+      ])
+    } catch (error) {
+      console.error(error)
+    }
+
+    if (isPublish) {
+      setImmediate(async () => {
+        if (!signedUserId) return
+        const isIntegrated = await this.externalInterationService.checkIntegrated(signedUserId)
+        if (!isIntegrated) return
+        const targetPost = await this.db.post.findUnique({
+          where: {
+            id: post.id,
+          },
+          include: {
+            postTags: {
+              include: {
+                tag: true,
+              },
+            },
+            user: true,
+          },
+        })
+        if (!targetPost) return
+        const serializedPost = this.postService.serialize(targetPost)
+        this.externalInterationService.notifyWebhook({
+          type: 'updated',
+          post: serializedPost,
+        })
+      })
+
+      const queueData = {
+        fk_following_id: signedUserId,
+        fk_post_id: post.id,
+      }
+      await this.redis.createFeedQueue(queueData)
+    }
+
+    if (!post.is_private && data.is_private) {
+      setImmediate(async () => {
+        if (!signedUserId) return
+        const isIntegrated = await this.externalInterationService.checkIntegrated(signedUserId)
+        if (!isIntegrated) return
+        this.externalInterationService.notifyWebhook({
+          type: 'deleted',
+          post_id: post.id,
+        })
+      })
+    }
+
+    setTimeout(async () => {
+      const images = await this.imageService.getImagesOf(post.id)
+      await this.imageService.trackImages(images, data.body)
+    }, 0)
+
+    return await this.db.post.update({
+      where: {
+        id: post.id,
+      },
+      data,
+    })
   }
   private isIncludeSpamKeyword({ input, user, country }: IsIncludeSpamKeywordArgs): boolean {
     const extraText = input.tags
