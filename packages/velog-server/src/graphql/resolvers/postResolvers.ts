@@ -12,7 +12,7 @@ import { SeriesService } from '@services/SeriesService/index.js'
 import { TagService } from '@services/TagService/index.js'
 import { FollowUserService } from '@services/FollowUser/index.js'
 import { FeedService } from '@services/FeedService/index.js'
-import { PostApiService } from '@services/PostApiService'
+import { PostApiService } from '@services/PostApiService/index.js'
 
 const postResolvers: Resolvers = {
   Post: {
