@@ -77,7 +77,7 @@ type Query {
 
 type Mutation {
   writePost(input: WritePostInput!): Post!
-  editPost(input: EditPostInput): Post!
+  editPost(input: EditPostInput!): Post!
   # createPostHistory(
   #   post_id: ID!
   #   title: String!

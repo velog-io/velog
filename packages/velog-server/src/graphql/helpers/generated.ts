@@ -238,7 +238,7 @@ export type MutationCreateNotificationArgs = {
 }
 
 export type MutationEditPostArgs = {
-  input?: InputMaybe<EditPostInput>
+  input: EditPostInput
 }
 
 export type MutationFollowArgs = {
@@ -1041,7 +1041,7 @@ export type MutationResolvers<
     ResolversTypes['Post'],
     ParentType,
     ContextType,
-    Partial<MutationEditPostArgs>
+    RequireFields<MutationEditPostArgs, 'input'>
   >
   follow?: Resolver<
     Maybe<ResolversTypes['Boolean']>,

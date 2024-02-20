@@ -26,13 +26,13 @@ import { TurnstileService } from '@lib/cloudflare/turnstile/TurnstileService.js'
 import { DynamicConfigService } from '@services/DynamicConfigService/index.js'
 
 interface Service {
-  write(input: WritePostInput, sigedUserId: string, ip: string): Promise<Post>
-  edit(input: EditPostInput, sigedUserId: string, ip: string): Promise<Post>
+  write(input: WritePostInput, sigedUserId?: string, ip?: string): Promise<Post>
+  edit(input: EditPostInput, sigedUserId?: string, ip?: string): Promise<Post>
 }
 
 @injectable()
 @singleton()
-export class PostAPIService implements Service {
+export class PostApiService implements Service {
   constructor(
     private readonly utils: UtilsService,
     private readonly db: DbService,
@@ -50,7 +50,7 @@ export class PostAPIService implements Service {
     private readonly userService: UserService,
     private readonly turnstileService: TurnstileService,
   ) {}
-  public async write(input: WritePostInput, signedUserId: string, ip: string): Promise<Post> {
+  public async write(input: WritePostInput, signedUserId?: string, ip = ''): Promise<Post> {
     const { token, ...data } = input
 
     if (!signedUserId) {
@@ -181,7 +181,7 @@ export class PostAPIService implements Service {
 
     return post
   }
-  public async edit(input: EditPostInput, signedUserId: string, ip: string): Promise<Post> {
+  public async edit(input: EditPostInput, signedUserId?: string, ip: string = ''): Promise<Post> {
     const { token, ...data } = input
 
     if (!signedUserId) {
