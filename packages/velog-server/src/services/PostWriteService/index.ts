@@ -77,14 +77,14 @@ export class PostAPIService implements Service {
     const isPublish = !data.is_temp && !data.is_private
 
     const country = geoip.lookup(ip)?.country ?? ''
-    const isIncludeSpam = this.isIncludeSpamKeyword({ input, user, country })
-    const isPostLimitReached = await this.isPostLimitReached(signedUserId)
-    const isBlockedUser = await this.dynamicConfigService.checkBlockedUser(user.username)
+    const isSpam = this.isIncludeSpamKeyword({ input, user, country })
+    const isLimit = await this.isPostLimitReached(signedUserId)
+    const isBlock = await this.dynamicConfigService.checkBlockedUser(user.username)
 
     const checks = [
-      { type: 'isSpam', value: isIncludeSpam },
-      { type: 'limit', value: isPostLimitReached },
-      { type: 'isBlock', value: isBlockedUser },
+      { type: 'spam', value: isSpam },
+      { type: 'limit', value: isLimit },
+      { type: 'block', value: isBlock },
     ]
 
     if (isPublish) {
@@ -217,14 +217,14 @@ export class PostAPIService implements Service {
     const isPublish = !data.is_temp && !data.is_private
 
     const country = geoip.lookup(ip)?.country ?? ''
-    const isIncludeSpam = this.isIncludeSpamKeyword({ input, user, country })
-    const isPostLimitReached = await this.isPostLimitReached(signedUserId)
-    const isBlockedUser = await this.dynamicConfigService.checkBlockedUser(user.username)
+    const isSpam = this.isIncludeSpamKeyword({ input, user, country })
+    const isLimit = await this.isPostLimitReached(signedUserId)
+    const isBlock = await this.dynamicConfigService.checkBlockedUser(user.username)
 
     const checks = [
-      { type: 'isSpam', value: isIncludeSpam },
-      { type: 'limit', value: isPostLimitReached },
-      { type: 'isBlock', value: isBlockedUser },
+      { type: 'spam', value: isSpam },
+      { type: 'limit', value: isLimit },
+      { type: 'block', value: isBlock },
     ]
 
     if (isPublish) {
