@@ -24,6 +24,7 @@ import { changeEmailTemplate } from '@template/changeEmailTemplate.js'
 import { ENV } from '@env'
 import { MailService } from '@lib/mail/MailService.js'
 import { ChangeEmailDataType } from '@lib/redis/RedisInterface.js'
+import { differenceInDays } from 'date-fns'
 
 interface Service {
   findById(userId: string): Promise<User | null>
@@ -39,6 +40,7 @@ interface Service {
   unregister(reply: FastifyReply, token: string, signedUserId?: string): Promise<void>
   initiateChangeEmail(email: string, signedUserId?: string): Promise<void>
   confirmChangeEmail(code: string, signedUserId?: string): Promise<void>
+  checkTrust(userId: string): Promise<boolean>
 }
 
 @injectable()
@@ -53,10 +55,11 @@ export class UserService implements Service {
     private readonly mail: MailService,
     private readonly authService: AuthService,
   ) {}
-  async findById(userId: string): Promise<User | null> {
+  public async findById(userId: string): Promise<User | null> {
     return await this.db.user.findUnique({ where: { id: userId } })
   }
-  async findByUsername(username: string): Promise<User | null> {
+
+  public async findByUsername(username: string): Promise<User | null> {
     return await this.db.user.findUnique({ where: { username } })
   }
   public async findByIdOrUsername({
@@ -73,6 +76,7 @@ export class UserService implements Service {
 
     return await this.findById(userId!)
   }
+
   public async findByEmail(email: string) {
     const validate = this.utils.validateEmail(email)
     if (!validate) {
@@ -99,6 +103,7 @@ export class UserService implements Service {
       },
     })
   }
+
   public async getCurrentUser(userId: string | undefined): Promise<CurrentUser | null> {
     if (!userId) return null
     const user = await this.db.user.findUnique({
@@ -114,7 +119,8 @@ export class UserService implements Service {
     if (!user) return null
     return user
   }
-  async updateLastAccessedAt(userId?: string): Promise<void> {
+
+  public async updateLastAccessedAt(userId?: string): Promise<void> {
     if (!userId) return
     await this.db.userProfile.update({
       where: {
@@ -125,7 +131,7 @@ export class UserService implements Service {
       },
     })
   }
-  async restoreToken(ctx: Pick<GraphQLContext, 'request' | 'reply'>): Promise<UserToken> {
+  public async restoreToken(ctx: Pick<GraphQLContext, 'request' | 'reply'>): Promise<UserToken> {
     const refreshToken: string | undefined = ctx.request.cookies['refresh_token']
     if (!refreshToken) {
       throw new UnauthorizedError('Not logged in')
@@ -154,6 +160,7 @@ export class UserService implements Service {
 
     return tokens
   }
+
   public verifyEmailAccessPermission(user: User, signedUserId?: string) {
     if (user.id !== signedUserId) {
       throw new UnauthorizedError('No permission to read email address')
@@ -175,6 +182,7 @@ export class UserService implements Service {
       return userIds.map((userId) => nomalized[userId])
     })
   }
+
   public async unregister(
     reply: FastifyReply,
     token: string,
@@ -209,6 +217,7 @@ export class UserService implements Service {
       })
     } catch (_) {}
   }
+
   public async initiateChangeEmail(email: string, signedUserId?: string): Promise<void> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')
@@ -284,6 +293,24 @@ export class UserService implements Service {
 
     await this.updateUser({ email }, signedUserId)
     this.redis.del(key)
+  }
+
+  public async checkTrust(userId: string): Promise<boolean> {
+    const user = await this.db.user.findUnique({
+      where: {
+        id: userId,
+      },
+    })
+
+    if (!user) {
+      throw new NotFoundError('Not found user')
+    }
+
+    const joinDay = new Date(user.created_at)
+    const today = new Date()
+
+    const diffDays = differenceInDays(today, joinDay)
+    return diffDays > 20
   }
 }
 

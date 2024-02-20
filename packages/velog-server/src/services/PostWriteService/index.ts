@@ -22,6 +22,8 @@ import { PostService } from '@services/PostService/index.js'
 import { RedisService } from '@lib/redis/RedisService.js'
 import { GraphcdnService } from '@lib/graphcdn/GraphcdnService.js'
 import { ImageService } from '@services/ImageService/index.js'
+import { UserService } from '@services/UserService'
+import { TurnstileService } from '@lib/cloudflare/turnstile/TurnstileService'
 
 interface Service {
   write(input: WritePostInput, sigedUserId: string, ip: string): Promise<Post>
@@ -44,6 +46,8 @@ export class PostWriteService implements Service {
     private readonly searchService: SearchService,
     private readonly externalInterationService: ExternalIntegrationService,
     private readonly imageService: ImageService,
+    private readonly userService: UserService,
+    private readonly turnstileService: TurnstileService,
   ) {}
   public async write(input: WritePostInput, signedUserId: string, ip: string): Promise<Post> {
     const { token, ...postArgs } = input
@@ -69,19 +73,38 @@ export class PostWriteService implements Service {
       throw new BadRequestError('Title is empty')
     }
 
+    const isPublish = !postArgs.is_temp && !postArgs.is_private
+
     const country = geoip.lookup(ip)?.country ?? ''
     const isIncludeSpam = this.isIncludeSpamKeyword({ input, user, country })
     const isPostLimitReached = await this.isPostLimitReached(signedUserId)
     const isBlockedUser = await this.restirctionService.checkBlockedUser(user.username)
 
-    const checked = [isIncludeSpam, isPostLimitReached, isBlockedUser]
-    if (checked.some((check) => check)) {
+    const checks = [
+      { type: 'isSpam', value: isIncludeSpam },
+      { type: 'limit', value: isPostLimitReached },
+      { type: 'isBlock', value: isBlockedUser },
+    ]
+
+    if (isPublish) {
+      const isVerified = await this.verifyTurnstile(signedUserId, token)
+      checks.push({
+        type: 'turnstile',
+        value: isVerified,
+      })
+    }
+
+    if (checks.map(({ value }) => value).some((check) => check)) {
       postArgs.is_private = true
       await this.alertIsSpam({
         userId: user.id,
         title: input.title!,
         country,
         ip,
+        type: checks
+          .filter(({ value }) => value)
+          .map(({ type }) => type)
+          .join(','),
       })
     }
 
@@ -114,7 +137,6 @@ export class PostWriteService implements Service {
       await this.searchService.searchSync.update(post.id)
     }
 
-    const isPublish = !postArgs.is_temp && !postArgs.is_private
     if (isPublish) {
       setImmediate(async () => {
         if (!signedUserId) return
@@ -239,9 +261,9 @@ export class PostWriteService implements Service {
 
     return true
   }
-  private async alertIsSpam({ userId, title, ip, country }: AlertSpam): Promise<void> {
+  private async alertIsSpam({ userId, title, ip, country, type }: AlertSpam): Promise<void> {
     const message = {
-      text: `스팸 의심 (수정) !\n *userId*: ${userId}\ntitle: ${title}, ip: ${ip}, country: ${country}`,
+      text: `스팸 의심 (수정) !\n *userId*: ${userId}\ntitle: ${title}, ip: ${ip}, country: ${country} type: ${type}`,
     }
     await this.discord.sendMessage('spam', JSON.stringify(message))
   }
@@ -261,6 +283,15 @@ export class PostWriteService implements Service {
 
     return series
   }
+  private async verifyTurnstile(signedUserId: string, token?: string): Promise<boolean> {
+    const isTrusted = await this.userService.checkTrust(signedUserId)
+    if (isTrusted) return true
+    if (!token) {
+      throw new BadRequestError('Turnstile token is required')
+    }
+
+    return await this.turnstileService.verifyToken(token)
+  }
 }
 
 type PostInput = WritePostInput | EditPostInput
@@ -270,6 +301,7 @@ type AlertSpam = {
   title: string
   ip: string
   country: string
+  type: string
 }
 
 type IsIncludeSpamKeywordArgs = {

@@ -53,6 +53,10 @@ const userResolvers: Resolvers = {
         followerUserId: ctx.user?.id,
       })
     },
+    is_trusted: async (parent) => {
+      const userService = container.resolve(UserService)
+      return await userService.checkTrust(parent.id)
+    },
   },
   Query: {
     user: async (_, { input }) => {

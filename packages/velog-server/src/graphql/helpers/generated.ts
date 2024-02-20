@@ -636,6 +636,7 @@ export type User = {
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   is_followed: Scalars['Boolean']['output']
+  is_trusted: Scalars['Boolean']['output']
   profile: UserProfile
   series_list: Array<Series>
   updated_at: Scalars['Date']['output']
@@ -1469,6 +1470,7 @@ export type UserResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   is_certified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   is_followed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  is_trusted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   profile?: Resolver<ResolversTypes['UserProfile'], ParentType, ContextType>
   series_list?: Resolver<Array<ResolversTypes['Series']>, ParentType, ContextType>
   updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
