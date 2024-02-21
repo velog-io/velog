@@ -51,7 +51,7 @@ export class PostApiService implements Service {
     private readonly turnstileService: TurnstileService,
   ) {}
   public async write(input: WritePostInput, signedUserId?: string, ip = ''): Promise<Post> {
-    const { token, ...data } = input
+    const { token, tags, series_id, ...data } = input
 
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')
@@ -87,7 +87,8 @@ export class PostApiService implements Service {
       { type: 'block', value: isBlock },
     ]
 
-    if (isPublish) {
+    const isTusted = this.userService.checkTrust(signedUserId)
+    if (isPublish && !isTusted) {
       const isVerified = await this.verifyTurnstile(signedUserId, token)
       checks.push({
         type: 'turnstile',
@@ -98,6 +99,7 @@ export class PostApiService implements Service {
     if (checks.map(({ value }) => value).some((check) => check)) {
       data.is_private = true
       await this.alertIsSpam({
+        action: '작성',
         userId: user.id,
         title: input.title!,
         country,
@@ -117,8 +119,8 @@ export class PostApiService implements Service {
 
     data.url_slug = processedUrlSlug
 
-    if (data.series_id && !data.is_temp) {
-      await this.checkSeriesOwnership(data.series_id, signedUserId)
+    if (series_id && !data.is_temp) {
+      await this.checkSeriesOwnership(series_id, signedUserId)
     }
 
     const post = await this.db.post.create({
@@ -126,13 +128,16 @@ export class PostApiService implements Service {
         ...data,
         fk_user_id: signedUserId,
       },
+      include: {
+        user: true,
+      },
     })
 
-    if (data.series_id && !data.is_temp) {
-      await this.seriesService.appendToSeries(data.series_id, post.id)
+    if (series_id && !data.is_temp) {
+      await this.seriesService.appendToSeries(series_id, post.id)
     }
 
-    await this.handleTags(data, post.id)
+    await this.handleTags({ ...data, tags }, post.id)
 
     if (!data.is_temp) {
       await this.searchService.searchSync.update(post.id)
@@ -182,7 +187,7 @@ export class PostApiService implements Service {
     return post
   }
   public async edit(input: EditPostInput, signedUserId?: string, ip: string = ''): Promise<Post> {
-    const { token, ...data } = input
+    const { token, tags, series_id, ...data } = input
 
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')
@@ -201,7 +206,14 @@ export class PostApiService implements Service {
       throw new NotFoundError('Not found user')
     }
 
-    const post = await this.postService.findById(data.id)
+    const post = await this.db.post.findUnique({
+      where: {
+        id: data.id,
+      },
+      include: {
+        user: true,
+      },
+    })
     if (!post) {
       throw new BadRequestError('Not found post')
     }
@@ -227,7 +239,8 @@ export class PostApiService implements Service {
       { type: 'block', value: isBlock },
     ]
 
-    if (isPublish) {
+    const isTusted = this.userService.checkTrust(signedUserId)
+    if (isPublish && !isTusted) {
       const isVerified = await this.verifyTurnstile(signedUserId, token)
       checks.push({
         type: 'turnstile',
@@ -238,6 +251,7 @@ export class PostApiService implements Service {
     if (checks.map(({ value }) => value).some((check) => check)) {
       data.is_private = true
       await this.alertIsSpam({
+        action: '수정',
         userId: user.id,
         title: input.title!,
         country,
@@ -263,14 +277,16 @@ export class PostApiService implements Service {
       },
     })
 
-    if (!prevSeriesPost && data.series_id) {
-      await this.seriesService.appendToSeries(data.series_id, post.id)
+    if (!prevSeriesPost && series_id) {
+      await this.seriesService.appendToSeries(series_id, post.id)
     }
 
-    if (prevSeriesPost && prevSeriesPost.fk_series_id !== data.series_id) {
-      if (data.series_id) {
-        await this.checkSeriesOwnership(data.series_id, signedUserId)
-        await this.seriesService.appendToSeries(data.series_id, post.id)
+    await this.handleTags({ ...data, tags }, post.id)
+
+    if (prevSeriesPost && prevSeriesPost.fk_series_id !== series_id) {
+      if (series_id) {
+        await this.checkSeriesOwnership(series_id, signedUserId)
+        await this.seriesService.appendToSeries(series_id, post.id)
       }
 
       // remove series
@@ -347,12 +363,14 @@ export class PostApiService implements Service {
       await this.imageService.trackImages(images, data.body)
     }, 0)
 
-    return await this.db.post.update({
+    await this.db.post.update({
       where: {
         id: post.id,
       },
       data,
     })
+
+    return post
   }
   private isIncludeSpamKeyword({ input, user, country }: IsIncludeSpamKeywordArgs): boolean {
     const extraText = input.tags
@@ -435,9 +453,16 @@ export class PostApiService implements Service {
 
     return true
   }
-  private async alertIsSpam({ userId, title, ip, country, type }: AlertSpam): Promise<void> {
+  private async alertIsSpam({
+    action,
+    userId,
+    title,
+    ip,
+    country,
+    type,
+  }: AlertSpam): Promise<void> {
     const message = {
-      text: `스팸 의심 (수정) !\n *userId*: ${userId}\ntitle: ${title}, ip: ${ip}, country: ${country} type: ${type}`,
+      text: `스팸 의심 (${action}) !\n *userId*: ${userId}\ntitle: ${title}, ip: ${ip}, country: ${country} type: ${type}`,
     }
     await this.discord.sendMessage('spam', JSON.stringify(message))
   }
@@ -471,6 +496,7 @@ export class PostApiService implements Service {
 type PostInput = WritePostInput | EditPostInput
 
 type AlertSpam = {
+  action: string
   userId: string
   title: string
   ip: string

@@ -5,6 +5,7 @@ import { Prisma, Tag } from '@prisma/client'
 import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 import { ApiResponse } from '@elastic/elasticsearch'
 import { TagService } from '@services/TagService/index.js'
+import { ENV } from '@env'
 
 interface Service {
   get searchSync(): SearchSyncType
@@ -25,6 +26,7 @@ export class SearchService implements Service {
     }
   }
   private async searchSyncUpdate(postId: string) {
+    if (ENV.appEnv === 'development') return
     const post = await this.db.post.findUnique({
       where: {
         id: postId,
@@ -51,19 +53,28 @@ export class SearchService implements Service {
     const postWithTags = Object.assign(post, { tags })
     const serialized = this.serializePost(postWithTags)
 
-    // if (ENV.appEnv === 'development') return
-    return this.elasticSearch.client.index({
-      id: postId,
-      index: 'posts',
-      body: serialized,
-    })
+    try {
+      return this.elasticSearch.client.index({
+        id: postId,
+        index: 'posts',
+        body: serialized,
+      })
+    } catch (error) {
+      console.log('elasticsearch post update', error)
+      throw error
+    }
   }
   private async searchSyncRemove(postId: string) {
-    // if (ENV.appEnv === 'development') return
-    return this.elasticSearch.client.delete({
-      id: postId,
-      index: 'posts',
-    })
+    if (ENV.appEnv === 'development') return
+    try {
+      return this.elasticSearch.client.delete({
+        id: postId,
+        index: 'posts',
+      })
+    } catch (error) {
+      console.log('elasticsearch post delete', error)
+      throw error
+    }
   }
   private serializePost(post: SerializedPostParam) {
     const picked = pick(

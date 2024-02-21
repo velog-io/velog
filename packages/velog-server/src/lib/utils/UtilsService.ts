@@ -187,6 +187,9 @@ export class UtilsService implements Service {
         [text, alphanumericKorean, spaceReplaced].some((t) => t.includes(keyword)),
       )
     ) {
+      console.log('text', text)
+      console.log('alphanumericKorean', alphanumericKorean)
+      console.log('spaceReplaced', spaceReplaced)
       return true
     }
 
@@ -197,7 +200,9 @@ export class UtilsService implements Service {
       return acc
     }, 0)
 
-    if (score >= 2 && isForeign) return true
+    if (score >= 2 && isForeign) {
+      return true
+    }
     return false
   }
   private hasKorean(text: string) {
