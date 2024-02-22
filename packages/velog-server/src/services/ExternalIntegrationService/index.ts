@@ -5,8 +5,8 @@ import { JwtService } from '@lib/jwt/JwtService.js'
 import { Time } from '@constants/TimeConstants.js'
 import { ENV } from '@env'
 import axios from 'axios'
-import { IntegrationTokenData, NotifyParams } from './ExternalIntegrationInterface.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
+import { SerializePost } from '@services/PostService/index.js'
 
 interface Service {
   createIntegrationCode(userId: string): Promise<string>
@@ -114,3 +114,19 @@ export class ExternalIntegrationService implements Service {
       .catch(console.error)
   }
 }
+
+export type IntegrationTokenData = {
+  integrated_user_id: string
+  type: 'integration'
+  app_identifier: 'codenary'
+}
+
+export type NotifyParams =
+  | {
+      type: 'created' | 'updated'
+      post: SerializePost
+    }
+  | {
+      type: 'deleted'
+      post_id: string
+    }

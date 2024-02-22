@@ -51,6 +51,101 @@ export class PostApiService implements Service {
     private readonly turnstileService: TurnstileService,
   ) {}
   public async write(input: WritePostInput, signedUserId?: string, ip = ''): Promise<Post> {
+    const { data, post, userId, series_id } = await this.initializePostProcess<'write'>({
+      input,
+      signedUserId,
+      type: 'write',
+      ip,
+    })
+
+    if (series_id && !data.is_temp) {
+      await this.seriesService.appendToSeries(series_id, post.id)
+    }
+
+    try {
+      await Promise.all([
+        data.is_temp ? null : this.searchService.searchSync.update(post.id),
+        this.graphcdn.purgeRecentPosts(),
+        this.graphcdn.purgeUser(userId),
+      ])
+    } catch (error) {
+      console.log(error)
+    }
+
+    return post
+  }
+  public async edit(input: EditPostInput, signedUserId?: string, ip: string = ''): Promise<Post> {
+    const { data, post, userId, series_id } = await this.initializePostProcess<'edit'>({
+      input,
+      signedUserId,
+      type: 'edit',
+      ip,
+    })
+
+    const prevSeriesPost = await this.db.seriesPost.findFirst({
+      where: {
+        fk_post_id: post.id,
+      },
+    })
+
+    if (!prevSeriesPost && series_id) {
+      await this.seriesService.appendToSeries(series_id, post.id)
+    }
+
+    // 다른 시리즈에 추가하는 경우
+    if (prevSeriesPost && prevSeriesPost.fk_series_id !== series_id) {
+      if (series_id) {
+        await this.checkSeriesOwnership(series_id, userId)
+        await this.seriesService.appendToSeries(series_id, post.id)
+      }
+
+      // remove series
+      await Promise.all([
+        this.seriesService.subtractIndexAfter(prevSeriesPost.fk_series_id!, prevSeriesPost.index!),
+        this.db.seriesPost.delete({
+          where: {
+            id: prevSeriesPost.id,
+          },
+        }),
+      ])
+    }
+
+    try {
+      await Promise.all([
+        data.is_temp ? null : this.searchService.searchSync.update(post.id),
+        this.graphcdn.purgePost(post.id),
+      ])
+    } catch (error) {
+      console.error(error)
+    }
+
+    if (!post.is_private && data.is_private) {
+      setImmediate(async () => {
+        if (!signedUserId) return
+        const isIntegrated = await this.externalInterationService.checkIntegrated(signedUserId)
+        if (!isIntegrated) return
+        this.externalInterationService.notifyWebhook({
+          type: 'deleted',
+          post_id: post.id,
+        })
+      })
+    }
+
+    await this.db.post.update({
+      where: {
+        id: post.id,
+      },
+      data,
+    })
+
+    return { ...post, url_slug: data.url_slug }
+  }
+  private async initializePostProcess<T extends 'write' | 'edit'>({
+    input,
+    signedUserId,
+    type,
+    ip,
+  }: InitializePostProcessArgs<T>) {
     const { token, tags, series_id, ...data } = input
 
     if (!signedUserId) {
@@ -87,19 +182,19 @@ export class PostApiService implements Service {
       { type: 'block', value: isBlock },
     ]
 
-    const isTusted = this.userService.checkTrust(signedUserId)
+    const isTusted = await this.userService.checkTrust(signedUserId)
     if (isPublish && !isTusted) {
-      const isVerified = await this.verifyTurnstile(signedUserId, token)
+      const isVerified = await this.verifyTurnstile(token)
       checks.push({
         type: 'turnstile',
-        value: isVerified,
+        value: !isVerified,
       })
     }
 
     if (checks.map(({ value }) => value).some((check) => check)) {
       data.is_private = true
       await this.alertIsSpam({
-        action: '작성',
+        action: type,
         userId: user.id,
         title: input.title!,
         country,
@@ -123,201 +218,48 @@ export class PostApiService implements Service {
       await this.checkSeriesOwnership(series_id, signedUserId)
     }
 
-    const post = await this.db.post.create({
-      data: {
-        ...data,
-        fk_user_id: signedUserId,
-      },
-      include: {
-        user: true,
-      },
-    })
-
-    if (series_id && !data.is_temp) {
-      await this.seriesService.appendToSeries(series_id, post.id)
+    let post: Post | null = null
+    if (type === 'write') {
+      post = await this.db.post.create({
+        data: {
+          ...(data as Omit<WritePostInput, 'tags' | 'token' | 'series_id'>),
+          fk_user_id: signedUserId,
+        },
+        include: {
+          user: true,
+        },
+      })
     }
 
-    await this.handleTags({ ...data, tags }, post.id)
-
-    if (!data.is_temp) {
-      await this.searchService.searchSync.update(post.id)
-    }
-
-    if (isPublish) {
-      setImmediate(async () => {
-        if (!signedUserId) return
-        const isIntegrated = await this.externalInterationService.checkIntegrated(signedUserId)
-        if (!isIntegrated) return
-        const targetPost = await this.db.post.findUnique({
-          where: {
-            id: post.id,
-          },
-          include: {
-            postTags: {
-              include: {
-                tag: true,
-              },
-            },
-            user: true,
-          },
-        })
-        if (!targetPost) return
-        const serializedPost = this.postService.serialize(targetPost)
-        this.externalInterationService.notifyWebhook({
-          type: 'created',
-          post: serializedPost,
-        })
+    if (type === 'edit') {
+      post = await this.db.post.findUnique({
+        where: {
+          id: (input as EditPostInput).id,
+        },
+        include: {
+          user: true,
+        },
       })
 
-      const queueData = {
-        fk_following_id: signedUserId,
-        fk_post_id: post.id,
+      if (post?.is_temp && !data.is_temp) {
+        Object.assign(data, { released_at: new Date() })
       }
-      await this.redis.createFeedQueue(queueData)
     }
 
-    this.graphcdn.purgeRecentPosts()
-    this.graphcdn.purgeUser(signedUserId)
-
-    setTimeout(async () => {
-      const images = await this.imageService.getImagesOf(post.id)
-      await this.imageService.trackImages(images, data.body)
-    }, 0)
-
-    return post
-  }
-  public async edit(input: EditPostInput, signedUserId?: string, ip: string = ''): Promise<Post> {
-    const { token, tags, series_id, ...data } = input
-
-    if (!signedUserId) {
-      throw new UnauthorizedError('Not logged in')
-    }
-
-    const user = await this.db.user.findUnique({
-      where: {
-        id: signedUserId,
-      },
-      include: {
-        profile: true,
-      },
-    })
-
-    if (!user) {
-      throw new NotFoundError('Not found user')
-    }
-
-    const post = await this.db.post.findUnique({
-      where: {
-        id: data.id,
-      },
-      include: {
-        user: true,
-      },
-    })
     if (!post) {
-      throw new BadRequestError('Not found post')
+      throw new NotFoundError('Not found post')
     }
 
-    if (post.fk_user_id !== signedUserId) {
-      throw new ForbiddenError('This post is not yours')
-    }
-
-    if (this.utils.checkEmpty(input.title)) {
-      throw new BadRequestError('Title is empty')
-    }
-
-    const isPublish = !data.is_temp && !data.is_private
-
-    const country = geoip.lookup(ip)?.country ?? ''
-    const isSpam = this.isIncludeSpamKeyword({ input, user, country })
-    const isLimit = await this.isPostLimitReached(signedUserId)
-    const isBlock = await this.dynamicConfigService.checkBlockedUser(user.username)
-
-    const checks = [
-      { type: 'spam', value: isSpam },
-      { type: 'limit', value: isLimit },
-      { type: 'block', value: isBlock },
-    ]
-
-    const isTusted = this.userService.checkTrust(signedUserId)
-    if (isPublish && !isTusted) {
-      const isVerified = await this.verifyTurnstile(signedUserId, token)
-      checks.push({
-        type: 'turnstile',
-        value: isVerified,
-      })
-    }
-
-    if (checks.map(({ value }) => value).some((check) => check)) {
-      data.is_private = true
-      await this.alertIsSpam({
-        action: '수정',
-        userId: user.id,
-        title: input.title!,
-        country,
-        ip,
-        type: checks
-          .filter(({ value }) => value)
-          .map(({ type }) => type)
-          .join(','),
-      })
-    }
-
-    const processedUrlSlug = await this.generateUrlSlug({
-      input,
-      urlSlug: input.url_slug,
-      userId: signedUserId,
-    })
-
-    data.url_slug = processedUrlSlug
-
-    const prevSeriesPost = await this.db.seriesPost.findUnique({
-      where: {
-        id: post.id,
-      },
-    })
-
-    if (!prevSeriesPost && series_id) {
-      await this.seriesService.appendToSeries(series_id, post.id)
-    }
-
-    await this.handleTags({ ...data, tags }, post.id)
-
-    if (prevSeriesPost && prevSeriesPost.fk_series_id !== series_id) {
-      if (series_id) {
-        await this.checkSeriesOwnership(series_id, signedUserId)
-        await this.seriesService.appendToSeries(series_id, post.id)
-      }
-
-      // remove series
-      await Promise.all([
-        this.seriesService.subtractIndexAfter(prevSeriesPost.fk_series_id!, prevSeriesPost.index!),
-        this.db.seriesPost.delete({
-          where: {
-            id: prevSeriesPost.id,
-          },
-        }),
-      ])
-    }
-
-    if (post.is_temp && !data.is_temp) {
-      Object.assign(data, { released_at: new Date() })
-    }
-
-    try {
-      await Promise.all([
-        data.is_temp ? null : this.searchService.searchSync.update(post.id),
-        this.graphcdn.purgePost(post.id),
-      ])
-    } catch (error) {
-      console.error(error)
-    }
+    await this.handleTags(tags, post.id)
 
     if (isPublish) {
       setImmediate(async () => {
+        if (!post) return
         if (!signedUserId) return
+
         const isIntegrated = await this.externalInterationService.checkIntegrated(signedUserId)
         if (!isIntegrated) return
+
         const targetPost = await this.db.post.findUnique({
           where: {
             id: post.id,
@@ -332,9 +274,10 @@ export class PostApiService implements Service {
           },
         })
         if (!targetPost) return
+
         const serializedPost = this.postService.serialize(targetPost)
         this.externalInterationService.notifyWebhook({
-          type: 'updated',
+          type: type === 'write' ? 'created' : 'updated',
           post: serializedPost,
         })
       })
@@ -343,34 +286,16 @@ export class PostApiService implements Service {
         fk_following_id: signedUserId,
         fk_post_id: post.id,
       }
-      await this.redis.createFeedQueue(queueData)
-    }
-
-    if (!post.is_private && data.is_private) {
-      setImmediate(async () => {
-        if (!signedUserId) return
-        const isIntegrated = await this.externalInterationService.checkIntegrated(signedUserId)
-        if (!isIntegrated) return
-        this.externalInterationService.notifyWebhook({
-          type: 'deleted',
-          post_id: post.id,
-        })
-      })
+      this.redis.createFeedQueue(queueData)
     }
 
     setTimeout(async () => {
+      if (!post) return
       const images = await this.imageService.getImagesOf(post.id)
       await this.imageService.trackImages(images, data.body)
     }, 0)
 
-    await this.db.post.update({
-      where: {
-        id: post.id,
-      },
-      data,
-    })
-
-    return post
+    return { data, isPublish, post, userId: signedUserId, series_id }
   }
   private isIncludeSpamKeyword({ input, user, country }: IsIncludeSpamKeywordArgs): boolean {
     const extraText = input.tags
@@ -419,11 +344,11 @@ export class PostApiService implements Service {
     return processedUrlSlug
   }
   private isEditArgs(args: any): args is EditPostInput {
-    if (!args.id) return true
+    if (args.id) return true
     return false
   }
-  private async handleTags(input: PostInput, postId: string): Promise<Tag[]> {
-    const tagsData = await Promise.all(input.tags.map(this.tagService.findOrCreate))
+  private async handleTags(tags: string[], postId: string): Promise<Tag[]> {
+    const tagsData = await Promise.all(tags.map((tag) => this.tagService.findOrCreate(tag)))
     await this.postTagService.syncPostTags(postId, tagsData)
     return tagsData
   }
@@ -460,7 +385,7 @@ export class PostApiService implements Service {
     ip,
     country,
     type,
-  }: AlertSpam): Promise<void> {
+  }: AlertSpamArgs): Promise<void> {
     const message = {
       text: `스팸 의심 (${action}) !\n *userId*: ${userId}\ntitle: ${title}, ip: ${ip}, country: ${country} type: ${type}`,
     }
@@ -482,20 +407,15 @@ export class PostApiService implements Service {
 
     return series
   }
-  private async verifyTurnstile(signedUserId: string, token?: string): Promise<boolean> {
-    const isTrusted = await this.userService.checkTrust(signedUserId)
-    if (isTrusted) return true
-    if (!token) {
-      throw new BadRequestError('Turnstile token is required')
-    }
-
+  private async verifyTurnstile(token: string = ''): Promise<boolean> {
+    if (!token) return false
     return await this.turnstileService.verifyToken(token)
   }
 }
 
 type PostInput = WritePostInput | EditPostInput
 
-type AlertSpam = {
+type AlertSpamArgs = {
   action: string
   userId: string
   title: string
@@ -514,4 +434,11 @@ type GenerateUrlSlugArgs = {
   input: PostInput
   urlSlug: string
   userId: string
+}
+
+type InitializePostProcessArgs<T extends 'write' | 'edit'> = {
+  input: T extends 'write' ? WritePostInput : EditPostInput
+  signedUserId?: string
+  type: T
+  ip: string
 }
