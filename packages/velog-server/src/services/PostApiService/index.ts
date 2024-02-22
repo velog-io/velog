@@ -51,7 +51,7 @@ export class PostApiService implements Service {
     private readonly turnstileService: TurnstileService,
   ) {}
   public async write(input: WritePostInput, signedUserId?: string, ip = ''): Promise<Post> {
-    const { data, post, userId, series_id } = await this.initializePostProcess<'write'>({
+    const { data, post, series_id } = await this.initializePostProcess<'write'>({
       input,
       signedUserId,
       type: 'write',
@@ -62,14 +62,8 @@ export class PostApiService implements Service {
       await this.seriesService.appendToSeries(series_id, post.id)
     }
 
-    try {
-      await Promise.all([
-        data.is_temp ? null : this.searchService.searchSync.update(post.id),
-        this.graphcdn.purgeRecentPosts(),
-        this.graphcdn.purgeUser(userId),
-      ])
-    } catch (error) {
-      console.log(error)
+    if (!data.is_temp) {
+      await this.searchService.searchSync.update(post.id)
     }
 
     return post
@@ -110,6 +104,13 @@ export class PostApiService implements Service {
       ])
     }
 
+    await this.db.post.update({
+      where: {
+        id: post.id,
+      },
+      data,
+    })
+
     try {
       await Promise.all([
         data.is_temp ? null : this.searchService.searchSync.update(post.id),
@@ -130,13 +131,6 @@ export class PostApiService implements Service {
         })
       })
     }
-
-    await this.db.post.update({
-      where: {
-        id: post.id,
-      },
-      data,
-    })
 
     return { ...post, url_slug: data.url_slug }
   }

@@ -54,11 +54,13 @@ export class SearchService implements Service {
     const serialized = this.serializePost(postWithTags)
 
     try {
-      return this.elasticSearch.client.index({
+      const result = await this.elasticSearch.client.index({
         id: postId,
         index: 'posts',
         body: serialized,
       })
+
+      return result
     } catch (error) {
       console.log('elasticsearch post update', error)
       throw error
