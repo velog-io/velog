@@ -79,7 +79,6 @@ const userResolvers: Resolvers = {
     checkEmailExists: async (_, { input }) => {
       const userService = container.resolve(UserService)
       const user = await userService.findByEmail(input.email)
-      console.log('user', user)
       return !!user
     },
   },
