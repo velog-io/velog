@@ -11,7 +11,7 @@ export const changeEmailTemplate: ChangeEmailTemplateArgs = (username, email, co
   </a>
   <div style="max-width: 100%; margin: 0 auto; padding: 1rem; text-align: justify; background: #f8f9fa; border: 1px solid #dee2e6; box-sizing: border-box; border-radius: 4px; color: #868e96; margin-top: 0.5rem; box-sizing: border-box;">
     <div><b style="black">안녕하세요!</b></div>
-    <p style="white-space: pre; word-wrap: break-word; word-break: break-all;">${username}의 이메일을 ${email}로 ${text}하는 것을 승인하겠습니까?</p>
+    <p style="word-wrap: break-word; word-break: break-all;">${username}의 이메일을 ${email}로 ${text}하는 것을 승인하겠습니까?</p>
   </div>
   <a href="${endpoint}/email-change?code=${code}" style="text-decoration: none; width: 400px; text-align:center; display:block; margin: 0 auto; margin-top: 1rem; background: #845ef7; padding-top: 1rem; color: white; font-size: 1.25rem; padding-bottom: 1rem; font-weight: 600; border-radius: 4px;">
     ${text}하기
