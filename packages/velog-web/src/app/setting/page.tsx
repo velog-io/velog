@@ -1,3 +1,4 @@
+import RequireLogin from '@/components/RequireLogin'
 import SettingEmailRow from '@/features/setting/components/SettingEmailRow'
 import SettingEmailRulesRow from '@/features/setting/components/SettingEmailRulesRow'
 import SettingSocialInfoRow from '@/features/setting/components/SettingSocialInfoRow'
@@ -13,7 +14,7 @@ export default async function SettingPage() {
   const user = await getCurrentUser()
 
   if (!user) {
-    notFound()
+    return <RequireLogin />
   }
 
   const velogConfig = await getVelogConfig({ username: user.username })
