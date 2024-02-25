@@ -2,7 +2,6 @@ import 'reflect-metadata'
 import { ENV } from '../env/env.mjs'
 import { DbService } from '../lib/db/DbService.mjs'
 import { container, injectable, singleton } from 'tsyringe'
-import { RedisService } from '../lib/redis/RedisService.mjs'
 
 @singleton()
 @injectable()
