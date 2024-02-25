@@ -1,22 +1,25 @@
-import { RedisService } from '@lib/redis/RedisService.js'
+import { DbService } from '@lib/db/DbService.js'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
-  checkBlockedUser(username: string): Promise<boolean>
+  isBlockedUser(username: string): Promise<boolean>
 }
 
 @injectable()
 @singleton()
 export class DynamicConfigService implements Service {
-  constructor(private readonly redis: RedisService) {}
-  public async checkBlockedUser(username: string = ''): Promise<boolean> {
+  constructor(private readonly db: DbService) {}
+  public async isBlockedUser(username: string = ''): Promise<boolean> {
     const list = await this.readBlockUserList()
     const isBlocked = list.includes(username)
     return isBlocked
   }
   private async readBlockUserList(): Promise<string[]> {
-    const keyname = this.redis.setName.blockList
-    const list = await this.redis.smembers(keyname)
-    return list
+    const list = await this.db.dynamicConfigItem.findMany({
+      where: {
+        type: 'username',
+      },
+    })
+    return list.map((item) => item.value)
   }
 }

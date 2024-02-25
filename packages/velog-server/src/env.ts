@@ -3,6 +3,8 @@ import { existsSync } from 'fs'
 import { z } from 'zod'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+import { container } from 'tsyringe'
+import { DbService } from '@lib/db/DbService.js'
 
 type DockerEnv = 'development' | 'stage' | 'production'
 type AppEnvironment = 'development' | 'production'
@@ -88,6 +90,8 @@ const env = z.object({
   graphcdnToken: z.string(),
 })
 
+const { bannedKeywords, bannedAltKeywords } = await readEnvFromDatabase()
+
 export const ENV = env.parse({
   dockerEnv,
   appEnv,
@@ -127,7 +131,17 @@ export const ENV = env.parse({
   discordErrorChannel: process.env.DISCORD_ERROR_CHANNEL,
   discordSpamChannel: process.env.DISCORD_SPAM_CHANNEL,
   turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY,
-  bannedKeywords: process.env.BANNED_KEYWORDS?.split(','),
-  bannedAltKeywords: process.env.BANNED_ALT_KEYWORDS?.split(','),
+  bannedKeywords: bannedKeywords,
+  bannedAltKeywords: bannedAltKeywords,
   graphcdnToken: process.env.GRAPHCDN_TOKEN,
 })
+
+async function readEnvFromDatabase() {
+  const db = container.resolve(DbService)
+  const items = await db.dynamicConfigItem.findMany()
+
+  return {
+    bannedKeywords: items.filter((item) => item.type === 'banned').map((item) => item.value),
+    bannedAltKeywords: items.filter((item) => item.type === 'bannedAlt').map((item) => item.value),
+  }
+}

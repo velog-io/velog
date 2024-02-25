@@ -168,7 +168,7 @@ export class PostApiService implements Service {
     const country = geoip.lookup(ip)?.country ?? ''
     const isSpam = this.isIncludeSpamKeyword({ input, user, country })
     const isLimit = await this.isPostLimitReached(signedUserId)
-    const isBlock = await this.dynamicConfigService.checkBlockedUser(user.username)
+    const isBlock = await this.dynamicConfigService.isBlockedUser(user.username)
 
     const checks = [
       { type: 'spam', value: isSpam },
