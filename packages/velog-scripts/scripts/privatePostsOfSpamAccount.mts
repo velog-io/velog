@@ -5,17 +5,16 @@ import { container, injectable } from 'tsyringe'
 import inquirer from 'inquirer'
 import { ENV } from '../env/env.mjs'
 import { DiscordService } from '../lib/discord/DiscordService.mjs'
-import { RedisService } from '../lib/redis/RedisService.mjs'
+import { BlockListService } from '../lib/blockList/BlockListService.mjs'
 
 interface IRunner {}
 
 @injectable()
 class Runner implements IRunner {
-  blockList!: string[]
   constructor(
     private readonly db: DbService,
     private readonly discord: DiscordService,
-    private readonly redis: RedisService,
+    private readonly blockList: BlockListService,
   ) {}
   public async run(names: string[]) {
     await this.init()
@@ -27,7 +26,7 @@ class Runner implements IRunner {
         const posts = await this.findWritenPostsByUserId(user.id)
 
         // add block list
-        await this.redis.addBlockList(username)
+        await this.blockList.addBlockList(username)
 
         if (posts.length === 0) {
           console.log(`${user.username} 유저의 비공개 처리 할 게시글이 없습니다.`)
@@ -85,9 +84,7 @@ class Runner implements IRunner {
   private async init() {
     try {
       await this.discord.connection()
-      await this.redis.connection()
-
-      this.blockList = await this.redis.readBlockList()
+      await this.db.$connect()
     } catch (error) {
       throw error
     }
@@ -130,7 +127,8 @@ class Runner implements IRunner {
     username: string,
     displayName: string | null,
   ): Promise<AskDeletePostsResult> {
-    if (this.blockList.includes(username)) {
+    const blockedList = await this.blockList.readBlockList()
+    if (blockedList.includes(username)) {
       return {
         posts,
         is_set_private: true,
