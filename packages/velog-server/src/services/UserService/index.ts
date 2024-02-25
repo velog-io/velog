@@ -253,13 +253,13 @@ export class UserService implements Service {
     try {
       if (ENV.dockerEnv === 'development') {
         console.log(`Login URL: ${ENV.clientV3Host}/email-change?code=${code}`)
+      } else {
+        await this.mail.sendMail({
+          to: email,
+          from: 'verify@velog.io',
+          ...template,
+        })
       }
-
-      await this.mail.sendMail({
-        to: email,
-        from: 'verify@velog.io',
-        ...template,
-      })
     } catch (error) {
       console.error('change email error', error)
       throw error
