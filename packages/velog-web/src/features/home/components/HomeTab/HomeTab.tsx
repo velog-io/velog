@@ -60,7 +60,7 @@ function HomeTab({ isFloatingHeader = false }: Props) {
           <motion.div
             initial={false}
             animate={{
-              left: isFeed ? '71.33%' : isRecent ? '37.33%' : '1%',
+              left: isFeed ? '68.33%' : isRecent ? '38.33%' : '2%',
             }}
             className={cx('indicator')}
           />
