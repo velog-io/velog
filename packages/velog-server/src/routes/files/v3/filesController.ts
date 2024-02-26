@@ -40,7 +40,7 @@ export class FilesController implements Controller {
     ip,
   }: CreateUrlArgs): Promise<CreateUrlResult> {
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     const { type, filename, refId } = body

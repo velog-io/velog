@@ -57,8 +57,7 @@ function getMessage(migrationDiff: string[]): string {
   const question = `🤔 Are you sure?`
   return [
     title,
-    ...migrationDiff.map((filename) => `  - ${filename}\n\n${getMigrationSummary(filename)}`),
-    '',
+    ...migrationDiff.map((filename) => `  - ${filename}\n${getMigrationSummary(filename)}`),
     question,
   ].join('\n')
 }
@@ -72,10 +71,12 @@ function getMigrationSummary(filename: string) {
   )
 
   const sql = fs.readFileSync(filepath, { encoding: 'utf-8' })
+  const lines = sql.split('\n')
+
   const target = ['ALTER', 'CREATE', 'DROP']
-  return sql
-    .split('\n')
+  return lines
     .filter((line) => target.some((str) => line.includes(str)))
     .map((v) => `    - ${v.replace(/[{}\[\]()<>;]+/g, '').toLowerCase()}`)
+    .map((v, i, arr) => (i === arr.length - 1 ? `${v}\n` : v))
     .join('\n')
 }

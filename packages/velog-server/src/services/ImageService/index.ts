@@ -29,6 +29,7 @@ export class ImageService implements Service {
     })
     return images
   }
+
   public async untrackPastImages(userId: string) {
     const images = await this.db.userImageNext.findMany({
       where: {
@@ -44,23 +45,23 @@ export class ImageService implements Service {
     if (images.length < 2) return
 
     // remove first one
-    const promises = images.slice(1).map(async (image) => {
-      return await this.db.userImageNext.update({
-        where: {
-          id: image.id,
-        },
-        data: {
-          tracked: false,
-        },
-      })
-    })
+    const imageIds = images.slice(1).map((image) => image.id)
 
-    await Promise.all(promises)
+    await this.db.userImageNext.updateMany({
+      where: {
+        id: {
+          in: imageIds,
+        },
+      },
+      data: {
+        tracked: false,
+      },
+    })
   }
 
   public async trackImages(images: UserImageNext[], body: string) {
     const promises = images.map(async (image) => {
-      const tracked = body.includes(image.id) ? true : false
+      const tracked = body.includes(image.id)
       return await this.db.userImageNext.update({
         where: {
           id: image.id,

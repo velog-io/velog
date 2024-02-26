@@ -12,6 +12,7 @@ import { SeriesService } from '@services/SeriesService/index.js'
 import { TagService } from '@services/TagService/index.js'
 import { FollowUserService } from '@services/FollowUser/index.js'
 import { FeedService } from '@services/FeedService/index.js'
+import { PostApiService } from '@services/PostApiService/index.js'
 
 const postResolvers: Resolvers = {
   Post: {
@@ -103,6 +104,14 @@ const postResolvers: Resolvers = {
     },
   },
   Mutation: {
+    writePost: async (_, { input }, ctx) => {
+      const postApiService = container.resolve(PostApiService)
+      return await postApiService.write(input, ctx.user?.id, ctx.ip ?? '')
+    },
+    editPost: async (_, { input }, ctx) => {
+      const postApiService = container.resolve(PostApiService)
+      return await postApiService.edit(input, ctx.user?.id, ctx.ip ?? '')
+    },
     likePost: async (_, { input }, ctx): Promise<Post> => {
       const postLikeService = container.resolve(PostLikeService)
       return await postLikeService.likePost(input.postId, ctx.user?.id)

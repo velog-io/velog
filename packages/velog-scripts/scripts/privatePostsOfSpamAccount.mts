@@ -5,17 +5,16 @@ import { container, injectable } from 'tsyringe'
 import inquirer from 'inquirer'
 import { ENV } from '../env/env.mjs'
 import { DiscordService } from '../lib/discord/DiscordService.mjs'
-import { RedisService } from '../lib/redis/RedisService.mjs'
+import { BlockListService } from '../lib/blockList/BlockListService.mjs'
 
 interface IRunner {}
 
 @injectable()
 class Runner implements IRunner {
-  blockList!: string[]
   constructor(
     private readonly db: DbService,
     private readonly discord: DiscordService,
-    private readonly redis: RedisService,
+    private readonly blockList: BlockListService,
   ) {}
   public async run(names: string[]) {
     await this.init()
@@ -26,8 +25,12 @@ class Runner implements IRunner {
         const user = await this.findUsersByUsername(username)
         const posts = await this.findWritenPostsByUserId(user.id)
 
-        // add block list
-        await this.redis.addBlockList(username)
+        const blockList = await this.blockList.readBlockList()
+
+        if (blockList.includes(username)) {
+          console.log(`${username} 유저는 이미 등록되어 있습니다.`)
+          continue
+        }
 
         if (posts.length === 0) {
           console.log(`${user.username} 유저의 비공개 처리 할 게시글이 없습니다.`)
@@ -41,9 +44,12 @@ class Runner implements IRunner {
           user.profile?.display_name || null,
         )
 
-        const postIds = posts.map(({ id }) => id!)
-
         if (!askResult.is_set_private) continue
+
+        const postIds = posts.map(({ id }) => id!)
+        // add block list
+        await this.blockList.addBlockList(username)
+
         // set private = true
         await this.setIsPrivatePost(postIds)
 
@@ -62,21 +68,24 @@ class Runner implements IRunner {
     }
 
     if (handledUser.length === 0) {
-      console.log('비공개 게시글 처리된 유저가 존재하지 않습니다.')
+      console.log('비공개 게시글로 처리된 유저가 존재하지 않습니다.')
       process.exit(0)
     }
 
     try {
-      const result = await this.discord.sendMessage(
-        ENV.discordPrivatePostsChannelId,
-        JSON.stringify({
-          title: '해당 유저의 글들이 비공개 처리 되었습니다.',
-          userInfo: handledUser,
-        }),
-      )
+      const promises = handledUser.map(async (userInfo) => {
+        await this.discord.sendMessage(
+          ENV.discordPrivatePostsChannelId,
+          JSON.stringify({
+            title: '해당 유저의 글들이 비공개 처리 되었습니다.',
+            userInfo: userInfo,
+          }),
+        )
 
-      handledUser.map((u) => console.log(`${u.username} 유저가 처리 되었습니다.`))
-      console.log(result)
+        console.log(`${userInfo.username} 유저가 처리 되었습니다.`)
+      })
+
+      await Promise.all(promises)
       process.exit(0)
     } catch (error) {
       console.log(error)
@@ -85,9 +94,7 @@ class Runner implements IRunner {
   private async init() {
     try {
       await this.discord.connection()
-      await this.redis.connection()
-
-      this.blockList = await this.redis.readBlockList()
+      await this.db.$connect()
     } catch (error) {
       throw error
     }
@@ -130,7 +137,8 @@ class Runner implements IRunner {
     username: string,
     displayName: string | null,
   ): Promise<AskDeletePostsResult> {
-    if (this.blockList.includes(username)) {
+    const blockedList = await this.blockList.readBlockList()
+    if (blockedList.includes(username)) {
       return {
         posts,
         is_set_private: true,

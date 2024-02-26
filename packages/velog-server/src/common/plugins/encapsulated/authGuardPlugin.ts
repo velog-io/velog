@@ -5,7 +5,7 @@ import fp from 'fastify-plugin'
 const authGuardPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.addHook('preHandler', async (request) => {
     if (!request.user) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
   })
 }

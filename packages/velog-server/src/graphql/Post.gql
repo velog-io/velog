@@ -76,8 +76,8 @@ type Query {
 }
 
 type Mutation {
-  # writePost(input: WritePostInput!): Post
-  # editPost(input: EditPostInput): Post
+  writePost(input: WritePostInput!): Post!
+  editPost(input: EditPostInput!): Post!
   # createPostHistory(
   #   post_id: ID!
   #   title: String!
@@ -85,37 +85,39 @@ type Mutation {
   #   is_markdown: Boolean!
   # ): PostHistory
   # removePost(id: ID!): Boolean
-  likePost(input: LikePostInput!): Post
-  unlikePost(input: UnlikePostInput!): Post
+  likePost(input: LikePostInput!): Post!
+  unlikePost(input: UnlikePostInput!): Post!
   # postView(id: ID!): Boolean
 }
 
-# input WritePostInput {
-#   title: String
-#   body: String
-#   tags: [String]
-#   is_markdown: Boolean
-#   is_temp: Boolean
-#   is_private: Boolean
-#   url_slug: String
-#   thumbnail: String
-#   meta: JSON
-#   series_id: ID
-# }
+input WritePostInput {
+  title: String!
+  body: String!
+  tags: [String!]!
+  is_markdown: Boolean!
+  is_temp: Boolean!
+  is_private: Boolean!
+  url_slug: String!
+  thumbnail: String
+  meta: JSON!
+  series_id: ID
+  token: String
+}
 
-# input EditPostInput {
-#   id: ID!
-#   title: String
-#   body: String
-#   tags: [String]
-#   is_markdown: Boolean
-#   is_temp: Boolean
-#   url_slug: String
-#   thumbnail: String
-#   meta: JSON
-#   is_private: Boolean
-#   series_id: ID
-# }
+input EditPostInput {
+  id: ID!
+  title: String!
+  body: String!
+  tags: [String!]!
+  is_markdown: Boolean!
+  is_temp: Boolean!
+  is_private: Boolean!
+  url_slug: String!
+  thumbnail: String
+  meta: JSON!
+  series_id: ID
+  token: String
+}
 
 input ReadPostInput {
   id: ID

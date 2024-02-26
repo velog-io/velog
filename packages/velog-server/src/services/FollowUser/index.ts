@@ -57,7 +57,7 @@ export class FollowUserService implements Service {
     }
 
     if (!followerUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     if (followingUserId === followerUserId) {
@@ -128,7 +128,7 @@ export class FollowUserService implements Service {
     }
 
     if (!followerUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     if (followingUserId === followerUserId) {

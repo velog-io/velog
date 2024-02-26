@@ -15,7 +15,7 @@ const env = z.object({
   discordPrivatePostsChannelId: z.string(),
   redisHost: z.string(),
   restorePostsUsername: z.string().optional(),
-  bannedKeywords: z.array(z.string()).min(1),
+  bannedKeywords: z.array(z.string()),
 })
 
 export const ENV = env.parse({
