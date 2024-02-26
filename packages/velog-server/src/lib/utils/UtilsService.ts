@@ -159,6 +159,7 @@ export class UtilsService implements Service {
   public spamFilter(text: string, isForeign: boolean, isTitle = false): boolean {
     const includesCN = /[\u4e00-\u9fa5]/.test(text)
     const includesKR = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(text)
+
     if (includesCN && !includesKR) {
       return true
     }
@@ -187,9 +188,6 @@ export class UtilsService implements Service {
         [text, alphanumericKorean, spaceReplaced].some((t) => t.includes(keyword)),
       )
     ) {
-      console.log('text', text)
-      console.log('alphanumericKorean', alphanumericKorean)
-      console.log('spaceReplaced', spaceReplaced)
       return true
     }
 
