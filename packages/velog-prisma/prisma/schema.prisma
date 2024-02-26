@@ -640,3 +640,13 @@ model Notification {
   @@index([fk_user_id])
   @@map("notifications")
 }
+
+model DynamicConfigItem {
+  id    String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  value String @db.VarChar(50)
+  type  String @db.VarChar(50)
+
+  @@unique([value, type])
+  @@index([value])
+  @@map("dynamic_config_items")
+}

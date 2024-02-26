@@ -12,6 +12,7 @@ type User {
   followers_count: Int!
   followings_count: Int!
   is_followed: Boolean!
+  is_trusted: Boolean!
 }
 
 type UserProfile {

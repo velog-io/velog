@@ -15,6 +15,7 @@ interface Service {
   getThumbnail(seriesId: string): Promise<string | null>
   getSeriesListByUsername(username: string): Promise<Series[]>
   getSeries(input: GetSeriesInput): Promise<Series | null>
+  appendToSeries(seriesId: string, postId: string): Promise<void>
 }
 
 @injectable()
@@ -29,9 +30,10 @@ export class SeriesService implements Service {
     })
     return series
   }
+
   public async findByUserId(userId?: string): Promise<Series[]> {
     if (!userId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
     const seriesList = await this.db.series.findMany({
       where: {
@@ -61,6 +63,7 @@ export class SeriesService implements Service {
     if (!seriesPost) return null
     return seriesPost?.series
   }
+
   public async getPostCount(seriesId: string): Promise<number> {
     const count = await this.db.seriesPost.count({
       where: {
@@ -69,6 +72,7 @@ export class SeriesService implements Service {
     })
     return count
   }
+
   public seriesPostLoader() {
     return this.createSeriesPostsLoader()
   }
@@ -101,7 +105,8 @@ export class SeriesService implements Service {
       return ordered
     })
   }
-  async getThumbnail(seriesId: string): Promise<string | null> {
+
+  public async getThumbnail(seriesId: string): Promise<string | null> {
     const seriesPost = await this.db.seriesPost.findFirst({
       where: {
         index: 1,
@@ -148,5 +153,46 @@ export class SeriesService implements Service {
     })
 
     return series
+  }
+
+  public async appendToSeries(seriesId: string, postId: string): Promise<void> {
+    const postsCount = await this.db.seriesPost.count({
+      where: {
+        fk_series_id: seriesId,
+      },
+    })
+
+    const nextIndex = postsCount + 1
+    const series = await this.db.series.findUnique({
+      where: {
+        id: seriesId,
+      },
+    })
+
+    if (!series) return
+
+    await this.db.seriesPost.create({
+      data: {
+        fk_post_id: postId,
+        fk_series_id: seriesId,
+        index: nextIndex,
+      },
+    })
+  }
+
+  public async subtractIndexAfter(seriesId: string, afterIndex: number) {
+    return this.db.seriesPost.updateMany({
+      where: {
+        fk_series_id: seriesId,
+        index: {
+          gt: afterIndex,
+        },
+      },
+      data: {
+        index: {
+          decrement: 1,
+        },
+      },
+    })
   }
 }

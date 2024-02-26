@@ -21,7 +21,7 @@ export class UserMetaService implements Service {
   }
   public async getMyMeta(user: User, signedUserId?: string): Promise<UserMeta | null> {
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     if (user.id !== signedUserId) {
@@ -36,7 +36,7 @@ export class UserMetaService implements Service {
   }
   public async updateUserMeta(patch: UpdateUserMetaArgs, signedUserId?: string): Promise<UserMeta> {
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     const userMeta = await this.findByUserId(signedUserId)

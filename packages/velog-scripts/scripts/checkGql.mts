@@ -244,5 +244,13 @@ type TargetInfo = {
 type Target = Record<string, TargetInfo>
 
 function whiteList() {
-  return ['logout', 'unregisterToken', 'acceptIntegration']
+  return [
+    'isLogged',
+    'logout',
+    'unregisterToken',
+    'acceptIntegration',
+    'readAllNotifications',
+    'removeAllNotifications',
+    'updateNotNoticeNotification',
+  ]
 }

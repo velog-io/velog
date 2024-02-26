@@ -10,9 +10,11 @@ import { UserTags } from '@graphql/helpers/generated'
 interface Service {
   findByNameFiltered(name: string): Promise<Tag | null>
   findById(tagId: string): Promise<Tag | null>
+  findByName(name: string): Promise<Tag | null>
   tagLoader(): DataLoader<string, Tag[]>
   getOriginTag(tagname: string): Promise<Tag | null>
   getUserTags(username: string, signedUserId?: string): Promise<GetUserTagsResult>
+  findOrCreate(name: string): Promise<Tag>
 }
 
 @injectable()
@@ -37,6 +39,7 @@ export class TagService implements Service {
       },
     })
   }
+
   public async findByName(name: string): Promise<Tag | null> {
     const filtered = this.utils.escapeForUrl(name).toLowerCase()
     return await this.db.tag.findFirst({
@@ -45,6 +48,7 @@ export class TagService implements Service {
       },
     })
   }
+
   public tagLoader() {
     return this.createTagsLoader()
   }
@@ -77,6 +81,7 @@ export class TagService implements Service {
         .map((array) => array.map((pt) => pt.tag!))
     })
   }
+
   public async getOriginTag(tagname: string): Promise<Tag | null> {
     const filtered = this.utils.escapeForUrl(tagname).toLowerCase()
 
@@ -102,6 +107,7 @@ export class TagService implements Service {
     }
     return tag
   }
+
   public async getUserTags(username: string, signedUserId?: string): Promise<GetUserTagsResult> {
     const user = await this.userService.findByUsername(username)
 
@@ -151,6 +157,21 @@ export class TagService implements Service {
     )
 
     return rawData.map((data) => ({ ...data, posts_count: Number(data.posts_count) }))
+  }
+
+  public async findOrCreate(name: string): Promise<Tag> {
+    const tag = await this.findByName(name)
+    if (tag) return tag
+
+    const filtered = this.utils.escapeForUrl(name).toLowerCase()
+    const freshTag = await this.db.tag.create({
+      data: {
+        name,
+        name_filtered: filtered,
+      },
+    })
+
+    return freshTag
   }
 }
 

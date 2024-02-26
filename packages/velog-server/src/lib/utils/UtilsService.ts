@@ -24,6 +24,7 @@ interface Service {
   validateEmail(email: string): boolean
   alphanumeric(): string
   randomNumber(max: number): number
+  spamFilter(text: string, isForeign: boolean, isTitle?: boolean): boolean
 }
 
 @injectable()
@@ -154,5 +155,55 @@ export class UtilsService implements Service {
   }
   public randomNumber(max: number) {
     return Math.floor(Math.random() * (max + 1))
+  }
+  public spamFilter(text: string, isForeign: boolean, isTitle = false): boolean {
+    const includesCN = /[\u4e00-\u9fa5]/.test(text)
+    const includesKR = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(text)
+
+    if (includesCN && !includesKR) {
+      return true
+    }
+
+    let replaced = text.replace(/```([\s\S]*?)```/g, '') // remove code blocks
+    // replace image markdown
+    replaced = replaced.replace(/!\[([\s\S]*?)\]\(([\s\S]*?)\)/g, '')
+
+    const alphanumericKorean = replaced
+      .replace(/[^a-zA-Zㄱ-힣0-9 \n]/g, '') // remove non-korean
+      .toLowerCase()
+
+    const hasLink = /http/.test(replaced)
+
+    if (!isTitle && isForeign && hasLink) {
+      const lines = replaced.split('\n').filter((line) => line.trim().length > 1)
+      const koreanLinesCount = lines.filter((line) => this.hasKorean(line)).length
+      const confidence = koreanLinesCount / lines.length
+      return confidence < 0.3
+    }
+
+    const spaceReplaced = alphanumericKorean.replace(/\s/g, '')
+
+    if (
+      ENV.bannedKeywords.some((keyword) =>
+        [text, alphanumericKorean, spaceReplaced].some((t) => t.includes(keyword)),
+      )
+    ) {
+      return true
+    }
+
+    const score = ENV.bannedAltKeywords.reduce((acc, current) => {
+      if (alphanumericKorean.includes(current)) {
+        return acc + 1
+      }
+      return acc
+    }, 0)
+
+    if (score >= 2 && isForeign) {
+      return true
+    }
+    return false
+  }
+  private hasKorean(text: string) {
+    return /[ㄱ-힣]/g.test(text)
   }
 }

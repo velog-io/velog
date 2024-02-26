@@ -3,6 +3,8 @@ import { existsSync } from 'fs'
 import { z } from 'zod'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+import { container } from 'tsyringe'
+import { DbService } from '@lib/db/DbService.js'
 
 type DockerEnv = 'development' | 'stage' | 'production'
 type AppEnvironment = 'development' | 'production'
@@ -14,9 +16,9 @@ const envFiles: EnvFiles = {
   stage: '.env.stage',
 }
 
-if (!process.env.DOCKER_ENV && process.env.NODE_ENV !== 'development') {
+if (!process.env.DOCKER_ENV && process.env.NODE_ENV !== undefined) {
   console.error(
-    'Development environment was initiated despite the absence of the Docker environment.',
+    'Development environment was initiated, despite the absence of the Docker environment.',
   )
 }
 
@@ -72,6 +74,7 @@ const env = z.object({
   codenaryApiKey: z.string(),
   codenaryCallback: z.string(),
   redisHost: z.string(),
+  redisPort: z.number(),
   slackUrl: z.string(),
   slackImage: z.string(),
   blacklistUsername: z.array(z.string()),
@@ -80,7 +83,14 @@ const env = z.object({
   adFreeWritersUsername: z.array(z.string()),
   discordBotToken: z.string(),
   discordErrorChannel: z.string(),
+  discordSpamChannel: z.string(),
+  turnstileSecretKey: z.string(),
+  bannedKeywords: z.array(z.string()),
+  bannedAltKeywords: z.array(z.string()),
+  graphcdnToken: z.string(),
 })
+
+const { bannedKeywords, bannedAltKeywords } = await readEnvFromDatabase()
 
 export const ENV = env.parse({
   dockerEnv,
@@ -110,6 +120,7 @@ export const ENV = env.parse({
   codenaryApiKey: process.env.CODENARY_API_KEY,
   codenaryCallback: process.env.CODENARY_CALLBACK,
   redisHost: process.env.REDIS_HOST,
+  redisPort: Number(process.env.REDIS_PORT) || 6379,
   slackUrl: `https://hooks.slack.com/services/${process.env.SLACK_TOKEN}`,
   slackImage: process.env.SLACK_IMAGE,
   blacklistUsername: (process.env.BLACKLIST_USERNAME ?? '').split(','),
@@ -118,4 +129,19 @@ export const ENV = env.parse({
   adFreeWritersUsername: process.env.AD_FREE_WRITERS_USERNAME?.split(','),
   discordBotToken: process.env.DISCORD_BOT_TOKEN,
   discordErrorChannel: process.env.DISCORD_ERROR_CHANNEL,
+  discordSpamChannel: process.env.DISCORD_SPAM_CHANNEL,
+  turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY,
+  bannedKeywords: bannedKeywords,
+  bannedAltKeywords: bannedAltKeywords,
+  graphcdnToken: process.env.GRAPHCDN_TOKEN,
 })
+
+async function readEnvFromDatabase() {
+  const db = container.resolve(DbService)
+  const items = await db.dynamicConfigItem.findMany()
+
+  return {
+    bannedKeywords: items.filter((item) => item.type === 'banned').map((item) => item.value),
+    bannedAltKeywords: items.filter((item) => item.type === 'bannedAlt').map((item) => item.value),
+  }
+}

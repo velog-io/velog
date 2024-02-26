@@ -20,7 +20,7 @@ async function main() {
   await discord.connection()
 
   console.info(`INFO: Database connected to "${ENV.databaseUrl.split('@')[1]}"`)
-  console.info(`INFO: Redis connected to ${ENV.redisHost}`)
+  console.info(`INFO: Redis connected to "${ENV.redisHost}:${ENV.redisPort}"`)
 
   process.send?.('ready')
   process.on('SIGINT', function () {

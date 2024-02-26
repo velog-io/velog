@@ -53,7 +53,7 @@ export class VelogConfigService implements Service {
   }
   public async updateVelogConfig(title: string, signedUserId?: string) {
     if (!signedUserId) {
-      throw new UnauthorizedError('Not Logged In')
+      throw new UnauthorizedError('Not logged in')
     }
 
     if (title === '' || this.utils.checkEmpty(title)) {

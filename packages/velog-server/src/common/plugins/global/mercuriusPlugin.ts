@@ -32,6 +32,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         errors: errors?.map((error) => ({ name: error.name, message: error.message })),
       }
       if (ENV.appEnv === 'development') {
+        console.log('errorHandler')
         request.log.error(request, 'errorHandler')
       } else {
         const discord = container.resolve(DiscordService)
@@ -50,6 +51,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
       const e = execution.errors?.[0]?.originalError
 
       if (!isHttpError(e)) {
+        console.log('send!')
         ;(ctx as any).request?.log?.error(execution, 'errorFormatter')
         const discord = container.resolve(DiscordService)
         discord.sendMessage(
