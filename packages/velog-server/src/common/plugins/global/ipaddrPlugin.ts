@@ -7,9 +7,10 @@ const ipaddrPlugin: FastifyPluginAsync = async (fastify) => {
     const xForwardedIp = request.headers['X-Forwarded-For']
 
     const graphCdnAddress = Array.isArray(fromCdnIp) ? fromCdnIp[0] : fromCdnIp
-    const xForwardedForAdress = Array.isArray(xForwardedIp) ? xForwardedIp[0] : xForwardedIp
+    const xForwardedForAddress = Array.isArray(xForwardedIp) ? xForwardedIp[0] : xForwardedIp
 
-    const ipaddr = xForwardedForAdress ?? graphCdnAddress ?? request.ips?.slice(-1)[0] ?? request.ip
+    const ipaddr =
+      xForwardedForAddress ?? graphCdnAddress ?? request.ips?.slice(-1)[0] ?? request.ip
     request.ipaddr = ipaddr
     done()
   })
