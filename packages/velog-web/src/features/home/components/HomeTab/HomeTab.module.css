@@ -75,8 +75,8 @@
       background: var(--border1);
       bottom: -10px;
 
-      @media screen and (max-width: 425px) {
-        width: 29%;
+      @media screen and (max-width: 430px) {
+        width: 34%;
         margin-left: 3px;
       }
     }
