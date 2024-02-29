@@ -163,6 +163,8 @@ export class PostApiService implements Service {
       throw new BadRequestError('Title is empty')
     }
 
+    data.title = data.title.slice(0, 255) ?? ''
+
     const isPublish = !data.is_temp && !data.is_private
 
     const country = geoip.lookup(ip)?.country ?? ''
@@ -218,6 +220,7 @@ export class PostApiService implements Service {
         data: {
           ...(data as Omit<WritePostInput, 'tags' | 'token' | 'series_id'>),
           fk_user_id: signedUserId,
+          title: data.title.slice(0, 255),
         },
         include: {
           user: true,
@@ -323,11 +326,13 @@ export class PostApiService implements Service {
 
     if (isEditArgs && urlSlugDuplicate && urlSlugDuplicate.id !== input.id) {
       const randomString = generate(8)
+      processedUrlSlug = processedUrlSlug.slice(0, 245)
       processedUrlSlug += `-${randomString}`
     }
 
     if (!isEditArgs && urlSlugDuplicate) {
       const randomString = generate(8)
+      processedUrlSlug = processedUrlSlug.slice(0, 245)
       processedUrlSlug += `-${randomString}`
     }
 
