@@ -21,6 +21,8 @@ function FloatingHeader({ header }: Props) {
   const [height, setHeight] = useState(0)
   const [marginTop, setMarginTop] = useState(0)
 
+  const isHome = checkIsHome(pathname)
+
   useEffect(() => {
     if (!blockRef.current) return
     setHeight(blockRef.current.clientHeight)
@@ -56,11 +58,19 @@ function FloatingHeader({ header }: Props) {
       setVisible(false)
     }
 
-    setMarginTop(Math.min(0, -1 * height + transitionPoint.current - scrollTop))
+    const marginTopMax = 0
+    const marginTopMin = isHome ? -112 : -64
+
+    const calculatedMarginTop = Math.min(
+      marginTopMax,
+      -1 * height + transitionPoint.current - scrollTop,
+    )
+
+    setMarginTop(Math.max(calculatedMarginTop, marginTopMin))
 
     direction.current = nextDirection
     prevScrollTop.current = scrollTop
-  }, [height])
+  }, [height, isHome])
 
   useEffect(() => {
     document.addEventListener('scroll', onScroll)
@@ -69,7 +79,6 @@ function FloatingHeader({ header }: Props) {
     }
   }, [onScroll])
 
-  const isHome = checkIsHome(pathname)
   return (
     <div
       className={cx('block')}

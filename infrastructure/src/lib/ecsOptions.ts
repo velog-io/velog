@@ -2,7 +2,7 @@ import { ENV } from '../env'
 
 const serverEcsOption: EcsOption = {
   desiredCount: ENV.isProduction ? 2 : 1,
-  cpu: 512,
+  cpu: ENV.isProduction ? 1024 * 0.75 : 512,
   memory: 1024,
   maxCapacity: 12,
   minCapacity: ENV.isProduction ? 2 : 1,
