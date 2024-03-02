@@ -220,7 +220,6 @@ export class PostApiService implements Service {
         data: {
           ...(data as Omit<WritePostInput, 'tags' | 'token' | 'series_id'>),
           fk_user_id: signedUserId,
-          title: data.title.slice(0, 255),
         },
         include: {
           user: true,
