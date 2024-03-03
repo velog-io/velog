@@ -49,8 +49,10 @@ export class PostTagService implements Service {
         fk_tag_id: tag.id,
       }))
 
-    await this.db.postTag.createMany({
-      data: tagsToAddData,
-    })
+    try {
+      await this.db.postTag.createMany({
+        data: tagsToAddData,
+      })
+    } catch (_) {}
   }
 }
