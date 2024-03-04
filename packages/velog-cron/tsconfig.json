@@ -26,7 +26,7 @@
     "skipLibCheck": true
   },
   "include": ["./src", ".eslintrc.cjs", "./scripts/**/*.ts", "test/**/*.ts"],
-  "exclude": [],
+  "exclude": ["node_modules"],
   "ts-node": {
     "transpileOnly": true
   }

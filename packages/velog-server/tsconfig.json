@@ -37,5 +37,5 @@
     "test/**/*.ts",
     "../velog-prisma/scripts/createMock.ts"
   ],
-  "exclude": []
+  "exclude": ["node_modules"]
 }
