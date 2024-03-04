@@ -1,16 +1,7 @@
-import fastify from 'fastify'
+import 'reflect-metadata'
 
-const server = fastify()
+import { EnvService } from '@lib/env/EnvService.mjs'
+import { container } from 'tsyringe'
 
-server.get('/ping', async (request, reply) => {
-  return 'pong\n'
-})
-
-server.listen({ port: 8080 }, (err, address) => {
-  if (err) {
-    console.error(err)
-    process.exit(1)
-  }
-
-  console.log(`Server listening at ${address}`)
-})
+const env = container.resolve(EnvService)
+env.init()

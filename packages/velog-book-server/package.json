@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "nodemon --watch './**/*.mts' --exec 'node --import @bleed-believer/path-alias' ./src/main.mts | pino-pretty",
     "start": "node --import @bleed-believer/path-alias dist/src/main.mjs",
-    "build": "tsc --project tsconfig.json"
+    "build": "tsc --project tsconfig.json",
+    "create-service": "tsx ./scripts/createService.mts"
   },
   "keywords": [
     "velog",
@@ -16,15 +17,23 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-ssm": "^3.525.0",
     "@bleed-believer/path-alias": "^1.1.2",
-    "fastify": "^4.18.0"
+    "dotenv": "^16.4.5",
+    "fastify": "^4.18.0",
+    "reflect-metadata": "^0.1.13",
+    "tsyringe": "^4.7.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@swc/core": "^1.4.2",
+    "@types/inquirer": "^9.0.7",
     "@types/node": "^20.11.24",
+    "inquirer": "^9.2.15",
     "nodemon": "^2.0.22",
     "pino-pretty": "^10.0.0",
     "ts-node": "^10.9.1",
+    "tsx": "^4.6.2",
     "typescript": "^5.3.3"
   }
 }
