@@ -22,10 +22,7 @@ const config: CodegenConfig = {
       ],
       config: {
         skipTypename: true,
-        contextType: './../../common/interfaces/graphql#GraphQLContext',
-        enumValues: {
-          NotificationType: './enums#NotificationType',
-        },
+        contextType: '../../common/interfaces/graphql.mjs#GraphQLContext',
         inputMaybeValue: 'T | undefined',
         maybeValue: 'T | null | undefined',
         scalars: {

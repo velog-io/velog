@@ -102,6 +102,9 @@ importers:
       fastify:
         specifier: ^4.18.0
         version: 4.18.0
+      graphql:
+        specifier: ^16.7.1
+        version: 16.7.1
       graphql-scalars:
         specifier: ^1.22.2
         version: 1.22.2(graphql@16.7.1)
