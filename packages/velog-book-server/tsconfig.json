@@ -9,7 +9,11 @@
     "baseUrl": "./",
     "rootDir": "./",
     "paths": {
-      "@lib/*": ["src/lib/*"]
+      "@lib/*": ["src/lib/*"],
+      "@errors/*": ["src/common/errors/*"],
+      "@graphql/*": ["src/graphql/*"],
+      "@plugins/*": ["src/common/plugins/*"],
+      "@interfaces/*": ["src/common/interfaces/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "outDir": "./dist",
@@ -18,7 +22,7 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["./src", ".eslintrc.cjs", "./dist", "./scripts"],
+  "include": ["./src", ".eslintrc.cjs", "./dist", "./scripts", "codegen.mts"],
   "exclude": ["node_modules"],
   "ts-node": {
     "transpileOnly": true,
