@@ -1,7 +1,7 @@
 import { pick } from 'rambda'
 import { DbService } from '@lib/db/DbService.js'
 import { injectable, singleton } from 'tsyringe'
-import { Prisma, Tag } from '@prisma/client'
+import { Prisma, Tag } from '@prisma/velog-rds/client'
 import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 import { ApiResponse } from '@elastic/elasticsearch'
 import { TagService } from '@services/TagService/index.js'

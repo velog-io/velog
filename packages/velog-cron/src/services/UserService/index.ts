@@ -1,5 +1,5 @@
 import { DbService } from '@lib/db/DbService.js'
-import { User } from '@prisma/client'
+import { User } from '@prisma/velog-rds/client'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {

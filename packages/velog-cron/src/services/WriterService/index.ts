@@ -1,6 +1,6 @@
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/velog-rds/client'
 import { injectable, singleton } from 'tsyringe'
 import { subMonths } from 'date-fns'
 

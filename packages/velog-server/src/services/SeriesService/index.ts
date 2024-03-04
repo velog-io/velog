@@ -1,7 +1,7 @@
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { GetSeriesInput } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
-import { SeriesPost, Series } from '@prisma/client'
+import { SeriesPost, Series } from '@prisma/velog-rds/client'
 import DataLoader from 'dataloader'
 
 import { injectable, singleton } from 'tsyringe'

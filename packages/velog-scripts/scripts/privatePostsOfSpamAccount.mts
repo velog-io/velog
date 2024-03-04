@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { Post, User, UserProfile } from '@prisma/client'
+import { Post, User, UserProfile } from '@prisma/velog-rds/client'
 import { DbService } from '../lib/db/DbService.mjs'
 import { container, injectable } from 'tsyringe'
 import inquirer from 'inquirer'

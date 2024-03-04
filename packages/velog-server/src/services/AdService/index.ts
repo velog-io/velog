@@ -3,7 +3,7 @@ import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { AdsInput } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { Ad, Prisma } from '@prisma/client'
+import { Ad, Prisma } from '@prisma/velog-rds/client'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {

@@ -1,6 +1,6 @@
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { DbService } from '@lib/db/DbService.js'
-import { Prisma, User, UserMeta } from '@prisma/client'
+import { Prisma, User, UserMeta } from '@prisma/velog-rds/client'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {

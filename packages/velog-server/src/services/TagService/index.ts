@@ -1,6 +1,6 @@
 import DataLoader from 'dataloader'
 import { DbService } from '@lib/db/DbService.js'
-import { Prisma, Tag } from '@prisma/client'
+import { Prisma, Tag } from '@prisma/velog-rds/client'
 import { injectable, singleton } from 'tsyringe'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { UserService } from '@services/UserService/index.js'

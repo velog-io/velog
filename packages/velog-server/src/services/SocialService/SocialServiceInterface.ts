@@ -1,4 +1,4 @@
-import { SocialAccount } from '@prisma/client'
+import { SocialAccount } from '@prisma/velog-rds/client'
 
 export type SocialProvider = 'google' | 'facebook' | 'github'
 export type GetSocialAccountParams = {

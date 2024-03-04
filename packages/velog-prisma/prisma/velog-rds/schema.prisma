@@ -1,5 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma/velog-rds/client"
   previewFeatures = ["postgresqlExtensions"]
 }
 
@@ -649,4 +650,9 @@ model DynamicConfigItem {
   @@unique([value, type])
   @@index([value])
   @@map("dynamic_config_items")
+}
+
+model HiDgimon {
+  id    String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  value String @db.VarChar(50)
 }

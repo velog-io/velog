@@ -1,6 +1,6 @@
 import { UserService } from '@services/UserService/index.js'
 import { DbService } from '@lib/db/DbService.js'
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/velog-rds/client'
 import { injectable, singleton } from 'tsyringe'
 import { NotFoundError } from '@errors/NotfoundError.js'
 

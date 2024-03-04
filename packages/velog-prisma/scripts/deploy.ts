@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/velog-rds/client'
 import path from 'path'
 import fs from 'fs'
 import inquirer from 'inquirer'
 import { exec } from 'child_process'
 
-// "prisma-migrate:deploy": "pnpm env:copy && pnpm prisma migrate deploy --schema=./prisma/schema.prisma"
+// "prisma-migrate:deploy": "pnpm env:copy && pnpm prisma migrate deploy --schema=./prisma/velog-rds/schema.prisma"
 
 const db = new PrismaClient()
 
@@ -31,12 +31,15 @@ const main = async () => {
     process.exit(0)
   }
 
-  exec('pnpm prisma migrate deploy --schema=./prisma/schema.prisma', (error, stdout, _stderr) => {
-    if (error) {
-      console.log(_stderr)
-    }
-    console.log(stdout)
-  })
+  exec(
+    'pnpm prisma migrate deploy --schema=./prisma/velog-rds/schema.prisma',
+    (error, stdout, _stderr) => {
+      if (error) {
+        console.log(_stderr)
+      }
+      console.log(stdout)
+    },
+  )
 }
 
 main()

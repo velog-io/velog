@@ -3,7 +3,7 @@ import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { VelogConfig } from '@prisma/client'
+import { VelogConfig } from '@prisma/velog-rds/client'
 import DataLoader from 'dataloader'
 import { injectable, singleton } from 'tsyringe'
 

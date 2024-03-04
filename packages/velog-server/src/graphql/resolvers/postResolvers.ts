@@ -4,7 +4,7 @@ import { PostService } from '@services/PostService/index.js'
 import { UserService } from '@services/UserService/index.js'
 import { PostIncludeComment, PostIncludeUser } from '@services/PostService/PostServiceInterface.js'
 import { CommentService } from '@services/CommentService/index.js'
-import { Post, Tag } from '@prisma/client'
+import { Post, Tag } from '@prisma/velog-rds/client'
 import { PostLikeService } from '@services/PostLikeService/index.js'
 import { DbService } from '@lib/db/DbService.js'
 

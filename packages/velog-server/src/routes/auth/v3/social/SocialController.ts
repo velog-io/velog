@@ -5,7 +5,7 @@ import { CookieService } from '@lib/cookie/CookieService.js'
 import { DbService } from '@lib/db/DbService.js'
 import { FileService } from '@lib/file/FileService.js'
 import { JwtService } from '@lib/jwt/JwtService.js'
-import { User, UserProfile } from '@prisma/client'
+import { User, UserProfile } from '@prisma/velog-rds/client'
 import {
   GetProfileFromSocial,
   SocialProfile,

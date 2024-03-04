@@ -1,6 +1,6 @@
 import { DbService } from '@lib/db/DbService.js'
 import { injectable, singleton } from 'tsyringe'
-import { PostReadLog } from '@prisma/client'
+import { PostReadLog } from '@prisma/velog-rds/client'
 import { LogParams } from './PostReadLogInterface'
 
 interface Service {

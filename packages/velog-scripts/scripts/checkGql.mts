@@ -103,7 +103,7 @@ class Runner {
     return Array.from(keys)
   }
   private readDatabaseColumn(): string[] {
-    const schemaPath = path.resolve(process.cwd(), './prisma/schema.prisma')
+    const schemaPath = path.resolve(process.cwd(), './prisma/velog-rds/schema.prisma')
 
     if (!fs.existsSync(schemaPath)) {
       throw new Error('Could not find prisma schema, please try "pnpm prisma:copy"')

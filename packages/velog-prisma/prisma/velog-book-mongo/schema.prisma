@@ -1,0 +1,38 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "node_modules/.prisma/velog-book-mongo"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_URL")
+}
+
+model Writer {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  fk_user_id String @unique
+  username   String @unique
+  email      String @unique
+}
+
+model Book {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  writerId String @db.ObjectId
+  meta     Json
+}
+
+model Page {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  writerId String @db.ObjectId
+  bookId   String @db.ObjectId
+  title    String
+  body     String
+}
+
+model PageHistory {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  pageId String
+  title  String
+  body   String
+}

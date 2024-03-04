@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/velog-rds/client'
 
 export type CurrentUser = Prisma.UserGetPayload<{
   include: {
