@@ -45,12 +45,14 @@ export class EnvService implements Service {
       dockerEnv: z.enum(['development', 'production', 'stage']),
       appEnv: z.enum(['development', 'production']),
       port: z.number(),
+      mongoUrl: z.string(),
     })
 
     const ENV: ENV = env.parse({
       dockerEnv,
       appEnv,
       port: Number(process.env.PORT),
+      mongoUrl: process.env.MONGO_URL,
     })
 
     this.env = ENV
@@ -75,4 +77,5 @@ type ENV = {
   dockerEnv: string
   appEnv: string
   port: number
+  mongoUrl: string
 }
