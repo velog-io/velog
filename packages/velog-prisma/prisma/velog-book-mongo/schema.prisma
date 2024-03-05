@@ -1,7 +1,6 @@
 generator client {
-  provider        = "prisma-client-js"
-  output          = "node_modules/.prisma/velog-book-mongo"
-  previewFeatures = ["postgresqlExtensions"]
+  provider = "prisma-client-js"
+  output   = "../../node_modules/@prisma/velog-book-mongo/client"
 }
 
 datasource db {

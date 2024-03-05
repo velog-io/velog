@@ -46,6 +46,8 @@ export class EnvService implements Service {
       appEnv: z.enum(['development', 'production']),
       port: z.number(),
       mongoUrl: z.string(),
+      discordBotToken: z.string(),
+      discordErrorChannel: z.string(),
     })
 
     const ENV: ENV = env.parse({
@@ -53,6 +55,8 @@ export class EnvService implements Service {
       appEnv,
       port: Number(process.env.PORT),
       mongoUrl: process.env.MONGO_URL,
+      discordBotToken: process.env.DISCORD_BOT_TOKEN,
+      discordErrorChannel: process.env.DISCORD_ERROR_CHANNEL,
     })
 
     this.env = ENV
@@ -78,4 +82,6 @@ type ENV = {
   appEnv: string
   port: number
   mongoUrl: string
+  discordBotToken: string
+  discordErrorChannel: string
 }
