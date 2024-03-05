@@ -20,7 +20,8 @@
     "env:copy": "tsx ./scripts/env.ts",
     "create-mock": "tsx ./scripts/createMock.ts",
     "prisma-migrate:dev": "pnpm env:copy --only-dev && pnpm prisma migrate dev --schema=./prisma/velog-rds/schema.prisma --create-only",
-    "prisma-migrate:deploy": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/deployPrisma.ts",
+    "prisma-migrate:rds": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/rdsDeploy.ts",
+    "prisma-migrate:monogo": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/mongoDeploy.ts",
     "prisma:generate": "tsx ./scripts/generatePrisma.ts"
   },
   "dependencies": {
