@@ -31,7 +31,7 @@ class ParameterService {
   private __dirname = path.dirname(this.__filename)
 
   private get name() {
-    let name = `/velog-v3/server/${this.environment}`
+    let name = `/velog-v3/book-server/${this.environment}`
     if (this.version > 0) {
       name = `${name}:${this.version}`
     }

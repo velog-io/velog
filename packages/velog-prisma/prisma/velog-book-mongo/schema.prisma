@@ -13,25 +13,32 @@ model Writer {
   fk_user_id String @unique
   username   String @unique
   email      String @unique
+  books      Book[]
 }
 
 model Book {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  writerId String @db.ObjectId
-  meta     Json
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  thumbnail String @db.String
+  meta      Json   @db.Json
+  writerId  String @db.ObjectId
+  writer    Writer @relation(fields: [writerId], references: [id])
+  pages     Page[]
 }
 
 model Page {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   writerId String @db.ObjectId
   bookId   String @db.ObjectId
-  title    String
-  body     String
+  title    String @db.String
+  body     String @db.String
+  book     Book   @relation(fields: [bookId], references: [id])
 }
 
 model PageHistory {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
-  pageId String
-  title  String
-  body   String
+  pageId String @db.String
+  title  String @db.String
+  body   String @db.String
+
+  @@index([pageId])
 }

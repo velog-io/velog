@@ -9,7 +9,8 @@ async function main() {
   env.init()
 
   const mongo = container.resolve(MongoService)
-  await mongo.connect()
+
+  await mongo.$connect()
   console.info(`Mongo database connection established to ${env.get('mongoUrl')}`)
 
   const port = env.get('port')

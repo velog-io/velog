@@ -37,5 +37,9 @@
     "test/**/*.ts",
     "../velog-prisma/scripts/createMock.ts"
   ],
-  "exclude": ["node_modules/.prisma/**.ts"]
+  "exclude": ["node_modules/.prisma/**.ts"],
+  "ts-node": {
+    "transpileOnly": true,
+    "esm": true
+  }
 }

@@ -7,15 +7,17 @@
     "email": "public.velopert@gmail.com"
   },
   "main": "./src/main.mts",
-  "module": "type",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon --watch './**/*.mts' --exec 'node --import @bleed-believer/path-alias' ./src/main.mts | pino-pretty",
+    "dev": "nodemon --watch './**/*.mts' --exec 'node --experimental-specifier-resolution=node --import @bleed-believer/path-alias' ./src/main.mts | pino-pretty",
     "start": "node --import @bleed-believer/path-alias dist/src/main.mjs",
     "build": "tsc --project tsconfig.json",
     "codegen": "graphql-codegen-esm --config codegen.mts",
     "create-service": "tsx ./scripts/createService.mts",
     "prisma:copy": "tsx ./scripts/copyPrisma.mts",
-    "prisma:generate": "prisma generate --schema='./prisma/velog-book-mongo/schema.prisma'"
+    "prisma:generate": "prisma generate --schema='./prisma/velog-book-mongo/schema.prisma'",
+    "prisma:push": "dotenv -e ./env/.env.development -- npx prisma db push --schema=./prisma/velog-book-mongo/schema.prisma",
+    "ssm": "tsx ./scripts/ssm/index.mts"
   },
   "keywords": [
     "velog",
@@ -60,5 +62,8 @@
     "ts-node": "^10.9.1",
     "tsx": "^4.6.2",
     "typescript": "^5.3.3"
+  },
+  "prisma": {
+    "schema": "./prisma/velog-book-mongo/schema.prisma"
   }
 }

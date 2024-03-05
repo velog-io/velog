@@ -12,7 +12,7 @@
   "engines": {
     "node": ">=18.16"
   },
-  "main": "main.ts",
+  "main": "/src/main.mts",
   "type": "module",
   "scripts": {
     "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader/transpile-only' src/main.ts | pino-pretty",

@@ -1,4 +1,3 @@
-import { ENV } from '@env'
 import { PrismaClient } from '@prisma/velog-rds/client/index.js'
 import { injectable, singleton } from 'tsyringe'
 
