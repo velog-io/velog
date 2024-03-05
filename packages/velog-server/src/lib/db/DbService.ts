@@ -1,11 +1,7 @@
 import { ENV } from '@env'
-import { PrismaClient } from '@prisma/velog-rds/client'
+import { PrismaClient } from '@prisma/velog-rds/client/index.js'
 import { injectable, singleton } from 'tsyringe'
 
 @injectable()
 @singleton()
-export class DbService extends PrismaClient {
-  constructor() {
-    super({ datasources: { db: { url: ENV.databaseUrl } } })
-  }
-}
+export class DbService extends PrismaClient {}
