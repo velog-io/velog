@@ -20,7 +20,8 @@
     "env:copy": "tsx ./scripts/env.ts",
     "create-mock": "tsx ./scripts/createMock.ts",
     "prisma-migrate:dev": "pnpm env:copy --only-dev && pnpm prisma migrate dev --schema=./prisma/velog-rds/schema.prisma --create-only",
-    "prisma-migrate:deploy": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/deploy"
+    "prisma-migrate:deploy": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/deployPrisma.ts",
+    "prisma:generate": "tsx ./scripts/generatePrisma.ts"
   },
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.391.0",
