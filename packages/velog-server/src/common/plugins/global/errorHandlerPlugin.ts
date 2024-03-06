@@ -11,20 +11,24 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
     }
     done()
   })
-  // fastify.addHook('onError', (request, reply, error) => {
-  //   request.log.error(error, 'fastify onError')
-  //   const discord = container.resolve(DiscordService)
-  //   discord.sendMessage(
-  //     'error',
-  //     JSON.stringify({
-  //       type: 'fastify OnError',
-  //       requestbody: request?.body || 'none',
-  //       query: request?.query || 'none',
-  //       error,
-  //       user: request?.user,
-  //     }),
-  //   )
-  // })
+  fastify.addHook('onError', (request, reply, error, done) => {
+    request.log.error(error, 'fastify onError')
+    const discord = container.resolve(DiscordService)
+    discord
+      .sendMessage(
+        'error',
+        JSON.stringify({
+          type: 'fastify OnError',
+          requestbody: request?.body || 'none',
+          query: request?.query || 'none',
+          error,
+          user: request?.user,
+        }),
+      )
+      .catch(console.error)
+
+    done()
+  })
   fastify.setErrorHandler((error, request, reply) => {
     if (isHttpError(error)) {
       reply.status(error.statusCode).send({
@@ -44,15 +48,17 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
       request.log.error(error, 'fastify handleError')
     } else {
       const discord = container.resolve(DiscordService)
-      discord.sendMessage(
-        'error',
-        JSON.stringify({
-          type: 'fastify handleError',
-          requestbody: request?.body,
-          error,
-          user: request?.user,
-        }),
-      )
+      discord
+        .sendMessage(
+          'error',
+          JSON.stringify({
+            type: 'fastify handleError',
+            requestbody: request?.body,
+            error,
+            user: request?.user,
+          }),
+        )
+        .catch(console.error)
     }
   })
 
