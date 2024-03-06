@@ -11,20 +11,20 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
     }
     done()
   })
-  fastify.addHook('onError', (request, reply, error) => {
-    request.log.error(error, 'fastify onError')
-    const discord = container.resolve(DiscordService)
-    discord.sendMessage(
-      'error',
-      JSON.stringify({
-        type: 'fastify OnError',
-        requestbody: request?.body || 'none',
-        query: request?.query || 'none',
-        error,
-        user: request?.user,
-      }),
-    )
-  })
+  // fastify.addHook('onError', (request, reply, error) => {
+  //   request.log.error(error, 'fastify onError')
+  //   const discord = container.resolve(DiscordService)
+  //   discord.sendMessage(
+  //     'error',
+  //     JSON.stringify({
+  //       type: 'fastify OnError',
+  //       requestbody: request?.body || 'none',
+  //       query: request?.query || 'none',
+  //       error,
+  //       user: request?.user,
+  //     }),
+  //   )
+  // })
   fastify.setErrorHandler((error, request, reply) => {
     if (isHttpError(error)) {
       reply.status(error.statusCode).send({
