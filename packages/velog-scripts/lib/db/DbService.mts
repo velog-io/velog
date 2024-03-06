@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/velog-rds/client'
+import { PrismaClient } from '@prisma/velog-rds/client/index.js'
 import { injectable, singleton } from 'tsyringe'
 
 @injectable()
