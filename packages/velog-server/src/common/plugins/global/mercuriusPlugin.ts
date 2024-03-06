@@ -12,7 +12,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
     logLevel: 'error',
     schema,
     resolvers: resolvers,
-    graphiql: ENV.appEnv !== 'production',
+    graphiql: ENV.dockerEnv !== 'production',
     context: (request, reply): GraphQLContext => {
       return {
         request,
