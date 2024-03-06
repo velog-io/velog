@@ -58,15 +58,15 @@ export class PostApiService implements Service {
       ip,
     })
 
-    if (series_id && !data.is_temp) {
-      await this.seriesService.appendToSeries(series_id, post.id)
-    }
+    // if (series_id && !data.is_temp) {
+    //   await this.seriesService.appendToSeries(series_id, post.id)
+    // }
 
-    if (!data.is_temp) {
-      await this.searchService.searchSync.update(post.id)
-    }
+    // if (!data.is_temp) {
+    //   await this.searchService.searchSync.update(post.id)
+    // }
 
-    return post
+    return post as Post
   }
   public async edit(input: EditPostInput, signedUserId?: string, ip: string = ''): Promise<Post> {
     const { data, post, userId, series_id } = await this.initializePostProcess<'edit'>({
@@ -76,63 +76,63 @@ export class PostApiService implements Service {
       ip,
     })
 
-    const prevSeriesPost = await this.db.seriesPost.findFirst({
-      where: {
-        fk_post_id: post.id,
-      },
-    })
+    // const prevSeriesPost = await this.db.seriesPost.findFirst({
+    //   where: {
+    //     fk_post_id: post.id,
+    //   },
+    // })
 
-    if (!prevSeriesPost && series_id) {
-      await this.seriesService.appendToSeries(series_id, post.id)
-    }
+    // if (!prevSeriesPost && series_id) {
+    //   await this.seriesService.appendToSeries(series_id, post.id)
+    // }
 
-    // 다른 시리즈에 추가하는 경우
-    if (prevSeriesPost && prevSeriesPost.fk_series_id !== series_id) {
-      if (series_id) {
-        await this.checkSeriesOwnership(series_id, userId)
-        await this.seriesService.appendToSeries(series_id, post.id)
-      }
+    // // 다른 시리즈에 추가하는 경우
+    // if (prevSeriesPost && prevSeriesPost.fk_series_id !== series_id) {
+    //   if (series_id) {
+    //     await this.checkSeriesOwnership(series_id, userId)
+    //     await this.seriesService.appendToSeries(series_id, post.id)
+    //   }
 
-      // remove series
-      await Promise.all([
-        this.seriesService.subtractIndexAfter(prevSeriesPost.fk_series_id!, prevSeriesPost.index!),
-        this.db.seriesPost.delete({
-          where: {
-            id: prevSeriesPost.id,
-          },
-        }),
-      ])
-    }
+    //   // remove series
+    //   await Promise.all([
+    //     this.seriesService.subtractIndexAfter(prevSeriesPost.fk_series_id!, prevSeriesPost.index!),
+    //     this.db.seriesPost.delete({
+    //       where: {
+    //         id: prevSeriesPost.id,
+    //       },
+    //     }),
+    //   ])
+    // }
 
-    await this.db.post.update({
-      where: {
-        id: post.id,
-      },
-      data,
-    })
+    // await this.db.post.update({
+    //   where: {
+    //     id: post.id,
+    //   },
+    //   data,
+    // })
 
-    try {
-      await Promise.all([
-        data.is_temp ? null : this.searchService.searchSync.update(post.id),
-        this.graphcdn.purgePost(post.id),
-      ])
-    } catch (error) {
-      console.error(error)
-    }
+    // try {
+    //   await Promise.all([
+    //     data.is_temp ? null : this.searchService.searchSync.update(post.id),
+    //     this.graphcdn.purgePost(post.id),
+    //   ])
+    // } catch (error) {
+    //   console.error(error)
+    // }
 
-    if (!post.is_private && data.is_private) {
-      setImmediate(async () => {
-        if (!signedUserId) return
-        const isIntegrated = await this.externalInterationService.checkIntegrated(signedUserId)
-        if (!isIntegrated) return
-        this.externalInterationService.notifyWebhook({
-          type: 'deleted',
-          post_id: post.id,
-        })
-      })
-    }
+    // if (!post.is_private && data.is_private) {
+    //   setImmediate(async () => {
+    //     if (!signedUserId) return
+    //     const isIntegrated = await this.externalInterationService.checkIntegrated(signedUserId)
+    //     if (!isIntegrated) return
+    //     this.externalInterationService.notifyWebhook({
+    //       type: 'deleted',
+    //       post_id: post.id,
+    //     })
+    //   })
+    // }
 
-    return { ...post, url_slug: data.url_slug }
+    return { ...post, url_slug: data.url_slug || '' } as { url_slug: string } & Post
   }
   private async initializePostProcess<T extends 'write' | 'edit'>({
     input,
@@ -216,15 +216,15 @@ export class PostApiService implements Service {
 
     let post: Post | null = null
     if (type === 'write') {
-      post = await this.db.post.create({
-        data: {
-          ...(data as Omit<WritePostInput, 'tags' | 'token' | 'series_id'>),
-          fk_user_id: signedUserId,
-        },
-        include: {
-          user: true,
-        },
-      })
+      // post = await this.db.post.create({
+      //   data: {
+      //     ...(data as Omit<WritePostInput, 'tags' | 'token' | 'series_id'>),
+      //     fk_user_id: signedUserId,
+      //   },
+      //   include: {
+      //     user: true,
+      //   },
+      // })
     }
 
     if (type === 'edit') {
@@ -243,6 +243,8 @@ export class PostApiService implements Service {
     }
 
     if (!post) {
+      post = await this.db.post.findFirst({ include: { user: true } })
+      return { data, isPublish, post, userId: signedUserId, series_id }
       throw new NotFoundError('Not found post')
     }
 
