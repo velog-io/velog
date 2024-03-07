@@ -9,8 +9,8 @@
   "main": "./src/main.mts",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --watch './**/*.mts' --exec 'node --experimental-specifier-resolution=node --import @bleed-believer/path-alias' ./src/main.mts | pino-pretty",
-    "start": "node --import @bleed-believer/path-alias dist/src/main.mjs",
+    "dev": "nodemon --watch './**/*.mts' --exec 'node --import @swc-node/register/esm-register' ./src/main.mts | pino-pretty",
+    "start": "node --import @swc-node/register/esm-register dist/src/main.mjs",
     "build": "tsc --project tsconfig.json",
     "codegen": "graphql-codegen-esm --config codegen.mts",
     "create-service": "tsx ./scripts/createService.mts",
@@ -26,7 +26,6 @@
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.525.0",
-    "@bleed-believer/path-alias": "^1.1.2",
     "@fastify/autoload": "^5.7.1",
     "@fastify/cors": "^8.3.0",
     "@fastify/mongodb": "^8.0.0",
@@ -51,6 +50,8 @@
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-operations": "^4.2.0",
     "@graphql-codegen/typescript-resolvers": "^4.0.0",
+    "@swc-node/register": "^1.9.0",
+    "@swc/cli": "^0.3.10",
     "@swc/core": "^1.4.2",
     "@types/inquirer": "^9.0.7",
     "@types/jest": "^29.5.12",
