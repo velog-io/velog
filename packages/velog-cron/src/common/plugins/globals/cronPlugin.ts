@@ -50,7 +50,6 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       name: 'providing a count of new users and posts from the past 24 hours',
       cronTime: '0 9 * * *', // every day at 00:00 (12:00 AM)
       jobService: statsDailyJob,
-      isImmediateExecute: true,
     },
     {
       name: 'providing a count of new users and posts from the past 1 week',
@@ -76,7 +75,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
 
   try {
     // for Test
-    if (ENV.dockerEnv !== 'production') {
+    if (ENV.appEnv !== 'production') {
       const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediateExecute)
       await Promise.all(immediateRunJobs.map(createTick))
     }
