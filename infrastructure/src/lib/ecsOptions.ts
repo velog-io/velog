@@ -21,7 +21,7 @@ const cronEcsOption: EcsOption = {
   cpu: 512,
   memory: 1024,
   maxCapacity: 1,
-  minCapacity: 1,
+  minCapacity: ENV.isProduction ? 1 : 0,
 }
 
 export const ecsOption = {
