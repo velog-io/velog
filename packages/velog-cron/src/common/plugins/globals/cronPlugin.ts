@@ -17,6 +17,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   const statsMonthlyJob = container.resolve(StatsMonthly)
 
   // 덜 실행하면서, 실행되는 순서로 정렬
+  // crontime은 UTC 기준으로 작성되기 때문에 KST에서 9시간을 빼줘야함
   const jobDescription: JobDescription[] = [
     {
       name: 'generate trending writers every day',
@@ -25,7 +26,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     },
     {
       name: 'posts score calculation in every day',
-      cronTime: '0 6 * * *', // every day at 06:00 (6:00 AM)
+      cronTime: '0 21 * * *', // every day at 06:00 (6:00 AM)
       jobService: calculatePostScoreJob,
       param: 0.1,
     },
@@ -47,18 +48,18 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     },
     // Stats Start
     {
-      name: 'providing a count of new users and posts from the past 24 hours',
-      cronTime: '0 9 * * *', // every day at 00:00 (12:00 AM)
+      name: 'providing a count of new users and posts from the past 1 day',
+      cronTime: '0 0 * * *', // every day at 9:00 AM
       jobService: statsDailyJob,
     },
     {
       name: 'providing a count of new users and posts from the past 1 week',
-      cronTime: '59 8 * * 1', // every Monday at 8:59 AM
+      cronTime: '59 17 * * 1', // every Monday at 8:59 AM
       jobService: statsWeeklyJob,
     },
     {
       name: 'providing a count of new users and posts from the past 1 month',
-      cronTime: '58 8 1 * *', // every 1st day of month at 8:58 AM
+      cronTime: '58 17 1 * *', // every 1st day of month at 8:58 AM
       jobService: statsMonthlyJob,
     },
     // Stats end
