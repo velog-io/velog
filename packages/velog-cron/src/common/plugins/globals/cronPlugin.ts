@@ -54,12 +54,12 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     },
     {
       name: 'providing a count of new users and posts from the past 1 week',
-      cronTime: '59 17 * * 1', // every Monday at 8:59 AM
+      cronTime: '59 23 * * 3', // every Monday at 8:59 AM
       jobService: statsWeeklyJob,
     },
     {
       name: 'providing a count of new users and posts from the past 1 month',
-      cronTime: '58 17 1 * *', // every 1st day of month at 8:58 AM
+      cronTime: '58 23 1 * *', // every 1st day of month at 8:58 AM
       jobService: statsMonthlyJob,
     },
     // Stats end
