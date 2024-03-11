@@ -14,35 +14,39 @@ model Writer {
   username   String @unique
   email      String @unique
   books      Book[]
+
+  @@map("writers")
 }
 
 model Book {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   thumbnail String @db.String
-  meta      Json   @db.Json
   writerId  String @db.ObjectId
   writer    Writer @relation(fields: [writerId], references: [id])
   pages     Page[]
+
+  @@map("books")
 }
 
 model Page {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  writerId String @db.ObjectId
-  bookId   String @db.ObjectId
-  title    String @db.String
-  body     String @db.String
-  book     Book   @relation(fields: [bookId], references: [id])
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  writerId String  @db.ObjectId
+  bookId   String  @db.ObjectId
+  title    String  @db.String
+  body     String  @db.String
+  parentId String? @db.String
+  book     Book    @relation(fields: [bookId], references: [id])
+
+  @@map("pages")
 }
 
 model PageHistory {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  pageId String @db.String
-  title  String @db.String
-  body   String @db.String
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  writerId String @db.ObjectId
+  pageId   String @db.String
+  title    String @db.String
+  body     String @db.String
 
   @@index([pageId])
-}
-
-model User {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  @@map("post_histories")
 }

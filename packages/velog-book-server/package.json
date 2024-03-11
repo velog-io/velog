@@ -13,10 +13,10 @@
     "start": "node --import @swc-node/register/esm-register dist/src/main.mjs",
     "build": "tsc --project tsconfig.json",
     "codegen": "graphql-codegen-esm --config codegen.mts",
+    "create-mock": "NODE_ENV=development dotenv -e ./env/.env.development -- tsx ./scripts/createMock.mts",
     "create-service": "tsx ./scripts/createService.mts",
     "prisma:copy": "tsx ./scripts/copyPrisma.mts",
     "prisma:generate": "prisma generate --schema='./prisma/velog-book-mongo/schema.prisma'",
-    "prisma:push": "tsx ./scripts/pushPrisma.mts",
     "ssm": "tsx ./scripts/ssm/index.mts"
   },
   "keywords": [
@@ -45,6 +45,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
     "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.1",
