@@ -18,7 +18,7 @@ import { SeriesService } from '@services/SeriesService/index.js'
 import { SearchService } from '@services/SearchService/index.js'
 import { ExternalIntegrationService } from '@services/ExternalIntegrationService/index.js'
 import { PostService } from '@services/PostService/index.js'
-import { RedisService } from '@lib/redis/RedisService.js'
+import { CreateFeedArgs, RedisService, SpamCheckArgs } from '@lib/redis/RedisService.js'
 import { GraphcdnService } from '@lib/graphcdn/GraphcdnService.js'
 import { ImageService } from '@services/ImageService/index.js'
 import { UserService } from '@services/UserService/index.js'
@@ -121,7 +121,7 @@ export class PostApiService implements Service {
     }
 
     if (!post.is_private && data.is_private) {
-      setImmediate(async () => {
+      setTimeout(async () => {
         if (!signedUserId) return
         const isIntegrated = await this.externalInterationService.checkIntegrated(signedUserId)
         if (!isIntegrated) return
@@ -129,7 +129,7 @@ export class PostApiService implements Service {
           type: 'deleted',
           post_id: post.id,
         })
-      })
+      }, 0)
     }
 
     return { ...post, url_slug: data.url_slug }
@@ -168,12 +168,10 @@ export class PostApiService implements Service {
     const isPublish = !data.is_temp && !data.is_private
 
     const country = geoip.lookup(ip)?.country ?? ''
-    const isSpam = this.isIncludeSpamKeyword({ input, user, country })
     const isLimit = await this.isPostLimitReached(signedUserId)
     const isBlock = await this.dynamicConfigService.isBlockedUser(user.username)
 
     const checks = [
-      { type: 'spam', value: isSpam },
       { type: 'limit', value: isLimit },
       { type: 'block', value: isBlock },
     ]
@@ -249,7 +247,7 @@ export class PostApiService implements Service {
     await this.handleTags(tags, post.id)
 
     if (isPublish) {
-      setImmediate(async () => {
+      setTimeout(async () => {
         if (!post) return
         if (!signedUserId) return
 
@@ -269,6 +267,7 @@ export class PostApiService implements Service {
             user: true,
           },
         })
+
         if (!targetPost) return
 
         const serializedPost = this.postService.serialize(targetPost)
@@ -276,13 +275,26 @@ export class PostApiService implements Service {
           type: type === 'write' ? 'created' : 'updated',
           post: serializedPost,
         })
-      })
+      }, 0)
 
-      const queueData = {
-        fk_following_id: signedUserId,
-        fk_post_id: post.id,
-      }
-      this.redis.createFeedQueue(queueData)
+      // create feed
+      setTimeout(() => {
+        const queueData: CreateFeedArgs = {
+          fk_following_id: signedUserId,
+          fk_post_id: post.id,
+        }
+        this.redis.createFeedQueue(queueData)
+      }, 0)
+
+      // check spam
+      setTimeout(() => {
+        const queueData: SpamCheckArgs = {
+          post_id: post.id,
+          user_id: signedUserId,
+          ip,
+        }
+        this.redis.addToSpamCheckQueue(queueData)
+      }, 0)
     }
 
     setTimeout(async () => {
@@ -322,16 +334,17 @@ export class PostApiService implements Service {
 
     const generate = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 8)
     const isEditArgs = this.isEditArgs(input)
+    const isWriteArgs = !isEditArgs
 
     if (isEditArgs && urlSlugDuplicate && urlSlugDuplicate.id !== input.id) {
       const randomString = generate(8)
-      processedUrlSlug = processedUrlSlug.slice(0, 245)
+      processedUrlSlug = processedUrlSlug.slice(0, 240)
       processedUrlSlug += `-${randomString}`
     }
 
-    if (!isEditArgs && urlSlugDuplicate) {
+    if (isWriteArgs && urlSlugDuplicate) {
       const randomString = generate(8)
-      processedUrlSlug = processedUrlSlug.slice(0, 245)
+      processedUrlSlug = processedUrlSlug.slice(0, 240)
       processedUrlSlug += `-${randomString}`
     }
 

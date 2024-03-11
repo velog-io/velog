@@ -47,6 +47,11 @@ export class RedisService extends Redis implements Service {
     const queueName = this.queueName.createFeed
     return await this.lpush(queueName, JSON.stringify(data))
   }
+
+  public async addToSpamCheckQueue(data: SpamCheckArgs): Promise<number> {
+    const queueName = this.queueName.spamCheck
+    return await this.lpush(queueName, JSON.stringify(data))
+  }
 }
 
 type GenerateRedisKey = {
@@ -60,7 +65,18 @@ type GenerateRedisKey = {
 
 type QueueName = 'createFeed' | 'spamCheck'
 
-type CreateFeedArgs = {
+export type ChangeEmailArgs = {
+  email: string
+  userId: string
+}
+
+export type CreateFeedArgs = {
   fk_following_id: string
   fk_post_id: string
+}
+
+export type SpamCheckArgs = {
+  post_id: string
+  user_id: string
+  ip: string
 }
