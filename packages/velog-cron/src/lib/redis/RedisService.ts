@@ -30,7 +30,7 @@ export class RedisService extends Redis implements Service {
 
   get queueName() {
     return {
-      feed: 'queue:feed',
+      createFeed: 'queue:feed',
     }
   }
 }
@@ -39,4 +39,4 @@ type GenerateRedisKey = {
   trendingWriters: () => string
 }
 
-type QueueName = 'feed'
+type QueueName = 'createFeed'

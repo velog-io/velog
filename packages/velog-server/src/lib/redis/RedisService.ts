@@ -6,7 +6,6 @@ interface Service {
   connection(): Promise<string>
   get generateKey(): GenerateRedisKey
   get queueName(): Record<QueueName, string>
-  get setName(): Record<SetName, string>
   createFeedQueue(data: CreateFeedArgs): Promise<number>
 }
 
@@ -39,18 +38,13 @@ export class RedisService extends Redis implements Service {
 
   public get queueName(): Record<QueueName, string> {
     return {
-      feed: 'queue:feed',
-    }
-  }
-
-  public get setName(): Record<SetName, string> {
-    return {
-      blockList: 'set:blockList',
+      createFeed: 'queue:feed',
+      spamCheck: 'queue:postIdsForSpamCheck',
     }
   }
 
   public async createFeedQueue(data: CreateFeedArgs): Promise<number> {
-    const queueName = this.queueName.feed
+    const queueName = this.queueName.createFeed
     return await this.lpush(queueName, JSON.stringify(data))
   }
 }
@@ -64,9 +58,7 @@ type GenerateRedisKey = {
   trendingWriters: () => string
 }
 
-type QueueName = 'feed'
-
-type SetName = 'blockList'
+type QueueName = 'createFeed' | 'spamCheck'
 
 type CreateFeedArgs = {
   fk_following_id: string
