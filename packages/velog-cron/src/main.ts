@@ -6,9 +6,11 @@ import app from './app.js'
 import { container } from 'tsyringe'
 import { DbService } from '@lib/db/DbService.js'
 import { RedisService } from '@lib/redis/RedisService.js'
+import { DiscordService } from '@lib/discord/DiscordService.js'
 
 async function main() {
-  app.listen({ port: ENV.port, host: '::' })
+  const discord = container.resolve(DiscordService)
+  await discord.connection()
 
   const dbService = container.resolve(DbService)
   await dbService.$connect()
@@ -21,6 +23,8 @@ async function main() {
     disableKeepAlive()
     process.exit(0)
   })
+
+  app.listen({ port: ENV.port, host: '::' })
 }
 
-main()
+await main()

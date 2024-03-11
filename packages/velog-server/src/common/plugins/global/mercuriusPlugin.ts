@@ -12,7 +12,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
     logLevel: 'error',
     schema,
     resolvers: resolvers,
-    graphiql: ENV.appEnv !== 'production',
+    graphiql: ENV.dockerEnv !== 'production',
     context: (request, reply): GraphQLContext => {
       return {
         request,
@@ -36,15 +36,18 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         request.log.error(request, 'errorHandler')
       } else {
         const discord = container.resolve(DiscordService)
-        discord.sendMessage(
-          'error',
-          JSON.stringify({
-            type: 'errorHandler',
-            requestbody: request?.body,
-            result,
-            user: request?.user,
-          }),
-        )
+
+        discord
+          .sendMessage(
+            'error',
+            JSON.stringify({
+              type: 'errorHandler',
+              requestbody: request?.body,
+              result,
+              user: request?.user,
+            }),
+          )
+          .catch(console.error)
       }
     },
     errorFormatter: (execution, ctx) => {
@@ -54,15 +57,17 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         console.log('send!')
         ;(ctx as any).request?.log?.error(execution, 'errorFormatter')
         const discord = container.resolve(DiscordService)
-        discord.sendMessage(
-          'error',
-          JSON.stringify({
-            type: 'errorFormat',
-            requestbody: (ctx as any).request?.body,
-            execution,
-            user: (ctx as any).request?.user,
-          }),
-        )
+        discord
+          .sendMessage(
+            'error',
+            JSON.stringify({
+              type: 'errorFormat',
+              requestbody: (ctx as any).request?.body,
+              execution,
+              user: (ctx as any).request?.user,
+            }),
+          )
+          .catch(console.error)
 
         return { statusCode: 500, response: execution }
       }
