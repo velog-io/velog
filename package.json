@@ -7,7 +7,9 @@
     "prepare": "husky install",
     "format": "pnpm format --write .",
     "precommit": "lint-staged",
-    "dev": "pnpm -r dev"
+    "dev": "pnpm -r dev",
+    "build": "pnpm -r build",
+    "prisma:init": "pnpm -r prisma:copy && pnpm -r prisma:generate"
   },
   "engines": {
     "node": ">=18.16",

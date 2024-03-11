@@ -37,10 +37,10 @@ export class StatsService implements Service {
     const timeFormat = 'yyyy-MM-dd HH:mm:ss'
     await this.discord.sendMessage(
       'stats',
-      `[Daily]\n통계 기간: ${format(start, timeFormat)}-${format(
+      `[Daily]\n기간: ${format(start, timeFormat)}-${format(
         end,
         'HH:mm:ss',
-      )}\n어제 하루 동안 ${usersCount}명의 사용자가 가입했습니다.\n어제 하루 동안 ${postCount}개의 공개 포스트가 작성되었습니다.`,
+      )}\n${usersCount}명의 사용자가 가입했습니다.\n${postCount}개의 공개 포스트가 작성되었습니다.`,
     )
   }
   public async weekly() {
@@ -53,10 +53,10 @@ export class StatsService implements Service {
     const timeFormat = 'yyyy-MM-dd HH:mm:ss'
     await this.discord.sendMessage(
       'stats',
-      `[Weekly]\n통계 기간: ${format(start, timeFormat)} ~ ${format(
+      `[Weekly]\n기간: ${format(start, timeFormat)} ~ ${format(
         end,
         timeFormat,
-      )}\n일주일 동안 ${usersCount}명의 사용자가 가입했습니다.\n일주일 동안 ${postCount}개의 공개 포스트가 작성되었습니다.`,
+      )}\n${usersCount}명의 사용자가 가입했습니다.\n${postCount}개의 공개 포스트가 작성되었습니다.`,
     )
   }
   public async monthly() {
@@ -69,10 +69,10 @@ export class StatsService implements Service {
     const timeFormat = 'yyyy-MM-dd'
     await this.discord.sendMessage(
       'stats',
-      `[Monthly]\n통계 기간: ${format(start, timeFormat)} ~ ${format(
+      `[Monthly]\n기간: ${format(start, timeFormat)} ~ ${format(
         end,
         timeFormat,
-      )}\n한 달 동안 ${usersCount}명의 사용자가 가입했습니다.\n한 달 동안 ${postCount}개의 공개 포스트가 작성되었습니다.`,
+      )}\n${usersCount}명의 사용자가 가입했습니다.\n${postCount}개의 공개 포스트가 작성되었습니다.`,
     )
   }
   private async getUsersCount(start: Date, end: Date) {
