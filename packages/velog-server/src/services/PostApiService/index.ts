@@ -289,6 +289,7 @@ export class PostApiService implements Service {
       // check spam
       setTimeout(() => {
         if (isSpam) return
+        if (isTusted) return
         const queueData: CheckPostSpamArgs = {
           post_id: post.id,
           user_id: signedUserId,

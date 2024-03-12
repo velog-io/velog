@@ -1,10 +1,11 @@
 import { DbService } from '@lib/db/DbService.js'
-import { CheckPostSpamArgs } from '@lib/redis/RedisService'
+import { CheckPostSpamArgs } from '@lib/redis/RedisService.js'
 import { Post, Prisma } from '@prisma/client'
 import { injectable, singleton } from 'tsyringe'
 import geoip from 'geoip-country'
 import { subMonths } from 'date-fns'
-import { DiscordService } from '@lib/discord/DiscordService'
+import { DiscordService } from '@lib/discord/DiscordService.js'
+import { NotFoundError } from '@errors/NotfoundError.js'
 
 interface Service {
   findById(postId: string): Promise<Post | null>
@@ -86,7 +87,7 @@ export class PostService implements Service {
     })
 
     if (!post) {
-      throw new Error('Not found Post')
+      throw new NotFoundError('Not found Post')
     }
 
     const user = await this.db.user.findUnique({
@@ -99,7 +100,7 @@ export class PostService implements Service {
     })
 
     if (!user) {
-      throw new Error('Not found User')
+      throw new NotFoundError('Not found User')
     }
 
     const country = geoip.lookup(ip)?.country ?? ''
