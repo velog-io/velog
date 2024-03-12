@@ -106,7 +106,7 @@ function SettingUserProfile({ displayName, shortBio, thumbnail }: Props) {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     await updateProfileMutateAsync({
-      input: { display_name: inputs.displayName, short_bio: inputs.shortBio },
+      input: { display_name: inputs.displayName, short_bio: inputs.shortBio.trim() },
     })
     onToggleEdit()
     currentUserRefetch()
