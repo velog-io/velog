@@ -14,14 +14,14 @@ export class BlockListService implements Service {
     await this.db.dynamicConfigItem.create({
       data: {
         value: username,
-        type: 'username',
+        type: 'blockUsername',
       },
     })
   }
   public async readBlockList() {
     const blockList = await this.db.dynamicConfigItem.findMany({
       where: {
-        type: 'username',
+        type: 'blockUsername',
       },
     })
     return blockList.map((item) => item.value)

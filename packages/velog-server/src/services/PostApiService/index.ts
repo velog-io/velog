@@ -7,7 +7,6 @@ import { TagService } from '@services/TagService/index.js'
 import { PostTagService } from '@services/PostTagService/index.js'
 import { Time } from '@constants/TimeConstants.js'
 import { DiscordService } from '@lib/discord/DiscordService.js'
-import { CurrentUser } from '@interfaces/user'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
@@ -18,7 +17,7 @@ import { SeriesService } from '@services/SeriesService/index.js'
 import { SearchService } from '@services/SearchService/index.js'
 import { ExternalIntegrationService } from '@services/ExternalIntegrationService/index.js'
 import { PostService } from '@services/PostService/index.js'
-import { CreateFeedArgs, RedisService, SpamCheckArgs } from '@lib/redis/RedisService.js'
+import { CreateFeedArgs, RedisService, CheckPostSpamArgs } from '@lib/redis/RedisService.js'
 import { GraphcdnService } from '@lib/graphcdn/GraphcdnService.js'
 import { ImageService } from '@services/ImageService/index.js'
 import { UserService } from '@services/UserService/index.js'
@@ -185,7 +184,8 @@ export class PostApiService implements Service {
       })
     }
 
-    if (checks.map(({ value }) => value).some((check) => check)) {
+    const isSpam = checks.map(({ value }) => value).some((check) => check)
+    if (isSpam) {
       data.is_private = true
       await this.alertIsSpam({
         action: type,
@@ -288,7 +288,8 @@ export class PostApiService implements Service {
 
       // check spam
       setTimeout(() => {
-        const queueData: SpamCheckArgs = {
+        if (isSpam) return
+        const queueData: CheckPostSpamArgs = {
           post_id: post.id,
           user_id: signedUserId,
           ip,
@@ -304,24 +305,6 @@ export class PostApiService implements Service {
     }, 0)
 
     return { data, isPublish, post, userId: signedUserId, series_id }
-  }
-  private isIncludeSpamKeyword({ input, user, country }: IsIncludeSpamKeywordArgs): boolean {
-    const extraText = input.tags
-      .join('')
-      .concat(user?.profile?.short_bio ?? '', user?.profile?.display_name ?? '')
-
-    const allowList = ['KR', 'GB', '']
-    const blockList = ['IN', 'PK', 'CN', 'VN', 'TH', 'PH']
-    const isForeign = !allowList.includes(country)
-
-    if (
-      blockList.includes(country) ||
-      this.utils.spamFilter(input.body!.concat(extraText), isForeign) ||
-      this.utils.spamFilter(input.title!, isForeign, true)
-    ) {
-      return true
-    }
-    return false
   }
   private async generateUrlSlug({ input, urlSlug, userId }: GenerateUrlSlugArgs) {
     let processedUrlSlug = this.utils.escapeForUrl(urlSlug)
@@ -386,7 +369,6 @@ export class PostApiService implements Service {
         is_private: true,
       },
     })
-
     return true
   }
   private async alertIsSpam({
@@ -433,12 +415,6 @@ type AlertSpamArgs = {
   ip: string
   country: string
   type: string
-}
-
-type IsIncludeSpamKeywordArgs = {
-  input: PostInput
-  user: CurrentUser
-  country: string
 }
 
 type GenerateUrlSlugArgs = {

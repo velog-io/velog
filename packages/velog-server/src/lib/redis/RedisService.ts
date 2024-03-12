@@ -39,7 +39,7 @@ export class RedisService extends Redis implements Service {
   public get queueName(): Record<QueueName, string> {
     return {
       createFeed: 'queue:feed',
-      spamCheck: 'queue:postIdsForSpamCheck',
+      checkPostSpam: 'queue:checkPostSpam',
     }
   }
 
@@ -48,8 +48,8 @@ export class RedisService extends Redis implements Service {
     return await this.lpush(queueName, JSON.stringify(data))
   }
 
-  public async addToSpamCheckQueue(data: SpamCheckArgs): Promise<number> {
-    const queueName = this.queueName.spamCheck
+  public async addToSpamCheckQueue(data: CheckPostSpamArgs): Promise<number> {
+    const queueName = this.queueName.checkPostSpam
     return await this.lpush(queueName, JSON.stringify(data))
   }
 }
@@ -63,7 +63,7 @@ type GenerateRedisKey = {
   trendingWriters: () => string
 }
 
-type QueueName = 'createFeed' | 'spamCheck'
+type QueueName = 'createFeed' | 'checkPostSpam'
 
 export type ChangeEmailArgs = {
   email: string
@@ -75,7 +75,7 @@ export type CreateFeedArgs = {
   fk_post_id: string
 }
 
-export type SpamCheckArgs = {
+export type CheckPostSpamArgs = {
   post_id: string
   user_id: string
   ip: string
