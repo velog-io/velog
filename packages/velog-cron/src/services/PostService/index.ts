@@ -213,6 +213,9 @@ export class PostService implements Service {
         last_used_at: {
           gte: oneMonthAgo,
         },
+        // usage_count: {
+        //   gte: 5,
+        // },
       },
     })
 
