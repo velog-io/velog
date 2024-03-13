@@ -136,6 +136,7 @@ export class PostService implements Service {
 
     this.discord.sendMessage('spam', JSON.stringify(message))
   }
+
   public async checkIsSpam(
     title: string,
     body: string,
@@ -151,19 +152,18 @@ export class PostService implements Service {
       return true
     }
 
-    const checkTitle = await this.spamFilter(title!, username, isForeign, true)
-    if (checkTitle) {
+    const isTitleSpam = await this.spamFilter(title!, username, isForeign, true)
+    if (isTitleSpam) {
       return true
     }
 
-    const checkBody = await this.spamFilter(body!.concat(extraText), username, isForeign)
-    if (checkBody) {
+    const isBodySpam = await this.spamFilter(body!.concat(extraText), username, isForeign)
+    if (isBodySpam) {
       return true
     }
 
     return false
   }
-
   private async spamFilter(
     text: string,
     username: string,
