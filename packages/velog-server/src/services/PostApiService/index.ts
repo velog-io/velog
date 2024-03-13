@@ -279,6 +279,7 @@ export class PostApiService implements Service {
 
       // create feed
       setTimeout(() => {
+        if (!post) return
         const queueData: CreateFeedArgs = {
           fk_following_id: signedUserId,
           fk_post_id: post.id,
@@ -288,6 +289,7 @@ export class PostApiService implements Service {
 
       // check spam
       setTimeout(() => {
+        if (!post) return
         if (isSpam) return
         if (isTusted) return
         const queueData: CheckPostSpamArgs = {
