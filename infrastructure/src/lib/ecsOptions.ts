@@ -1,13 +1,5 @@
 import { ENV } from '../env'
 
-const serverEcsOption: EcsOption = {
-  desiredCount: ENV.isProduction ? 2 : 1,
-  cpu: ENV.isProduction ? 512 : 512,
-  memory: 1024,
-  maxCapacity: 12,
-  minCapacity: ENV.isProduction ? 2 : 1,
-}
-
 const webEcsOption: EcsOption = {
   desiredCount: ENV.isProduction ? 2 : 1,
   cpu: ENV.isProduction ? 1024 : 512,
@@ -16,9 +8,17 @@ const webEcsOption: EcsOption = {
   minCapacity: ENV.isProduction ? 2 : 1,
 }
 
+const serverEcsOption: EcsOption = {
+  desiredCount: ENV.isProduction ? 2 : 1,
+  cpu: ENV.isProduction ? 1024 * 0.75 : 512,
+  memory: 1024,
+  maxCapacity: 12,
+  minCapacity: ENV.isProduction ? 2 : 1,
+}
+
 const cronEcsOption: EcsOption = {
   desiredCount: 1,
-  cpu: 512,
+  cpu: ENV.isProduction ? 1024 : 512,
   memory: 1024,
   maxCapacity: 1,
   minCapacity: ENV.isProduction ? 1 : 0,

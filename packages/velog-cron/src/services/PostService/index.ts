@@ -87,7 +87,8 @@ export class PostService implements Service {
     })
 
     if (!post) {
-      throw new NotFoundError('Not found Post')
+      console.log('Not found Post when spam check')
+      return
     }
 
     const user = await this.db.user.findUnique({
@@ -99,9 +100,7 @@ export class PostService implements Service {
       },
     })
 
-    if (!user) {
-      throw new NotFoundError('Not found User')
-    }
+    if (!user) return
 
     const country = geoip.lookup(ip)?.country ?? ''
 
