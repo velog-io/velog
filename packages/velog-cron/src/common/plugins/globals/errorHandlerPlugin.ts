@@ -4,8 +4,9 @@ import { FastifyPluginCallback } from 'fastify'
 import fp from 'fastify-plugin'
 
 const pluginFn: FastifyPluginCallback = (fastify, _, done) => {
-  fastify.addHook('onError', (request, reply, error) => {
-    console.log('fastify hook error:', error)
+  fastify.addHook('onError', (request, reply, error, done) => {
+    request.log.error(error, 'fastify onError')
+    done()
   })
   fastify.setErrorHandler((error, _, reply) => {
     if (isHttpError(error)) {

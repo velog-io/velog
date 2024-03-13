@@ -24,6 +24,11 @@ const v1: FastifyPluginCallback = (fastify, opts, done) => {
     reply.status(HttpStatus.OK).send({ processedPostsCount })
   })
 
+  fastify.post('/test/spam-filter', async (_, reply) => {
+    await postController.spamFilterTestRunner()
+    reply.status(HttpStatus.OK).send(HttpStatusMessage.Ok)
+  })
+
   done()
 }
 

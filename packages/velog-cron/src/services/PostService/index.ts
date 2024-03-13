@@ -111,11 +111,17 @@ export class PostService implements Service {
       .join('')
       .concat(user.profile?.short_bio ?? '', user.profile?.display_name ?? '')
 
-    const isSpam = await this.checkIsSpam(post.title ?? '', post.body ?? '', extraText, country)
+    const isSpam = await this.checkIsSpam(
+      post.title ?? '',
+      post.body ?? '',
+      user.username,
+      extraText,
+      country,
+    )
 
     if (!isSpam) return
 
-    this.db.post.update({
+    await this.db.post.update({
       where: {
         id: post.id,
       },
@@ -130,9 +136,10 @@ export class PostService implements Service {
 
     this.discord.sendMessage('spam', JSON.stringify(message))
   }
-  private async checkIsSpam(
+  public async checkIsSpam(
     title: string,
     body: string,
+    username: string,
     extraText: string,
     country: string,
   ): Promise<boolean> {
@@ -144,14 +151,12 @@ export class PostService implements Service {
       return true
     }
 
-    const checkTitle = await this.spamFilter(title!, isForeign, true)
-
+    const checkTitle = await this.spamFilter(title!, username, isForeign, true)
     if (checkTitle) {
       return true
     }
 
-    const checkBody = await this.spamFilter(body!.concat(extraText), isForeign)
-
+    const checkBody = await this.spamFilter(body!.concat(extraText), username, isForeign)
     if (checkBody) {
       return true
     }
@@ -159,7 +164,12 @@ export class PostService implements Service {
     return false
   }
 
-  private async spamFilter(text: string, isForeign: boolean, isTitle = false): Promise<boolean> {
+  private async spamFilter(
+    text: string,
+    username: string,
+    isForeign: boolean,
+    isTitle = false,
+  ): Promise<boolean> {
     const includesCN = /[\u4e00-\u9fa5]/.test(text)
     const includesKR = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(text)
 
@@ -171,11 +181,19 @@ export class PostService implements Service {
     // replace image markdown
     replaced = replaced.replace(/!\[([\s\S]*?)\]\(([\s\S]*?)\)/g, '')
 
-    const alphanumericKorean = replaced
-      .replace(/[^a-zA-Zㄱ-힣0-9 \n]/g, '') // remove non-korean
-      .toLowerCase()
+    if (isTitle) {
+      replaced = replaced.replace(/\s/g, '')
+    }
 
     const hasLink = /http/.test(replaced)
+
+    const phoneRegex = [/\+\d{13}/, /\+\d{11}/]
+
+    const containsPhoneNumber = phoneRegex.some((regex) => regex.test(replaced))
+
+    if (containsPhoneNumber) {
+      return true
+    }
 
     if (!isTitle && isForeign && hasLink) {
       const lines = replaced.split('\n').filter((line) => line.trim().length > 1)
@@ -184,7 +202,9 @@ export class PostService implements Service {
       return confidence < 0.3
     }
 
-    const spaceReplaced = alphanumericKorean.replace(/\s/g, '')
+    const removeDuplicatedWords = Array.from(
+      new Set(replaced.toLocaleLowerCase().replace(/\s/g, '').split(/\n| /)),
+    ).join(' ')
 
     const oneMonthAgo = subMonths(new Date(), 1)
     const bannedKeywords = await this.db.dynamicConfigItem.findMany({
@@ -196,37 +216,16 @@ export class PostService implements Service {
       },
     })
 
-    const removeDuplicated = Array.from(
-      new Set([text, alphanumericKorean, spaceReplaced].join(',').split(' ')),
-    )
-    const keywordsToUpdate: string[] = []
-
     const checkKeyword = bannedKeywords
       .map((keyword) => keyword.value)
       .some((keyword) => {
-        if (removeDuplicated.includes(keyword)) {
-          keywordsToUpdate.push(keyword)
+        if (removeDuplicatedWords.includes(keyword)) {
+          this.updateDynmicConfigItem(keyword)
           return true
         } else {
           return false
         }
       })
-
-    if (keywordsToUpdate.length > 0) {
-      this.db.dynamicConfigItem.updateMany({
-        where: {
-          value: {
-            in: keywordsToUpdate,
-          },
-        },
-        data: {
-          last_used_at: new Date(),
-          usage_count: {
-            increment: 1,
-          },
-        },
-      })
-    }
 
     if (checkKeyword) {
       return true
@@ -238,22 +237,54 @@ export class PostService implements Service {
       },
     })
 
-    const score = bannedAltKeywords
-      .map(({ value }) => value)
-      .reduce((acc, current) => {
-        if (alphanumericKorean.includes(current)) {
-          return acc + 1
-        }
-        return acc
-      }, 0)
+    let score = 0
 
-    if (score >= 2 && isForeign) {
-      return true
+    if (hasLink) {
+      score++
     }
+
+    const isOnlyNumbers = /^\d+$/.test(username)
+    if (isOnlyNumbers) {
+      score++
+    }
+
+    const notAlphanumbericKorean = replaced.replace(/[a-zA-Zㄱ-힣0-9]/g, '') // remove korean
+    if (notAlphanumbericKorean.length / replaced.length > 0.35) {
+      score++
+    }
+
+    for (const { value: keyword } of bannedAltKeywords) {
+      if (removeDuplicatedWords.includes(keyword)) {
+        this.updateDynmicConfigItem(keyword)
+        score++
+      }
+
+      if (score >= 2 && isForeign) {
+        return true
+      }
+
+      if (score >= 3) {
+        return true
+      }
+    }
+
     return false
   }
   private hasKorean(text: string) {
     return /[ㄱ-힣]/g.test(text)
+  }
+  private async updateDynmicConfigItem(value: string) {
+    await this.db.dynamicConfigItem.updateMany({
+      where: {
+        value,
+      },
+      data: {
+        last_used_at: new Date(),
+        usage_count: {
+          increment: 1,
+        },
+      },
+    })
   }
 }
 
