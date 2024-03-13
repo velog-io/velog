@@ -217,6 +217,10 @@ export class PostService implements Service {
         //   gte: 5,
         // },
       },
+      orderBy: {
+        usage_count: 'desc',
+        last_used_at: 'desc',
+      },
     })
 
     const checkKeyword = bannedKeywords
