@@ -5,7 +5,6 @@ import { injectable, singleton } from 'tsyringe'
 import geoip from 'geoip-country'
 import { subMonths } from 'date-fns'
 import { DiscordService } from '@lib/discord/DiscordService.js'
-import { NotFoundError } from '@errors/NotfoundError.js'
 
 interface Service {
   findById(postId: string): Promise<Post | null>
