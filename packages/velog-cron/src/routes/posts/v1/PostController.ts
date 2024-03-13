@@ -66,49 +66,50 @@ export class PostController implements Controller {
     return posts.length
   }
   async spamFilterTestRunner() {
+    if (ENV.appEnv !== 'development') return
+
     const utils = container.resolve(UtilsService)
     const postService = container.resolve(PostService)
     try {
-      if (ENV.appEnv !== 'development') return
-
       const filePath = path.resolve(utils.resolveDir('./src/routes/posts/v1/spam_post.json'))
 
       const fileExits = fs.existsSync(filePath)
-      if (!fileExits) return
+      if (!fileExits) {
+        throw new NotFoundError('Not found spam_post.json')
+      }
 
       const readFileResult = fs.readFileSync(filePath, { encoding: 'utf-8' })
       const data = JSON.parse(readFileResult)
       const key = Object.keys(data)[0]
       const posts: PostData[] = data[key]
-        .filter((v: any) => !!v.title)
-        .map((v: any, index: number) => ({ id: index, ...v }))
+        .filter((post: any) => post.title)
+        .map((post: any, index: number) => ({ id: index, ...post }))
 
-      const postLength = 5000
+      const maxPostLength = 5000
       const set = new Set()
-
       const bannedUesrnames: string[] = []
 
-      for (const post of posts.slice(0, postLength)) {
+      for (const post of posts.slice(0, maxPostLength)) {
         const { id, title, body, username } = post
         if (bannedUesrnames.includes(username)) {
           set.add(id)
         }
 
-        const isSpam = await postService.checkIsSpam(title, body, username, '', 'US')
-        if (isSpam) {
+        const isForeignSpam = await postService.checkIsSpam(title, body, username, '', 'US')
+        if (isForeignSpam) {
           set.add(id)
           continue
         }
 
-        const isSpam2 = await postService.checkIsSpam(title, body, username, '', 'KR')
-        if (isSpam2) {
+        const isInternalSpam = await postService.checkIsSpam(title, body, username, '', 'KR')
+        if (isInternalSpam) {
           set.add(id)
         }
       }
 
       const isSpamCount = set.size
       console.log('isSpamCount: ', isSpamCount)
-      console.log('ratio: ', isSpamCount / postLength)
+      console.log('ratio: ', isSpamCount / maxPostLength)
 
       const allowIds: number[] = []
       for (const id of allowIds) {
