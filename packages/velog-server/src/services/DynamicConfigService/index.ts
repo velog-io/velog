@@ -17,7 +17,7 @@ export class DynamicConfigService implements Service {
   private async readBlockUserList(): Promise<string[]> {
     const list = await this.db.dynamicConfigItem.findMany({
       where: {
-        type: 'username',
+        type: 'blockUsername',
       },
     })
     return list.map((item) => item.value)
