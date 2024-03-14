@@ -30,6 +30,7 @@ export class DiscordService {
       'canceling statement',
       'Not allow origin',
       'Unknown query',
+      'Code is required',
     ]
     const isFrequentWordIncluded = frequentWord.some((word) => message.includes(word))
 
