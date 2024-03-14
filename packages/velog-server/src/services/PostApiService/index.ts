@@ -301,11 +301,11 @@ export class PostApiService implements Service {
       }, 0)
     }
 
-    setTimeout(async () => {
-      if (!post) return
-      const images = await this.imageService.getImagesOf(post.id)
-      await this.imageService.trackImages(images, data.body)
-    }, 0)
+    // setTimeout(async () => {
+    //   if (!post) return
+    //   const images = await this.imageService.getImagesOf(post.id)
+    //   await this.imageService.trackImages(images, data.body)
+    // }, 0)
 
     return { data, isPublish, post, userId: signedUserId, series_id }
   }

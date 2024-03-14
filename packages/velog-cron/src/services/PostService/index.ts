@@ -128,11 +128,13 @@ export class PostService implements Service {
       },
     })
 
-    const message = {
-      text: `[Captured By Bot], *userId*: ${user_id}\ntitle: ${post.title}, ip: ${ip}, country: ${country} type: spam`,
-    }
+    setTimeout(() => {
+      const message = {
+        text: `[Captured By Bot], *userId*: ${user_id}\ntitle: ${post.title}, ip: ${ip}, country: ${country} type: spam`,
+      }
 
-    this.discord.sendMessage('spam', JSON.stringify(message))
+      this.discord.sendMessage('spam', JSON.stringify(message))
+    }, 0)
   }
 
   public async checkIsSpam(

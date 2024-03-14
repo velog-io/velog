@@ -21,6 +21,7 @@
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "start": "node dist/src/main.js",
     "prisma:copy": "tsx ./scripts/copyPrisma.ts",
+    "prisma:generate": "prisma generate",
     "prisma:rm": "rm -rf ./prisma",
     "codegen": "graphql-codegen --config codegen.ts",
     "test": "pnpm jest --detectOpenHandles",
