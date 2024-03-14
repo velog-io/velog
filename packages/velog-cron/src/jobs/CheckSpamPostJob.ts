@@ -27,6 +27,7 @@ export class CheckSpamPostJob extends JobProgress implements Job {
       try {
         await this.postService.checkSpam(data)
       } catch (error) {
+        console.log('PostSpamCheckJob error', error)
         const message = { message: 'PostSpamCheckJob error', payload: item, error: error }
         this.discord.sendMessage('error', JSON.stringify(message))
       } finally {

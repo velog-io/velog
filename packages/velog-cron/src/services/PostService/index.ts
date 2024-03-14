@@ -129,7 +129,7 @@ export class PostService implements Service {
     })
 
     const message = {
-      text: `*userId*: ${user_id}\ntitle: ${post.title}, ip: ${ip}, country: ${country} type: isSpam`,
+      text: `[Captured By Bot], *userId*: ${user_id}\ntitle: ${post.title}, ip: ${ip}, country: ${country} type: spam`,
     }
 
     this.discord.sendMessage('spam', JSON.stringify(message))
@@ -215,10 +215,14 @@ export class PostService implements Service {
         //   gte: 5,
         // },
       },
-      orderBy: {
-        usage_count: 'desc',
-        last_used_at: 'desc',
-      },
+      orderBy: [
+        {
+          usage_count: 'desc',
+        },
+        {
+          last_used_at: 'desc',
+        },
+      ],
     })
 
     const checkKeyword = bannedKeywords
