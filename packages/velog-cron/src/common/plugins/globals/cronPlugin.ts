@@ -61,7 +61,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     },
     {
       name: 'providing a count of new users and posts from the past 1 week',
-      cronTime: '59 23 * * 3', // every Monday at 8:59 AM
+      cronTime: '59 23 * * 0',
       jobService: statsWeeklyJob,
     },
     {
