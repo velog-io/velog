@@ -28,9 +28,10 @@ export class RedisService extends Redis implements Service {
     }
   }
 
-  get queueName() {
+  get queueName(): Record<QueueName, string> {
     return {
-      feed: 'queue:feed',
+      createFeed: 'queue:feed',
+      checkPostSpam: 'queue:checkPostSpam',
     }
   }
 }
@@ -39,4 +40,10 @@ type GenerateRedisKey = {
   trendingWriters: () => string
 }
 
-type QueueName = 'feed'
+type QueueName = 'createFeed' | 'checkPostSpam'
+
+export type CheckPostSpamArgs = {
+  post_id: string
+  user_id: string
+  ip: string
+}

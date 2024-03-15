@@ -6,6 +6,7 @@ import { DeleteFeedJob } from '@jobs/DeleteFeedJob.js'
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 import { ENV } from '@env'
+import { CheckSpamPostJob } from '@jobs/CheckSpamPostJob.js'
 
 const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   const calculatePostScoreJob = container.resolve(CalculatePostScoreJob)
@@ -15,6 +16,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   const statsDailyJob = container.resolve(StatsDaily)
   const statsWeeklyJob = container.resolve(StatsWeekly)
   const statsMonthlyJob = container.resolve(StatsMonthly)
+  const checkSpamPostJob = container.resolve(CheckSpamPostJob)
 
   // 덜 실행하면서, 실행되는 순서로 정렬
   // crontime은 UTC 기준으로 작성되기 때문에 KST에서 9시간을 빼줘야함
@@ -46,6 +48,11 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       jobService: calculatePostScoreJob,
       param: 0.5,
     },
+    {
+      name: 'check post spam in every 2 minutes',
+      cronTime: '*/2 * * * *', // every 2 minutes
+      jobService: checkSpamPostJob,
+    },
     // Stats Start
     {
       name: 'providing a count of new users and posts from the past 1 day',
@@ -54,12 +61,12 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     },
     {
       name: 'providing a count of new users and posts from the past 1 week',
-      cronTime: '59 17 * * 1', // every Monday at 8:59 AM
+      cronTime: '59 23 * * 0',
       jobService: statsWeeklyJob,
     },
     {
       name: 'providing a count of new users and posts from the past 1 month',
-      cronTime: '58 17 1 * *', // every 1st day of month at 8:58 AM
+      cronTime: '58 23 1 * *', // every 1st day of month at 8:58 AM
       jobService: statsMonthlyJob,
     },
     // Stats end
@@ -79,6 +86,13 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     if (ENV.appEnv !== 'production') {
       const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediateExecute)
       await Promise.all(immediateRunJobs.map(createTick))
+      const crons = immediateRunJobs.map(createJob)
+      await Promise.all(
+        crons.map((cron) => {
+          console.log(`${cron.name} is registered`)
+          cron.start()
+        }),
+      )
     }
 
     if (ENV.dockerEnv === 'production') {
@@ -93,7 +107,6 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   } catch (error) {
     console.error('Error initializing cron jobs:', error)
   } finally {
-    console.log('finally')
     done()
   }
 }
@@ -105,14 +118,7 @@ function isNeedParamJobService(arg: any): arg is NeedParamJobService {
 }
 
 function isNotNeedParamJobService(arg: any): arg is NotNeedParamJobService {
-  return (
-    arg.jobService instanceof GenerateFeedJob ||
-    arg.jobService instanceof GenerateTrendingWritersJob ||
-    arg.jobService instanceof DeleteFeedJob ||
-    arg.jobService instanceof StatsDaily ||
-    arg.jobService instanceof StatsWeekly ||
-    arg.jobService instanceof StatsMonthly
-  )
+  return arg.jobService instanceof CalculatePostScoreJob === false
 }
 
 async function createTick(description: JobDescription) {
@@ -134,24 +140,27 @@ async function createTick(description: JobDescription) {
 
 type JobDescription = NeedParamJobService | NotNeedParamJobService
 
-type NeedParamJobService = {
+type JobService =
+  | CalculatePostScoreJob
+  | GenerateFeedJob
+  | GenerateTrendingWritersJob
+  | DeleteFeedJob
+  | StatsDaily
+  | StatsWeekly
+  | StatsMonthly
+  | CheckSpamPostJob
+
+type BaseJobService = {
   name: string
   cronTime: string
-  param: any
   isImmediateExecute?: boolean
+}
+
+type NeedParamJobService = BaseJobService & {
+  param: any
   jobService: CalculatePostScoreJob
 }
 
-type NotNeedParamJobService = {
-  name: string
-  cronTime: string
-  param?: undefined
-  isImmediateExecute?: boolean
-  jobService:
-    | GenerateFeedJob
-    | GenerateTrendingWritersJob
-    | DeleteFeedJob
-    | StatsDaily
-    | StatsWeekly
-    | StatsMonthly
+type NotNeedParamJobService = Omit<BaseJobService, 'param'> & {
+  jobService: Exclude<JobService, CalculatePostScoreJob>
 }

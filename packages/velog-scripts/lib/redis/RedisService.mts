@@ -2,9 +2,7 @@ import { injectable, singleton } from 'tsyringe'
 import Redis from 'ioredis'
 import { ENV } from '../../env/env.mjs'
 
-interface Service {
-  get setName(): SetName
-}
+interface Service {}
 
 @injectable()
 @singleton()
@@ -20,32 +18,4 @@ export class RedisService extends Redis implements Service {
       })
     })
   }
-
-  get setName() {
-    return {
-      blockList: 'set:blockList',
-    }
-  }
-
-  public async addBlockList(username: string) {
-    try {
-      const keyname = this.setName.blockList
-      await this.sadd(keyname, username)
-    } catch (error) {
-      throw error
-    }
-  }
-
-  public async readBlockList() {
-    try {
-      const keyname = this.setName.blockList
-      return await this.smembers(keyname)
-    } catch (error) {
-      throw error
-    }
-  }
-}
-
-type SetName = {
-  blockList: string
 }

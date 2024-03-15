@@ -25,7 +25,12 @@ export class DiscordService {
   public async sendMessage(type: MessageType, message: string) {
     this.isSending = true
 
-    const frequentWord = ['connection pool', 'canceling statement', 'Not allow origin']
+    const frequentWord = [
+      'connection pool',
+      'canceling statement',
+      'Not allow origin',
+      'Unknown query',
+    ]
     const isFrequentWordIncluded = frequentWord.some((word) => message.includes(word))
 
     if (isFrequentWordIncluded) {

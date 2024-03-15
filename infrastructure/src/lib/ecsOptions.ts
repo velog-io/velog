@@ -1,25 +1,25 @@
 import { ENV } from '../env'
 
-const serverEcsOption: EcsOption = {
+const webEcsOption: EcsOption = {
   desiredCount: ENV.isProduction ? 2 : 1,
-  cpu: ENV.isProduction ? 512 : 512,
-  memory: 1024,
+  containerCpu: ENV.isProduction ? 1024 : 512,
+  containerMemory: ENV.isProduction ? 2048 : 1024,
   maxCapacity: 12,
   minCapacity: ENV.isProduction ? 2 : 1,
 }
 
-const webEcsOption: EcsOption = {
+const serverEcsOption: EcsOption = {
   desiredCount: ENV.isProduction ? 2 : 1,
-  cpu: ENV.isProduction ? 1024 : 512,
-  memory: ENV.isProduction ? 2048 : 1024,
+  containerCpu: ENV.isProduction ? 1024 : 512,
+  containerMemory: 1024,
   maxCapacity: 12,
   minCapacity: ENV.isProduction ? 2 : 1,
 }
 
 const cronEcsOption: EcsOption = {
-  desiredCount: 1,
-  cpu: 512,
-  memory: 1024,
+  desiredCount: ENV.isProduction ? 1 : 0,
+  containerCpu: ENV.isProduction ? 1024 : 512,
+  containerMemory: 512,
   maxCapacity: 1,
   minCapacity: ENV.isProduction ? 1 : 0,
 }
@@ -32,8 +32,8 @@ export const ecsOption = {
 
 type EcsOption = {
   desiredCount: number
-  cpu: number
-  memory: number
+  containerCpu: number
+  containerMemory: number
   maxCapacity: number
   minCapacity: number
 }

@@ -16,7 +16,7 @@ export class GenerateFeedJob extends JobProgress implements Job {
     console.log('Create feed job start...')
     console.time('create feed')
 
-    const feedQueueName = this.redis.queueName.feed
+    const feedQueueName = this.redis.queueName.createFeed
     let handledQueueCount = 0
     while (true) {
       const item = await this.redis.lindex(feedQueueName, 0)
