@@ -252,7 +252,7 @@ export class PostService implements Service {
       })
 
     if (checkKeyword) {
-      return { isSpam: true, reason: `bannedKeyword: `.concat(...usedBannedKeywords) }
+      return { isSpam: true, reason: `bannedKeyword: `.concat(...usedBannedKeywords.join(',')) }
     }
 
     const bannedAltKeywords = await this.db.dynamicConfigItem.findMany({
@@ -289,7 +289,7 @@ export class PostService implements Service {
       if (score >= 2 && isForeign) {
         return {
           isSpam: true,
-          reason: `initScore: ${initScore}, foreign,  ${'BannedAltKeywords: '.concat(
+          reason: `initScore: ${initScore}, foreign,  ${'bannedAltKeywords: '.concat(
             usedBannedAltKeywords.join(','),
           )}`,
         }
@@ -298,7 +298,7 @@ export class PostService implements Service {
       if (score >= 3) {
         return {
           isSpam: true,
-          reason: `initScore: ${initScore}, foreign,  ${'BannedAltKeywords: '.concat(
+          reason: `initScore: ${initScore}, foreign,  ${'bannedAltKeywords: '.concat(
             usedBannedAltKeywords.join(','),
           )}`,
         }
