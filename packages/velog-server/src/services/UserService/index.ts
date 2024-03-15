@@ -122,14 +122,18 @@ export class UserService implements Service {
 
   public async updateLastAccessedAt(userId?: string): Promise<void> {
     if (!userId) return
-    await this.db.userProfile.update({
-      where: {
-        fk_user_id: userId,
-      },
-      data: {
-        last_accessed_at: this.utils.now,
-      },
-    })
+    try {
+      await this.db.userProfile.update({
+        where: {
+          fk_user_id: userId,
+        },
+        data: {
+          last_accessed_at: this.utils.now,
+        },
+      })
+    } catch (error) {
+      console.error('updateLastAccessedAt error', error)
+    }
   }
   public async restoreToken(ctx: Pick<GraphQLContext, 'request' | 'reply'>): Promise<UserToken> {
     const refreshToken: string | undefined = ctx.request.cookies['refresh_token']
