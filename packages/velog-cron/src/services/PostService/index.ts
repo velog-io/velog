@@ -4,6 +4,7 @@ import { injectable, singleton } from 'tsyringe'
 import geoip from 'geoip-country'
 import { subMonths } from 'date-fns'
 import { DiscordService } from '@lib/discord/DiscordService.js'
+import { CheckPostSpamArgs } from '@lib/redis/RedisService'
 
 interface Service {
   findById(postId: string): Promise<Post | null>
