@@ -46,8 +46,8 @@ export const createECSfargateService = ({
         container: {
           // name: withPrefix(`${packageType}-container`),
           image: imageUri,
-          cpu: option.cpu,
-          memory: option.memory,
+          cpu: option.containerCpu,
+          memory: option.containerMemory,
           essential: true,
           portMappings: [{ targetGroup: targetGroup }],
           environment: [

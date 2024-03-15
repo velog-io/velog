@@ -13,7 +13,7 @@
     "add:bannedKeyword": "pnpm env:copy -e development && pnpm prisma:copy && ts-node ./scripts/addBannedKeywords.mts",
     "env:copy": "tsx ./scripts/copyEnv.ts",
     "prisma:copy": "tsx ./scripts/copyPrisma.ts",
-    "build": "tsc",
+    "prisma:generate": "pnpm prisma generate",
     "ssm": "tsx ./scripts/ssm/index.ts"
   },
   "engines": {

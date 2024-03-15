@@ -11,13 +11,12 @@ export class DynamicConfigService implements Service {
   constructor(private readonly db: DbService) {}
   public async isBlockedUser(username: string = ''): Promise<boolean> {
     const list = await this.readBlockUserList()
-    const isBlocked = list.includes(username)
-    return isBlocked
+    return list.includes(username)
   }
   private async readBlockUserList(): Promise<string[]> {
     const list = await this.db.dynamicConfigItem.findMany({
       where: {
-        type: 'username',
+        type: 'blockUsername',
       },
     })
     return list.map((item) => item.value)

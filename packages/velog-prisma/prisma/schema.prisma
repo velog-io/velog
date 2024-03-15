@@ -642,9 +642,11 @@ model Notification {
 }
 
 model DynamicConfigItem {
-  id    String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  value String @db.VarChar(50)
-  type  String @db.VarChar(50)
+  id           String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  value        String   @db.VarChar(50)
+  type         String   @db.VarChar(50)
+  usage_count  Int      @default(0)
+  last_used_at DateTime @default(now()) @db.Timestamptz(6)
 
   @@unique([value, type])
   @@index([value])

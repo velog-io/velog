@@ -1,7 +1,9 @@
 env/*
 !env/.env.example
 
-
 prisma
 
 dist
+
+# spam test data
+spam_post.json

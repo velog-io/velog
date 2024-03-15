@@ -23,7 +23,7 @@ import { RedisService } from '@lib/redis/RedisService.js'
 import { changeEmailTemplate } from '@template/changeEmailTemplate.js'
 import { ENV } from '@env'
 import { MailService } from '@lib/mail/MailService.js'
-import { ChangeEmailDataType } from '@lib/redis/RedisInterface.js'
+import { ChangeEmailArgs } from '@lib/redis/RedisService.js'
 import { differenceInDays } from 'date-fns'
 
 interface Service {
@@ -122,14 +122,18 @@ export class UserService implements Service {
 
   public async updateLastAccessedAt(userId?: string): Promise<void> {
     if (!userId) return
-    await this.db.userProfile.update({
-      where: {
-        fk_user_id: userId,
-      },
-      data: {
-        last_accessed_at: this.utils.now,
-      },
-    })
+    try {
+      await this.db.userProfile.update({
+        where: {
+          fk_user_id: userId,
+        },
+        data: {
+          last_accessed_at: this.utils.now,
+        },
+      })
+    } catch (error) {
+      console.error('updateLastAccessedAt error', error)
+    }
   }
   public async restoreToken(ctx: Pick<GraphQLContext, 'request' | 'reply'>): Promise<UserToken> {
     const refreshToken: string | undefined = ctx.request.cookies['refresh_token']
@@ -246,7 +250,7 @@ export class UserService implements Service {
     const data = JSON.stringify({
       userId: user.id,
       email: email.toLowerCase(),
-    } as ChangeEmailDataType)
+    } as ChangeEmailArgs)
 
     const template = changeEmailTemplate(user.username, email, code)
 
@@ -279,7 +283,7 @@ export class UserService implements Service {
       throw new NotFoundError('Not found data')
     }
 
-    const { userId, email }: ChangeEmailDataType = JSON.parse(metadata)
+    const { userId, email }: ChangeEmailArgs = JSON.parse(metadata)
 
     if (userId !== signedUserId) {
       throw new UnauthorizedError('No permission to change the email')

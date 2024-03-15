@@ -7,7 +7,6 @@ import { TagService } from '@services/TagService/index.js'
 import { PostTagService } from '@services/PostTagService/index.js'
 import { Time } from '@constants/TimeConstants.js'
 import { DiscordService } from '@lib/discord/DiscordService.js'
-import { CurrentUser } from '@interfaces/user'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
@@ -18,7 +17,7 @@ import { SeriesService } from '@services/SeriesService/index.js'
 import { SearchService } from '@services/SearchService/index.js'
 import { ExternalIntegrationService } from '@services/ExternalIntegrationService/index.js'
 import { PostService } from '@services/PostService/index.js'
-import { RedisService } from '@lib/redis/RedisService.js'
+import { CreateFeedArgs, RedisService, CheckPostSpamArgs } from '@lib/redis/RedisService.js'
 import { GraphcdnService } from '@lib/graphcdn/GraphcdnService.js'
 import { ImageService } from '@services/ImageService/index.js'
 import { UserService } from '@services/UserService/index.js'
@@ -121,7 +120,7 @@ export class PostApiService implements Service {
     }
 
     if (!post.is_private && data.is_private) {
-      setImmediate(async () => {
+      setTimeout(async () => {
         if (!signedUserId) return
         const isIntegrated = await this.externalInterationService.checkIntegrated(signedUserId)
         if (!isIntegrated) return
@@ -129,7 +128,7 @@ export class PostApiService implements Service {
           type: 'deleted',
           post_id: post.id,
         })
-      })
+      }, 0)
     }
 
     return { ...post, url_slug: data.url_slug }
@@ -168,12 +167,10 @@ export class PostApiService implements Service {
     const isPublish = !data.is_temp && !data.is_private
 
     const country = geoip.lookup(ip)?.country ?? ''
-    const isSpam = this.isIncludeSpamKeyword({ input, user, country })
     const isLimit = await this.isPostLimitReached(signedUserId)
     const isBlock = await this.dynamicConfigService.isBlockedUser(user.username)
 
     const checks = [
-      { type: 'spam', value: isSpam },
       { type: 'limit', value: isLimit },
       { type: 'block', value: isBlock },
     ]
@@ -187,7 +184,8 @@ export class PostApiService implements Service {
       })
     }
 
-    if (checks.map(({ value }) => value).some((check) => check)) {
+    const isSpam = checks.map(({ value }) => value).some((check) => check)
+    if (isSpam) {
       data.is_private = true
       await this.alertIsSpam({
         action: type,
@@ -249,7 +247,7 @@ export class PostApiService implements Service {
     await this.handleTags(tags, post.id)
 
     if (isPublish) {
-      setImmediate(async () => {
+      setTimeout(async () => {
         if (!post) return
         if (!signedUserId) return
 
@@ -269,6 +267,7 @@ export class PostApiService implements Service {
             user: true,
           },
         })
+
         if (!targetPost) return
 
         const serializedPost = this.postService.serialize(targetPost)
@@ -276,40 +275,39 @@ export class PostApiService implements Service {
           type: type === 'write' ? 'created' : 'updated',
           post: serializedPost,
         })
-      })
+      }, 0)
 
-      const queueData = {
-        fk_following_id: signedUserId,
-        fk_post_id: post.id,
-      }
-      this.redis.createFeedQueue(queueData)
+      // create feed
+      setTimeout(() => {
+        if (!post) return
+        const queueData: CreateFeedArgs = {
+          fk_following_id: signedUserId,
+          fk_post_id: post.id,
+        }
+        this.redis.createFeedQueue(queueData)
+      }, 0)
+
+      // check spam
+      setTimeout(() => {
+        if (!post) return
+        if (isSpam) return
+        if (isTusted) return
+        const queueData: CheckPostSpamArgs = {
+          post_id: post.id,
+          user_id: signedUserId,
+          ip,
+        }
+        this.redis.addToSpamCheckQueue(queueData)
+      }, 0)
     }
 
-    setTimeout(async () => {
-      if (!post) return
-      const images = await this.imageService.getImagesOf(post.id)
-      await this.imageService.trackImages(images, data.body)
-    }, 0)
+    // setTimeout(async () => {
+    //   if (!post) return
+    //   const images = await this.imageService.getImagesOf(post.id)
+    //   await this.imageService.trackImages(images, data.body)
+    // }, 0)
 
     return { data, isPublish, post, userId: signedUserId, series_id }
-  }
-  private isIncludeSpamKeyword({ input, user, country }: IsIncludeSpamKeywordArgs): boolean {
-    const extraText = input.tags
-      .join('')
-      .concat(user?.profile?.short_bio ?? '', user?.profile?.display_name ?? '')
-
-    const allowList = ['KR', 'GB', '']
-    const blockList = ['IN', 'PK', 'CN', 'VN', 'TH', 'PH']
-    const isForeign = !allowList.includes(country)
-
-    if (
-      blockList.includes(country) ||
-      this.utils.spamFilter(input.body!.concat(extraText), isForeign) ||
-      this.utils.spamFilter(input.title!, isForeign, true)
-    ) {
-      return true
-    }
-    return false
   }
   private async generateUrlSlug({ input, urlSlug, userId }: GenerateUrlSlugArgs) {
     let processedUrlSlug = this.utils.escapeForUrl(urlSlug)
@@ -322,16 +320,17 @@ export class PostApiService implements Service {
 
     const generate = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 8)
     const isEditArgs = this.isEditArgs(input)
+    const isWriteArgs = !isEditArgs
 
     if (isEditArgs && urlSlugDuplicate && urlSlugDuplicate.id !== input.id) {
       const randomString = generate(8)
-      processedUrlSlug = processedUrlSlug.slice(0, 245)
+      processedUrlSlug = processedUrlSlug.slice(0, 240)
       processedUrlSlug += `-${randomString}`
     }
 
-    if (!isEditArgs && urlSlugDuplicate) {
+    if (isWriteArgs && urlSlugDuplicate) {
       const randomString = generate(8)
-      processedUrlSlug = processedUrlSlug.slice(0, 245)
+      processedUrlSlug = processedUrlSlug.slice(0, 240)
       processedUrlSlug += `-${randomString}`
     }
 
@@ -373,7 +372,6 @@ export class PostApiService implements Service {
         is_private: true,
       },
     })
-
     return true
   }
   private async alertIsSpam({
@@ -420,12 +418,6 @@ type AlertSpamArgs = {
   ip: string
   country: string
   type: string
-}
-
-type IsIncludeSpamKeywordArgs = {
-  input: PostInput
-  user: CurrentUser
-  country: string
 }
 
 type GenerateUrlSlugArgs = {

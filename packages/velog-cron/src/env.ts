@@ -39,6 +39,10 @@ const env = z.object({
   databaseUrl: z.string(),
   cronApiKey: z.string(),
   redisHost: z.string(),
+  discordBotToken: z.string(),
+  discordStatsChannel: z.string(),
+  discordSpamChannel: z.string(),
+  discordErrorChannel: z.string(),
 })
 
 export const ENV = env.parse({
@@ -48,4 +52,8 @@ export const ENV = env.parse({
   databaseUrl: process.env.DATABASE_URL,
   cronApiKey: process.env.CRON_API_KEY,
   redisHost: process.env.REDIS_HOST,
+  discordBotToken: process.env.DISCORD_BOT_TOKEN,
+  discordStatsChannel: process.env.DISCORD_STATS_CHANNEL,
+  discordSpamChannel: process.env.DISCORD_SPAM_CHANNEL,
+  discordErrorChannel: process.env.DISCORD_ERROR_CHANNEL,
 })

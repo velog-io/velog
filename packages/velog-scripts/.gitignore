@@ -2,3 +2,5 @@
 
 /data/*
 !/data/.gitkeep
+
+dist

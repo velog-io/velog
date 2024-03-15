@@ -10,7 +10,7 @@ class Runner {
   public async run(bannedKeywords: string[]) {
     const data = bannedKeywords.map((value) => ({
       value,
-      type: 'banned',
+      type: 'bannedKeyword',
     }))
 
     try {

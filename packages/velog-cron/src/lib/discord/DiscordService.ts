@@ -25,12 +25,7 @@ export class DiscordService {
   public async sendMessage(type: MessageType, message: string) {
     this.isSending = true
 
-    const frequentWord = [
-      'connection pool',
-      'canceling statement',
-      'Not allow origin',
-      'Unknown query',
-    ]
+    const frequentWord: string[] = []
     const isFrequentWordIncluded = frequentWord.some((word) => message.includes(word))
 
     if (isFrequentWordIncluded) {
@@ -47,8 +42,9 @@ export class DiscordService {
       }
 
       const channelMapper: Record<MessageType, string> = {
-        error: ENV.discordErrorChannel,
+        stats: ENV.discordStatsChannel,
         spam: ENV.discordSpamChannel,
+        error: ENV.discordErrorChannel,
       }
 
       const channelId = channelMapper[type]
@@ -76,4 +72,4 @@ export class DiscordService {
   }
 }
 
-type MessageType = 'error' | 'spam'
+type MessageType = 'stats' | 'spam' | 'error'
