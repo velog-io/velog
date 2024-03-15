@@ -26,7 +26,7 @@ export default function useInputs<T extends Record<string, any>>(defaultValues: 
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
       name: e.target.name,
-      value: e.target.value.trim(),
+      value: e.target.value,
     })
   }, [])
   const onReset = useCallback(() => {
