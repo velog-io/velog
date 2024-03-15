@@ -19,7 +19,7 @@ const serverEcsOption: EcsOption = {
 const cronEcsOption: EcsOption = {
   desiredCount: ENV.isProduction ? 1 : 0,
   containerCpu: ENV.isProduction ? 1024 : 512,
-  containerMemory: 512,
+  containerMemory: 1024,
   maxCapacity: 1,
   minCapacity: ENV.isProduction ? 1 : 0,
 }
