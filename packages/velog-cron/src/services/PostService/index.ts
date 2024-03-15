@@ -109,13 +109,11 @@ export class PostService implements Service {
       .join('')
       .concat(user.profile?.short_bio ?? '', user.profile?.display_name ?? '')
 
-    const isSpam = await this.checkIsSpam(
-      post.title ?? '',
-      post.body ?? '',
-      user.username,
-      extraText,
-      country,
-    )
+    const {
+      isSpam,
+      reason,
+      targetType = '',
+    } = await this.checkIsSpam(post.title ?? '', post.body ?? '', user.username, extraText, country)
 
     if (!isSpam) return
 
@@ -130,9 +128,13 @@ export class PostService implements Service {
 
     setTimeout(() => {
       const message = {
-        text: `[Captured By Bot], *userId*: ${user_id}\ntitle: ${post.title}, ip: ${ip}, country: ${country} type: spam`,
+        text: `[Captured By Bot], *userId*: ${user_id}\ntitle: ${post.title}, ip: ${ip}, country: ${country} type: spam,
+        reason: ${reason}`,
       }
 
+      if (targetType) {
+        message.text = message.text.concat(`, targetType: ${targetType}`)
+      }
       this.discord.sendMessage('spam', JSON.stringify(message))
     }, 0)
   }
@@ -143,38 +145,47 @@ export class PostService implements Service {
     username: string,
     extraText: string,
     country: string,
-  ): Promise<boolean> {
+  ): Promise<{ isSpam: boolean; reason: string; targetType?: string }> {
     const allowList = ['KR', 'GB', '']
     const blockList = ['IN', 'PK', 'CN', 'VN', 'TH', 'PH']
     const isForeign = !allowList.includes(country)
 
     if (blockList.includes(country)) {
-      return true
+      return { isSpam: true, reason: 'blocked country' }
     }
 
-    const isTitleSpam = await this.spamFilter(title!, username, isForeign, true)
+    const { isSpam: isTitleSpam, reason: titleSpamReason } = await this.spamFilter(
+      title!,
+      username,
+      isForeign,
+      true,
+    )
     if (isTitleSpam) {
-      return true
+      return { isSpam: isTitleSpam, reason: titleSpamReason, targetType: 'title' }
     }
 
-    const isBodySpam = await this.spamFilter(body!.concat(extraText), username, isForeign)
+    const { isSpam: isBodySpam, reason: bodySpamReason } = await this.spamFilter(
+      body!.concat(extraText),
+      username,
+      isForeign,
+    )
     if (isBodySpam) {
-      return true
+      return { isSpam: isBodySpam, reason: bodySpamReason, targetType: 'body' }
     }
 
-    return false
+    return { isSpam: false, reason: '' }
   }
   private async spamFilter(
     text: string,
     username: string,
     isForeign: boolean,
     isTitle = false,
-  ): Promise<boolean> {
+  ): Promise<{ isSpam: boolean; reason: string }> {
     const includesCN = /[\u4e00-\u9fa5]/.test(text)
     const includesKR = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(text)
 
     if (includesCN && !includesKR) {
-      return true
+      return { isSpam: true, reason: 'includesCN' }
     }
 
     let replaced = text.replace(/```([\s\S]*?)```/g, '') // remove code blocks
@@ -192,14 +203,14 @@ export class PostService implements Service {
     const containsPhoneNumber = phoneRegex.some((regex) => regex.test(replaced))
 
     if (containsPhoneNumber) {
-      return true
+      return { isSpam: true, reason: 'containsPhoneNumber' }
     }
 
     if (!isTitle && isForeign && hasLink) {
       const lines = replaced.split('\n').filter((line) => line.trim().length > 1)
       const koreanLinesCount = lines.filter((line) => this.hasKorean(line)).length
       const confidence = koreanLinesCount / lines.length
-      return confidence < 0.3
+      return { isSpam: confidence < 0.3, reason: 'foreignWithLink' }
     }
 
     const removeDuplicatedWords = Array.from(
@@ -227,10 +238,12 @@ export class PostService implements Service {
       ],
     })
 
+    const usedBannedKeywords: string[] = []
     const checkKeyword = bannedKeywords
       .map((keyword) => keyword.value)
       .some((keyword) => {
         if (removeDuplicatedWords.includes(keyword)) {
+          usedBannedKeywords.push(keyword)
           this.updateDynmicConfigItem(keyword)
           return true
         } else {
@@ -239,7 +252,7 @@ export class PostService implements Service {
       })
 
     if (checkKeyword) {
-      return true
+      return { isSpam: true, reason: `bannedKeyword: `.concat(...usedBannedKeywords) }
     }
 
     const bannedAltKeywords = await this.db.dynamicConfigItem.findMany({
@@ -264,22 +277,35 @@ export class PostService implements Service {
       score++
     }
 
+    const initScore = score
+    const usedBannedAltKeywords: string[] = []
     for (const { value: keyword } of bannedAltKeywords) {
       if (removeDuplicatedWords.includes(keyword)) {
+        usedBannedAltKeywords.push(keyword)
         this.updateDynmicConfigItem(keyword)
         score++
       }
 
       if (score >= 2 && isForeign) {
-        return true
+        return {
+          isSpam: true,
+          reason: `initScore: ${initScore}, foreign,  ${'BannedAltKeywords: '.concat(
+            usedBannedAltKeywords.join(','),
+          )}`,
+        }
       }
 
       if (score >= 3) {
-        return true
+        return {
+          isSpam: true,
+          reason: `initScore: ${initScore}, foreign,  ${'BannedAltKeywords: '.concat(
+            usedBannedAltKeywords.join(','),
+          )}`,
+        }
       }
     }
 
-    return false
+    return { isSpam: false, reason: '' }
   }
   private hasKorean(text: string) {
     return /[ㄱ-힣]/g.test(text)
