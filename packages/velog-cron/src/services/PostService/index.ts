@@ -273,8 +273,12 @@ export class PostService implements Service {
     }
 
     const notAlphanumbericKorean = replaced.replace(/[a-zA-Zㄱ-힣0-9]/g, '') // remove korean
-    if (notAlphanumbericKorean.length / replaced.length > 0.2) {
+    if (notAlphanumbericKorean.length / replaced.length > 0.3) {
       score++
+    }
+
+    if (!isForeign) {
+      score--
     }
 
     const initScore = score
