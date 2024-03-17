@@ -40,6 +40,8 @@ export const createECSfargateService = ({
         subnets: subnetIds,
       },
       taskDefinitionArgs: {
+        cpu: option.taskCpu,
+        memory: option.taskMemory,
         executionRole: {
           roleArn: ecsTaskExecutionRole.arn,
         },

@@ -273,8 +273,12 @@ export class PostService implements Service {
     }
 
     const notAlphanumbericKorean = replaced.replace(/[a-zA-Zㄱ-힣0-9]/g, '') // remove korean
-    if (notAlphanumbericKorean.length / replaced.length > 0.35) {
+    if (notAlphanumbericKorean.length / replaced.length > 0.3) {
       score++
+    }
+
+    if (!isForeign) {
+      score--
     }
 
     const initScore = score
@@ -295,10 +299,10 @@ export class PostService implements Service {
         }
       }
 
-      if (score >= 3) {
+      if (score >= 4) {
         return {
           isSpam: true,
-          reason: `initScore: ${initScore}, foreign,  ${'bannedAltKeywords: '.concat(
+          reason: `initScore: ${initScore}, ${'bannedAltKeywords: '.concat(
             usedBannedAltKeywords.join(','),
           )}`,
         }
