@@ -75,7 +75,6 @@ export const createECSfargateService = ({
     },
     {
       replaceOnChanges: ['taskDefinitionArgs.container.image'],
-      ignoreChanges: ['taskDefinition.cpu', 'taskDefinition.memory'],
     },
   )
 
