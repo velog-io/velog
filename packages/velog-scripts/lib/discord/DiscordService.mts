@@ -33,7 +33,10 @@ export class DiscordService {
         const channel = await this.client.channels.fetch(channelId)
 
         if (channel?.isTextBased()) {
-          await channel.send(message)
+          const chunkSize = 2000
+          for (let i = 0; i < message.length; i += chunkSize) {
+            await channel.send(message.slice(i, i + chunkSize))
+          }
         } else {
           throw new Error('Wrong channel type')
         }
