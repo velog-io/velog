@@ -54,7 +54,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
       const e = execution.errors?.[0]?.originalError
 
       if (!isHttpError(e)) {
-        console.log('send!')
+        console.log('mecurius errorFormatter')
         ;(ctx as any).request?.log?.error(execution, 'errorFormatter')
         const discord = container.resolve(DiscordService)
         discord
