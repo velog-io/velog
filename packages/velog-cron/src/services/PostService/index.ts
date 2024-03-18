@@ -128,8 +128,7 @@ export class PostService implements Service {
 
     setTimeout(() => {
       const message = {
-        text: `[Captured By Bot], *userId*: ${user_id}\ntitle: ${post.title}, ip: ${ip}, country: ${country} type: spam,
-        reason: ${reason}`,
+        text: `[Captured By Cron], *userId*: ${user_id}\ntitle: ${post.title}, ip: ${ip}, country: ${country}, reason: ${reason}, type: spam`,
       }
 
       if (targetType) {

@@ -26,8 +26,8 @@ const webStageEcsOption: EcsBaseOption = {
 
 const serverProdEcsOption: EcsBaseOption = {
   desiredCount: 2,
-  cpu: 0.5, // unit 1024
-  memory: 1, // unit 1024
+  cpu: 1, // unit 1024
+  memory: 2, // unit 1024
   maxCapacity: 12,
   minCapacity: 2,
 }
@@ -42,8 +42,8 @@ const serverStageEcsOption: EcsBaseOption = {
 
 const cronProdEcsOption: EcsBaseOption = {
   desiredCount: 1,
-  cpu: 1, // unit 1024
-  memory: 2, // unit 1024
+  cpu: 0.5, // unit 1024
+  memory: 1, // unit 1024
   maxCapacity: 1,
   minCapacity: 1,
 }

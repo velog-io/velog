@@ -73,7 +73,10 @@ export const createECSfargateService = ({
         },
       },
     },
-    { replaceOnChanges: ['taskDefinitionArgs.container.image'] },
+    {
+      replaceOnChanges: ['taskDefinitionArgs.container.image'],
+      ignoreChanges: ['taskDefinition.cpu', 'taskDefinition.memory'],
+    },
   )
 
   const resourceId = service.service.id.apply((t) => t.split(':').at(-1)!)
