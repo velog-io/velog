@@ -35,7 +35,7 @@
     "@aws-sdk/client-ssm": "^3.379.1",
     "@aws-sdk/s3-request-presigner": "^3.473.0",
     "@elastic/elasticsearch": "7.3.0",
-    "@fastify/autoload": "^5.7.1",
+    "@fastify/autoload": "^5.8.0",
     "@fastify/cookie": "^9.3.1",
     "@fastify/cors": "^8.3.0",
     "@fastify/formbody": "^7.4.0",

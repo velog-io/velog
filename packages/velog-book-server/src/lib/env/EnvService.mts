@@ -11,6 +11,11 @@ interface Service {}
 @singleton()
 export class EnvService implements Service {
   private env: any
+  constructor() {
+    if (!this.env) {
+      this.init()
+    }
+  }
   public init() {
     const envFiles: EnvFiles = {
       development: '.env.development',

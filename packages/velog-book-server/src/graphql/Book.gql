@@ -1,0 +1,14 @@
+type Book {
+  id: ID!
+  thumbnail: String!
+  writerId: String!
+  pages: [Page!]!
+}
+
+type Query {
+  book(input: BookInput!): Void
+}
+
+input BookInput {
+  bookId: ID!
+}

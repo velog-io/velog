@@ -5,7 +5,6 @@ import { ForbiddenError } from '@errors/ForbiddenError.mjs'
 import { EnvService } from '@lib/env/EnvService.mjs'
 
 const corsPlugin: FastifyPluginAsync = async (fastify) => {
-  console.log('hello')
   const corsWhitelist: RegExp[] = [
     /^https:\/\/velog.io$/,
     /^https:\/\/(.*).velog.io$/,

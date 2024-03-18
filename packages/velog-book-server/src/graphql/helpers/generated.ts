@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GraphQLResolveInfo } from 'graphql'
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import { GraphQLContext } from '../../common/interfaces/graphql.mjs'
 export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined
@@ -21,32 +21,37 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean }
   Int: { input: number; output: number }
   Float: { input: number; output: number }
+  Date: { input: Date; output: Date }
+  JSON: { input: Record<string, any>; output: Record<string, any> }
+  PositiveInt: { input: number; output: number }
+  Void: { input: void; output: void }
 }
 
-export type Ad = {
-  body: Scalars['String']['output']
-  end_date: Scalars['String']['output']
+export type Book = {
   id: Scalars['ID']['output']
-  image: Scalars['String']['output']
-  is_disabled: Scalars['Boolean']['output']
-  start_date: Scalars['String']['output']
-  title: Scalars['String']['output']
-  type: Scalars['String']['output']
-  url: Scalars['String']['output']
+  pages: Array<Page>
+  thumbnail: Scalars['String']['output']
+  writerId: Scalars['String']['output']
 }
 
-export type AdsInput = {
-  limit?: InputMaybe<Scalars['Int']['input']>
-  type: Scalars['String']['input']
-  writer_username?: InputMaybe<Scalars['String']['input']>
+export type BookInput = {
+  bookId: Scalars['ID']['input']
+}
+
+export type Page = {
+  body: Scalars['String']['output']
+  bookId: Scalars['ID']['output']
+  id: Scalars['ID']['output']
+  parentId?: Maybe<Scalars['ID']['output']>
+  title: Scalars['String']['output']
 }
 
 export type Query = {
-  ads: Array<Ad>
+  book?: Maybe<Scalars['Void']['output']>
 }
 
-export type QueryAdsArgs = {
-  input: AdsInput
+export type QueryBookArgs = {
+  input: BookInput
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
@@ -133,55 +138,92 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Ad: ResolverTypeWrapper<Ad>
-  AdsInput: AdsInput
+  Book: ResolverTypeWrapper<Book>
+  BookInput: BookInput
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
+  Date: ResolverTypeWrapper<Scalars['Date']['output']>
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
-  Int: ResolverTypeWrapper<Scalars['Int']['output']>
+  JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
+  Page: ResolverTypeWrapper<Page>
+  PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Query: ResolverTypeWrapper<{}>
   String: ResolverTypeWrapper<Scalars['String']['output']>
+  Void: ResolverTypeWrapper<Scalars['Void']['output']>
 }
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Ad: Ad
-  AdsInput: AdsInput
+  Book: Book
+  BookInput: BookInput
   Boolean: Scalars['Boolean']['output']
+  Date: Scalars['Date']['output']
   ID: Scalars['ID']['output']
-  Int: Scalars['Int']['output']
+  JSON: Scalars['JSON']['output']
+  Page: Page
+  PositiveInt: Scalars['PositiveInt']['output']
   Query: {}
   String: Scalars['String']['output']
+  Void: Scalars['Void']['output']
 }
 
-export type AdResolvers<
+export type BookResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['Ad'] = ResolversParentTypes['Ad'],
+  ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book'],
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  pages?: Resolver<Array<ResolversTypes['Page']>, ParentType, ContextType>
+  thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  writerId?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
+export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
+  name: 'Date'
+}
+
+export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
+  name: 'JSON'
+}
+
+export type PageResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['Page'] = ResolversParentTypes['Page'],
 > = {
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  end_date?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  bookId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  image?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  is_disabled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
-  start_date?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  parentId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
+export interface PositiveIntScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['PositiveInt'], any> {
+  name: 'PositiveInt'
 }
 
 export type QueryResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
-  ads?: Resolver<
-    Array<ResolversTypes['Ad']>,
+  book?: Resolver<
+    Maybe<ResolversTypes['Void']>,
     ParentType,
     ContextType,
-    RequireFields<QueryAdsArgs, 'input'>
+    RequireFields<QueryBookArgs, 'input'>
   >
 }
 
+export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Void'], any> {
+  name: 'Void'
+}
+
 export type Resolvers<ContextType = GraphQLContext> = {
-  Ad?: AdResolvers<ContextType>
+  Book?: BookResolvers<ContextType>
+  Date?: GraphQLScalarType
+  JSON?: GraphQLScalarType
+  Page?: PageResolvers<ContextType>
+  PositiveInt?: GraphQLScalarType
   Query?: QueryResolvers<ContextType>
+  Void?: GraphQLScalarType
 }

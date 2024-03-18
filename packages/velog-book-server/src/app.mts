@@ -1,18 +1,21 @@
-import { container } from 'tsyringe'
-import autoload from '@fastify/autoload'
-import { UtilsService } from '@lib/utils/UtilsService.mjs'
 import Fastify from 'fastify'
+import corsPlugin from '@plugins/global/corsPlugin.mjs'
+import ipaddrPlugin from '@plugins/global/ipaddrPlugin.mjs'
+import mercuriusPlugin from '@plugins/global/mercuriusPlugin.mjs'
 
 const app = Fastify({
   logger: true,
   trustProxy: true,
 })
 
-const utils = container.resolve(UtilsService)
-app.register(autoload, {
-  dir: utils.resolveDir('./src/common/plugins/global'),
-  encapsulate: false,
-  forceESM: true,
-})
+app.register(corsPlugin)
+app.register(ipaddrPlugin)
+app.register(mercuriusPlugin)
+
+// app.register(autoload, {
+//   dir: utils.resolveDir('./src/common/plugins/global'),
+//   encapsulate: false,
+//   forceESM: true,
+// })
 
 export default app
