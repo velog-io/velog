@@ -40,6 +40,7 @@ export const createECSfargateService = ({
         subnets: subnetIds,
       },
       taskDefinitionArgs: {
+        // TODO: Ignore changes for taskDefinitionArgs.cpu, memory
         // cpu: option.taskCpu,
         // memory: option.taskMemory,
         executionRole: {
@@ -88,7 +89,7 @@ export const createECSfargateService = ({
       scalableDimension: 'ecs:service:DesiredCount',
       serviceNamespace: 'ecs',
     },
-    { replaceOnChanges: ['resourceId'] },
+    // { replaceOnChanges: ['resourceId'] },
   )
 
   const ecsCPUPolicy = new aws.appautoscaling.Policy(
@@ -107,7 +108,7 @@ export const createECSfargateService = ({
         scaleOutCooldown: 60,
       },
     },
-    { replaceOnChanges: ['resourceId'] },
+    // { replaceOnChanges: ['resourceId'] },
   )
 
   const ecsMemoryPolicy = new aws.appautoscaling.Policy(
@@ -126,6 +127,6 @@ export const createECSfargateService = ({
         scaleOutCooldown: 60,
       },
     },
-    { replaceOnChanges: ['resourceId'] },
+    // { replaceOnChanges: ['resourceId'] },
   )
 }
