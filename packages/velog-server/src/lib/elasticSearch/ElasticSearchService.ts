@@ -4,6 +4,7 @@ import { injectable, singleton } from 'tsyringe'
 import { BuildQueryService } from './BuildQueryService.js'
 import { PostIncludeTags } from '@services/PostService/PostServiceInterface.js'
 import { Post } from '@prisma/client'
+import { InternalServerError } from '@errors/InternalServerError.js'
 
 interface Service {
   get client(): Client
@@ -138,26 +139,37 @@ export class ElasticSearchService implements Service {
 
     query.script_score.query.bool.must.push(privatePostsQuery)
 
-    const result = await this.client.search({
-      index: 'posts',
-      body: {
-        from,
-        size,
-        query,
-      },
-    })
+    try {
+      const result = await this.client.search({
+        index: 'posts',
+        body: {
+          from,
+          size,
+          query,
+        },
+      })
 
-    const posts = result.body.hits.hits.map((hit: any) => hit._source)
-    posts.forEach((p: any) => {
-      p.released_at = new Date(p.released_at)
-    })
+      console.log('result', result)
 
-    const data = {
-      count: result.body.hits.total.value,
-      posts: result.body.hits.hits.map((hit: any) => hit._source),
+      const posts = result.body.hits.hits.map((hit: any) => hit._source)
+      posts.forEach((p: any) => {
+        p.released_at = new Date(p.released_at)
+      })
+
+      const data = {
+        count: result.body.hits.total.value,
+        posts: result.body.hits.hits.map((hit: any) => hit._source),
+      }
+
+      // TODO: bug fix for elastic search
+      return {
+        count: 0,
+        posts: [],
+      }
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerError('Internal Server Error')
     }
-
-    return data
   }
 }
 
