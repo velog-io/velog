@@ -146,7 +146,7 @@ export class PostService implements Service {
     country: string,
   ): Promise<{ isSpam: boolean; reason: string; targetType?: string }> {
     const allowList = ['KR', 'GB', '']
-    const blockList = ['IN', 'PK', 'CN', 'VN', 'TH', 'PH']
+    const blockList = ['IN', 'PK', 'CN', 'VN', 'TH', 'PH', 'UG']
     const isForeign = !allowList.includes(country)
 
     if (blockList.includes(country)) {
@@ -201,7 +201,7 @@ export class PostService implements Service {
 
     const containsPhoneNumber = phoneRegex.some((regex) => regex.test(replaced))
 
-    if (containsPhoneNumber) {
+    if (containsPhoneNumber && isForeign) {
       return { isSpam: true, reason: 'containsPhoneNumber' }
     }
 
