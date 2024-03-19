@@ -175,7 +175,7 @@ export class TagService implements Service {
     } catch (error) {
       console.log('create tag error', error)
       console.log('name', name)
-      console.log('name_filtered', name_filtered)
+      console.log('name_filtered', filtered)
       const tag = await this.db.tag.findFirst({
         where: {
           name: name,
