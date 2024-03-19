@@ -291,7 +291,7 @@ export class PostService implements Service {
           id: true,
         },
         orderBy: {
-          [timeframe === 'year' ? 'likes' : 'score']: 'desc',
+          score: 'desc',
         },
         take: limit,
         skip: offset,
