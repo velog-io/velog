@@ -164,14 +164,25 @@ export class TagService implements Service {
     if (tag) return tag
 
     const filtered = this.utils.escapeForUrl(name).toLowerCase()
-    const freshTag = await this.db.tag.create({
-      data: {
-        name,
-        name_filtered: filtered,
-      },
-    })
-
-    return freshTag
+    try {
+      const freshTag = await this.db.tag.create({
+        data: {
+          name,
+          name_filtered: filtered,
+        },
+      })
+      return freshTag
+    } catch (error) {
+      console.log('create tag error', error)
+      console.log('name', name)
+      console.log('name_filtered', name_filtered)
+      const tag = await this.db.tag.findFirst({
+        where: {
+          name: name,
+        },
+      })
+      return tag!
+    }
   }
 }
 
