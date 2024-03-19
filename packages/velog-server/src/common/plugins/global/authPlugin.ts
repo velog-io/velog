@@ -19,13 +19,13 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
     const authorization = request.headers['authorization']
 
     try {
-      if (!accessToken && authorization) {
+      if (!accessToken && !!authorization && typeof authorization === 'string') {
         accessToken = authorization.split('Bearer ')[1]
       }
 
       if (!accessToken && !refreshToken) return
 
-      if (accessToken && refreshToken) {
+      if (accessToken) {
         const accessTokenData = await jwt.decodeToken<AccessTokenData>(accessToken)
 
         const diff = accessTokenData.exp * 1000 - new Date().getTime()
@@ -33,17 +33,21 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
         if (diff < Time.ONE_MINUTE_IN_MS * 30 && refreshToken) {
           await userService.restoreToken({ request, reply })
         }
+
+        request.user = { id: accessTokenData.user_id }
+        return
       }
 
       if (!accessToken && refreshToken) {
         const tokens = await userService.restoreToken({ request, reply })
         accessToken = tokens.accessToken
+
+        const accessTokenData = await jwt.decodeToken<AccessTokenData>(accessToken)
+        request.user = { id: accessTokenData.user_id }
+        return
       }
 
-      if (!accessToken) return
-
-      const accessTokenData = await jwt.decodeToken<AccessTokenData>(accessToken)
-      request.user = { id: accessTokenData.user_id }
+      request.user = null
     } catch (e) {
       console.log('accessToken', accessToken)
       console.log('authPlugin error', e)
@@ -55,10 +59,9 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
 
           const accessTokenData = await jwt.decodeToken<AccessTokenData>(accessToken)
           request.user = { id: accessTokenData.user_id }
-        } else {
-          throw new Error()
         }
       } catch (error) {
+        console.log('refresh token error', error)
         const cookie = container.resolve(CookieService)
         cookie.clearCookie(reply, 'access_token')
         cookie.clearCookie(reply, 'refresh_token')

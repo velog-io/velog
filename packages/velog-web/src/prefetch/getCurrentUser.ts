@@ -6,6 +6,7 @@ export default async function getCurrentUser() {
   try {
     const headers = {}
     const token = getAccessToken()
+
     if (token) {
       Object.assign(headers, { authorization: `Bearer ${token.value}` })
     }
