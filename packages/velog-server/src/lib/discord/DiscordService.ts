@@ -30,6 +30,9 @@ export class DiscordService {
       'canceling statement',
       'Not allow origin',
       'Unknown query',
+      'ECONNRESET',
+      'https://oauth2.googleapis.com',
+      '/api/posts/v1/score',
     ]
     const isFrequentWordIncluded = frequentWord.some((word) => message.includes(word))
 
