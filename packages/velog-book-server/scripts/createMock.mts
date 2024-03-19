@@ -9,7 +9,9 @@ class Seeder {
   async createWriter() {
     const exists = await this.mongo.writer.findFirst({})
 
-    if (exists) return exists
+    if (exists) {
+      throw new Error('Already exists mock data')
+    }
 
     return this.mongo.writer.create({
       data: {
@@ -21,10 +23,10 @@ class Seeder {
   }
 
   async createBook(writer: Writer) {
-    const mockPages = getMockPages(100).map((page) => ({ writerId: writer.id, ...page }))
+    const mockPages = getMockPages(100).map((page) => ({ writer_id: writer.id, ...page }))
     const book = await this.mongo.book.create({
       data: {
-        writerId: writer.id,
+        writer_id: writer.id,
         thumbnail: faker.image.dataUri(),
         pages: {
           createMany: {
@@ -36,7 +38,7 @@ class Seeder {
 
     const pages = await this.mongo.page.findMany({
       where: {
-        bookId: book.id,
+        book_id: book.id,
       },
     })
     const topLevel = pages.slice(0, 10)
@@ -51,7 +53,7 @@ class Seeder {
           id: selected.id,
         },
         data: {
-          parentId: parentId,
+          parent_id: parentId,
         },
       })
     }
@@ -69,7 +71,7 @@ class Seeder {
           id: selected.id,
         },
         data: {
-          parentId: parentId,
+          parent_id: parentId,
         },
       })
     }

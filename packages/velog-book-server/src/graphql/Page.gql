@@ -1,7 +1,8 @@
 type Page {
   id: ID!
-  bookId: ID!
+  book_id: ID!
   title: String!
   body: String!
-  parentId: ID
+  parent_id: ID
+  childrens: [Page!]!
 }

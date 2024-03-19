@@ -19,23 +19,24 @@ model Writer {
 }
 
 model Book {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  thumbnail String @db.String
-  writerId  String @db.ObjectId
-  writer    Writer @relation(fields: [writerId], references: [id])
-  pages     Page[]
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  thumbnail    String  @db.String
+  writer_id    String  @db.ObjectId
+  is_published Boolean @default(false)
+  writer       Writer  @relation(fields: [writer_id], references: [id])
+  pages        Page[]
 
   @@map("books")
 }
 
 model Page {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  writerId String  @db.ObjectId
-  bookId   String  @db.ObjectId
-  title    String  @db.String
-  body     String  @db.String
-  parentId String? @db.String
-  book     Book    @relation(fields: [bookId], references: [id])
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  writer_id String  @db.ObjectId
+  book_id   String  @db.ObjectId
+  title     String  @db.String
+  body      String  @db.String
+  parent_id String? @db.String
+  book      Book    @relation(fields: [book_id], references: [id])
 
   @@map("pages")
 }

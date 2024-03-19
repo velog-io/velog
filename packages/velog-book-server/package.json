@@ -39,6 +39,7 @@
     "graphql": "^16.7.1",
     "graphql-scalars": "^1.22.2",
     "mercurius": "^13.0.0",
+    "mqemitter-redis": "^5.0.0",
     "prisma": "^5.11.0",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.7.0",

@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import { GraphQLContext } from '../../common/interfaces/graphql.mjs'
+import { Book as BookModel } from '@prisma/velog-book-mongo/client'
 export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -29,9 +30,10 @@ export type Scalars = {
 
 export type Book = {
   id: Scalars['ID']['output']
+  is_published: Scalars['Boolean']['output']
   pages: Array<Page>
   thumbnail: Scalars['String']['output']
-  writerId: Scalars['String']['output']
+  writer_id: Scalars['String']['output']
 }
 
 export type BookInput = {
@@ -40,18 +42,26 @@ export type BookInput = {
 
 export type Page = {
   body: Scalars['String']['output']
-  bookId: Scalars['ID']['output']
+  book_id: Scalars['ID']['output']
+  childrens: Array<Page>
   id: Scalars['ID']['output']
-  parentId?: Maybe<Scalars['ID']['output']>
+  parent_id?: Maybe<Scalars['ID']['output']>
   title: Scalars['String']['output']
 }
 
 export type Query = {
-  book?: Maybe<Scalars['Void']['output']>
+  book?: Maybe<Book>
 }
 
 export type QueryBookArgs = {
   input: BookInput
+}
+
+export type Writer = {
+  email: Scalars['String']['output']
+  fk_user_id: Scalars['String']['output']
+  id: Scalars['ID']['output']
+  username: Scalars['String']['output']
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
@@ -138,7 +148,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Book: ResolverTypeWrapper<Book>
+  Book: ResolverTypeWrapper<BookModel>
   BookInput: BookInput
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
@@ -149,6 +159,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>
   String: ResolverTypeWrapper<Scalars['String']['output']>
   Void: ResolverTypeWrapper<Scalars['Void']['output']>
+  Writer: ResolverTypeWrapper<Writer>
 }
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -164,6 +175,7 @@ export type ResolversParentTypes = {
   Query: {}
   String: Scalars['String']['output']
   Void: Scalars['Void']['output']
+  Writer: Writer
 }
 
 export type BookResolvers<
@@ -171,9 +183,10 @@ export type BookResolvers<
   ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book'],
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  is_published?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   pages?: Resolver<Array<ResolversTypes['Page']>, ParentType, ContextType>
   thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  writerId?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  writer_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -190,9 +203,10 @@ export type PageResolvers<
   ParentType extends ResolversParentTypes['Page'] = ResolversParentTypes['Page'],
 > = {
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  bookId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  book_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  childrens?: Resolver<Array<ResolversTypes['Page']>, ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  parentId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
+  parent_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
@@ -207,7 +221,7 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
   book?: Resolver<
-    Maybe<ResolversTypes['Void']>,
+    Maybe<ResolversTypes['Book']>,
     ParentType,
     ContextType,
     RequireFields<QueryBookArgs, 'input'>
@@ -218,6 +232,17 @@ export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'Void'
 }
 
+export type WriterResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['Writer'] = ResolversParentTypes['Writer'],
+> = {
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
 export type Resolvers<ContextType = GraphQLContext> = {
   Book?: BookResolvers<ContextType>
   Date?: GraphQLScalarType
@@ -226,4 +251,5 @@ export type Resolvers<ContextType = GraphQLContext> = {
   PositiveInt?: GraphQLScalarType
   Query?: QueryResolvers<ContextType>
   Void?: GraphQLScalarType
+  Writer?: WriterResolvers<ContextType>
 }

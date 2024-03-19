@@ -15,6 +15,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
     schema,
     resolvers: resolvers,
     graphiql: env.get('appEnv') !== 'production',
+    subscription: {},
     context: (request, reply): GraphQLContext => {
       return {
         request,

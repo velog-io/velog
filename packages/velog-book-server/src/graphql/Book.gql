@@ -1,14 +1,15 @@
 type Book {
   id: ID!
   thumbnail: String!
-  writerId: String!
+  writer_id: String!
+  is_published: Boolean!
   pages: [Page!]!
 }
 
 type Query {
-  book(input: BookInput!): Void
+  book(input: BookInput!): Book
 }
 
 input BookInput {
-  bookId: ID!
+  book_id: ID!
 }
