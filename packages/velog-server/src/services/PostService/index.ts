@@ -403,15 +403,17 @@ export class PostService implements Service {
     }
   }
   public async updatePostScore(postId: string) {
-    await axios.patch(
-      `${ENV.cronHost}/api/posts/v1/score/${postId}`,
-      {},
-      {
-        headers: {
-          'Cron-Api-Key': ENV.cronApiKey,
+    try {
+      await axios.patch(
+        `${ENV.cronHost}/api/posts/v1/score/${postId}`,
+        {},
+        {
+          headers: {
+            'Cron-Api-Key': ENV.cronApiKey,
+          },
         },
-      },
-    )
+      )
+    } catch (_) {}
   }
   public shortDescription(post: Post): string {
     if (post.short_description) return post.short_description
