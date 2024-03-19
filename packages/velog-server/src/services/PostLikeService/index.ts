@@ -120,9 +120,9 @@ export class PostLikeService implements Service {
       await this.postService.updatePostScore(postId)
     }
 
-    setTimeout(() => {
+    setTimeout(async () => {
       try {
-        this.searchService.searchSync.update(post.id)
+        await this.searchService.searchSync.update(post.id)
       } catch (error) {
         console.log('likePost searchSync update error', error)
       }
@@ -190,9 +190,9 @@ export class PostLikeService implements Service {
     })
 
     await this.postService.updatePostScore(postId)
-    setTimeout(() => {
+    setTimeout(async () => {
       try {
-        this.searchService.searchSync.update(post.id)
+        await this.searchService.searchSync.update(post.id)
       } catch (error) {
         console.log('unlikePost searchSync update error', error)
       }
