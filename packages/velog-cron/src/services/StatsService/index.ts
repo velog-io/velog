@@ -39,7 +39,7 @@ export class StatsService implements Service {
       `[Daily]\n기간: ${format(
         start,
         'yyyy-MM-dd',
-      )}}\n${usersCount}명의 사용자가 가입했습니다.\n${postCount}개의 공개 포스트가 작성되었습니다.`,
+      )}\n${usersCount}명의 사용자가 가입했습니다.\n${postCount}개의 공개 포스트가 작성되었습니다.`,
     )
   }
   public async weekly() {
