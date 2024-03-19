@@ -53,15 +53,17 @@ export class EnvService implements Service {
       mongoUrl: z.string(),
       discordBotToken: z.string(),
       discordErrorChannel: z.string(),
+      redisHost: z.string(),
     })
 
-    const ENV: ENV = env.parse({
+    const ENV = env.parse({
       dockerEnv,
       appEnv,
       port: Number(process.env.PORT),
       mongoUrl: process.env.MONGO_URL,
       discordBotToken: process.env.DISCORD_BOT_TOKEN,
       discordErrorChannel: process.env.DISCORD_ERROR_CHANNEL,
+      redisHost: process.env.REDIS_HOST,
     })
 
     this.env = ENV
@@ -89,4 +91,5 @@ type ENV = {
   mongoUrl: string
   discordBotToken: string
   discordErrorChannel: string
+  redisHost: string
 }

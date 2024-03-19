@@ -11,7 +11,7 @@ export class RedisService extends Redis implements Service {
     super({ port: 6379, host: ENV.redisHost })
   }
 
-  async connection(): Promise<string> {
+  connection(): Promise<string> {
     return new Promise((resolve) => {
       this.connect(() => {
         resolve(`Redis connection established to ${ENV.redisHost}`)
