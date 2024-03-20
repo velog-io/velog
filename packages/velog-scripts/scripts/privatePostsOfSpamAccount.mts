@@ -31,7 +31,12 @@ class Runner implements IRunner {
         if (blockList.includes(username)) {
           console.log(`${username} 유저는 이미 등록되어 있습니다.`)
           continue
+        } else {
+          await this.blockList.addBlockList(username)
+          console.log(`${username} 유저가 blockList에 등록 되었습니다.`)
         }
+
+        // add block list
 
         if (posts.length === 0) {
           console.log(`${user.username} 유저의 비공개 처리 할 게시글이 없습니다.`)
@@ -49,8 +54,6 @@ class Runner implements IRunner {
         if (!askResult.is_set_private) continue
 
         const postIds = posts.map(({ id }) => id!)
-        // add block list
-        await this.blockList.addBlockList(username)
 
         // set private = true
         await this.setIsPrivatePost(postIds)
