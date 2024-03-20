@@ -2,10 +2,10 @@ version: '3.9'
 services:
   web:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: ./packages/velog-web/Dockerfile
       args:
-        DOCKER_ENV: 'stage'
+        DOCKER_ENV: stage
     env_file:
       - ../../.env
     tty: true
