@@ -30,10 +30,6 @@ class Runner implements IRunner {
 
         if (blockList.includes(username)) {
           console.log(`${username} 유저는 이미 등록되어 있습니다.`)
-          continue
-        } else {
-          await this.blockList.addBlockList(username)
-          console.log(`${username} 유저가 blockList에 등록 되었습니다.`)
         }
 
         // add block list
