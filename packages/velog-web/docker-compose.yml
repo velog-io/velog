@@ -6,6 +6,8 @@ services:
       dockerfile: ./packages/velog-web/Dockerfile
       args:
         DOCKER_ENV: stage
+        AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+        AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
     env_file:
       - ../../.env
     tty: true

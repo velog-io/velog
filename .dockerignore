@@ -4,6 +4,8 @@ node_modules
 .out
 *.md
 
+.DS_Store
+
 /packages/**/*.md
 /packages/**/node_modules
 /packages/**/dist

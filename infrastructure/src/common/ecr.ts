@@ -78,7 +78,8 @@ export const createECRImage = (type: PackageType, repo: Repository): pulumi.Outp
     withPrefix(option.imageName),
     {
       repositoryUrl: repo.repositoryUrl,
-      path: option.path,
+      path: option.context,
+      dockerfile: `${option.dockerfile}/Dockerfile`,
       extraOptions,
     },
     {
@@ -109,16 +110,19 @@ const options = {
   web: {
     ecrRepoName: ENV.ecrWebRepositoryName,
     imageName: 'web-image',
-    path: '../packages/velog-web/',
+    dockerfile: '../packages/velog-web',
+    context: '../',
   },
   server: {
     ecrRepoName: ENV.ecrServerRepositoryName,
     imageName: 'server-image',
-    path: '../packages/velog-server/',
+    dockerfile: '../packages/velog-server',
+    context: '../',
   },
   cron: {
     ecrRepoName: ENV.ecrCronRepositoryName,
     imageName: 'cron-image',
-    path: '../packages/velog-cron/',
+    dockerfile: '../packages/velog-cron',
+    context: '../',
   },
 }
