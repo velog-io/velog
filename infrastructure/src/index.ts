@@ -62,6 +62,7 @@ export const imageUrls = getCluster().then((cluster) =>
     } else {
       const repo = await getECRRepository(type)
       imageUri = getECRImage(repo)
+      console.log('imageUri', imageUri)
     }
 
     const infraSettings = {

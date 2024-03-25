@@ -47,7 +47,7 @@ export const createECSfargateService = ({
           roleArn: ecsTaskExecutionRole.arn,
         },
         container: {
-          // name: withPrefix(`${packageType}-container`),
+          name: withPrefix(`${packageType}-container`),
           image: imageUri,
           cpu: option.containerCpu,
           memory: option.containerMemory,
@@ -89,7 +89,7 @@ export const createECSfargateService = ({
       scalableDimension: 'ecs:service:DesiredCount',
       serviceNamespace: 'ecs',
     },
-    // { replaceOnChanges: ['resourceId'] },
+    { replaceOnChanges: ['resourceId'] },
   )
 
   const ecsCPUPolicy = new aws.appautoscaling.Policy(
@@ -108,7 +108,7 @@ export const createECSfargateService = ({
         scaleOutCooldown: 60,
       },
     },
-    // { replaceOnChanges: ['resourceId'] },
+    { replaceOnChanges: ['resourceId'] },
   )
 
   const ecsMemoryPolicy = new aws.appautoscaling.Policy(
@@ -127,6 +127,6 @@ export const createECSfargateService = ({
         scaleOutCooldown: 60,
       },
     },
-    // { replaceOnChanges: ['resourceId'] },
+    { replaceOnChanges: ['resourceId'] },
   )
 }

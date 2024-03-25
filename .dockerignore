@@ -16,6 +16,7 @@ node_modules
 /packages/**/.env.*
 /packages/**/.dockerignore
 /packages/**/.eslintrc
+/packages/**/.eslintrc.*
 /packages/**/.eslintignore
 /packages/**/.prettierrc 
 /packages/**/.prettierignore

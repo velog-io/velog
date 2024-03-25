@@ -18,6 +18,7 @@ const nextConfig = {
     esmExternals: true, // support esm
     taint: true, // for security
   },
+  output: 'standalone',
 }
 
 export default nextConfig

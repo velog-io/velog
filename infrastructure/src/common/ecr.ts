@@ -1,11 +1,11 @@
 import { PackageType } from './../type.d'
 import * as clientEcr from '@aws-sdk/client-ecr'
-import * as awsx from '@pulumi/awsx'
 import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
 import { ENV } from '../env'
 import { Repository } from '@pulumi/aws/ecr'
 import * as pulumi from '@pulumi/pulumi'
+import * as docker from '@pulumi/docker'
 
 const ecrClient = new clientEcr.ECR({ region: 'ap-northeast-2' })
 
@@ -72,21 +72,31 @@ const createRepoLifecyclePolicy = (type: PackageType, repo: Repository) => {
 
 export const createECRImage = (type: PackageType, repo: Repository): pulumi.Output<string> => {
   const option = options[type]
-  const extraOptions = ['--platform', 'linux/amd64', '--build-arg', `DOCKER_ENV=${ENV.dockerEnv}`]
-
-  const image = new awsx.ecr.Image(
+  const image = new docker.Image(
     withPrefix(option.imageName),
     {
-      repositoryUrl: repo.repositoryUrl,
-      path: option.context,
-      dockerfile: `${option.dockerfile}/Dockerfile`,
-      extraOptions,
+      imageName: pulumi.interpolate`${repo.repositoryUrl}:latest`,
+      build: {
+        context: option.context,
+        dockerfile: `${option.dockerfile}/Dockerfile`,
+        platform: 'linux/amd64',
+        args: {
+          DOCKER_ENV: `${ENV.dockerEnv}`,
+          AWS_ACCESS_KEY_ID: `${ENV.awsAccessKeyId}`,
+          AWS_SECRET_ACCESS_KEY: `${ENV.awsSecretAccessKey}`,
+          BUILDKIT_INLINE_CACHE: '1',
+        },
+        cacheFrom: {
+          images: [pulumi.interpolate`${repo.repositoryUrl}:latest`],
+        },
+      },
     },
     {
       retainOnDelete: true,
     },
   )
-  return image.imageUri
+
+  return image.imageName
 }
 
 export const getECRImage = (repo: Repository): pulumi.Output<string> => {
@@ -99,10 +109,8 @@ export const getECRImage = (repo: Repository): pulumi.Output<string> => {
     throw new Error(`Not found ${repo} Image`)
   }
 
-  return image.apply((img) => {
-    const tag = img.imageTags.filter((str) => str !== 'latest')[0]
-    const imageUri = `${img.registryId}.dkr.ecr.ap-northeast-2.amazonaws.com/${img.repositoryName}:${tag}`
-    return imageUri
+  return image.apply(() => {
+    return pulumi.interpolate`${repo.repositoryUrl}:latest`
   })
 }
 
