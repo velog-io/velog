@@ -13,7 +13,7 @@
   },
   "engines": {
     "node": ">=18.16",
-    "pnpm": ">=8.6.0",
+    "pnpm": ">=8.15.0",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm"
   },

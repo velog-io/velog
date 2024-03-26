@@ -1,4 +1,5 @@
 FROM node:18-slim AS base
+
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
@@ -17,35 +18,39 @@ RUN corepack enable
 
 WORKDIR /app
 COPY ./${APP_DIR} /app/${APP_DIR}
-COPY ./package.json /app
-COPY ./pnpm-lock.yaml /app/
-COPY ./pnpm-workspace.yaml /app/
+COPY ./package*.json /app
+COPY ./pnpm-*.yaml /app
 
-FROM base As deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
-ENV NEXT_TELEMETRY_DISABLED 1
+FROM base As installer
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 FROM base As builder
-COPY --from=deps /app/${APP_DIR}/node_modules /app/${APP_DIR}/node_modules
-COPY --from=deps /app/node_modules /app/node_modules
+COPY --from=installer /app/${APP_DIR}/node_modules /app/${APP_DIR}/node_modules
+COPY --from=installer /app/node_modules /app/node_modules
 
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN pnpm -r ssm pull -e ${DOCKER_ENV}
 RUN pnpm -r env:copy -e ${DOCKER_ENV}
-# RUN pnpm -r build
+RUN pnpm -r build
 
+FROM base AS runner
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# FROM base AS runner
+COPY --from=builder /app/${APP_DIR}/public /app/standalone/public
+COPY --from=builder --chown=nextjs:nodejs /app/${APP_DIR}/.next/standalone /app/standalone
+COPY --from=builder --chown=nextjs:nodejs /app/${APP_DIR}/.next/static /app/standalone/${APP_DIR}/.next/static
 
-# RUN addgroup --system --gid 1001 nodejs
-# RUN adduser --system --uid 1001 nextjs
+RUN rm -rf ./packages
 
-# COPY --from=builder --chown=nextjs:nodejs /app/${APP_DIR}/.next/standalone ./
-# COPY --from=builder --chown=nextjs:nodejs /app/${APP_DIR}/.next/static ./.next/static
+USER nextjs
 
-# USER nextjs
+WORKDIR /app/standalone/packages/velog-web
 
-# CMD ["pnpm", "start"]
+ENV PORT=3001
+ENV HOSTNAME=0.0.0.0
+
+CMD ["node", "server.js"]
 
 
 # ---------------------------

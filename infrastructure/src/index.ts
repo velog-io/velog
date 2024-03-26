@@ -57,12 +57,11 @@ export const imageUrls = getCluster().then((cluster) =>
     let type = pack as PackageType
     let imageUri: pulumi.Output<string>
     if (targets.includes(type) || target === 'all') {
-      const newRepo = createECRRepository(type)
-      imageUri = createECRImage(type, newRepo)
+      const repo = createECRRepository(type)
+      imageUri = createECRImage(type, repo)
     } else {
       const repo = await getECRRepository(type)
       imageUri = getECRImage(repo)
-      console.log('imageUri', imageUri)
     }
 
     const infraSettings = {

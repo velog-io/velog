@@ -6,6 +6,7 @@ import { ENV } from '../env'
 import { Repository } from '@pulumi/aws/ecr'
 import * as pulumi from '@pulumi/pulumi'
 import * as docker from '@pulumi/docker'
+import { getRandomSHA256Hash } from '../lib/hash'
 
 const ecrClient = new clientEcr.ECR({ region: 'ap-northeast-2' })
 
@@ -72,10 +73,12 @@ const createRepoLifecyclePolicy = (type: PackageType, repo: Repository) => {
 
 export const createECRImage = (type: PackageType, repo: Repository): pulumi.Output<string> => {
   const option = options[type]
+  const tagName = getRandomSHA256Hash()
   const image = new docker.Image(
     withPrefix(option.imageName),
     {
-      imageName: pulumi.interpolate`${repo.repositoryUrl}:latest`,
+      imageName: pulumi.interpolate`${repo.repositoryUrl}:${tagName}`,
+      skipPush: false,
       build: {
         context: option.context,
         dockerfile: `${option.dockerfile}/Dockerfile`,
@@ -84,10 +87,6 @@ export const createECRImage = (type: PackageType, repo: Repository): pulumi.Outp
           DOCKER_ENV: `${ENV.dockerEnv}`,
           AWS_ACCESS_KEY_ID: `${ENV.awsAccessKeyId}`,
           AWS_SECRET_ACCESS_KEY: `${ENV.awsSecretAccessKey}`,
-          BUILDKIT_INLINE_CACHE: '1',
-        },
-        cacheFrom: {
-          images: [pulumi.interpolate`${repo.repositoryUrl}:latest`],
         },
       },
     },
@@ -109,8 +108,10 @@ export const getECRImage = (repo: Repository): pulumi.Output<string> => {
     throw new Error(`Not found ${repo} Image`)
   }
 
-  return image.apply(() => {
-    return pulumi.interpolate`${repo.repositoryUrl}:latest`
+  return image.apply((img) => {
+    const tag = img.imageTags.filter((str) => str !== 'latest')[0]
+    const imageUri = `${img.registryId}.dkr.ecr.ap-northeast-2.amazonaws.com/${img.repositoryName}:${tag}`
+    return imageUri
   })
 }
 
