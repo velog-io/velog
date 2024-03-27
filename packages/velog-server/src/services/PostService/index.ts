@@ -400,6 +400,8 @@ export class PostService implements Service {
       fk_user_id: post.fk_user_id,
       url_slug: post.url_slug,
       likes: post.likes,
+      is_private: post.is_private,
+      is_temp: post.is_temp || false,
     }
   }
   public async updatePostScore(postId: string) {
@@ -714,6 +716,8 @@ export type SerializePost = {
   short_description: string
   tags: string[]
   fk_user_id: string
+  is_temp: boolean
+  is_private: boolean
 }
 
 type SerializeArgs = Post & {

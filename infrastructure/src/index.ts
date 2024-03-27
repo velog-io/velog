@@ -12,7 +12,8 @@ import { execCommand } from './lib/execCommand'
 import { createECRImage, createECRRepository, getECRImage, getECRRepository } from './common/ecr'
 import { getCluster } from './common/ecs'
 
-execCommand('pnpm -r prisma:copy')
+execCommand('pnpm -F velog-server prisma:copy')
+execCommand('pnpm -F velog-cron prisma:copy')
 
 const config = new pulumi.Config()
 const target = config.get('target')
