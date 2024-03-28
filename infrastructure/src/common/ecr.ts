@@ -1,11 +1,12 @@
 import { PackageType } from './../type.d'
 import * as clientEcr from '@aws-sdk/client-ecr'
-import * as awsx from '@pulumi/awsx'
 import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
 import { ENV } from '../env'
 import { Repository } from '@pulumi/aws/ecr'
 import * as pulumi from '@pulumi/pulumi'
+import * as docker from '@pulumi/docker'
+import { getRandomSHA256Hash } from '../lib/hash'
 
 const ecrClient = new clientEcr.ECR({ region: 'ap-northeast-2' })
 
@@ -72,20 +73,29 @@ const createRepoLifecyclePolicy = (type: PackageType, repo: Repository) => {
 
 export const createECRImage = (type: PackageType, repo: Repository): pulumi.Output<string> => {
   const option = options[type]
-  const extraOptions = ['--platform', 'linux/amd64', '--build-arg', `DOCKER_ENV=${ENV.dockerEnv}`]
-
-  const image = new awsx.ecr.Image(
+  const tagName = getRandomSHA256Hash()
+  const image = new docker.Image(
     withPrefix(option.imageName),
     {
-      repositoryUrl: repo.repositoryUrl,
-      path: option.path,
-      extraOptions,
+      imageName: pulumi.interpolate`${repo.repositoryUrl}:${tagName}`,
+      skipPush: false,
+      build: {
+        context: option.context,
+        dockerfile: `${option.dockerfile}/Dockerfile`,
+        platform: 'linux/amd64',
+        args: {
+          DOCKER_ENV: `${ENV.dockerEnv}`,
+          AWS_ACCESS_KEY_ID: `${ENV.awsAccessKeyId}`,
+          AWS_SECRET_ACCESS_KEY: `${ENV.awsSecretAccessKey}`,
+        },
+      },
     },
     {
       retainOnDelete: true,
     },
   )
-  return image.imageUri
+
+  return image.imageName
 }
 
 export const getECRImage = (repo: Repository): pulumi.Output<string> => {
@@ -109,16 +119,19 @@ const options = {
   web: {
     ecrRepoName: ENV.ecrWebRepositoryName,
     imageName: 'web-image',
-    path: '../packages/velog-web/',
+    dockerfile: '../packages/velog-web',
+    context: '../',
   },
   server: {
     ecrRepoName: ENV.ecrServerRepositoryName,
     imageName: 'server-image',
-    path: '../packages/velog-server/',
+    dockerfile: '../packages/velog-server',
+    context: '../',
   },
   cron: {
     ecrRepoName: ENV.ecrCronRepositoryName,
     imageName: 'cron-image',
-    path: '../packages/velog-cron/',
+    dockerfile: '../packages/velog-cron',
+    context: '../',
   },
 }

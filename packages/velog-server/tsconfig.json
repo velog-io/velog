@@ -34,10 +34,10 @@
     "jest.*",
     "codegen.ts",
     "./scripts/**/*.ts",
-    "test/**/*.ts",
-    "../velog-prisma/scripts/createMock.ts"
+    "../velog-prisma/scripts/createMock.ts",
+    "./test/**/*.ts"
   ],
-  "exclude": ["node_modules/.prisma/**.ts"],
+  "exclude": ["node_modules", "**/*.test.ts", "./scripts/**/*.ts"],
   "ts-node": {
     "transpileOnly": true,
     "esm": true

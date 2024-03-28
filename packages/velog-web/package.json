@@ -16,8 +16,6 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm env:copy -e development && next dev -p 3001 --turbo",
-    "stage": "pnpm env:copy -e stage && pnpm start",
-    "prod": "pnpm env:copy -e production && pnpm start",
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p 3001",
     "lint": "next lint",
@@ -68,7 +66,7 @@
     "sharp": "^0.32.4",
     "strip-markdown": "^6.0.0",
     "throttle-debounce": "^5.0.0",
-    "tsx": "^4.6.2",
+    "tsx": "^4.7.1",
     "unist-util-visit": "^2.0.1",
     "zod": "^3.21.4"
   },

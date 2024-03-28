@@ -123,7 +123,7 @@ export class UserService implements Service {
   public async updateLastAccessedAt(userId?: string): Promise<void> {
     if (!userId) return
     try {
-      await this.db.userProfile.update({
+      await this.db.userProfile.updateMany({
         where: {
           fk_user_id: userId,
         },

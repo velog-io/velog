@@ -291,7 +291,7 @@ export class PostService implements Service {
           id: true,
         },
         orderBy: {
-          [timeframe === 'year' ? 'likes' : 'score']: 'desc',
+          score: 'desc',
         },
         take: limit,
         skip: offset,
@@ -400,18 +400,22 @@ export class PostService implements Service {
       fk_user_id: post.fk_user_id,
       url_slug: post.url_slug,
       likes: post.likes,
+      is_private: post.is_private,
+      is_temp: post.is_temp || false,
     }
   }
   public async updatePostScore(postId: string) {
-    await axios.patch(
-      `${ENV.cronHost}/api/posts/v1/score/${postId}`,
-      {},
-      {
-        headers: {
-          'Cron-Api-Key': ENV.cronApiKey,
+    try {
+      await axios.patch(
+        `${ENV.cronHost}/api/posts/v1/score/${postId}`,
+        {},
+        {
+          headers: {
+            'Cron-Api-Key': ENV.cronApiKey,
+          },
         },
-      },
-    )
+      )
+    } catch (_) {}
   }
   public shortDescription(post: Post): string {
     if (post.short_description) return post.short_description
@@ -712,6 +716,8 @@ export type SerializePost = {
   short_description: string
   tags: string[]
   fk_user_id: string
+  is_temp: boolean
+  is_private: boolean
 }
 
 type SerializeArgs = Post & {

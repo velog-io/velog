@@ -104,6 +104,21 @@ export type CreateNotificationInput = {
   type: NotificationType
 }
 
+export type EditPostInput = {
+  body: Scalars['String']['input']
+  id: Scalars['ID']['input']
+  is_markdown: Scalars['Boolean']['input']
+  is_private: Scalars['Boolean']['input']
+  is_temp: Scalars['Boolean']['input']
+  meta: Scalars['JSON']['input']
+  series_id?: InputMaybe<Scalars['ID']['input']>
+  tags: Array<Scalars['String']['input']>
+  thumbnail?: InputMaybe<Scalars['String']['input']>
+  title: Scalars['String']['input']
+  token?: InputMaybe<Scalars['String']['input']>
+  url_slug: Scalars['String']['input']
+}
+
 export type FeedPostsInput = {
   limit?: InputMaybe<Scalars['PositiveInt']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -187,16 +202,17 @@ export type Mutation = {
   acceptIntegration: Scalars['String']['output']
   confirmChangeEmail: Maybe<Scalars['Void']['output']>
   createNotification: Notification
+  editPost: Post
   follow: Maybe<Scalars['Boolean']['output']>
   initiateChangeEmail: Maybe<Scalars['Void']['output']>
-  likePost: Maybe<Post>
+  likePost: Post
   logout: Maybe<Scalars['Void']['output']>
   readAllNotifications: Maybe<Scalars['Void']['output']>
   readNotification: Maybe<Scalars['Void']['output']>
   removeAllNotifications: Maybe<Scalars['Void']['output']>
   sendMail: Maybe<SendMailResponse>
   unfollow: Maybe<Scalars['Boolean']['output']>
-  unlikePost: Maybe<Post>
+  unlikePost: Post
   unregister: Maybe<Scalars['Void']['output']>
   updateAbout: Maybe<UserProfile>
   updateEmailRules: Maybe<UserMeta>
@@ -205,6 +221,7 @@ export type Mutation = {
   updateSocialInfo: Maybe<UserProfile>
   updateThumbnail: Maybe<UserProfile>
   updateVelogTitle: Maybe<VelogConfig>
+  writePost: Post
 }
 
 export type MutationConfirmChangeEmailArgs = {
@@ -213,6 +230,10 @@ export type MutationConfirmChangeEmailArgs = {
 
 export type MutationCreateNotificationArgs = {
   input: CreateNotificationInput
+}
+
+export type MutationEditPostArgs = {
+  input: EditPostInput
 }
 
 export type MutationFollowArgs = {
@@ -269,6 +290,10 @@ export type MutationUpdateThumbnailArgs = {
 
 export type MutationUpdateVelogTitleArgs = {
   input: UpdateVelogTitleInput
+}
+
+export type MutationWritePostArgs = {
+  input: WritePostInput
 }
 
 export type Notification = {
@@ -611,6 +636,7 @@ export type User = {
   id: Scalars['ID']['output']
   is_certified: Scalars['Boolean']['output']
   is_followed: Scalars['Boolean']['output']
+  is_trusted: Scalars['Boolean']['output']
   profile: UserProfile
   series_list: Array<Series>
   updated_at: Scalars['DateTimeISO']['output']
@@ -654,6 +680,20 @@ export type VelogConfig = {
   id: Scalars['ID']['output']
   logo_image: Maybe<Scalars['String']['output']>
   title: Maybe<Scalars['String']['output']>
+}
+
+export type WritePostInput = {
+  body: Scalars['String']['input']
+  is_markdown: Scalars['Boolean']['input']
+  is_private: Scalars['Boolean']['input']
+  is_temp: Scalars['Boolean']['input']
+  meta: Scalars['JSON']['input']
+  series_id?: InputMaybe<Scalars['ID']['input']>
+  tags: Array<Scalars['String']['input']>
+  thumbnail?: InputMaybe<Scalars['String']['input']>
+  title: Scalars['String']['input']
+  token?: InputMaybe<Scalars['String']['input']>
+  url_slug: Scalars['String']['input']
 }
 
 export type AdsQueryVariables = Exact<{

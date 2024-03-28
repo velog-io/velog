@@ -12,7 +12,8 @@ import { execCommand } from './lib/execCommand'
 import { createECRImage, createECRRepository, getECRImage, getECRRepository } from './common/ecr'
 import { getCluster } from './common/ecs'
 
-execCommand('pnpm -r prisma:copy')
+execCommand('pnpm -F velog-server prisma:copy')
+execCommand('pnpm -F velog-cron prisma:copy')
 
 const config = new pulumi.Config()
 const target = config.get('target')
@@ -57,8 +58,8 @@ export const imageUrls = getCluster().then((cluster) =>
     let type = pack as PackageType
     let imageUri: pulumi.Output<string>
     if (targets.includes(type) || target === 'all') {
-      const newRepo = createECRRepository(type)
-      imageUri = createECRImage(type, newRepo)
+      const repo = createECRRepository(type)
+      imageUri = createECRImage(type, repo)
     } else {
       const repo = await getECRRepository(type)
       imageUri = getECRImage(repo)

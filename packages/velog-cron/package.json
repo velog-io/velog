@@ -21,6 +21,7 @@
     "stage": "pnpm ssm pull -e stage && DOCKER_ENV=stage pnpm start",
     "prod": "pnpm ssm pull -e production && DOCKER_ENV=production pnpm start",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "build:prod": "tsc --project tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
     "start": "node dist/src/main.js",
     "prisma:copy": "tsx ./scripts/copyPrisma.ts",
     "prisma:generate": "prisma generate --schema='./prisma/velog-rds/schema.prisma'",
@@ -47,8 +48,9 @@
     "prisma": "^5.11.0",
     "reflect-metadata": "^0.1.13",
     "tsc-alias": "^1.8.7",
-    "tsx": "^4.6.2",
+    "tsx": "^4.7.1",
     "tsyringe": "^4.7.0",
+    "typescript": "^5.3.3",
     "zod": "^3.21.4"
   },
   "devDependencies": {
@@ -63,7 +65,6 @@
     "eslint-plugin-prettier": "^5.0.0",
     "nodemon": "^2.0.22",
     "prettier": "^3.0.2",
-    "ts-paths-esm-loader": "^1.4.3",
-    "typescript": "^5.3.3"
+    "ts-paths-esm-loader": "^1.4.3"
   }
 }

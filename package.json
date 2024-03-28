@@ -13,7 +13,7 @@
   },
   "engines": {
     "node": ">=18.16",
-    "pnpm": ">=8.6.0",
+    "pnpm": ">=7.0.0",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm"
   },
@@ -29,9 +29,11 @@
     "velog",
     "blog"
   ],
+  "dependencies": {
+    "husky": "^8.0.0"
+  },
   "devDependencies": {
-    "husky": "^8.0.0",
     "lint-staged": "^13.2.3",
-    "pnpm": "^8.6.5"
+    "pnpm": "^8.15.5"
   }
 }

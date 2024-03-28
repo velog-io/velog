@@ -2,14 +2,21 @@ version: '3.9'
 services:
   server:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: ./packages/velog-server/Dockerfile
       args:
-        DOCKER_ENV: 'stage'
-    env_file:
-      - ../../.env
+        DOCKER_ENV: stage
+        AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+        AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
     tty: true
     stdin_open: true
     ports:
       - 5003:5003
-    mem_limit: '1g'
+    deploy:
+      resources:
+        limits:
+          cpus: '1' # range 0.01 to 10.00
+          memory: '1G'
+        reservations:
+          cpus: '0.25'
+          memory: '256M'
