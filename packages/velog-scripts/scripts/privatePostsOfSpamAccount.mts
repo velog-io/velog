@@ -31,7 +31,6 @@ class Runner implements IRunner {
         if (blockList.includes(username)) {
           console.log(`${username} 유저는 이미 등록되어 있습니다.`)
         }
-
         // add block list
 
         if (posts.length === 0) {
@@ -53,6 +52,8 @@ class Runner implements IRunner {
 
         // set private = true
         await this.setIsPrivatePost(postIds)
+
+        await this.blockList.addBlockList(username)
 
         const blockUesrInfo: BlockUserInfo = {
           id: user.id,
