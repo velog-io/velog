@@ -14,4 +14,11 @@ services:
     stdin_open: true
     ports:
       - 5003:5003
-    mem_limit: '1g'
+    deploy:
+      resources:
+        limits:
+          cpus: '1' # range 0.01 to 10.00
+          memory: '1G'
+        reservations:
+          cpus: '0.25'
+          memory: '256M'
