@@ -19,6 +19,7 @@
     "stage": "pnpm ssm pull -e stage && NODE_ENV=production pnpm start",
     "prod": "pnpm ssm pull -e production && NODE_ENV=production pnpm start",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "build:prod": "tsc --project tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
     "start": "node dist/src/main.js",
     "prisma:copy": "tsx ./scripts/copyPrisma.ts",
     "prisma:generate": "prisma generate",
