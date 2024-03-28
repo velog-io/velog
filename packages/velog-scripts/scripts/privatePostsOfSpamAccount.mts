@@ -28,10 +28,10 @@ class Runner implements IRunner {
 
         const blockList = await this.blockList.readBlockList()
 
+        // add block list
         if (blockList.includes(username)) {
           console.log(`${username} 유저는 이미 등록되어 있습니다.`)
         }
-        // add block list
 
         if (posts.length === 0) {
           console.log(`${user.username} 유저의 비공개 처리 할 게시글이 없습니다.`)
