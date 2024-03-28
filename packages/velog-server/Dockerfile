@@ -39,4 +39,4 @@ COPY --from=builder /app/${APP_DIR}/env /app/${APP_DIR}/env
 
 EXPOSE 5003
 
-CMD [ "pnpm", "-r", "start" ]
+CMD [ "pnpm", "start" ]
