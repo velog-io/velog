@@ -1,12 +1,22 @@
-.DS_Store
+# IDE
 .idea
-./dist
+.vscode
+
+# Else
+.DS_Store
+**/.DS_Store
+
+# build
 **/node_modules/
 **/dist/
+**/build/**
+**/.next/**
 
-
+# env
 .env
 .env.*
+**/env.*
 !**/**/.env.example
 
-.vscode
+# turbo
+**/.turbo

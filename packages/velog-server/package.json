@@ -83,7 +83,6 @@
     "tsyringe": "^4.7.0",
     "typescript": "^5.3.3",
     "uuid": "^9.0.1",
-    "velog-server": "link:",
     "zod": "^3.21.4"
   },
   "devDependencies": {

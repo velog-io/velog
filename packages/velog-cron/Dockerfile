@@ -31,7 +31,7 @@ RUN pnpm prisma generate
 
 FROM base As builder
 RUN pnpm ssm pull -e ${DOCKER_ENV}
-RUN pnpm build
+RUN pnpm build:prod
 
 FROM base As runner
 COPY --from=builder /app/${APP_DIR}/dist /app/${APP_DIR}/dist
