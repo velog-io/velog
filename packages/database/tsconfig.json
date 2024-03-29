@@ -14,9 +14,10 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["scripts/*.ts", ".eslintrc.cjs"],
-  "exclude": [],
+  "include": [".eslintrc.cjs", "./index.mts", "./lib/**/*.mts", "./scripts/**.mts"],
+  "exclude": ["node_modules"],
   "ts-node": {
-    "transpileOnly": true
+    "transpileOnly": true,
+    "esm": true
   }
 }

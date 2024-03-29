@@ -16,6 +16,8 @@
 .env
 .env.*
 **/env.*
+!**/env.ts
+!**/env.mts
 !**/**/.env.example
 
 # turbo
