@@ -14,6 +14,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["/lib"],
+  "include": ["/lib", "index.mts"],
   "exclude": ["node_modules"]
 }

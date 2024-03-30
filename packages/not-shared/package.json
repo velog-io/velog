@@ -1,15 +1,10 @@
 {
-  "name": "@packages/common-scripts",
+  "name": "@packages/not-shared",
   "version": "1.0.0",
   "author": {
     "name": "velopert",
     "email": "public.velopert@gmail.com"
   },
-  "files": [
-    "lib"
-  ],
-  "main": "./lib/index.mts",
-  "types": "./lib/index.mts",
   "type": "module",
   "scripts": {
     "private:posts": "pnpm env:copy -e development && node --import @swc-node/register/esm-register ./scripts/privatePostsOfSpamAccount.mts",

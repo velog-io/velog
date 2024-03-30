@@ -14,7 +14,7 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["./scripts", ".eslintrc.cjs", "./lib", "./env", "./data"],
+  "include": ["./scripts", ".eslintrc.cjs", "./lib", "./env", "./data", "index.mts"],
   "exclude": ["./dist"],
   "ts-node": {
     "transpileOnly": true,

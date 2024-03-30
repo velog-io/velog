@@ -854,7 +854,7 @@ importers:
     devDependencies:
       '@packages/common-scripts':
         specifier: workspace:*
-        version: link:../not-shared
+        version: link:../common-scripts
       '@types/inquirer':
         specifier: ^9.0.3
         version: 9.0.7

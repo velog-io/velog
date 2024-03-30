@@ -17,7 +17,7 @@ type Option = {
   packageName: string
 }
 
-export class ParameterStoreService {
+export class SSMService {
   constructor({ packageName }: Option) {
     this.packageName = packageName
     const { environment, version } = this.getFlag()

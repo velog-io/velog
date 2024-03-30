@@ -1,11 +1,13 @@
 {
-  "name": "common-scripts",
+  "name": "@packages/common-scripts",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "main": "index.mts",
+  "types": "./index.mts",
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
