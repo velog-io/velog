@@ -1,6 +1,4 @@
 import Redis from 'ioredis'
-import { EnvService } from 'lib/env/EnvService.mjs'
-import { container, injectable, singleton } from 'tsyringe'
 
 interface Service {
   connection(): Promise<string>
@@ -9,18 +7,22 @@ interface Service {
   createFeedQueue(data: CreateFeedArgs): Promise<number>
 }
 
-@injectable()
-@singleton()
+type InitializeArgs = {
+  port: number
+  host: string
+}
+
 export class RedisService extends Redis implements Service {
-  constructor(private readonly env: EnvService) {
-    const envService = container.resolve(EnvService)
-    super({ port: envService.get('velogRedisHost'), host: envService.get('velogRedisHost') })
+  host: string
+  constructor({ port, host }: InitializeArgs) {
+    super({ port: port, host })
+    this.host = host
   }
 
   public async connection(): Promise<string> {
     return new Promise((resolve) => {
       this.connect(() => {
-        resolve(`Redis connection established to ${this.env.get('velogRedisHost')}`)
+        resolve(`Redis connection established to ${this.host}`)
       })
     })
   }

@@ -824,6 +824,9 @@ importers:
       '@aws-sdk/client-ssm':
         specifier: ^3.391.0
         version: 3.540.0
+      '@packages/common-scripts':
+        specifier: workspace:*
+        version: link:../common-scripts
       '@prisma/client':
         specifier: ^5.11.0
         version: 5.11.0(prisma@5.11.0)
@@ -852,9 +855,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@packages/common-scripts':
-        specifier: workspace:*
-        version: link:../common-scripts
       '@types/inquirer':
         specifier: ^9.0.3
         version: 9.0.7

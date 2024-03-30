@@ -18,15 +18,16 @@
   "types": "./index.mts",
   "type": "module",
   "scripts": {
-    "env:copy": "tsx ./scripts/copyEnv.mts",
     "create-mock": "tsx ./scripts/createMock.mts",
     "prisma-migrate:dev": "pnpm env:copy --only-dev && pnpm prisma migrate dev --schema=./prisma/velog-rds/schema.prisma --create-only",
-    "prisma-migrate:rds": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/rdsDeploy.mts",
-    "prisma-migrate:mongo": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/mongoDeploy.mts",
+    "prisma-deploy:rds": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/rdsDeploy.mts",
+    "prisma-deploy:mongo": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/mongoDeploy.mts",
     "prisma:generate": "tsx ./scripts/generatePrisma.mts",
+    "env:copy": "tsx ./scripts/copyEnv.mts",
     "ssm": "tsx ./scripts/ssm.mts"
   },
   "dependencies": {
+    "@packages/common-scripts":"workspace:*",
     "@aws-sdk/client-ssm": "^3.391.0",
     "@prisma/client": "^5.11.0",
     "dotenv": "^16.4.5",

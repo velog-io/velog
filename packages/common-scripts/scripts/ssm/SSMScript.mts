@@ -15,11 +15,13 @@ type Environment = 'development' | 'stage' | 'production' | 'test'
 
 type Option = {
   packageName: string
+  envFolderPath?: string
 }
 
-export class SSMService {
-  constructor({ packageName }: Option) {
+export class SSMScript {
+  constructor({ packageName, envFolderPath = './env' }: Option) {
     this.packageName = packageName
+    this.envFolderPath = envFolderPath
     const { environment, version } = this.getFlag()
     this.environment = environment
     this.version = version
@@ -28,9 +30,8 @@ export class SSMService {
   private environment: Environment
   private version: number
   private packageName: string
+  private envFolderPath: string
   private client = new SSMClient({ region: 'ap-northeast-2' })
-  private __filename = fileURLToPath(import.meta.url)
-  private __dirname = path.dirname(this.__filename)
   private get name() {
     let name = `/velog-v3/${this.packageName}/${this.environment}`
     if (this.version > 0) {
@@ -39,7 +40,7 @@ export class SSMService {
     return name
   }
   private get envPath() {
-    const envPath = path.resolve(this.__dirname, `../../env/.env.${this.environment}`)
+    const envPath = path.resolve(process.cwd(), `${this.envFolderPath}/.env.${this.environment}`)
     return envPath
   }
   private readEnv = (): string => {

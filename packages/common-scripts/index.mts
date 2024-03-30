@@ -1,2 +1,2 @@
-export * from './scripts/copyEnv/copyEnvService.mjs'
-export * from './scripts/ssm/SSMService.mjs'
+export * from './scripts/copyEnv/CopyEnvScript.mjs'
+export * from './scripts/ssm/SSMScript.mjs'
