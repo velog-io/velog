@@ -1,5 +1,5 @@
 {
-  "name": "velog-web",
+  "name": "web",
   "version": "3.0.0",
   "private": true,
   "license": "MIT",
@@ -26,6 +26,7 @@
     "ssm": "tsx ./scripts/ssm/index.ts"
   },
   "dependencies": {
+    "@packages/common-scripts": "workspace:*",
     "@aws-sdk/client-ssm": "^3.431.0",
     "@sentry/browser": "^7.75.0",
     "@tanstack/react-query": "^5.18.0",

@@ -3,10 +3,18 @@ import { Post, User, UserProfile } from '@prisma/velog-rds/client'
 import { DbService } from '../lib/db/DbService.mjs'
 import { container, injectable } from 'tsyringe'
 import inquirer from 'inquirer'
-import { ENV } from '../env/env.mjs'
 import { DiscordService } from '../lib/discord/DiscordService.mjs'
 import { BlockListService } from '../lib/blockList/BlockListService.mjs'
 import { format } from 'date-fns'
+
+const ENV = {
+  discordPrivatePostsChannelId: process.env.DISCORD_PRIVATE_POSTS_CHANNEL_ID,
+  spamAccountDisplayName: process.env.SPAM_ACCOUNT_DISPLAY_NAME?.split(','),
+}
+
+if (!ENV.discordPrivatePostsChannelId) {
+  throw new Error('')
+}
 
 interface IRunner {}
 
@@ -77,7 +85,7 @@ class Runner implements IRunner {
     try {
       const promises = handledUser.map(async (userInfo) => {
         await this.discord.sendMessage(
-          ENV.discordPrivatePostsChannelId,
+          ENV.discordPrivatePostsChannelId!,
           JSON.stringify({
             title: '해당 유저의 글들이 비공개 처리 되었습니다.',
             userInfo: userInfo,

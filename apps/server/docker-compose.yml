@@ -3,7 +3,7 @@ services:
   server:
     build:
       context: ../../
-      dockerfile: ./packages/velog-server/Dockerfile
+      dockerfile: ./apps/server/Dockerfile
       args:
         DOCKER_ENV: stage
         AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}

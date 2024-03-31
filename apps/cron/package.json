@@ -1,5 +1,5 @@
 {
-  "name": "velog-cron",
+  "name": "cron",
   "version": "1.0.0",
   "author": {
     "name": "velopert",
@@ -30,6 +30,7 @@
     "ssm": "tsx ./scripts/ssm/index.ts"
   },
   "dependencies": {
+    "@packages/common-scripts": "workspace:*",
     "@aws-sdk/client-ssm": "^3.379.1",
     "@fastify/autoload": "^5.8.0",
     "@fastify/cors": "^8.3.0",

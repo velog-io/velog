@@ -147,6 +147,9 @@ importers:
       '@fastify/cors':
         specifier: ^8.3.0
         version: 8.3.0
+      '@packages/common-scripts':
+        specifier: workspace:*
+        version: link:../../packages/common-scripts
       '@prisma/client':
         specifier: ^5.11.0
         version: 5.11.0(prisma@5.11.0)
@@ -286,6 +289,12 @@ importers:
       '@octokit/rest':
         specifier: ^20.0.1
         version: 20.0.1
+      '@packages/common-scripts':
+        specifier: workspace:*
+        version: link:../../packages/common-scripts
+      '@packages/database':
+        specifier: workspace:*
+        version: link:../../packages/database
       '@prisma/client':
         specifier: ^5.11.0
         version: 5.11.0(prisma@5.11.0)
@@ -512,6 +521,9 @@ importers:
       '@aws-sdk/client-ssm':
         specifier: ^3.431.0
         version: 3.540.0
+      '@packages/common-scripts':
+        specifier: workspace:*
+        version: link:../../packages/common-scripts
       '@sentry/browser':
         specifier: ^7.75.0
         version: 7.75.0
@@ -891,6 +903,9 @@ importers:
       '@aws-sdk/client-ssm':
         specifier: ^3.484.0
         version: 3.540.0
+      '@packages/common-scripts':
+        specifier: workspace:*
+        version: link:../common-scripts
       '@prisma/client':
         specifier: ^5.11.0
         version: 5.11.0(prisma@5.11.0)

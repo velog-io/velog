@@ -3,7 +3,10 @@ import { container, injectable, singleton } from 'tsyringe'
 // import { data } from '../data/data.mjs'
 import { Prisma } from '@prisma/velog-rds/client'
 import { DbService } from '../lib/db/DbService.mjs'
-import { ENV } from '../env/env.mjs'
+
+const ENV = {
+  restorePostsUsername: process.env.RESTORE_POSTS_USERNAME,
+}
 
 @singleton()
 @injectable()

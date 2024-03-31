@@ -1,5 +1,5 @@
 {
-  "name": "@pacakcage/database",
+  "name": "@packages/database",
   "version": "1.0.0",
   "author": {
     "name": "velopert",
@@ -27,7 +27,7 @@
     "ssm": "tsx ./scripts/ssm.mts"
   },
   "dependencies": {
-    "@packages/common-scripts":"workspace:*",
+    "@packages/common-scripts": "workspace:*",
     "@aws-sdk/client-ssm": "^3.391.0",
     "@prisma/client": "^5.11.0",
     "dotenv": "^16.4.5",

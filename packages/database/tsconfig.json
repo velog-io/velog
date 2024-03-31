@@ -14,7 +14,7 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": [".eslintrc.cjs", "./index.mts", "./lib/**/*.mts", "./scripts/**.mts"],
+  "include": [".eslintrc.cjs", "./index.mts", "./src/*.mts", "./lib/*.mts", "./scripts/**.mts", "lib/env/EnvService.mts"],
   "exclude": ["node_modules"],
   "ts-node": {
     "transpileOnly": true,
