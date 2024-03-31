@@ -5,6 +5,7 @@ import { container } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
 import { CookieService } from '@lib/cookie/CookieService.js'
 import { Time } from '@constants/TimeConstants.js'
+import { DbService } from '@lib/db/DbService'
 
 const authPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('user', null)
@@ -13,6 +14,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
 
     const userService = container.resolve(UserService)
     const jwt = container.resolve(JwtService)
+    const cookie = container.resolve(CookieService)
 
     let accessToken: string | undefined = request.cookies['access_token']
     const refreshToken: string | undefined = request.cookies['refresh_token']
@@ -32,6 +34,14 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
         // refresh token when life < 30mins
         if (diff < Time.ONE_MINUTE_IN_MS * 30 && refreshToken) {
           await userService.restoreToken({ request, reply })
+        }
+
+        const user = await userService.findById(accessTokenData.user_id)
+
+        if (!user) {
+          cookie.clearCookie(reply, 'access_token')
+          cookie.clearCookie(reply, 'refresh_token')
+          throw new Error('User not found')
         }
 
         request.user = { id: accessTokenData.user_id }
@@ -62,7 +72,6 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
         }
       } catch (error) {
         console.log('refresh token error', error)
-        const cookie = container.resolve(CookieService)
         cookie.clearCookie(reply, 'access_token')
         cookie.clearCookie(reply, 'refresh_token')
       }

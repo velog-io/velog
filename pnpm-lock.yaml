@@ -602,7 +602,7 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2
       next:
-        specifier: ^14.1.0
+        specifier: 14.1.0
         version: 14.1.0(@babel/core@7.22.9)(react-dom@18.2.0)(react@18.2.0)
       postcss-flexbugs-fixes:
         specifier: ^5.0.2
