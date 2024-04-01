@@ -1,4 +1,4 @@
-import { FollowUser, Prisma, UserProfile } from '@packages/database/src/velog-rds.mjs'
+import { FollowUser, Prisma, UserProfile } from '@packages/database/src/velog-rds/index.mjs'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { ConfilctError } from '@errors/ConfilctError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'

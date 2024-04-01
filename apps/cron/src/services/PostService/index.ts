@@ -1,5 +1,5 @@
 import { DbService } from '@lib/db/DbService.js'
-import { Post, Prisma } from '@prisma/velog-rds/client'
+import { Post, Prisma } from '@packages/database/src/velog-rds/index.mjs'
 import { injectable, singleton } from 'tsyringe'
 import geoip from 'geoip-country'
 import { subMonths } from 'date-fns'

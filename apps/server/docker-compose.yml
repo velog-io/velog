@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   server:
+    container_name: velog-server
     build:
       context: ../../
       dockerfile: ./apps/server/Dockerfile

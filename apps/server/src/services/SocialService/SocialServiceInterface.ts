@@ -1,4 +1,4 @@
-import { SocialAccount } from '@packages/database/src/velog-rds.mjs'
+import { SocialAccount } from '@packages/database/src/velog-rds/index.mjs'
 
 export type SocialProvider = 'google' | 'facebook' | 'github'
 export type GetSocialAccountParams = {

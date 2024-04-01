@@ -7,7 +7,7 @@ import {
   UserProfile as UserProfileModel,
   Post as PostModel,
   Comment as CommentModel,
-} from '@packages/database/src/velog-rds.mjs'
+} from '@packages/database/src/velog-rds/index.mjs'
 import { GraphQLContext } from './../../common/interfaces/graphql'
 export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined

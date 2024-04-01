@@ -1,6 +1,6 @@
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { Tag } from '@packages/database/src/velog-rds.mjs'
+import { Tag } from '@packages/database/src/velog-rds/index.mjs'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {

@@ -11,7 +11,7 @@ import {
 } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { Prisma } from '@packages/database/src/velog-rds.mjs'
+import { Prisma } from '@packages/database/src/velog-rds/index.mjs'
 import { UserService } from '@services/UserService/index.js'
 import { injectable, singleton } from 'tsyringe'
 import { z } from 'zod'

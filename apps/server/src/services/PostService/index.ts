@@ -1,5 +1,5 @@
 import removeMd from 'remove-markdown'
-import { Post, PostTag, Prisma, Tag, User } from '@packages/database/src/velog-rds.mjs'
+import { Post, PostTag, Prisma, Tag, User } from '@packages/database/src/velog-rds/index.mjs'
 import { container, injectable, singleton } from 'tsyringe'
 import {
   GetPostsInput,

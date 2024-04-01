@@ -1,7 +1,7 @@
 import { CurrentUser } from '@interfaces/user'
 import { CookieService } from '@lib/cookie/CookieService.js'
 import { DbService } from '@lib/db/DbService.js'
-import { Prisma, User } from '@packages/database/src/velog-rds.mjs'
+import { Prisma, User } from '@packages/database/src/velog-rds/index.mjs'
 import { injectable, singleton } from 'tsyringe'
 import { GraphQLContext } from '@interfaces/graphql'
 import { JwtService } from '@lib/jwt/JwtService.js'

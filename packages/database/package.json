@@ -12,7 +12,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=20.11"
+    "node": ">=18.16"
   },
   "type": "module",
   "scripts": {

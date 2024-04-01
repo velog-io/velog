@@ -30,6 +30,7 @@
     "ssm": "tsx ./scripts/ssm/index.ts"
   },
   "dependencies": {
+    "@packages/database": "workspace:*",
     "@packages/common-scripts": "workspace:*",
     "@aws-sdk/client-ssm": "^3.379.1",
     "@fastify/autoload": "^5.8.0",

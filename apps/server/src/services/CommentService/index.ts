@@ -2,7 +2,7 @@ import { DbService } from '@lib/db/DbService.js'
 import { injectable, singleton } from 'tsyringe'
 import DataLoader from 'dataloader'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { Comment, Prisma } from '@packages/database/src/velog-rds.mjs'
+import { Comment, Prisma } from '@packages/database/src/velog-rds/index.mjs'
 
 interface Service {
   count(postId: string): Promise<number>

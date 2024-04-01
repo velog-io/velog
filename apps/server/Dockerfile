@@ -5,7 +5,8 @@ RUN corepack enable
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
-RUN pnpm install -g prisma
+RUN pnpm add -g prisma
+RUN pnpm add -g turbo 
 
 ARG DOCKER_ENV
 ENV DOCKER_ENV=${DOCKER_ENV}
@@ -24,19 +25,21 @@ WORKDIR /app/${APP_DIR}
 COPY ./package*.json /app
 COPY ./pnpm-*.yaml /app
 COPY ./${APP_DIR} /app/${APP_DIR}
+COPY ./packages/database /app/packages/database
 
+RUN turbo telemetry disable
+
+RUN turbo prune server --docker
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-# TODO: prisma를 모듈로 import 하도록 변경해야함, turborepo 도입 이후에 변경 할 것
-RUN pnpm prisma generate
 
-FROM base As builder
+# FROM base As builder
 RUN pnpm ssm pull -e ${DOCKER_ENV}
-RUN pnpm build:prod
+# RUN pnpm build:prod
 
-FROM base As runner
-COPY --from=builder /app/${APP_DIR}/dist /app/${APP_DIR}/dist
-COPY --from=builder /app/${APP_DIR}/env /app/${APP_DIR}/env
+# FROM base As runner
+# COPY --from=builder /app/${APP_DIR}/dist /app/${APP_DIR}/dist
+# COPY --from=builder /app/${APP_DIR}/env /app/${APP_DIR}/env
 
-EXPOSE 5003
+# EXPOSE 5003
 
-CMD [ "pnpm", "start" ]
+# CMD [ "pnpm", "start" ]
