@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import { container, injectable, singleton } from 'tsyringe'
 // import { data } from '../data/data.mjs'
-import { Prisma } from '@packages/database/velog-rds/.'
+import { Prisma } from '@packages/database/src/velog-rds/index.mjs'
 import { DbService } from '../lib/db/DbService.mjs'
 
 const ENV = {

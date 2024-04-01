@@ -14,9 +14,6 @@
   "engines": {
     "node": ">=20.11"
   },
-  "files": [
-    "./dist/"
-  ],
   "type": "module",
   "scripts": {
     "create-mock": "tsx ./scripts/createMock.mts",
