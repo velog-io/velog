@@ -12,7 +12,8 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "declaration": true
   },
   "include": [".eslintrc.cjs", "./src", "./scripts/**.mts"],
   "exclude": ["node_modules"],

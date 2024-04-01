@@ -21,7 +21,7 @@
       "@env": ["src/env.ts"],
       "@template/*": ["src/template/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"],
     "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

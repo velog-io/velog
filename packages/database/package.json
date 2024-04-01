@@ -11,9 +11,18 @@
     "cron"
   ],
   "exports": {
-    "./velog-rds": "./dist/velog-rds/index.mjs",
-    "./velog-book-mongo": "./dist/velog-book-mongo/index.mjs",
-    "./velog-redis": "./dist/velog-redis/index.mjs"
+    "./velog-rds": {
+      "default": "./dist/velog-rds/index.mjs",
+      "types": "./dist/velog-rds/index.d.ts"
+    },
+    "./velog-book-mongo": {
+      "default": "./dist/velog-book-mongo/index.mjs",
+      "types": "./dist/velog-book-mongo/index.d.ts"
+    },
+    "./velog-redis":{
+      "default":  "./dist/velog-redis/index.mjs",
+      "types": "./dist/velog-redis/index.mjs"
+    }
   },
   "license": "MIT",
   "engines": {
