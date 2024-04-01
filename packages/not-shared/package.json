@@ -24,6 +24,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@packages/database": "workspace:*",
     "@packages/common-scripts": "workspace:*",
     "@aws-sdk/client-ssm": "^3.484.0",
     "@prisma/client": "^5.11.0",

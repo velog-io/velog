@@ -14,16 +14,7 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": [
-    ".eslintrc.cjs",
-    "./index.mts",
-    "./src/*.mts",
-    "./src/*.ts",
-    "./lib/*.mts",
-    "./scripts/**.mts",
-    "lib/env/EnvService.mts",
-    "src/velog-rds/index.mts"
-  ],
+  "include": [".eslintrc.cjs", "./src", "./scripts/**.mts"],
   "exclude": ["node_modules"],
   "ts-node": {
     "transpileOnly": true,

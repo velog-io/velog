@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { Post, User, UserProfile } from '@prisma/velog-rds/client'
+import { Post, User, UserProfile } from '@packages/database/src/velog-rds.mjs'
 import { DbService } from '../lib/db/DbService.mjs'
 import { container, injectable } from 'tsyringe'
 import inquirer from 'inquirer'
@@ -9,7 +9,7 @@ import { format } from 'date-fns'
 
 const ENV = {
   discordPrivatePostsChannelId: process.env.DISCORD_PRIVATE_POSTS_CHANNEL_ID,
-  spamAccountDisplayName: process.env.SPAM_ACCOUNT_DISPLAY_NAME?.split(','),
+  spamAccountDisplayName: process.env.SPAM_ACCOUNT_DISPLAY_NAME?.split(',') || [],
 }
 
 if (!ENV.discordPrivatePostsChannelId) {

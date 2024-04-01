@@ -918,6 +918,9 @@ importers:
       '@packages/common-scripts':
         specifier: workspace:*
         version: link:../common-scripts
+      '@packages/database':
+        specifier: workspace:*
+        version: link:../database
       '@prisma/client':
         specifier: ^5.11.0
         version: 5.11.0(prisma@5.11.0)
