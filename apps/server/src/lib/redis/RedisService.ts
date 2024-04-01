@@ -1,5 +1,5 @@
 import { ENV } from '@env'
-import Redis from 'ioredis'
+import { Redis } from 'ioredis'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {

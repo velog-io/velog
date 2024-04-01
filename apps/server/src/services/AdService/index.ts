@@ -1,9 +1,9 @@
 import { ENV } from '@env'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
-import { AdsInput } from '@graphql/helpers/generated'
+import { AdsInput } from '@graphql/helpers/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { Ad, Prisma } from '@packages/database/src/velog-rds/index.mjs'
+import { Ad, Prisma } from '@packages/database/velog-rds'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {

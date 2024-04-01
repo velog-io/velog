@@ -5,7 +5,7 @@ import { CookieService } from '@lib/cookie/CookieService.js'
 import { DbService } from '@lib/db/DbService.js'
 import { FileService } from '@lib/file/FileService.js'
 import { JwtService } from '@lib/jwt/JwtService.js'
-import { User, UserProfile } from '@packages/database/src/velog-rds/index.mjs'
+import { User, UserProfile } from '@packages/database/velog-rds'
 import {
   GetProfileFromSocial,
   SocialProfile,

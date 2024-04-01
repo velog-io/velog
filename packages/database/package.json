@@ -10,6 +10,11 @@
     "velog",
     "cron"
   ],
+  "exports": {
+    "./velog-rds": "./dist/velog-rds/index.mjs",
+    "./velog-book-mongo": "./dist/velog-book-mongo/index.mjs",
+    "./velog-redis": "./dist/velog-redis/index.mjs"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=18.16"
@@ -23,7 +28,7 @@
     "prisma:generate": "tsx ./scripts/generatePrisma.mts",
     "env:copy": "tsx ./scripts/copyEnv.mts",
     "ssm": "tsx ./scripts/ssm.mts",
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
     "@packages/common-scripts": "workspace:*",

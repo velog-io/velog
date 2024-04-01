@@ -8,10 +8,10 @@ import {
   NotificationType,
   NotificationsInput,
   NotificationActionInput,
-} from '@graphql/helpers/generated'
+} from '@graphql/helpers/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { Prisma } from '@packages/database/src/velog-rds/index.mjs'
+import { Prisma } from '@packages/database/velog-rds'
 import { UserService } from '@services/UserService/index.js'
 import { injectable, singleton } from 'tsyringe'
 import { z } from 'zod'

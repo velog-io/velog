@@ -1,10 +1,10 @@
-import { Resolvers } from '@graphql/helpers/generated'
+import { Resolvers } from '@graphql/helpers/generated.js'
 import { container } from 'tsyringe'
 import { PostService } from '@services/PostService/index.js'
 import { UserService } from '@services/UserService/index.js'
 import { PostIncludeComment, PostIncludeUser } from '@services/PostService/PostServiceInterface.js'
 import { CommentService } from '@services/CommentService/index.js'
-import { Post, Tag } from '@packages/database/src/velog-rds/index.mjs'
+import { Post, Tag } from '@packages/database/velog-rds'
 import { PostLikeService } from '@services/PostLikeService/index.js'
 import { DbService } from '@lib/db/DbService.js'
 

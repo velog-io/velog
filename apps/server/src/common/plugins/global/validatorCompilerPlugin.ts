@@ -1,4 +1,4 @@
-import Ajv from 'ajv'
+const Ajv = require('ajv')
 import { FastifyPluginAsync } from 'fastify'
 
 const schemaCompilers = {

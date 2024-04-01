@@ -1,11 +1,11 @@
 import 'reflect-metadata'
 import { faker } from '@faker-js/faker'
-import { getMockUserWithProfile, MockUserWithProfileType } from 'test/mock/mockUser'
+import { getMockUserWithProfile, MockUserWithProfileType } from 'test/mock/mockUser.js'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { Post, Prisma, User } from '@packages/database/src/velog-rds/index.mjs'
-import { mockComment } from 'test/mock/mockComment'
-import { MockPostsType, mockPosts } from 'test/mock/mockPost'
+import { Post, Prisma, User } from '@packages/database/velog-rds'
+import { mockComment } from 'test/mock/mockComment.js'
+import { MockPostsType, mockPosts } from 'test/mock/mockPost.js'
 import { v4 as uuidv4 } from 'uuid'
 import { ENV } from '@env'
 import {
@@ -13,7 +13,7 @@ import {
   CommentReplyNotifictionActionInput,
   FollowNotificationActionInput,
   PostLikeNotificationActionInput,
-} from '@graphql/helpers/generated'
+} from '@graphql/helpers/generated.js'
 
 const MAX_COMMENTS_PER_POST = 5
 

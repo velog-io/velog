@@ -1,5 +1,5 @@
 import { container } from 'tsyringe'
-import { ElasticSearchService } from './ElasticSearchService'
+import { ElasticSearchService } from './ElasticSearchService.js'
 
 describe('ElasticSearchService', () => {
   const service = container.resolve(ElasticSearchService)

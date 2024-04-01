@@ -1,7 +1,7 @@
 import { DbService } from '@lib/db/DbService.js'
 import { injectable, singleton } from 'tsyringe'
-import { PostReadLog } from '@packages/database/src/velog-rds/index.mjs'
-import { LogParams } from './PostReadLogInterface'
+import { PostReadLog } from '@packages/database/velog-rds'
+import { LogParams } from './PostReadLogInterface.js'
 
 interface Service {
   log(params: LogParams): Promise<PostReadLog>

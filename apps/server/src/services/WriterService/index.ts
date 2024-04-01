@@ -1,5 +1,5 @@
 import { BadRequestError } from '@errors/BadRequestErrors.js'
-import { TrendingWriter } from '@graphql/helpers/generated'
+import { TrendingWriter } from '@graphql/helpers/generated.js'
 import { RedisService } from '@lib/redis/RedisService.js'
 import { injectable, singleton } from 'tsyringe'
 

@@ -1,4 +1,4 @@
-import { Comment, Post, Tag, User } from '@packages/database/src/velog-rds/index.mjs'
+import { Comment, Post, Tag, User } from '@packages/database/velog-rds'
 
 export type PostIncludeUser = Post & { user?: User }
 export type PostIncludeComment = Post & { comments?: Comment[] }

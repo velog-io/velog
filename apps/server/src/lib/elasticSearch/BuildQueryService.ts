@@ -1,5 +1,5 @@
 import { injectable, singleton } from 'tsyringe'
-import { PostIncludeTags } from '@services/PostService/PostServiceInterface'
+import { PostIncludeTags } from '@services/PostService/PostServiceInterface.js'
 
 @injectable()
 @singleton()

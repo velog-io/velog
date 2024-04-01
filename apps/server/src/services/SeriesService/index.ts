@@ -1,7 +1,7 @@
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
-import { GetSeriesInput } from '@graphql/helpers/generated'
+import { GetSeriesInput } from '@graphql/helpers/generated.js'
 import { DbService } from '@lib/db/DbService.js'
-import { SeriesPost, Series } from '@packages/database/src/velog-rds/index.mjs'
+import { SeriesPost, Series } from '@packages/database/velog-rds'
 import DataLoader from 'dataloader'
 
 import { injectable, singleton } from 'tsyringe'

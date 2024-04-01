@@ -3,7 +3,7 @@ import { ENV } from '@env'
 import { injectable, singleton } from 'tsyringe'
 import { BuildQueryService } from './BuildQueryService.js'
 import { PostIncludeTags } from '@services/PostService/PostServiceInterface.js'
-import { Post } from '@packages/database/src/velog-rds/index.mjs'
+import { Post } from '@packages/database/velog-rds'
 
 interface Service {
   get client(): Client

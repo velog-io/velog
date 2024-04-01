@@ -1,9 +1,9 @@
-import { CurrentUser } from '@interfaces/user'
+import { CurrentUser } from '@interfaces/user.js'
 import { CookieService } from '@lib/cookie/CookieService.js'
 import { DbService } from '@lib/db/DbService.js'
-import { Prisma, User } from '@packages/database/src/velog-rds/index.mjs'
+import { Prisma, User } from '@packages/database/velog-rds'
 import { injectable, singleton } from 'tsyringe'
-import { GraphQLContext } from '@interfaces/graphql'
+import { GraphQLContext } from '@interfaces/graphql.js'
 import { JwtService } from '@lib/jwt/JwtService.js'
 import { RefreshTokenData } from '@lib/jwt/JwtInterface.js'
 import { Time } from '@constants/TimeConstants.js'
@@ -14,7 +14,7 @@ import {
   ForbiddenError,
   ConfilctError,
 } from '@errors/index.js'
-import { UserToken } from '@graphql/helpers/generated'
+import { UserToken } from '@graphql/helpers/generated.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import DataLoader from 'dataloader'
 import { AuthService } from '@services/AuthService/index.js'

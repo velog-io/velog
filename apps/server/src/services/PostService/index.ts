@@ -1,5 +1,5 @@
 import removeMd from 'remove-markdown'
-import { Post, PostTag, Prisma, Tag, User } from '@packages/database/src/velog-rds/index.mjs'
+import { Post, PostTag, Prisma, Tag, User } from '@packages/database/velog-rds'
 import { container, injectable, singleton } from 'tsyringe'
 import {
   GetPostsInput,
@@ -11,7 +11,7 @@ import {
 } from '@graphql/helpers/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { BadRequestError, ConfilctError, NotFoundError, UnauthorizedError } from '@errors/index.js'
-import { GetPostsByTypeParams, Timeframe } from './PostServiceInterface'
+import { GetPostsByTypeParams, Timeframe } from './PostServiceInterface.js'
 import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { PostReadLogService } from '@services/PostReadLogService/index.js'

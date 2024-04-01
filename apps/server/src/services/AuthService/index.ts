@@ -6,7 +6,7 @@ import { createAuthTemplate } from '@template/createAuthTemplate.js'
 import { ENV } from '@env'
 import { FastifyReply } from 'fastify'
 import { CookieService } from '@lib/cookie/CookieService.js'
-import { GraphQLContext } from '@interfaces/graphql'
+import { GraphQLContext } from '@interfaces/graphql.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 
 interface Service {

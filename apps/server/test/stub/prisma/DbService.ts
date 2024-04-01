@@ -1,7 +1,7 @@
-import { PrismaClient } from '@packages/database/src/velog-rds/index.mjs'
+import { PrismaClient } from '@packages/database/velog-rds'
 import { mockDeep, mockReset, DeepMockProxy } from 'jest-mock-extended'
 
-import prisma from './client'
+import prisma from './client.js'
 
 jest.mock('./client', () => ({
   __esModule: true,

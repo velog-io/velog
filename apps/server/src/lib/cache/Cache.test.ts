@@ -1,5 +1,5 @@
 import { container } from 'tsyringe'
-import { CacheService } from './CacheService'
+import { CacheService } from './CacheService.js'
 
 describe('CacheService', () => {
   const service = container.resolve(CacheService)

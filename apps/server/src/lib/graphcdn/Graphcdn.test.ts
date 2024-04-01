@@ -1,5 +1,5 @@
 import { container } from 'tsyringe'
-import { GraphcdnService } from './GraphcdnService'
+import { GraphcdnService } from './GraphcdnService.js'
 
 describe('GraphcdnService', () => {
   const service = container.resolve(GraphcdnService)

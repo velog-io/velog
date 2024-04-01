@@ -1,5 +1,5 @@
 import { container } from 'tsyringe'
-import { TurnstileService } from './TurnstileService'
+import { TurnstileService } from './TurnstileService.js'
 
 describe('TurnstileService', () => {
   const service = container.resolve(TurnstileService)

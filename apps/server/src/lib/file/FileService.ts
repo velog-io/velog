@@ -5,7 +5,7 @@ import tmp from 'tmp'
 import fs from 'fs'
 import path from 'path'
 import multer from 'fastify-multer'
-import { StorageEngine } from 'fastify-multer/lib/interfaces'
+import { StorageEngine } from 'fastify-multer/lib/interfaces.js'
 
 interface Service {
   get multerStorage(): StorageEngine
