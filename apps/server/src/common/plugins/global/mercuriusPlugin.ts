@@ -45,6 +45,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
               requestbody: request?.body,
               result,
               user: request?.user,
+              ip: request?.ip,
             }),
           )
           .catch(console.error)
@@ -65,6 +66,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
               requestbody: (ctx as any).request?.body,
               execution,
               user: (ctx as any).request?.user,
+              ip: (ctx as any).request?.ip,
             }),
           )
           .catch(console.error)

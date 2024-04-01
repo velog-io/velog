@@ -17,7 +17,6 @@
   "include": ["./scripts", ".eslintrc.cjs", "./lib", "./env", "./data", "index.mts"],
   "exclude": ["./dist"],
   "ts-node": {
-    "transpileOnly": true,
-    "esm": true
+    "transpileOnly": true
   }
 }

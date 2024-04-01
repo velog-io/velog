@@ -33,6 +33,8 @@ export class DiscordService {
       'ECONNRESET',
       'https://oauth2.googleapis.com',
       '/api/posts/v1/score',
+      'Code is required',
+      `notificationCount`,
     ]
     const isFrequentWordIncluded = frequentWord.some((word) => message.includes(word))
 
