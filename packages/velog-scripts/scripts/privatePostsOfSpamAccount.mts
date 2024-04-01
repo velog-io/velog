@@ -6,7 +6,7 @@ import inquirer from 'inquirer'
 import { ENV } from '../env/env.mjs'
 import { DiscordService } from '../lib/discord/DiscordService.mjs'
 import { BlockListService } from '../lib/blockList/BlockListService.mjs'
-
+import { format } from 'date-fns'
 interface IRunner {}
 
 @injectable()
@@ -42,6 +42,7 @@ class Runner implements IRunner {
           user.id,
           username,
           user.profile?.display_name || null,
+          user.created_at,
         )
 
         if (!askResult.is_set_private) continue
@@ -136,6 +137,7 @@ class Runner implements IRunner {
     userId: string,
     username: string,
     displayName: string | null,
+    createdAt: Date,
   ): Promise<AskDeletePostsResult> {
     const blockedList = await this.blockList.readBlockList()
     if (blockedList.includes(username)) {
@@ -149,6 +151,7 @@ class Runner implements IRunner {
       id: userId,
       username: username,
       displayName: displayName ?? '',
+      '가입 날짜': format(createdAt, 'yyyy-MM-dd'),
       '업데이트 될 글 개수': posts.length,
       '최근 작성된 글': posts.slice(0, 5).map((post) => ({
         title: post.title,
