@@ -5,7 +5,6 @@ import { container } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
 import { CookieService } from '@lib/cookie/CookieService.js'
 import { Time } from '@constants/TimeConstants.js'
-import { DbService } from '@lib/db/DbService'
 
 const authPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('user', null)
@@ -36,13 +35,13 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
           await userService.restoreToken({ request, reply })
         }
 
-        const user = await userService.findById(accessTokenData.user_id)
+        // const user = await userService.findById(accessTokenData.user_id)
 
-        if (!user) {
-          cookie.clearCookie(reply, 'access_token')
-          cookie.clearCookie(reply, 'refresh_token')
-          throw new Error('User not found')
-        }
+        // if (!user) {
+        //   cookie.clearCookie(reply, 'access_token')
+        //   cookie.clearCookie(reply, 'refresh_token')
+        //   throw new Error('User not found')
+        // }
 
         request.user = { id: accessTokenData.user_id }
         return
