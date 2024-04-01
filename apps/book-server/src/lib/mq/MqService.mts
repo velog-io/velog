@@ -13,7 +13,7 @@ export class MqService {
   }
 
   private init() {
-    const emitter = redis({
+    const emitter = redis.default({
       port: 6379,
       host: this.envService.get('redisHost'),
     })

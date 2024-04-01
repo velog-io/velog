@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import { GraphQLContext } from '../../common/interfaces/graphql.mjs'
-import { Book as BookModel } from '@prisma/velog-book-mongo/client'
+import { Book as BookModel } from '@packages/database/velog-book-mongo'
 export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }

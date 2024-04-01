@@ -1,4 +1,4 @@
-import { Resolvers } from '@graphql/helpers/generated'
+import { Resolvers } from '@graphql/helpers/generated.js'
 import { BookService } from 'src/services/BookService/index.mjs'
 import { PageService } from 'src/services/PageService/index.mjs'
 import { container } from 'tsyringe'

@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "ES2022",
+    "module": "NodeNext",
     "lib": ["ES2022"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
     "baseUrl": "./",
     "rootDir": "./",
     "paths": {
@@ -15,14 +15,14 @@
       "@plugins/*": ["src/common/plugins/*"],
       "@interfaces/*": ["src/common/interfaces/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"],
     "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["./src", ".eslintrc.cjs", "./dist", "./scripts", "codegen.mts", "test/**/*.mts"],
+  "include": ["./src", ".eslintrc.cjs", "./scripts", "codegen.mts", "test/**/*.mts"],
   "exclude": ["node_modules"],
   "ts-node": {
     "transpileOnly": true,

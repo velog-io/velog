@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { getMockPages } from 'test/mock/mockBook.mjs'
-import { Writer } from '@prisma/velog-book-mongo/client'
+import { Writer } from '@packages/database/velog-book-mongo'
 import { faker } from '@faker-js/faker'
 
 class Seeder {
