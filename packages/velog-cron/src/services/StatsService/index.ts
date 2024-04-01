@@ -36,10 +36,10 @@ export class StatsService implements Service {
 
     await this.discord.sendMessage(
       'stats',
-      `[Daily]\n기간: ${format(
+      `[Daily]\n${format(
         start,
         'yyyy-MM-dd',
-      )}\n${usersCount}명의 사용자가 가입했습니다.\n${postCount}개의 공개 포스트가 작성되었습니다.`,
+      )} 동안\n${usersCount}명의 사용자가 가입했습니다.\n${postCount}개의 공개 포스트가 작성되었습니다.`,
     )
   }
   public async weekly() {
@@ -53,10 +53,10 @@ export class StatsService implements Service {
     const timeFormat = 'yyyy-MM-dd HH:mm:ss'
     await this.discord.sendMessage(
       'stats',
-      `[Daily]\n기간: ${format(start, timeFormat)}-${format(
+      `[Weekly]\n${format(start, timeFormat)}-${format(
         end,
-        'HH:mm:ss',
-      )}\n${usersCount}명의 사용자가 가입했습니다.\n${postCount}개의 공개 포스트가 작성되었습니다.`,
+        timeFormat,
+      )} 동안\n${usersCount}명의 사용자가 가입했습니다.\n${postCount}개의 공개 포스트가 작성되었습니다.`,
     )
   }
   public async monthly() {

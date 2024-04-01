@@ -29,7 +29,7 @@ const serverProdEcsOption: EcsBaseOption = {
   cpu: 1, // unit 1024
   memory: 2, // unit 1024
   maxCapacity: 12,
-  minCapacity: 1,
+  minCapacity: 2,
 }
 
 const serverStageEcsOption: EcsBaseOption = {

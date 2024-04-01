@@ -23,6 +23,7 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
           query: request?.query || 'none',
           error,
           user: request?.user,
+          ip: request?.ip,
         }),
       )
       .catch(console.error)
@@ -56,6 +57,7 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
             requestbody: request?.body,
             error,
             user: request?.user,
+            ip: request?.ip,
           }),
         )
         .catch(console.error)
