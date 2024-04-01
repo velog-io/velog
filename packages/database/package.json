@@ -14,8 +14,9 @@
   "engines": {
     "node": ">=20.11"
   },
-  "main": "./index.mts",
-  "types": "./index.mts",
+  "files": [
+    "./src"
+  ],
   "type": "module",
   "scripts": {
     "create-mock": "tsx ./scripts/createMock.mts",

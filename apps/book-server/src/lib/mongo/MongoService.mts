@@ -1,5 +1,5 @@
 import { injectable, singleton } from 'tsyringe'
-import { PrismaClient } from '@prisma/velog-book-mongo/client'
+import { PrismaClient } from '@packages/database/src/velog-book-mongo.mjs'
 
 @injectable()
 @singleton()

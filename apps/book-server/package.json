@@ -25,6 +25,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@packages/database": "workspace:*",
     "@aws-sdk/client-ssm": "^3.525.0",
     "@fastify/autoload": "^5.8.0",
     "@fastify/cors": "^8.3.0",
