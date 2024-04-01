@@ -5,7 +5,7 @@ import { google } from 'googleapis'
 import qs from 'qs'
 import axios from 'axios'
 import { Octokit } from '@octokit/rest'
-import { SocialAccount } from '@prisma/velog-rds/client'
+import { SocialAccount } from '@packages/database/src/velog-rds.mjs'
 import {
   FacebookProfile,
   FacebookTokenResult,

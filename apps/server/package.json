@@ -31,8 +31,6 @@
     "ssm": "tsx ./scripts/ssm/index.ts"
   },
   "dependencies": {
-    "@packages/common-scripts": "workspace:*",
-    "@packages/database": "workspace:*",
     "@aws-sdk/client-s3": "^3.473.0",
     "@aws-sdk/client-ses": "^3.405.0",
     "@aws-sdk/client-ssm": "^3.379.1",
@@ -47,6 +45,8 @@
     "@graphql-tools/merge": "^9.0.0",
     "@graphql-tools/schema": "^10.0.0",
     "@octokit/rest": "^20.0.1",
+    "@packages/common-scripts": "workspace:*",
+    "@packages/database": "workspace:*",
     "@prisma/client": "^5.11.0",
     "ajv": "^8.12.0",
     "axios": "^1.4.0",
@@ -94,6 +94,9 @@
     "@graphql-codegen/typescript": "^4.0.0",
     "@graphql-codegen/typescript-operations": "^4.0.0",
     "@graphql-codegen/typescript-resolvers": "^4.0.0",
+    "@swc-node/register": "^1.9.0",
+    "@swc/cli": "^0.3.10",
+    "@swc/core": "^1.4.11",
     "@types/backblaze-b2": "^1.5.2",
     "@types/geoip-country": "^4.0.2",
     "@types/inquirer": "^9.0.7",

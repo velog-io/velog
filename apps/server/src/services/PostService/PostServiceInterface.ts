@@ -1,4 +1,4 @@
-import { Comment, Post, Tag, User } from '@prisma/velog-rds/client'
+import { Comment, Post, Tag, User } from '@packages/database/src/velog-rds.mjs'
 
 export type PostIncludeUser = Post & { user?: User }
 export type PostIncludeComment = Post & { comments?: Comment[] }

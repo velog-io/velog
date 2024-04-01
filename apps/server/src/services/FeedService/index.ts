@@ -2,7 +2,7 @@ import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { FeedPostsInput } from '@graphql/helpers/generated'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
-import { Post } from '@prisma/velog-rds/client'
+import { Post } from '@packages/database/src/velog-rds.mjs'
 import { subMonths, subYears } from 'date-fns'
 import { injectable, singleton } from 'tsyringe'
 

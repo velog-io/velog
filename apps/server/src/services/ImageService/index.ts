@@ -1,7 +1,7 @@
 import { ENV } from '@env'
 import { DbService } from '@lib/db/DbService.js'
 import { SlackService } from '@lib/slack/SlackService.js'
-import { UserImageNext } from '@prisma/velog-rds/client'
+import { UserImageNext } from '@packages/database/src/velog-rds.mjs'
 import { UserService } from '@services/UserService/index.js'
 import { injectable, singleton } from 'tsyringe'
 

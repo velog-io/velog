@@ -15,7 +15,7 @@
       "@interfaces/*": ["src/common/interfaces/*"],
       "@graphql/*": ["src/graphql/*"],
       "@test/*": ["src/test/*"],
-      "@lib/*": ["src/lib/*"],
+      "@lib/*": ["./src/lib/*"],
       "@routes/*": ["src/routes/*"],
       "@services/*": ["src/services/*"],
       "@env": ["src/env.ts"],
@@ -40,6 +40,7 @@
   "exclude": ["node_modules"],
   "ts-node": {
     "transpileOnly": true,
-    "esm": true
+    "esm": true,
+    "swc": true
   }
 }
