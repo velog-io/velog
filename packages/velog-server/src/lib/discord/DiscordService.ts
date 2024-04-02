@@ -1,8 +1,8 @@
 import { container, injectable, singleton } from 'tsyringe'
 import { Client, GatewayIntentBits } from 'discord.js'
 import { ENV } from '@env'
-import { RedisService } from '@lib/redis/RedisService'
-import { Time } from '@constants/TimeConstants'
+import { RedisService } from '@lib/redis/RedisService.js'
+import { Time } from '@constants/TimeConstants.js'
 
 @injectable()
 @singleton()
