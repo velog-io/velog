@@ -17,7 +17,7 @@
     "create-service": "tsx ./scripts/createService.mts",
     "prisma:copy": "tsx ./scripts/copyPrisma.mts",
     "prisma:generate": "prisma generate --schema='./prisma/velog-book-mongo/schema.prisma'",
-    "ssm": "tsx ./scripts/ssm/index.mts"
+    "ssm": "tsx ./scripts/ssm.mts"
   },
   "keywords": [
     "velog",
@@ -48,6 +48,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@packages/database": "workspace:*",
+    "@packages/common-scripts": "workspace:*",
     "@faker-js/faker": "^8.3.1",
     "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/cli": "^5.0.0",

@@ -36,10 +36,8 @@
     "scripts/*.ts",
     "../velog-prisma/scripts/createMock.ts",
     "./test/**/*.ts",
-    "scripts/ssm.mts",
-    "scripts/createService.mts",
-    "scripts/createMock.mts",
-    "scripts/copyPrisma.mts"
+    "scripts/**.mts",
+    "scripts/**/*.mts"
   ],
   "exclude": ["node_modules"],
   "ts-node": {
