@@ -9,7 +9,7 @@ interface Service {
 
 @injectable()
 @singleton()
-export class RedisService extends Redis implements Service {
+export class RedisService extends Redis.default implements Service {
   constructor() {
     super({ port: 6379, host: ENV.redisHost })
   }

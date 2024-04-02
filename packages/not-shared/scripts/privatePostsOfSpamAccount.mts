@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { Post, User, UserProfile } from '@packages/database/src/velog-rds/index.mjs'
+import { Post, User, UserProfile } from '@packages/database/velog-rds'
 import { DbService } from '../lib/db/DbService.mjs'
 import { container, injectable } from 'tsyringe'
 import inquirer from 'inquirer'

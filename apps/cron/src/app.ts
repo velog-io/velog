@@ -11,7 +11,7 @@ const app = Fastify({
 })
 
 app.register(closePlugin)
-app.register(fastifyCron)
+app.register(fastifyCron.default)
 
 const utils = container.resolve(UtilsService)
 app.register(autoload, {

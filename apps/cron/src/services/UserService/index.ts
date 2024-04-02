@@ -1,5 +1,5 @@
 import { DbService } from '@lib/db/DbService.js'
-import { User } from '@packages/database/src/velog-rds/index.mjs'
+import { User } from '@packages/database/velog-rds'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {

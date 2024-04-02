@@ -1,23 +1,24 @@
-const Ajv = require('ajv')
+// const Ajv = require('ajv')
+import Ajv from 'ajv'
 import { FastifyPluginAsync } from 'fastify'
 
 const schemaCompilers = {
-  body: new Ajv({
+  body: new Ajv.default({
     removeAdditional: true,
     coerceTypes: false,
     allErrors: true,
   }),
-  params: new Ajv({
+  params: new Ajv.default({
     removeAdditional: true,
     coerceTypes: true,
     allErrors: true,
   }),
-  querystring: new Ajv({
+  querystring: new Ajv.default({
     removeAdditional: true,
     coerceTypes: true,
     allErrors: true,
   }),
-  headers: new Ajv({
+  headers: new Ajv.default({
     removeAdditional: true,
     coerceTypes: true,
     allErrors: true,

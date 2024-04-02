@@ -1,10 +1,10 @@
 import { DbService } from '@lib/db/DbService.js'
-import { Post, Prisma } from '@packages/database/src/velog-rds/index.mjs'
+import { Post, Prisma } from '@packages/database/velog-rds'
 import { injectable, singleton } from 'tsyringe'
 import geoip from 'geoip-country'
 import { subMonths } from 'date-fns'
 import { DiscordService } from '@lib/discord/DiscordService.js'
-import { CheckPostSpamArgs } from '@lib/redis/RedisService'
+import { CheckPostSpamArgs } from '@lib/redis/RedisService.js'
 
 interface Service {
   findById(postId: string): Promise<Post | null>

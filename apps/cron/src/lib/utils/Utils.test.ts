@@ -1,5 +1,5 @@
 import { container } from 'tsyringe'
-import { UtilsService } from './UtilsService'
+import { UtilsService } from './UtilsService.js'
 
 describe('UtilsService', () => {
   const service = container.resolve(UtilsService)
