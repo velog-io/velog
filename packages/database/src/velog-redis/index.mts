@@ -7,14 +7,14 @@ interface Service {
   createFeedQueue(data: CreateFeedArgs): Promise<number>
 }
 
-type InitializeArgs = {
+type RedisOptions = {
   port: number
   host: string
 }
 
 export class RedisService extends Redis implements Service {
   host: string
-  constructor({ port, host }: InitializeArgs) {
+  constructor({ port, host }: RedisOptions) {
     super({ port: port, host })
     this.host = host
   }
