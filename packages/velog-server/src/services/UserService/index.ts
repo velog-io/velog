@@ -319,10 +319,12 @@ export class UserService implements Service {
   }
   public async checkExistsUser(userId?: string): Promise<boolean> {
     if (!userId) return false
+
     const key = this.redis.generateKey.existsUser(userId)
     const value = await this.redis.get(key)
     if (value === 'true') return true
     if (value === 'false') return false
+
     const user = await this.findById(userId)
     const save = user ? 'true' : 'false'
     await this.redis.set(key, save, 'EX', Time.ONE_MINUTE_IN_S * 10)
