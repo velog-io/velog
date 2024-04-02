@@ -24,15 +24,19 @@ export class DiscordService {
       this.client.login(ENV.discordBotToken)
     })
   }
-  public async sendMessage(type: MessageType, payload: MessagePayload) {
+  public async sendMessage(type: MessageType, payload: MessagePayload | string) {
     this.isSending = true
 
-    const metaData = Object.assign(payload, {
-      body: payload.body ?? 'none',
-      query: payload.query ?? 'none',
-    })
-
-    const message = JSON.stringify(metaData)
+    let message = ''
+    if (typeof payload === 'string') {
+      message = payload
+    } else {
+      const metaData = Object.assign(payload, {
+        body: payload.body ?? 'none',
+        query: payload.query ?? 'none',
+      })
+      message = JSON.stringify(metaData)
+    }
 
     const frequentWord = [
       'connection pool',
@@ -53,7 +57,7 @@ export class DiscordService {
       return
     }
 
-    if (payload.body?.include('WritePost') && payload?.user?.id) {
+    if (typeof payload === 'object' && payload.body?.include('WritePost') && payload?.user?.id) {
       const redisService = container.resolve(RedisService)
       const key = redisService.generateKey.errorMessageCache(payload.type, payload?.user?.id)
       const exists = await redisService.exists(key)
