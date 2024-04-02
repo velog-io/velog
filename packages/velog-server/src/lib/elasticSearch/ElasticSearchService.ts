@@ -4,6 +4,7 @@ import { injectable, singleton } from 'tsyringe'
 import { BuildQueryService } from './BuildQueryService.js'
 import { PostIncludeTags } from '@services/PostService/PostServiceInterface.js'
 import { Post } from '@prisma/client'
+import { UserService } from '@services/UserService/index.js'
 
 interface Service {
   get client(): Client
@@ -13,7 +14,10 @@ interface Service {
 @injectable()
 @singleton()
 export class ElasticSearchService implements Service {
-  constructor(private readonly buildQueryService: BuildQueryService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly buildQueryService: BuildQueryService,
+  ) {}
   public get client(): Client {
     return new Client({ node: ENV.esHost })
   }
@@ -147,14 +151,26 @@ export class ElasticSearchService implements Service {
       },
     })
 
-    const posts = result.body.hits.hits.map((hit: any) => hit._source)
-    posts.forEach((p: any) => {
-      p.released_at = new Date(p.released_at)
+    const sources = result.body.hits.hits
+      .map((hit: any) => hit._source)
+      .map((p: any) => ({ ...p, released_at: new Date(p.released_at) }))
+
+    const promises = sources.map(async (post: any) => {
+      try {
+        const result = await this.userService.checkExistsUser(post?.user?.id)
+        return { id: post.id, result }
+      } catch (error) {
+        console.error('Error checking user:', error)
+        return { id: post.id, result: false }
+      }
     })
+
+    const promiseResult = await Promise.all(promises)
+    const existsUserPosts = promiseResult.filter(({ result }) => result).map(({ id }) => id)
 
     const data = {
       count: result.body.hits.total.value,
-      posts: result.body.hits.hits.map((hit: any) => hit._source),
+      posts: sources.filter((post: any) => existsUserPosts.includes(post.id)),
     }
 
     return data
