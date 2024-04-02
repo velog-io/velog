@@ -33,6 +33,7 @@ export class RedisService extends Redis implements Service {
         `ssr:/@${username}/series/${seriesUrlSlug}`,
       changeEmail: (code: string) => `changeEmailCode:${code}`,
       trendingWriters: () => `trending:writers`,
+      existsUser: (userId: string) => `exists:user:${userId}`,
     }
   }
 
@@ -61,6 +62,7 @@ type GenerateRedisKey = {
   postSeries: (username: string, seriesUrlSlug: string) => string
   changeEmail: (code: string) => string
   trendingWriters: () => string
+  existsUser: (userId: string) => string
 }
 
 type QueueName = 'createFeed' | 'checkPostSpam'

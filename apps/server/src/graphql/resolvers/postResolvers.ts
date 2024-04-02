@@ -18,8 +18,19 @@ const postResolvers: Resolvers = {
   Post: {
     user: async (parent: PostIncludeUser) => {
       if (!parent.user) {
-        const userService = container.resolve(UserService)
-        return await userService.getCurrentUser(parent.fk_user_id)
+        if (parent?.fk_user_id) {
+          const userService = container.resolve(UserService)
+          return await userService.getCurrentUser(parent.fk_user_id)
+        }
+
+        if (parent.id) {
+          const postService = container.resolve(PostService)
+          const userService = container.resolve(UserService)
+          const post = await postService.findById(parent.id)
+          return await userService.getCurrentUser(post?.fk_user_id)
+        }
+
+        return null
       }
       return parent?.user
     },
