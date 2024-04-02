@@ -15,17 +15,14 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
     request.log.error(error, 'fastify onError')
     const discord = container.resolve(DiscordService)
     discord
-      .sendMessage(
-        'error',
-        JSON.stringify({
-          type: 'fastify OnError',
-          requestbody: request?.body || 'none',
-          query: request?.query || 'none',
-          error,
-          user: request?.user,
-          ip: request?.ip,
-        }),
-      )
+      .sendMessage('error', {
+        type: 'fastify OnError',
+        body: request?.body,
+        query: request?.query,
+        error,
+        user: request?.user,
+        ip: request?.ip,
+      })
       .catch(console.error)
 
     done()
@@ -50,16 +47,14 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
     } else {
       const discord = container.resolve(DiscordService)
       discord
-        .sendMessage(
-          'error',
-          JSON.stringify({
-            type: 'fastify handleError',
-            requestbody: request?.body,
-            error,
-            user: request?.user,
-            ip: request?.ip,
-          }),
-        )
+        .sendMessage('error', {
+          type: 'fastify handleError',
+          body: request?.body,
+          query: request?.query,
+          error,
+          user: request?.user,
+          ip: request?.ip,
+        })
         .catch(console.error)
     }
   })
