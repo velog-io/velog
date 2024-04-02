@@ -35,13 +35,12 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
           await userService.restoreToken({ request, reply })
         }
 
-        // const user = await userService.findById(accessTokenData.user_id)
-
-        // if (!user) {
-        //   cookie.clearCookie(reply, 'access_token')
-        //   cookie.clearCookie(reply, 'refresh_token')
-        //   throw new Error('User not found')
-        // }
+        const user = await userService.checkExistsUser(accessTokenData.user_id)
+        if (!user) {
+          cookie.clearCookie(reply, 'access_token')
+          cookie.clearCookie(reply, 'refresh_token')
+          throw new Error('User not found')
+        }
 
         request.user = { id: accessTokenData.user_id }
         return
