@@ -1,22 +1,15 @@
 import { injectable, singleton } from 'tsyringe'
-import redis, { MQEmitterRedis } from 'mqemitter-redis'
-import { EnvService } from '@lib/env/EnvService.mjs'
+import { RedisService } from '@packages/database/velog-redis'
+
+type MqServerOptions = {
+  port: number
+  host: string
+}
 
 @injectable()
 @singleton()
-export class MqService {
-  public emitter!: MQEmitterRedis
-  constructor(private readonly envService: EnvService) {
-    if (!this.emitter) {
-      this.init()
-    }
-  }
-
-  private init() {
-    const emitter = redis.default({
-      port: 6379,
-      host: this.envService.get('redisHost'),
-    })
-    this.emitter = emitter
+export class MqService extends RedisService {
+  constructor({ port, host }: MqServerOptions) {
+    super({ port, host })
   }
 }

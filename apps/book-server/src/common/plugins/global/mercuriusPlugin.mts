@@ -10,15 +10,14 @@ import { MqService } from '@lib/mq/MqService.mjs'
 
 const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
   const env = container.resolve(EnvService)
-  const mqService = container.resolve(MqService)
-
+  const mqService = new MqService({ port: 6379, host: env.get('redisHost') })
   fastify.register(mercurius, {
     logLevel: 'error',
     schema,
     resolvers: resolvers,
     graphiql: env.get('appEnv') !== 'production',
     subscription: {
-      emitter: mqService.emitter,
+      emitter: mqService,
       verifyClient: (info, next) => {
         if (info.req.headers['x-fastify-header'] !== 'fastify is awesome !') {
           return next(false) // the connection is not allowed
@@ -54,6 +53,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
             type: 'errorHandler',
             requestbody: request?.body,
             result,
+            ip: request?.ip,
           }),
         )
       }
@@ -72,6 +72,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
             requestbody: (ctx as any).request?.body,
             execution,
             user: (ctx as any).request?.user,
+            ip: (ctx as any).request?.ip,
           }),
         )
 
