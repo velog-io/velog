@@ -34,6 +34,7 @@ export class RedisService extends Redis implements Service {
       changeEmail: (code: string) => `changeEmailCode:${code}`,
       trendingWriters: () => `trending:writers`,
       existsUser: (userId: string) => `exists:user:${userId}`,
+      errorMessageCache: (type: string, userId: string) => `error:${type}:${userId}`,
     }
   }
 
@@ -63,6 +64,7 @@ type GenerateRedisKey = {
   changeEmail: (code: string) => string
   trendingWriters: () => string
   existsUser: (userId: string) => string
+  errorMessageCache: (type: string, userId: string) => string
 }
 
 type QueueName = 'createFeed' | 'checkPostSpam'
