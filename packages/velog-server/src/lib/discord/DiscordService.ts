@@ -1,6 +1,8 @@
-import { injectable, singleton } from 'tsyringe'
+import { container, injectable, singleton } from 'tsyringe'
 import { Client, GatewayIntentBits } from 'discord.js'
 import { ENV } from '@env'
+import { RedisService } from '@lib/redis/RedisService'
+import { Time } from '@constants/TimeConstants'
 
 @injectable()
 @singleton()
@@ -22,8 +24,15 @@ export class DiscordService {
       this.client.login(ENV.discordBotToken)
     })
   }
-  public async sendMessage(type: MessageType, message: string) {
+  public async sendMessage(type: MessageType, payload: MessagePayload) {
     this.isSending = true
+
+    const metaData = Object.assign(payload, {
+      body: payload.body ?? 'none',
+      query: payload.query ?? 'none',
+    })
+
+    const message = JSON.stringify(metaData)
 
     const frequentWord = [
       'connection pool',
@@ -42,6 +51,14 @@ export class DiscordService {
       this.isSending = false
       console.log('Frequent word included skip sending message')
       return
+    }
+
+    if (payload.body?.include('WritePost') && payload?.user?.id) {
+      const redisService = container.resolve(RedisService)
+      const key = redisService.generateKey.errorMessageCache(payload.type, payload?.user?.id)
+      const exists = await redisService.exists(key)
+      if (exists === 1) return
+      await redisService.setex(key, Time.ONE_MINUTE_IN_S * 10, 'true')
     }
 
     try {
@@ -82,3 +99,12 @@ export class DiscordService {
 }
 
 type MessageType = 'error' | 'spam'
+type MessagePayload = {
+  type: string
+  body?: any
+  query?: any
+  user?: { id: string }
+  ip?: string
+  error?: any
+  originError?: any
+}

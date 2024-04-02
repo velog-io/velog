@@ -23,7 +23,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
     },
     errorHandler: (error, request) => {
       const { name, message, code, stack, errors, statusCode } = error
-      const result = {
+      const errorData = {
         name,
         message,
         code,
@@ -38,43 +38,38 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         const discord = container.resolve(DiscordService)
 
         discord
-          .sendMessage(
-            'error',
-            JSON.stringify({
-              type: 'errorHandler',
-              requestbody: request?.body,
-              result,
-              user: request?.user,
-              ip: request?.ip,
-            }),
-          )
+          .sendMessage('error', {
+            type: 'errorHandler',
+            body: request?.body,
+            user: request?.user,
+            ip: request?.ip,
+            originError: error,
+            error: errorData,
+          })
           .catch(console.error)
       }
     },
-    errorFormatter: (execution, ctx) => {
-      const e = execution.errors?.[0]?.originalError
+    errorFormatter: (error, ctx) => {
+      const e = error.errors?.[0]?.originalError
 
       if (!isHttpError(e)) {
         console.log('mecurius errorFormatter')
-        ;(ctx as any).request?.log?.error(execution, 'errorFormatter')
+        ;(ctx as any).request?.log?.error(error, 'errorFormatter')
         const discord = container.resolve(DiscordService)
         discord
-          .sendMessage(
-            'error',
-            JSON.stringify({
-              type: 'errorFormat',
-              requestbody: (ctx as any).request?.body,
-              execution,
-              user: (ctx as any).request?.user,
-              ip: (ctx as any).request?.ip,
-            }),
-          )
+          .sendMessage('error', {
+            type: 'errorFormat',
+            body: (ctx as any).request?.body,
+            error,
+            user: (ctx as any).request?.user,
+            ip: (ctx as any).request?.ip,
+          })
           .catch(console.error)
 
-        return { statusCode: 500, response: execution }
+        return { statusCode: 500, response: error }
       }
 
-      const errors = execution.errors?.map((error) =>
+      const errors = error.errors?.map((error) =>
         Object.assign(error, {
           extensions: {
             name: e.name,
