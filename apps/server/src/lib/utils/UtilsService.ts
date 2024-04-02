@@ -1,4 +1,4 @@
-import { ENV } from '@env'
+import { ENV } from 'src/env.mjs'
 import { dirname, join } from 'path'
 import { injectable, singleton } from 'tsyringe'
 import { fileURLToPath } from 'url'

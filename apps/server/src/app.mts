@@ -2,12 +2,12 @@ import autoload from '@fastify/autoload'
 import Fastify from 'fastify'
 import formbody from '@fastify/formbody'
 import cookie from '@fastify/cookie'
-import { ENV } from '@env'
+import { ENV } from 'src/env.mjs'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { container } from 'tsyringe'
 import routes from '@routes/index.js'
 import multer from 'fastify-multer'
-import validatorCompilerPlugin from '@plugins/global/validatorCompilerPlugin.js'
+import validatorCompilerPlugin from '@plugins/global/validatorCompilerPlugin.mjs'
 
 const app = Fastify({
   logger: true,

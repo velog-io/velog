@@ -1,4 +1,4 @@
-import { ENV } from '@env'
+import { ENV } from 'src/env.mjs'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { AdsInput } from '@graphql/helpers/generated.js'
 import { DbService } from '@lib/db/DbService.js'

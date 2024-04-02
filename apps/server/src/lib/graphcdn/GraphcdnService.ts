@@ -1,6 +1,6 @@
 import { injectable, singleton } from 'tsyringe'
 import axios, { AxiosResponse } from 'axios'
-import { ENV } from '@env'
+import { ENV } from 'src/env.mjs'
 
 interface Service {
   purgePost(id: string): Promise<AxiosResponse>

@@ -1,4 +1,4 @@
-import { ENV } from '@env'
+import { ENV } from 'src/env.mjs'
 import { DbService } from '@lib/db/DbService.js'
 import { injectable, singleton } from 'tsyringe'
 import { google } from 'googleapis'

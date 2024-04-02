@@ -6,7 +6,7 @@ import { readdirSync } from 'fs'
 import { DateTimeISOResolver, VoidResolver, PositiveIntResolver } from 'graphql-scalars'
 import { IResolvers, MercuriusContext } from 'mercurius'
 import { basename, dirname, resolve } from 'path'
-import { ENV } from '@env'
+import { ENV } from 'src/env.mjs'
 import { fileURLToPath } from 'url'
 
 async function resolverAutoLoader(): Promise<Resolvers[]> {

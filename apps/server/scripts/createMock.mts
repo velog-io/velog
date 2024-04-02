@@ -7,7 +7,7 @@ import { Post, Prisma, User } from '@packages/database/velog-rds'
 import { mockComment } from 'test/mock/mockComment.js'
 import { MockPostsType, mockPosts } from 'test/mock/mockPost.js'
 import { v4 as uuidv4 } from 'uuid'
-import { ENV } from '@env'
+import { ENV } from 'src/env.mjs'
 import {
   CommentNotificationActionInput,
   CommentReplyNotifictionActionInput,

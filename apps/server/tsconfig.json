@@ -18,7 +18,7 @@
       "@lib/*": ["./src/lib/*"],
       "@routes/*": ["src/routes/*"],
       "@services/*": ["src/services/*"],
-      "@env": ["src/env.ts"],
+      "@env": ["src/env.mts"],
       "@template/*": ["src/template/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"],
@@ -35,7 +35,11 @@
     "codegen.ts",
     "scripts/*.ts",
     "../velog-prisma/scripts/createMock.ts",
-    "./test/**/*.ts"
+    "./test/**/*.ts",
+    "scripts/ssm.mts",
+    "scripts/createService.mts",
+    "scripts/createMock.mts",
+    "scripts/copyPrisma.mts"
   ],
   "exclude": ["node_modules"],
   "ts-node": {

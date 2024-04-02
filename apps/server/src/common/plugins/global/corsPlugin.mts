@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import cors from '@fastify/cors'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
-import { ENV } from '@env'
+import { ENV } from 'src/env.mjs'
 
 const corsPlugin: FastifyPluginAsync = async (fastify) => {
   const corsWhitelist: RegExp[] = [
