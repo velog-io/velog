@@ -26,7 +26,7 @@ const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
   : 'development'
 
 const envFile = envFiles[dockerEnv]
-const prefix = dockerEnv === 'development' ? './env' : '../env'
+const prefix = './env'
 
 function resolveDir(dir: string): string {
   const __filename = fileURLToPath(import.meta.url)
