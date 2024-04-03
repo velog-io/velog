@@ -17,6 +17,9 @@ importers:
       pnpm:
         specifier: ^8.15.5
         version: 8.15.5
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
 
   apps/book-server:
     dependencies:

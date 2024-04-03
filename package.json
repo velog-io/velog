@@ -7,8 +7,7 @@
     "format": "pnpm format --write .",
     "precommit": "lint-staged",
     "dev": "pnpm -r dev",
-    "build": "pnpm -r build",
-    "prisma:init": "pnpm -r prisma:copy && pnpm -r prisma:generate"
+    "build": "turbo build"
   },
   "engines": {
     "node": ">=18.16",
@@ -31,6 +30,7 @@
   "devDependencies": {
     "husky": "^8.0.0",
     "lint-staged": "^13.2.3",
-    "pnpm": "^8.15.5"
+    "pnpm": "^8.15.5",
+    "prettier": "^3.2.5"
   }
 }
