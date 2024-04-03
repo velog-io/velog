@@ -26,12 +26,13 @@ const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
   : 'development'
 
 const envFile = envFiles[dockerEnv]
-const prefix = './env'
+const prefix = dockerEnv === 'development' ? './env' : '../env'
 
 function resolveDir(dir: string): string {
   const __filename = fileURLToPath(import.meta.url)
   const splited = dirname(__filename).split('/src')
   const cwd = splited.slice(0, -1).join('/src')
+  console.log('cwd', cwd)
   return join(cwd, dir)
 }
 

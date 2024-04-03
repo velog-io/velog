@@ -39,10 +39,5 @@
     "scripts/**.mts",
     "scripts/**/*.mts"
   ],
-  "exclude": ["node_modules"],
-  "ts-node": {
-    "transpileOnly": true,
-    "esm": true,
-    "swc": true
-  }
+  "exclude": ["node_modules"]
 }

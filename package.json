@@ -4,7 +4,6 @@
   "description": "Velog is a blog platform for developers.",
   "private": true,
   "scripts": {
-    "prepare": "husky install",
     "format": "pnpm format --write .",
     "precommit": "lint-staged",
     "dev": "pnpm -r dev",

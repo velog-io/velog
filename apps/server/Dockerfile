@@ -1,11 +1,13 @@
 FROM node:20.12.0-alpine AS base
+RUN apk update
+RUN apk add --no-cache libc6-compat
 
 RUN corepack enable
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
-RUN pnpm add -g prisma turbo
+RUN pnpm add -g turbo prisma
 
 ARG DOCKER_ENV
 ENV DOCKER_ENV=${DOCKER_ENV}
@@ -19,30 +21,37 @@ ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 
 ENV APP_DIR="apps/server"
 
-WORKDIR /app/${APP_DIR}
+WORKDIR /app
 
-COPY ./package*.json /app
-COPY ./pnpm-*.yaml /app
-COPY ./turbo.json /app
-COPY ./${APP_DIR} /app/${APP_DIR}
-COPY ./packages /app/packages
-
-
-RUN turbo telemetry disable
-
+FROM base AS pruner
+COPY . .
 RUN turbo prune server --docker
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm -r prisma:generate
 
 FROM base As builder
-RUN pnpm ssm pull -e ${DOCKER_ENV}
-WORKDIR /app
-RUN turbo build
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY --from=pruner /app/out/json/ ./
+COPY --from=pruner /app/out/full/ .
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+RUN pnpm --filter @packages/database prisma:generate
+RUN pnpm --filter server ssm pull -e ${DOCKER_ENV}
+RUN turbo build:prod
 
 FROM base As runner
-COPY --from=builder /app/packages/database/dist /app/packages/database/dist
+COPY --from=builder /app/package*.json .
+COPY --from=builder /app/pnpm-*.yaml .
+COPY --from=builder /app/packages/ /app/packages
+
+WORKDIR /app/${APP_DIR}
+
 COPY --from=builder /app/${APP_DIR}/dist /app/${APP_DIR}/dist
+COPY --from=builder /app/${APP_DIR}/src/graphql /app/${APP_DIR}/src/graphql
+COPY --from=builder /app/${APP_DIR}/*.json .
 COPY --from=builder /app/${APP_DIR}/env /app/${APP_DIR}/env
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
 EXPOSE 5003
 
