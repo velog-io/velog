@@ -1,15 +1,14 @@
 version: '3.9'
 services:
-  server:
+  cron:
+    container_name: velog-cron
     build:
       context: ../../
-      dockerfile: ./packages/velog-cron/Dockerfile
+      dockerfile: ./apps/cron/Dockerfile
       args:
         DOCKER_ENV: 'stage'
         AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
         AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-    env_file:
-      - ../../.env
     tty: true
     stdin_open: true
     ports:

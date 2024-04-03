@@ -1,4 +1,4 @@
-import { ENV } from '@env'
+import { ENV } from 'src/env.mjs'
 import { isHttpError } from '@errors/HttpError.js'
 import { FastifyPluginCallback } from 'fastify'
 import fp from 'fastify-plugin'

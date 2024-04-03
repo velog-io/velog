@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -z "$AWS_PROFILE" ]; then
+  echo "AWS_PROFILE이 설정되어 있지 않습니다."
+  exit 1
+fi
+
 # AWS 프로필 설정 읽기
 export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile $AWS_PROFILE)
 export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile $AWS_PROFILE)

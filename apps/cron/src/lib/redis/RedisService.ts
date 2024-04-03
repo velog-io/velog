@@ -1,6 +1,6 @@
 import { injectable, singleton } from 'tsyringe'
 import Redis from 'ioredis'
-import { ENV } from '@env'
+import { ENV } from 'src/env.mjs'
 
 interface Service {
   get generateKey(): GenerateRedisKey

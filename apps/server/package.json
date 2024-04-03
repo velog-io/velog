@@ -16,8 +16,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --watch './**/*.mts' --exec 'node --import @swc-node/register/esm-register' ./src/main.mts | pino-pretty",
-    "start": "NODE_ENV=production DOCKER_ENV=stage node dist/src/main.mjs",
-    "build": "tsc --project tsconfig.json",
+    "start": "NODE_ENV=production node dist/src/main.mjs",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "build:prod": "tsc --project tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
     "codegen": "graphql-codegen --config codegen.ts",
     "test": "pnpm jest --detectOpenHandles",

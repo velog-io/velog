@@ -1,6 +1,6 @@
 import { injectable, singleton } from 'tsyringe'
 import { Client, GatewayIntentBits } from 'discord.js'
-import { ENV } from '@env'
+import { ENV } from 'src/env.mjs'
 
 @injectable()
 @singleton()
