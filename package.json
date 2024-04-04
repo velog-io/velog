@@ -7,7 +7,8 @@
     "format": "pnpm format --write .",
     "precommit": "lint-staged",
     "dev": "pnpm -r dev",
-    "build": "turbo build"
+    "build": "turbo build",
+    "lint": "turbo lint"
   },
   "engines": {
     "node": ">=18.16",
