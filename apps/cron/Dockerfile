@@ -19,13 +19,14 @@ ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
 ARG AWS_SECRET_ACCESS_KEY
 ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 
-ENV APP_DIR="apps/cron"
+ENV APP_NAME="cron"
+ENV APP_DIR="apps/${APP_NAME}"
 
 WORKDIR /app
 
 FROM base AS pruner
 COPY . .
-RUN turbo prune cron --docker
+RUN turbo prune ${APP_NAME} --docker
 
 FROM base As builder
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
@@ -36,7 +37,7 @@ COPY --from=pruner /app/out/full/ ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 RUN pnpm --filter @packages/database prisma:generate
-RUN pnpm --filter cron ssm pull -e ${DOCKER_ENV}
+RUN pnpm --filter ${APP_NAME} ssm pull -e ${DOCKER_ENV}
 RUN turbo build:prod
 
 FROM base As runner

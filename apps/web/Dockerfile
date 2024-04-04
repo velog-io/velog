@@ -28,14 +28,13 @@ RUN turbo prune web --docker
 FROM base As builder
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
-COPY --from=pruner /app/out/json/ ./
 COPY --from=pruner /app/out/full/ ./
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 RUN pnpm --filter web ssm pull -e ${DOCKER_ENV}
-RUN pnpm -r env:copy -e ${DOCKER_ENV}
-RUN turbo build:prod
+RUN pnpm --filter web env:copy -e ${DOCKER_ENV}
+RUN turbo build
 
 FROM base AS runner
 RUN addgroup --system --gid 1001 nodejs
