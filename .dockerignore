@@ -24,4 +24,5 @@ docker-compose.*
 /**/**/.vscode
 /**/**/.eslint.cjs
 /**/**/jest.*.*
+
 /packages/not-shared

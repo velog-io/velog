@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.431.0",
-    "@packages/common-scripts": "workspace:*",
+    "@packages/scripts": "workspace:*",
     "@sentry/browser": "^7.75.0",
     "@tanstack/react-query": "^5.18.0",
     "axios": "^1.4.0",

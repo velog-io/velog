@@ -1,4 +1,4 @@
-import { SSMScript } from '@packages/common-scripts'
+import { SSMScript } from '@packages/scripts'
 
-const parameterStoreService = new SSMScript({ packageName: 'scripts' })
-parameterStoreService.excute()
+const ssmScript = new SSMScript({ packageName: 'scripts' })
+ssmScript.excute()

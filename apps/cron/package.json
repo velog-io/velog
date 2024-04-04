@@ -28,7 +28,7 @@
     "@aws-sdk/client-ssm": "^3.379.1",
     "@fastify/autoload": "^5.8.0",
     "@fastify/cors": "^8.3.0",
-    "@packages/common-scripts": "workspace:*",
+    "@packages/scripts": "workspace:*",
     "@packages/database": "workspace:*",
     "@prisma/client": "^5.11.0",
     "date-fns": "^2.30.0",

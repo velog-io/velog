@@ -1,4 +1,1 @@
-import { CopyEnvScript } from '@packages/common-scripts'
-
-const envScript = new CopyEnvScript()
-envScript.excute()
+/Users/winverse/Desktop/workspace/velog/.prettierrc

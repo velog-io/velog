@@ -1,11 +1,11 @@
 {
-  "name": "@packages/common-scripts",
+  "name": "@packages/scripts",
   "version": "1.0.0",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "main": "index.mts",
+  "main": "./index.mts",
   "types": "./index.mts",
   "type": "module",
   "keywords": [],

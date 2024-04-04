@@ -21,6 +21,8 @@ ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 
 ENV APP_NAME="server"
 ENV APP_DIR="apps/${APP_NAME}"
+RUN echo "APP_DIR value is: ${APP_DIR}"
+
 
 WORKDIR /app
 
