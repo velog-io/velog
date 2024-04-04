@@ -17,7 +17,7 @@
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.09);
 
     @media screen and (max-width: 768px) {
-        width: calc(100% - 2rem);
+      width: calc(100% - 2rem);
     }
   }
 }

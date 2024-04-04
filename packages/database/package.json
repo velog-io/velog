@@ -19,8 +19,8 @@
       "default": "./dist/velog-book-mongo/index.mjs",
       "types": "./dist/velog-book-mongo/index.d.ts"
     },
-    "./velog-redis":{
-      "default":  "./dist/velog-redis/index.mjs",
+    "./velog-redis": {
+      "default": "./dist/velog-redis/index.mjs",
       "types": "./dist/velog-redis/index.mjs"
     }
   },
@@ -35,9 +35,10 @@
     "prisma-deploy:rds": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/rdsDeploy.mts",
     "prisma-deploy:mongo": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/mongoDeploy.mts",
     "prisma:generate": "tsx ./scripts/generatePrisma.mts",
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "prettier -w .",
     "env:copy": "tsx ./scripts/copyEnv.mts",
-    "ssm": "tsx ./scripts/ssm.mts",
-    "build": "tsc -p tsconfig.build.json"
+    "ssm": "tsx ./scripts/ssm.mts"
   },
   "dependencies": {
     "@packages/scripts": "workspace:*",

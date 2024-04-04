@@ -13,6 +13,7 @@
     "env:copy": "tsx ./scripts/copyEnv.mts",
     "prisma:copy": "tsx ./scripts/copyPrisma.mts",
     "prisma:generate": "prisma generate --schema='./prisma/velog-rds/schema.prisma'",
+    "lint": "prettier -w .",
     "ssm": "tsx ./scripts/ssm.mts"
   },
   "engines": {
