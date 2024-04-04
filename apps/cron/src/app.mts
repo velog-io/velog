@@ -15,7 +15,7 @@ app.register(fastifyCron.default)
 
 const utils = container.resolve(UtilsService)
 app.register(autoload, {
-  dir: utils.resolveDir('./src/common/plugins/globals'),
+  dir: utils.resolveDir('./src/common/plugins/global'),
   encapsulate: true,
   forceESM: true,
 })

@@ -17,7 +17,7 @@
   "main": "/src/main.ts",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-paths-esm-loader' src/main.ts | pino-pretty",
+    "dev": "nodemon --watch './**/*.mts' --exec 'node --import @swc-node/register/esm-register' ./src/main.mts | pino-pretty",
     "start": "NODE_ENV=production node dist/src/main.mjs",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "build:prod": "tsc --project tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
@@ -25,11 +25,11 @@
     "ssm": "tsx ./scripts/ssm.mts"
   },
   "dependencies": {
-    "@packages/database": "workspace:*",
-    "@packages/common-scripts": "workspace:*",
     "@aws-sdk/client-ssm": "^3.379.1",
     "@fastify/autoload": "^5.8.0",
     "@fastify/cors": "^8.3.0",
+    "@packages/common-scripts": "workspace:*",
+    "@packages/database": "workspace:*",
     "@prisma/client": "^5.11.0",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
@@ -51,6 +51,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@swc-node/register": "^1.9.0",
     "@types/geoip-country": "^4.0.2",
     "@types/inquirer": "^9.0.3",
     "@types/jest": "^29.5.2",

@@ -223,6 +223,9 @@ importers:
         specifier: ^3.21.4
         version: 3.22.4
     devDependencies:
+      '@swc-node/register':
+        specifier: ^1.9.0
+        version: 1.9.0(@swc/core@1.4.11)(@swc/types@0.1.6)(typescript@5.3.3)
       '@types/geoip-country':
         specifier: ^4.0.2
         version: 4.0.2
@@ -313,9 +316,6 @@ importers:
       '@prisma/client':
         specifier: ^5.11.0
         version: 5.11.0(prisma@5.11.0)
-      '@swc-node/register':
-        specifier: ^1.9.0
-        version: 1.9.0(@swc/core@1.4.11)(@swc/types@0.1.6)(typescript@5.3.3)
       ajv:
         specifier: ^8.12.0
         version: 8.12.0
@@ -452,6 +452,9 @@ importers:
       '@graphql-codegen/typescript-resolvers':
         specifier: ^4.0.0
         version: 4.0.0(graphql@16.7.1)
+      '@swc-node/register':
+        specifier: ^1.9.0
+        version: 1.9.0(@swc/core@1.4.11)(@swc/types@0.1.6)(typescript@5.3.3)
       '@types/backblaze-b2':
         specifier: ^1.5.2
         version: 1.5.2
@@ -8745,6 +8748,7 @@ packages:
     dependencies:
       '@swc/core': 1.4.11
       '@swc/types': 0.1.6
+    dev: true
 
   /@swc-node/register@1.9.0(@swc/core@1.4.11)(@swc/types@0.1.6)(typescript@5.3.3):
     resolution: {integrity: sha512-i0iYInD4q5v3xQC6bKvs0QtfUxu197CU5qKALmpxEqTYs7sIhQ7KFLe3kP+eAR4gRkJTvAgjQgrokXLN2jZrOw==}
@@ -8763,12 +8767,14 @@ packages:
     transitivePeerDependencies:
       - '@swc/types'
       - supports-color
+    dev: true
 
   /@swc-node/sourcemap-support@0.5.0:
     resolution: {integrity: sha512-fbhjL5G0YvFoWwNhWleuBUfotiX+USiA9oJqu9STFw+Hb0Cgnddn+HVS/K5fI45mn92e8V+cHD2jgFjk4w2T9Q==}
     dependencies:
       source-map-support: 0.5.21
       tslib: 2.6.2
+    dev: true
 
   /@swc/cli@0.3.10(@swc/core@1.4.11)(chokidar@3.6.0):
     resolution: {integrity: sha512-YWfYo9kXdbmIuGwIPth9geKgb0KssCMTdZa44zAN5KoqcuCP2rTW9s60heQDSRNpbtCmUr7BKF1VivsoHXrvrQ==}
@@ -8800,6 +8806,7 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@swc/core-darwin-x64@1.4.11:
@@ -8808,6 +8815,7 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@swc/core-linux-arm-gnueabihf@1.4.11:
@@ -8816,6 +8824,7 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@swc/core-linux-arm64-gnu@1.4.11:
@@ -8824,6 +8833,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@swc/core-linux-arm64-musl@1.4.11:
@@ -8832,6 +8842,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@swc/core-linux-x64-gnu@1.4.11:
@@ -8840,6 +8851,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@swc/core-linux-x64-musl@1.4.11:
@@ -8848,6 +8860,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@swc/core-win32-arm64-msvc@1.4.11:
@@ -8856,6 +8869,7 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@swc/core-win32-ia32-msvc@1.4.11:
@@ -8864,6 +8878,7 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@swc/core-win32-x64-msvc@1.4.11:
@@ -8872,6 +8887,7 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@swc/core@1.4.11:
@@ -8897,9 +8913,11 @@ packages:
       '@swc/core-win32-arm64-msvc': 1.4.11
       '@swc/core-win32-ia32-msvc': 1.4.11
       '@swc/core-win32-x64-msvc': 1.4.11
+    dev: true
 
   /@swc/counter@0.1.3:
     resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
+    dev: true
 
   /@swc/helpers@0.5.2:
     resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
@@ -8911,6 +8929,7 @@ packages:
     resolution: {integrity: sha512-/JLo/l2JsT/LRd80C3HfbmVpxOAJ11FO2RCEslFrgzLltoP9j8XIbsyDcfCt2WWyX+CM96rBoNM+IToAkFOugg==}
     dependencies:
       '@swc/counter': 0.1.3
+    dev: true
 
   /@szmarczak/http-timer@4.0.6:
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
@@ -16319,6 +16338,7 @@ packages:
   /pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
     engines: {node: '>= 6'}
+    dev: true
 
   /piscina@4.4.0:
     resolution: {integrity: sha512-+AQduEJefrOApE4bV7KRmp3N2JnnyErlVqq4P/jmko4FPz9Z877BCccl/iB3FdrWSUkvbGV9Kan/KllJgat3Vg==}
