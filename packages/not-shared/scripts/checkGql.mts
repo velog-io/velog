@@ -58,7 +58,9 @@ class Runner {
     fs.readdirSync(dirpath)
       .filter((file) => path.extname(file) === '.ts')
       .forEach((file) => {
-        const text = fs.readFileSync(`${dirpath}/${file}`, { encoding: 'utf-8' })
+        const text = fs.readFileSync(`${dirpath}/${file}`, {
+          encoding: 'utf-8',
+        })
         // gql 태그로 정의된 쿼리들만 추출
         const gqlQueries = text.match(/gql`([\s\S]*?)`/gm)
 
@@ -88,7 +90,9 @@ class Runner {
     fs.readdirSync(dirpath)
       .filter((file) => path.extname(file) === '.gql')
       .forEach((file) => {
-        const query = fs.readFileSync(`${dirpath}/${file}`, { encoding: 'utf-8' })
+        const query = fs.readFileSync(`${dirpath}/${file}`, {
+          encoding: 'utf-8',
+        })
         const blocks = query.match(/{[^{}]+}/g)
         if (blocks) {
           blocks.forEach((block) => {
@@ -172,7 +176,9 @@ class Runner {
     fs.readdirSync(dirpath)
       .filter((file) => path.extname(file) === '.gql')
       .forEach((file) => {
-        const query = fs.readFileSync(`${dirpath}/${file}`, { encoding: 'utf-8' })
+        const query = fs.readFileSync(`${dirpath}/${file}`, {
+          encoding: 'utf-8',
+        })
         // 모든 type 정의 추출 (type Query와 type Mutation 제외)
         const typeDefs = query.match(/type\s+(?!Query|Mutation)(\w+)\s*{[^}]*}/g)
         if (typeDefs) {
@@ -202,7 +208,9 @@ class Runner {
     fs.readdirSync(dirpath)
       .filter((file) => path.extname(file) === '.ts')
       .forEach((file) => {
-        const query = fs.readFileSync(`${dirpath}/${file}`, { encoding: 'utf-8' })
+        const query = fs.readFileSync(`${dirpath}/${file}`, {
+          encoding: 'utf-8',
+        })
         const typeDefs = query.match(/type\s+(?!Query|Mutation)(\w+)\s*{[^}]*}/g)
 
         if (typeDefs) {

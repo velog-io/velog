@@ -40,7 +40,10 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         code,
         statusCode,
         stack,
-        errors: errors?.map((error) => ({ name: error.name, message: error.message })),
+        errors: errors?.map((error) => ({
+          name: error.name,
+          message: error.message,
+        })),
       }
       if (env.get('appEnv') === 'development') {
         console.log('errorHandler')

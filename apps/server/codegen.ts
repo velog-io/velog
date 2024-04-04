@@ -5,7 +5,7 @@ const config: CodegenConfig = {
   schema: 'src/graphql/**/*.gql',
   documents: undefined,
   hooks: {
-    afterOneFileWrite: ['prettier --write'],
+    afterOneFileWrite: ['pnpm lint'],
   },
   generates: {
     'src/graphql/helpers/generated.ts': {
@@ -21,15 +21,15 @@ const config: CodegenConfig = {
       ],
       config: {
         skipTypename: true,
-        contextType: './../../common/interfaces/graphql#GraphQLContext',
+        contextType: './../../common/interfaces/graphql.js#GraphQLContext',
         enumValues: {
-          NotificationType: './enums#NotificationType',
+          NotificationType: './enums.js#NotificationType',
         },
         mappers: {
-          User: '@packages/database/src/velog-rds.mjs#User as UserModel',
-          UserProfile: '@packages/database/src/velog-rds.mjs#UserProfile as UserProfileModel',
-          Post: '@packages/database/src/velog-rds.mjs#Post as PostModel',
-          Comment: '@packages/database/src/velog-rds.mjs#Comment as CommentModel',
+          User: '@packages/database/velog-rds#User as UserModel',
+          UserProfile: '@packages/database/velog-rds#UserProfile as UserProfileModel',
+          Post: '@packages/database/velog-rds#Post as PostModel',
+          Comment: '@packages/database/velog-rds#Comment as CommentModel',
         },
         inputMaybeValue: 'T | undefined',
         maybeValue: 'T | null | undefined',

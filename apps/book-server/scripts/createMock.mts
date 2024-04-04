@@ -23,7 +23,10 @@ class Seeder {
   }
 
   async createBook(writer: Writer) {
-    const mockPages = getMockPages(100).map((page) => ({ writer_id: writer.id, ...page }))
+    const mockPages = getMockPages(100).map((page) => ({
+      writer_id: writer.id,
+      ...page,
+    }))
     const book = await this.mongo.book.create({
       data: {
         writer_id: writer.id,

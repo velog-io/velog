@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { NotificationType } from './enums.js'
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import {
   User as UserModel,
@@ -7,8 +8,7 @@ import {
   Post as PostModel,
   Comment as CommentModel,
 } from '@packages/database/velog-rds'
-import { NotificationType } from './enums.js'
-import { GraphQLContext } from '@interfaces/graphql.js'
+import { GraphQLContext } from './../../common/interfaces/graphql.js'
 export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
