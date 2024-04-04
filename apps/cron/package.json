@@ -27,10 +27,9 @@
   },
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.379.1",
-    "@fastify/autoload": "^5.8.0",
     "@fastify/cors": "^8.3.0",
-    "@packages/scripts": "workspace:*",
     "@packages/database": "workspace:*",
+    "@packages/scripts": "workspace:*",
     "@prisma/client": "^5.11.0",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",

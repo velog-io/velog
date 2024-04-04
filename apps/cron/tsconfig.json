@@ -13,7 +13,6 @@
       "@jobs/*": ["src/jobs/*"],
       "@routes/*": ["src/routes/*"],
       "@services/*": ["src/services/*"],
-      "@src": ["src/*"],
       "@errors/*": ["src/common/errors/*"],
       "@plugins/*": ["src/common/plugins/*"],
       "@constants/*": ["src/common/constants/*"]

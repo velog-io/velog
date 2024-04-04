@@ -27,7 +27,6 @@
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.525.0",
-    "@fastify/autoload": "^5.8.0",
     "@fastify/cors": "^8.3.0",
     "@fastify/mongodb": "^8.0.0",
     "@graphql-tools/graphql-file-loader": "^8.0.0",
@@ -49,14 +48,14 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@packages/database": "workspace:*",
-    "@packages/scripts": "workspace:*",
     "@faker-js/faker": "^8.3.1",
     "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-operations": "^4.2.0",
     "@graphql-codegen/typescript-resolvers": "^4.0.0",
+    "@packages/database": "workspace:*",
+    "@packages/scripts": "workspace:*",
     "@swc-node/register": "^1.9.0",
     "@swc/cli": "^0.3.10",
     "@swc/core": "^1.4.2",
