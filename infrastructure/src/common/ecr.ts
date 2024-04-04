@@ -119,19 +119,19 @@ const options = {
   web: {
     ecrRepoName: ENV.ecrWebRepositoryName,
     imageName: 'web-image',
-    dockerfile: '../packages/velog-web',
+    dockerfile: '../apps/web',
     context: '../',
   },
   server: {
     ecrRepoName: ENV.ecrServerRepositoryName,
     imageName: 'server-image',
-    dockerfile: '../packages/velog-server',
+    dockerfile: '../apps/server',
     context: '../',
   },
   cron: {
     ecrRepoName: ENV.ecrCronRepositoryName,
     imageName: 'cron-image',
-    dockerfile: '../packages/velog-cron',
+    dockerfile: '../apps/cron',
     context: '../',
   },
 }

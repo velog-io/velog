@@ -8,12 +8,8 @@ import * as pulumi from '@pulumi/pulumi'
 import { createVPC } from './common/vpc'
 import { getCertificate } from './common/certificate'
 import { createCronInfra } from './packages/cron'
-import { execCommand } from './lib/execCommand'
 import { createECRImage, createECRRepository, getECRImage, getECRRepository } from './common/ecr'
 import { getCluster } from './common/ecs'
-
-execCommand('pnpm -F velog-server prisma:copy')
-execCommand('pnpm -F velog-cron prisma:copy')
 
 const config = new pulumi.Config()
 const target = config.get('target')
