@@ -92,6 +92,8 @@
     "encoding": "^0.1.13",
     "eslint": "8.43.0",
     "eslint-config-next": "^13.4.19",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "husky": "^8.0.0",
     "husky-init": "^8.0.0",
     "prettier": "^2.8.8",

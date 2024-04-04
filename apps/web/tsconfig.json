@@ -33,7 +33,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "public/*",
-    "src/assets/**/svg"
+    "src/assets/**/svg",
+    "scripts/*"
   ],
   "exclude": ["node_modules"]
 }
