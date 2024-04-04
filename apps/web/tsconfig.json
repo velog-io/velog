@@ -34,7 +34,8 @@
     ".next/types/**/*.ts",
     "public/*",
     "src/assets/**/svg",
-    "scripts/*"
+    "scripts/*",
+    ".eslintrc.cjs"
   ],
   "exclude": ["node_modules"]
 }
