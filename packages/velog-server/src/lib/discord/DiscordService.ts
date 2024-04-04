@@ -9,7 +9,6 @@ import { Time } from '@constants/TimeConstants.js'
 export class DiscordService {
   private client!: Client
   public isSending: boolean = false
-  construct() {}
   public connection(): Promise<Client> {
     return new Promise((resolve) => {
       this.client = new Client({
@@ -27,7 +26,7 @@ export class DiscordService {
   public async sendMessage(type: MessageType, payload: MessagePayload | string) {
     this.isSending = true
 
-    let message = ''
+    let message: string = ''
     if (typeof payload === 'string') {
       message = payload
     } else {
@@ -57,7 +56,7 @@ export class DiscordService {
       return
     }
 
-    if (typeof payload === 'object' && payload.body?.include('WritePost') && payload?.user?.id) {
+    if (typeof payload === 'object' && message.includes('WritePost') && payload?.user?.id) {
       const redisService = container.resolve(RedisService)
       const key = redisService.generateKey.errorMessageCache(payload.type, payload?.user?.id)
       const exists = await redisService.exists(key)
