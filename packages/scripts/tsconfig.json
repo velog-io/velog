@@ -7,6 +7,7 @@
     "emitDecoratorMetadata": true,
     "moduleResolution": "NodeNext",
     "baseUrl": "./",
+    "rootDir": "./",
     "typeRoots": ["./node_modules/@types"],
     "outDir": "./dist",
     "esModuleInterop": true,
@@ -14,6 +15,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["/lib", "index.mts"],
+  "include": ["/lib", "index.mts", "./.eslintrc.cjs"],
   "exclude": ["node_modules"]
 }

@@ -24,7 +24,7 @@ const config: CodegenConfig = {
         skipTypename: true,
         contextType: '../../common/interfaces/graphql.mjs#GraphQLContext',
         mappers: {
-          Book: '@prisma/velog-book-mongo/client#Book as BookModel',
+          Book: '@packages/database/velog-book-mongo#Book as BookModel',
         },
         inputMaybeValue: 'T | undefined',
         maybeValue: 'T | null | undefined',

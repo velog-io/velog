@@ -3,14 +3,25 @@ import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { injectable, singleton } from 'tsyringe'
 import { BadRequestError } from '@errors/BadRequestErrors.mjs'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
+import { Book } from '@packages/database/velog-book-mongo'
 
-interface Service {}
+interface Service {
+  findById(bookId: string): Promise<Book | null>
+  getBook(bookId: string, signedUserId?: string): Promise<Book>
+}
 
 @injectable()
 @singleton()
 export class BookService implements Service {
   constructor(private readonly mongo: MongoService) {}
-  public async getBook(bookId: string, signedUserId?: string) {
+  public async findById(bookId: string): Promise<Book | null> {
+    return await this.mongo.book.findUnique({
+      where: {
+        id: bookId,
+      },
+    })
+  }
+  public async getBook(bookId: string, signedUserId?: string): Promise<Book> {
     if (!bookId) {
       throw new BadRequestError('Not found book')
     }

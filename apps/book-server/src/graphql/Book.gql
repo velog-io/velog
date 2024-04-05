@@ -10,6 +10,14 @@ type Query {
   book(input: BookInput!): Book
 }
 
+type Mutation {
+  deploy(input: DeployInput!): Void
+}
+
 input BookInput {
+  book_id: ID!
+}
+
+input DeployInput {
   book_id: ID!
 }

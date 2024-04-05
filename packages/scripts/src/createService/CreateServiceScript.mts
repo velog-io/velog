@@ -21,7 +21,10 @@ export class CreateServiceScript {
       },
     ])
 
-    const templateDir = path.resolve(this.__dirname, `./templates/${type}`)
+    const __filename = fileURLToPath(import.meta.url)
+    const __dirname = dirname(__filename)
+
+    const templateDir = path.resolve(__dirname, `./templates/${type}`)
     const files = fs.readdirSync(templateDir)
 
     files.forEach((file) => {

@@ -22,7 +22,14 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["./src", ".eslintrc.cjs", "./scripts", "codegen.mts", "test/**/*.mts"],
+  "include": [
+    "./src",
+    ".eslintrc.cjs",
+    "./scripts",
+    "./scripts/**/*.mts",
+    "codegen.mts",
+    "test/**/*.mts"
+  ],
   "exclude": ["node_modules"],
   "ts-node": {
     "transpileOnly": true,

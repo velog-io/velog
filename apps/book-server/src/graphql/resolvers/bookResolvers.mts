@@ -1,4 +1,5 @@
 import { Resolvers } from '@graphql/helpers/generated.js'
+import { BookDeployService } from 'src/services/BookDeployService/index.mjs'
 import { BookService } from 'src/services/BookService/index.mjs'
 import { PageService } from 'src/services/PageService/index.mjs'
 import { container } from 'tsyringe'
@@ -14,7 +15,13 @@ const bookResolvers: Resolvers = {
   Query: {
     book: async (_, { input }) => {
       const bookService = container.resolve(BookService)
-      return await bookService.getBook(input.bookId)
+      return await bookService.getBook(input.book_id)
+    },
+  },
+  Mutation: {
+    deploy: async (_, { input }) => {
+      const bookDeployService = container.resolve(BookDeployService)
+      return await bookDeployService.deploy(input.book_id)
     },
   },
 }

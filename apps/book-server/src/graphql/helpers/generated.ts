@@ -1,30 +1,20 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
-import { GraphQLContext } from '../../common/interfaces/graphql.mjs'
 import { Book as BookModel } from '@packages/database/velog-book-mongo'
+import { GraphQLContext } from '../../common/interfaces/graphql.mjs'
 export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K]
-}
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>
-}
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>
-}
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
   [_ in K]?: never
 }
 export type Incremental<T> =
   | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never
-    }
-export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
-  [P in K]-?: NonNullable<T[P]>
-}
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never }
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string }
@@ -47,7 +37,19 @@ export type Book = {
 }
 
 export type BookInput = {
-  bookId: Scalars['ID']['input']
+  book_id: Scalars['ID']['input']
+}
+
+export type DeployInput = {
+  book_id: Scalars['ID']['input']
+}
+
+export type Mutation = {
+  deploy?: Maybe<Scalars['Void']['output']>
+}
+
+export type MutationDeployArgs = {
+  input: DeployInput
 }
 
 export type Page = {
@@ -162,8 +164,10 @@ export type ResolversTypes = {
   BookInput: BookInput
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
+  DeployInput: DeployInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
+  Mutation: ResolverTypeWrapper<{}>
   Page: ResolverTypeWrapper<Page>
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Query: ResolverTypeWrapper<{}>
@@ -174,12 +178,14 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Book: Book
+  Book: BookModel
   BookInput: BookInput
   Boolean: Scalars['Boolean']['output']
   Date: Scalars['Date']['output']
+  DeployInput: DeployInput
   ID: Scalars['ID']['output']
   JSON: Scalars['JSON']['output']
+  Mutation: {}
   Page: Page
   PositiveInt: Scalars['PositiveInt']['output']
   Query: {}
@@ -206,6 +212,18 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 
 export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON'
+}
+
+export type MutationResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
+> = {
+  deploy?: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationDeployArgs, 'input'>
+  >
 }
 
 export type PageResolvers<
@@ -257,6 +275,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Book?: BookResolvers<ContextType>
   Date?: GraphQLScalarType
   JSON?: GraphQLScalarType
+  Mutation?: MutationResolvers<ContextType>
   Page?: PageResolvers<ContextType>
   PositiveInt?: GraphQLScalarType
   Query?: QueryResolvers<ContextType>

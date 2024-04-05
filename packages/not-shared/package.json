@@ -23,7 +23,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@aws-sdk/client-ssm": "^3.484.0",
     "@packages/database": "workspace:*",
     "@packages/scripts": "workspace:*",
     "@prisma/client": "^5.11.0",
@@ -44,8 +43,13 @@
     "@swc/core": "^1.4.4",
     "@types/inquirer": "^9.0.7",
     "@types/node": "^20.10.6",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^7.5.0",
     "chokidar": "^3.6.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
