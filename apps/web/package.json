@@ -18,7 +18,6 @@
     "dev": "pnpm env:copy -e development && next dev -p 3001 --turbo",
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p 3001",
-    "lint": "prettier -w .",
     "env:copy": "tsx ./scripts/copyEnv.ts",
     "create-component": "tsx ./scripts/createComponent.ts",
     "create-svg-component": "tsx ./scripts/createSvgComponent.ts",
