@@ -23,9 +23,9 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-ssm": "^3.484.0",
     "@packages/database": "workspace:*",
     "@packages/scripts": "workspace:*",
-    "@aws-sdk/client-ssm": "^3.484.0",
     "@prisma/client": "^5.11.0",
     "date-fns": "^2.30.0",
     "discord.js": "^14.14.1",
@@ -45,6 +45,7 @@
     "@types/inquirer": "^9.0.7",
     "@types/node": "^20.10.6",
     "chokidar": "^3.6.0",
+    "eslint-config-prettier": "^9.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }

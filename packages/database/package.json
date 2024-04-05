@@ -41,8 +41,8 @@
     "ssm": "tsx ./scripts/ssm.mts"
   },
   "dependencies": {
-    "@packages/scripts": "workspace:*",
     "@aws-sdk/client-ssm": "^3.391.0",
+    "@packages/scripts": "workspace:*",
     "@prisma/client": "^5.11.0",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.2.1",
@@ -61,7 +61,6 @@
     "@typescript-eslint/parser": "^6.4.1",
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.2",
     "typescript": "^5.3.3"
   }

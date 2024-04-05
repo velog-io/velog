@@ -56,7 +56,9 @@ function FlatPostCard({ post, hideUser }: Props) {
         {post.short_description?.length === 150 && '...'}
       </p>
       <div className={cx('tagsWrapper')}>
-        {post.tags?.map((tag) => <TagItem key={tag} name={tag} link={true} />)}
+        {post.tags?.map((tag) => (
+          <TagItem key={tag} name={tag} link={true} />
+        ))}
       </div>
       <div className={cx('subInfo')}>
         <span>{releasedAt}</span>
