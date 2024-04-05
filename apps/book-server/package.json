@@ -16,8 +16,6 @@
     "codegen": "graphql-codegen-esm --config codegen.mts",
     "create-mock": "NODE_ENV=development dotenv -e ./env/.env.development -- tsx ./scripts/createMock.mts",
     "create-service": "tsx ./scripts/createService.mts",
-    "prisma:copy": "tsx ./scripts/copyPrisma.mts",
-    "prisma:generate": "prisma generate --schema='./prisma/velog-book-mongo/schema.prisma'",
     "ssm": "tsx ./scripts/ssm.mts"
   },
   "keywords": [
