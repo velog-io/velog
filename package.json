@@ -8,7 +8,8 @@
     "precommit": "lint-staged",
     "dev": "pnpm -r dev",
     "build": "turbo build",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "clean": "find . -name \"node_modules\" -type d -prune -exec rm -rf '{}' +"
   },
   "engines": {
     "node": ">=18.16",

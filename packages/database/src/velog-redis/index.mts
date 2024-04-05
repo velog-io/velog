@@ -12,7 +12,7 @@ type RedisOptions = {
   host: string
 }
 
-export class RedisService extends Redis implements Service {
+export class RedisService extends Redis.default implements Service {
   host: string
   constructor({ port, host }: RedisOptions) {
     super({ port: port, host })
