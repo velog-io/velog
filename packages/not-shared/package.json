@@ -15,7 +15,7 @@
     "ssm": "tsx ./scripts/ssm.mts"
   },
   "engines": {
-    "node": ">=18.16"
+    "node": ">=20.11.1"
   },
   "keywords": [
     "velog",

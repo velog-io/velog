@@ -10,7 +10,7 @@
     "velog"
   ],
   "engines": {
-    "node": ">=18.16"
+    "node": ">=20.11.1"
   },
   "main": "/src/main.mts",
   "type": "module",

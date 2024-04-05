@@ -7,6 +7,7 @@
     "emitDecoratorMetadata": true,
     "moduleResolution": "NodeNext",
     "baseUrl": "./",
+    "rootDir": "./",
     "paths": {
       "@plugins/*": ["src/common/plugins/*"],
       "@constants/*": ["src/common/constants/*"],
@@ -34,7 +35,6 @@
     "jest.*",
     "codegen.ts",
     "scripts/*.ts",
-    "../velog-prisma/scripts/createMock.ts",
     "./test/**/*.ts",
     "scripts/**.mts",
     "scripts/**/*.mts"

@@ -1,0 +1,25 @@
+{
+  "name": "@packages/libs",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "author": {
+    "name": "velopert",
+    "email": "public.velopert@gmail.com"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11.1"
+  },
+  "keywords": [],
+  "scripts": {
+    "create-service": "tsx ./scripts/create-service.mts"
+  },
+  "dependencies": {
+    "@packages/scripts": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.2"
+  }
+}

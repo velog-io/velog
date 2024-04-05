@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.18.2]
+        node-version: [20.11.1]
     defaults:
       run:
         working-directory: './packages/velog-cron'
