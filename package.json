@@ -10,7 +10,7 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "clean": "find . -name \"node_modules\" -type d -prune -exec rm -rf '{}' +",
-    "prisma:init": "pnpm -r prisma:generate && pnpm i"
+    "prisma:init": "pnpm -r prisma:generate"
   },
   "engines": {
     "node": ">=18.16",
