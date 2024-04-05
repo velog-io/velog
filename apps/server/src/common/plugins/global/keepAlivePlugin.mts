@@ -5,6 +5,7 @@ export const startClosing = () => {
   isClosing = true
 }
 
+// TODO: apply fastify-plugin
 const keepAlivePlugin: FastifyPluginAsync = async (fastify) => {
   fastify.addHook('onRequest', (_, reply, done) => {
     if (isClosing) {
