@@ -13,7 +13,7 @@ const ENV = {
 }
 
 if (!ENV.discordPrivatePostsChannelId) {
-  throw new Error('')
+  throw new Error('Missing Discord private posts channel ID.') // Provide an error message
 }
 
 interface IRunner {}
