@@ -5,3 +5,4 @@ node_moudles
 
 # confilc files
 /src/**/**/katexWhiteList.ts
+/src/**/**/FlatPostCard.tsx
