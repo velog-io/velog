@@ -9,3 +9,7 @@ pnpm-lock.yaml
 
 # Server
 **/dist
+
+# confilc files
+**/src/**/**/katexWhiteList.ts
+**/src/**/**/FlatPostCard.tsx
