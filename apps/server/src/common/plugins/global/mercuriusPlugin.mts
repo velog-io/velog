@@ -7,6 +7,7 @@ import { isHttpError } from '@errors/HttpError.js'
 import { container } from 'tsyringe'
 import { DiscordService } from '@lib/discord/DiscordService.js'
 
+// TODO: apply fastify-plugin'
 const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.register(mercurius, {
     logLevel: 'error',

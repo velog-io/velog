@@ -3,6 +3,7 @@ import cors from '@fastify/cors'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
 import { ENV } from 'src/env.mjs'
 
+// TODO: apply fastify-plugin
 const corsPlugin: FastifyPluginAsync = async (fastify) => {
   const corsWhitelist: RegExp[] = [
     /^https:\/\/velog.io$/,

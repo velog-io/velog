@@ -1,5 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify'
 
+// TODO: apply fastify-plugin
 const ipaddrPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('ipaddr', null)
   fastify.addHook('preHandler', (request, reply, done) => {

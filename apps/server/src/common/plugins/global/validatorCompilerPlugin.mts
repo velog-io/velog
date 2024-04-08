@@ -25,6 +25,7 @@ const schemaCompilers = {
   }),
 }
 
+// TODO: apply fastify-plugin
 const validatorCompiler: FastifyPluginAsync = async (fastify) => {
   fastify.setValidatorCompiler((request) => {
     if (!request.httpPart) {

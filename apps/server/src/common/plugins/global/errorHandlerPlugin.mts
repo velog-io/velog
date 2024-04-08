@@ -4,6 +4,7 @@ import { DiscordService } from '@lib/discord/DiscordService.js'
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 
+// TODO: apply fastify-plugin
 const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
   fastify.addHook('preHandler', function (request, reply, done) {
     if (request.body) {
