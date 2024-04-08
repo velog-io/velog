@@ -19,9 +19,16 @@ const bookResolvers: Resolvers = {
     },
   },
   Mutation: {
-    deploy: async (_, { input }) => {
+    deploy: async (_, { input }, { pubsub }) => {
       const bookDeployService = container.resolve(BookDeployService)
       return await bookDeployService.deploy(input.book_id)
+    },
+  },
+  Subscription: {
+    bookDeploy: {
+      subscribe: async (parent, { input }, { pubsub }) => {
+        return await pubsub.subscribe('hello')
+      },
     },
   },
 }

@@ -69,6 +69,14 @@ export type QueryBookArgs = {
   input: BookInput
 }
 
+export type Subscription = {
+  bookDeploy?: Maybe<Scalars['Void']['output']>
+}
+
+export type SubscriptionBookDeployArgs = {
+  input: DeployInput
+}
+
 export type Writer = {
   email: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
@@ -172,6 +180,7 @@ export type ResolversTypes = {
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Query: ResolverTypeWrapper<{}>
   String: ResolverTypeWrapper<Scalars['String']['output']>
+  Subscription: ResolverTypeWrapper<{}>
   Void: ResolverTypeWrapper<Scalars['Void']['output']>
   Writer: ResolverTypeWrapper<Writer>
 }
@@ -190,6 +199,7 @@ export type ResolversParentTypes = {
   PositiveInt: Scalars['PositiveInt']['output']
   Query: {}
   String: Scalars['String']['output']
+  Subscription: {}
   Void: Scalars['Void']['output']
   Writer: Writer
 }
@@ -256,6 +266,19 @@ export type QueryResolvers<
   >
 }
 
+export type SubscriptionResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription'],
+> = {
+  bookDeploy?: SubscriptionResolver<
+    Maybe<ResolversTypes['Void']>,
+    'bookDeploy',
+    ParentType,
+    ContextType,
+    RequireFields<SubscriptionBookDeployArgs, 'input'>
+  >
+}
+
 export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Void'], any> {
   name: 'Void'
 }
@@ -279,6 +302,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Page?: PageResolvers<ContextType>
   PositiveInt?: GraphQLScalarType
   Query?: QueryResolvers<ContextType>
+  Subscription?: SubscriptionResolvers<ContextType>
   Void?: GraphQLScalarType
   Writer?: WriterResolvers<ContextType>
 }

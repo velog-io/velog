@@ -19,6 +19,7 @@
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p 3001",
     "env:copy": "tsx ./scripts/copyEnv.ts",
+    "lint": "prettier -w . ",
     "create-component": "tsx ./scripts/createComponent.ts",
     "create-svg-component": "tsx ./scripts/createSvgComponent.ts",
     "codegen": "pnpm env:copy -e development && graphql-codegen --config codegen.ts -r dotenv/config",

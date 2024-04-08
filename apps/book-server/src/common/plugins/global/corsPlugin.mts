@@ -1,3 +1,4 @@
+import fp from 'fastify-plugin'
 import { container } from 'tsyringe'
 import { FastifyPluginAsync } from 'fastify'
 import cors from '@fastify/cors'
@@ -18,7 +19,7 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
     corsWhitelist.push(/^http:\/\/localhost/)
   }
 
-  fastify.register(cors, {
+  await fastify.register(cors, {
     credentials: true,
     origin: (origin, callback) => {
       if (!origin || corsWhitelist.some((re) => re.test(origin))) {
@@ -30,4 +31,4 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
   })
 }
 
-export default corsPlugin
+export default fp(corsPlugin)

@@ -3,13 +3,13 @@ import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: `${ENV.graphqlHost}/graphql`,
   documents: 'src/graphql/*.gql',
   hooks: {
     afterOneFileWrite: ['pnpm lint'],
   },
   generates: {
     'src/graphql/helpers/generated.ts': {
+      schema: `${ENV.graphqlHost}/graphql`,
       documents: 'string',
       config: {
         reactQueryVersion: 5,
