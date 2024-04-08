@@ -17,9 +17,5 @@
     "declaration": true
   },
   "include": [".eslintrc.cjs", "./src", "./scripts/**.mts"],
-  "exclude": ["node_modules"],
-  "ts-node": {
-    "transpileOnly": true,
-    "esm": true
-  }
+  "exclude": ["node_modules"]
 }

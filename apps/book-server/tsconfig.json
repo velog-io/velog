@@ -30,9 +30,5 @@
     "codegen.mts",
     "test/**/*.mts"
   ],
-  "exclude": ["node_modules"],
-  "ts-node": {
-    "transpileOnly": true,
-    "esm": true
-  }
+  "exclude": ["node_modules"]
 }

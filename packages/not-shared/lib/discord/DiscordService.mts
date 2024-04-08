@@ -1,6 +1,12 @@
 import { injectable, singleton } from 'tsyringe'
 import { Client, GatewayIntentBits } from 'discord.js'
-import { ENV } from '../../env/env.mjs'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const ENV = {
+  discordBotToken: process.env.DISCORD_BOT_TOKEN,
+}
 
 @injectable()
 @singleton()
