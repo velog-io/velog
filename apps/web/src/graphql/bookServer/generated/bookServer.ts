@@ -1,5 +1,5 @@
 import { useMutation, UseMutationOptions } from '@tanstack/react-query'
-import { bookServerFetcher } from '../helpers/bookServerFetcher'
+import { fetcher } from '../helpers/bookServerFetcher'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = T | null | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -98,7 +98,7 @@ export const useDeployMutation = <TError = unknown, TContext = unknown>(
   return useMutation<DeployMutation, TError, DeployMutationVariables, TContext>({
     mutationKey: ['deploy'],
     mutationFn: (variables?: DeployMutationVariables) =>
-      bookServerFetcher<DeployMutation, DeployMutationVariables>(DeployDocument, variables)(),
+      fetcher<DeployMutation, DeployMutationVariables>(DeployDocument, variables)(),
     ...options,
   })
 }
@@ -108,4 +108,4 @@ useDeployMutation.getKey = () => ['deploy']
 useDeployMutation.fetcher = (
   variables: DeployMutationVariables,
   options?: RequestInit['headers'],
-) => bookServerFetcher<DeployMutation, DeployMutationVariables>(DeployDocument, variables, options)
+) => fetcher<DeployMutation, DeployMutationVariables>(DeployDocument, variables, options)

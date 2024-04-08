@@ -5,9 +5,7 @@
   background: var(--bg-element1);
   border-radius: 4px;
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.04);
-  transition:
-    0.25s box-shadow ease-in,
-    0.25s transform ease-in;
+  transition: 0.25s box-shadow ease-in, 0.25s transform ease-in;
 
   &:hover {
     transform: translateY(-8px);

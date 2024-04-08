@@ -6,7 +6,7 @@ import {
   UseSuspenseQueryOptions,
   UseMutationOptions,
 } from '@tanstack/react-query'
-import { serverFetcher } from '../helpers/serverFetcher'
+import { fetcher } from '../helpers/serverFetcher'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = T | null | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -1218,7 +1218,7 @@ export const useAdsQuery = <TData = AdsQuery, TError = unknown>(
 ) => {
   return useQuery<AdsQuery, TError, TData>({
     queryKey: ['ads', variables],
-    queryFn: serverFetcher<AdsQuery, AdsQueryVariables>(AdsDocument, variables),
+    queryFn: fetcher<AdsQuery, AdsQueryVariables>(AdsDocument, variables),
     ...options,
   })
 }
@@ -1233,7 +1233,7 @@ export const useSuspenseAdsQuery = <TData = AdsQuery, TError = unknown>(
 ) => {
   return useSuspenseQuery<AdsQuery, TError, TData>({
     queryKey: ['adsSuspense', variables],
-    queryFn: serverFetcher<AdsQuery, AdsQueryVariables>(AdsDocument, variables),
+    queryFn: fetcher<AdsQuery, AdsQueryVariables>(AdsDocument, variables),
     ...options,
   })
 }
@@ -1241,7 +1241,7 @@ export const useSuspenseAdsQuery = <TData = AdsQuery, TError = unknown>(
 useSuspenseAdsQuery.getKey = (variables: AdsQueryVariables) => ['adsSuspense', variables]
 
 useAdsQuery.fetcher = (variables: AdsQueryVariables, options?: RequestInit['headers']) =>
-  serverFetcher<AdsQuery, AdsQueryVariables>(AdsDocument, variables, options)
+  fetcher<AdsQuery, AdsQueryVariables>(AdsDocument, variables, options)
 
 export const IsLoggedDocument = `
     query isLogged {
@@ -1257,7 +1257,7 @@ export const useIsLoggedQuery = <TData = IsLoggedQuery, TError = unknown>(
 ) => {
   return useQuery<IsLoggedQuery, TError, TData>({
     queryKey: variables === undefined ? ['isLogged'] : ['isLogged', variables],
-    queryFn: serverFetcher<IsLoggedQuery, IsLoggedQueryVariables>(IsLoggedDocument, variables),
+    queryFn: fetcher<IsLoggedQuery, IsLoggedQueryVariables>(IsLoggedDocument, variables),
     ...options,
   })
 }
@@ -1273,7 +1273,7 @@ export const useSuspenseIsLoggedQuery = <TData = IsLoggedQuery, TError = unknown
 ) => {
   return useSuspenseQuery<IsLoggedQuery, TError, TData>({
     queryKey: variables === undefined ? ['isLoggedSuspense'] : ['isLoggedSuspense', variables],
-    queryFn: serverFetcher<IsLoggedQuery, IsLoggedQueryVariables>(IsLoggedDocument, variables),
+    queryFn: fetcher<IsLoggedQuery, IsLoggedQueryVariables>(IsLoggedDocument, variables),
     ...options,
   })
 }
@@ -1282,7 +1282,7 @@ useSuspenseIsLoggedQuery.getKey = (variables?: IsLoggedQueryVariables) =>
   variables === undefined ? ['isLoggedSuspense'] : ['isLoggedSuspense', variables]
 
 useIsLoggedQuery.fetcher = (variables?: IsLoggedQueryVariables, options?: RequestInit['headers']) =>
-  serverFetcher<IsLoggedQuery, IsLoggedQueryVariables>(IsLoggedDocument, variables, options)
+  fetcher<IsLoggedQuery, IsLoggedQueryVariables>(IsLoggedDocument, variables, options)
 
 export const SendMailDocument = `
     mutation sendMail($input: SendMailInput!) {
@@ -1298,7 +1298,7 @@ export const useSendMailMutation = <TError = unknown, TContext = unknown>(
   return useMutation<SendMailMutation, TError, SendMailMutationVariables, TContext>({
     mutationKey: ['sendMail'],
     mutationFn: (variables?: SendMailMutationVariables) =>
-      serverFetcher<SendMailMutation, SendMailMutationVariables>(SendMailDocument, variables)(),
+      fetcher<SendMailMutation, SendMailMutationVariables>(SendMailDocument, variables)(),
     ...options,
   })
 }
@@ -1308,8 +1308,7 @@ useSendMailMutation.getKey = () => ['sendMail']
 useSendMailMutation.fetcher = (
   variables: SendMailMutationVariables,
   options?: RequestInit['headers'],
-) =>
-  serverFetcher<SendMailMutation, SendMailMutationVariables>(SendMailDocument, variables, options)
+) => fetcher<SendMailMutation, SendMailMutationVariables>(SendMailDocument, variables, options)
 
 export const FollowDocument = `
     mutation follow($input: FollowInput!) {
@@ -1323,7 +1322,7 @@ export const useFollowMutation = <TError = unknown, TContext = unknown>(
   return useMutation<FollowMutation, TError, FollowMutationVariables, TContext>({
     mutationKey: ['follow'],
     mutationFn: (variables?: FollowMutationVariables) =>
-      serverFetcher<FollowMutation, FollowMutationVariables>(FollowDocument, variables)(),
+      fetcher<FollowMutation, FollowMutationVariables>(FollowDocument, variables)(),
     ...options,
   })
 }
@@ -1333,7 +1332,7 @@ useFollowMutation.getKey = () => ['follow']
 useFollowMutation.fetcher = (
   variables: FollowMutationVariables,
   options?: RequestInit['headers'],
-) => serverFetcher<FollowMutation, FollowMutationVariables>(FollowDocument, variables, options)
+) => fetcher<FollowMutation, FollowMutationVariables>(FollowDocument, variables, options)
 
 export const UnfollowDocument = `
     mutation unfollow($input: UnfollowInput!) {
@@ -1347,7 +1346,7 @@ export const useUnfollowMutation = <TError = unknown, TContext = unknown>(
   return useMutation<UnfollowMutation, TError, UnfollowMutationVariables, TContext>({
     mutationKey: ['unfollow'],
     mutationFn: (variables?: UnfollowMutationVariables) =>
-      serverFetcher<UnfollowMutation, UnfollowMutationVariables>(UnfollowDocument, variables)(),
+      fetcher<UnfollowMutation, UnfollowMutationVariables>(UnfollowDocument, variables)(),
     ...options,
   })
 }
@@ -1357,8 +1356,7 @@ useUnfollowMutation.getKey = () => ['unfollow']
 useUnfollowMutation.fetcher = (
   variables: UnfollowMutationVariables,
   options?: RequestInit['headers'],
-) =>
-  serverFetcher<UnfollowMutation, UnfollowMutationVariables>(UnfollowDocument, variables, options)
+) => fetcher<UnfollowMutation, UnfollowMutationVariables>(UnfollowDocument, variables, options)
 
 export const GetFollowersDocument = `
     query getFollowers($input: GetFollowInput!) {
@@ -1384,7 +1382,7 @@ export const useGetFollowersQuery = <TData = GetFollowersQuery, TError = unknown
 ) => {
   return useQuery<GetFollowersQuery, TError, TData>({
     queryKey: ['getFollowers', variables],
-    queryFn: serverFetcher<GetFollowersQuery, GetFollowersQueryVariables>(
+    queryFn: fetcher<GetFollowersQuery, GetFollowersQueryVariables>(
       GetFollowersDocument,
       variables,
     ),
@@ -1402,7 +1400,7 @@ export const useSuspenseGetFollowersQuery = <TData = GetFollowersQuery, TError =
 ) => {
   return useSuspenseQuery<GetFollowersQuery, TError, TData>({
     queryKey: ['getFollowersSuspense', variables],
-    queryFn: serverFetcher<GetFollowersQuery, GetFollowersQueryVariables>(
+    queryFn: fetcher<GetFollowersQuery, GetFollowersQueryVariables>(
       GetFollowersDocument,
       variables,
     ),
@@ -1419,11 +1417,7 @@ useGetFollowersQuery.fetcher = (
   variables: GetFollowersQueryVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<GetFollowersQuery, GetFollowersQueryVariables>(
-    GetFollowersDocument,
-    variables,
-    options,
-  )
+  fetcher<GetFollowersQuery, GetFollowersQueryVariables>(GetFollowersDocument, variables, options)
 
 export const GetFollowingsDocument = `
     query getFollowings($input: GetFollowInput!) {
@@ -1449,7 +1443,7 @@ export const useGetFollowingsQuery = <TData = GetFollowingsQuery, TError = unkno
 ) => {
   return useQuery<GetFollowingsQuery, TError, TData>({
     queryKey: ['getFollowings', variables],
-    queryFn: serverFetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(
+    queryFn: fetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(
       GetFollowingsDocument,
       variables,
     ),
@@ -1470,7 +1464,7 @@ export const useSuspenseGetFollowingsQuery = <TData = GetFollowingsQuery, TError
 ) => {
   return useSuspenseQuery<GetFollowingsQuery, TError, TData>({
     queryKey: ['getFollowingsSuspense', variables],
-    queryFn: serverFetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(
+    queryFn: fetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(
       GetFollowingsDocument,
       variables,
     ),
@@ -1487,7 +1481,7 @@ useGetFollowingsQuery.fetcher = (
   variables: GetFollowingsQueryVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(
+  fetcher<GetFollowingsQuery, GetFollowingsQueryVariables>(
     GetFollowingsDocument,
     variables,
     options,
@@ -1515,7 +1509,7 @@ export const useNotificationQuery = <TData = NotificationQuery, TError = unknown
 ) => {
   return useQuery<NotificationQuery, TError, TData>({
     queryKey: ['notification', variables],
-    queryFn: serverFetcher<NotificationQuery, NotificationQueryVariables>(
+    queryFn: fetcher<NotificationQuery, NotificationQueryVariables>(
       NotificationDocument,
       variables,
     ),
@@ -1533,7 +1527,7 @@ export const useSuspenseNotificationQuery = <TData = NotificationQuery, TError =
 ) => {
   return useSuspenseQuery<NotificationQuery, TError, TData>({
     queryKey: ['notificationSuspense', variables],
-    queryFn: serverFetcher<NotificationQuery, NotificationQueryVariables>(
+    queryFn: fetcher<NotificationQuery, NotificationQueryVariables>(
       NotificationDocument,
       variables,
     ),
@@ -1550,11 +1544,7 @@ useNotificationQuery.fetcher = (
   variables: NotificationQueryVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<NotificationQuery, NotificationQueryVariables>(
-    NotificationDocument,
-    variables,
-    options,
-  )
+  fetcher<NotificationQuery, NotificationQueryVariables>(NotificationDocument, variables, options)
 
 export const NotNoticeNotificationCountDocument = `
     query notNoticeNotificationCount {
@@ -1576,10 +1566,10 @@ export const useNotNoticeNotificationCountQuery = <
       variables === undefined
         ? ['notNoticeNotificationCount']
         : ['notNoticeNotificationCount', variables],
-    queryFn: serverFetcher<
-      NotNoticeNotificationCountQuery,
-      NotNoticeNotificationCountQueryVariables
-    >(NotNoticeNotificationCountDocument, variables),
+    queryFn: fetcher<NotNoticeNotificationCountQuery, NotNoticeNotificationCountQueryVariables>(
+      NotNoticeNotificationCountDocument,
+      variables,
+    ),
     ...options,
   })
 }
@@ -1608,10 +1598,10 @@ export const useSuspenseNotNoticeNotificationCountQuery = <
       variables === undefined
         ? ['notNoticeNotificationCountSuspense']
         : ['notNoticeNotificationCountSuspense', variables],
-    queryFn: serverFetcher<
-      NotNoticeNotificationCountQuery,
-      NotNoticeNotificationCountQueryVariables
-    >(NotNoticeNotificationCountDocument, variables),
+    queryFn: fetcher<NotNoticeNotificationCountQuery, NotNoticeNotificationCountQueryVariables>(
+      NotNoticeNotificationCountDocument,
+      variables,
+    ),
     ...options,
   })
 }
@@ -1627,7 +1617,7 @@ useNotNoticeNotificationCountQuery.fetcher = (
   variables?: NotNoticeNotificationCountQueryVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<NotNoticeNotificationCountQuery, NotNoticeNotificationCountQueryVariables>(
+  fetcher<NotNoticeNotificationCountQuery, NotNoticeNotificationCountQueryVariables>(
     NotNoticeNotificationCountDocument,
     variables,
     options,
@@ -1655,7 +1645,7 @@ export const useReadAllNotificationsMutation = <TError = unknown, TContext = unk
   >({
     mutationKey: ['readAllNotifications'],
     mutationFn: (variables?: ReadAllNotificationsMutationVariables) =>
-      serverFetcher<ReadAllNotificationsMutation, ReadAllNotificationsMutationVariables>(
+      fetcher<ReadAllNotificationsMutation, ReadAllNotificationsMutationVariables>(
         ReadAllNotificationsDocument,
         variables,
       )(),
@@ -1669,7 +1659,7 @@ useReadAllNotificationsMutation.fetcher = (
   variables?: ReadAllNotificationsMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<ReadAllNotificationsMutation, ReadAllNotificationsMutationVariables>(
+  fetcher<ReadAllNotificationsMutation, ReadAllNotificationsMutationVariables>(
     ReadAllNotificationsDocument,
     variables,
     options,
@@ -1697,7 +1687,7 @@ export const useRemoveAllNotificationsMutation = <TError = unknown, TContext = u
   >({
     mutationKey: ['removeAllNotifications'],
     mutationFn: (variables?: RemoveAllNotificationsMutationVariables) =>
-      serverFetcher<RemoveAllNotificationsMutation, RemoveAllNotificationsMutationVariables>(
+      fetcher<RemoveAllNotificationsMutation, RemoveAllNotificationsMutationVariables>(
         RemoveAllNotificationsDocument,
         variables,
       )(),
@@ -1711,7 +1701,7 @@ useRemoveAllNotificationsMutation.fetcher = (
   variables?: RemoveAllNotificationsMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<RemoveAllNotificationsMutation, RemoveAllNotificationsMutationVariables>(
+  fetcher<RemoveAllNotificationsMutation, RemoveAllNotificationsMutationVariables>(
     RemoveAllNotificationsDocument,
     variables,
     options,
@@ -1734,7 +1724,7 @@ export const useReadNoticationMutation = <TError = unknown, TContext = unknown>(
   return useMutation<ReadNoticationMutation, TError, ReadNoticationMutationVariables, TContext>({
     mutationKey: ['readNotication'],
     mutationFn: (variables?: ReadNoticationMutationVariables) =>
-      serverFetcher<ReadNoticationMutation, ReadNoticationMutationVariables>(
+      fetcher<ReadNoticationMutation, ReadNoticationMutationVariables>(
         ReadNoticationDocument,
         variables,
       )(),
@@ -1748,7 +1738,7 @@ useReadNoticationMutation.fetcher = (
   variables: ReadNoticationMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<ReadNoticationMutation, ReadNoticationMutationVariables>(
+  fetcher<ReadNoticationMutation, ReadNoticationMutationVariables>(
     ReadNoticationDocument,
     variables,
     options,
@@ -1776,10 +1766,10 @@ export const useUpdateNotNoticeNotificationMutation = <TError = unknown, TContex
   >({
     mutationKey: ['updateNotNoticeNotification'],
     mutationFn: (variables?: UpdateNotNoticeNotificationMutationVariables) =>
-      serverFetcher<
-        UpdateNotNoticeNotificationMutation,
-        UpdateNotNoticeNotificationMutationVariables
-      >(UpdateNotNoticeNotificationDocument, variables)(),
+      fetcher<UpdateNotNoticeNotificationMutation, UpdateNotNoticeNotificationMutationVariables>(
+        UpdateNotNoticeNotificationDocument,
+        variables,
+      )(),
     ...options,
   })
 }
@@ -1790,7 +1780,7 @@ useUpdateNotNoticeNotificationMutation.fetcher = (
   variables?: UpdateNotNoticeNotificationMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<UpdateNotNoticeNotificationMutation, UpdateNotNoticeNotificationMutationVariables>(
+  fetcher<UpdateNotNoticeNotificationMutation, UpdateNotNoticeNotificationMutationVariables>(
     UpdateNotNoticeNotificationDocument,
     variables,
     options,
@@ -1894,7 +1884,7 @@ export const useReadPostQuery = <TData = ReadPostQuery, TError = unknown>(
 ) => {
   return useQuery<ReadPostQuery, TError, TData>({
     queryKey: ['readPost', variables],
-    queryFn: serverFetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables),
+    queryFn: fetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables),
     ...options,
   })
 }
@@ -1909,7 +1899,7 @@ export const useSuspenseReadPostQuery = <TData = ReadPostQuery, TError = unknown
 ) => {
   return useSuspenseQuery<ReadPostQuery, TError, TData>({
     queryKey: ['readPostSuspense', variables],
-    queryFn: serverFetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables),
+    queryFn: fetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables),
     ...options,
   })
 }
@@ -1920,7 +1910,7 @@ useSuspenseReadPostQuery.getKey = (variables: ReadPostQueryVariables) => [
 ]
 
 useReadPostQuery.fetcher = (variables: ReadPostQueryVariables, options?: RequestInit['headers']) =>
-  serverFetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables, options)
+  fetcher<ReadPostQuery, ReadPostQueryVariables>(ReadPostDocument, variables, options)
 
 export const RecentPostsDocument = `
     query recentPosts($input: RecentPostsInput!) {
@@ -1956,10 +1946,7 @@ export const useRecentPostsQuery = <TData = RecentPostsQuery, TError = unknown>(
 ) => {
   return useQuery<RecentPostsQuery, TError, TData>({
     queryKey: ['recentPosts', variables],
-    queryFn: serverFetcher<RecentPostsQuery, RecentPostsQueryVariables>(
-      RecentPostsDocument,
-      variables,
-    ),
+    queryFn: fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, variables),
     ...options,
   })
 }
@@ -1974,10 +1961,7 @@ export const useSuspenseRecentPostsQuery = <TData = RecentPostsQuery, TError = u
 ) => {
   return useSuspenseQuery<RecentPostsQuery, TError, TData>({
     queryKey: ['recentPostsSuspense', variables],
-    queryFn: serverFetcher<RecentPostsQuery, RecentPostsQueryVariables>(
-      RecentPostsDocument,
-      variables,
-    ),
+    queryFn: fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, variables),
     ...options,
   })
 }
@@ -1990,12 +1974,7 @@ useSuspenseRecentPostsQuery.getKey = (variables: RecentPostsQueryVariables) => [
 useRecentPostsQuery.fetcher = (
   variables: RecentPostsQueryVariables,
   options?: RequestInit['headers'],
-) =>
-  serverFetcher<RecentPostsQuery, RecentPostsQueryVariables>(
-    RecentPostsDocument,
-    variables,
-    options,
-  )
+) => fetcher<RecentPostsQuery, RecentPostsQueryVariables>(RecentPostsDocument, variables, options)
 
 export const TrendingPostsDocument = `
     query trendingPosts($input: TrendingPostsInput!) {
@@ -2031,7 +2010,7 @@ export const useTrendingPostsQuery = <TData = TrendingPostsQuery, TError = unkno
 ) => {
   return useQuery<TrendingPostsQuery, TError, TData>({
     queryKey: ['trendingPosts', variables],
-    queryFn: serverFetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
+    queryFn: fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
       TrendingPostsDocument,
       variables,
     ),
@@ -2052,7 +2031,7 @@ export const useSuspenseTrendingPostsQuery = <TData = TrendingPostsQuery, TError
 ) => {
   return useSuspenseQuery<TrendingPostsQuery, TError, TData>({
     queryKey: ['trendingPostsSuspense', variables],
-    queryFn: serverFetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
+    queryFn: fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
       TrendingPostsDocument,
       variables,
     ),
@@ -2069,7 +2048,7 @@ useTrendingPostsQuery.fetcher = (
   variables: TrendingPostsQueryVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
+  fetcher<TrendingPostsQuery, TrendingPostsQueryVariables>(
     TrendingPostsDocument,
     variables,
     options,
@@ -2109,7 +2088,7 @@ export const useFeedPostsQuery = <TData = FeedPostsQuery, TError = unknown>(
 ) => {
   return useQuery<FeedPostsQuery, TError, TData>({
     queryKey: ['feedPosts', variables],
-    queryFn: serverFetcher<FeedPostsQuery, FeedPostsQueryVariables>(FeedPostsDocument, variables),
+    queryFn: fetcher<FeedPostsQuery, FeedPostsQueryVariables>(FeedPostsDocument, variables),
     ...options,
   })
 }
@@ -2124,7 +2103,7 @@ export const useSuspenseFeedPostsQuery = <TData = FeedPostsQuery, TError = unkno
 ) => {
   return useSuspenseQuery<FeedPostsQuery, TError, TData>({
     queryKey: ['feedPostsSuspense', variables],
-    queryFn: serverFetcher<FeedPostsQuery, FeedPostsQueryVariables>(FeedPostsDocument, variables),
+    queryFn: fetcher<FeedPostsQuery, FeedPostsQueryVariables>(FeedPostsDocument, variables),
     ...options,
   })
 }
@@ -2137,7 +2116,7 @@ useSuspenseFeedPostsQuery.getKey = (variables: FeedPostsQueryVariables) => [
 useFeedPostsQuery.fetcher = (
   variables: FeedPostsQueryVariables,
   options?: RequestInit['headers'],
-) => serverFetcher<FeedPostsQuery, FeedPostsQueryVariables>(FeedPostsDocument, variables, options)
+) => fetcher<FeedPostsQuery, FeedPostsQueryVariables>(FeedPostsDocument, variables, options)
 
 export const VelogPostsDocument = `
     query velogPosts($input: GetPostsInput!) {
@@ -2174,10 +2153,7 @@ export const useVelogPostsQuery = <TData = VelogPostsQuery, TError = unknown>(
 ) => {
   return useQuery<VelogPostsQuery, TError, TData>({
     queryKey: ['velogPosts', variables],
-    queryFn: serverFetcher<VelogPostsQuery, VelogPostsQueryVariables>(
-      VelogPostsDocument,
-      variables,
-    ),
+    queryFn: fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, variables),
     ...options,
   })
 }
@@ -2192,10 +2168,7 @@ export const useSuspenseVelogPostsQuery = <TData = VelogPostsQuery, TError = unk
 ) => {
   return useSuspenseQuery<VelogPostsQuery, TError, TData>({
     queryKey: ['velogPostsSuspense', variables],
-    queryFn: serverFetcher<VelogPostsQuery, VelogPostsQueryVariables>(
-      VelogPostsDocument,
-      variables,
-    ),
+    queryFn: fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, variables),
     ...options,
   })
 }
@@ -2208,8 +2181,7 @@ useSuspenseVelogPostsQuery.getKey = (variables: VelogPostsQueryVariables) => [
 useVelogPostsQuery.fetcher = (
   variables: VelogPostsQueryVariables,
   options?: RequestInit['headers'],
-) =>
-  serverFetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, variables, options)
+) => fetcher<VelogPostsQuery, VelogPostsQueryVariables>(VelogPostsDocument, variables, options)
 
 export const SearchPostsDocument = `
     query searchPosts($input: GetSearchPostsInput!) {
@@ -2247,10 +2219,7 @@ export const useSearchPostsQuery = <TData = SearchPostsQuery, TError = unknown>(
 ) => {
   return useQuery<SearchPostsQuery, TError, TData>({
     queryKey: ['searchPosts', variables],
-    queryFn: serverFetcher<SearchPostsQuery, SearchPostsQueryVariables>(
-      SearchPostsDocument,
-      variables,
-    ),
+    queryFn: fetcher<SearchPostsQuery, SearchPostsQueryVariables>(SearchPostsDocument, variables),
     ...options,
   })
 }
@@ -2265,10 +2234,7 @@ export const useSuspenseSearchPostsQuery = <TData = SearchPostsQuery, TError = u
 ) => {
   return useSuspenseQuery<SearchPostsQuery, TError, TData>({
     queryKey: ['searchPostsSuspense', variables],
-    queryFn: serverFetcher<SearchPostsQuery, SearchPostsQueryVariables>(
-      SearchPostsDocument,
-      variables,
-    ),
+    queryFn: fetcher<SearchPostsQuery, SearchPostsQueryVariables>(SearchPostsDocument, variables),
     ...options,
   })
 }
@@ -2281,12 +2247,7 @@ useSuspenseSearchPostsQuery.getKey = (variables: SearchPostsQueryVariables) => [
 useSearchPostsQuery.fetcher = (
   variables: SearchPostsQueryVariables,
   options?: RequestInit['headers'],
-) =>
-  serverFetcher<SearchPostsQuery, SearchPostsQueryVariables>(
-    SearchPostsDocument,
-    variables,
-    options,
-  )
+) => fetcher<SearchPostsQuery, SearchPostsQueryVariables>(SearchPostsDocument, variables, options)
 
 export const UserTagsDocument = `
     query userTags($input: UserTagsInput!) {
@@ -2311,7 +2272,7 @@ export const useUserTagsQuery = <TData = UserTagsQuery, TError = unknown>(
 ) => {
   return useQuery<UserTagsQuery, TError, TData>({
     queryKey: ['userTags', variables],
-    queryFn: serverFetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables),
+    queryFn: fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables),
     ...options,
   })
 }
@@ -2326,7 +2287,7 @@ export const useSuspenseUserTagsQuery = <TData = UserTagsQuery, TError = unknown
 ) => {
   return useSuspenseQuery<UserTagsQuery, TError, TData>({
     queryKey: ['userTagsSuspense', variables],
-    queryFn: serverFetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables),
+    queryFn: fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables),
     ...options,
   })
 }
@@ -2337,7 +2298,7 @@ useSuspenseUserTagsQuery.getKey = (variables: UserTagsQueryVariables) => [
 ]
 
 useUserTagsQuery.fetcher = (variables: UserTagsQueryVariables, options?: RequestInit['headers']) =>
-  serverFetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables, options)
+  fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables, options)
 
 export const GetUserDocument = `
     query getUser($input: GetUserInput!) {
@@ -2363,7 +2324,7 @@ export const useGetUserQuery = <TData = GetUserQuery, TError = unknown>(
 ) => {
   return useQuery<GetUserQuery, TError, TData>({
     queryKey: ['getUser', variables],
-    queryFn: serverFetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables),
+    queryFn: fetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables),
     ...options,
   })
 }
@@ -2378,7 +2339,7 @@ export const useSuspenseGetUserQuery = <TData = GetUserQuery, TError = unknown>(
 ) => {
   return useSuspenseQuery<GetUserQuery, TError, TData>({
     queryKey: ['getUserSuspense', variables],
-    queryFn: serverFetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables),
+    queryFn: fetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables),
     ...options,
   })
 }
@@ -2389,7 +2350,7 @@ useSuspenseGetUserQuery.getKey = (variables: GetUserQueryVariables) => [
 ]
 
 useGetUserQuery.fetcher = (variables: GetUserQueryVariables, options?: RequestInit['headers']) =>
-  serverFetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables, options)
+  fetcher<GetUserQuery, GetUserQueryVariables>(GetUserDocument, variables, options)
 
 export const GetUserFollowInfoDocument = `
     query getUserFollowInfo($input: GetUserInput!) {
@@ -2418,7 +2379,7 @@ export const useGetUserFollowInfoQuery = <TData = GetUserFollowInfoQuery, TError
 ) => {
   return useQuery<GetUserFollowInfoQuery, TError, TData>({
     queryKey: ['getUserFollowInfo', variables],
-    queryFn: serverFetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
+    queryFn: fetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
       GetUserFollowInfoDocument,
       variables,
     ),
@@ -2439,7 +2400,7 @@ export const useSuspenseGetUserFollowInfoQuery = <TData = GetUserFollowInfoQuery
 ) => {
   return useSuspenseQuery<GetUserFollowInfoQuery, TError, TData>({
     queryKey: ['getUserFollowInfoSuspense', variables],
-    queryFn: serverFetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
+    queryFn: fetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
       GetUserFollowInfoDocument,
       variables,
     ),
@@ -2456,7 +2417,7 @@ useGetUserFollowInfoQuery.fetcher = (
   variables: GetUserFollowInfoQueryVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
+  fetcher<GetUserFollowInfoQuery, GetUserFollowInfoQueryVariables>(
     GetUserFollowInfoDocument,
     variables,
     options,
@@ -2492,10 +2453,7 @@ export const useCurrentUserQuery = <TData = CurrentUserQuery, TError = unknown>(
 ) => {
   return useQuery<CurrentUserQuery, TError, TData>({
     queryKey: variables === undefined ? ['currentUser'] : ['currentUser', variables],
-    queryFn: serverFetcher<CurrentUserQuery, CurrentUserQueryVariables>(
-      CurrentUserDocument,
-      variables,
-    ),
+    queryFn: fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, variables),
     ...options,
   })
 }
@@ -2512,10 +2470,7 @@ export const useSuspenseCurrentUserQuery = <TData = CurrentUserQuery, TError = u
   return useSuspenseQuery<CurrentUserQuery, TError, TData>({
     queryKey:
       variables === undefined ? ['currentUserSuspense'] : ['currentUserSuspense', variables],
-    queryFn: serverFetcher<CurrentUserQuery, CurrentUserQueryVariables>(
-      CurrentUserDocument,
-      variables,
-    ),
+    queryFn: fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, variables),
     ...options,
   })
 }
@@ -2526,12 +2481,7 @@ useSuspenseCurrentUserQuery.getKey = (variables?: CurrentUserQueryVariables) =>
 useCurrentUserQuery.fetcher = (
   variables?: CurrentUserQueryVariables,
   options?: RequestInit['headers'],
-) =>
-  serverFetcher<CurrentUserQuery, CurrentUserQueryVariables>(
-    CurrentUserDocument,
-    variables,
-    options,
-  )
+) => fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, variables, options)
 
 export const VelogConfigDocument = `
     query velogConfig($input: GetVelogConfigInput!) {
@@ -2550,10 +2500,7 @@ export const useVelogConfigQuery = <TData = VelogConfigQuery, TError = unknown>(
 ) => {
   return useQuery<VelogConfigQuery, TError, TData>({
     queryKey: ['velogConfig', variables],
-    queryFn: serverFetcher<VelogConfigQuery, VelogConfigQueryVariables>(
-      VelogConfigDocument,
-      variables,
-    ),
+    queryFn: fetcher<VelogConfigQuery, VelogConfigQueryVariables>(VelogConfigDocument, variables),
     ...options,
   })
 }
@@ -2568,10 +2515,7 @@ export const useSuspenseVelogConfigQuery = <TData = VelogConfigQuery, TError = u
 ) => {
   return useSuspenseQuery<VelogConfigQuery, TError, TData>({
     queryKey: ['velogConfigSuspense', variables],
-    queryFn: serverFetcher<VelogConfigQuery, VelogConfigQueryVariables>(
-      VelogConfigDocument,
-      variables,
-    ),
+    queryFn: fetcher<VelogConfigQuery, VelogConfigQueryVariables>(VelogConfigDocument, variables),
     ...options,
   })
 }
@@ -2584,12 +2528,7 @@ useSuspenseVelogConfigQuery.getKey = (variables: VelogConfigQueryVariables) => [
 useVelogConfigQuery.fetcher = (
   variables: VelogConfigQueryVariables,
   options?: RequestInit['headers'],
-) =>
-  serverFetcher<VelogConfigQuery, VelogConfigQueryVariables>(
-    VelogConfigDocument,
-    variables,
-    options,
-  )
+) => fetcher<VelogConfigQuery, VelogConfigQueryVariables>(VelogConfigDocument, variables, options)
 
 export const GetUserAboutDocument = `
     query getUserAbout($input: GetUserInput!) {
@@ -2612,7 +2551,7 @@ export const useGetUserAboutQuery = <TData = GetUserAboutQuery, TError = unknown
 ) => {
   return useQuery<GetUserAboutQuery, TError, TData>({
     queryKey: ['getUserAbout', variables],
-    queryFn: serverFetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(
+    queryFn: fetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(
       GetUserAboutDocument,
       variables,
     ),
@@ -2630,7 +2569,7 @@ export const useSuspenseGetUserAboutQuery = <TData = GetUserAboutQuery, TError =
 ) => {
   return useSuspenseQuery<GetUserAboutQuery, TError, TData>({
     queryKey: ['getUserAboutSuspense', variables],
-    queryFn: serverFetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(
+    queryFn: fetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(
       GetUserAboutDocument,
       variables,
     ),
@@ -2647,11 +2586,7 @@ useGetUserAboutQuery.fetcher = (
   variables: GetUserAboutQueryVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(
-    GetUserAboutDocument,
-    variables,
-    options,
-  )
+  fetcher<GetUserAboutQuery, GetUserAboutQueryVariables>(GetUserAboutDocument, variables, options)
 
 export const GetUserSeriesListDocument = `
     query getUserSeriesList($input: GetUserInput!) {
@@ -2678,7 +2613,7 @@ export const useGetUserSeriesListQuery = <TData = GetUserSeriesListQuery, TError
 ) => {
   return useQuery<GetUserSeriesListQuery, TError, TData>({
     queryKey: ['getUserSeriesList', variables],
-    queryFn: serverFetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
+    queryFn: fetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
       GetUserSeriesListDocument,
       variables,
     ),
@@ -2699,7 +2634,7 @@ export const useSuspenseGetUserSeriesListQuery = <TData = GetUserSeriesListQuery
 ) => {
   return useSuspenseQuery<GetUserSeriesListQuery, TError, TData>({
     queryKey: ['getUserSeriesListSuspense', variables],
-    queryFn: serverFetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
+    queryFn: fetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
       GetUserSeriesListDocument,
       variables,
     ),
@@ -2716,7 +2651,7 @@ useGetUserSeriesListQuery.fetcher = (
   variables: GetUserSeriesListQueryVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
+  fetcher<GetUserSeriesListQuery, GetUserSeriesListQueryVariables>(
     GetUserSeriesListDocument,
     variables,
     options,
@@ -2736,7 +2671,7 @@ export const useUnregisterTokenQuery = <TData = UnregisterTokenQuery, TError = u
 ) => {
   return useQuery<UnregisterTokenQuery, TError, TData>({
     queryKey: variables === undefined ? ['unregisterToken'] : ['unregisterToken', variables],
-    queryFn: serverFetcher<UnregisterTokenQuery, UnregisterTokenQueryVariables>(
+    queryFn: fetcher<UnregisterTokenQuery, UnregisterTokenQueryVariables>(
       UnregisterTokenDocument,
       variables,
     ),
@@ -2758,7 +2693,7 @@ export const useSuspenseUnregisterTokenQuery = <TData = UnregisterTokenQuery, TE
       variables === undefined
         ? ['unregisterTokenSuspense']
         : ['unregisterTokenSuspense', variables],
-    queryFn: serverFetcher<UnregisterTokenQuery, UnregisterTokenQueryVariables>(
+    queryFn: fetcher<UnregisterTokenQuery, UnregisterTokenQueryVariables>(
       UnregisterTokenDocument,
       variables,
     ),
@@ -2773,7 +2708,7 @@ useUnregisterTokenQuery.fetcher = (
   variables?: UnregisterTokenQueryVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<UnregisterTokenQuery, UnregisterTokenQueryVariables>(
+  fetcher<UnregisterTokenQuery, UnregisterTokenQueryVariables>(
     UnregisterTokenDocument,
     variables,
     options,
@@ -2793,7 +2728,7 @@ export const useCheckEmailExistsQuery = <TData = CheckEmailExistsQuery, TError =
 ) => {
   return useQuery<CheckEmailExistsQuery, TError, TData>({
     queryKey: ['checkEmailExists', variables],
-    queryFn: serverFetcher<CheckEmailExistsQuery, CheckEmailExistsQueryVariables>(
+    queryFn: fetcher<CheckEmailExistsQuery, CheckEmailExistsQueryVariables>(
       CheckEmailExistsDocument,
       variables,
     ),
@@ -2814,7 +2749,7 @@ export const useSuspenseCheckEmailExistsQuery = <TData = CheckEmailExistsQuery, 
 ) => {
   return useSuspenseQuery<CheckEmailExistsQuery, TError, TData>({
     queryKey: ['checkEmailExistsSuspense', variables],
-    queryFn: serverFetcher<CheckEmailExistsQuery, CheckEmailExistsQueryVariables>(
+    queryFn: fetcher<CheckEmailExistsQuery, CheckEmailExistsQueryVariables>(
       CheckEmailExistsDocument,
       variables,
     ),
@@ -2831,7 +2766,7 @@ useCheckEmailExistsQuery.fetcher = (
   variables: CheckEmailExistsQueryVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<CheckEmailExistsQuery, CheckEmailExistsQueryVariables>(
+  fetcher<CheckEmailExistsQuery, CheckEmailExistsQueryVariables>(
     CheckEmailExistsDocument,
     variables,
     options,
@@ -2852,10 +2787,7 @@ export const useUpdateAboutMutation = <TError = unknown, TContext = unknown>(
   return useMutation<UpdateAboutMutation, TError, UpdateAboutMutationVariables, TContext>({
     mutationKey: ['updateAbout'],
     mutationFn: (variables?: UpdateAboutMutationVariables) =>
-      serverFetcher<UpdateAboutMutation, UpdateAboutMutationVariables>(
-        UpdateAboutDocument,
-        variables,
-      )(),
+      fetcher<UpdateAboutMutation, UpdateAboutMutationVariables>(UpdateAboutDocument, variables)(),
     ...options,
   })
 }
@@ -2866,7 +2798,7 @@ useUpdateAboutMutation.fetcher = (
   variables: UpdateAboutMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<UpdateAboutMutation, UpdateAboutMutationVariables>(
+  fetcher<UpdateAboutMutation, UpdateAboutMutationVariables>(
     UpdateAboutDocument,
     variables,
     options,
@@ -2892,7 +2824,7 @@ export const useUpdateThumbnailMutation = <TError = unknown, TContext = unknown>
   return useMutation<UpdateThumbnailMutation, TError, UpdateThumbnailMutationVariables, TContext>({
     mutationKey: ['updateThumbnail'],
     mutationFn: (variables?: UpdateThumbnailMutationVariables) =>
-      serverFetcher<UpdateThumbnailMutation, UpdateThumbnailMutationVariables>(
+      fetcher<UpdateThumbnailMutation, UpdateThumbnailMutationVariables>(
         UpdateThumbnailDocument,
         variables,
       )(),
@@ -2906,7 +2838,7 @@ useUpdateThumbnailMutation.fetcher = (
   variables: UpdateThumbnailMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<UpdateThumbnailMutation, UpdateThumbnailMutationVariables>(
+  fetcher<UpdateThumbnailMutation, UpdateThumbnailMutationVariables>(
     UpdateThumbnailDocument,
     variables,
     options,
@@ -2933,7 +2865,7 @@ export const useUpdateProfileMutation = <TError = unknown, TContext = unknown>(
   return useMutation<UpdateProfileMutation, TError, UpdateProfileMutationVariables, TContext>({
     mutationKey: ['updateProfile'],
     mutationFn: (variables?: UpdateProfileMutationVariables) =>
-      serverFetcher<UpdateProfileMutation, UpdateProfileMutationVariables>(
+      fetcher<UpdateProfileMutation, UpdateProfileMutationVariables>(
         UpdateProfileDocument,
         variables,
       )(),
@@ -2947,7 +2879,7 @@ useUpdateProfileMutation.fetcher = (
   variables: UpdateProfileMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<UpdateProfileMutation, UpdateProfileMutationVariables>(
+  fetcher<UpdateProfileMutation, UpdateProfileMutationVariables>(
     UpdateProfileDocument,
     variables,
     options,
@@ -2974,7 +2906,7 @@ export const useUpdateVelogTitleMutation = <TError = unknown, TContext = unknown
     {
       mutationKey: ['updateVelogTitle'],
       mutationFn: (variables?: UpdateVelogTitleMutationVariables) =>
-        serverFetcher<UpdateVelogTitleMutation, UpdateVelogTitleMutationVariables>(
+        fetcher<UpdateVelogTitleMutation, UpdateVelogTitleMutationVariables>(
           UpdateVelogTitleDocument,
           variables,
         )(),
@@ -2989,7 +2921,7 @@ useUpdateVelogTitleMutation.fetcher = (
   variables: UpdateVelogTitleMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<UpdateVelogTitleMutation, UpdateVelogTitleMutationVariables>(
+  fetcher<UpdateVelogTitleMutation, UpdateVelogTitleMutationVariables>(
     UpdateVelogTitleDocument,
     variables,
     options,
@@ -3016,7 +2948,7 @@ export const useUpdateSocialInfoMutation = <TError = unknown, TContext = unknown
     {
       mutationKey: ['updateSocialInfo'],
       mutationFn: (variables?: UpdateSocialInfoMutationVariables) =>
-        serverFetcher<UpdateSocialInfoMutation, UpdateSocialInfoMutationVariables>(
+        fetcher<UpdateSocialInfoMutation, UpdateSocialInfoMutationVariables>(
           UpdateSocialInfoDocument,
           variables,
         )(),
@@ -3031,7 +2963,7 @@ useUpdateSocialInfoMutation.fetcher = (
   variables: UpdateSocialInfoMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<UpdateSocialInfoMutation, UpdateSocialInfoMutationVariables>(
+  fetcher<UpdateSocialInfoMutation, UpdateSocialInfoMutationVariables>(
     UpdateSocialInfoDocument,
     variables,
     options,
@@ -3058,7 +2990,7 @@ export const useUpdateEmailRulesMutation = <TError = unknown, TContext = unknown
     {
       mutationKey: ['updateEmailRules'],
       mutationFn: (variables?: UpdateEmailRulesMutationVariables) =>
-        serverFetcher<UpdateEmailRulesMutation, UpdateEmailRulesMutationVariables>(
+        fetcher<UpdateEmailRulesMutation, UpdateEmailRulesMutationVariables>(
           UpdateEmailRulesDocument,
           variables,
         )(),
@@ -3073,7 +3005,7 @@ useUpdateEmailRulesMutation.fetcher = (
   variables: UpdateEmailRulesMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<UpdateEmailRulesMutation, UpdateEmailRulesMutationVariables>(
+  fetcher<UpdateEmailRulesMutation, UpdateEmailRulesMutationVariables>(
     UpdateEmailRulesDocument,
     variables,
     options,
@@ -3091,10 +3023,7 @@ export const useUnregisterMutation = <TError = unknown, TContext = unknown>(
   return useMutation<UnregisterMutation, TError, UnregisterMutationVariables, TContext>({
     mutationKey: ['unregister'],
     mutationFn: (variables?: UnregisterMutationVariables) =>
-      serverFetcher<UnregisterMutation, UnregisterMutationVariables>(
-        UnregisterDocument,
-        variables,
-      )(),
+      fetcher<UnregisterMutation, UnregisterMutationVariables>(UnregisterDocument, variables)(),
     ...options,
   })
 }
@@ -3105,11 +3034,7 @@ useUnregisterMutation.fetcher = (
   variables: UnregisterMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<UnregisterMutation, UnregisterMutationVariables>(
-    UnregisterDocument,
-    variables,
-    options,
-  )
+  fetcher<UnregisterMutation, UnregisterMutationVariables>(UnregisterDocument, variables, options)
 
 export const InitiateChangeEmailDocument = `
     mutation initiateChangeEmail($input: InitiateChangeEmailInput!) {
@@ -3133,7 +3058,7 @@ export const useInitiateChangeEmailMutation = <TError = unknown, TContext = unkn
   >({
     mutationKey: ['initiateChangeEmail'],
     mutationFn: (variables?: InitiateChangeEmailMutationVariables) =>
-      serverFetcher<InitiateChangeEmailMutation, InitiateChangeEmailMutationVariables>(
+      fetcher<InitiateChangeEmailMutation, InitiateChangeEmailMutationVariables>(
         InitiateChangeEmailDocument,
         variables,
       )(),
@@ -3147,7 +3072,7 @@ useInitiateChangeEmailMutation.fetcher = (
   variables: InitiateChangeEmailMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<InitiateChangeEmailMutation, InitiateChangeEmailMutationVariables>(
+  fetcher<InitiateChangeEmailMutation, InitiateChangeEmailMutationVariables>(
     InitiateChangeEmailDocument,
     variables,
     options,
@@ -3175,7 +3100,7 @@ export const useConfirmChangeEmailMutation = <TError = unknown, TContext = unkno
   >({
     mutationKey: ['confirmChangeEmail'],
     mutationFn: (variables?: ConfirmChangeEmailMutationVariables) =>
-      serverFetcher<ConfirmChangeEmailMutation, ConfirmChangeEmailMutationVariables>(
+      fetcher<ConfirmChangeEmailMutation, ConfirmChangeEmailMutationVariables>(
         ConfirmChangeEmailDocument,
         variables,
       )(),
@@ -3189,7 +3114,7 @@ useConfirmChangeEmailMutation.fetcher = (
   variables: ConfirmChangeEmailMutationVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<ConfirmChangeEmailMutation, ConfirmChangeEmailMutationVariables>(
+  fetcher<ConfirmChangeEmailMutation, ConfirmChangeEmailMutationVariables>(
     ConfirmChangeEmailDocument,
     variables,
     options,
@@ -3207,7 +3132,7 @@ export const useLogoutMutation = <TError = unknown, TContext = unknown>(
   return useMutation<LogoutMutation, TError, LogoutMutationVariables, TContext>({
     mutationKey: ['logout'],
     mutationFn: (variables?: LogoutMutationVariables) =>
-      serverFetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables)(),
+      fetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables)(),
     ...options,
   })
 }
@@ -3217,7 +3142,7 @@ useLogoutMutation.getKey = () => ['logout']
 useLogoutMutation.fetcher = (
   variables?: LogoutMutationVariables,
   options?: RequestInit['headers'],
-) => serverFetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables, options)
+) => fetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables, options)
 
 export const TrendingWritersDocument = `
     query trendingWriters($input: TrendingWritersInput!) {
@@ -3248,7 +3173,7 @@ export const useTrendingWritersQuery = <TData = TrendingWritersQuery, TError = u
 ) => {
   return useQuery<TrendingWritersQuery, TError, TData>({
     queryKey: ['trendingWriters', variables],
-    queryFn: serverFetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(
+    queryFn: fetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(
       TrendingWritersDocument,
       variables,
     ),
@@ -3269,7 +3194,7 @@ export const useSuspenseTrendingWritersQuery = <TData = TrendingWritersQuery, TE
 ) => {
   return useSuspenseQuery<TrendingWritersQuery, TError, TData>({
     queryKey: ['trendingWritersSuspense', variables],
-    queryFn: serverFetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(
+    queryFn: fetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(
       TrendingWritersDocument,
       variables,
     ),
@@ -3286,7 +3211,7 @@ useTrendingWritersQuery.fetcher = (
   variables: TrendingWritersQueryVariables,
   options?: RequestInit['headers'],
 ) =>
-  serverFetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(
+  fetcher<TrendingWritersQuery, TrendingWritersQueryVariables>(
     TrendingWritersDocument,
     variables,
     options,

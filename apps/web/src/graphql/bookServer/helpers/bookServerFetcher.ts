@@ -1,7 +1,7 @@
 import { ENV } from '@/env'
 import graphqlFetch from '@/lib/graphqlFetch'
 
-export function bookServerFetcher<TData, TVariables extends Record<string, any>>(
+export function fetcher<TData, TVariables extends Record<string, any>>(
   query: string,
   variables?: TVariables,
   headers?: RequestInit['headers'],

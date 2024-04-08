@@ -46,7 +46,7 @@ const config: CodegenConfig = {
       config: {
         ...commonGenerateOptions.config,
         fetcher: {
-          func: '../helpers/serverFetcher#serverFetcher',
+          func: '../helpers/serverFetcher#fetcher',
         },
       },
       plugins: commonGenerateOptions.plugins,
@@ -57,7 +57,7 @@ const config: CodegenConfig = {
       config: {
         ...commonGenerateOptions.config,
         fetcher: {
-          func: '../helpers/bookServerFetcher#bookServerFetcher',
+          func: '../helpers/bookServerFetcher#fetcher',
         },
       },
       plugins: commonGenerateOptions.plugins,
