@@ -1,4 +1,4 @@
-import { Post } from '@/graphql/helpers/generated'
+import { Post } from '@/graphql/server/generated/server'
 import styles from './FlatPostCardList.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import FlatPostCard from '../FlatPostCard/FlatPostCard'

@@ -1,7 +1,7 @@
 'use server'
 
 import { ENV } from '@/env'
-import { Post, TrendingPostsDocument, TrendingPostsInput } from '@/graphql/helpers/generated'
+import { Post, TrendingPostsDocument, TrendingPostsInput } from '@/graphql/server/generated/server'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getTrendingPosts({

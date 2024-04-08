@@ -1,4 +1,4 @@
-import { Tag } from '@/graphql/helpers/generated'
+import { Tag } from '@/graphql/server/generated/server'
 import styles from './VelogTagHorizontalList.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import Link from 'next/link'

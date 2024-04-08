@@ -5,7 +5,7 @@ import SettingRow from '../SettingRow'
 import styles from './SettingEmailRulesRow.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useEffect, useState } from 'react'
-import { useCurrentUserQuery, useUpdateEmailRulesMutation } from '@/graphql/helpers/generated'
+import { useCurrentUserQuery, useUpdateEmailRulesMutation } from '@/graphql/server/generated/server'
 
 const cx = bindClassNames(styles)
 

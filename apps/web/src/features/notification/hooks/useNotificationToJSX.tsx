@@ -1,4 +1,4 @@
-import { useNotificationQuery, useReadNoticationMutation } from '@/graphql/helpers/generated'
+import { useNotificationQuery, useReadNoticationMutation } from '@/graphql/server/generated/server'
 import { MergedNotifications } from './useNotificationMerge'
 import {
   isCommentAction,

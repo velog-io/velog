@@ -3,7 +3,7 @@
 import Thumbnail from '@/components/Thumbnail'
 import styles from './VelogFollowStats.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { useGetUserFollowInfoQuery } from '@/graphql/helpers/generated'
+import { useGetUserFollowInfoQuery } from '@/graphql/server/generated/server'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 

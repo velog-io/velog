@@ -1,4 +1,4 @@
-import { UserTags, UserTagsDocument } from '@/graphql/helpers/generated'
+import { UserTags, UserTagsDocument } from '@/graphql/server/generated/server'
 import { getAccessToken } from '@/lib/auth'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 

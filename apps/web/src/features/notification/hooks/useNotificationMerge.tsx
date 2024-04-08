@@ -1,4 +1,4 @@
-import { Notification } from '@/graphql/helpers/generated'
+import { Notification } from '@/graphql/server/generated/server'
 import { useMemo } from 'react'
 
 export default function useNotificationMerge(notifications: NotificationQueryData[] = []) {

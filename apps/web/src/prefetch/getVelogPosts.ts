@@ -1,4 +1,4 @@
-import { Post, VelogPostsDocument } from '@/graphql/helpers/generated'
+import { Post, VelogPostsDocument } from '@/graphql/server/generated/server'
 import { getAccessToken } from '@/lib/auth'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 

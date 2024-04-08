@@ -1,4 +1,4 @@
-import { UserTags } from '@/graphql/helpers/generated'
+import { UserTags } from '@/graphql/server/generated/server'
 import VelogTagVerticalList from '../VelogTagVerticalList'
 import VelogTagHorizontalList from '../VelogTagHorizontalList'
 

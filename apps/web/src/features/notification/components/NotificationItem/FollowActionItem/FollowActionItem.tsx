@@ -4,7 +4,7 @@ import { NotificationNotMerged } from '@/features/notification/hooks/useNotifica
 import itemStyles from '../NotificationItem.module.css'
 import styles from './FollowActionItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { FollowNotificationActionInput } from '@/graphql/helpers/generated'
+import { FollowNotificationActionInput } from '@/graphql/server/generated/server'
 import { useTimeFormat } from '@/hooks/useTimeFormat'
 import Link from 'next/link'
 import Thumbnail from '@/components/Thumbnail'

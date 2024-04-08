@@ -6,8 +6,8 @@ import {
   TrendingPostsDocument,
   TrendingPostsQuery,
   TrendingPostsQueryVariables,
-} from '@/graphql/helpers/generated'
-import { infiniteTrendingPostsQueryKey } from '@/graphql/helpers/queryKey'
+} from '@/graphql/server/generated/server'
+import { infiniteTrendingPostsQueryKey } from '@/graphql/server/helpers/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useParams } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'

@@ -13,7 +13,7 @@ import HeaderSkeleton from '@/components/Header/HeaderSkeleton'
 import {
   useCurrentUserQuery,
   useNotNoticeNotificationCountQuery,
-} from '@/graphql/helpers/generated'
+} from '@/graphql/server/generated/server'
 import HeaderLogo from './HeaderLogo'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import { getUsernameFromParams } from '@/lib/utils'

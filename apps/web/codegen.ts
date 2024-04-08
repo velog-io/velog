@@ -1,47 +1,66 @@
 import { ENV } from './src/env'
 import type { CodegenConfig } from '@graphql-codegen/cli'
+import type { Types } from '@graphql-codegen/plugin-helpers'
+
+const commonGenerateOptions: Types.ConfiguredOutput = {
+  config: {
+    enumsAsTypes: true,
+    reactQueryVersion: 5,
+    addSuspenseQuery: true,
+    exposeQueryKeys: true,
+    exposeFetcher: true,
+    exposeMutationKeys: true,
+    skipTypename: true,
+    inputMaybeValue: 'T | null | undefined',
+    maybeValue: 'T | null',
+    avoidOptionals: {
+      field: true,
+      inputValue: false,
+      object: true,
+      defaultValue: true,
+    },
+    scalars: {
+      Date: 'Date',
+      JSON: 'Record<string, any>',
+      ID: 'string',
+      Void: 'void',
+      PositiveInt: 'number',
+    },
+  },
+  plugins: [
+    'typescript',
+    '@graphql-codegen/typescript-operations',
+    '@graphql-codegen/typescript-react-query',
+  ],
+}
 
 const config: CodegenConfig = {
   overwrite: true,
-  documents: 'src/graphql/*.gql',
   hooks: {
     afterOneFileWrite: ['pnpm lint'],
   },
   generates: {
-    'src/graphql/helpers/generated.ts': {
-      schema: `${ENV.graphqlHost}/graphql`,
-      documents: 'string',
+    'src/graphql/server/generated/server.ts': {
+      schema: `${ENV.graphqlServerHost}/graphql`,
+      documents: './src/graphql/server/*.gql',
       config: {
-        reactQueryVersion: 5,
-        addSuspenseQuery: true,
-        exposeQueryKeys: true,
-        exposeFetcher: true,
-        exposeMutationKeys: true,
-        skipTypename: true,
-        inputMaybeValue: 'T | null | undefined',
-        maybeValue: 'T | null',
+        ...commonGenerateOptions.config,
         fetcher: {
-          func: './fetcher#fetcher',
-        },
-        avoidOptionals: {
-          field: true,
-          inputValue: false,
-          object: true,
-          defaultValue: true,
-        },
-        scalars: {
-          Date: 'Date',
-          JSON: 'Record<string, any>',
-          ID: 'string',
-          Void: 'void',
-          PositiveInt: 'number',
+          func: '../helpers/serverFetcher#serverFetcher',
         },
       },
-      plugins: [
-        'typescript',
-        '@graphql-codegen/typescript-operations',
-        '@graphql-codegen/typescript-react-query',
-      ],
+      plugins: commonGenerateOptions.plugins,
+    },
+    'src/graphql/bookServer/generated/bookServer.ts': {
+      schema: `${ENV.graphqlBookServerHost}/graphql`,
+      documents: './src/graphql/bookServer/*.gql',
+      config: {
+        ...commonGenerateOptions.config,
+        fetcher: {
+          func: '../helpers/bookServerFetcher#bookServerFetcher',
+        },
+      },
+      plugins: commonGenerateOptions.plugins,
     },
   },
 }

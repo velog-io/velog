@@ -3,8 +3,8 @@ import {
   VelogPostsDocument,
   VelogPostsQuery,
   VelogPostsQueryVariables,
-} from '@/graphql/helpers/generated'
-import { infiniteVelogPostsQueryKey } from '@/graphql/helpers/queryKey'
+} from '@/graphql/server/generated/server'
+import { infiniteVelogPostsQueryKey } from '@/graphql/server/helpers/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'
 

@@ -3,8 +3,8 @@ import {
   TrendingWritersQuery,
   TrendingWritersQueryVariables,
   TrendingWriter,
-} from '@/graphql/helpers/generated'
-import { infiniteTrendingWritersQueryKey } from '@/graphql/helpers/queryKey'
+} from '@/graphql/server/generated/server'
+import { infiniteTrendingWritersQueryKey } from '@/graphql/server/helpers/queryKey'
 import useCustomInfiniteQuery from '@/hooks/useCustomInfiniteQuery'
 import { useMemo } from 'react'
 

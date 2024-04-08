@@ -10,7 +10,7 @@ import Button from '@/components/Button'
 import SettingRow from '../SettingRow'
 import SettingEditButton from '../SettingEditButton'
 import useInputs from '@/hooks/useInputs'
-import { useCurrentUserQuery, useUpdateSocialInfoMutation } from '@/graphql/helpers/generated'
+import { useCurrentUserQuery, useUpdateSocialInfoMutation } from '@/graphql/server/generated/server'
 
 const cx = bindClassNames(styles)
 

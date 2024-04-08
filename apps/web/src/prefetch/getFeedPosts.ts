@@ -1,5 +1,5 @@
 import { ENV } from '@/env'
-import { FeedPostsDocument, Post } from '@/graphql/helpers/generated'
+import { FeedPostsDocument, Post } from '@/graphql/server/generated/server'
 import { getAccessToken } from '@/lib/auth'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 

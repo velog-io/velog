@@ -1,4 +1,4 @@
-import { ReadPostInput, ReadPostDocument, Post } from '@/graphql/helpers/generated'
+import { ReadPostInput, ReadPostDocument, Post } from '@/graphql/server/generated/server'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getPostByUrlSlug({ username, url_slug }: ReadPostInput) {

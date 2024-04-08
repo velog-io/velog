@@ -8,7 +8,7 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { FlatPostCardList, FlatPostCardListSkeleton } from '@/components/FlatPost/FlatPostCardList'
 import { UndrawBlankCanvas } from '@/assets/vectors/components'
 import VelogTag from '../VelogTag'
-import { Post, UserTags } from '@/graphql/helpers/generated'
+import { Post, UserTags } from '@/graphql/server/generated/server'
 
 const cx = bindClassNames(styles)
 

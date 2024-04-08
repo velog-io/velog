@@ -1,4 +1,4 @@
-import { GetUserDocument, User } from '@/graphql/helpers/generated'
+import { GetUserDocument, User } from '@/graphql/server/generated/server'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getUser(username: string) {

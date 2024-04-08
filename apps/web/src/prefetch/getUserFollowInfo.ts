@@ -1,4 +1,4 @@
-import { GetUserFollowInfoDocument, User } from '@/graphql/helpers/generated'
+import { GetUserFollowInfoDocument, User } from '@/graphql/server/generated/server'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getUserFollowInfo(username: string) {

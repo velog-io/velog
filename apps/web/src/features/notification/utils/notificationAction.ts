@@ -4,7 +4,7 @@ import {
   FollowNotificationActionInput,
   NotificationType,
   PostLikeNotificationActionInput,
-} from '@/graphql/helpers/generated'
+} from '@/graphql/server/generated/server'
 import { NotificationMerged, NotificationNotMerged } from '../hooks/useNotificationMerge'
 
 export const isFollowAction = (

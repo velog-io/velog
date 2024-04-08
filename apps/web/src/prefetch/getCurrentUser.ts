@@ -1,4 +1,4 @@
-import { CurrentUserDocument, User } from '@/graphql/helpers/generated'
+import { CurrentUserDocument, User } from '@/graphql/server/generated/server'
 import { getAccessToken } from '@/lib/auth'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 

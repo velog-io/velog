@@ -1,6 +1,6 @@
 'use client'
 
-import { Post } from '@/graphql/helpers/generated'
+import { Post } from '@/graphql/server/generated/server'
 import PostCardGrid from '../PostCardGrid'
 import useFeedPosts from '../../hooks/useFeedPosts'
 import FeedPostsEmpty from './FeedPostsEmpty'

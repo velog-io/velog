@@ -1,7 +1,7 @@
 'use client'
 
-import { fetcher } from '@/graphql/helpers/fetcher'
-import { Exact } from '@/graphql/helpers/generated'
+import { serverFetcher } from '@/graphql/server/helpers/serverFetcher'
+import { Exact } from '@/graphql/server/generated/server'
 import {
   InfiniteData,
   UndefinedInitialDataInfiniteOptions,
@@ -30,7 +30,7 @@ export default function useCustomInfiniteQuery<
         ...rest,
         queryKey,
         queryFn: ({ pageParam }) =>
-          fetcher<TQueryFnData, TVariables>(document, { input: pageParam } as TVariables)(),
+          serverFetcher<TQueryFnData, TVariables>(document, { input: pageParam } as TVariables)(),
         initialPageParam: initialPageParam.input,
       }
     })(),

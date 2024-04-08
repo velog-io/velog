@@ -4,7 +4,7 @@ import {
   useCurrentUserQuery,
   useGetUserAboutQuery,
   useUpdateAboutMutation,
-} from '@/graphql/helpers/generated'
+} from '@/graphql/server/generated/server'
 import styles from './VelogAbout.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { VelogAboutContent, VelogAboutContentSkeleton } from '../VelogAboutContent'

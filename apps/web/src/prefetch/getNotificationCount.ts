@@ -1,4 +1,7 @@
-import { IsLoggedDocument, NotNoticeNotificationCountDocument } from '@/graphql/helpers/generated'
+import {
+  IsLoggedDocument,
+  NotNoticeNotificationCountDocument,
+} from '@/graphql/server/generated/server'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getNotificationCount(): Promise<number> {

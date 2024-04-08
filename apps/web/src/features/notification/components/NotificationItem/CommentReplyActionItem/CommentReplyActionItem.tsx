@@ -1,6 +1,6 @@
 'use client'
 
-import { CommentReplyNotifictionActionInput } from '@/graphql/helpers/generated'
+import { CommentReplyNotifictionActionInput } from '@/graphql/server/generated/server'
 import itemStyles from '../NotificationItem.module.css'
 import styles from './CommentReplyActionItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'

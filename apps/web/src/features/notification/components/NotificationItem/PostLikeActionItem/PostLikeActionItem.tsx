@@ -1,6 +1,6 @@
 'use client'
 
-import { PostLikeNotificationActionInput } from '@/graphql/helpers/generated'
+import { PostLikeNotificationActionInput } from '@/graphql/server/generated/server'
 import itemStyles from '../NotificationItem.module.css'
 import styles from './PostLikeActionItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'

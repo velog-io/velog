@@ -8,7 +8,7 @@ import { validateEmail } from '@/lib/validate'
 import { toast } from 'react-toastify'
 import AuthSocialButtonGroup from '@/features/auth/components/AuthModal/AuthSocialButtonGroup'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { useSendMailMutation } from '@/graphql/helpers/generated'
+import { useSendMailMutation } from '@/graphql/server/generated/server'
 
 const cx = bindClassNames(styles)
 

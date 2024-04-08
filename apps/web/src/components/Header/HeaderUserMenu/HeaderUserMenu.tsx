@@ -4,7 +4,7 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 import HeaderUserMenuItem from '@/components/Header/HeaderUserMenuItem/HeaderUserMenuItem'
 import { useAuth } from '@/state/auth'
 import { useCallback } from 'react'
-import { useLogoutMutation } from '@/graphql/helpers/generated'
+import { useLogoutMutation } from '@/graphql/server/generated/server'
 
 const cx = bindClassNames(styles)
 

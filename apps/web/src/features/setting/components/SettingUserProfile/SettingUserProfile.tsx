@@ -15,7 +15,7 @@ import {
   useCurrentUserQuery,
   useUpdateProfileMutation,
   useUpdateThumbnailMutation,
-} from '@/graphql/helpers/generated'
+} from '@/graphql/server/generated/server'
 import JazzbarContext from '@/providers/JazzbarProvider'
 
 const cx = bindClassNames(styles)

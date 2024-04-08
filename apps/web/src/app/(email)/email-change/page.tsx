@@ -1,7 +1,7 @@
 'use client'
 
 import SpinnerBlock from '@/components/SpinnerBlock'
-import { useConfirmChangeEmailMutation } from '@/graphql/helpers/generated'
+import { useConfirmChangeEmailMutation } from '@/graphql/server/generated/server'
 import { usePopup } from '@/state/popup'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef } from 'react'
@@ -13,7 +13,7 @@ type Props = {
 
 export default function Page({ searchParams }: Props) {
   const code = searchParams.code
-  const { mutateAsync } = useConfirmChangeEmailMutation()
+  const { mutateAsync } = useConfirmChangeEmailMutation({})
   const router = useRouter()
   const { actions } = usePopup()
   const hasChecked = useRef<boolean>(false)

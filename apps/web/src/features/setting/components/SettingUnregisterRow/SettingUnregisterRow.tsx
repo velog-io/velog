@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import SettingRow from '../SettingRow'
 import Button from '@/components/Button'
 import PopupOKCancel from '@/components/PopupOKCancel'
-import { useUnregisterMutation, useUnregisterTokenQuery } from '@/graphql/helpers/generated'
+import { useUnregisterMutation, useUnregisterTokenQuery } from '@/graphql/server/generated/server'
 import { toast } from 'react-toastify'
 
 type Props = {}

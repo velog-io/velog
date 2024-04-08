@@ -3,7 +3,7 @@
 import styles from './CommentActionItem.module.css'
 import itemStyles from '../NotificationItem.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
-import { CommentNotificationActionInput } from '@/graphql/helpers/generated'
+import { CommentNotificationActionInput } from '@/graphql/server/generated/server'
 import { NotificationNotMerged } from '@/features/notification/hooks/useNotificationMerge'
 import Link from 'next/link'
 import Thumbnail from '@/components/Thumbnail'

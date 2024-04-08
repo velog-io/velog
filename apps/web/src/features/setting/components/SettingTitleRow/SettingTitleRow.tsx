@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import SettingRow from '../SettingRow'
 import SettingInput from '../SettingInput'
 import Button from '@/components/Button'
-import { useUpdateVelogTitleMutation, useVelogConfigQuery } from '@/graphql/helpers/generated'
+import { useUpdateVelogTitleMutation, useVelogConfigQuery } from '@/graphql/server/generated/server'
 
 const cx = bindClassNames(styles)
 

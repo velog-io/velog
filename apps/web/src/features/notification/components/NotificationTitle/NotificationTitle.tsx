@@ -3,7 +3,7 @@
 import {
   useNotNoticeNotificationCountQuery,
   useUpdateNotNoticeNotificationMutation,
-} from '@/graphql/helpers/generated'
+} from '@/graphql/server/generated/server'
 import styles from './NotificationTitle.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import { useEffect } from 'react'

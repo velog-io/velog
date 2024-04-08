@@ -9,7 +9,7 @@ import { useParams, usePathname } from 'next/navigation'
 import AdPostCard from '../PostCard/AdPostCard'
 
 import { Fragment, useEffect, useRef } from 'react'
-import { Post } from '@/graphql/helpers/generated'
+import { Post } from '@/graphql/server/generated/server'
 import PostCardSkeletonGrid from './PostCardSkeletonGrid'
 import { TrendingPost } from '../../interface/post'
 import PostCard from '../PostCard/PostCard'

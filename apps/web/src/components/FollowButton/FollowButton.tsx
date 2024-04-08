@@ -6,7 +6,7 @@ import {
   useFollowMutation,
   useGetUserFollowInfoQuery,
   useUnfollowMutation,
-} from '@/graphql/helpers/generated'
+} from '@/graphql/server/generated/server'
 import { useAuth } from '@/state/auth'
 import { debounce } from 'throttle-debounce'
 import { useModal } from '@/state/modal'

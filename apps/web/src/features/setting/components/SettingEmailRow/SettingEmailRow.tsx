@@ -13,7 +13,7 @@ import { toast } from 'react-toastify'
 import {
   useCheckEmailExistsQuery,
   useInitiateChangeEmailMutation,
-} from '@/graphql/helpers/generated'
+} from '@/graphql/server/generated/server'
 
 const cx = bindClassNames(styles)
 

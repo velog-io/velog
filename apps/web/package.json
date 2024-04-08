@@ -22,13 +22,13 @@
     "lint": "prettier -w . ",
     "create-component": "tsx ./scripts/createComponent.ts",
     "create-svg-component": "tsx ./scripts/createSvgComponent.ts",
-    "codegen": "pnpm env:copy -e development && graphql-codegen --config codegen.ts -r dotenv/config",
+    "codegen": "pnpm env:copy -e development && graphql-codegen-esm --config codegen.ts -r dotenv/config",
     "ssm": "tsx ./scripts/ssm.mts"
   },
   "dependencies": {
     "@packages/scripts": "workspace:*",
     "@sentry/browser": "^7.75.0",
-    "@tanstack/react-query": "^5.18.0",
+    "@tanstack/react-query": "^5.29.0",
     "axios": "^1.4.0",
     "codemirror": "5.51",
     "date-fns": "^2.30.0",
@@ -71,9 +71,10 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.0",
-    "@graphql-codegen/typescript-operations": "^4.0.1",
-    "@graphql-codegen/typescript-react-query": "^6.0.0",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/plugin-helpers": "^5.0.3",
+    "@graphql-codegen/typescript-operations": "^4.2.0",
+    "@graphql-codegen/typescript-react-query": "^6.1.0",
     "@svgr/cli": "^8.0.1",
     "@testing-library/react": "^14.0.0",
     "@types/codemirror": "^0.0.84",

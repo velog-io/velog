@@ -10,7 +10,7 @@ import {
   useNotificationQuery,
   useReadAllNotificationsMutation,
   useRemoveAllNotificationsMutation,
-} from '@/graphql/helpers/generated'
+} from '@/graphql/server/generated/server'
 import PopupOKCancel from '@/components/PopupOKCancel'
 import { useEffect, useState } from 'react'
 import { useQueries } from '@tanstack/react-query'

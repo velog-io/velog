@@ -1,0 +1,3 @@
+mutation deploy($input: DeployInput!) {
+  deploy(input: $input)
+}

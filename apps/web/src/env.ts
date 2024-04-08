@@ -16,8 +16,9 @@ const env = z.object({
   clientV2Host: z.string(),
   apiV2Host: z.string(),
   apiV3Host: z.string(),
-  graphqlHost: z.string(),
-  graphqlHostNoCDN: z.string(),
+  graphqlServerHost: z.string(),
+  graphqlServerHostNoCDN: z.string(),
+  graphqlBookServerHost: z.string(),
   defaultPostLimit: z.number().default(20),
   gaMeasurementId: z.string(),
 })
@@ -31,7 +32,8 @@ export const ENV = env.parse({
   clientV2Host: process.env.NEXT_PUBLIC_CLIENT_V2_HOST,
   apiV2Host: process.env.NEXT_PUBLIC_API_V2_HOST,
   apiV3Host: process.env.NEXT_PUBLIC_API_V3_HOST,
-  graphqlHost: process.env.NEXT_PUBLIC_GRAPHQL_HOST,
-  graphqlHostNoCDN: process.env.NEXT_PUBLIC_GRAPHQL_HOST_NOCDN,
+  graphqlServerHost: process.env.NEXT_PUBLIC_GRAPHQL_SERVER_HOST,
+  graphqlServerHostNoCDN: process.env.NEXT_PUBLIC_GRAPHQL_SERVER_HOST_NOCDN,
+  graphqlBookServerHost: process.env.NEXT_PUBLIC_GRAPHQL_BOOK_SERVER_HOST,
   gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
 })

@@ -11,11 +11,14 @@ import { includeProtocol } from '@/lib/includeProtocol'
 import { MdHome } from 'react-icons/md'
 import FollowButton from '../FollowButton'
 import { useAuth } from '@/state/auth'
-import { UserProfile as Profile, useGetUserFollowInfoQuery } from '@/graphql/helpers/generated'
+import {
+  UserProfile as Profile,
+  useGetUserFollowInfoQuery,
+} from '@/graphql/server/generated/server'
 import { useParams } from 'next/navigation'
 import { getUsernameFromParams } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
-import { infiniteGetFollowersQueryKey } from '@/graphql/helpers/queryKey'
+import { infiniteGetFollowersQueryKey } from '@/graphql/server/helpers/queryKey'
 
 const cx = bindClassNames(styles)
 

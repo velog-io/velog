@@ -1,4 +1,4 @@
-import { AdsDocument, AdsInput } from '@/graphql/helpers/generated'
+import { AdsDocument, AdsInput } from '@/graphql/server/generated/server'
 import graphqlFetch, { GraphqlRequestBody } from '@/lib/graphqlFetch'
 
 export default async function getAds({ type, limit }: AdsInput) {

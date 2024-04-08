@@ -1,6 +1,6 @@
 'use client'
 
-import { useCurrentUserQuery, useNotificationQuery } from '@/graphql/helpers/generated'
+import { useCurrentUserQuery, useNotificationQuery } from '@/graphql/server/generated/server'
 import styles from './NotificationList.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import useNotificationMerge from '../../hooks/useNotificationMerge'

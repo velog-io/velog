@@ -1,4 +1,4 @@
-import { Post } from '@/graphql/helpers/generated'
+import { Post } from '@/graphql/server/generated/server'
 import styles from './FlatPostCard.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
 import Link from 'next/link'
@@ -56,9 +56,7 @@ function FlatPostCard({ post, hideUser }: Props) {
         {post.short_description?.length === 150 && '...'}
       </p>
       <div className={cx('tagsWrapper')}>
-        {post.tags?.map((tag) => (
-          <TagItem key={tag} name={tag} link={true} />
-        ))}
+        {post.tags?.map((tag) => <TagItem key={tag} name={tag} link={true} />)}
       </div>
       <div className={cx('subInfo')}>
         <span>{releasedAt}</span>
