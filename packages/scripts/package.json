@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "lint": "prettier -w ."
+    "lint": "prettier -w . --cache"
   },
   "main": "./index.mts",
   "types": "./index.mts",
