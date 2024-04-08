@@ -73,11 +73,9 @@ export class TagService implements Service {
         ],
       })
       return this.utils
-        .groupById<Prisma.PostTagGetPayload<{ include: { tag: true } }>>(
-          postIds as string[],
-          postsTags,
-          (pt) => pt.fk_post_id!,
-        )
+        .groupById<
+          Prisma.PostTagGetPayload<{ include: { tag: true } }>
+        >(postIds as string[], postsTags, (pt) => pt.fk_post_id!)
         .map((array) => array.map((pt) => pt.tag!))
     })
   }
