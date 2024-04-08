@@ -7,6 +7,7 @@ import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 import { ENV } from 'src/env.mjs'
 import { CheckSpamPostJob } from '@jobs/CheckSpamPostJob.js'
+import fp from 'fastify-plugin'
 
 const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   const calculatePostScoreJob = container.resolve(CalculatePostScoreJob)
@@ -111,8 +112,6 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   }
 }
 
-export default cronPlugin
-
 function isNeedParamJobService(arg: any): arg is NeedParamJobService {
   return arg.jobService instanceof CalculatePostScoreJob
 }
@@ -164,3 +163,5 @@ type NeedParamJobService = BaseJobService & {
 type NotNeedParamJobService = Omit<BaseJobService, 'param'> & {
   jobService: Exclude<JobService, CalculatePostScoreJob>
 }
+
+export default fp(cronPlugin)

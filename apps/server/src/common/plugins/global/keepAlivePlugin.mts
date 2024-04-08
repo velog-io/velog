@@ -1,4 +1,5 @@
 import { FastifyPluginAsync } from 'fastify'
+import fp from 'fastify-plugin'
 
 let isClosing = false
 export const startClosing = () => {
@@ -16,4 +17,4 @@ const keepAlivePlugin: FastifyPluginAsync = async (fastify) => {
   })
 }
 
-export default keepAlivePlugin
+export default fp(keepAlivePlugin)

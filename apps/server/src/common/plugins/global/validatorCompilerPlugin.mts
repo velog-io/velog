@@ -1,6 +1,7 @@
 // const Ajv = require('ajv')
 import Ajv from 'ajv'
 import { FastifyPluginAsync } from 'fastify'
+import fp from 'fastify-plugin'
 
 const schemaCompilers = {
   body: new Ajv.default({
@@ -39,4 +40,4 @@ const validatorCompiler: FastifyPluginAsync = async (fastify) => {
   })
 }
 
-export default validatorCompiler
+export default fp(validatorCompiler)

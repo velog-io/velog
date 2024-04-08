@@ -1,4 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
+import fp from 'fastify-plugin'
 
 // TODO: apply fastify-plugin
 const ipaddrPlugin: FastifyPluginAsync = async (fastify) => {
@@ -17,4 +18,4 @@ const ipaddrPlugin: FastifyPluginAsync = async (fastify) => {
   })
 }
 
-export default ipaddrPlugin
+export default fp(ipaddrPlugin)

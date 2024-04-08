@@ -11,6 +11,7 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
+    'next',
   ],
   rules: {
     'prettier/prettier': ['error', { semi: false, singleQuote: true }],

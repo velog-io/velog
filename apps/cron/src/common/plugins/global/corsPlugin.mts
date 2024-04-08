@@ -2,6 +2,7 @@ import { FastifyPluginCallback } from 'fastify'
 import { ENV } from 'src/env.mjs'
 import cors from '@fastify/cors'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
+import fp from 'fastify-plugin'
 
 const corsPlugin: FastifyPluginCallback = (fastify, opts, done) => {
   const corsWhitelist: RegExp[] = [
@@ -30,4 +31,4 @@ const corsPlugin: FastifyPluginCallback = (fastify, opts, done) => {
   done()
 }
 
-export default corsPlugin
+export default fp(corsPlugin)

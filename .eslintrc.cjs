@@ -4,7 +4,7 @@ module.exports = {
   parserOptions: {
     project: true,
   },
-  ignorePatterns: ["apps/**", "packages/**", "node_modules/", "dist/"],
+  ignorePatterns: ["node_modules/", "dist/"],
   env: {
     node: true,
     jest: true,
@@ -12,5 +12,18 @@ module.exports = {
   globals: {
     react: true,
     jsx: true,
+  },
+  rules: {
+    "prettier/prettier": ["error", { semi: false, singleQuote: true }],
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { ignoreRestSiblings: true },
+    ],
   },
 };

@@ -5,6 +5,7 @@ import { container } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'
 import { CookieService } from '@lib/cookie/CookieService.js'
 import { Time } from '@constants/TimeConstants.js'
+import fp from 'fastify-plugin'
 
 // TODO: apply fastify-plugin
 const authPlugin: FastifyPluginAsync = async (fastify) => {
@@ -78,4 +79,4 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
   })
 }
 
-export default authPlugin
+export default fp(authPlugin)

@@ -1,6 +1,7 @@
 import { ENV } from 'src/env.mjs'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { FastifyPluginCallback } from 'fastify'
+import fp from 'fastify-plugin'
 
 const checkApiKeyPlugin: FastifyPluginCallback = (fastify, opts, done) => {
   fastify.addHook('preHandler', (request, reply, done) => {
@@ -17,4 +18,4 @@ const checkApiKeyPlugin: FastifyPluginCallback = (fastify, opts, done) => {
   done()
 }
 
-export default checkApiKeyPlugin
+export default fp(checkApiKeyPlugin)
