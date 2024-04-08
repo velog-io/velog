@@ -32,7 +32,7 @@ const bookResolvers: Resolvers = {
   Subscription: {
     bookDeploy: {
       subscribe: async (parent, { input }, { pubsub }) => {
-        return await pubsub.subscribe('hello')
+        return await pubsub.subscribe(`bookDeploy:${input.book_id}`)
       },
     },
   },
