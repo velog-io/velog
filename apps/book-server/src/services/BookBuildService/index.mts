@@ -4,7 +4,11 @@ import { injectable, singleton } from 'tsyringe'
 import path from 'path'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
 import fs from 'fs-extra'
-import { exec } from 'child_process'
+import { PageService } from '../PageService/index.mjs'
+import { exec as execCb } from 'child_process'
+import { promisify } from 'util'
+
+const exec = promisify(execCb)
 
 interface Service {
   build(bookId: string): Promise<void>
@@ -13,7 +17,10 @@ interface Service {
 @injectable()
 @singleton()
 export class BookBuildService implements Service {
-  constructor(private readonly mongo: MongoService) {}
+  constructor(
+    private readonly mongo: MongoService,
+    private readonly pageService: PageService,
+  ) {}
   async build(bookId: string): Promise<void> {
     //TODO: ADD authentication
     const book = await this.mongo.book.findUnique({
@@ -41,15 +48,26 @@ export class BookBuildService implements Service {
     await fs.copy(src, dest, { dereference: true })
 
     //nextra install
-    exec('pnpm i', { cwd: dest }, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`)
-        return
-      }
-      console.log(`stdout: ${stdout}`)
-      console.error(`stderr: ${stderr}`)
-    })
-
+    await this.installDependencies(dest)
     // json to files
+    const pages = await this.pageService.organizePages(bookId)
+
+    console.log(pages.slice(0, 1))
+
+    // create meta.json
+
+    // test: remove file
+    fs.rmSync(dest, { recursive: true, force: true })
+  }
+  private async installDependencies(dest: string) {
+    try {
+      const { stdout, stderr } = await exec('pnpm i', { cwd: dest })
+      console.log(`stdout: ${stdout}`)
+      if (stderr) {
+        console.error(`stderr: ${stderr}`)
+      }
+    } catch (error) {
+      console.error(`exec error: ${error}`)
+    }
   }
 }
