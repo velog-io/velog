@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import { Book as BookModel } from '@packages/database/velog-book-mongo'
-import { GraphQLContext } from '../../common/interfaces/graphql.mjs'
+import { GraphQLContext } from '../common/interfaces/graphql.mjs'
 export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -40,12 +40,21 @@ export type BookInput = {
   book_id: Scalars['ID']['input']
 }
 
+export type BuildInput = {
+  book_id: Scalars['ID']['input']
+}
+
 export type DeployInput = {
   book_id: Scalars['ID']['input']
 }
 
 export type Mutation = {
+  build?: Maybe<Scalars['Void']['output']>
   deploy?: Maybe<Scalars['Void']['output']>
+}
+
+export type MutationBuildArgs = {
+  input: BuildInput
 }
 
 export type MutationDeployArgs = {
@@ -171,6 +180,7 @@ export type ResolversTypes = {
   Book: ResolverTypeWrapper<BookModel>
   BookInput: BookInput
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
+  BuildInput: BuildInput
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
   DeployInput: DeployInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
@@ -190,6 +200,7 @@ export type ResolversParentTypes = {
   Book: BookModel
   BookInput: BookInput
   Boolean: Scalars['Boolean']['output']
+  BuildInput: BuildInput
   Date: Scalars['Date']['output']
   DeployInput: DeployInput
   ID: Scalars['ID']['output']
@@ -228,6 +239,12 @@ export type MutationResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
+  build?: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationBuildArgs, 'input'>
+  >
   deploy?: Resolver<
     Maybe<ResolversTypes['Void']>,
     ParentType,

@@ -82,7 +82,7 @@
     "@types/gtag.js": "^0.0.12",
     "@types/inquirer": "^9.0.3",
     "@types/jest": "^29.5.2",
-    "@types/node": "^20.3.1",
+    "@types/node": "^20.12.5",
     "@types/prismjs": "^1.26.2",
     "@types/react": "^18.2.48",
     "@types/react-dom": "18.2.6",
@@ -98,7 +98,7 @@
     "husky": "^8.0.0",
     "husky-init": "^8.0.0",
     "prettier": "^2.8.8",
-    "typescript": "^5.3.3",
+    "typescript": "^5.4.4",
     "typescript-plugin-css-modules": "^5.0.1"
   }
 }

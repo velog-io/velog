@@ -2,14 +2,14 @@ import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: 'src/graphql/**/*.gql',
+  schema: 'src/graphql/*.gql',
   documents: undefined,
   hooks: {
     afterOneFileWrite: ['prettier --write'],
   },
   emitLegacyCommonJSImports: false,
   generates: {
-    'src/graphql/helpers/generated.ts': {
+    'src/graphql/generated.ts': {
       plugins: [
         'typescript',
         'typescript-resolvers',
@@ -22,7 +22,7 @@ const config: CodegenConfig = {
       ],
       config: {
         skipTypename: true,
-        contextType: '../../common/interfaces/graphql.mjs#GraphQLContext',
+        contextType: '../common/interfaces/graphql.mjs#GraphQLContext',
         mappers: {
           Book: '@packages/database/velog-book-mongo#Book as BookModel',
         },

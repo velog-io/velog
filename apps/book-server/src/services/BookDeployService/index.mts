@@ -16,7 +16,6 @@ export class BookDeployService implements Service {
   constructor(
     private readonly writerService: WriterService,
     private readonly bookService: BookService,
-    private readonly bookBuildService: BookBuildService,
   ) {}
   async deploy(bookId: string, signedUserId?: string): Promise<void> {
     if (!signedUserId) {
@@ -38,7 +37,5 @@ export class BookDeployService implements Service {
     if (book.writer_id !== writer.id) {
       throw new ConfilctError('Not owner of book')
     }
-
-    await this.bookBuildService.build(book)
   }
 }

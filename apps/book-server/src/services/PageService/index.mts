@@ -1,4 +1,4 @@
-import { Page } from '@graphql/helpers/generated.js'
+import { Page } from '@graphql/generated.js'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { injectable, singleton } from 'tsyringe'
 

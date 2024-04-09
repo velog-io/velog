@@ -83,7 +83,6 @@ class Seeder {
 
 const main = async () => {
   const mongo = new MongoService()
-
   const seeder = new Seeder(mongo)
 
   try {
