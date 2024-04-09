@@ -15,6 +15,7 @@ export class PageService implements Service {
       where: {
         book_id: bookId,
       },
+      orderBy: [{ index: 'asc' }],
     })
 
     const bookMap = new Map()
@@ -45,6 +46,6 @@ export class PageService implements Service {
   }
 }
 
-type PageData = {
+export type PageData = {
   childrens?: Page[]
 } & Page

@@ -75,6 +75,6 @@
     "prettier": "^3.2.5",
     "ts-node": "^10.9.1",
     "tsx": "^4.6.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.4"
   }
 }

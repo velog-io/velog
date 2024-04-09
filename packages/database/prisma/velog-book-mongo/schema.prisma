@@ -35,7 +35,9 @@ model Page {
   book_id   String  @db.ObjectId
   title     String  @db.String
   body      String  @db.String
+  type      String  @db.String
   parent_id String? @db.String
+  index     Int     @db.Int
   book      Book    @relation(fields: [book_id], references: [id])
 
   @@map("pages")

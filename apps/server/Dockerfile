@@ -23,7 +23,6 @@ ENV APP_NAME="server"
 ENV APP_DIR="apps/${APP_NAME}"
 RUN echo "APP_DIR value is: ${APP_DIR}"
 
-
 WORKDIR /app
 
 FROM base AS pruner

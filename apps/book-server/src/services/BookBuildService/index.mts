@@ -4,9 +4,10 @@ import { injectable, singleton } from 'tsyringe'
 import path from 'path'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
 import fs from 'fs-extra'
-import { PageService } from '../PageService/index.mjs'
+import { PageData, PageService } from '../PageService/index.mjs'
 import { exec as execCb } from 'child_process'
 import { promisify } from 'util'
+import { Page } from '@graphql/generated.js'
 
 const exec = promisify(execCb)
 
@@ -38,6 +39,7 @@ export class BookBuildService implements Service {
 
     const exists = fs.existsSync(dest)
     if (exists) {
+      fs.rmSync(dest, { recursive: true, force: true })
       throw new ConfilctError('Build process already in progress for this book')
     }
     // Create folder
@@ -52,16 +54,14 @@ export class BookBuildService implements Service {
     // json to files
     const pages = await this.pageService.organizePages(bookId)
 
-    console.log(pages.slice(0, 1))
-
     // create meta.json
+    await this.writeMetaJson(pages, `${dest}/pages`, true)
 
-    // test: remove file
-    fs.rmSync(dest, { recursive: true, force: true })
+    await exec('pnpm prettier -w .', { cwd: dest })
   }
   private async installDependencies(dest: string) {
     try {
-      const { stdout, stderr } = await exec('pnpm i', { cwd: dest })
+      const { stdout, stderr } = await exec('pnpm i next', { cwd: dest })
       console.log(`stdout: ${stdout}`)
       if (stderr) {
         console.error(`stderr: ${stderr}`)
@@ -70,4 +70,35 @@ export class BookBuildService implements Service {
       console.error(`exec error: ${error}`)
     }
   }
+  private async writeMetaJson(book: BookResult[], baseDest: string, isinit: boolean = false) {
+    const generateKey = (page: Page, index: number, isMdx = true) =>
+      isinit && isMdx && index === 0 ? 'index' : `${page.title}_${page.id}`.replaceAll(' ', '_')
+
+    const meta = book.reduce(
+      (acc, page, index) => {
+        const key = generateKey(page, index)
+        acc[key] = page.title
+        return acc
+      },
+      {} as Record<string, string>,
+    )
+
+    fs.writeFileSync(`${baseDest}/_meta.json`, JSON.stringify(meta, null, 2))
+
+    const promises = book.map((page, index) => {
+      const mdxTarget = path.resolve(baseDest, `${generateKey(page, index)}.mdx`)
+      fs.writeFileSync(mdxTarget, page.body)
+
+      if (page.childrens.length > 0) {
+        const folderPath = generateKey(page, index, false)
+        const targetPath = `${baseDest}/${folderPath}`
+        fs.mkdirSync(targetPath)
+        return this.writeMetaJson(page.childrens, targetPath, false)
+      }
+    })
+
+    await Promise.all(promises)
+  }
 }
+
+type BookResult = PageData

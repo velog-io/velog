@@ -175,7 +175,7 @@ importers:
         specifier: ^4.6.2
         version: 4.7.2
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.4.4
         version: 5.4.4
 
   apps/cron:
@@ -236,7 +236,7 @@ importers:
         version: 1.8.8
       tsx:
         specifier: ^4.7.1
-        version: 4.7.1
+        version: 4.7.2
       tsyringe:
         specifier: ^4.7.0
         version: 4.7.0
@@ -443,7 +443,7 @@ importers:
         specifier: ^4.7.0
         version: 4.7.0
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.4.4
         version: 5.4.4
       uuid:
         specifier: ^9.0.1
@@ -803,7 +803,7 @@ importers:
         version: 16.4.5
       tsx:
         specifier: ^4.7.1
-        version: 4.7.1
+        version: 4.7.2
       zod:
         specifier: ^3.21.4
         version: 3.22.4
@@ -894,7 +894,7 @@ importers:
         specifier: ^3.2.5
         version: 3.2.5
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.4.4
         version: 5.4.4
 
   packages/libs:
@@ -1007,7 +1007,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.12)(@types/node@20.12.5)(typescript@5.4.4)
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.4.4
         version: 5.4.4
 
   packages/scripts:
@@ -16012,7 +16012,6 @@ packages:
       get-tsconfig: 4.7.2
     optionalDependencies:
       fsevents: 2.3.3
-    dev: true
 
   /tsyringe@4.7.0:
     resolution: {integrity: sha512-ncFDM1jTLsok4ejMvSW5jN1VGPQD48y2tfAR0pdptWRKYX4bkbqPt92k7KJ5RFJ1KV36JEs/+TMh7I6OUgj74g==}

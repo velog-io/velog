@@ -3,9 +3,72 @@ import { faker } from '@faker-js/faker'
 export const getMockPages = (count: number) =>
   Array(count)
     .fill(0)
-    .map(() => ({
-      title: faker.lorem.text(),
-      body: faker.lorem.sentences({ min: 10, max: 1000 }),
-    }))
+    .map((_, index) => {
+      if (index === 2 || index === 6) {
+        return {
+          title: 'About',
+          index: index,
+          body: '',
+          type: 'separator',
+        }
+      }
+      const title = faker.company.catchPhrase()
+      return {
+        title,
+        index: index,
+        type: 'page',
+        body: `# ${title}_${index}
+        - ${faker.lorem.paragraph(2)}
+        - ${faker.lorem.paragraph(1)}
+        - [${faker.lorem.words(2)}](${faker.internet.url()})
+        
+        ## ${faker.company.catchPhrase()}
+        - ${faker.lorem.paragraph(1)}
+        - ${faker.lorem.paragraph(2)}
+  
+        ## ${faker.company.catchPhrase()}
+        - ${faker.lorem.paragraph(3)}
+        - ${faker.lorem.paragraph(1)}
+  
+        ### ${faker.company.catchPhrase()}
+        - ${faker.lorem.paragraph(3)}
+        - ${faker.lorem.paragraph(1)}
+  
+        # ${faker.company.catchPhrase()}
+        - ${faker.lorem.paragraph(1)}
+        - ${faker.lorem.paragraph(2)}
+  
+        ## ${faker.company.catchPhrase()}
+        - ${faker.lorem.paragraph(3)}
+        - ${faker.lorem.paragraph(1)}
+  
+        ### ${faker.company.catchPhrase()}
+        - ${faker.lorem.paragraph(3)}
+        - ${faker.lorem.paragraph(1)}
+        
+        ${faker.lorem.paragraphs(2)}
+  
+        ${
+          index === 0 &&
+          `
+        \`\`\`js filename="demo.js" {4} copy
+        import { useState } from 'react'
+        
+        export const Counter = () => {
+          const [count, setCount] = useState(0)
+          return (
+            <div>
+              <button onClick={() => setCount(count + 1)} className={styles.counter}>
+                Clicked {count} times
+              </button>
+            </div>
+          )
+        }
+        \`\`\`
+        `
+        }
+      `.replaceAll('      ', ''),
+      }
+    })
 
 export const getMockBooks = () => Array(100).fill(0).map(getMockPages)
