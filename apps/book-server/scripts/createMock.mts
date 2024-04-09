@@ -30,6 +30,7 @@ class Seeder {
     const book = await this.mongo.book.create({
       data: {
         writer_id: writer.id,
+        title: 'Learning bunJS is Fun!',
         thumbnail: faker.image.dataUri(),
         pages: {
           createMany: {

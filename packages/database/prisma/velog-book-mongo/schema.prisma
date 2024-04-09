@@ -20,6 +20,7 @@ model Writer {
 
 model Book {
   id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  title        String  @db.String
   thumbnail    String  @db.String
   writer_id    String  @db.ObjectId
   is_published Boolean @default(false)

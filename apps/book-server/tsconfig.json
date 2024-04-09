@@ -13,7 +13,8 @@
       "@errors/*": ["src/common/errors/*"],
       "@graphql/*": ["src/graphql/*"],
       "@plugins/*": ["src/common/plugins/*"],
-      "@interfaces/*": ["src/common/interfaces/*"]
+      "@interfaces/*": ["src/common/interfaces/*"],
+      "@templates/*": ["src/templates/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"],
     "outDir": "./dist",

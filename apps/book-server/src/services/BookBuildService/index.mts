@@ -8,6 +8,8 @@ import { PageData, PageService } from '../PageService/index.mjs'
 import { exec as execCb } from 'child_process'
 import { promisify } from 'util'
 import { Page } from '@graphql/generated.js'
+import { indexJSXTemplate } from '@templates/indexJSXTemplate.js'
+import { themeConfigTemplate } from '@templates/themeConfigTemplate.js'
 
 const exec = promisify(execCb)
 
@@ -54,8 +56,12 @@ export class BookBuildService implements Service {
     // json to files
     const pages = await this.pageService.organizePages(bookId)
 
-    // create meta.json
-    await this.writeMetaJson(pages, `${dest}/pages`, true)
+    // create meta.jsonP
+    const pagesPath = `${dest}/pages`
+    await this.writeMetaJson(pages, pagesPath)
+
+    fs.writeFileSync(`${dest}/theme.config.tsx`, themeConfigTemplate({ title: book.title }))
+    fs.writeFileSync(`${pagesPath}/index.jsx`, indexJSXTemplate(this.generateKey(pages[0])))
 
     await exec('pnpm prettier -w .', { cwd: dest })
   }
@@ -70,13 +76,15 @@ export class BookBuildService implements Service {
       console.error(`exec error: ${error}`)
     }
   }
-  private async writeMetaJson(book: BookResult[], baseDest: string, isinit: boolean = false) {
-    const generateKey = (page: Page, index: number, isMdx = true) =>
-      isinit && isMdx && index === 0 ? 'index' : `${page.title}_${page.id}`.replaceAll(' ', '_')
-
+  private generateKey = (page: Page) => `${page.title}_${page.id}`.replace(/[^a-zA-Z0-9-_]/g, '_')
+  private async writeMetaJson(book: BookResult[], baseDest: string, isinit = false) {
+    let indexPageName = ''
     const meta = book.reduce(
       (acc, page, index) => {
-        const key = generateKey(page, index)
+        const key = this.generateKey(page)
+        if (index === 0) {
+          indexPageName = key
+        }
         acc[key] = page.title
         return acc
       },
@@ -86,14 +94,14 @@ export class BookBuildService implements Service {
     fs.writeFileSync(`${baseDest}/_meta.json`, JSON.stringify(meta, null, 2))
 
     const promises = book.map((page, index) => {
-      const mdxTarget = path.resolve(baseDest, `${generateKey(page, index)}.mdx`)
+      const mdxTarget = path.resolve(baseDest, `${this.generateKey(page)}.mdx`)
       fs.writeFileSync(mdxTarget, page.body)
 
       if (page.childrens.length > 0) {
-        const folderPath = generateKey(page, index, false)
+        const folderPath = this.generateKey(page)
         const targetPath = `${baseDest}/${folderPath}`
         fs.mkdirSync(targetPath)
-        return this.writeMetaJson(page.childrens, targetPath, false)
+        return this.writeMetaJson(page.childrens, targetPath)
       }
     })
 

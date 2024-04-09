@@ -1,23 +1,18 @@
-import type { DocsThemeConfig } from 'nextra-theme-docs'
+import nextra from 'nextra'
 
-const config: DocsThemeConfig = {
-  logo: '<span>My Nextra Documentation</span>',
-  editLink: {
-    text: '',
+const withNextra = nextra({
+  theme: 'nextra-theme-docs',
+  themeConfig: './theme.config.tsx',
+  latex: true,
+  flexsearch: {
+    codeblocks: false,
   },
-  feedback: {
-    content: '',
-  },
-  sidebar: {
-    titleComponent({ title, type }) {
-      if (type === 'separator') {
-        return <span className="cursor-default">{title}</span>
-      }
-      return <>{title}</>
-    },
-    defaultMenuCollapseLevel: 1,
-    toggleButton: true,
-  },
+  defaultShowCopyCode: true,
+})
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',
 }
 
-export default config
+export default withNextra(nextConfig)
