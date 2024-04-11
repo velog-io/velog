@@ -7,26 +7,24 @@ type Book {
 }
 
 type Query {
-  book(input: BookInput!): Book
+  book(input: BookIDInput!): Book
 }
 
 type Mutation {
-  deploy(input: DeployInput!): Void
-  build(input: BuildInput!): Void
+  deploy(input: BookIDInput!): Void
+  build(input: BookIDInput!): Void
 }
 
 type Subscription {
-  bookDeploy(input: DeployInput!): Void
+  bookBuildInstalled(input: BookIDInput!): SubScriptionPayload
+  bookBuildCompleted(input: BookIDInput!): SubScriptionPayload
+  bookDeployCompleted(input: BookIDInput!): SubScriptionPayload
 }
 
-input BookInput {
+input BookIDInput {
   book_id: ID!
 }
 
-input DeployInput {
-  book_id: ID!
-}
-
-input BuildInput {
-  book_id: ID!
+type SubScriptionPayload {
+  message: String!
 }

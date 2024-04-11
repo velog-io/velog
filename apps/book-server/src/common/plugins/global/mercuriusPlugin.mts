@@ -6,12 +6,15 @@ import { isHttpError } from '@errors/HttpError.mjs'
 import { container } from 'tsyringe'
 import { DiscordService } from '@lib/discord/DiscordService.mjs'
 import { EnvService } from '@lib/env/EnvService.mjs'
-import { MqService } from '@lib/mq/MqService.mjs'
+import { MqOptions, MqService } from '@lib/mq/MqService.mjs'
 import { GraphQLContextBase } from '@interfaces/graphql.mjs'
 
 const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
   const env = container.resolve(EnvService)
-  const mqService = new MqService({ port: 6379, host: env.get('redisHost') })
+  container.register<MqService>(MqService, {
+    useValue: new MqService({ host: env.get('redisHost'), port: 6379 }),
+  })
+  const mqService = container.resolve(MqService)
 
   fastify.register(mercurius, {
     logLevel: 'error',

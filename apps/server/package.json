@@ -65,7 +65,7 @@
     "marked": "^8.0.0",
     "mercurius": "^14.0.0",
     "mime-types": "^2.1.35",
-    "nanoid": "^4.0.2",
+    "nanoid": "^5.0.7",
     "nanoid-dictionary": "^4.3.0",
     "pino-pretty": "^10.0.0",
     "prisma": "^5.11.0",

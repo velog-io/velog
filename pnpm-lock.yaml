@@ -80,6 +80,9 @@ importers:
       mqemitter-redis:
         specifier: ^5.0.0
         version: 5.0.0
+      nanoid:
+        specifier: ^5.0.7
+        version: 5.0.7
       prisma:
         specifier: ^5.11.0
         version: 5.12.1
@@ -438,8 +441,8 @@ importers:
         specifier: ^2.1.35
         version: 2.1.35
       nanoid:
-        specifier: ^4.0.2
-        version: 4.0.2
+        specifier: ^5.0.7
+        version: 5.0.7
       nanoid-dictionary:
         specifier: ^4.3.0
         version: 4.3.0
@@ -634,8 +637,8 @@ importers:
         specifier: ^9.2.7
         version: 9.2.16
       nanoid:
-        specifier: ^4.0.2
-        version: 4.0.2
+        specifier: ^5.0.7
+        version: 5.0.7
       next:
         specifier: ^14.1.0
         version: 14.1.0(@babel/core@7.24.3)(react-dom@18.2.0)(react@18.2.0)
@@ -14406,9 +14409,9 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  /nanoid@4.0.2:
-    resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
-    engines: {node: ^14 || ^16 || >=18}
+  /nanoid@5.0.7:
+    resolution: {integrity: sha512-oLxFY2gd2IqnjcYyOXD8XGCftpGtZP2AbHbOkthDkvRywH5ayNtPVy9YlOPcHckXzbLTCHpkb7FB+yuxKV13pQ==}
+    engines: {node: ^18 || >=20}
     hasBin: true
     dev: false
 

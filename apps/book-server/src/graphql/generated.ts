@@ -36,15 +36,7 @@ export type Book = {
   writer_id: Scalars['String']['output']
 }
 
-export type BookInput = {
-  book_id: Scalars['ID']['input']
-}
-
-export type BuildInput = {
-  book_id: Scalars['ID']['input']
-}
-
-export type DeployInput = {
+export type BookIdInput = {
   book_id: Scalars['ID']['input']
 }
 
@@ -54,11 +46,11 @@ export type Mutation = {
 }
 
 export type MutationBuildArgs = {
-  input: BuildInput
+  input: BookIdInput
 }
 
 export type MutationDeployArgs = {
-  input: DeployInput
+  input: BookIdInput
 }
 
 export type Page = {
@@ -75,15 +67,29 @@ export type Query = {
 }
 
 export type QueryBookArgs = {
-  input: BookInput
+  input: BookIdInput
+}
+
+export type SubScriptionPayload = {
+  message: Scalars['String']['output']
 }
 
 export type Subscription = {
-  bookDeploy?: Maybe<Scalars['Void']['output']>
+  bookBuildCompleted?: Maybe<SubScriptionPayload>
+  bookBuildInstalled?: Maybe<SubScriptionPayload>
+  bookDeployCompleted?: Maybe<SubScriptionPayload>
 }
 
-export type SubscriptionBookDeployArgs = {
-  input: DeployInput
+export type SubscriptionBookBuildCompletedArgs = {
+  input: BookIdInput
+}
+
+export type SubscriptionBookBuildInstalledArgs = {
+  input: BookIdInput
+}
+
+export type SubscriptionBookDeployCompletedArgs = {
+  input: BookIdInput
 }
 
 export type Writer = {
@@ -178,11 +184,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Book: ResolverTypeWrapper<BookModel>
-  BookInput: BookInput
+  BookIDInput: BookIdInput
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
-  BuildInput: BuildInput
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
-  DeployInput: DeployInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
   Mutation: ResolverTypeWrapper<{}>
@@ -190,6 +194,7 @@ export type ResolversTypes = {
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Query: ResolverTypeWrapper<{}>
   String: ResolverTypeWrapper<Scalars['String']['output']>
+  SubScriptionPayload: ResolverTypeWrapper<SubScriptionPayload>
   Subscription: ResolverTypeWrapper<{}>
   Void: ResolverTypeWrapper<Scalars['Void']['output']>
   Writer: ResolverTypeWrapper<Writer>
@@ -198,11 +203,9 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Book: BookModel
-  BookInput: BookInput
+  BookIDInput: BookIdInput
   Boolean: Scalars['Boolean']['output']
-  BuildInput: BuildInput
   Date: Scalars['Date']['output']
-  DeployInput: DeployInput
   ID: Scalars['ID']['output']
   JSON: Scalars['JSON']['output']
   Mutation: {}
@@ -210,6 +213,7 @@ export type ResolversParentTypes = {
   PositiveInt: Scalars['PositiveInt']['output']
   Query: {}
   String: Scalars['String']['output']
+  SubScriptionPayload: SubScriptionPayload
   Subscription: {}
   Void: Scalars['Void']['output']
   Writer: Writer
@@ -283,16 +287,39 @@ export type QueryResolvers<
   >
 }
 
+export type SubScriptionPayloadResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['SubScriptionPayload'] = ResolversParentTypes['SubScriptionPayload'],
+> = {
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
 export type SubscriptionResolvers<
   ContextType = GraphQLContext,
   ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription'],
 > = {
-  bookDeploy?: SubscriptionResolver<
-    Maybe<ResolversTypes['Void']>,
-    'bookDeploy',
+  bookBuildCompleted?: SubscriptionResolver<
+    Maybe<ResolversTypes['SubScriptionPayload']>,
+    'bookBuildCompleted',
     ParentType,
     ContextType,
-    RequireFields<SubscriptionBookDeployArgs, 'input'>
+    RequireFields<SubscriptionBookBuildCompletedArgs, 'input'>
+  >
+  bookBuildInstalled?: SubscriptionResolver<
+    Maybe<ResolversTypes['SubScriptionPayload']>,
+    'bookBuildInstalled',
+    ParentType,
+    ContextType,
+    RequireFields<SubscriptionBookBuildInstalledArgs, 'input'>
+  >
+  bookDeployCompleted?: SubscriptionResolver<
+    Maybe<ResolversTypes['SubScriptionPayload']>,
+    'bookDeployCompleted',
+    ParentType,
+    ContextType,
+    RequireFields<SubscriptionBookDeployCompletedArgs, 'input'>
   >
 }
 
@@ -319,6 +346,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Page?: PageResolvers<ContextType>
   PositiveInt?: GraphQLScalarType
   Query?: QueryResolvers<ContextType>
+  SubScriptionPayload?: SubScriptionPayloadResolvers<ContextType>
   Subscription?: SubscriptionResolvers<ContextType>
   Void?: GraphQLScalarType
   Writer?: WriterResolvers<ContextType>

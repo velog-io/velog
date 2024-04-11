@@ -1,4 +1,5 @@
 import { Resolvers } from '@graphql/generated.js'
+import { MqService } from '@lib/mq/MqService.mjs'
 import { BookBuildService } from 'src/services/BookBuildService/index.mjs'
 import { BookDeployService } from 'src/services/BookDeployService/index.mjs'
 import { BookService } from 'src/services/BookService/index.mjs'
@@ -24,15 +25,31 @@ const bookResolvers: Resolvers = {
       const bookDeployService = container.resolve(BookDeployService)
       return await bookDeployService.deploy(input.book_id)
     },
-    build: async (_, { input }) => {
+    build: async (_, { input }, { pubsub }) => {
       const bookBuildService = container.resolve(BookBuildService)
-      return await bookBuildService.build(input.book_id)
+      return await bookBuildService.build(input.book_id, pubsub)
     },
   },
   Subscription: {
-    bookDeploy: {
-      subscribe: async (parent, { input }, { pubsub }) => {
-        return await pubsub.subscribe(`bookDeploy:${input.book_id}`)
+    bookBuildInstalled: {
+      subscribe: async (_, { input }, { pubsub }) => {
+        const mqService = container.resolve(MqService)
+        const buildTopic = mqService.generateTopic('build')
+        return pubsub.subscribe(buildTopic.installed(input.book_id))
+      },
+    },
+    bookBuildCompleted: {
+      subscribe: async (_, { input }, { pubsub }) => {
+        const mqService = container.resolve(MqService)
+        const buildTopic = mqService.generateTopic('build')
+        return pubsub.subscribe(buildTopic.completed(input.book_id))
+      },
+    },
+    bookDeployCompleted: {
+      subscribe: async (_, { input }, { pubsub }) => {
+        const mqService = container.resolve(MqService)
+        const generateTopic = mqService.generateTopic('deploy')
+        return pubsub.subscribe(generateTopic.completed(input.book_id))
       },
     },
   },

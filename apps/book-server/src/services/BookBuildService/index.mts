@@ -10,11 +10,14 @@ import { promisify } from 'util'
 import { Page } from '@graphql/generated.js'
 import { indexJSXTemplate } from '@templates/indexJSXTemplate.js'
 import { themeConfigTemplate } from '@templates/themeConfigTemplate.js'
+import { urlAlphabet, random, customRandom } from 'nanoid'
+import { PubSub } from 'mercurius'
+import { MqService } from '@lib/mq/MqService.mjs'
 
 const exec = promisify(execCb)
 
 interface Service {
-  build(bookId: string): Promise<void>
+  build(bookId: string, pubsub: PubSub): Promise<void>
 }
 
 @injectable()
@@ -22,9 +25,10 @@ interface Service {
 export class BookBuildService implements Service {
   constructor(
     private readonly mongo: MongoService,
+    private readonly mq: MqService,
     private readonly pageService: PageService,
   ) {}
-  async build(bookId: string): Promise<void> {
+  public async build(bookId: string, pubsub: PubSub): Promise<void> {
     //TODO: ADD authentication
     const book = await this.mongo.book.findUnique({
       where: { id: bookId },
@@ -33,7 +37,6 @@ export class BookBuildService implements Service {
     if (!book) {
       throw new NotFoundError('Book not found')
     }
-
     // create folder
     const dest = path.resolve(process.cwd(), 'books', bookId)
 
@@ -51,12 +54,24 @@ export class BookBuildService implements Service {
     const src = path.resolve(process.cwd(), 'books/base')
     await fs.copy(src, dest, { dereference: true })
 
-    //nextra install
-    await this.installDependencies(dest)
+    // nextra install
+    const stdout = await this.installDependencies(dest)
+    const generateTopic = this.mq.generateTopic('build')
+    const installTopic = generateTopic.installed(bookId)
+
+    pubsub.publish({
+      topic: installTopic,
+      payload: {
+        bookBuildInstalled: {
+          message: stdout,
+        },
+      },
+    })
+
     // json to files
     const pages = await this.pageService.organizePages(bookId)
 
-    // create meta.jsonP
+    // create meta.json
     const pagesPath = `${dest}/pages`
     await this.writeMetaJson(pages, pagesPath)
 
@@ -64,19 +79,33 @@ export class BookBuildService implements Service {
     fs.writeFileSync(`${pagesPath}/index.jsx`, indexJSXTemplate(this.generateKey(pages[0])))
 
     await exec('pnpm prettier -w .', { cwd: dest })
+
+    const completedTopic = generateTopic.completed(bookId)
+    pubsub.publish({
+      topic: completedTopic,
+      payload: {
+        bookBuildCompleted: {
+          message: 'completed',
+        },
+      },
+    })
   }
   private async installDependencies(dest: string) {
     try {
       const { stdout, stderr } = await exec('pnpm i next', { cwd: dest })
-      console.log(`stdout: ${stdout}`)
       if (stderr) {
         console.error(`stderr: ${stderr}`)
       }
+      return stdout
     } catch (error) {
       console.error(`exec error: ${error}`)
     }
   }
-  private generateKey = (page: Page) => `${page.title}_${page.id}`.replace(/[^a-zA-Z0-9-_]/g, '_')
+  private generateKey = (page: Page) =>
+    `${page.title}_${customRandom(urlAlphabet, 10, random)().toLocaleLowerCase()}`.replace(
+      /[^a-zA-Z0-9-_]/g,
+      '_',
+    )
   private async writeMetaJson(book: BookResult[], baseDest: string, isinit = false) {
     let indexPageName = ''
     const meta = book.reduce(
