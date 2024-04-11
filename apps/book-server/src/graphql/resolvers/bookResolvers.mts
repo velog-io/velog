@@ -21,35 +21,38 @@ const bookResolvers: Resolvers = {
     },
   },
   Mutation: {
-    deploy: async (_, { input }, { pubsub }) => {
+    deploy: async (_, { input }) => {
       const bookDeployService = container.resolve(BookDeployService)
       return await bookDeployService.deploy(input.book_id)
     },
-    build: async (_, { input }, { pubsub }) => {
+    build: async (_, { input }) => {
       const bookBuildService = container.resolve(BookBuildService)
-      return await bookBuildService.build(input.book_id, pubsub)
+      return await bookBuildService.build(input.book_id)
     },
   },
   Subscription: {
     bookBuildInstalled: {
       subscribe: async (_, { input }, { pubsub }) => {
         const mqService = container.resolve(MqService)
-        const buildTopic = mqService.generateTopic('build')
-        return pubsub.subscribe(buildTopic.installed(input.book_id))
+        const generator = mqService.topicGenerator('bookBuildInstalled')
+        const topic = generator(input.book_id)
+        return pubsub.subscribe(topic)
       },
     },
     bookBuildCompleted: {
       subscribe: async (_, { input }, { pubsub }) => {
         const mqService = container.resolve(MqService)
-        const buildTopic = mqService.generateTopic('build')
-        return pubsub.subscribe(buildTopic.completed(input.book_id))
+        const generator = mqService.topicGenerator('bookBuildCompleted')
+        const topic = generator(input.book_id)
+        return pubsub.subscribe(topic)
       },
     },
     bookDeployCompleted: {
       subscribe: async (_, { input }, { pubsub }) => {
         const mqService = container.resolve(MqService)
-        const generateTopic = mqService.generateTopic('deploy')
-        return pubsub.subscribe(generateTopic.completed(input.book_id))
+        const generator = mqService.topicGenerator('bookDeployCompleted')
+        const topic = generator(input.book_id)
+        return pubsub.subscribe(topic)
       },
     },
   },

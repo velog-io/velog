@@ -1,11 +1,15 @@
 import { injectable, singleton } from 'tsyringe'
 import MQEmitterRedis, { MQEmitterOptions } from 'mqemitter-redis'
 import { RedisOptions } from 'ioredis'
+import { PubSub } from 'mercurius'
+import { SubscriptionResolvers } from '@graphql/generated.js'
 
 export type MqOptions = {
   host: string
   port: number
 }
+
+type PayloadKey = keyof SubscriptionResolvers
 
 export type Emitter = MQEmitterRedis.MQEmitterRedis
 
@@ -13,8 +17,8 @@ export type Emitter = MQEmitterRedis.MQEmitterRedis
 @singleton()
 export class MqService {
   public emitter!: Emitter
-  port: number
-  host: string
+  private port: number
+  private host: string
   constructor({ host, port }: MqOptions) {
     this.host = host
     this.port = port
@@ -32,17 +36,24 @@ export class MqService {
     this.emitter = emitter
   }
 
-  generateTopic<T extends TopicType>(type: T) {
-    const map: TopicMap = {
-      build: {
-        completed: (bookId: string) => `BOOK_BUILD:completed:${bookId}`,
-        installed: (bookId: string) => `BOOK_BUILD:installed:${bookId}`,
-      },
-      deploy: {
-        completed: (bookId: string) => `BOOK_DEPLOY:completed:${bookId}`,
-      },
+  public topicGenerator<T extends keyof SubscriptionResolvers>(type: T) {
+    const map: { [K in keyof SubscriptionResolvers]: (args: any) => string } = {
+      bookBuildCompleted: (bookId: string) => `BOOK_BUILD:completed:${bookId}`,
+      bookBuildInstalled: (bookId: string) => `BOOK_BUILD:installed:${bookId}`,
+      bookDeployCompleted: (bookId: string) => `BOOK_DEPLOY:completed:${bookId}`,
     }
-    return map[type] as TopicMap[T]
+    const generator = map[type]
+    if (!generator) {
+      throw new Error('No topic generator found for type')
+    }
+    return generator
+  }
+
+  public async publish({ topicParameter, payload }: PublishArgs) {
+    const key = Object.keys(payload)[0] as keyof SubscriptionResolvers
+    const generator = this.topicGenerator(key)
+    const topic = generator(topicParameter)
+    this.emitter.emit({ topic, payload })
   }
 }
 
@@ -59,4 +70,9 @@ type BuildType = {
 
 type DeployType = {
   completed: (bookId: string) => string
+}
+
+type PublishArgs = {
+  topicParameter: string
+  payload: { [K in keyof SubscriptionResolvers]: { message: any } & { [T: string]: any } }
 }

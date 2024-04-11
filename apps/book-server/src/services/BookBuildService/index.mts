@@ -17,7 +17,7 @@ import { MqService } from '@lib/mq/MqService.mjs'
 const exec = promisify(execCb)
 
 interface Service {
-  build(bookId: string, pubsub: PubSub): Promise<void>
+  build(bookId: string): Promise<void>
 }
 
 @injectable()
@@ -28,7 +28,7 @@ export class BookBuildService implements Service {
     private readonly mq: MqService,
     private readonly pageService: PageService,
   ) {}
-  public async build(bookId: string, pubsub: PubSub): Promise<void> {
+  public async build(bookId: string): Promise<void> {
     //TODO: ADD authentication
     const book = await this.mongo.book.findUnique({
       where: { id: bookId },
@@ -56,11 +56,9 @@ export class BookBuildService implements Service {
 
     // nextra install
     const stdout = await this.installDependencies(dest)
-    const generateTopic = this.mq.generateTopic('build')
-    const installTopic = generateTopic.installed(bookId)
 
-    pubsub.publish({
-      topic: installTopic,
+    this.mq.publish({
+      topicParameter: bookId,
       payload: {
         bookBuildInstalled: {
           message: stdout,
@@ -80,13 +78,10 @@ export class BookBuildService implements Service {
 
     await exec('pnpm prettier -w .', { cwd: dest })
 
-    const completedTopic = generateTopic.completed(bookId)
-    pubsub.publish({
-      topic: completedTopic,
+    this.mq.publish({
+      topicParameter: bookId,
       payload: {
-        bookBuildCompleted: {
-          message: 'completed',
-        },
+        bookBuildCompleted: { message: 'completed' },
       },
     })
   }
