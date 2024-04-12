@@ -25,6 +25,6 @@
     "rootDir": "./",
     "baseUrl": "./"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "./theme.config.tsx", "./components/*"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "./theme.config.tsx"],
   "exclude": ["node_modules"]
 }

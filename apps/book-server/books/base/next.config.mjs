@@ -5,7 +5,7 @@ const withNextra = nextra({
   themeConfig: './theme.config.tsx',
   latex: true,
   flexsearch: {
-    codeblocks: false,
+    codeblocks: true,
   },
   defaultShowCopyCode: true,
 })
@@ -17,8 +17,8 @@ const nextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
+  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://assets.velog.io' : undefined,
   // skipTrailingSlashRedirect: true,
-  distDir: 'dist',
   // images: {
   //   loader: 'imgix',
   //   path: 'https://example.com/myaccount/',

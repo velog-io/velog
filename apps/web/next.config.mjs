@@ -12,8 +12,8 @@ const nextConfig = {
   assetPrefix: isProductionContainer
     ? 'https://assets.velcdn.com'
     : isStageContainer
-    ? 'https://assets-stage.velcdn.com'
-    : undefined,
+      ? 'https://assets-stage.velcdn.com'
+      : undefined,
   experimental: {
     esmExternals: true, // support esm
     taint: true, // for security

@@ -54,6 +54,7 @@ export class EnvService implements Service {
       discordBotToken: z.string(),
       discordErrorChannel: z.string(),
       redisHost: z.string(),
+      bookBucketUrl: z.string(),
     })
 
     const ENV = env.parse({
@@ -64,6 +65,7 @@ export class EnvService implements Service {
       discordBotToken: process.env.DISCORD_BOT_TOKEN,
       discordErrorChannel: process.env.DISCORD_ERROR_CHANNEL,
       redisHost: process.env.REDIS_HOST,
+      bookBucketUrl: process.env.BOOK_BUCKET_URL,
     })
 
     this.env = ENV
@@ -92,4 +94,5 @@ type ENV = {
   discordBotToken: string
   discordErrorChannel: string
   redisHost: string
+  bookBucketUrl: string
 }

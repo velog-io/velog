@@ -11,8 +11,9 @@ import { Page } from '@graphql/generated.js'
 import { indexJSXTemplate } from '@templates/indexJSXTemplate.js'
 import { themeConfigTemplate } from '@templates/themeConfigTemplate.js'
 import { urlAlphabet, random, customRandom } from 'nanoid'
-import { PubSub } from 'mercurius'
 import { MqService } from '@lib/mq/MqService.mjs'
+import { nextConfigTempate } from '@templates/nextConfigTemplate.js'
+import { EnvService } from '@lib/env/EnvService.mjs'
 
 const exec = promisify(execCb)
 
@@ -26,6 +27,7 @@ export class BookBuildService implements Service {
   constructor(
     private readonly mongo: MongoService,
     private readonly mq: MqService,
+    private readonly env: EnvService,
     private readonly pageService: PageService,
   ) {}
   public async build(bookId: string): Promise<void> {
@@ -71,10 +73,14 @@ export class BookBuildService implements Service {
 
     // create meta.json
     const pagesPath = `${dest}/pages`
-    await this.writeMetaJson(pages, pagesPath)
+    const metaData = await this.writeMetaJson(pages, pagesPath)
 
+    fs.writeFileSync(
+      `${dest}/next.config.mjs`,
+      nextConfigTempate({ bucketUrl: this.env.get('bookBucketUrl'), bookId }),
+    )
     fs.writeFileSync(`${dest}/theme.config.tsx`, themeConfigTemplate({ title: book.title }))
-    fs.writeFileSync(`${pagesPath}/index.jsx`, indexJSXTemplate(this.generateKey(pages[0])))
+    fs.writeFileSync(`${pagesPath}/index.jsx`, indexJSXTemplate(metaData[0].key))
 
     await exec('pnpm prettier -w .', { cwd: dest })
 
@@ -129,6 +135,8 @@ export class BookBuildService implements Service {
     })
 
     await Promise.all(promises)
+
+    return bookData
   }
 }
 
