@@ -36,7 +36,7 @@ export class MqService {
     this.emitter = emitter
   }
 
-  public topicGenerator<T extends keyof SubscriptionResolvers>(type: T) {
+  public topicGenerator<T extends keyof SubscriptionResolvers>(type: T): Function {
     const map: { [K in keyof SubscriptionResolvers]: (args: any) => string } = {
       bookBuildCompleted: (bookId: string) => `BOOK_BUILD:completed:${bookId}`,
       bookBuildInstalled: (bookId: string) => `BOOK_BUILD:installed:${bookId}`,

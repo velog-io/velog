@@ -1,6 +1,10 @@
 {
   "extends": "@packages/tsconfig/base.json",
   "compilerOptions": {
+    "rootDir": "./",
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"],
     "paths": {
       "@test/*": ["src/test/*"],
       "@lib/*": ["src/lib/*"],
@@ -10,8 +14,7 @@
       "@errors/*": ["src/common/errors/*"],
       "@plugins/*": ["src/common/plugins/*"],
       "@constants/*": ["src/common/constants/*"]
-    },
-    "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"]
+    }
   },
   "include": ["./src", ".eslintrc.cjs", "./scripts", "test/**/*.ts"],
   "exclude": ["node_modules"]
