@@ -1,19 +1,10 @@
 {
+  "extends": "@packages/tsconfig/base.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "lib": ["ES2022"],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "moduleResolution": "NodeNext",
     "baseUrl": "./",
     "rootDir": "./",
     "typeRoots": ["./node_modules/@types"],
-    "outDir": "./dist",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
+    "outDir": "./dist"
   },
   "include": ["/lib", "index.mts", "./.eslintrc.cjs"],
   "exclude": ["node_modules"]

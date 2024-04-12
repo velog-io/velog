@@ -1,6 +1,9 @@
 {
   "extends": "@packages/tsconfig/base.json",
   "compilerOptions": {
+    "rootDir": "./",
+    "baseUrl": "./",
+    "outDir": "./dist",
     "paths": {
       "@lib/*": ["src/lib/*"],
       "@errors/*": ["src/common/errors/*"],
@@ -8,7 +11,8 @@
       "@plugins/*": ["src/common/plugins/*"],
       "@interfaces/*": ["src/common/interfaces/*"],
       "@templates/*": ["src/templates/*"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"]
   },
   "include": [
     "./src",

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": "./",
     "baseUrl": "./",
-    "outDir": "./",
+    "outDir": "./dist",
     "paths": {
       "@plugins/*": ["src/common/plugins/*"],
       "@constants/*": ["src/common/constants/*"],
