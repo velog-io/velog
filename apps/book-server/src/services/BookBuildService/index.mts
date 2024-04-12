@@ -78,10 +78,12 @@ export class BookBuildService implements Service {
 
     await exec('pnpm prettier -w .', { cwd: dest })
 
+    const buildStdout = await exec('pnpm build', { cwd: dest })
+    console.log('buildStdout', buildStdout)
     this.mq.publish({
       topicParameter: bookId,
       payload: {
-        bookBuildCompleted: { message: 'completed' },
+        bookBuildCompleted: { message: buildStdout },
       },
     })
   }
@@ -101,14 +103,11 @@ export class BookBuildService implements Service {
       /[^a-zA-Z0-9-_]/g,
       '_',
     )
-  private async writeMetaJson(book: BookResult[], baseDest: string, isinit = false) {
-    let indexPageName = ''
-    const meta = book.reduce(
-      (acc, page, index) => {
-        const key = this.generateKey(page)
-        if (index === 0) {
-          indexPageName = key
-        }
+  private async writeMetaJson(book: BookResult[], baseDest: string) {
+    const bookData = book.map((page) => ({ key: this.generateKey(page), ...page }))
+    const meta = bookData.reduce(
+      (acc, page) => {
+        const key = page.key
         acc[key] = page.title
         return acc
       },
@@ -117,12 +116,12 @@ export class BookBuildService implements Service {
 
     fs.writeFileSync(`${baseDest}/_meta.json`, JSON.stringify(meta, null, 2))
 
-    const promises = book.map((page, index) => {
-      const mdxTarget = path.resolve(baseDest, `${this.generateKey(page)}.mdx`)
+    const promises = bookData.map((page) => {
+      const mdxTarget = path.resolve(baseDest, `${page.key}.mdx`)
       fs.writeFileSync(mdxTarget, page.body)
 
       if (page.childrens.length > 0) {
-        const folderPath = this.generateKey(page)
+        const folderPath = page.key
         const targetPath = `${baseDest}/${folderPath}`
         fs.mkdirSync(targetPath)
         return this.writeMetaJson(page.childrens, targetPath)

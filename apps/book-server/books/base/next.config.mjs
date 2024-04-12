@@ -13,6 +13,16 @@ const withNextra = nextra({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
+  images: {
+    unoptimized: true,
+  },
+  trailingSlash: true,
+  // skipTrailingSlashRedirect: true,
+  distDir: 'dist',
+  // images: {
+  //   loader: 'imgix',
+  //   path: 'https://example.com/myaccount/',
+  // },
 }
 
 export default withNextra(nextConfig)
