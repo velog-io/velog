@@ -26,7 +26,7 @@ export function Feature({
         large && styles.large,
         centered && styles.centered,
         lightOnly && styles['light-only'],
-        className
+        className,
       )}
       {...props}
     >
