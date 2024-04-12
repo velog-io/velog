@@ -21,6 +21,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@packages/eslint-config": "workspace:*",
     "@packages/tsconfig": "workspace:*",
     "@types/inquirer": "^9.0.7",
     "@types/node": "^20.12.5",

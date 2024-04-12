@@ -14,13 +14,6 @@
     },
     "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"]
   },
-  "include": [
-    "./src",
-    ".eslintrc.cjs",
-    "./scripts",
-    "./scripts/**/*.mts",
-    "./codegen.mts",
-    "test/**/*.mts"
-  ],
+  "include": ["./src", "./scripts", "./scripts/**/*.mts", "./codegen.mts", "test/**/*.mts"],
   "exclude": ["node_modules", "books"]
 }

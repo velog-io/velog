@@ -1,6 +1,9 @@
 {
   "extends": "@packages/tsconfig/next.json",
   "compilerOptions": {
+    "baseUrl": "./",
+    "rootDir": "./",
+    "typeRoots": ["node_modules/@types/", "./src/types/"],
     "plugins": [
       {
         "name": "next"
@@ -20,7 +23,7 @@
     "public/*",
     "src/assets/**/svg",
     "scripts/*",
-    ".eslintrc.cjs"
+    "eslint.config.js"
   ],
   "exclude": ["node_modules"]
 }

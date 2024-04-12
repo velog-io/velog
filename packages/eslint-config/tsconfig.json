@@ -1,0 +1,8 @@
+{
+  "extends": "@packages/tsconfig/next.json",
+  "compilerOptions": {
+    "rootDir": "./",
+    "baseUrl": "./"
+  },
+  "exclude": ["node_modules"]
+}
