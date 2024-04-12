@@ -1,13 +1,6 @@
 {
+  "extends": "@packages/tsconfig/base.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "lib": ["ES2022"],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "moduleResolution": "NodeNext",
-    "baseUrl": "./",
-    "rootDir": "./",
     "paths": {
       "@lib/*": ["src/lib/*"],
       "@errors/*": ["src/common/errors/*"],
@@ -15,20 +8,14 @@
       "@plugins/*": ["src/common/plugins/*"],
       "@interfaces/*": ["src/common/interfaces/*"],
       "@templates/*": ["src/templates/*"]
-    },
-    "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"],
-    "outDir": "./dist",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
+    }
   },
   "include": [
     "./src",
     ".eslintrc.cjs",
     "./scripts",
     "./scripts/**/*.mts",
-    "codegen.mts",
+    "./codegen.mts",
     "test/**/*.mts"
   ],
   "exclude": ["node_modules", "books"]

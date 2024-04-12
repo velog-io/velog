@@ -50,6 +50,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@packages/tsconfig": "workspace:*",
     "@swc-node/register": "^1.9.0",
     "@types/geoip-country": "^4.0.2",
     "@types/inquirer": "^9.0.3",

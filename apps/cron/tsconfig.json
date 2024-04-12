@@ -1,13 +1,6 @@
 {
+  "extends": "@packages/tsconfig/base.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "lib": ["ES2022"],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "moduleResolution": "NodeNext",
-    "baseUrl": "./",
-    "rootDir": "./",
     "paths": {
       "@test/*": ["src/test/*"],
       "@lib/*": ["src/lib/*"],
@@ -18,18 +11,8 @@
       "@plugins/*": ["src/common/plugins/*"],
       "@constants/*": ["src/common/constants/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"],
-    "outDir": "./dist",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
+    "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"]
   },
   "include": ["./src", ".eslintrc.cjs", "./scripts", "test/**/*.ts"],
-  "exclude": ["node_modules"],
-  "ts-node": {
-    "transpileOnly": true,
-    "esm": true,
-    "swc": true
-  }
+  "exclude": ["node_modules"]
 }

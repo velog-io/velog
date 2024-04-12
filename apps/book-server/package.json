@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "nodemon --watch './**/*.mts' --exec 'node --import @swc-node/register/esm-register' ./src/main.mts | pino-pretty",
     "start": "node --import @swc-node/register/esm-register dist/src/main.mjs",
-    "build": "tsc --project tsconfig.json",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "lint": "prettier -w . --cache",
     "codegen": "graphql-codegen-esm --config codegen.mts",
     "create-mock": "NODE_ENV=development dotenv -e ./env/.env.development -- tsx ./scripts/createMock.mts",
@@ -49,6 +49,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@packages/tsconfig": "workspace:*",
     "@faker-js/faker": "^8.3.1",
     "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/cli": "^5.0.0",

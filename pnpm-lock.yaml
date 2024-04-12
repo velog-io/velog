@@ -117,6 +117,9 @@ importers:
       '@packages/scripts':
         specifier: workspace:*
         version: link:../../packages/scripts
+      '@packages/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@swc-node/register':
         specifier: ^1.9.0
         version: 1.9.0(@swc/core@1.4.12)(@swc/types@0.1.6)(typescript@5.4.4)
@@ -250,6 +253,9 @@ importers:
         specifier: ^3.21.4
         version: 3.22.4
     devDependencies:
+      '@packages/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@swc-node/register':
         specifier: ^1.9.0
         version: 1.9.0(@swc/core@1.4.12)(@swc/types@0.1.6)(typescript@5.4.4)
@@ -473,6 +479,9 @@ importers:
       '@graphql-codegen/typescript-resolvers':
         specifier: ^4.0.0
         version: 4.0.6(graphql@16.7.1)
+      '@packages/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@swc-node/register':
         specifier: ^1.9.0
         version: 1.9.0(@swc/core@1.4.12)(@swc/types@0.1.6)(typescript@5.4.4)
@@ -705,6 +714,9 @@ importers:
       '@next/eslint-plugin-next':
         specifier: ^14.1.4
         version: 14.1.4
+      '@packages/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       '@svgr/cli':
         specifier: ^8.0.1
         version: 8.0.1
@@ -1061,6 +1073,8 @@ importers:
       prettier:
         specifier: ^3.2.5
         version: 3.2.5
+
+  packages/tsconfig: {}
 
 packages:
 
