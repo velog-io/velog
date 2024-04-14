@@ -70,7 +70,6 @@ export class EnvService implements Service {
 
     this.env = ENV
   }
-
   private resolveDir(dir: string): string {
     const __filename = fileURLToPath(import.meta.url)
     const splited = dirname(__filename).split('/src')
