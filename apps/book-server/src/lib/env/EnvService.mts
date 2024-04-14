@@ -10,7 +10,7 @@ interface Service {}
 @injectable()
 @singleton()
 export class EnvService implements Service {
-  private env: any
+  private env!: ENV
   constructor() {
     if (!this.env) {
       this.init()
@@ -57,7 +57,7 @@ export class EnvService implements Service {
       bookBucketUrl: z.string(),
     })
 
-    const ENV = env.parse({
+    const ENV: ENV = env.parse({
       dockerEnv,
       appEnv,
       port: Number(process.env.PORT),
@@ -78,7 +78,7 @@ export class EnvService implements Service {
     return join(cwd, dir)
   }
 
-  public get(key: keyof ENV) {
+  public get<K extends keyof ENV>(key: K): ENV[K] {
     return this.env[key]
   }
 }
@@ -87,8 +87,8 @@ type DockerEnv = 'development' | 'stage' | 'production'
 type AppEnvironment = 'development' | 'production'
 type EnvFiles = Record<DockerEnv, string>
 type ENV = {
-  dockerEnv: string
-  appEnv: string
+  dockerEnv: DockerEnv
+  appEnv: AppEnvironment
   port: number
   mongoUrl: string
   discordBotToken: string

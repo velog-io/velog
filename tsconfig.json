@@ -3,6 +3,5 @@
   "compilerOptions": {
     "rootDir": "./"
   },
-  // "include": ["apps/*", "infrastructure/*", "packages/*"],
   "exclude": ["apps/book-server/books/*"]
 }

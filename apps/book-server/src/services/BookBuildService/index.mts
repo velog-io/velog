@@ -84,9 +84,7 @@ export class BookBuildService implements Service {
     fs.writeFileSync(`${pagesPath}/index.jsx`, indexJSXTemplate(metaData[0].key))
 
     await exec('pnpm prettier -w .', { cwd: dest })
-
     const buildStdout = await this.buildTsToJs(dest)
-
     if (buildStdout) {
       this.mq.publish({
         topicParameter: bookId,
@@ -97,8 +95,10 @@ export class BookBuildService implements Service {
     }
   }
   private async installDependencies(dest: string) {
+    const dockerEnv = this.env.get('dockerEnv')
+    const command = 'pnpm install next'.concat(dockerEnv !== 'development' ? '' : ' --no-lock')
     try {
-      const { stdout, stderr } = await exec('pnpm i next', { cwd: dest })
+      const { stdout, stderr } = await exec(command, { cwd: dest })
       if (stderr) {
         console.error(`stderr: ${stderr}`)
       }

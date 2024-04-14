@@ -15,5 +15,5 @@
     "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"]
   },
   "include": ["./src", "./scripts", "./scripts/**/*.mts", "./codegen.mts", "test/**/*.mts"],
-  "exclude": ["node_modules", "books"]
+  "exclude": ["node_modules"]
 }
