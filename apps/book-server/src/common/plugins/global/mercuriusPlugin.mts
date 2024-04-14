@@ -6,7 +6,7 @@ import { isHttpError } from '@errors/HttpError.mjs'
 import { container } from 'tsyringe'
 import { DiscordService } from '@lib/discord/DiscordService.mjs'
 import { EnvService } from '@lib/env/EnvService.mjs'
-import { MqOptions, MqService } from '@lib/mq/MqService.mjs'
+import { MqService } from '@lib/mq/MqService.mjs'
 import { GraphQLContextBase } from '@interfaces/graphql.mjs'
 
 const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {

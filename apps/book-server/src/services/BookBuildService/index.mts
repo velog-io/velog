@@ -1,13 +1,12 @@
+import path from 'path'
+import fs from 'fs-extra'
+import { exec as execCb } from 'child_process'
+import { promisify } from 'util'
 import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { injectable, singleton } from 'tsyringe'
-import path from 'path'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
-import fs from 'fs-extra'
 import { PageData, PageService } from '../PageService/index.mjs'
-import { exec as execCb } from 'child_process'
-import { promisify } from 'util'
-import { Page } from '@graphql/generated.js'
 import { indexJSXTemplate } from '@templates/indexJSXTemplate.js'
 import { themeConfigTemplate } from '@templates/themeConfigTemplate.js'
 import { urlAlphabet, random, customRandom } from 'nanoid'
@@ -57,16 +56,18 @@ export class BookBuildService implements Service {
     await fs.copy(src, dest, { dereference: true })
 
     // nextra install
-    const stdout = await this.installDependencies(dest)
+    const installStdout = await this.installDependencies(dest)
 
-    this.mq.publish({
-      topicParameter: bookId,
-      payload: {
-        bookBuildInstalled: {
-          message: stdout,
+    if (installStdout) {
+      this.mq.publish({
+        topicParameter: bookId,
+        payload: {
+          bookBuildInstalled: {
+            message: installStdout,
+          },
         },
-      },
-    })
+      })
+    }
 
     // json to files
     const pages = await this.pageService.organizePages(bookId)
@@ -84,14 +85,16 @@ export class BookBuildService implements Service {
 
     await exec('pnpm prettier -w .', { cwd: dest })
 
-    const buildStdout = await exec('pnpm build', { cwd: dest })
-    console.log('buildStdout', buildStdout)
-    this.mq.publish({
-      topicParameter: bookId,
-      payload: {
-        bookBuildCompleted: { message: buildStdout },
-      },
-    })
+    const buildStdout = await this.buildTsToJs(dest)
+
+    if (buildStdout) {
+      this.mq.publish({
+        topicParameter: bookId,
+        payload: {
+          bookBuildCompleted: { message: buildStdout },
+        },
+      })
+    }
   }
   private async installDependencies(dest: string) {
     try {
@@ -104,14 +107,20 @@ export class BookBuildService implements Service {
       console.error(`exec error: ${error}`)
     }
   }
-  private generateKey = (page: Page) =>
-    `${page.title}_${customRandom(urlAlphabet, 10, random)().toLocaleLowerCase()}`.replace(
-      /[^a-zA-Z0-9-_]/g,
-      '_',
-    )
+  private async buildTsToJs(dest: string) {
+    try {
+      const { stdout, stderr } = await exec('pnpm build', { cwd: dest })
+      if (stderr) {
+        console.error(`stderr: ${stderr}`)
+      }
+      return stdout
+    } catch (error) {
+      console.error(`exec error: ${error}`)
+    }
+  }
   private async writeMetaJson(book: BookResult[], baseDest: string) {
-    const bookData = book.map((page) => ({ key: this.generateKey(page), ...page }))
-    const meta = bookData.reduce(
+    const books = this.insertKey(book)
+    const meta = books.reduce(
       (acc, page) => {
         const key = page.key
         acc[key] = page.title
@@ -122,7 +131,7 @@ export class BookBuildService implements Service {
 
     fs.writeFileSync(`${baseDest}/_meta.json`, JSON.stringify(meta, null, 2))
 
-    const promises = bookData.map((page) => {
+    const promises = books.map((page) => {
       const mdxTarget = path.resolve(baseDest, `${page.key}.mdx`)
       fs.writeFileSync(mdxTarget, page.body)
 
@@ -135,8 +144,16 @@ export class BookBuildService implements Service {
     })
 
     await Promise.all(promises)
-
-    return bookData
+    return books
+  }
+  private insertKey = (book: BookResult[]) => {
+    return book.map((page) => ({
+      key: `${page.title}_${customRandom(urlAlphabet, 10, random)().toLocaleLowerCase()}`.replace(
+        /[^a-zA-Z0-9-_]/g,
+        '_',
+      ),
+      ...page,
+    }))
   }
 }
 

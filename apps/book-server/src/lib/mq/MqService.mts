@@ -1,15 +1,12 @@
 import { injectable, singleton } from 'tsyringe'
 import MQEmitterRedis, { MQEmitterOptions } from 'mqemitter-redis'
 import { RedisOptions } from 'ioredis'
-import { PubSub } from 'mercurius'
 import { SubscriptionResolvers } from '@graphql/generated.js'
 
 export type MqOptions = {
   host: string
   port: number
 }
-
-type PayloadKey = keyof SubscriptionResolvers
 
 export type Emitter = MQEmitterRedis.MQEmitterRedis
 
@@ -36,8 +33,8 @@ export class MqService {
     this.emitter = emitter
   }
 
-  public topicGenerator<T extends keyof SubscriptionResolvers>(type: T): Function {
-    const map: { [K in keyof SubscriptionResolvers]: (args: any) => string } = {
+  public topicGenerator<T extends SubscriptionResolverKey>(type: T): (args: any) => string {
+    const map: TopicMap = {
       bookBuildCompleted: (bookId: string) => `BOOK_BUILD:completed:${bookId}`,
       bookBuildInstalled: (bookId: string) => `BOOK_BUILD:installed:${bookId}`,
       bookDeployCompleted: (bookId: string) => `BOOK_DEPLOY:completed:${bookId}`,
@@ -57,22 +54,15 @@ export class MqService {
   }
 }
 
-type TopicType = 'build' | 'deploy'
-interface TopicMap extends Record<TopicType, BuildType | DeployType> {
-  build: BuildType
-  deploy: DeployType
+type SubscriptionResolverKey = keyof SubscriptionResolvers
+type Payload = {
+  [K in SubscriptionResolverKey]?: { message: string }
 }
-
-type BuildType = {
-  completed: (bookId: string) => string
-  installed: (bookId: string) => string
-}
-
-type DeployType = {
-  completed: (bookId: string) => string
+type TopicMap = {
+  [K in SubscriptionResolverKey]: (args: any) => string
 }
 
 type PublishArgs = {
   topicParameter: string
-  payload: { [K in keyof SubscriptionResolvers]: { message: any } & { [T: string]: any } }
+  payload: Payload
 }
