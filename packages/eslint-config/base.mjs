@@ -21,8 +21,8 @@ export default [
       sourceType: 'module',
       tsconfigRootDir: __dirname,
     },
-    plugins: ['@typescript-eslint', 'prettier'],
-    extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
+    plugins: ['@typescript-eslint'],
+    extends: ['plugin:@typescript-eslint/recommended', 'prettier'],
     root: true,
     env: {
       node: true,

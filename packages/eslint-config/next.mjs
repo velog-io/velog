@@ -21,11 +21,11 @@ export default [
       sourceType: 'module',
       tsconfigRootDir: __dirname,
     },
-    plugins: ['@typescript-eslint', 'prettier'],
+    plugins: ['@typescript-eslint'],
     extends: [
       'plugin:@typescript-eslint/eslint-recommended',
       'plugin:@typescript-eslint/recommended',
-      'plugin:prettier/recommended',
+      'prettier',
     ],
     globals: {
       React: true,
