@@ -57,6 +57,7 @@
     "@types/inquirer": "^9.0.3",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.12.5",
+    "eslint": "^9.0.0",
     "nodemon": "^2.0.22",
     "ts-paths-esm-loader": "^1.4.3"
   }

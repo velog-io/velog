@@ -45,6 +45,7 @@
     "@types/inquirer": "^9.0.7",
     "@types/node": "^20.12.5",
     "chokidar": "^3.6.0",
+    "eslint": "^9.0.0",
     "typescript": "^5.4.4"
   }
 }

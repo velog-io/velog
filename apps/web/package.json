@@ -71,13 +71,12 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@packages/eslint-config": "workspace:*",
-    "@packages/tsconfig": "workspace:*",
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/plugin-helpers": "^5.0.3",
     "@graphql-codegen/typescript-operations": "^4.2.0",
     "@graphql-codegen/typescript-react-query": "^6.1.0",
-    "@next/eslint-plugin-next": "^14.1.4",
+    "@packages/eslint-config": "workspace:*",
+    "@packages/tsconfig": "workspace:*",
     "@svgr/cli": "^8.0.1",
     "@testing-library/react": "^14.0.0",
     "@types/codemirror": "^0.0.84",
@@ -91,6 +90,7 @@
     "@types/sanitize-html": "^2.9.0",
     "@types/throttle-debounce": "^5.0.1",
     "encoding": "^0.1.13",
+    "eslint": "^9.0.0",
     "typescript": "^5.4.4",
     "typescript-plugin-css-modules": "^5.0.1"
   }

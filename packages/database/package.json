@@ -58,11 +58,7 @@
     "@types/inquirer": "^9.0.3",
     "@types/jest": "^29.5.3",
     "@types/node": "^20.12.5",
-    "@typescript-eslint/eslint-plugin": "^7.5.0",
-    "@typescript-eslint/parser": "^7.5.0",
     "eslint": "^9.0.0",
-    "eslint-config-prettier": "^9.0.0",
-    "prettier": "^3.2.5",
     "typescript": "^5.4.4"
   }
 }
