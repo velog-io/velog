@@ -16,6 +16,6 @@
       "@constants/*": ["src/common/constants/*"]
     }
   },
-  "include": ["./src", ".eslintrc.cjs", "./scripts", "test/**/*.ts"],
+  "include": ["./src", "eslint.config.js", "./scripts", "test/**/*.ts"],
   "exclude": ["node_modules"]
 }

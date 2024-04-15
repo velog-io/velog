@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import 'reflect-metadata'
 import { container, injectable, singleton } from 'tsyringe'
 // import { data } from '../data/data.mjs'

@@ -11,7 +11,6 @@ import errorHandlerPlugin from '@plugins/global/errorHandlerPlugin.mjs'
 import ipaddrPlugin from '@plugins/global/ipaddrPlugin.mjs'
 import keepAlivePlugin from '@plugins/global/keepAlivePlugin.mjs'
 import mercuriusPlugin from '@plugins/global/mercuriusPlugin.mjs'
-import cors from '@fastify/cors'
 
 const app = Fastify({
   logger: true,

@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'url'
 import path from 'path'
 import inquirer from 'inquirer'
 import fs from 'fs'

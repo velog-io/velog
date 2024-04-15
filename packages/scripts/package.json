@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "lint": "prettier -w . --cache"
+    "lint": "eslint --fix"
   },
   "main": "./index.mts",
   "types": "./index.mts",
@@ -25,10 +25,6 @@
     "@packages/tsconfig": "workspace:*",
     "@types/inquirer": "^9.0.7",
     "@types/node": "^20.12.5",
-    "@typescript-eslint/eslint-plugin": "^7.5.0",
-    "@typescript-eslint/parser": "^7.5.0",
-    "eslint": "^9.0.0",
-    "eslint-config-prettier": "^9.0.0",
     "prettier": "^3.2.5"
   }
 }

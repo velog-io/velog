@@ -1,7 +1,6 @@
 import { injectable, singleton } from 'tsyringe'
 import { BookService } from '../BookService/index.mjs'
 import { NotFoundError } from '@errors/NotfoundError.mjs'
-import { BookBuildService } from '../BookBuildService/index.mjs'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
 import { WriterService } from '../WriterService/index.mjs'
 import { ConfilctError } from '@errors/ConfilctError.mjs'

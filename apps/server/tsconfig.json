@@ -21,13 +21,13 @@
   },
   "include": [
     "./src",
-    ".eslintrc.cjs",
     "jest.*",
     "codegen.ts",
-    "scripts/*.ts",
     "./test/**/*.ts",
+    "scripts/**/*.ts",
     "scripts/**.mts",
-    "scripts/**/*.mts"
+    "scripts/**/*.mts",
+    "eslint.config.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

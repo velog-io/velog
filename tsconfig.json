@@ -3,5 +3,6 @@
   "compilerOptions": {
     "rootDir": "./"
   },
+  "include": [".lintstagedrc.mjs", "**/*"],
   "exclude": ["apps/book-server/books/*"]
 }

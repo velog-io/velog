@@ -36,7 +36,7 @@
     "prisma-deploy:mongo": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/mongoDeploy.mts",
     "prisma:generate": "tsx ./scripts/generatePrisma.mts && pnpm build",
     "build": "tsc -p tsconfig.build.json",
-    "lint": "prettier -w . --cache",
+    "lint": "eslint --fix",
     "env:copy": "tsx ./scripts/copyEnv.mts",
     "ssm": "tsx ./scripts/ssm.mts"
   },

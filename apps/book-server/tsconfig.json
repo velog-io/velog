@@ -14,6 +14,6 @@
     },
     "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"]
   },
-  "include": ["./src", "./scripts", "./scripts/**/*.mts", "./codegen.mts", "test/**/*.mts"],
-  "exclude": ["node_modules"]
+  "include": ["./src", "./scripts", "./codegen.mts", "test/**/*.mts", "eslint.config.js"],
+  "exclude": ["node_modules", "dist"]
 }

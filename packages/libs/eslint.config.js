@@ -4,6 +4,6 @@ import baseConfig from '@packages/eslint-config/base.mjs'
 export default [
   ...baseConfig,
   {
-    ignores: ['node_modules', 'dist'],
+    ignores: ['node_modules'],
   },
 ]

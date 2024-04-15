@@ -11,7 +11,7 @@
     "check:gql": "pnpm prisma:copy && pnpm env:copy -e development && node --import @swc-node/register/esm-register ./scripts/checkGql.mts",
     "restore:posts": "pnpm env:copy -e development && pnpm prisma:copy && node --import @swc-node/register/esm-register ./scripts/restorePosts.mts",
     "env:copy": "tsx ./scripts/copyEnv.mts",
-    "lint": "prettier -w . --cache",
+    "lint": "eslint --fix",
     "ssm": "tsx ./scripts/ssm.mts"
   },
   "engines": {
@@ -44,13 +44,7 @@
     "@swc/core": "^1.4.4",
     "@types/inquirer": "^9.0.7",
     "@types/node": "^20.12.5",
-    "@typescript-eslint/eslint-plugin": "^7.5.0",
-    "@typescript-eslint/parser": "^7.5.0",
     "chokidar": "^3.6.0",
-    "eslint": "^9.0.0",
-    "eslint-config-prettier": "^9.0.0",
-    "prettier": "^3.2.5",
-    "ts-node": "^10.9.2",
     "typescript": "^5.4.4"
   }
 }

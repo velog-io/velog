@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as aws from '@pulumi/aws'
 import * as awsx from '@pulumi/awsx'
 import * as clientEcs from '@aws-sdk/client-ecs'

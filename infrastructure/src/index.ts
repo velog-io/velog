@@ -51,7 +51,7 @@ const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => voi
 
 export const imageUrls = getCluster().then((cluster) =>
   Object.entries(createInfraMapper).map(async ([pack, func]) => {
-    let type = pack as PackageType
+    const type = pack as PackageType
     let imageUri: pulumi.Output<string>
     if (targets.includes(type) || target === 'all') {
       const repo = createECRRepository(type)

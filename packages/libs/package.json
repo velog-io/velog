@@ -14,17 +14,15 @@
   },
   "keywords": [],
   "scripts": {
-    "create-service": "tsx ./scripts/create-service.mts"
+    "create-service": "tsx ./scripts/create-service.mts",
+    "lint": "eslint --fix"
   },
   "dependencies": {
     "@packages/scripts": "workspace:*"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.5.0",
-    "@typescript-eslint/parser": "^7.5.0",
-    "eslint": "^9.0.0",
-    "eslint-config-prettier": "^9.0.0",
-    "prettier": "^3.2.5",
+    "@packages/eslint-config": "workspace:*",
+    "@packages/tsconfig": "workspace:*",
     "tsx": "^4.7.2"
   }
 }

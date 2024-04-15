@@ -6,6 +6,6 @@
     "typeRoots": ["./node_modules/@types"],
     "outDir": "./dist"
   },
-  "include": ["/lib", "index.mts", "./.eslintrc.cjs"],
+  "include": ["src", "lib", "scripts", "index.mts", "eslint.config.js"],
   "exclude": ["node_modules"]
 }
