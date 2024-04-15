@@ -4,9 +4,31 @@ export const getMockPages = (count: number) =>
   Array(count)
     .fill(0)
     .map((_, index) => {
-      if (index === 2 || index === 6) {
+      if (index === 0) {
         return {
-          title: 'About',
+          title: 'Introduction',
+          index: index,
+          body: `# Introduction_${index}
+          - ${faker.lorem.paragraph(2)}
+          - ${faker.lorem.paragraph(1)}
+          - [${faker.lorem.words(2)}](${faker.internet.url()})
+          `,
+          type: 'page',
+        }
+      }
+
+      if (index === 2) {
+        return {
+          title: 'Getting Started',
+          index: index,
+          body: '',
+          type: 'separator',
+        }
+      }
+
+      if (index === 6) {
+        return {
+          title: 'API Reference',
           index: index,
           body: '',
           type: 'separator',

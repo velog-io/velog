@@ -45,7 +45,9 @@ class Seeder {
         book_id: book.id,
       },
     })
-    const topLevel = pages.slice(0, 10)
+    const topLevel = pages
+      .slice(0, 10)
+      .filter((_, index) => index !== 0 && index !== 2 && index !== 6)
     const secondLevel = pages.slice(10, 50)
 
     for (let i = 11; i < 51; i++) {

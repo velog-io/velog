@@ -7,12 +7,12 @@ import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { injectable, singleton } from 'tsyringe'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
 import { PageData, PageService } from '../PageService/index.mjs'
-import { indexJSXTemplate } from '@templates/indexJSXTemplate.js'
 import { themeConfigTemplate } from '@templates/themeConfigTemplate.js'
 import { urlAlphabet, random, customRandom } from 'nanoid'
 import { MqService } from '@lib/mq/MqService.mjs'
 import { nextConfigTempate } from '@templates/nextConfigTemplate.js'
 import { EnvService } from '@lib/env/EnvService.mjs'
+import { WriterService } from '../WriterService/index.mjs'
 
 const exec = promisify(execCb)
 
@@ -28,9 +28,20 @@ export class BookBuildService implements Service {
     private readonly mq: MqService,
     private readonly env: EnvService,
     private readonly pageService: PageService,
+    private readonly writerService: WriterService,
   ) {}
   public async build(bookId: string): Promise<void> {
-    //TODO: ADD authentication
+    // TODO: ADD authentication
+    // if (!signedUserId) {
+    //   throw new UnauthorizedError('Not logged in')
+    // }
+
+    // const writer = await this.writerService.findById(signedUserId)
+
+    // if (!writer) {
+    //   throw new NotFoundError('Not found writer')
+    // }
+
     const book = await this.mongo.book.findUnique({
       where: { id: bookId },
     })
@@ -38,6 +49,11 @@ export class BookBuildService implements Service {
     if (!book) {
       throw new NotFoundError('Book not found')
     }
+
+    // if (book.writer_id !== writer.id) {
+    //   throw new ConfilctError('Not owner of book')
+    // }
+
     // create folder
     const dest = path.resolve(process.cwd(), 'books', bookId)
 
@@ -48,6 +64,7 @@ export class BookBuildService implements Service {
       fs.rmSync(dest, { recursive: true, force: true })
       throw new ConfilctError('Build process already in progress for this book')
     }
+
     // Create folder
     fs.mkdirSync(dest)
 
@@ -74,14 +91,13 @@ export class BookBuildService implements Service {
 
     // create meta.json
     const pagesPath = `${dest}/pages`
-    const metaData = await this.writeMetaJson(pages, pagesPath)
+    await this.writeMetaJson(pages, pagesPath, false)
 
     fs.writeFileSync(
       `${dest}/next.config.mjs`,
       nextConfigTempate({ bucketUrl: this.env.get('bookBucketUrl'), bookId }),
     )
     fs.writeFileSync(`${dest}/theme.config.tsx`, themeConfigTemplate({ title: book.title }))
-    fs.writeFileSync(`${pagesPath}/index.jsx`, indexJSXTemplate(metaData[0].key))
 
     await exec('pnpm prettier -w .', { cwd: dest })
     const buildStdout = await this.buildTsToJs(dest)
@@ -118,28 +134,44 @@ export class BookBuildService implements Service {
       console.error(`exec error: ${error}`)
     }
   }
-  private async writeMetaJson(book: BookResult[], baseDest: string) {
+  private async writeMetaJson(book: BookResult[], baseDest: string, isRecursive: boolean) {
     const books = this.insertKey(book)
-    const meta = books.reduce(
-      (acc, page) => {
+    const meta = books.reduce((acc, page, index) => {
+      if (index === 0) {
+        acc['index'] = page.title
+        return acc
+      }
+
+      if (page.type === 'page') {
         const key = page.key
         acc[key] = page.title
         return acc
-      },
-      {} as Record<string, string>,
-    )
+      }
+
+      if (page.type === 'separator') {
+        const key = page.key
+        acc[key] = {
+          type: 'separator',
+          title: page.title,
+        }
+        return acc
+      }
+
+      return acc
+    }, {} as MetaJson)
 
     fs.writeFileSync(`${baseDest}/_meta.json`, JSON.stringify(meta, null, 2))
 
-    const promises = books.map((page) => {
-      const mdxTarget = path.resolve(baseDest, `${page.key}.mdx`)
+    const promises = books.map((page, index) => {
+      const filename = index === 0 && !isRecursive ? 'index' : page.key
+      const mdxTarget = path.resolve(baseDest, `${filename}.mdx`)
       fs.writeFileSync(mdxTarget, page.body)
 
-      if (page.childrens.length > 0) {
+      if (page.type !== 'separator' && page.childrens.length > 0) {
         const folderPath = page.key
         const targetPath = `${baseDest}/${folderPath}`
         fs.mkdirSync(targetPath)
-        return this.writeMetaJson(page.childrens, targetPath)
+        return this.writeMetaJson(page.childrens, targetPath, true)
       }
     })
 
@@ -158,3 +190,6 @@ export class BookBuildService implements Service {
 }
 
 type BookResult = PageData
+type MetaJsonSerpator = { type: 'separator'; title: string }
+type MetaJsonValue = string | MetaJsonSerpator
+type MetaJson = Record<string, MetaJsonValue>

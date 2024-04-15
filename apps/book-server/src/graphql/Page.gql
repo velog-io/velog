@@ -5,4 +5,5 @@ type Page {
   body: String!
   parent_id: ID
   childrens: [Page!]!
+  type: String!
 }

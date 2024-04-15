@@ -1,9 +1,6 @@
 import { CreateServiceScript } from '@packages/scripts'
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
+import { URL } from 'url'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
+const __dirname = new URL('.', import.meta.url).pathname
 const createServiceScript = new CreateServiceScript({ __dirname })
 createServiceScript.excute()

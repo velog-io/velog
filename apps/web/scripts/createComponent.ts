@@ -1,9 +1,9 @@
-import url from 'url'
+import { URL } from 'url'
 import path from 'path'
 import fs from 'fs'
 import inquirer from 'inquirer'
 
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
+const __dirname = new URL('.', import.meta.url).pathname
 const templateDir = path.resolve(__dirname, './templates/component')
 const files = fs.readdirSync(templateDir)
 const filesData = new Map<string, string>()

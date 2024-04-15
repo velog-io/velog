@@ -1,5 +1,5 @@
 {
-  "name": "@packages/libs",
+  "name": "@packages/library",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -12,17 +12,28 @@
   "engines": {
     "node": ">=20.11.1"
   },
-  "keywords": [],
+  "exports": {
+    "./awsS3": {
+      "default": "./dist/awsS3/AwsS3Service.mjs",
+      "types": "./dist/awsS3/AwsS3Service.d.mts"
+    },
+    "./discord": {
+      "default": "./dist/discord/DiscordService.mjs",
+      "types": "./dist/discord/DiscordService.d.mts"
+    }
+  },
   "scripts": {
-    "create-service": "tsx ./scripts/create-service.mts",
-    "lint": "eslint --fix"
+    "build": "tsc -p tsconfig.json",
+    "create-service": "tsx ./scripts/createService.mts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.473.0",
     "@packages/scripts": "workspace:*"
   },
   "devDependencies": {
     "@packages/eslint-config": "workspace:*",
     "@packages/tsconfig": "workspace:*",
+    "@types/jest": "^29.5.12",
     "eslint": "^9.0.0",
     "tsx": "^4.7.2"
   }

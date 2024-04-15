@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-
+ 
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import { Book as BookModel } from '@packages/database/velog-book-mongo'
 import { GraphQLContext } from '../common/interfaces/graphql.mjs'
@@ -60,6 +60,7 @@ export type Page = {
   id: Scalars['ID']['output']
   parent_id?: Maybe<Scalars['ID']['output']>
   title: Scalars['String']['output']
+  type: Scalars['String']['output']
 }
 
 export type Query = {
@@ -267,6 +268,7 @@ export type PageResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   parent_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 

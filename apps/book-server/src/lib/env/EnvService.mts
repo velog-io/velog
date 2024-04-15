@@ -54,6 +54,7 @@ export class EnvService implements Service {
       discordBotToken: z.string(),
       discordErrorChannel: z.string(),
       redisHost: z.string(),
+      bookBucketName: z.string(),
       bookBucketUrl: z.string(),
     })
 
@@ -65,6 +66,7 @@ export class EnvService implements Service {
       discordBotToken: process.env.DISCORD_BOT_TOKEN,
       discordErrorChannel: process.env.DISCORD_ERROR_CHANNEL,
       redisHost: process.env.REDIS_HOST,
+      bookBucketName: process.env.BOOK_BUCKET_NAME,
       bookBucketUrl: process.env.BOOK_BUCKET_URL,
     })
 
@@ -93,5 +95,6 @@ type ENV = {
   discordBotToken: string
   discordErrorChannel: string
   redisHost: string
+  bookBucketName: string
   bookBucketUrl: string
 }
