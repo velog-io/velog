@@ -8,7 +8,7 @@
     "precommit": "lint-staged",
     "dev": "pnpm -r dev",
     "build": "turbo build",
-    "lint": "turbo lint",
+    "lint": "pnpm -r lint",
     "clean": "find . -name \"node_modules\" -type d -prune -exec rm -rf '{}' +",
     "prisma:init": "pnpm -r prisma:generate"
   },

@@ -4,6 +4,13 @@ import baseConfig from '@packages/eslint-config/base.mjs'
 export default [
   ...baseConfig,
   {
-    ignores: ['node_modules', './packages/*', './apps/*', './infrastructure/*'],
+    ignores: [
+      'node_modules',
+      './packages/*',
+      './apps/*',
+      './infrastructure/*',
+      '.lintstagedrc.mjs',
+      '**/node_modules',
+    ],
   },
 ]
