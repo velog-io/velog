@@ -151,7 +151,7 @@ class Runner {
 
   private setWhiteList(target: Target) {
     const whiteList = new Set<string>()
-     
+
     Object.keys(target)
       .map((key) => target[key])
       .map(({ ext, path }) => {

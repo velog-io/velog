@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
- 
+
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
 import { Book as BookModel } from '@packages/database/velog-book-mongo'
 import { GraphQLContext } from '../common/interfaces/graphql.mjs'
