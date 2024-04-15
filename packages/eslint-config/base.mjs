@@ -22,14 +22,13 @@ export default [
       tsconfigRootDir: __dirname,
     },
     plugins: ['@typescript-eslint'],
-    extends: ['plugin:@typescript-eslint/recommended', 'prettier'],
+    extends: ['plugin:@typescript-eslint/recommended'],
     root: true,
     env: {
       node: true,
       jest: true,
     },
     rules: {
-      'prettier/prettier': ['error', { semi: false, singleQuote: true }],
       '@typescript-eslint/interface-name-prefix': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
