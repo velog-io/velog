@@ -87,11 +87,11 @@ export class BookBuildService implements Service {
     }
 
     // json to files
-    const pages = await this.pageService.organizePages(bookId)
+    const bookData = await this.pageService.organizePages(bookId)
 
     // create meta.json
-    const pagesPath = `${dest}/pages`
-    await this.writeMetaJson(pages, pagesPath, false)
+    const pagePathOfBook = `${dest}/pages`
+    await this.writeMetaJson({ book: bookData, baseDest: pagePathOfBook, isRecursive: false })
 
     fs.writeFileSync(
       `${dest}/next.config.mjs`,
@@ -134,10 +134,10 @@ export class BookBuildService implements Service {
       console.error(`exec error: ${error}`)
     }
   }
-  private async writeMetaJson(book: BookResult[], baseDest: string, isRecursive: boolean) {
+  private async writeMetaJson({ book, baseDest, isRecursive }: WriteMetaJsonArgs) {
     const books = this.insertKey(book)
     const meta = books.reduce((acc, page, index) => {
-      if (index === 0) {
+      if (!isRecursive && index === 0) {
         acc['index'] = page.title
         return acc
       }
@@ -171,7 +171,7 @@ export class BookBuildService implements Service {
         const folderPath = page.key
         const targetPath = `${baseDest}/${folderPath}`
         fs.mkdirSync(targetPath)
-        return this.writeMetaJson(page.childrens, targetPath, true)
+        return this.writeMetaJson({ book: page.childrens, baseDest: targetPath, isRecursive: true })
       }
     })
 
@@ -193,3 +193,9 @@ type BookResult = PageData
 type MetaJsonSerpator = { type: 'separator'; title: string }
 type MetaJsonValue = string | MetaJsonSerpator
 type MetaJson = Record<string, MetaJsonValue>
+
+type WriteMetaJsonArgs = {
+  book: BookResult[]
+  baseDest: string
+  isRecursive: boolean
+}
