@@ -23,8 +23,9 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "create-service": "tsx ./scripts/createService.mts"
+    "build": "tsc -p tsconfig.build.json",
+    "create-service": "tsx ./scripts/createService.mts",
+    "lint": "eslint --fix"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.473.0",
