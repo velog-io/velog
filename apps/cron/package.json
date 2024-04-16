@@ -19,8 +19,7 @@
   "scripts": {
     "dev": "nodemon --watch './**/*.mts' --exec 'node --import @swc-node/register/esm-register' ./src/main.mts | pino-pretty",
     "start": "NODE_ENV=production node dist/src/main.mjs",
-    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
-    "build:prod": "tsc --project tsconfig.prod.json && tsc-alias -p tsconfig.prod.json",
+    "build": "tsc --project tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "lint": "eslint --fix",
     "create-service": "tsx ./scripts/createService.ts",
     "ssm": "tsx ./scripts/ssm.mts"
