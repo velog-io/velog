@@ -6,6 +6,7 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
 RUN pnpm add -g turbo
+RUN turbo telemetry disable
 
 ARG DOCKER_ENV
 ENV DOCKER_ENV=${DOCKER_ENV}
