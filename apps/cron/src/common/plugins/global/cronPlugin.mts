@@ -5,7 +5,7 @@ import { GenerateTrendingWritersJob } from '@jobs/GenerateTrendingWritersJob.js'
 import { DeleteFeedJob } from '@jobs/DeleteFeedJob.js'
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import { CheckSpamPostJob } from '@jobs/CheckSpamPostJob.js'
 import fp from 'fastify-plugin'
 

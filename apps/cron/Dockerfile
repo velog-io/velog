@@ -48,7 +48,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 RUN pnpm --filter @packages/database prisma:generate
 RUN pnpm --filter ${APP_NAME} ssm pull -e ${DOCKER_ENV}
-RUN turbo build:prod
+RUN turbo build
 
 FROM base As runner
 COPY --from=builder /app/package*.json .

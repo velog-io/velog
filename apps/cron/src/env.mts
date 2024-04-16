@@ -20,7 +20,7 @@ const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
   : 'development'
 
 const envFile = envFiles[dockerEnv]
-const prefix = dockerEnv === 'development' ? './env' : '../env'
+const prefix = './env'
 
 const utils = container.resolve(UtilsService)
 const configPath = utils.resolveDir(`${prefix}/${envFile}`)

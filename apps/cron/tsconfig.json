@@ -13,7 +13,8 @@
       "@services/*": ["src/services/*"],
       "@errors/*": ["src/common/errors/*"],
       "@plugins/*": ["src/common/plugins/*"],
-      "@constants/*": ["src/common/constants/*"]
+      "@constants/*": ["src/common/constants/*"],
+      "@env": ["src/env.mts"]
     }
   },
   "include": ["./src", "eslint.config.js", "./scripts", "test/**/*.ts"],

@@ -5,7 +5,7 @@ import { PostService } from '@services/PostService/index.js'
 import { container, injectable, singleton } from 'tsyringe'
 import { utcToZonedTime } from 'date-fns-tz'
 import { startOfDay, subMonths } from 'date-fns'
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import fs from 'fs'
 import path from 'path'
 import { UtilsService } from '@lib/utils/UtilsService.js'
@@ -18,10 +18,7 @@ interface Controller {
 @singleton()
 @injectable()
 export class PostController implements Controller {
-  constructor(
-    private readonly db: DbService,
-    private readonly postService: PostService,
-  ) {}
+  constructor(private readonly db: DbService, private readonly postService: PostService) {}
   async updatePostScore(postId: string): Promise<void> {
     const post = await this.postService.findById(postId)
 

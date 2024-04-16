@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { ENV } from './env.mjs'
+import { ENV } from '@env'
 import { disableKeepAlive } from '@plugins/encapsulated/closePlugin.js'
 import app from './app.mjs'
 import { container } from 'tsyringe'
