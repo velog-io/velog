@@ -9,10 +9,11 @@ datasource db {
 }
 
 model Writer {
-  id         String @id @default(auto()) @map("_id") @db.ObjectId
-  fk_user_id String @unique
-  username   String @unique
-  email      String @unique
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  fk_user_id String  @unique
+  pen_name   String  @unique
+  email      String  @unique
+  short_bio  String? @db.String
   books      Book[]
 
   @@map("writers")

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
- 
+
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
-import { Book as BookModel } from '@packages/database/velog-book-mongo'
+import { Book as BookModel, Writer as WriterModel } from '@packages/database/velog-book-mongo'
 import { GraphQLContext } from '../common/interfaces/graphql.mjs'
 export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined
@@ -97,7 +97,8 @@ export type Writer = {
   email: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
-  username: Scalars['String']['output']
+  pen_name: Scalars['String']['output']
+  short_bio?: Maybe<Scalars['String']['output']>
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
@@ -198,7 +199,7 @@ export type ResolversTypes = {
   SubScriptionPayload: ResolverTypeWrapper<SubScriptionPayload>
   Subscription: ResolverTypeWrapper<{}>
   Void: ResolverTypeWrapper<Scalars['Void']['output']>
-  Writer: ResolverTypeWrapper<Writer>
+  Writer: ResolverTypeWrapper<WriterModel>
 }
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -217,7 +218,7 @@ export type ResolversParentTypes = {
   SubScriptionPayload: SubScriptionPayload
   Subscription: {}
   Void: Scalars['Void']['output']
-  Writer: Writer
+  Writer: WriterModel
 }
 
 export type BookResolvers<
@@ -291,8 +292,7 @@ export type QueryResolvers<
 
 export type SubScriptionPayloadResolvers<
   ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['SubScriptionPayload'] = ResolversParentTypes['SubScriptionPayload'],
+  ParentType extends ResolversParentTypes['SubScriptionPayload'] = ResolversParentTypes['SubScriptionPayload'],
 > = {
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
@@ -336,7 +336,8 @@ export type WriterResolvers<
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  pen_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  short_bio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 

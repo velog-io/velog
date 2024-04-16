@@ -25,6 +25,7 @@ const config: CodegenConfig = {
         contextType: '../common/interfaces/graphql.mjs#GraphQLContext',
         mappers: {
           Book: '@packages/database/velog-book-mongo#Book as BookModel',
+          Writer: '@packages/database/velog-book-mongo#Writer as WriterModel',
         },
         inputMaybeValue: 'T | undefined',
         maybeValue: 'T | null | undefined',
