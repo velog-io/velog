@@ -42,10 +42,7 @@
     "pino-pretty": "^10.0.0",
     "prisma": "^5.11.0",
     "reflect-metadata": "^0.1.13",
-    "tsc-alias": "^1.8.7",
-    "tsx": "^4.7.1",
     "tsyringe": "^4.7.0",
-    "typescript": "^5.3.3",
     "zod": "^3.21.4"
   },
   "devDependencies": {
@@ -58,6 +55,9 @@
     "@types/node": "^20.12.5",
     "eslint": "^9.0.0",
     "nodemon": "^2.0.22",
-    "ts-paths-esm-loader": "^1.4.3"
+    "ts-paths-esm-loader": "^1.4.3",
+    "tsc-alias": "^1.8.7",
+    "tsx": "^4.7.2",
+    "typescript": "^5.4.5"
   }
 }

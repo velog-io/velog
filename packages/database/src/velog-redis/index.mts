@@ -36,6 +36,8 @@ export class RedisService extends Redis.default implements Service {
         `ssr:/@${username}/series/${seriesUrlSlug}`,
       changeEmail: (code: string) => `changeEmailCode:${code}`,
       trendingWriters: () => `trending:writers`,
+      existsUser: (userId: string) => `exists:user:${userId}`,
+      errorMessageCache: (type: string, userId: string) => `error:${type}:${userId}`,
     }
   }
 
@@ -63,6 +65,8 @@ type GenerateRedisKey = {
   userCache: (username: string) => string
   postSeries: (username: string, seriesUrlSlug: string) => string
   changeEmail: (code: string) => string
+  existsUser: (userId: string) => string
+  errorMessageCache: (type: string, userId: string) => string
   trendingWriters: () => string
 }
 

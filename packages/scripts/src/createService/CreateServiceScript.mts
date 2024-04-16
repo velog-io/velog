@@ -5,10 +5,17 @@ import { fileURLToPath } from 'url'
 
 const filesData = new Map<string, string>()
 
+type CreateServiceScriptParams = {
+  __dirname: string
+  isPackages?: boolean
+}
+
 export class CreateServiceScript {
   private __dirname: string
-  constructor({ __dirname }: { __dirname: string }) {
+  private isPackages: boolean
+  constructor({ __dirname, isPackages = false }: CreateServiceScriptParams) {
     this.__dirname = __dirname
+    this.isPackages = isPackages
   }
   public async excute() {
     const { type } = await inquirer.prompt([
@@ -42,8 +49,8 @@ export class CreateServiceScript {
 
     const dirPath =
       type === 'lib'
-        ? path.resolve(this.__dirname, '../src/lib')
-        : path.resolve(this.__dirname, `../src/services`)
+        ? path.resolve(this.__dirname, this.isPackages ? '../src' : '../src/lib')
+        : path.resolve(this.__dirname, this.isPackages ? '../src' : `../src/services`)
 
     const filename = answer.feature.trim()
 

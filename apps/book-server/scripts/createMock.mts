@@ -16,8 +16,9 @@ class Seeder {
     return this.mongo.writer.create({
       data: {
         fk_user_id: '6152b185-2efb-4d79-88f9-b9cfa96cbb9a',
-        username: 'test',
+        pen_name: 'test',
         email: 'test@velog.com',
+        short_bio: 'Hello, I am test writer',
       },
     })
   }

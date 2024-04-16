@@ -28,7 +28,6 @@ ENV TURBO_TOKEN=${TURBO_TOKEN}
 ARG TURBO_REMOTE_CACHE_SIGNATURE_KEY
 ENV TURBO_REMOTE_CACHE_SIGNATURE_KEY=${TURBO_REMOTE_CACHE_SIGNATURE_KEY}
 
-
 ENV APP_NAME="server"
 ENV APP_DIR="apps/${APP_NAME}"
 RUN echo "APP_DIR value is: ${APP_DIR}"
@@ -49,7 +48,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 RUN pnpm --filter @packages/database prisma:generate
 RUN pnpm --filter ${APP_NAME} ssm pull -e ${DOCKER_ENV}
-RUN turbo build --filter ${APP_NAME}
+RUN turbo run build --filter ${APP_NAME} --remote-only --team=${TURBO_TEAM} --token=${TURBO_TOKEN}
 
 FROM base As runner
 COPY --from=builder /app/package*.json .
