@@ -9,6 +9,8 @@ ENV PATH="$PNPM_HOME:$PATH"
 
 RUN pnpm add -g turbo prisma
 
+RUN turbo telemetry disable
+
 ARG DOCKER_ENV
 ENV DOCKER_ENV=${DOCKER_ENV}
 RUN echo "DOCKER_ENV value is: ${DOCKER_ENV}"
@@ -20,13 +22,16 @@ ARG AWS_SECRET_ACCESS_KEY
 ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 
 ARG TURBO_TEAM
-ENV TURBO_TEAM=${TURBO_TEAM}
+ENV TURBO_TEAM=$TURBO_TEAM
+RUN echo "TURBO_TEAM value is: ${TURBO_TEAM}"
 
 ARG TURBO_TOKEN
-ENV TURBO_TOKEN=${TURBO_TOKEN}
+ENV TURBO_TOKEN=$TURBO_TOKEN
+RUN echo "TURBO_TOKEN is: ${TURBO_TOKEN}"
 
 ARG TURBO_REMOTE_CACHE_SIGNATURE_KEY
-ENV TURBO_REMOTE_CACHE_SIGNATURE_KEY=${TURBO_REMOTE_CACHE_SIGNATURE_KEY}
+ENV TURBO_REMOTE_CACHE_SIGNATURE_KEY=$TURBO_REMOTE_CACHE_SIGNATURE_KEY
+RUN echo "TURBO_REMOTE_CACHE_SIGNATURE_KEY is: ${TURBO_REMOTE_CACHE_SIGNATURE_KEY}"
 
 ENV APP_NAME="server"
 ENV APP_DIR="apps/${APP_NAME}"
@@ -48,15 +53,14 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 RUN pnpm --filter @packages/database prisma:generate
 RUN pnpm --filter ${APP_NAME} ssm pull -e ${DOCKER_ENV}
-RUN turbo run build --filter ${APP_NAME} --remote-only --team=${TURBO_TEAM} --token=${TURBO_TOKEN}
+RUN turbo run build --filter ${APP_NAME}
 
 FROM base As runner
-COPY --from=builder /app/package*.json .
-COPY --from=builder /app/pnpm-*.yaml .
+COPY --from=builder /app/package*.json /app/
+COPY --from=builder /app/pnpm-*.yaml /app/
 COPY --from=builder /app/packages/ /app/packages
 
 WORKDIR /app/${APP_DIR}
-
 COPY --from=builder /app/${APP_DIR}/dist /app/${APP_DIR}/dist
 COPY --from=builder /app/${APP_DIR}/src/graphql /app/${APP_DIR}/src/graphql
 COPY --from=builder /app/${APP_DIR}/*.json .
