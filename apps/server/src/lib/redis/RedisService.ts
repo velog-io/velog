@@ -1,4 +1,4 @@
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import { Redis } from 'ioredis'
 import { injectable, singleton } from 'tsyringe'
 

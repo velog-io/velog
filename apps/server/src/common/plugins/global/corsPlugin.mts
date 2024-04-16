@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import cors from '@fastify/cors'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import fp from 'fastify-plugin'
 
 // TODO: apply fastify-plugin

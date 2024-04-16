@@ -1,4 +1,4 @@
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import { isHttpError } from '@errors/HttpError.js'
 import { DiscordService } from '@lib/discord/DiscordService.js'
 import { FastifyPluginCallback } from 'fastify'

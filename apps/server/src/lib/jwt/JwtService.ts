@@ -1,7 +1,7 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
 import { injectable, singleton } from 'tsyringe'
 import { Time } from '@constants/TimeConstants.js'
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import { DbService } from '@lib/db/DbService.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 

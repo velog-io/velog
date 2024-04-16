@@ -1,5 +1,5 @@
 import { Client } from '@elastic/elasticsearch'
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import { injectable, singleton } from 'tsyringe'
 import { BuildQueryService } from './BuildQueryService.js'
 import { PostIncludeTags } from '@services/PostService/PostServiceInterface.js'

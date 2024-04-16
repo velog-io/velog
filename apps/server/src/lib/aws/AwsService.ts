@@ -4,7 +4,7 @@ import { S3Client } from '@aws-sdk/client-s3'
 import mime from 'mime-types'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { GetObjectCommand } from '@aws-sdk/client-s3'
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 
 interface Service {
   generateSignedUrl(path: string, filename: string): Promise<string>

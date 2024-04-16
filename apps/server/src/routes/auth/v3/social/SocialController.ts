@@ -1,5 +1,5 @@
 import { Time } from '@constants/TimeConstants.js'
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import { B2ManagerService } from '@lib/b2Manager/B2ManagerService.js'
 import { CookieService } from '@lib/cookie/CookieService.js'
 import { DbService } from '@lib/db/DbService.js'

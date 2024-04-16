@@ -1,6 +1,6 @@
 import { injectable, singleton } from 'tsyringe'
 import B2 from 'backblaze-b2'
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import { finished } from 'stream/promises'
 import { Readable } from 'stream'
 

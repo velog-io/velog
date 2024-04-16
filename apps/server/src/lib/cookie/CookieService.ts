@@ -1,4 +1,4 @@
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import type { CookieSerializeOptions } from '@fastify/cookie'
 import { FastifyReply } from 'fastify'
 import { injectable, singleton } from 'tsyringe'

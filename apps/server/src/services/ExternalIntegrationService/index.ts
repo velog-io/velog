@@ -3,7 +3,7 @@ import { injectable, singleton } from 'tsyringe'
 import { nanoid } from 'nanoid'
 import { JwtService } from '@lib/jwt/JwtService.js'
 import { Time } from '@constants/TimeConstants.js'
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import axios from 'axios'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { SerializePost } from '@services/PostService/index.js'
@@ -19,10 +19,7 @@ interface Service {
 @injectable()
 @singleton()
 export class ExternalIntegrationService implements Service {
-  constructor(
-    private readonly db: DbService,
-    private readonly jwt: JwtService,
-  ) {}
+  constructor(private readonly db: DbService, private readonly jwt: JwtService) {}
   public async createIntegrationCode(signedUserId?: string): Promise<string> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')

@@ -1,4 +1,4 @@
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 
 export const changeEmailTemplate: ChangeEmailTemplateArgs = (username, email, code) => {
   const text = email ? '변경' : '설정'

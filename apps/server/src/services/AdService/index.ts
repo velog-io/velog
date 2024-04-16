@@ -1,4 +1,4 @@
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { AdsInput } from '@graphql/helpers/generated.js'
 import { DbService } from '@lib/db/DbService.js'
@@ -13,10 +13,7 @@ interface Service {
 @injectable()
 @singleton()
 export class AdService implements Service {
-  constructor(
-    private readonly db: DbService,
-    private readonly utils: UtilsService,
-  ) {}
+  constructor(private readonly db: DbService, private readonly utils: UtilsService) {}
   public async getAds({ type, writer_username = '', limit = 2 }: AdsInput): Promise<Ad[]> {
     if (!['feed', 'banner'].includes(type)) {
       throw new BadRequestError('Invalid type')

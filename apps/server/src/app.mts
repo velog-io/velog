@@ -1,7 +1,7 @@
 import Fastify from 'fastify'
 import formbody from '@fastify/formbody'
 import cookie from '@fastify/cookie'
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import routes from '@routes/index.js'
 import multer from 'fastify-multer'
 import validatorCompilerPlugin from '@plugins/global/validatorCompilerPlugin.mjs'

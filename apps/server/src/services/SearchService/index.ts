@@ -5,7 +5,7 @@ import { Prisma, Tag } from '@packages/database/velog-rds'
 import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 import { ApiResponse } from '@elastic/elasticsearch'
 import { TagService } from '@services/TagService/index.js'
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 
 interface Service {
   get searchSync(): SearchSyncType

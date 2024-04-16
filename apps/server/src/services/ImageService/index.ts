@@ -1,4 +1,4 @@
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import { DbService } from '@lib/db/DbService.js'
 import { SlackService } from '@lib/slack/SlackService.js'
 import { UserImageNext } from '@packages/database/velog-rds'

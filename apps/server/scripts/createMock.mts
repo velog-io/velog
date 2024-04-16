@@ -7,7 +7,7 @@ import { Post, Prisma, User } from '@packages/database/velog-rds'
 import { mockComment } from 'test/mock/mockComment.js'
 import { MockPostsType, mockPosts } from 'test/mock/mockPost.js'
 import { v4 as uuidv4 } from 'uuid'
-import { ENV } from 'src/env.mjs'
+import { ENV } from '@env'
 import {
   CommentNotificationActionInput,
   CommentReplyNotifictionActionInput,
@@ -18,10 +18,7 @@ import {
 const MAX_COMMENTS_PER_POST = 5
 
 class Seeder {
-  constructor(
-    private readonly db: DbService,
-    private readonly utils: UtilsService,
-  ) {}
+  constructor(private readonly db: DbService, private readonly utils: UtilsService) {}
   public createUser(mockUser: MockUserWithProfileType[]) {
     return mockUser.map((user) => {
       const { profile, username, email, is_certified } = user
