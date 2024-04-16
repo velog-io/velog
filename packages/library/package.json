@@ -36,6 +36,7 @@
     "@packages/tsconfig": "workspace:*",
     "@types/jest": "^29.5.12",
     "eslint": "^9.0.0",
-    "tsx": "^4.7.2"
+    "tsx": "^4.7.2",
+    "typescript": "^5.4.5"
   }
 }

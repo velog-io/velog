@@ -34,7 +34,7 @@
     "prisma-migrate:dev": "pnpm env:copy --only-dev && pnpm prisma migrate dev --schema=./prisma/velog-rds/schema.prisma --create-only",
     "prisma-deploy:rds": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/rdsDeploy.mts",
     "prisma-deploy:mongo": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/mongoDeploy.mts",
-    "prisma:generate": "tsx ./scripts/generatePrisma.mts && pnpm build",
+    "prisma:generate": "tsx ./scripts/generatePrisma.mts",
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint --fix",
     "env:copy": "tsx ./scripts/copyEnv.mts",

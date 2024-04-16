@@ -19,6 +19,16 @@ ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
 ARG AWS_SECRET_ACCESS_KEY
 ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 
+ARG TURBO_TEAM
+ENV TURBO_TEAM=${TURBO_TEAM}
+
+ARG TURBO_TOKEN
+ENV TURBO_TOKEN=${TURBO_TOKEN}
+
+ARG TURBO_REMOTE_CACHE_SIGNATURE_KEY
+ENV TURBO_REMOTE_CACHE_SIGNATURE_KEY=${TURBO_REMOTE_CACHE_SIGNATURE_KEY}
+
+
 ENV APP_NAME="server"
 ENV APP_DIR="apps/${APP_NAME}"
 RUN echo "APP_DIR value is: ${APP_DIR}"
@@ -38,8 +48,9 @@ COPY --from=pruner /app/out/full/ ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 RUN pnpm --filter @packages/database prisma:generate
+RUN turbo build --filter @packages/database
 RUN pnpm --filter ${APP_NAME} ssm pull -e ${DOCKER_ENV}
-RUN turbo build:prod
+RUN turbo build:prod --filter ${APP_NAME}
 
 FROM base As runner
 COPY --from=builder /app/package*.json .
