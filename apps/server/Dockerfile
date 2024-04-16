@@ -48,7 +48,6 @@ COPY --from=pruner /app/out/full/ ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 RUN pnpm --filter @packages/database prisma:generate
-RUN turbo build --filter @packages/database
 RUN pnpm --filter ${APP_NAME} ssm pull -e ${DOCKER_ENV}
 RUN turbo build:prod --filter ${APP_NAME}
 

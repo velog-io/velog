@@ -30,6 +30,7 @@ ENV TURBO_REMOTE_CACHE_SIGNATURE_KEY=${TURBO_REMOTE_CACHE_SIGNATURE_KEY}
 
 ENV APP_NAME="cron"
 ENV APP_DIR="apps/${APP_NAME}"
+RUN echo "APP_DIR value is: ${APP_DIR}"
 
 WORKDIR /app
 
@@ -47,7 +48,6 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 RUN pnpm --filter @packages/database prisma:generate
 RUN pnpm --filter ${APP_NAME} ssm pull -e ${DOCKER_ENV}
-RUN pnpm install
 RUN turbo build:prod
 
 FROM base As runner
