@@ -1,7 +1,11 @@
 import { ENV } from '@env'
 import { injectable, singleton } from 'tsyringe'
 import { RedisService as Redis } from '@packages/database/velog-redis'
-export { ChangeEmailArgs, CheckPostSpamArgs, CreateFeedArgs } from '@packages/database/velog-redis'
+export type {
+  ChangeEmailArgs,
+  CheckPostSpamArgs,
+  CreateFeedArgs,
+} from '@packages/database/velog-redis'
 
 @injectable()
 @singleton()
