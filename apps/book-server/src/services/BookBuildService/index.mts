@@ -72,15 +72,13 @@ export class BookBuildService implements Service {
     const src = path.resolve(process.cwd(), 'books/base')
     await fs.copy(src, dest, { dereference: true })
 
-    // nextra install
-    const installStdout = await this.installDependencies(dest)
-
-    if (installStdout) {
+    const stdout = await this.installDependencies('npm install', dest)
+    if (stdout) {
       this.mq.publish({
         topicParameter: bookId,
         payload: {
           bookBuildInstalled: {
-            message: installStdout,
+            message: stdout,
           },
         },
       })
@@ -110,21 +108,21 @@ export class BookBuildService implements Service {
       })
     }
   }
-  private async installDependencies(dest: string) {
-    const command = 'pnpm install --frozen-lockfile'
+  private async installDependencies(command: string, dest: string): Promise<string> {
     try {
       const { stdout, stderr } = await exec(command, { cwd: dest })
       if (stderr) {
         console.error(`stderr: ${stderr}`)
+        throw new Error(stderr)
       }
       return stdout
     } catch (error) {
-      console.error(`exec error: ${error}`)
+      throw new Error(`exec error: ${error}`)
     }
   }
   private async buildTsToJs(dest: string) {
     try {
-      const { stdout, stderr } = await exec('pnpm build', { cwd: dest })
+      const { stdout, stderr } = await exec('pnpm next build', { cwd: dest })
       if (stderr) {
         console.error(`stderr: ${stderr}`)
       }
