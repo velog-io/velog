@@ -111,7 +111,7 @@ export class BookBuildService implements Service {
     }
   }
   private async installDependencies(dest: string) {
-    const command = 'pnpm install --offline'
+    const command = 'pnpm install --frozen-lockfile'
     try {
       const { stdout, stderr } = await exec(command, { cwd: dest })
       if (stderr) {

@@ -1,5 +1,5 @@
 {
-  "name": "nextra",
+  "name": "@packages/nextra",
   "version": "0.1.0",
   "private": true,
   "type": "module",
