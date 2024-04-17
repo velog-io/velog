@@ -4,9 +4,7 @@ import { bindClassNames } from '@/lib/styles/bindClassNames'
 
 const cx = bindClassNames(styles)
 
-type Props = {}
-
-function PrivatePostLabel({}: Props) {
+function PrivatePostLabel() {
   return (
     <div className={cx('block')}>
       <LockIcon /> 비공개
