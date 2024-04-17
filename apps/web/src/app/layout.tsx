@@ -66,6 +66,14 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html id="html" lang="ko">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+          integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="body" suppressHydrationWarning={true}>
         <CoreProvider>{children}</CoreProvider>
       </body>

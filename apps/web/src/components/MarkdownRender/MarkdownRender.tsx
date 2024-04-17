@@ -47,15 +47,7 @@ function MarkdownRender({ markdown, codeTheme = 'atom-one', onConvertFinish, isE
         .use(math)
         .use(katex)
         .use(stringify)
-        .use(rehypeDocument, {
-          // Get the latest one from: <https://katex.org/
-          link: {
-            rel: 'stylesheet',
-            href: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
-            integrity: 'sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq',
-            crossOrigin: 'anonymous',
-          },
-        })
+        .use(rehypeDocument)
         .process(text, (err: any, file: any) => {
           if (err) {
             console.log('markdown-render error', err)
