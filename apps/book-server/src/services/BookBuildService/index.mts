@@ -111,8 +111,7 @@ export class BookBuildService implements Service {
     }
   }
   private async installDependencies(dest: string) {
-    const dockerEnv = this.env.get('dockerEnv')
-    const command = 'pnpm install next'.concat(dockerEnv !== 'development' ? '' : ' --no-lock')
+    const command = 'pnpm install --offline'
     try {
       const { stdout, stderr } = await exec(command, { cwd: dest })
       if (stderr) {

@@ -1,5 +1,6 @@
 packages:
   - 'packages/*'
   - 'apps/*'
-  - '!apps/book-server/books/*'
+  - 'apps/book-server/books/*'
+  - '!apps/book-server/books/base'
   - 'infrastructure/'
