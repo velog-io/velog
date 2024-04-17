@@ -1,7 +1,7 @@
 .block {
   cursor: pointer;
   user-select: none;
-  img {
+  & img {
     display: block;
     height: 2.5rem;
     width: 2.5rem;
@@ -10,7 +10,7 @@
     object-fit: cover;
     transition: 0.125s all ease-in;
   }
-  svg {
+  & svg {
     font-size: 1.5rem;
     margin-left: 0.25rem;
     color: var(--text3);
@@ -20,10 +20,10 @@
   display: flex;
   align-items: center;
   &:hover {
-    img {
+    & img {
       box-shadow: 0px 0 12px rgba(0, 0, 0, 0.1);
     }
-    svg {
+    & svg {
       color: var(--text1);
     }
   }

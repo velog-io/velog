@@ -12,12 +12,12 @@
     background: var(--slight-layer);
   }
 
-  svg {
+  & svg {
     flex-shrink: 0;
     width: 24px;
     height: 24px;
 
-    path {
+    & path {
       fill: var(--text1);
     }
   }

@@ -5,7 +5,7 @@
     margin: 0;
     padding: 0;
 
-    li {
+    & li {
       display: flex;
       justify-content: space-between;
       user-select: none;
@@ -24,7 +24,7 @@
       }
     }
 
-    li + li {
+    & li + li {
       margin-top: 8px;
     }
   }

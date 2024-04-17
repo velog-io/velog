@@ -42,7 +42,7 @@
 
     .system {
       display: flex;
-      div {
+      & div {
         width: 50%;
         height: 100%;
       }

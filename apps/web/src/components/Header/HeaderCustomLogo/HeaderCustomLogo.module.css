@@ -10,7 +10,7 @@
 
   .logo {
     display: flex;
-    svg {
+    & svg {
       width: 28px;
       height: 28px;
 
@@ -21,7 +21,7 @@
     }
   }
 
-  svg {
+  & svg {
     color: var(--text1);
   }
 

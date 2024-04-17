@@ -22,7 +22,7 @@
     flex-direction: column;
     grid-template-columns: repeat(1, 100%);
 
-    svg {
+    & svg {
       width: 320px;
       height: 320px;
       margin-bottom: 32px;

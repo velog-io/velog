@@ -10,7 +10,7 @@
 
   &.isRead {
     background-color: var(--bg-element7);
-    p {
+    & p {
       color: var(--text3) !important;
       font-weight: 400 !important;
     }
@@ -30,7 +30,7 @@
       height: 32px;
     }
 
-    img {
+    & img {
       border-radius: 50%;
       box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
     }
@@ -48,14 +48,14 @@
     font-weight: 400;
     max-width: 100%;
 
-    p {
+    & p {
       white-space: pre;
       word-wrap: break-word;
       word-break: break-all;
       color: var(--text2);
     }
 
-    span {
+    & span {
       display: inline;
     }
 

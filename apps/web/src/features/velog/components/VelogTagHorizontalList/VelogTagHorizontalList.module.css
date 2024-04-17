@@ -36,13 +36,13 @@
   &.active {
     background: var(--primary1);
     color: var(--button-text);
-    span {
+    & span {
       color: var(--button-text);
       opacity: 0.8;
     }
   }
 
-  span {
+  & span {
     color: var(--text3);
     font-size: 12px;
     margin-left: 4px;

@@ -18,7 +18,7 @@
     color: var(--text2);
     font-weight: bold;
   }
-  ul {
+  & ul {
     list-style: none;
     padding-left: 0;
   }
@@ -39,7 +39,7 @@
       color: var(--text1);
       text-decoration: underline;
 
-      span {
+      & span {
         text-decoration: none;
       }
     }
@@ -49,12 +49,12 @@
     color: var(--primary2);
     font-weight: bold;
 
-    a {
+    & a {
       color: var(--primary2);
     }
   }
 
-  span {
+  & span {
     margin-left: 8px;
     color: var(--text3);
     font-weight: normal;

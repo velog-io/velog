@@ -25,7 +25,7 @@
     display: flex;
     position: relative;
 
-    a {
+    & a {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -39,25 +39,25 @@
         font-weight: bold;
       }
 
-      svg {
+      & svg {
         font-size: 24px;
         margin-right: 8px;
       }
 
       @media screen and (max-width: 768px) {
-        svg {
+        & svg {
           font-size: 18px;
         }
       }
 
       @media screen and (max-width: 425px) {
-        svg {
+        & svg {
           font-size: 16px;
         }
       }
     }
 
-    a + a {
+    & a + a {
       margin-left: 20px;
       @media screen and (max-width: 768px) {
         margin-left: 8px;
@@ -115,7 +115,7 @@
       width: 70px;
     }
 
-    svg {
+    & svg {
       width: 24px;
       height: 24px;
     }

@@ -1,7 +1,7 @@
 .block {
   width: 100%;
   position: relative;
-  img {
+  & img {
     position: absolute;
     top: 0;
     left: 0;

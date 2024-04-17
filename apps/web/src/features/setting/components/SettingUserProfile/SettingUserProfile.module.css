@@ -19,18 +19,18 @@
       overflow: hidden;
     }
 
-    button + button {
+    & button + button {
       margin-top: 0.5rem;
       margin-left: 0;
     }
 
     @media screen and (max-width: 768px) {
-      img {
+      & img {
         width: 6rem;
         height: 6rem;
         margin-bottom: 1rem;
       }
-      button {
+      & button {
         width: 10rem;
       }
       align-items: center;
@@ -44,13 +44,13 @@
     padding-left: 1.5rem;
 
     border-left: 1px solid var(--border4);
-    h2 {
+    & h2 {
       font-size: 2.25rem;
       margin: 0;
       line-height: 1.5;
       color: var(--text1);
     }
-    p {
+    & p {
       font-size: 1rem;
       margin-top: 0.25rem;
       margin-bottom: 0.5rem;
@@ -66,10 +66,10 @@
       border-bottom: 1px solid var(--border4);
       border-left: none;
       padding-left: 0;
-      h2 {
+      & h2 {
         font-size: 1.25rem;
       }
-      p {
+      & p {
         font-size: 0.875rem;
       }
     }
@@ -77,7 +77,7 @@
 }
 
 .form {
-  input + input {
+  & input + input {
     margin-top: 1rem;
   }
   .displayName {
@@ -93,10 +93,10 @@
     .display-name {
       font-size: 1.25rem;
     }
-    input {
+    & input {
       font-size: 0.875rem;
     }
-    input + input {
+    & input + input {
       margin-top: 0.5rem;
     }
     .button-wrapper {

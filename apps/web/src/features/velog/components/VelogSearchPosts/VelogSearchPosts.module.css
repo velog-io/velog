@@ -11,7 +11,7 @@
       margin-bottom: 1rem;
     }
 
-    b {
+    & b {
       color: var(--text1);
     }
   }

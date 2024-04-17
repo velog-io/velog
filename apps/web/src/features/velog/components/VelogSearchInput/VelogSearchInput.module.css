@@ -24,7 +24,7 @@
       padding-right: 8px;
     }
 
-    svg {
+    & svg {
       width: 16px;
       height: 16px;
       transition: all 0.125s ease-in;
@@ -37,7 +37,7 @@
       }
     }
 
-    input {
+    & input {
       transition: all 0.125s ease-in;
       font-size: 14px;
       flex: 1;
@@ -62,10 +62,10 @@
 
   .focus {
     border: 1px solid var(--border1);
-    svg {
+    & svg {
       fill: var(--gray9);
     }
-    input {
+    & input {
       color: var(--text1);
     }
   }

@@ -12,7 +12,7 @@
     나눔고딕, 'Nanum Gothic', 돋움, Dotum, Tahoma, Geneva, sans-serif;
   display: inline-flex;
   align-items: center;
-  svg {
+  & svg {
     margin-right: 8px;
     width: 14px;
     height: 14px;

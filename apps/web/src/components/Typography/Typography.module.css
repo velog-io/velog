@@ -7,25 +7,25 @@
   word-break: break-word;
   overflow-wrap: break-word;
 
-  ul,
-  ol,
-  p {
+  & ul,
+  & ol,
+  & p {
     /* ${media.xxlarge} {
       color: ${themedPalette.text1};
       font-weight: 300;
     } */
 
-    b {
+    & b {
       font-weight: 400;
     }
-    code {
+    & code {
       background: var(--bg-inline-code);
       padding: 0.2em 0.4em;
       font-size: 85%;
       border-radius: 3px;
     }
-    a {
-      code {
+    & a {
+      & code {
         color: var(--primary1);
       }
     }
@@ -34,7 +34,7 @@
     -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Apple SD Gothic Neo',
     arial, 나눔고딕, 'Nanum Gothic', 돋움; */
 
-  a {
+  &a {
     color: var(--primary1);
     text-decoration: none;
     &:hover {
@@ -42,11 +42,11 @@
       text-decoration: underline;
     }
   }
-  code {
+  & code {
     font-family: 'Fira Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
   }
 
-  hr {
+  & hr {
     border: none;
     height: 1px;
     width: 100%;
@@ -55,8 +55,8 @@
     margin-bottom: 32px;
   }
 
-  p {
-    img {
+  & p {
+    & img {
       display: block;
       margin: 0 auto;
       max-width: 100%;
@@ -65,63 +65,63 @@
     }
   }
 
-  h1 {
+  & h1 {
     font-size: 40px;
   }
-  h2 {
+  & h2 {
     font-size: 32px;
   }
-  h3 {
+  & h3 {
     font-size: 24px;
   }
-  h4 {
+  & h4 {
     font-size: 18px;
   }
 
-  h1,
-  h2,
-  h3,
-  h4 {
+  & h1,
+  & h2,
+  & h3,
+  & h4 {
     line-height: 1.5;
     margin-bottom: 16px;
   }
-  p + h1,
-  p + h2,
-  p + h3,
-  p + h4 {
+  & p + h1,
+  & p + h2,
+  & p + h3,
+  & p + h4 {
     margin-top: 40px;
   }
 
   @media screen and (max-width: 768px) {
     font-size: 1rem;
-    h1 {
+    & h1 {
       font-size: 36px;
     }
-    h2 {
+    & h2 {
       font-size: 28px;
     }
-    h3 {
+    & h3 {
       font-size: 20px;
     }
-    h4 {
+    & h4 {
       font-size: 16px;
     }
 
-    h1,
-    h2,
-    h3,
-    h4 {
+    & h1,
+    & h2,
+    & h3,
+    & h4 {
       margin-bottom: 12px;
     }
-    p + h1,
-    p + h2,
-    p + h3,
-    p + h4 {
+    & p + h1,
+    & p + h2,
+    & p + h3,
+    & p + h4 {
       margin-top: 32px;
     }
   }
 
-  blockquote {
+  & blockquote {
     margin-top: 32px;
     margin-bottom: 32px;
     border-left: 4px solid var(--primary2);
@@ -133,14 +133,14 @@
     padding: 16px;
     padding-left: 32px;
     color: var(--text1);
-    ul,
-    ol {
+    & ul,
+    & ol {
       padding-left: 1rem;
     }
-    *:first-child {
+    & > *:first-child {
       margin-top: 0;
     }
-    *:last-child {
+    & > *:last-child {
       margin-bottom: 0;
     }
   }

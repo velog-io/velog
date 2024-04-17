@@ -17,7 +17,7 @@
       }
     }
 
-    img {
+    & img {
       display: block;
       border-radius: 50%;
       object-fit: cover;
@@ -41,7 +41,7 @@
         font-weight: bold;
         color: var(--text1);
 
-        a {
+        & a {
           color: inherit;
           text-decoration: none;
           &:hover {
@@ -127,7 +127,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        svg {
+        & svg {
           cursor: pointer;
           width: 32px;
           height: 32px;
@@ -143,12 +143,12 @@
           }
         }
 
-        a {
+        & a {
           color: inherit;
           display: block;
         }
-        a + a,
-        a + svg {
+        & a + a,
+        & a + svg {
           margin-left: 16px;
         }
 
@@ -156,7 +156,7 @@
           padding-left: 0.5rem;
           padding-right: 0.5rem;
 
-          div {
+          & div {
             background: var(--gray7);
             box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.05);
             padding: 0.5rem;

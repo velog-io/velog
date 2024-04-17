@@ -11,21 +11,21 @@
     }
   }
 
-  h2,
-  h4 {
+  & h2,
+  & h4 {
     margin: 0;
   }
-  h2 {
+  & h2 {
     font-size: 1.3125rem;
     color: var(--text1);
   }
-  h4 {
+  & h4 {
     margin-top: 1rem;
     margin-bottom: 1rem;
     color: var(--text3);
   }
 
-  section + section {
+  & section + section {
     margin-top: 2.5rem;
   }
 
@@ -35,7 +35,7 @@
     }
     text-align: right;
     color: var(--primary1);
-    span {
+    & span {
       margin-right: 0.25rem;
     }
     .link {

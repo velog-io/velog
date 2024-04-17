@@ -1,6 +1,6 @@
 .block {
   width: 100%;
-  a {
+  & a {
     display: block;
     color: inherit;
   }
@@ -16,7 +16,7 @@
     }
   }
 
-  h4 {
+  & h4 {
     font-size: 16px;
     margin-top: 16px;
     margin-bottom: 8px;

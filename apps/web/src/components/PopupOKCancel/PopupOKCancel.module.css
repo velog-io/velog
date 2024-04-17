@@ -1,5 +1,5 @@
 .block {
-  h3 {
+  & h3 {
     margin: 0;
     font-size: 24px;
     color: var(--text1);
@@ -18,7 +18,7 @@
     margin-top: 2rem;
     display: flex;
     justify-content: flex-end;
-    button + button {
+    & button + button {
       margin-left: 0.75rem;
     }
   }

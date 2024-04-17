@@ -22,12 +22,12 @@
       width: 160px;
     }
 
-    ul {
+    & ul {
       list-style: none;
       padding-left: 0;
       margin: 0;
     }
-    li {
+    & li {
       font-weight: 600;
 
       font-size: 0.875rem;
@@ -35,7 +35,7 @@
       &:hover {
         color: var(--primary1);
       }
-      a {
+      & a {
         display: block;
         padding: 0.75rem 1rem;
 
@@ -43,13 +43,13 @@
         text-decoration: none;
       }
     }
-    li + li {
+    & li + li {
       border-top: 1px solid var(--border4);
     }
     .contact {
       border-top: 1px solid var(--border4);
       padding: 1rem;
-      h5 {
+      & h5 {
         margin: 0;
         font-size: 0.75rem;
       }
@@ -63,7 +63,7 @@
       justify-content: center;
       padding-top: 0.5rem;
       padding-bottom: 0.5rem;
-      img {
+      & img {
         width: 120px;
         height: auto;
       }

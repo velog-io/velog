@@ -19,16 +19,16 @@
       width: 160px;
     }
 
-    ul {
+    & ul {
       padding-left: 0;
       margin: 0;
       user-select: none;
       list-style: none;
     }
 
-    li {
+    & li {
       cursor: pointer;
-      a {
+      & a {
         display: block;
         padding: 0.75rem 1rem;
         text-decoration: none;
@@ -48,7 +48,7 @@
       }
     }
 
-    li + li {
+    & li + li {
       border-top: 1px solid var(--border4);
     }
   }
