@@ -27,8 +27,8 @@ ENV TURBO_TOKEN=${TURBO_TOKEN}
 ARG TURBO_REMOTE_CACHE_SIGNATURE_KEY
 ENV TURBO_REMOTE_CACHE_SIGNATURE_KEY=${TURBO_REMOTE_CACHE_SIGNATURE_KEY}
 
+ENV APP_NAME="web"
 ENV APP_DIR="apps/web"
-
 WORKDIR /app
 
 FROM base AS pruner
@@ -42,9 +42,9 @@ COPY --from=pruner /app/out/full/ ./
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-RUN pnpm --filter web ssm pull -e ${DOCKER_ENV}
-RUN pnpm --filter web env:copy -e ${DOCKER_ENV}
-RUN turbo build
+RUN pnpm --filter ${APP_NAME} ssm pull -e ${DOCKER_ENV}
+RUN pnpm --filter ${APP_NAME} env:copy -e ${DOCKER_ENV}
+RUN turbo build --filter=${APP_NAME} --remote-only
 
 FROM base AS runner
 RUN addgroup --system --gid 1001 nodejs
@@ -56,7 +56,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/${APP_DIR}/.next/static /app/stan
 
 USER nextjs
 
-WORKDIR /app/standalone/apps/web
+WORKDIR /app/standalone/apps/${APP_NAME}
 
 EXPOSE 3001
 
