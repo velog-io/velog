@@ -23,6 +23,8 @@ export const nextConfigTempate = ({ bucketUrl, bookId }: Props) => {
       unoptimized: true,
     },
     assetPrefix: process.env.NODE_ENV === 'production' ? '${bucketUrl}/${bookId}' : undefined,
+    basePath: '/${bookId}',
+    trailingSlash: false
   }
   
   export default withNextra(nextConfig)

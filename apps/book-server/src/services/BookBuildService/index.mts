@@ -93,7 +93,10 @@ export class BookBuildService implements Service {
 
     fs.writeFileSync(
       `${dest}/next.config.mjs`,
-      nextConfigTempate({ bucketUrl: this.env.get('bookBucketUrl'), bookId }),
+      nextConfigTempate({
+        bucketUrl: this.env.get('bookBucketUrl'),
+        bookId,
+      }),
     )
     fs.writeFileSync(`${dest}/theme.config.tsx`, themeConfigTemplate({ title: book.title }))
 

@@ -10,7 +10,7 @@ class Seeder {
     const exists = await this.mongo.writer.findFirst({})
 
     if (exists) {
-      throw new Error('Already exists mock data')
+      return exists
     }
 
     return this.mongo.writer.create({

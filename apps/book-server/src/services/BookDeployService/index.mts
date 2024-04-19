@@ -76,6 +76,8 @@ export class BookDeployService implements Service {
 
     try {
       await Promise.all(promises)
+
+      console.log(`Deployed URL: , ${this.env.get('bookBucketUrl')}/${bookId}/index.html`)
     } catch (error) {
       console.error(error)
     }

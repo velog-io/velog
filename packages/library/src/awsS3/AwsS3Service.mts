@@ -5,6 +5,7 @@ import {
   Bucket,
   PutObjectCommand,
   PutObjectCommandInput,
+  PutObjectCommandOutput,
 } from '@aws-sdk/client-s3'
 
 type Params = {
@@ -30,7 +31,12 @@ export class AwsS3Service implements Service {
       return []
     }
   }
-  public async uploadFile({ bucketName, key, body, ...args }: UploadFileArgs): Promise<void> {
+  public async uploadFile({
+    bucketName,
+    key,
+    body,
+    ...args
+  }: UploadFileArgs): Promise<PutObjectCommandOutput> {
     const buckets = await this.getBuckets()
     const bucket = buckets.find((bucket) => bucket.Name === bucketName)
 
@@ -45,8 +51,7 @@ export class AwsS3Service implements Service {
       ...args,
     }
     const command = new PutObjectCommand(input)
-    const response = await this.client.send(command)
-    console.log(response)
+    return await this.client.send(command)
   }
 }
 
