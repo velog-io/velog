@@ -63,7 +63,11 @@ export class BookDeployService implements Service {
     // upload to S3
     const promises = targetFiles.map(async (filePath) => {
       const body = fs.readFileSync(filePath)
-      const relativePath = filePath.replace(output, '')
+      let relativePath = filePath.replace(output, '')
+      const ext = path.extname(relativePath)
+      if (ext === '.html' && !relativePath.includes('index.html')) {
+        relativePath = relativePath.replace('.html', '')
+      }
       const contentType = mime.getType(filePath)
       await this.awsS3.uploadFile({
         bucketName: this.env.get('bookBucketName'),
