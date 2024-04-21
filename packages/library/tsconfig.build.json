@@ -4,5 +4,5 @@
     "rootDir": "./src"
   },
   "include": ["./src"],
-  "exclude": ["./scripts", "node_modules/"]
+  "exclude": ["./scripts", "node_modules/", "src/**/*.test.mts"]
 }
