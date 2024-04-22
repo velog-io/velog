@@ -11,8 +11,8 @@ import { themeConfigTemplate } from '@templates/themeConfigTemplate.js'
 import { urlAlphabet, random, customRandom } from 'nanoid'
 import { MqService } from '@lib/mq/MqService.mjs'
 import { nextConfigTempate } from '@templates/nextConfigTemplate.js'
-import { EnvService } from '@lib/env/EnvService.mjs'
 import { WriterService } from '../WriterService/index.mjs'
+import { ENV } from '@env'
 
 const exec = promisify(execCb)
 
@@ -26,7 +26,6 @@ export class BookBuildService implements Service {
   constructor(
     private readonly mongo: MongoService,
     private readonly mq: MqService,
-    private readonly env: EnvService,
     private readonly pageService: PageService,
     private readonly writerService: WriterService,
   ) {}
@@ -94,7 +93,7 @@ export class BookBuildService implements Service {
     fs.writeFileSync(
       `${dest}/next.config.mjs`,
       nextConfigTempate({
-        bucketUrl: this.env.get('bookBucketUrl'),
+        bucketUrl: ENV.bookBucketUrl,
         bookId,
       }),
     )

@@ -11,14 +11,14 @@ type Query {
 }
 
 type Mutation {
-  deploy(input: BookIDInput!): Void
-  build(input: BookIDInput!): Void
+  deploy(input: BookIDInput!): Void @auth
+  build(input: BookIDInput!): Void @auth
 }
 
 type Subscription {
-  bookBuildInstalled(input: BookIDInput!): SubScriptionPayload
-  bookBuildCompleted(input: BookIDInput!): SubScriptionPayload
-  bookDeployCompleted(input: BookIDInput!): SubScriptionPayload
+  bookBuildInstalled(input: BookIDInput!): SubScriptionPayload @auth
+  bookBuildCompleted(input: BookIDInput!): SubScriptionPayload @auth
+  bookDeployCompleted(input: BookIDInput!): SubScriptionPayload @auth
 }
 
 input BookIDInput {

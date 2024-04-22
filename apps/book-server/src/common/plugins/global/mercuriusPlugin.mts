@@ -5,29 +5,28 @@ import type { FastifyPluginAsync } from 'fastify'
 import { isHttpError } from '@errors/HttpError.mjs'
 import { container } from 'tsyringe'
 import { DiscordService } from '@lib/discord/DiscordService.mjs'
-import { EnvService } from '@lib/env/EnvService.mjs'
 import { MqService } from '@lib/mq/MqService.mjs'
 import { GraphQLContextBase } from '@interfaces/graphql.mjs'
+import { ENV } from '@env'
+import { schemaTransforms } from '@graphql/transformer/index.mjs'
 
 const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
-  const env = container.resolve(EnvService)
-  container.register<MqService>(MqService, {
-    useValue: new MqService({ host: env.get('redisHost'), port: 6379 }),
-  })
   const mqService = container.resolve(MqService)
 
   fastify.register(mercurius, {
     logLevel: 'error',
     schema,
     resolvers: resolvers,
-    graphiql: env.get('appEnv') !== 'production',
+    graphiql: ENV.appEnv !== 'production',
     subscription: {
       emitter: mqService.emitter,
       verifyClient: (info, next) => {
         // if (info.req.headers['x-fastify-header'] !== 'fastify is awesome !') {
         //   return next(false) // the connection is not allowed
         // }
-        next(true) // the connection is allowed
+
+        next(false)
+        // next(true) // the connection is allowed
       },
     },
     context: (request, reply): GraphQLContextBase => {
@@ -35,8 +34,10 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
         request,
         reply,
         ip: request.ipaddr,
+        writer: request.writer,
       }
     },
+    schemaTransforms,
     errorHandler: (error, request) => {
       const { name, message, code, stack, errors, statusCode } = error
       const result = {
@@ -50,7 +51,7 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
           message: error.message,
         })),
       }
-      if (env.get('appEnv') === 'development') {
+      if (ENV.appEnv === 'development') {
         console.log('errorHandler')
         request.log.error(request, 'errorHandler')
       } else {

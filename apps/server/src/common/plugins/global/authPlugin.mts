@@ -1,5 +1,5 @@
 import { JwtService } from '@lib/jwt/JwtService.js'
-import { AccessTokenData } from '@lib/jwt/JwtInterface.js'
+import type { AccessTokenData } from '@packages/library/jwt'
 import { FastifyPluginAsync } from 'fastify'
 import { container } from 'tsyringe'
 import { UserService } from '@services/UserService/index.js'

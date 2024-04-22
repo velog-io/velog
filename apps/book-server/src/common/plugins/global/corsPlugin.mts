@@ -1,9 +1,8 @@
 import fp from 'fastify-plugin'
-import { container } from 'tsyringe'
 import { FastifyPluginAsync } from 'fastify'
 import cors from '@fastify/cors'
 import { ForbiddenError } from '@errors/ForbiddenError.mjs'
-import { EnvService } from '@lib/env/EnvService.mjs'
+import { ENV } from '@env'
 
 const corsPlugin: FastifyPluginAsync = async (fastify) => {
   const corsWhitelist: RegExp[] = [
@@ -14,8 +13,7 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
     /https:\/\/velog.graphcdn.app/,
   ]
 
-  const env = container.resolve(EnvService)
-  if (env.get('appEnv') === 'development') {
+  if (ENV.appEnv === 'development') {
     corsWhitelist.push(/^http:\/\/localhost/)
   }
 

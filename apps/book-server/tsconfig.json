@@ -11,7 +11,9 @@
       "@plugins/*": ["src/common/plugins/*"],
       "@interfaces/*": ["src/common/interfaces/*"],
       "@templates/*": ["src/templates/*"],
-      "@services/*": ["src/services/*"]
+      "@services/*": ["src/services/*"],
+      "@env": ["src/env.mts"],
+      "@constants/*": ["src/common/constants/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/types", "./node_modules/@packages/**/*.d.ts"]
   },

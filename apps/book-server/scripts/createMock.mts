@@ -3,6 +3,7 @@ import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { getMockPages } from 'test/mock/mockBook.mjs'
 import { Writer } from '@packages/database/velog-book-mongo'
 import { faker } from '@faker-js/faker'
+import { urlAlphabet, random, customRandom } from 'nanoid'
 
 class Seeder {
   constructor(private readonly mongo: MongoService) {}
@@ -28,11 +29,20 @@ class Seeder {
       writer_id: writer.id,
       ...page,
     }))
+
+    const title = 'Learning bunJS is Fun!'
+    const urlSlug = `${title}-${customRandom(urlAlphabet, 10, random)().toLocaleLowerCase()}`
+
     const book = await this.mongo.book.create({
       data: {
         writer_id: writer.id,
-        title: 'Learning bunJS is Fun!',
+        title: title,
         thumbnail: faker.image.dataUri(),
+        description: faker.lorem.paragraph(2),
+        is_temp: false,
+        is_private: false,
+        is_published: true,
+        url_slug: urlSlug,
         pages: {
           createMany: {
             data: mockPages,

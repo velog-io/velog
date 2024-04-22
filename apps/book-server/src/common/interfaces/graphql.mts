@@ -9,4 +9,5 @@ export type GraphQLContextBase = {
   request: FastifyRequest
   reply: FastifyReply
   ip: string | null
+  writer: { id: string } | null
 }

@@ -5,7 +5,7 @@ import { Prisma, User } from '@packages/database/velog-rds'
 import { injectable, singleton } from 'tsyringe'
 import { GraphQLContext } from '@interfaces/graphql.js'
 import { JwtService } from '@lib/jwt/JwtService.js'
-import { RefreshTokenData } from '@lib/jwt/JwtInterface.js'
+import type { RefreshTokenData } from '@packages/library/jwt'
 import { Time } from '@constants/TimeConstants.js'
 import {
   UnauthorizedError,

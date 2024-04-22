@@ -1,13 +1,13 @@
 import { injectable, singleton } from 'tsyringe'
 import { Client, GatewayIntentBits } from 'discord.js'
-import { EnvService } from '@lib/env/EnvService.mjs'
+import { ENV } from '@env'
 
 @injectable()
 @singleton()
 export class DiscordService {
   private client!: Client
   public isSending: boolean = false
-  constructor(private readonly env: EnvService) {}
+  constructor() {}
   public connection(): Promise<Client> {
     return new Promise((resolve) => {
       this.client = new Client({
@@ -19,7 +19,7 @@ export class DiscordService {
         resolve(this.client)
       })
 
-      this.client.login(this.env.get('discordBotToken'))
+      this.client.login(ENV.discordBotToken)
     })
   }
   public async sendMessage(type: MessageType, message: string) {
@@ -42,7 +42,7 @@ export class DiscordService {
       }
 
       const channelMapper: Record<MessageType, string> = {
-        error: this.env.get('discordErrorChannel'),
+        error: ENV.discordErrorChannel,
       }
 
       const channelId = channelMapper[type]

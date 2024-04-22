@@ -2,6 +2,7 @@ import { injectable, singleton } from 'tsyringe'
 import MQEmitterRedis, { MQEmitterOptions } from 'mqemitter-redis'
 import { RedisOptions } from 'ioredis'
 import { SubscriptionResolvers } from '@graphql/generated.js'
+import { ENV } from '@env'
 
 export type MqOptions = {
   host: string
@@ -14,19 +15,15 @@ export type Emitter = MQEmitterRedis.MQEmitterRedis
 @singleton()
 export class MqService {
   public emitter!: Emitter
-  private port: number
-  private host: string
-  constructor({ host, port }: MqOptions) {
-    this.host = host
-    this.port = port
+  constructor() {
     if (!this.emitter) {
       this.init()
     }
   }
   private init() {
     const options: MQEmitterOptions & RedisOptions = {
-      port: 6379,
-      host: this.host,
+      port: ENV.redisPort,
+      host: ENV.redisHost,
       separator: ':',
     }
     const emitter: Emitter = (MQEmitterRedis as any)(options)

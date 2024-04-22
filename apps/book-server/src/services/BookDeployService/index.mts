@@ -5,8 +5,8 @@ import { BookService } from '@services/BookService/index.mjs'
 import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { WriterService } from '../WriterService/index.mjs'
 import { AwsS3Service } from '@lib/awsS3/AwsS3Service.mjs'
-import { EnvService } from '@lib/env/EnvService.mjs'
 import mime from 'mime'
+import { ENV } from '@env'
 
 interface Service {
   deploy: (bookId: string) => Promise<void>
@@ -16,7 +16,6 @@ interface Service {
 @singleton()
 export class BookDeployService implements Service {
   constructor(
-    private readonly env: EnvService,
     private readonly awsS3: AwsS3Service,
     private readonly writerService: WriterService,
     private readonly bookService: BookService,
@@ -70,7 +69,7 @@ export class BookDeployService implements Service {
       }
       const contentType = mime.getType(filePath)
       await this.awsS3.uploadFile({
-        bucketName: this.env.get('bookBucketName'),
+        bucketName: ENV.bookBucketName,
         key: `${bookId}${relativePath}`,
         body: body,
         ContentType: contentType ?? 'application/octet-stream',
@@ -81,7 +80,7 @@ export class BookDeployService implements Service {
     try {
       await Promise.all(promises)
 
-      console.log(`Deployed URL: , ${this.env.get('bookBucketUrl')}/${bookId}/index.html`)
+      console.log(`Deployed URL: , ${ENV.bookBucketUrl}/${bookId}/index.html`)
     } catch (error) {
       console.error(error)
     }
