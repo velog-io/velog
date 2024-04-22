@@ -5,16 +5,17 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = env("MONGO_URL")
+  url      = env("VELOG_BOOK_MONGO_URL")
 }
 
 model Writer {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  fk_user_id String  @unique
-  pen_name   String  @unique
-  email      String  @unique
-  short_bio  String? @db.String
-  books      Book[]
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  fk_user_id       String   @unique
+  pen_name         String   @unique
+  email            String   @unique
+  short_bio        String?  @db.String
+  last_accessed_at DateTime @default(now()) @db.Timestamp
+  books            Book[]
 
   @@map("writers")
 }
@@ -25,8 +26,16 @@ model Book {
   thumbnail    String  @db.String
   writer_id    String  @db.ObjectId
   is_published Boolean @default(false)
+  is_private   Boolean @default(true)
+  is_temp      Boolean @default(true)
   writer       Writer  @relation(fields: [writer_id], references: [id])
   pages        Page[]
+  url_slug     String  @unique
+  description  String  @db.String
+
+  released_at DateTime? @db.Timestamp
+  created_at  DateTime  @default(now()) @db.Timestamp
+  updated_at  DateTime  @default(now()) @db.Timestamp
 
   @@map("books")
 }

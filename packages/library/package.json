@@ -20,6 +20,14 @@
     "./discord": {
       "default": "./dist/discord/DiscordService.mjs",
       "types": "./dist/discord/DiscordService.d.mts"
+    },
+    "./fastifyCookie": {
+      "default": "./dist/fastifyCookie/FastifyCookieService.mjs",
+      "types": "./dist/fastifyCookie/FastifyCookieService.d.mts"
+    },
+    "./jwt": {
+      "default": "./dist/jwt/JwtService.mjs",
+      "types": "./dist/jwt/JwtService.d.mts"
     }
   },
   "scripts": {
@@ -29,12 +37,16 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.473.0",
-    "@packages/scripts": "workspace:*"
+    "@fastify/cookie": "^9.3.1",
+    "@packages/scripts": "workspace:*",
+    "fastify": "^4.26.2",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@packages/eslint-config": "workspace:*",
     "@packages/tsconfig": "workspace:*",
     "@types/jest": "^29.5.12",
+    "@types/jsonwebtoken": "^9.0.2",
     "eslint": "^9.0.0",
     "tsx": "^4.7.2",
     "typescript": "^5.4.5"
