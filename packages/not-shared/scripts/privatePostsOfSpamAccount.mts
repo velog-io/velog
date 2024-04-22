@@ -39,6 +39,9 @@ class Runner implements IRunner {
         // add block list
         if (blockList.includes(username)) {
           console.log(`${username} 유저는 이미 등록되어 있습니다.`)
+        } else {
+          await this.blockList.addBlockList(username)
+          console.log(`${username} 유저가 blockList에 등록되었습니다.`)
         }
 
         if (posts.length === 0) {
@@ -60,8 +63,6 @@ class Runner implements IRunner {
 
         // set private = true
         await this.setIsPrivatePost(postIds)
-
-        await this.blockList.addBlockList(username)
 
         const blockUesrInfo: BlockUserInfo = {
           id: user.id,
@@ -91,8 +92,6 @@ class Runner implements IRunner {
             userInfo: userInfo,
           }),
         )
-
-        console.log(`${userInfo.username} 유저가 처리 되었습니다.`)
       })
 
       await Promise.all(promises)
