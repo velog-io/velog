@@ -13,7 +13,7 @@ const socialRoute: FastifyPluginCallback = (fastify, opts, done) => {
       request: FastifyRequest<{
         Body: { display_name: string; username: string; short_bio: string }
       }>,
-      reply: FastifyReply,
+      reply,
     ) => await controller.socialRegister(request, reply),
   )
 
@@ -61,10 +61,7 @@ const socialRoute: FastifyPluginCallback = (fastify, opts, done) => {
   )
 
   /* Login Token */
-  fastify.get(
-    '/profile',
-    async (_, reply: FastifyReply) => await controller.getSocialProfile(reply),
-  )
+  fastify.get('/profile', async (request) => await controller.getSocialProfile(request))
   fastify.get(
     '/redirect/:provider',
     async (

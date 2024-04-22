@@ -26,6 +26,9 @@ importers:
 
   apps/book-server:
     dependencies:
+      '@fastify/cookie':
+        specifier: ^9.3.1
+        version: 9.3.1
       '@fastify/cors':
         specifier: ^8.3.0
         version: 8.5.0

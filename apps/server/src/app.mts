@@ -20,18 +20,6 @@ const app = Fastify({
 app.register(cookie, { secret: ENV.cookieSecretKey })
 app.register(formbody)
 
-// await app.register(cors, {
-//   credentials: true,
-//   origin: (origin, callback) => {
-//     callback(null, true)
-//     // if (!origin || corsWhitelist.some((re) => re.test(origin))) {
-//     //   callback(null, true)
-//     // } else {
-//     //   callback(new ForbiddenError('Not allow origin'), false)
-//     // }
-//   },
-// })
-
 await app.register(corsPlugin)
 app.register(authPlugin)
 app.register(ipaddrPlugin)

@@ -1,5 +1,5 @@
 import type { CookieSerializeOptions } from '@fastify/cookie'
-import { FastifyReply } from 'fastify'
+import type { FastifyReply, FastifyRequest } from 'fastify'
 
 interface Service {
   setCookie(
@@ -8,7 +8,7 @@ interface Service {
     value: string,
     options?: CookieSerializeOptions,
   ): void
-  getCookie(reply: FastifyReply, name: string): string | undefined
+  getCookie(request: FastifyRequest, name: string): string | undefined
   clearCookie(reply: FastifyReply, name: string): void
 }
 
@@ -36,8 +36,11 @@ export class FastifyCookieService implements Service {
       })
     })
   }
-  public getCookie(reply: FastifyReply, name: string) {
-    return reply.cookies[name]
+  public getCookie(request: FastifyRequest, name: string) {
+    if (!request.cookies) {
+      throw new Error('Not Setup @fastify/cookie Plugin')
+    }
+    return request.cookies[name]
   }
   public clearCookie(reply: FastifyReply, name: string): void {
     this.domains.forEach((domain) => {

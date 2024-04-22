@@ -13,7 +13,7 @@ import {
 } from '@services/SocialService/SocialServiceInterface.js'
 import { SocialService } from '@services/SocialService/index.js'
 import { ExternalIntegrationService } from '@services/ExternalIntegrationService/index.js'
-import { FastifyReply, FastifyRequest } from 'fastify'
+import type { FastifyReply, FastifyRequest } from 'fastify'
 import { injectable, singleton } from 'tsyringe'
 import { google } from 'googleapis'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
@@ -32,7 +32,7 @@ interface Controller {
     }>,
     reply: FastifyReply,
   ): Promise<SocialRegisterResult>
-  getSocialProfile(reply: FastifyReply): Promise<GetProfileFromSocial>
+  getSocialProfile(request: FastifyRequest): Promise<GetProfileFromSocial>
   socialRedirect(params: SocialRedirectParams): Promise<void>
 }
 
@@ -181,7 +181,7 @@ export class SocialController implements Controller {
     reply: FastifyReply,
   ): Promise<SocialRegisterResult> {
     // check token existancy
-    const registerToken = this.cookie.getCookie(reply, 'register_token')
+    const registerToken = this.cookie.getCookie(request, 'register_token')
     if (!registerToken) {
       throw new UnauthorizedError()
     }
@@ -312,8 +312,8 @@ export class SocialController implements Controller {
     const uploadResult = await this.b2Manager.upload(buffer, uploadPath)
     return uploadResult.url
   }
-  public async getSocialProfile(reply: FastifyReply): Promise<GetProfileFromSocial> {
-    const registerToken = this.cookie.getCookie(reply, 'register_token')
+  public async getSocialProfile(request: FastifyRequest): Promise<GetProfileFromSocial> {
+    const registerToken = this.cookie.getCookie(request, 'register_token')
     if (!registerToken) {
       throw new UnauthorizedError()
     }
