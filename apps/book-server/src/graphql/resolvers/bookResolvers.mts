@@ -21,13 +21,13 @@ const bookResolvers: Resolvers = {
     },
   },
   Mutation: {
-    deploy: async (_, { input }) => {
+    deploy: async (_, { input }, ctx) => {
       const bookDeployService = container.resolve(BookDeployService)
-      return await bookDeployService.deploy(input.book_id)
+      return await bookDeployService.deploy(input.book_id, ctx.writer?.id)
     },
-    build: async (_, { input }) => {
+    build: async (_, { input }, ctx) => {
       const bookBuildService = container.resolve(BookBuildService)
-      return await bookBuildService.build(input.book_id)
+      return await bookBuildService.build(input.book_id, ctx.writer?.id)
     },
   },
   Subscription: {

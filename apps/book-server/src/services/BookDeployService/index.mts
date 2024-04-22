@@ -7,11 +7,12 @@ import { WriterService } from '../WriterService/index.mjs'
 import { AwsS3Service } from '@lib/awsS3/AwsS3Service.mjs'
 import mime from 'mime'
 import { ENV } from '@env'
+import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
+import { ConfilctError } from '@errors/ConfilctError.mjs'
 
 interface Service {
-  deploy: (bookId: string) => Promise<void>
+  deploy: (bookId: string, signedWriterId?: string) => Promise<void>
 }
-
 @injectable()
 @singleton()
 export class BookDeployService implements Service {
@@ -20,17 +21,16 @@ export class BookDeployService implements Service {
     private readonly writerService: WriterService,
     private readonly bookService: BookService,
   ) {}
-  async deploy(bookId: string): Promise<void> {
-    // TODO: add authentification
-    // if (!signedUserId) {
-    //   throw new UnauthorizedError('Not logged in')
-    // }
+  async deploy(bookId: string, signedWriterId?: string): Promise<void> {
+    if (!signedWriterId) {
+      throw new UnauthorizedError('Not logged in')
+    }
 
-    // const writer = await this.writerService.findById(signedUserId)
+    const writer = await this.writerService.findById(signedWriterId)
 
-    // if (!writer) {
-    //   throw new NotFoundError('Not found writer')
-    // }
+    if (!writer) {
+      throw new NotFoundError('Not found writer')
+    }
 
     const book = await this.bookService.findById(bookId)
 
@@ -38,9 +38,9 @@ export class BookDeployService implements Service {
       throw new NotFoundError('Not found book')
     }
 
-    // if (book.writer_id !== writer.id) {
-    //   throw new ConfilctError('Not owner of book')
-    // }
+    if (book.writer_id !== writer.id) {
+      throw new ConfilctError('Not owner of book')
+    }
 
     const output = path.resolve(process.cwd(), 'books', bookId, 'out')
 
@@ -70,7 +70,7 @@ export class BookDeployService implements Service {
       const contentType = mime.getType(filePath)
       await this.awsS3.uploadFile({
         bucketName: ENV.bookBucketName,
-        key: `${bookId}${relativePath}`,
+        key: `@${writer.pen_name}/${book.url_slug}${relativePath}`,
         body: body,
         ContentType: contentType ?? 'application/octet-stream',
         ACL: 'public-read',
@@ -80,7 +80,9 @@ export class BookDeployService implements Service {
     try {
       await Promise.all(promises)
 
-      console.log(`Deployed URL: , ${ENV.bookBucketUrl}/${bookId}/index.html`)
+      console.log(
+        `Deployed URL: , https://books.velog.io/@${writer.pen_name}/${book.url_slug}/index.html`,
+      )
     } catch (error) {
       console.error(error)
     }

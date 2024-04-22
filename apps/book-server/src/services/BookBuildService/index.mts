@@ -13,11 +13,12 @@ import { MqService } from '@lib/mq/MqService.mjs'
 import { nextConfigTempate } from '@templates/nextConfigTemplate.js'
 import { WriterService } from '../WriterService/index.mjs'
 import { ENV } from '@env'
+import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
 
 const exec = promisify(execCb)
 
 interface Service {
-  build(bookId: string): Promise<void>
+  build(bookId: string, signedWriterId?: string): Promise<void>
 }
 
 @injectable()
@@ -29,17 +30,17 @@ export class BookBuildService implements Service {
     private readonly pageService: PageService,
     private readonly writerService: WriterService,
   ) {}
-  public async build(bookId: string): Promise<void> {
+  public async build(bookId: string, signedWriterId?: string): Promise<void> {
     // TODO: ADD authentication
-    // if (!signedUserId) {
-    //   throw new UnauthorizedError('Not logged in')
-    // }
+    if (!signedWriterId) {
+      throw new UnauthorizedError('Not logged in')
+    }
 
-    // const writer = await this.writerService.findById(signedUserId)
+    const writer = await this.writerService.findById(signedWriterId)
 
-    // if (!writer) {
-    //   throw new NotFoundError('Not found writer')
-    // }
+    if (!writer) {
+      throw new NotFoundError('Not found writer')
+    }
 
     const book = await this.mongo.book.findUnique({
       where: { id: bookId },
@@ -49,9 +50,9 @@ export class BookBuildService implements Service {
       throw new NotFoundError('Book not found')
     }
 
-    // if (book.writer_id !== writer.id) {
-    //   throw new ConfilctError('Not owner of book')
-    // }
+    if (book.writer_id !== writer.id) {
+      throw new ConfilctError('Not owner of book')
+    }
 
     // create folder
     const dest = path.resolve(process.cwd(), 'books', bookId)
@@ -94,7 +95,8 @@ export class BookBuildService implements Service {
       `${dest}/next.config.mjs`,
       nextConfigTempate({
         bucketUrl: ENV.bookBucketUrl,
-        bookId,
+        penName: writer.pen_name,
+        urlSlug: book.url_slug,
       }),
     )
     fs.writeFileSync(`${dest}/theme.config.tsx`, themeConfigTemplate({ title: book.title }))

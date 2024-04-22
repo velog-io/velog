@@ -25,7 +25,7 @@ export class AwsS3Service implements Service {
       const data = await this.client.send(command)
       return data.Buckets ?? []
     } catch (error: any) {
-      console.error('get buckets error')
+      console.error('get buckets error', error)
       const { requestId, cfId, extendedRequestId } = error.$metadata
       console.log({ requestId, cfId, extendedRequestId })
       return []
