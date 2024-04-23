@@ -3,10 +3,12 @@ import path from 'path'
 import fs from 'fs'
 import inquirer from 'inquirer'
 import { exec } from 'child_process'
+import { ENV } from 'scripts/env.mjs'
 
 // "prisma-migrate:deploy": "pnpm env:copy && pnpm prisma migrate deploy --schema=./prisma/velog-rds/schema.prisma"
 
-const db = new PrismaClient()
+const db = new PrismaClient({ datasourceUrl: ENV.velogRdsUrl })
+const migraionsPath = './prisma/velog-rds/migrations'
 
 const main = async () => {
   const filenames = getMigrationFilenames()
@@ -14,7 +16,8 @@ const main = async () => {
   const diff = filenames.filter((filename) => !appliedMigrationNames.includes(filename))
 
   const message = getMessage(diff)
-  console.log(`Target Database Info: ${process.env.DATABASE_URL}\n`)
+
+  console.log(`Target Database Info: ${ENV.velogRdsUrl}`)
 
   const { answer } = await inquirer.prompt([
     {
@@ -45,7 +48,7 @@ const main = async () => {
 main()
 
 function getMigrationFilenames() {
-  const dirPath = path.resolve(process.cwd(), './prisma/migrations/')
+  const dirPath = path.resolve(process.cwd(), migraionsPath)
   return fs.readdirSync(dirPath).filter((file) => path.extname(file) !== '.toml')
 }
 
@@ -66,12 +69,7 @@ function getMessage(migrationDiff: string[]): string {
 }
 
 function getMigrationSummary(filename: string) {
-  const filepath = path.resolve(
-    process.cwd(),
-    `./prisma/migrations`,
-    `${filename}`,
-    './migration.sql',
-  )
+  const filepath = path.resolve(process.cwd(), migraionsPath, `${filename}`, './migration.sql')
 
   const sql = fs.readFileSync(filepath, { encoding: 'utf-8' })
   const lines = sql.split('\n')

@@ -1,14 +1,15 @@
-import { container, injectable, singleton } from 'tsyringe'
+import { injectable, singleton } from 'tsyringe'
 import { Client, GatewayIntentBits } from 'discord.js'
 import { ENV } from '@env'
-import { RedisService } from '@lib/redis/RedisService.js'
 import { Time } from '@constants/TimeConstants.js'
+import { RedisService } from '@lib/redis/RedisService.js'
 
 @injectable()
 @singleton()
 export class DiscordService {
   private client!: Client
   public isSending: boolean = false
+  constructor(private readonly redis: RedisService) {}
   public connection(): Promise<Client> {
     return new Promise((resolve) => {
       this.client = new Client({
@@ -57,11 +58,10 @@ export class DiscordService {
     }
 
     if (typeof payload === 'object' && message.includes('WritePost') && payload?.user?.id) {
-      const redisService = container.resolve(RedisService)
-      const key = redisService.generateKey.errorMessageCache(payload.type, payload?.user?.id)
-      const exists = await redisService.exists(key)
+      const key = this.redis.generateKey.errorMessageCache(payload.type, payload?.user?.id)
+      const exists = await this.redis.exists(key)
       if (exists === 1) return
-      await redisService.setex(key, Time.ONE_MINUTE_IN_S * 10, 'true')
+      await this.redis.setex(key, Time.ONE_MINUTE_IN_S * 10, 'true')
     }
 
     try {

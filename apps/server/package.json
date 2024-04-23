@@ -23,7 +23,8 @@
     "test": "pnpm jest --detectOpenHandles",
     "create-service": "tsx ./scripts/createService.ts",
     "create-mock": "NODE_ENV=development tsx ./scripts/createMock.ts",
-    "ssm": "tsx ./scripts/ssm.mts"
+    "ssm": "tsx ./scripts/ssm.mts",
+    "turbo": "turbo build"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.473.0",

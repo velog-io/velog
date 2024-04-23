@@ -1,7 +1,7 @@
 import Redis from 'ioredis'
 
 interface Service {
-  connection(): Promise<string>
+  connection(): Promise<void>
   get generateKey(): GenerateRedisKey
   get queueName(): Record<QueueName, string>
   createFeedQueue(data: CreateFeedArgs): Promise<number>
@@ -14,15 +14,20 @@ type RedisOptions = {
 
 export class RedisService extends Redis.default implements Service {
   host: string
+  port: number
   constructor({ port, host }: RedisOptions) {
+    if (!port) throw new Error('redis port is required')
+    if (!host) throw new Error('redis host is required')
     super({ port: port, host })
     this.host = host
+    this.port = port
   }
 
-  public async connection(): Promise<string> {
+  public async connection(): Promise<void> {
     return new Promise((resolve) => {
-      this.connect(() => {
-        resolve(`Redis connection established to ${this.host}`)
+      super.connect(() => {
+        resolve()
+        console.info(`INFO: Redis connected to "${this.host}:${this.port}"`)
       })
     })
   }

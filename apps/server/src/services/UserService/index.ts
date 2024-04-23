@@ -19,11 +19,10 @@ import { UtilsService } from '@lib/utils/UtilsService.js'
 import DataLoader from 'dataloader'
 import { AuthService } from '@services/AuthService/index.js'
 import { FastifyReply } from 'fastify'
-import { RedisService } from '@lib/redis/RedisService.js'
+import { RedisService, ChangeEmailArgs } from '@lib/redis/RedisService.js'
 import { changeEmailTemplate } from '@template/changeEmailTemplate.js'
 import { ENV } from '@env'
 import { MailService } from '@lib/mail/MailService.js'
-import { ChangeEmailArgs } from '@lib/redis/RedisService.js'
 import { differenceInDays } from 'date-fns'
 
 interface Service {

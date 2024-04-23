@@ -107,7 +107,7 @@ class Seeder {
 }
 
 const main = async () => {
-  const mongo = new MongoService()
+  const mongo = new MongoService({ datasourceUrl: process.env.MONGO_URL })
   const seeder = new Seeder(mongo)
 
   try {

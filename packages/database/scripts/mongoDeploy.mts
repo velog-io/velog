@@ -1,5 +1,6 @@
 import inquirer from 'inquirer'
 import { exec } from 'child_process'
+import { ENV } from 'scripts/env.mjs'
 
 const main = async () => {
   const { answer } = await inquirer.prompt([
@@ -11,6 +12,8 @@ const main = async () => {
       default: 'No',
     },
   ])
+
+  console.log(`Target Database Info: ${ENV.velogBookMongoUrl}`)
 
   if (answer === 'No') {
     console.info('🚫 db push process stopped by user.')

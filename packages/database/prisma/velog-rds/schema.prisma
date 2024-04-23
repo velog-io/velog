@@ -653,8 +653,3 @@ model DynamicConfigItem {
   @@index([value])
   @@map("dynamic_config_items")
 }
-
-model HiDgimon {
-  id    String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  value String @db.VarChar(50)
-}
