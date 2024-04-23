@@ -75,6 +75,7 @@
     "@graphql-codegen/typescript-operations": "^4.2.0",
     "@graphql-codegen/typescript-react-query": "^6.1.0",
     "@packages/eslint-config": "workspace:*",
+    "@packages/nextra-theme-docs": "workspace:*",
     "@packages/tsconfig": "workspace:*",
     "@svgr/cli": "^8.0.1",
     "@testing-library/react": "^14.0.0",
