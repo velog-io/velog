@@ -611,6 +611,9 @@ importers:
       next:
         specifier: ^14.2.1
         version: 14.2.1(@babel/core@7.24.4)(react-dom@18.2.0)(react@18.2.0)
+      next-seo:
+        specifier: ^6.0.0
+        version: 6.5.0(next@14.2.1)(react-dom@18.2.0)(react@18.2.0)
       prismjs:
         specifier: ^1.29.0
         version: 1.29.0
@@ -927,9 +930,6 @@ importers:
       '@headlessui/react':
         specifier: ^1.7.17
         version: 1.7.19(react-dom@18.2.0)(react@18.2.0)
-      '@packages/nextra-theme-docs':
-        specifier: 'link:'
-        version: 'link:'
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8

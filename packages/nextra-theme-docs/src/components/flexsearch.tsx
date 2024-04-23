@@ -1,7 +1,6 @@
 import cn from 'clsx'
 // flexsearch types are incorrect, they were overwritten in tsconfig.json
 import FlexSearch from 'flexsearch'
-import { useRouter } from 'next/router'
 import type { SearchData } from 'nextra'
 import type { ReactElement, ReactNode } from 'react'
 import { useCallback, useState } from 'react'
@@ -56,13 +55,8 @@ const loadIndexes = (basePath: string, locale: string): Promise<void> => {
   return promise
 }
 
-const loadIndexesImpl = async (
-  basePath: string,
-  locale: string
-): Promise<void> => {
-  const response = await fetch(
-    `${basePath}/_next/static/chunks/nextra-data-${locale}.json`
-  )
+const loadIndexesImpl = async (basePath: string, locale: string): Promise<void> => {
+  const response = await fetch(`${basePath}/_next/static/chunks/nextra-data-${locale}.json`)
   const searchData = (await response.json()) as SearchData
 
   const pageIndex: PageIndex = new FlexSearch.Document({
@@ -71,13 +65,13 @@ const loadIndexesImpl = async (
     document: {
       id: 'id',
       index: 'content',
-      store: ['title']
+      store: ['title'],
     },
     context: {
       resolution: 9,
       depth: 2,
-      bidirectional: true
-    }
+      bidirectional: true,
+    },
   })
 
   const sectionIndex: SectionIndex = new FlexSearch.Document({
@@ -87,13 +81,13 @@ const loadIndexesImpl = async (
       id: 'id',
       index: 'content',
       tag: 'pageId',
-      store: ['title', 'content', 'url', 'display']
+      store: ['title', 'content', 'url', 'display'],
     },
     context: {
       resolution: 9,
       depth: 2,
-      bidirectional: true
-    }
+      bidirectional: true,
+    },
   })
 
   let pageId = 0
@@ -114,7 +108,7 @@ const loadIndexesImpl = async (
         title,
         pageId: `page_${pageId}`,
         content: title,
-        ...(paragraphs[0] && { display: paragraphs[0] })
+        ...(paragraphs[0] && { display: paragraphs[0] }),
       })
 
       for (let i = 0; i < paragraphs.length; i++) {
@@ -123,7 +117,7 @@ const loadIndexesImpl = async (
           url,
           title,
           pageId: `page_${pageId}`,
-          content: paragraphs[i]
+          content: paragraphs[i],
         })
       }
 
@@ -134,19 +128,16 @@ const loadIndexesImpl = async (
     pageIndex.add({
       id: pageId,
       title: structurizedData.title,
-      content: pageContent
+      content: pageContent,
     })
   }
 
   indexes[locale] = [pageIndex, sectionIndex]
 }
 
-export function Flexsearch({
-  className
-}: {
-  className?: string
-}): ReactElement {
-  const { locale = DEFAULT_LOCALE, basePath } = useRouter()
+export function Flexsearch({ className }: { className?: string }): ReactElement {
+  const locale = DEFAULT_LOCALE
+  const basePath = '/'
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [results, setResults] = useState<SearchResult[]>([])
@@ -160,7 +151,7 @@ export function Flexsearch({
     const pageResults =
       pageIndex.search<true>(search, 5, {
         enrich: true,
-        suggest: true
+        suggest: true,
       })[0]?.result || []
 
     const results: Result[] = []
@@ -175,7 +166,7 @@ export function Flexsearch({
         sectionIndex.search<true>(search, 5, {
           enrich: true,
           suggest: true,
-          tag: `page_${result.id}`
+          tag: `page_${result.id}`,
         })[0]?.result || []
 
       let isFirstItemOfPage = true
@@ -199,7 +190,7 @@ export function Flexsearch({
             <div
               className={cn(
                 'nx-mx-2.5 nx-mb-2 nx-mt-6 nx-select-none nx-border-b nx-border-black/10 nx-px-2.5 nx-pb-1.5 nx-text-xs nx-font-semibold nx-uppercase nx-text-gray-500 first:nx-mt-0 dark:nx-border-white/20 dark:nx-text-gray-300',
-                'contrast-more:nx-border-gray-600 contrast-more:nx-text-gray-900 contrast-more:dark:nx-border-gray-50 contrast-more:dark:nx-text-gray-50'
+                'contrast-more:nx-border-gray-600 contrast-more:nx-text-gray-900 contrast-more:dark:nx-border-gray-50 contrast-more:dark:nx-text-gray-50',
               )}
             >
               {result.doc.title}
@@ -216,7 +207,7 @@ export function Flexsearch({
                 </div>
               )}
             </>
-          )
+          ),
         })
         isFirstItemOfPage = false
       }
@@ -234,12 +225,12 @@ export function Flexsearch({
           }
           return a._page_rk - b._page_rk
         })
-        .map(res => ({
+        .map((res) => ({
           id: `${res._page_rk}_${res._section_rk}`,
           route: res.route,
           prefix: res.prefix,
-          children: res.children
-        }))
+          children: res.children,
+        })),
     )
   }
 
@@ -255,7 +246,7 @@ export function Flexsearch({
         setLoading(false)
       }
     },
-    [locale, basePath]
+    [locale, basePath],
   )
 
   const handleChange = async (value: string) => {

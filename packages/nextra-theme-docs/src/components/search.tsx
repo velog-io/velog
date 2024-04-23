@@ -1,6 +1,6 @@
 import { Transition } from '@headlessui/react'
 import cn from 'clsx'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useMounted } from 'nextra/hooks'
 import { InformationCircleIcon, SpinnerIcon } from 'nextra/icons'
 import type { CompositionEvent, KeyboardEvent, ReactElement } from 'react'
@@ -32,12 +32,13 @@ export function Search({
   onActive,
   loading,
   error,
-  results
+  results,
 }: SearchProps): ReactElement {
   const [show, setShow] = useState(false)
   const config = useConfig()
   const [active, setActive] = useState(0)
   const router = useRouter()
+
   const { setMenu } = useMenu()
   const input = useRef<HTMLInputElement>(null)
   const ulRef = useRef<HTMLUListElement>(null)
@@ -62,8 +63,7 @@ export function Search({
         return
       if (
         e.key === '/' ||
-        (e.key === 'k' &&
-          (e.metaKey /* for Mac */ || /* for non-Mac */ e.ctrlKey))
+        (e.key === 'k' && (e.metaKey /* for Mac */ || /* for non-Mac */ e.ctrlKey))
       ) {
         e.preventDefault()
         // prevent to scroll to top
@@ -87,13 +87,10 @@ export function Search({
     setMenu(false)
   }, [onChange, setMenu])
 
-  const handleActive = useCallback(
-    (e: { currentTarget: { dataset: DOMStringMap } }) => {
-      const { index } = e.currentTarget.dataset
-      setActive(Number(index))
-    },
-    []
-  )
+  const handleActive = useCallback((e: { currentTarget: { dataset: DOMStringMap } }) => {
+    const { index } = e.currentTarget.dataset
+    setActive(Number(index))
+  }, [])
 
   const handleKeyDown = useCallback(
     function <T>(e: KeyboardEvent<T>) {
@@ -101,7 +98,7 @@ export function Search({
         case 'ArrowDown': {
           if (active + 1 < results.length) {
             const el = ulRef.current?.querySelector<HTMLAnchorElement>(
-              `li:nth-of-type(${active + 2}) > a`
+              `li:nth-of-type(${active + 2}) > a`,
             )
             if (el) {
               e.preventDefault()
@@ -114,7 +111,7 @@ export function Search({
         case 'ArrowUp': {
           if (active - 1 >= 0) {
             const el = ulRef.current?.querySelector<HTMLAnchorElement>(
-              `li:nth-of-type(${active}) > a`
+              `li:nth-of-type(${active}) > a`,
             )
             if (el) {
               e.preventDefault()
@@ -139,7 +136,7 @@ export function Search({
         }
       }
     },
-    [active, results, router, finishSearch, handleActive, composition]
+    [active, results, router, finishSearch, handleActive, composition],
   )
 
   const mounted = useMounted()
@@ -165,7 +162,7 @@ export function Search({
           'nx-items-center nx-gap-1 nx-transition-opacity',
           value
             ? 'nx-z-20 nx-flex nx-cursor-pointer hover:nx-opacity-70'
-            : 'nx-pointer-events-none nx-hidden sm:nx-flex'
+            : 'nx-pointer-events-none nx-hidden sm:nx-flex',
         )}
         title={value ? 'Clear' : undefined}
         onClick={() => {
@@ -185,26 +182,18 @@ export function Search({
       </kbd>
     </Transition>
   )
-  const handleComposition = useCallback(
-    (e: CompositionEvent<HTMLInputElement>) => {
-      setComposition(e.type === 'compositionend')
-    },
-    []
-  )
+  const handleComposition = useCallback((e: CompositionEvent<HTMLInputElement>) => {
+    setComposition(e.type === 'compositionend')
+  }, [])
 
   return (
     <div className={cn('nextra-search nx-relative md:nx-w-64', className)}>
-      {renderList && (
-        <div
-          className="nx-fixed nx-inset-0 nx-z-10"
-          onClick={() => setShow(false)}
-        />
-      )}
+      {renderList && <div className="nx-fixed nx-inset-0 nx-z-10" onClick={() => setShow(false)} />}
 
       <Input
         ref={input}
         value={value}
-        onChange={e => {
+        onChange={(e) => {
           const { value } = e.target
           onChange(value)
           setShow(Boolean(value))
@@ -242,11 +231,11 @@ export function Search({
             'md:nx-max-h-[min(calc(100vh-5rem-env(safe-area-inset-bottom)),400px)]',
             'nx-inset-x-0 ltr:md:nx-left-auto rtl:md:nx-right-auto',
             'contrast-more:nx-border contrast-more:nx-border-gray-900 contrast-more:dark:nx-border-gray-50',
-            overlayClassName
+            overlayClassName,
           )}
           ref={ulRef}
           style={{
-            transition: 'max-height .2s ease' // don't work with tailwindcss
+            transition: 'max-height .2s ease', // don't work with tailwindcss
           }}
         >
           {error ? (
@@ -269,7 +258,7 @@ export function Search({
                     'contrast-more:nx-border',
                     i === active
                       ? 'nx-bg-primary-500/10 nx-text-primary-600 contrast-more:nx-border-primary-500'
-                      : 'nx-text-gray-800 contrast-more:nx-border-transparent dark:nx-text-gray-300'
+                      : 'nx-text-gray-800 contrast-more:nx-border-transparent dark:nx-text-gray-300',
                   )}
                 >
                   <Anchor

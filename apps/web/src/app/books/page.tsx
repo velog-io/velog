@@ -1,10 +1,9 @@
-// import Aside from '@/features/bookEdit/components/Aside'
+import Aside from '@/features/bookEdit/components/Aside'
 
 function page() {
   return (
     <>
-      {/* <Aside /> */}
-      hello
+      <Aside />
     </>
   )
 }
