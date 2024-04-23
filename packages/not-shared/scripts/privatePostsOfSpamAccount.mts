@@ -147,14 +147,6 @@ class Runner implements IRunner {
     displayName: string | null,
     createdAt: Date,
   ): Promise<AskDeletePostsResult> {
-    const blockedList = await this.blockList.readBlockList()
-    if (blockedList.includes(username)) {
-      return {
-        posts,
-        is_set_private: true,
-      }
-    }
-
     console.log({
       id: userId,
       username: username,

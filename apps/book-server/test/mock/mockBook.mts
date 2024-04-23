@@ -8,12 +8,27 @@ export const getMockPages = (count: number) =>
         return {
           title: 'Introduction',
           index: index,
+          type: 'page',
           body: `# Introduction_${index}
           - ${faker.lorem.paragraph(2)}
           - ${faker.lorem.paragraph(1)}
           - [${faker.lorem.words(2)}](${faker.internet.url()})
-          `,
-          type: 'page',
+              \`\`\`js filename="demo.js" {4} copy
+              import { useState } from 'react'
+              
+              export const Counter = () => {
+                const [count, setCount] = useState(0)
+                return (
+                  <div>
+                    <button onClick={() => setCount(count + 1)} className={styles.counter}>
+                      Clicked {count} times
+                    </button>
+                  </div>
+                )
+              }
+              \`\`\`
+          ![](${faker.image.url()})
+          `.replaceAll('      ', ''),
         }
       }
 
@@ -69,26 +84,7 @@ export const getMockPages = (count: number) =>
         - ${faker.lorem.paragraph(1)}
         
         ${faker.lorem.paragraphs(2)}
-  
-        ${
-          index === 0 &&
-          `
-        \`\`\`js filename="demo.js" {4} copy
-        import { useState } from 'react'
-        
-        export const Counter = () => {
-          const [count, setCount] = useState(0)
-          return (
-            <div>
-              <button onClick={() => setCount(count + 1)} className={styles.counter}>
-                Clicked {count} times
-              </button>
-            </div>
-          )
-        }
-        \`\`\`
-        `
-        }
+
       `.replaceAll('      ', ''),
       }
     })
