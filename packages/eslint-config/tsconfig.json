@@ -1,8 +1,11 @@
 {
-  "extends": "@packages/tsconfig/next.json",
+  "extends": "@packages/tsconfig/base.json",
   "compilerOptions": {
-    "rootDir": "./",
-    "baseUrl": "./"
+    "rootDir": "./src",
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "declaration": true,
+    "allowJs": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

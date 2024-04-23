@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "typeRoots": ["node_modules/@types/", "./src/types/"],
+    "typeRoots": ["node_modules/@types/", "./src/types/", "node_moduels/@packages/"],
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",

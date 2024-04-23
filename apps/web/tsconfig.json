@@ -3,8 +3,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "rootDir": "./",
-    "outDir": "./dist",
-    "typeRoots": ["node_modules/@types/", "./src/types/"],
+    "typeRoots": ["node_modules/@types/", "./src/types/", "node_modules/@packages/"],
     "plugins": [
       {
         "name": "next"
@@ -25,9 +24,9 @@
     "public/*",
     "src/assets/**/svg",
     "scripts/*",
-    "eslint.config.js",
     "next.config.mjs",
+    "eslint.config.js",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }
