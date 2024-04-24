@@ -6,5 +6,5 @@ export default defineConfig({
   format: 'esm',
   dts: true,
   external: ['nextra'],
-  outExtension: () => ({ js: '.js' })
+  outExtension: () => ({ js: '.js' }),
 })

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "rootDir": "./",
-    "typeRoots": ["node_modules/@types/", "./src/types/", "node_modules/@packages/"],
+    "typeRoots": ["node_modules/@types/", "./src/types/", "./node_modules/@packages/**/**/*.d.ts"],
     "plugins": [
       {
         "name": "next"

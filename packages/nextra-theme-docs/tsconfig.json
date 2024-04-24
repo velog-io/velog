@@ -2,8 +2,7 @@
   "compilerOptions": {
     "target": "es2016",
     "module": "ESNext",
-    "declaration": true,
-    "outDir": "./dist",
+    "declaration": false,
     "noEmit": true,
     "esModuleInterop": true,
     "strict": true,
