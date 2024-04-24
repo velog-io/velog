@@ -8,7 +8,7 @@ export default function useCurrentPath() {
   const search = useSearchParams()
 
   const currentPath = useMemo(() => {
-    const query = search.toString()
+    const query = search?.toString()
     return `${pathname === '/' ? '' : pathname}${query ? `?${query}` : ''}`
   }, [pathname, search])
 

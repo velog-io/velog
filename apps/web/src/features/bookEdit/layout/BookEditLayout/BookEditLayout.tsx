@@ -2,6 +2,7 @@
 
 import styles from './BookEditLayout.module.css'
 import { bindClassNames } from '@/lib/styles/bindClassNames'
+import NextraLayout from '@/components/Layouts/NextraLayout'
 
 const cx = bindClassNames(styles)
 
@@ -10,7 +11,11 @@ type Props = {
 }
 
 function BookEditLayout({ children }: Props) {
-  return <div className={cx('block')}>{children}</div>
+  return (
+    <NextraLayout>
+      <div className={cx('block')}>{children}</div>
+    </NextraLayout>
+  )
 }
 
 export default BookEditLayout

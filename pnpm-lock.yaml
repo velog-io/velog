@@ -1001,7 +1001,7 @@ importers:
         specifier: ^14.2.1
         version: 14.2.1(@babel/core@7.24.4)(react-dom@18.2.0)(react@18.2.0)
       nextra:
-        specifier: ^2.13.4
+        specifier: 2.13.4
         version: 2.13.4(next@14.2.1)(react-dom@18.2.0)(react@18.2.0)
       postcss:
         specifier: ^8.4.31

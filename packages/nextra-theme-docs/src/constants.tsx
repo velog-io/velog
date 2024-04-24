@@ -339,3 +339,5 @@ export const DEEP_OBJECT_KEYS = Object.entries(DEFAULT_THEME)
     }
   })
   .filter(Boolean)
+
+export const NEXTRA_INTERNAL = Symbol.for('__nextra_internal__')

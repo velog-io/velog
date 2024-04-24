@@ -1,3 +1,5 @@
+'use client'
+
 import { useReducer, useCallback, useMemo } from 'react'
 
 type UseInputsAction = {
