@@ -22,7 +22,7 @@
     "./eslint.config.js",
     "./src",
     "./css",
-    "./postcss.config.js",
+    "postcss.config.cjs",
     "./tailwind.config.js",
     "./tsup.config.ts",
     "./vite.config.ts"
