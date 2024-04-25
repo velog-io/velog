@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const colors = require('tailwindcss/colors')
+import colors from 'tailwindcss/colors'
 
 const makePrimaryColor =
   (l) =>

@@ -23,7 +23,7 @@
     "./src",
     "./css",
     "postcss.config.cjs",
-    "./tailwind.config.js",
+    "tailwind.config.mjs",
     "./tsup.config.ts",
     "./vite.config.ts"
   ],
