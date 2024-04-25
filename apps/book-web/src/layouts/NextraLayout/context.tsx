@@ -1,7 +1,6 @@
-import { useRouter } from 'next/router'
-
-import { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-theme-docs'
+import { DocsThemeConfig, PageOpts, PageMapItem } from '@packages/nextra-theme-docs'
 import React from 'react'
+import { useRouter } from 'next/router'
 
 export const pageOpts: PageOpts = {
   frontMatter: {},

@@ -1,4 +1,4 @@
-import nextra from 'nextra'
+import nextra from ''
 
 const withNextra = nextra({
   theme: 'nextra-theme-docs',
@@ -13,7 +13,6 @@ const withNextra = nextra({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   webpack: (config) => {
     config.resolve.fallback = {
       fs: false,
@@ -21,4 +20,4 @@ const nextConfig = {
   },
 }
 
-export default withNextra(nextConfig)
+export default nextConfig

@@ -228,8 +228,7 @@ export { Callout, Steps, Tabs, Tab, Cards, Card, FileTree } from 'nextra/compone
 
 export { useTheme } from 'next-themes'
 export { Link } from './mdx-components'
-export * from 'nextra'
-export * from './hooks'
+export * from './nextra/src/index'
 export {
   Bleed,
   Collapse,
@@ -241,4 +240,4 @@ export {
   ThemeSwitch,
   LocaleSwitch,
 } from './components'
-export { PageMapItem, PageOpts, ThemeConfig } from './nextra/types'
+export { PageMapItem, PageOpts, ThemeConfig } from './nextra/src/types'
