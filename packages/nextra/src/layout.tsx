@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react'
 import { SSGContext } from './ssg'
-import { useInternals } from './use-internals'
+import useInternals from './use-internals'
 
 export default function Nextra({
   __nextra_pageMap,

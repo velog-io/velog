@@ -9,11 +9,11 @@ import {
 } from './constants'
 import { pageMapCache } from './page-map'
 import { NextraConfig, ThemeConfig } from './types'
-import { NextraPlugin, NextraSearchPlugin } from './webpack-plugins'
+import { NextraPlugin } from './webpack-plugins'
 
 const DEFAULT_EXTENSIONS = ['js', 'jsx', 'ts', 'tsx']
 
-const nextra = (themeOrNextraConfig: NextraConfig, themeConfig: ThemeConfig) =>
+export const nextra = (themeOrNextraConfig: NextraConfig, themeConfig: ThemeConfig) =>
   function withNextra(nextConfig: NextConfig = {}) {
     const nextraConfig = {
       ...DEFAULT_CONFIG,
@@ -77,9 +77,9 @@ const nextra = (themeOrNextraConfig: NextraConfig, themeConfig: ThemeConfig) =>
           config.plugins ||= []
           config.plugins.push(nextraPlugin)
 
-          if (nextraConfig.flexsearch) {
-            config.plugins.push(new NextraSearchPlugin())
-          }
+          // if (nextraConfig.flexsearch) {
+          //   config.plugins.push(new NextraSearchPlugin())
+          // }
         }
 
         config.module.rules.push(
@@ -133,5 +133,3 @@ const nextra = (themeOrNextraConfig: NextraConfig, themeConfig: ThemeConfig) =>
       },
     }
   }
-
-export default nextra

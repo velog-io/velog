@@ -16,7 +16,9 @@
       "@/*": ["./src/*"],
       "@/public/*": ["./public/*"]
     },
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
   },
   "include": [
     "next-env.d.ts",

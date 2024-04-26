@@ -8,7 +8,7 @@ import { defineConfig } from 'tsup'
 const CLIENT_ENTRY = [
   'src/{use-internals,setup-page,normalize-pages,mdx}.ts',
   'src/{ssg,layout}.tsx',
-  'src/{components,hooks,icons}/*.{ts,tsx}'
+  'src/{components,hooks,icons}/*.{ts,tsx}',
 ]
 
 const entries = fg.sync(CLIENT_ENTRY, { absolute: true })
@@ -26,12 +26,8 @@ const sharedConfig = {
     {
       name: 'add-mjs',
       setup(build) {
-        build.onResolve({ filter: /.*/ }, async args => {
-          if (
-            args.importer &&
-            args.path.startsWith('.') &&
-            !args.path.endsWith('.json')
-          ) {
+        build.onResolve({ filter: /.*/ }, async (args) => {
+          if (args.importer && args.path.startsWith('.') && !args.path.endsWith('.json')) {
             let isDir: boolean
             const importPath = slash(path.join(args.resolveDir, args.path))
             try {
@@ -39,36 +35,31 @@ const sharedConfig = {
             } catch {
               isDir = false
             }
-
             const isClientImporter = entriesSet.has(slash(args.importer))
-
             if (isClientImporter) {
-              const isClientImport = entries.some(entry =>
-                entry.startsWith(importPath)
-              )
+              const isClientImport = entries.some((entry) => entry.startsWith(importPath))
               if (isClientImport) {
                 return { path: args.path, external: true }
               }
             }
-
             if (isDir) {
               // it's a directory
-              return { path: args.path + '/index.mjs', external: true }
+              return { path: args.path + '/index.js', external: true }
             }
-            return { path: args.path + '.mjs', external: true }
+            return { path: args.path + '.js', external: true }
           }
         })
-      }
-    }
-  ]
+      },
+    },
+  ],
 } satisfies Options
 
 export default defineConfig([
   {
     name: 'nextra',
     entry: ['src/index.js', 'src/__temp__.js', 'src/catch-all.ts'],
-    format: 'cjs',
-    dts: false
+    format: 'esm',
+    dts: false,
   },
   {
     name: 'nextra-esm',
@@ -76,19 +67,19 @@ export default defineConfig([
       'src/**/*.ts',
       '!src/**/*.d.ts',
       '!src/catch-all.ts',
-      ...CLIENT_ENTRY.map(filePath => `!${filePath}`)
+      ...CLIENT_ENTRY.map((filePath) => `!${filePath}`),
     ],
-    ...sharedConfig
+    ...sharedConfig,
   },
   {
     name: 'nextra-client',
     entry: CLIENT_ENTRY,
     outExtension: () => ({ js: '.js' }),
-    ...sharedConfig
+    ...sharedConfig,
   },
   {
     entry: ['src/types.ts'],
     name: 'nextra-types',
-    dts: { only: true }
-  }
+    dts: { only: true },
+  },
 ])

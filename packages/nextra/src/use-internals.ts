@@ -7,10 +7,8 @@ import type { NextraInternalGlobal } from './types'
  * This hook is used to access the internal state of Nextra, you should never
  * use this hook in your application.
  */
-export function useInternals() {
-  const __nextra_internal__ = (globalThis as NextraInternalGlobal)[
-    NEXTRA_INTERNAL
-  ]
+const useInternals = () => {
+  const __nextra_internal__ = (globalThis as NextraInternalGlobal)[NEXTRA_INTERNAL]
 
   const { route } = useRouter()
   const rerender = useState({})[1]
@@ -37,14 +35,14 @@ export function useInternals() {
   const context = __nextra_internal__.context[route]
 
   if (!context) {
-    throw new Error(
-      `No content found for the current route. This is a Nextra bug.`
-    )
+    throw new Error(`No content found for the current route. This is a Nextra bug.`)
   }
 
   console.log('context', context)
   return {
     context,
-    Layout: __nextra_internal__.Layout
+    Layout: __nextra_internal__.Layout,
   }
 }
+
+export default useInternals

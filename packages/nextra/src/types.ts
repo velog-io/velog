@@ -1,14 +1,11 @@
+import * as react from 'react'
 import type { ProcessorOptions } from '@mdx-js/mdx'
 import type { GrayMatterFile } from 'gray-matter'
 import type { Heading as MDASTHeading } from 'mdast'
 import type { NextConfig } from 'next'
 import type { FC, ReactNode } from 'react'
 import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
-import type {
-  MARKDOWN_EXTENSIONS,
-  META_FILENAME,
-  NEXTRA_INTERNAL
-} from './constants'
+import type { MARKDOWN_EXTENSIONS, META_FILENAME, NEXTRA_INTERNAL } from './constants'
 import type { PageMapCache } from './page-map'
 
 type MetaFilename = typeof META_FILENAME
@@ -124,17 +121,13 @@ export type Flexsearch =
        * A site can have multiple indexes, by default they're separated by
        * locales as multiple index files.
        */
-      indexKey?: (
-        filepath: string,
-        route: string,
-        locale?: string
-      ) => null | string
+      indexKey?: (filepath: string, route: string, locale?: string) => null | string
     }
 type Transform = (
   result: string,
   options: {
     route: string
-  }
+  },
 ) => string | Promise<string>
 
 export type NextraConfig = {

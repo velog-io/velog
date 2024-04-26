@@ -8,17 +8,18 @@
     "node": ">=16"
   },
   "type": "module",
-  "main": "./dist/index.mjs",
+  "main": "./dist/index.js",
   "exports": {
     "./package.json": "./package.json",
-    ".": {
-      "default": "./dist/index.mjs",
+    ".": "./dist/index.js",
+    "./index.js": {
+      "default": "./dist/index.js",
       "types": "./dist/index.d.mts"
     },
     "./catch-all": "./dist/catch-all.js",
     "./data": {
       "import": "./dist/ssg.js",
-      "types": "./dist/ssg.d.mts"
+      "types": "./dist/ssg.d.ts"
     },
     "./ssg": {
       "import": "./dist/ssg.js",
@@ -27,38 +28,41 @@
     "./loader": "./loader.js",
     "./setup-page": {
       "import": "./dist/setup-page.js",
-      "types": "./dist/setup-page.d.mts"
+      "types": "./dist/setup-page.d.ts"
     },
     "./mdx": {
       "import": "./dist/mdx.js",
-      "types": "./dist/mdx.d.mts"
+      "types": "./dist/mdx.d.ts"
     },
     "./normalize-pages": {
       "import": "./dist/normalize-pages.js",
-      "types": "./dist/normalize-pages.d.mts"
+      "types": "./dist/normalize-pages.d.ts"
     },
     "./components": {
       "import": "./dist/components/index.js",
-      "types": "./dist/components/index.d.mts"
+      "types": "./dist/components/index.d.ts"
     },
     "./mdx-plugins": {
-      "import": "./dist/mdx-plugins/index.mjs",
-      "types": "./dist/mdx-plugins/index.d.mts"
+      "import": "./dist/mdx-plugins/index.js",
+      "types": "./dist/mdx-plugins/index.d.ts"
     },
     "./hooks": {
       "import": "./dist/hooks/index.js",
-      "types": "./dist/hooks/index.d.mts"
+      "types": "./dist/hooks/index.d.ts"
     },
     "./icons": {
       "import": "./dist/icons/index.js",
-      "types": "./dist/icons/index.d.mts"
+      "types": "./dist/icons/index.d.ts"
+    },
+    "./use-internals": {
+      "import": "./dist/use-internals.js",
+      "types": "./dist/use-internals.d.ts"
     },
     "./*": {
-      "import": "./dist/*.mjs",
-      "types": "./dist/*.d.mts"
+      "default": "./dist/*.js",
+      "types": "./dist/*.d.ts"
     }
   },
-  "types": "./dist/types.d.mts",
   "typesVersions": {
     "*": {
       "compile": [
@@ -151,7 +155,6 @@
     "title": "^3.5.3",
     "unist-util-remove": "^4.0.0",
     "unist-util-visit": "^5.0.0",
-    "webpack": "5.73",
     "zod": "^3.22.3"
   },
   "devDependencies": {

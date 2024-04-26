@@ -1,4 +1,4 @@
-import webpack from 'webpack'
+import * as webpack from 'next/dist/compiled/webpack/webpack'
 import type { Compiler } from 'webpack'
 import { IS_PRODUCTION } from '../constants'
 import type { SearchData } from '../types'
@@ -11,7 +11,7 @@ export class NextraSearchPlugin {
       compilation.hooks.processAssets.tap(
         {
           name: pluginName,
-          stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
+          stage: webpack.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
         },
         (assets) => {
           const indexFiles: Record<string, SearchData> = {}
