@@ -38,6 +38,10 @@
       "import": "./dist/normalize-pages.js",
       "types": "./dist/normalize-pages.d.ts"
     },
+    "./use-internals": {
+      "import": "./dist/use-internals.js",
+      "types": "./dist/use-internals.d.ts"
+    },
     "./components": {
       "import": "./dist/components/index.js",
       "types": "./dist/components/index.d.ts"
@@ -53,10 +57,6 @@
     "./icons": {
       "import": "./dist/icons/index.js",
       "types": "./dist/icons/index.d.ts"
-    },
-    "./use-internals": {
-      "import": "./dist/use-internals.js",
-      "types": "./dist/use-internals.d.ts"
     },
     "./*": {
       "default": "./dist/*.js",

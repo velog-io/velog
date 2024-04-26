@@ -1,5 +1,6 @@
 import NextraDocLayout from '@packages/nextra-theme-docs'
-import useInternals from '@packages/nextra/use-internals'
+import { Item } from '@packages/nextra/dist/normalize-pages'
+// import { useInternals } from '@packages/nextra/dist/use-internals'
 
 type Props = {
   children: React.ReactNode
@@ -11,9 +12,9 @@ type Props = {
 // children: ReactNode
 
 function NextraLayout({ children }: Props) {
-  const { context, Layout } = useInternals()
-  console.log('context', context)
-  console.log('Layout', Layout)
+  // const { context, Layout } = useInternals()
+  // console.log('context', context)
+  // console.log('Layout', Layout)
   return <div>{children}</div>
 }
 

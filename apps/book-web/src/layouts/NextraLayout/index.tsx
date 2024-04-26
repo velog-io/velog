@@ -1,1 +1,1 @@
-export { default } from './NextraLayout.jsx'
+export { default } from './NextraLayout'
