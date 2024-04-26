@@ -1,6 +1,3 @@
-import * as context from './context'
-import NextraDocLayout, { useInternals } from '@packages/nextra-theme-docs'
-
 type Props = {
   children: React.ReactNode
 }
@@ -11,14 +8,7 @@ type Props = {
 // children: ReactNode
 
 function NextraLayout({ children }: Props) {
-  const { context, Layout } = useInternals()
-  console.log('cotent', context)
-  console.log('Layout', Layout)
-  return (
-    <NextraDocLayout {...context} pageProps={{}}>
-      {children}
-    </NextraDocLayout>
-  )
+  return <div>{children}</div>
 }
 
 export default NextraLayout

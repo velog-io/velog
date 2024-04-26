@@ -225,11 +225,8 @@ export default function NextraDocLayout({
 export { useConfig, PartialDocsThemeConfig as DocsThemeConfig }
 export { useMDXComponents } from 'nextra/mdx'
 export { Callout, Steps, Tabs, Tab, Cards, Card, FileTree } from 'nextra/components'
-
 export { useTheme } from 'next-themes'
 export { Link } from './mdx-components'
-export * from 'nextra'
-export * from './hooks'
 export {
   Bleed,
   Collapse,
