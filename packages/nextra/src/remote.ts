@@ -1,8 +1,8 @@
-import { compileMdx } from './compile'
+import { compileMdx } from './compile.js'
 
 export async function buildDynamicMDX(
   content: string,
-  compileMdxOptions: Parameters<typeof compileMdx>[1]
+  compileMdxOptions: Parameters<typeof compileMdx>[1],
 ) {
   if (compileMdxOptions && 'remarkLinkRewriteOptions' in compileMdxOptions) {
     throw new Error(`\`remarkLinkRewriteOptions\` was removed. For overriding internal links use \`remarkLinkRewrite\` instead.
@@ -24,23 +24,20 @@ const result = await buildDynamicMDX(rawMdx, {
 `)
   }
 
-  const { result, headings, frontMatter, title } = await compileMdx(
-    content,
-    compileMdxOptions
-  )
+  const { result, headings, frontMatter, title } = await compileMdx(content, compileMdxOptions)
 
   return {
     __nextra_dynamic_mdx: result,
     __nextra_dynamic_opts: JSON.stringify({
       headings,
       frontMatter,
-      title: frontMatter.title || title
-    })
+      title: frontMatter.title || title,
+    }),
   }
 }
 
 export async function buildDynamicMeta() {
   return {
-    __nextra_pageMap: await globalThis.__nextra_resolvePageMap()
+    __nextra_pageMap: await globalThis.__nextra_resolvePageMap(),
   }
 }

@@ -1,2 +1,2 @@
-export { NextraPlugin } from './nextra'
+export { NextraPlugin } from './nextra.js'
 // export { NextraSearchPlugin } from './nextra-search'

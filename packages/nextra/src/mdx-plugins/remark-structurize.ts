@@ -1,16 +1,16 @@
 import type { Root } from 'mdast'
 import type { Plugin } from 'unified'
-import type { Flexsearch, StructurizedData } from '../types'
+import type { Flexsearch, StructurizedData } from '../types.js'
 
 const CODE_TABLE_QUOTE_LIST = new Set<string>([
   'code',
   'table',
   'blockquote',
   'list',
-  'mdxJsxFlowElement'
+  'mdxJsxFlowElement',
 ])
 
-export const remarkStructurize: Plugin<[Flexsearch], Root> = options => {
+export const remarkStructurize: Plugin<[Flexsearch], Root> = (options) => {
   const opts = { codeblocks: true, ...(options as any) }
   const structurizedData: StructurizedData = Object.create(null)
   let activeSlug = ''
@@ -63,10 +63,7 @@ export const remarkStructurize: Plugin<[Flexsearch], Root> = options => {
       if (!skip) content += node.value
     }
 
-    if (
-      CODE_TABLE_QUOTE_LIST.has(type) ||
-      ['listItem', 'break'].includes(type)
-    ) {
+    if (CODE_TABLE_QUOTE_LIST.has(type) || ['listItem', 'break'].includes(type)) {
       result += '\n'
       if (!skip) content += '\n'
     }

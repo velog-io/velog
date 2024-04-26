@@ -1,8 +1,8 @@
 import path from 'node:path'
 import slash from 'slash'
 import title from 'title'
-import { LOCALE_REGEX } from './constants'
-import type { Folder, MdxFile, Meta } from './types'
+import { LOCALE_REGEX } from './constants.js'
+import type { Folder, MdxFile, Meta } from './types.js'
 
 export function parseFileName(filePath: string): {
   name: string
@@ -15,7 +15,7 @@ export function parseFileName(filePath: string): {
   return {
     name: locale ? name.replace(LOCALE_REGEX, '') : name,
     locale,
-    ext
+    ext,
   }
 }
 
@@ -42,19 +42,17 @@ export function sortPages(
     | Pick<MdxFile, 'kind' | 'name' | 'frontMatter' | 'locale'>
     | Pick<Folder, 'kind' | 'name'>
   )[],
-  locale?: string
+  locale?: string,
 ): [string, string][] {
   if (locale === '') {
     locale = undefined
   }
   return pages
-    .filter(item => item.kind === 'Folder' || item.locale === locale)
-    .map(item => ({
+    .filter((item) => item.kind === 'Folder' || item.locale === locale)
+    .map((item) => ({
       name: item.name,
       date: 'frontMatter' in item && item.frontMatter?.date,
-      title:
-        ('frontMatter' in item && item.frontMatter?.title) ||
-        pageTitleFromFilename(item.name)
+      title: ('frontMatter' in item && item.frontMatter?.title) || pageTitleFromFilename(item.name),
     }))
     .sort((a, b) => {
       if (a.date && b.date) {
@@ -68,7 +66,7 @@ export function sortPages(
       }
       return a.title.localeCompare(b.title, locale, { numeric: true })
     })
-    .map(item => [item.name, item.title])
+    .map((item) => [item.name, item.title])
 }
 
 export function isSerializable(o: any): boolean {

@@ -6,10 +6,11 @@ import {
   DEFAULT_LOCALES,
   MARKDOWN_EXTENSION_REGEX,
   MARKDOWN_EXTENSIONS,
-} from './constants'
-import { pageMapCache } from './page-map'
-import { NextraConfig, ThemeConfig } from './types'
-import { NextraPlugin } from './webpack-plugins'
+} from './constants.js'
+import { pageMapCache } from './page-map.js'
+import { NextraConfig, ThemeConfig } from './types.js'
+import { NextraPlugin } from './webpack-plugins/index.js'
+export { default as NextraLayout } from './layout.js'
 
 const DEFAULT_EXTENSIONS = ['js', 'jsx', 'ts', 'tsx']
 

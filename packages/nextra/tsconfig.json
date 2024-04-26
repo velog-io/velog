@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "es2022",
-    "module": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "declaration": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -10,8 +11,8 @@
     "allowJs": true,
     "jsx": "react-jsx",
     "lib": ["es2022", "dom"],
-    "moduleResolution": "node",
     "types": ["vitest/globals", "webpack-env"],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "outDir": "./dist"
   }
 }

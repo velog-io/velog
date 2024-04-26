@@ -44,9 +44,9 @@ const sharedConfig = {
             }
             if (isDir) {
               // it's a directory
-              return { path: args.path + '/index.js', external: true }
+              return { path: args.path, external: true }
             }
-            return { path: args.path + '.js', external: true }
+            return { path: args.path, external: true }
           }
         })
       },

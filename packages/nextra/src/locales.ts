@@ -1,21 +1,18 @@
-import { addBasePath } from 'next/dist/client/add-base-path'
-import { addLocale } from 'next/dist/client/add-locale'
-import { hasBasePath } from 'next/dist/client/has-base-path'
-import { removeBasePath } from 'next/dist/client/remove-base-path'
-import { removeLocale } from 'next/dist/client/remove-locale'
-import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
+import { addBasePath } from 'next/dist/client/add-base-path.js'
+import { addLocale } from 'next/dist/client/add-locale.js'
+import { hasBasePath } from 'next/dist/client/has-base-path.js'
+import { removeBasePath } from 'next/dist/client/remove-base-path.js'
+import { removeLocale } from 'next/dist/client/remove-locale.js'
+import type { NextRequest } from 'next/server.js'
+import { NextResponse } from 'next/server.js'
 
 type LegacyMiddlewareCookies = Record<string, string>
 type StableMiddlewareCookies = Map<string, string>
 type Next13MiddlewareCookies = NextRequest['cookies']
 
 function getCookie(
-  cookies:
-    | LegacyMiddlewareCookies
-    | StableMiddlewareCookies
-    | Next13MiddlewareCookies,
-  key: string
+  cookies: LegacyMiddlewareCookies | StableMiddlewareCookies | Next13MiddlewareCookies,
+  key: string,
 ): string | undefined {
   if (typeof cookies.get === 'function') {
     const cookie = cookies.get(key)
@@ -77,11 +74,7 @@ export function locales(request: NextRequest) {
     // locale can be missing from there for consistency.
     if (finalLocale !== nextUrl.defaultLocale) {
       const url = addBasePath(
-        addLocale(
-          `${nextUrl.pathname}${nextUrl.search}`,
-          finalLocale,
-          nextUrl.defaultLocale
-        )
+        addLocale(`${nextUrl.pathname}${nextUrl.search}`, finalLocale, nextUrl.defaultLocale),
       )
       return NextResponse.redirect(new URL(url, request.url))
     }
@@ -93,11 +86,7 @@ export function locales(request: NextRequest) {
   // If we are not showing the correct localed page, rewrite the current request.
   if (!pathname.endsWith('.' + finalLocale)) {
     const url = addBasePath(
-      addLocale(
-        `${pathname}.${finalLocale}${nextUrl.search}`,
-        finalLocale,
-        nextUrl.defaultLocale
-      )
+      addLocale(`${pathname}.${finalLocale}${nextUrl.search}`, finalLocale, nextUrl.defaultLocale),
     )
     return NextResponse.rewrite(new URL(url, request.url))
   }

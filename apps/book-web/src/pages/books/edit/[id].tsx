@@ -1,4 +1,5 @@
-import NextraLayout from '@/layouts/NextraLayout/NextraLayout'
+// import NextraLayout from '@/layouts/NextraLayout/index.jsx'
+import { NextraLayout } from '@packages/nextra'
 
 type Props = {
   children: React.ReactNode

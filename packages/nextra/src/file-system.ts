@@ -1,7 +1,7 @@
 import fs from 'graceful-fs'
 import * as findPagesDirImport from 'next/dist/lib/find-pages-dir.js'
-import { CWD } from './constants'
-import { getDefault } from './utils'
+import { CWD } from './constants.js'
+import { getDefault } from './utils.js'
 
 const { findPagesDir } = getDefault(findPagesDirImport)
 
@@ -15,6 +15,4 @@ export function findPagesDirectory(): string {
   )
 }
 
-export const PAGES_DIR = process.env.VITEST_WORKER_ID
-  ? ''
-  : findPagesDirectory()
+export const PAGES_DIR = process.env.VITEST_WORKER_ID ? '' : findPagesDirectory()

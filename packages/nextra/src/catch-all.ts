@@ -1,25 +1,24 @@
-import { MARKDOWN_EXTENSION_REGEX } from './constants'
-import type { DynamicFolder, DynamicMeta } from './types'
+import { MARKDOWN_EXTENSION_REGEX } from './constants.js'
+import type { DynamicFolder, DynamicMeta } from './types.js'
 
 function appendSlashForFolders(obj: DynamicMeta): DynamicMeta {
   return Object.fromEntries(
     Object.entries(obj).map(([key, value]) => {
-      const isFolder =
-        value && typeof value === 'object' && value.type === 'folder'
+      const isFolder = value && typeof value === 'object' && value.type === 'folder'
       return isFolder ? [`${key}/`, value] : [key, value]
-    })
+    }),
   )
 }
 
 export function createCatchAllMeta(
   filePaths: string[],
-  customMeta: DynamicMeta = Object.create(null)
+  customMeta: DynamicMeta = Object.create(null),
 ): DynamicMeta {
   const metaMap: DynamicMeta = appendSlashForFolders(customMeta)
 
   const paths = filePaths
-    .filter(filePath => MARKDOWN_EXTENSION_REGEX.test(filePath))
-    .map(filePath => filePath.replace(MARKDOWN_EXTENSION_REGEX, '').split('/'))
+    .filter((filePath) => MARKDOWN_EXTENSION_REGEX.test(filePath))
+    .map((filePath) => filePath.replace(MARKDOWN_EXTENSION_REGEX, '').split('/'))
 
   for (const path of paths) {
     addToMap(metaMap, path)

@@ -1,7 +1,7 @@
 import type { Root } from 'mdast'
 import type { Plugin } from 'unified'
 import { visit } from 'unist-util-visit'
-import { EXTERNAL_URL_REGEX } from '../constants'
+import { EXTERNAL_URL_REGEX } from '../constants.js'
 
 export type RemarkLinkRewriteOptions = {
   pattern: RegExp
@@ -12,10 +12,10 @@ export type RemarkLinkRewriteOptions = {
 export const remarkLinkRewrite: Plugin<[RemarkLinkRewriteOptions], Root> = ({
   pattern,
   replace,
-  excludeExternalLinks
+  excludeExternalLinks,
 }) => {
   return (tree, _file, done) => {
-    visit(tree, 'link', node => {
+    visit(tree, 'link', (node) => {
       if (!(excludeExternalLinks && EXTERNAL_URL_REGEX.test(node.url))) {
         node.url = node.url.replace(pattern, replace)
       }

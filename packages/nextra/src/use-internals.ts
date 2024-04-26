@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router.js'
 import { useEffect, useState } from 'react'
-import { NEXTRA_INTERNAL } from './constants'
-import type { NextraInternalGlobal } from './types'
+import { NEXTRA_INTERNAL } from './constants.js'
+import type { NextraInternalGlobal } from './types.js'
 
 /**
  * This hook is used to access the internal state of Nextra, you should never

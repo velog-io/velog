@@ -1,5 +1,5 @@
 import path from 'node:path'
-import type { NextraConfig } from './types'
+import type { NextraConfig } from './types.js'
 
 export const MARKDOWN_EXTENSION_REGEX = /\.mdx?$/
 
@@ -14,9 +14,9 @@ export const DEFAULT_LOCALE = 'en-US'
 export const DEFAULT_CONFIG: Omit<NextraConfig, 'theme'> = {
   staticImage: true,
   flexsearch: {
-    codeblocks: true
+    codeblocks: true,
   },
-  codeHighlight: true
+  codeHighlight: true,
 }
 
 export const OFFICIAL_THEMES = ['nextra-theme-docs', 'nextra-theme-blog']

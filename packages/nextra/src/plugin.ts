@@ -8,8 +8,8 @@ import {
   DEFAULT_LOCALES,
   DYNAMIC_META_FILENAME,
   MARKDOWN_EXTENSION_REGEX,
-  META_FILENAME
-} from './constants'
+  META_FILENAME,
+} from './constants.js'
 import type {
   FileMap,
   Folder,
@@ -17,25 +17,16 @@ import type {
   MdxPath,
   MetaJsonFile,
   MetaJsonPath,
-  PageMapItem
-} from './types'
-import {
-  isSerializable,
-  normalizePageRoute,
-  parseFileName,
-  sortPages,
-  truthy
-} from './utils'
+  PageMapItem,
+} from './types.js'
+import { isSerializable, normalizePageRoute, parseFileName, sortPages, truthy } from './utils.js'
 
 const readdir = promisify(fs.readdir)
 const readFile = promisify(fs.readFile)
 const realpath = promisify(fs.realpath)
 const stat = promisify(fs.stat)
 
-export const collectMdx = async (
-  filePath: string,
-  route = ''
-): Promise<MdxFile> => {
+export const collectMdx = async (filePath: string, route = ''): Promise<MdxFile> => {
   const { name, locale } = parseFileName(filePath)
 
   const content = await readFile(filePath, 'utf8')
@@ -45,7 +36,7 @@ export const collectMdx = async (
     name,
     route,
     ...(locale && { locale }),
-    ...(Object.keys(data).length && { frontMatter: data })
+    ...(Object.keys(data).length && { frontMatter: data }),
   }
 }
 
@@ -56,7 +47,7 @@ export async function collectFiles({
   locales = DEFAULT_LOCALES,
   route = '/',
   fileMap = Object.create(null),
-  isFollowingSymlink = false
+  isFollowingSymlink = false,
 }: {
   dir: string
   locales?: string[]
@@ -66,7 +57,7 @@ export async function collectFiles({
 }): Promise<{ items: PageMapItem[]; fileMap: FileMap }> {
   const files = await readdir(dir, { withFileTypes: true })
 
-  const promises = files.map(async f => {
+  const promises = files.map(async (f) => {
     const filePath = path.join(dir, f.name)
     let isDirectory = f.isDirectory()
 
@@ -97,14 +88,14 @@ export async function collectFiles({
         locales,
         route: fileRoute,
         fileMap,
-        isFollowingSymlink: isSymlinked
+        isFollowingSymlink: isSymlinked,
       })
       if (!items.length) return
       return <Folder>{
         kind: 'Folder',
         name: f.name,
         route: fileRoute,
-        children: items
+        children: items,
       }
     }
 
@@ -131,7 +122,7 @@ export async function collectFiles({
           fileMap[fp] = {
             kind: 'Meta',
             ...(locale && { locale }),
-            data: JSON.parse(content)
+            data: JSON.parse(content),
           }
           return fileMap[fp]
         }
@@ -151,7 +142,7 @@ export async function collectFiles({
               kind: 'Meta',
               ...(locale && { locale }),
               __nextra_src: filePath,
-              data: {}
+              data: {},
             }
           } else if (meta && typeof meta === 'object' && isSerializable(meta)) {
             // Static content, can be statically optimized.
@@ -160,12 +151,12 @@ export async function collectFiles({
               ...(locale && { locale }),
               // we spread object because default title could be incorrectly set when _meta.json/js
               // is imported/exported by another _meta.js
-              data: { ...meta }
+              data: { ...meta },
             }
           } else {
             console.error(
               `[nextra] "${fileName}" is not a valid meta file. The default export is required to be a serializable object or a function. Please check the following file:`,
-              path.relative(CWD, filePath)
+              path.relative(CWD, filePath),
             )
           }
           return fileMap[fp]
@@ -174,19 +165,19 @@ export async function collectFiles({
         const relPath = path.relative(CWD, filePath)
         console.error(
           `[nextra] Error loading ${relPath}
-${(err as Error).name}: ${(err as Error).message}`
+${(err as Error).name}: ${(err as Error).message}`,
         )
       }
 
       if (fileName === 'meta.json') {
         console.warn(
           '[nextra] "meta.json" was renamed to "_meta.json". Rename the following file:',
-          path.relative(CWD, filePath)
+          path.relative(CWD, filePath),
         )
       } else if (/_meta\.(jsx|ts|tsx|cjs|mjs)$/.test(fileName)) {
         console.error(
           `[nextra] "${fileName}" is not currently supported, please rename the following file to "${DYNAMIC_META_FILENAME}":`,
-          path.relative(CWD, filePath)
+          path.relative(CWD, filePath),
         )
       }
     })
@@ -214,9 +205,7 @@ ${(err as Error).name}: ${(err as Error).message}`
 
     const defaultMeta = sortPages(mdxPages, locale)
 
-    const metaFilename = locale
-      ? META_FILENAME.replace('.', `.${locale}.`)
-      : META_FILENAME
+    const metaFilename = locale ? META_FILENAME.replace('.', `.${locale}.`) : META_FILENAME
 
     const metaPath = path.join(dir, metaFilename) as MetaJsonPath
 
@@ -225,7 +214,7 @@ ${(err as Error).name}: ${(err as Error).message}`
       const meta = {
         kind: 'Meta' as const,
         ...(locale && { locale }),
-        data: Object.fromEntries(defaultMeta)
+        data: Object.fromEntries(defaultMeta),
       }
       fileMap[metaPath] = meta
       items.push(meta)

@@ -1,7 +1,8 @@
 import type { ComponentProps, ReactElement } from 'react'
 import { useCallback, useEffect, useState } from 'react'
-import { CheckIcon, CopyIcon } from '../icons'
-import { Button } from './button'
+import { CheckIcon } from '../icons/check.js'
+import { CopyIcon } from '../icons/copy.js'
+import { Button } from './button.js'
 
 export const CopyToClipboard = ({
   getValue,
@@ -22,9 +23,7 @@ export const CopyToClipboard = ({
     }
   }, [isCopied])
 
-  const handleClick = useCallback<
-    NonNullable<ComponentProps<'button'>['onClick']>
-  >(async () => {
+  const handleClick = useCallback<NonNullable<ComponentProps<'button'>['onClick']>>(async () => {
     setCopied(true)
     if (!navigator?.clipboard) {
       console.error('Access to clipboard rejected!')

@@ -1,11 +1,6 @@
-import { IS_PRODUCTION } from './constants'
-import filterRouteLocale from './filter-route-locale'
-import type {
-  DynamicMetaDescriptor,
-  FileMap,
-  MdxPath,
-  PageMapItem
-} from './types'
+import { IS_PRODUCTION } from './constants.js'
+import filterRouteLocale from './filter-route-locale.js'
+import type { DynamicMetaDescriptor, FileMap, MdxPath, PageMapItem } from './types.js'
 
 type PageMapProps = {
   filePath: string
@@ -17,7 +12,7 @@ type PageMapProps = {
 export function getDynamicMeta(
   path: string,
   items: PageMapItem[],
-  locale?: string
+  locale?: string,
 ): [DynamicMetaDescriptor[], PageMapItem[]] {
   const newItems: PageMapItem[] = []
   const dynamicMetaItems: DynamicMetaDescriptor[] = []
@@ -28,13 +23,13 @@ export function getDynamicMeta(
       const [dynamicItemsInChildren, newItemsInChildren] = getDynamicMeta(
         `${path}[${i}].children`,
         item.children,
-        locale
+        locale,
       )
       dynamicMetaItems.push(...dynamicItemsInChildren)
       if (newItemsInChildren.length) {
         newItems.push({
           ...item,
-          children: newItemsInChildren
+          children: newItemsInChildren,
         })
       }
       continue
@@ -46,7 +41,7 @@ export function getDynamicMeta(
         dynamicMetaItems.push({
           metaFilePath: __nextra_src,
           metaObjectKeyPath: `${path}[${i}]`,
-          metaParentKeyPath: path.replace(/\.children$/, '')
+          metaParentKeyPath: path.replace(/\.children$/, ''),
         })
         newItems.push(newItem)
       }
@@ -58,17 +53,10 @@ export function getDynamicMeta(
   return [dynamicMetaItems, newItems]
 }
 
-const cachedDynamicMetaForLocale: Record<
-  string,
-  [DynamicMetaDescriptor[], PageMapItem[]]
-> = Object.create(null)
+const cachedDynamicMetaForLocale: Record<string, [DynamicMetaDescriptor[], PageMapItem[]]> =
+  Object.create(null)
 
-export function resolvePageMap({
-  filePath,
-  items,
-  fileMap,
-  defaultLocale
-}: PageMapProps): {
+export function resolvePageMap({ filePath, items, fileMap, defaultLocale }: PageMapProps): {
   route: string
   pageMap: PageMapItem[]
   dynamicMetaItems: DynamicMetaDescriptor[]
@@ -81,13 +69,13 @@ export function resolvePageMap({
     (cachedDynamicMetaForLocale[localeKey] = getDynamicMeta(
       '',
       locale ? filterRouteLocale(items, locale, defaultLocale) : items,
-      locale
+      locale,
     ))
 
   return {
     pageMap: newItems,
     route,
-    dynamicMetaItems
+    dynamicMetaItems,
   }
 }
 
@@ -97,7 +85,7 @@ export class PageMapCache {
     fileMap: FileMap
   } | null = {
     items: [],
-    fileMap: Object.create(null)
+    fileMap: Object.create(null),
   }
 
   set(data: { items: PageMapItem[]; fileMap: FileMap }) {

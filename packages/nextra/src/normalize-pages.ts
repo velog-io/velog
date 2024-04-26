@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { ERROR_ROUTES } from './constants'
-import type { Folder, MdxFile, PageMapItem } from './types'
+import { ERROR_ROUTES } from './constants.js'
+import type { Folder, MdxFile, PageMapItem } from './types.js'
 
 const DEFAULT_PAGE_THEME: PageTheme = {
   breadcrumb: true,
@@ -12,7 +12,7 @@ const DEFAULT_PAGE_THEME: PageTheme = {
   sidebar: true,
   timestamp: true,
   toc: true,
-  typesetting: 'default'
+  typesetting: 'default',
 }
 
 const pageThemeSchema = z.strictObject({
@@ -25,7 +25,7 @@ const pageThemeSchema = z.strictObject({
   sidebar: z.boolean(),
   timestamp: z.boolean(),
   toc: z.boolean(),
-  typesetting: z.enum(['default', 'article'])
+  typesetting: z.enum(['default', 'article']),
 })
 
 export type PageTheme = z.infer<typeof pageThemeSchema>
@@ -42,19 +42,19 @@ const titleSchema = z.string()
 const linkItemSchema = z.strictObject({
   href: z.string(),
   newWindow: z.boolean(),
-  title: titleSchema
+  title: titleSchema,
 })
 
 const menuItemSchema = z.strictObject({
   display: displaySchema.optional(),
   items: z.record(linkItemSchema.partial({ href: true, newWindow: true })),
   title: titleSchema,
-  type: z.literal('menu')
+  type: z.literal('menu'),
 })
 
 const separatorItemSchema = z.strictObject({
   title: titleSchema.optional(),
-  type: z.literal('separator')
+  type: z.literal('separator'),
 })
 
 const itemSchema = linkItemSchema
@@ -62,23 +62,16 @@ const itemSchema = linkItemSchema
     display: displaySchema,
     theme: pageThemeSchema,
     title: titleSchema,
-    type: z.enum(['page', 'doc'])
+    type: z.enum(['page', 'doc']),
   })
   .deepPartial()
 
 type Display = z.infer<typeof displaySchema>
 type IMenuItem = z.infer<typeof menuItemSchema>
 
-export const metaSchema = z
-  .string()
-  .or(menuItemSchema)
-  .or(separatorItemSchema)
-  .or(itemSchema)
+export const metaSchema = z.string().or(menuItemSchema).or(separatorItemSchema).or(itemSchema)
 
-function extendMeta(
-  meta: string | Record<string, any> = {},
-  fallback: Record<string, any>
-) {
+function extendMeta(meta: string | Record<string, any> = {}, fallback: Record<string, any>) {
   if (typeof meta === 'string') {
     meta = { title: meta }
   }
@@ -141,7 +134,7 @@ export function normalizePages({
   route,
   docsRoot = '',
   underCurrentDocsRoot = false,
-  pageThemeContext = DEFAULT_PAGE_THEME
+  pageThemeContext = DEFAULT_PAGE_THEME,
 }: {
   list: PageMapItem[]
   locale: string
@@ -168,7 +161,7 @@ export function normalizePages({
   for (const key of metaKeys) {
     if (typeof meta[key] === 'string') {
       meta[key] = {
-        title: meta[key]
+        title: meta[key],
       }
     }
   }
@@ -206,9 +199,7 @@ export function normalizePages({
         // not hidden routes
         !a.name.startsWith('_') &&
         // locale matches, or fallback to default locale
-        (!('locale' in a) ||
-          !a.locale ||
-          [locale, defaultLocale].includes(a.locale))
+        (!('locale' in a) || !a.locale || [locale, defaultLocale].includes(a.locale)),
     )
     .sort((a, b) => {
       const indexA = metaKeys.indexOf(a.name)
@@ -218,7 +209,7 @@ export function normalizePages({
       if (indexB === -1) return -1
       return indexA - indexB
     })
-    .flatMap(item => {
+    .flatMap((item) => {
       const items = []
       const index = metaKeys.indexOf(item.name)
       let extendedItem
@@ -230,7 +221,7 @@ export function normalizePages({
             items.push({
               name: key,
               route: '',
-              ...meta[key]
+              ...meta[key],
             })
           }
         }
@@ -248,7 +239,7 @@ export function normalizePages({
       items.push({
         name: key,
         route: '#',
-        ...meta[key]
+        ...meta[key],
       })
     }
   }
@@ -271,7 +262,7 @@ export function normalizePages({
     const { display, type = 'doc' } = extendedMeta
     const extendedPageThemeContext = {
       ...pageThemeContext,
-      ...extendedMeta.theme
+      ...extendedMeta.theme,
     }
 
     // If the doc is under the active page root.
@@ -286,7 +277,7 @@ export function normalizePages({
         route,
         docsRoot: type === 'page' || type === 'menu' ? a.route : docsRoot,
         underCurrentDocsRoot: underCurrentDocsRoot || isCurrentDocsTree,
-        pageThemeContext: extendedPageThemeContext
+        pageThemeContext: extendedPageThemeContext,
       })
 
     const title = extendedMeta.title || (type !== 'separator' && a.name)
@@ -295,7 +286,7 @@ export function normalizePages({
       type,
       ...(title && { title }),
       ...(display && { display }),
-      ...(normalizedChildren && { children: [] })
+      ...(normalizedChildren && { children: [] }),
     })
     const item: Item = getItem()
     const docsItem: DocsItem = getItem()
@@ -313,7 +304,7 @@ export function normalizePages({
       // There can be multiple matches.
       activeThemeContext = {
         ...activeThemeContext,
-        ...extendedPageThemeContext
+        ...extendedPageThemeContext,
       }
       switch (type) {
         case 'page':
@@ -326,10 +317,7 @@ export function normalizePages({
           activeIndex = flatDocsDirectories.length
       }
     }
-    if (
-      (display === 'hidden' && item.kind !== 'Folder') ||
-      ERROR_ROUTES.has(a.route)
-    ) {
+    if ((display === 'hidden' && item.kind !== 'Folder') || ERROR_ROUTES.has(a.route)) {
       continue
     }
 
@@ -346,12 +334,10 @@ export function normalizePages({
         switch (activeType) {
           case 'page':
           case 'menu':
-            activeIndex =
-              topLevelNavbarItems.length + normalizedChildren.activeIndex
+            activeIndex = topLevelNavbarItems.length + normalizedChildren.activeIndex
             break
           case 'doc':
-            activeIndex =
-              flatDocsDirectories.length + normalizedChildren.activeIndex
+            activeIndex = flatDocsDirectories.length + normalizedChildren.activeIndex
             break
         }
         if (a.withIndexPage && type === 'doc') {
@@ -368,9 +354,7 @@ export function normalizePages({
 
           // If it's a page with children inside, we inject itself as a page too.
           if (normalizedChildren.flatDirectories.length) {
-            pageItem.firstChildRoute = findFirstRoute(
-              normalizedChildren.flatDirectories
-            )
+            pageItem.firstChildRoute = findFirstRoute(normalizedChildren.flatDirectories)
             topLevelNavbarItems.push(pageItem)
           } else if (pageItem.withIndexPage) {
             topLevelNavbarItems.push(pageItem)
@@ -437,6 +421,6 @@ export function normalizePages({
     flatDirectories,
     docsDirectories,
     flatDocsDirectories,
-    topLevelNavbarItems
+    topLevelNavbarItems,
   }
 }

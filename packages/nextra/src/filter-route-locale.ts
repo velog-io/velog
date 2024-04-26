@@ -1,6 +1,6 @@
-import { META_FILENAME } from './constants'
-import type { PageMapItem } from './types'
-import { truthy } from './utils'
+import { META_FILENAME } from './constants.js'
+import type { PageMapItem } from './types.js'
+import { truthy } from './utils.js'
 
 export default function filterRouteLocale(
   pageMap: PageMapItem[],

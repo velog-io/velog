@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router.js'
-import type { DocsThemeConfig } from 'nextra-theme-docs'
-import { useConfig } from 'nextra-theme-docs'
+import type { DocsThemeConfig } from '@packages/nextra-theme-docs'
+import { useConfig } from '@packages/nextra-theme-docs'
 
 const config: DocsThemeConfig = {
   logo: <span>Learning bunJS is Fun!</span>,

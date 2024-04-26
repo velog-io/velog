@@ -5,8 +5,8 @@
 
 import get from 'lodash.get'
 import type { FC } from 'react'
-import { NEXTRA_INTERNAL } from './constants'
-import NextraLayout from './layout'
+import { NEXTRA_INTERNAL } from './constants.js'
+import NextraLayout from './layout.js'
 import type {
   DynamicFolder,
   DynamicMeta,
@@ -17,9 +17,9 @@ import type {
   NextraInternalGlobal,
   PageMapItem,
   PageOpts,
-  ThemeConfig
-} from './types'
-import { normalizePageRoute, pageTitleFromFilename } from './utils'
+  ThemeConfig,
+} from './types.js'
+import { normalizePageRoute, pageTitleFromFilename } from './utils.js'
 
 function isFolder(value: DynamicMetaItem): value is DynamicFolder {
   return !!value && typeof value === 'object' && value.type === 'folder'
@@ -30,20 +30,17 @@ function normalizeMetaData(obj: DynamicMeta): DynamicMeta {
     Object.entries(obj).map(([key, value]) => {
       if (isFolder(value)) {
         const keyWithoutSlash = key.replace('/', '')
-        return [
-          keyWithoutSlash,
-          value.title || pageTitleFromFilename(keyWithoutSlash)
-        ]
+        return [keyWithoutSlash, value.title || pageTitleFromFilename(keyWithoutSlash)]
       }
       return [key, value || pageTitleFromFilename(key)]
-    })
+    }),
   )
 }
 
 export function collectCatchAllRoutes(
   parent: Folder<any>,
   meta: DynamicMetaJsonFile,
-  isRootFolder = true
+  isRootFolder = true,
 ): void {
   if (isRootFolder) {
     collectCatchAllRoutes(
@@ -51,9 +48,9 @@ export function collectCatchAllRoutes(
       {
         kind: 'Meta',
         data: meta.data,
-        locale: meta.locale
+        locale: meta.locale,
       },
-      false
+      false,
     )
     meta.data = normalizeMetaData(meta.data)
     return
@@ -67,7 +64,7 @@ export function collectCatchAllRoutes(
         kind: 'MdxPage',
         ...(meta.locale && { locale: meta.locale }),
         name: key,
-        route: normalizePageRoute(parent.route, key)
+        route: normalizePageRoute(parent.route, key),
       })
       continue
     }
@@ -80,9 +77,9 @@ export function collectCatchAllRoutes(
         {
           kind: 'Meta',
           ...(meta.locale && { locale: meta.locale }),
-          data: normalizeMetaData(value.items)
-        }
-      ]
+          data: normalizeMetaData(value.items),
+        },
+      ],
     }
 
     parent.children.push(newParent)
@@ -91,9 +88,9 @@ export function collectCatchAllRoutes(
       {
         kind: 'Meta',
         data: value.items,
-        locale: meta.locale
+        locale: meta.locale,
       },
-      false
+      false,
     )
   }
 }
@@ -108,7 +105,7 @@ export function setupNextraPage({
   MDXContent,
   hot,
   pageOptsChecksum,
-  dynamicMetaModules = []
+  dynamicMetaModules = [],
 }: {
   pageNextRoute: string
   pageOpts: PageOpts
@@ -124,25 +121,18 @@ export function setupNextraPage({
       if (process.env.NODE_ENV === 'production' && cachedResolvedPageMap) {
         return cachedResolvedPageMap
       }
-      const clonedPageMap: PageMapItem[] = JSON.parse(
-        JSON.stringify(__nextra_internal__.pageMap)
-      )
+      const clonedPageMap: PageMapItem[] = JSON.parse(JSON.stringify(__nextra_internal__.pageMap))
 
       await Promise.all(
-        dynamicMetaModules.map(
-          async ([importMod, { metaObjectKeyPath, metaParentKeyPath }]) => {
-            const mod = await importMod
-            const metaData = await mod.default()
-            const meta: DynamicMetaJsonFile = get(
-              clonedPageMap,
-              metaObjectKeyPath
-            )
-            meta.data = metaData
+        dynamicMetaModules.map(async ([importMod, { metaObjectKeyPath, metaParentKeyPath }]) => {
+          const mod = await importMod
+          const metaData = await mod.default()
+          const meta: DynamicMetaJsonFile = get(clonedPageMap, metaObjectKeyPath)
+          meta.data = metaData
 
-            const parent: Folder = get(clonedPageMap, metaParentKeyPath)
-            collectCatchAllRoutes(parent, meta)
-          }
-        )
+          const parent: Folder = get(clonedPageMap, metaParentKeyPath)
+          collectCatchAllRoutes(parent, meta)
+        }),
       )
       return (cachedResolvedPageMap = clonedPageMap)
     }
@@ -151,9 +141,8 @@ export function setupNextraPage({
   // Make sure the same component is always returned so Next.js will render the
   // stable layout. We then put the actual content into a global store and use
   // the route to identify it.
-  const __nextra_internal__ = ((globalThis as NextraInternalGlobal)[
-    NEXTRA_INTERNAL
-  ] ||= Object.create(null))
+  const __nextra_internal__ = ((globalThis as NextraInternalGlobal)[NEXTRA_INTERNAL] ||=
+    Object.create(null))
 
   if (pageOpts.pageMap) {
     __nextra_internal__.pageMap = pageOpts.pageMap
@@ -164,7 +153,7 @@ export function setupNextraPage({
     pageOpts = {
       ...pageOpts,
       pageMap: __nextra_internal__.pageMap,
-      flexsearch: __nextra_internal__.flexsearch
+      flexsearch: __nextra_internal__.flexsearch,
     }
     themeConfig = __nextra_internal__.themeConfig
   }
@@ -172,7 +161,7 @@ export function setupNextraPage({
   pageOpts = {
     // @ts-ignore ignore "'frontMatter' is specified more than once" error to treeshake empty object `{}` for each compiled page
     frontMatter: {},
-    ...pageOpts
+    ...pageOpts,
   }
 
   __nextra_internal__.route = pageOpts.route
@@ -180,7 +169,7 @@ export function setupNextraPage({
   __nextra_internal__.context[pageNextRoute] = {
     Content: MDXContent,
     pageOpts,
-    themeConfig
+    themeConfig,
   }
 
   if (process.env.NODE_ENV !== 'production' && hot) {
@@ -188,13 +177,12 @@ export function setupNextraPage({
     const checksum = pageOptsChecksum
     hot.data ||= Object.create(null)
     if (hot.data.prevPageOptsChecksum !== checksum) {
-      const listeners =
-        __nextra_internal__.refreshListeners[pageNextRoute] || []
+      const listeners = __nextra_internal__.refreshListeners[pageNextRoute] || []
       for (const listener of listeners) {
         listener()
       }
     }
-    hot.dispose(data => {
+    hot.dispose((data) => {
       data.prevPageOptsChecksum = checksum
     })
   }

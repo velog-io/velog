@@ -1,8 +1,8 @@
 import type { Compiler } from 'webpack'
-import { PAGES_DIR } from '../file-system'
-import { pageMapCache } from '../page-map'
-import { collectFiles } from '../plugin'
-import type { NextraConfig } from '../types'
+import { PAGES_DIR } from '../file-system.js'
+import { pageMapCache } from '../page-map.js'
+import { collectFiles } from '../plugin.js'
+import type { NextraConfig } from '../types.js'
 
 export class NextraPlugin {
   constructor(private config: NextraConfig & { locales: string[] }) {}

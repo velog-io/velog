@@ -1,13 +1,13 @@
 import path from 'node:path'
 import fs from 'graceful-fs'
 import slash from 'slash'
-import { compileMdx } from './compile'
-import { CWD, IS_PRODUCTION, MARKDOWN_EXTENSION_REGEX, OFFICIAL_THEMES } from './constants'
-import { existsSync, PAGES_DIR } from './file-system'
-import { resolvePageMap } from './page-map'
-import { collectFiles, collectMdx } from './plugin'
-import type { FileMap, LoaderOptions, MdxPath, PageMapItem, PageOpts } from './types'
-import { hashFnv32a, pageTitleFromFilename, parseFileName } from './utils'
+import { compileMdx } from './compile.js'
+import { CWD, IS_PRODUCTION, MARKDOWN_EXTENSION_REGEX, OFFICIAL_THEMES } from './constants.js'
+import { existsSync, PAGES_DIR } from './file-system.js'
+import { resolvePageMap } from './page-map.js'
+import { collectFiles, collectMdx } from './plugin.js'
+import type { FileMap, LoaderOptions, MdxPath, PageMapItem, PageOpts } from './types.js'
+import { hashFnv32a, pageTitleFromFilename, parseFileName } from './utils.js'
 
 const IS_WEB_CONTAINER = !!process.versions.webcontainer
 

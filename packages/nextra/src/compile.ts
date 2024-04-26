@@ -2,7 +2,7 @@ import { createRequire } from 'node:module'
 import path from 'node:path'
 import type { ProcessorOptions } from '@mdx-js/mdx'
 import { createProcessor } from '@mdx-js/mdx'
-import type { Processor } from '@mdx-js/mdx/lib/core'
+import type { Processor } from '@mdx-js/mdx/lib/core.js'
 import { remarkMermaid } from '@theguild/remark-mermaid'
 import { remarkNpm2Yarn } from '@theguild/remark-npm2yarn'
 import grayMatter from 'gray-matter'
@@ -19,8 +19,8 @@ import {
   CWD,
   DEFAULT_LOCALE,
   ERROR_ROUTES,
-  MARKDOWN_URL_EXTENSION_REGEX
-} from './constants'
+  MARKDOWN_URL_EXTENSION_REGEX,
+} from './constants.js'
 import {
   attachMeta,
   parseMeta,
@@ -31,19 +31,14 @@ import {
   remarkRemoveImports,
   remarkReplaceImports,
   remarkStaticImage,
-  remarkStructurize
-} from './mdx-plugins'
+  remarkStructurize,
+} from './mdx-plugins/index.js'
 import theme from './theme.json'
-import type {
-  LoaderOptions,
-  PageOpts,
-  ReadingTime,
-  StructurizedData
-} from './types'
-import { truthy } from './utils'
+import type { LoaderOptions, PageOpts, ReadingTime, StructurizedData } from './types.js'
+import { truthy } from './utils.js'
 
 globalThis.__nextra_temp_do_not_use = () => {
-  import('./__temp__')
+  import('./__temp__.js')
 }
 
 const require = createRequire(import.meta.url)
@@ -64,8 +59,7 @@ const DEFAULT_REHYPE_PRETTY_CODE_OPTIONS: RehypePrettyCodeOptions = {
   onVisitHighlightedWord(node: any) {
     node.properties.className = ['highlighted']
   },
-  filterMetaString: (meta: string) =>
-    meta.replace(CODE_BLOCK_FILENAME_REGEX, '')
+  filterMetaString: (meta: string) => meta.replace(CODE_BLOCK_FILENAME_REGEX, ''),
 }
 
 const cachedCompilerForFormat: Record<
@@ -73,8 +67,7 @@ const cachedCompilerForFormat: Record<
   Processor
 > = Object.create(null)
 
-type MdxOptions = LoaderOptions['mdxOptions'] &
-  Pick<ProcessorOptions, 'jsx' | 'outputFormat'>
+type MdxOptions = LoaderOptions['mdxOptions'] & Pick<ProcessorOptions, 'jsx' | 'outputFormat'>
 
 // @ts-expect-error -- Without bind is unable to use `remarkLinkRewrite` with `buildDynamicMDX`
 // because we already use `remarkLinkRewrite` function to remove .mdx? extensions
@@ -82,12 +75,7 @@ const clonedRemarkLinkRewrite = remarkLinkRewrite.bind(null)
 
 type CompileMdxOptions = Pick<
   LoaderOptions,
-  | 'staticImage'
-  | 'flexsearch'
-  | 'defaultShowCopyCode'
-  | 'readingTime'
-  | 'latex'
-  | 'codeHighlight'
+  'staticImage' | 'flexsearch' | 'defaultShowCopyCode' | 'readingTime' | 'latex' | 'codeHighlight'
 > & {
   mdxOptions?: MdxOptions
   route?: string
@@ -111,17 +99,14 @@ export async function compileMdx(
     mdxOptions,
     filePath = '',
     useCachedCompiler,
-    isPageImport = true
-  }: CompileMdxOptions = {}
+    isPageImport = true,
+  }: CompileMdxOptions = {},
 ) {
   // Extract frontMatter information if it exists
   const { data: frontMatter, content } = grayMatter(source)
 
   let searchIndexKey: string | null = null
-  if (
-    ERROR_ROUTES.has(route) ||
-    route === '/_app' /* remove this check in v3 */
-  ) {
+  if (ERROR_ROUTES.has(route) || route === '/_app' /* remove this check in v3 */) {
     /* skip */
   } else if (typeof flexsearch === 'object') {
     if (flexsearch.indexKey) {
@@ -142,19 +127,17 @@ export async function compileMdx(
     outputFormat = 'function-body',
     remarkPlugins,
     rehypePlugins,
-    rehypePrettyCodeOptions
+    rehypePrettyCodeOptions,
   }: MdxOptions = {
     ...mdxOptions,
     // You can override MDX options in the frontMatter too.
-    ...frontMatter.mdxOptions
+    ...frontMatter.mdxOptions,
   }
 
-  const format =
-    _format === 'detect' ? (filePath.endsWith('.mdx') ? 'mdx' : 'md') : _format
+  const format = _format === 'detect' ? (filePath.endsWith('.mdx') ? 'mdx' : 'md') : _format
 
   // https://github.com/shuding/nextra/issues/1303
-  const isFileOutsideCWD =
-    !isPageImport && path.relative(CWD, filePath).startsWith('..')
+  const isFileOutsideCWD = !isPageImport && path.relative(CWD, filePath).startsWith('..')
 
   const isRemoteContent = outputFormat === 'function-body'
 
@@ -165,9 +148,7 @@ export async function compileMdx(
   const processor = compiler()
 
   try {
-    const vFile = await processor.process(
-      filePath ? { value: content, path: filePath } : content
-    )
+    const vFile = await processor.process(filePath ? { value: content, path: filePath } : content)
 
     const { title, hasJsxInH1, readingTime, structurizedData } = vFile.data as {
       readingTime?: ReadingTime
@@ -184,7 +165,7 @@ export async function compileMdx(
       ...(readingTime && { readingTime }),
       ...(searchIndexKey !== null && { searchIndexKey, structurizedData }),
       ...(isRemoteContent && { headings: vFile.data.headings }),
-      frontMatter
+      frontMatter,
     }
   } catch (err) {
     console.error(`[nextra] Error compiling ${filePath}.`)
@@ -207,8 +188,8 @@ export async function compileMdx(
           {
             packageName: 'nextra/components',
             tabNamesProp: 'items',
-            storageKey: 'selectedPackageManager'
-          }
+            storageKey: 'selectedPackageManager',
+          },
         ] satisfies Pluggable,
         isRemoteContent && remarkRemoveImports,
         remarkGfm,
@@ -216,7 +197,7 @@ export async function compileMdx(
           ([
             remarkMdxDisableExplicitJsx,
             // Replace the <summary> and <details> with customized components
-            { whiteList: ['details', 'summary'] }
+            { whiteList: ['details', 'summary'] },
           ] satisfies Pluggable),
         remarkCustomHeadingId,
         [remarkHeadings, { isRemoteContent }] satisfies Pluggable,
@@ -232,9 +213,9 @@ export async function compileMdx(
           {
             pattern: MARKDOWN_URL_EXTENSION_REGEX,
             replace: '',
-            excludeExternalLinks: true
-          }
-        ] satisfies Pluggable
+            excludeExternalLinks: true,
+          },
+        ] satisfies Pluggable,
       ].filter(truthy),
       rehypePlugins: [
         ...(rehypePlugins || []),
@@ -242,7 +223,7 @@ export async function compileMdx(
           // To render <details /> and <summary /> correctly
           rehypeRaw,
           // fix Error: Cannot compile `mdxjsEsm` node for npm2yarn and mermaid
-          { passThrough: ['mdxjsEsm', 'mdxJsxFlowElement'] }
+          { passThrough: ['mdxjsEsm', 'mdxJsxFlowElement'] },
         ],
         [parseMeta, { defaultShowCopyCode }],
         // Should be before `rehypePrettyCode`
@@ -252,11 +233,11 @@ export async function compileMdx(
             rehypePrettyCode,
             {
               ...DEFAULT_REHYPE_PRETTY_CODE_OPTIONS,
-              ...rehypePrettyCodeOptions
-            }
+              ...rehypePrettyCodeOptions,
+            },
           ] as any),
-        attachMeta
-      ].filter(truthy)
+        attachMeta,
+      ].filter(truthy),
     })
   }
 }

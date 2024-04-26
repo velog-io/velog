@@ -2,35 +2,30 @@ import Slugger from 'github-slugger'
 import type { Parent, Root } from 'mdast'
 import type { Plugin } from 'unified'
 import { visit } from 'unist-util-visit'
-import { MARKDOWN_EXTENSION_REGEX } from '../constants'
-import type { Heading } from '../types'
-import type { HProperties } from './remark-custom-heading-id'
+import { MARKDOWN_EXTENSION_REGEX } from '../constants.js'
+import type { Heading } from '../types.js'
+import type { HProperties } from './remark-custom-heading-id.js'
 
 const getFlattenedValue = (node: Parent): string =>
   node.children
-    .map(child =>
-      'children' in child
-        ? getFlattenedValue(child)
-        : 'value' in child
-        ? child.value
-        : ''
+    .map((child) =>
+      'children' in child ? getFlattenedValue(child) : 'value' in child ? child.value : '',
     )
     .join('')
 
 const SKIP_FOR_PARENT_NAMES = new Set(['Tab', 'Tabs.Tab'])
 
-export const remarkHeadings: Plugin<
-  [{ exportName?: string; isRemoteContent?: boolean }],
-  Root
-> = ({ exportName = '__toc', isRemoteContent }) => {
+export const remarkHeadings: Plugin<[{ exportName?: string; isRemoteContent?: boolean }], Root> = ({
+  exportName = '__toc',
+  isRemoteContent,
+}) => {
   const headings: (Heading | string)[] = []
   let hasJsxInH1: boolean
   let title: string
 
   const slugger = new Slugger()
   return (tree, file, done) => {
-    const PartialComponentToHeadingsName: Record<string, string> =
-      Object.create(null)
+    const PartialComponentToHeadingsName: Record<string, string> = Object.create(null)
 
     visit(
       tree,
@@ -39,13 +34,13 @@ export const remarkHeadings: Plugin<
         // push partial component's __toc export name to headings list
         'mdxJsxFlowElement',
         // verify .md/.mdx exports and attach named __toc export
-        'mdxjsEsm'
+        'mdxjsEsm',
       ],
       (node, _index, parent) => {
         if (node.type === 'heading') {
           if (node.depth === 1) {
             const hasJsx = node.children.some(
-              (child: { type: string }) => child.type === 'mdxJsxTextElement'
+              (child: { type: string }) => child.type === 'mdxJsxTextElement',
             )
             if (hasJsx) {
               hasJsxInH1 = true
@@ -78,7 +73,7 @@ export const remarkHeadings: Plugin<
             if (!isMdxImport) continue
 
             const componentName = child.specifiers.find(
-              (o: any) => o.type === 'ImportDefaultSpecifier'
+              (o: any) => o.type === 'ImportDefaultSpecifier',
             )?.local.name
 
             if (!componentName) continue
@@ -89,18 +84,17 @@ export const remarkHeadings: Plugin<
             child.specifiers.push({
               type: 'ImportSpecifier',
               imported: { type: 'Identifier', name: exportName },
-              local: { type: 'Identifier', name: exportAsName }
+              local: { type: 'Identifier', name: exportAsName },
             })
           }
         } else {
           // If component name equals default export name from .md/.mdx import
-          const headingsName =
-            PartialComponentToHeadingsName[(node as any).name]
+          const headingsName = PartialComponentToHeadingsName[(node as any).name]
           if (headingsName) {
             headings.push(headingsName)
           }
         }
-      }
+      },
     )
 
     file.data.hasJsxInH1 = hasJsxInH1
@@ -113,11 +107,11 @@ export const remarkHeadings: Plugin<
       return
     }
 
-    const headingElements = headings.map(heading =>
+    const headingElements = headings.map((heading) =>
       typeof heading === 'string'
         ? {
             type: 'SpreadElement',
-            argument: { type: 'Identifier', name: heading }
+            argument: { type: 'Identifier', name: heading },
           }
         : {
             type: 'ObjectExpression',
@@ -125,9 +119,9 @@ export const remarkHeadings: Plugin<
               type: 'Property',
               kind: 'init',
               key: { type: 'Identifier', name: key },
-              value: { type: 'Literal', value }
-            }))
-          }
+              value: { type: 'Literal', value },
+            })),
+          },
     )
 
     tree.children.push({
@@ -145,14 +139,14 @@ export const remarkHeadings: Plugin<
                   {
                     type: 'VariableDeclarator',
                     id: { type: 'Identifier', name: exportName },
-                    init: { type: 'ArrayExpression', elements: headingElements }
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      }
+                    init: { type: 'ArrayExpression', elements: headingElements },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
     } as any)
 
     done()
