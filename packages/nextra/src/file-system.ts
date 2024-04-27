@@ -10,6 +10,7 @@ export const { existsSync } = fs
 export function findPagesDirectory(): string {
   const res = findPagesDir(CWD)
   return (
+    '/Users/jangsanghyeon/Desktop/nextra-sample/pages-2' ||
     res.pagesDir || // next v13
     (res as any).pages // next v12
   )

@@ -304,6 +304,7 @@ export function Sidebar({
   includePlaceholder,
 }: SideBarProps): ReactElement {
   const config = useConfig()
+
   const { menu, setMenu } = useMenu()
   const [focused, setFocused] = useState<null | string>(null)
   const [showSidebar, setSidebar] = useState(true)

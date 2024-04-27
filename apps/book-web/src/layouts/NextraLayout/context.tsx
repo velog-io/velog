@@ -1,112 +1,49 @@
-import { useRouter } from 'next/router'
-
-import { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-theme-docs'
 import React from 'react'
-
-export const pageOpts: PageOpts = {
-  frontMatter: {},
-  filePath: 'pages/index.mdx',
-  route: '/',
-  timestamp: 1712618681000,
-  pageMap: [
-    {
-      kind: 'MdxPage',
-      name: 'Balanced_client-driven_flexibility_6614ba2e52f87b67fc14427b',
-      route: '/Balanced_client-driven_flexibility_6614ba2e52f87b67fc14427b',
-    },
-    {
-      kind: 'Meta',
-      data: {
-        index: { title: 'Introduction' },
-        another: { title: 'Another Page' },
-        advanced: { title: 'Advanced (A Folder)' },
-        contact: {
-          title: 'Contact ↗',
-          type: 'page',
-          href: 'https://twitter.com/shuding_',
-          newWindow: true,
-        },
-        about: { title: 'About' },
-        'Balanced_client-driven_flexibility_6614ba2e52f87b67fc14427b': {
-          title: 'Balanced Client Driven Flexibility 6614ba2e52f87b67fc14427b',
-        },
-      },
-    },
-    { kind: 'MdxPage', name: 'about', route: '/about' },
-    {
-      kind: 'Folder',
-      name: 'advanced',
-      route: '/advanced',
-      children: [
-        {
-          kind: 'Folder',
-          name: ' hello',
-          route: '/advanced/ hello',
-          children: [
-            { kind: 'MdxPage', name: 'hi', route: '/advanced/ hello/hi' },
-            { kind: 'Meta', data: { hi: { title: 'Hi' } } },
-          ],
-        },
-        { kind: 'MdxPage', name: 'satori', route: '/advanced/satori' },
-        { kind: 'Meta', data: { satori: { title: 'Satori' } } },
-      ],
-    },
-    { kind: 'MdxPage', name: 'advanced', route: '/advanced' },
-    { kind: 'MdxPage', name: 'another', route: '/another' },
-    { kind: 'MdxPage', name: 'index', route: '/' },
-  ],
-  flexsearch: { codeblocks: true },
-  title: 'Welcome to Nextra',
-  headings: [],
-}
+import { useRouter } from 'next/router'
+import { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-theme-docs'
 
 export const pageMap: PageMapItem[] = [
-  {
-    kind: 'MdxPage',
-    name: 'Balanced_client-driven_flexibility_6614ba2e52f87b67fc14427b',
-    route: '/Balanced_client-driven_flexibility_6614ba2e52f87b67fc14427b',
-  },
   {
     kind: 'Meta',
     data: {
       index: { title: 'Introduction' },
       another: { title: 'Another Page' },
       advanced: { title: 'Advanced (A Folder)' },
-      contact: {
-        title: 'Contact ↗',
-        type: 'page',
-        href: 'https://twitter.com/shuding_',
-        newWindow: true,
-      },
       about: { title: 'About' },
-      'Balanced_client-driven_flexibility_6614ba2e52f87b67fc14427b': {
-        title: 'Balanced Client Driven Flexibility 6614ba2e52f87b67fc14427b',
-      },
     },
   },
-  { kind: 'MdxPage', name: 'about', route: '/about' },
   {
     kind: 'Folder',
     name: 'advanced',
-    route: '/advanced',
+    route: '/books/advanced',
     children: [
       {
         kind: 'Folder',
         name: ' hello',
-        route: '/advanced/ hello',
+        route: '/books/advanced/hello',
         children: [
-          { kind: 'MdxPage', name: 'hi', route: '/advanced/ hello/hi' },
+          { kind: 'MdxPage', name: 'hi', route: '/books/advanced/hello/hi' },
           { kind: 'Meta', data: { hi: { title: 'Hi' } } },
         ],
       },
-      { kind: 'MdxPage', name: 'satori', route: '/advanced/satori' },
+      { kind: 'MdxPage', name: 'satori', route: '/books/advanced/satori' },
       { kind: 'Meta', data: { satori: { title: 'Satori' } } },
     ],
   },
-  { kind: 'MdxPage', name: 'advanced', route: '/advanced' },
-  { kind: 'MdxPage', name: 'another', route: '/another' },
-  { kind: 'MdxPage', name: 'index', route: '/' },
+  { kind: 'MdxPage', name: 'advanced', route: '/books/advanced' },
+  { kind: 'MdxPage', name: 'another', route: '/books/another' },
+  { kind: 'MdxPage', name: 'index', route: '/books' },
 ]
+
+export const pageOpts: PageOpts = {
+  frontMatter: {},
+  filePath: 'pages/index.mdx',
+  route: '/',
+  timestamp: 1712618681000,
+  pageMap: pageMap,
+  title: 'Welcome to Nextra',
+  headings: [],
+}
 
 export const themeConfig: DocsThemeConfig = {
   logo: <span>Learning bunJS is Fun!</span>,

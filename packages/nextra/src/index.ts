@@ -1,5 +1,5 @@
 /* eslint-env node */
-import { NextConfig } from 'next'
+import type { NextConfig } from 'next'
 import {
   DEFAULT_CONFIG,
   DEFAULT_LOCALE,
@@ -11,6 +11,7 @@ import { pageMapCache } from './page-map.js'
 import { NextraConfig, ThemeConfig } from './types.js'
 import { NextraPlugin } from './webpack-plugins/index.js'
 export { default as NextraLayout } from './layout.js'
+export { useInternals } from './use-internals.js'
 
 const DEFAULT_EXTENSIONS = ['js', 'jsx', 'ts', 'tsx']
 

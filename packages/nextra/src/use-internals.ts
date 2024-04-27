@@ -2,6 +2,7 @@ import { useRouter } from 'next/router.js'
 import { useEffect, useState } from 'react'
 import { NEXTRA_INTERNAL } from './constants.js'
 import type { NextraInternalGlobal } from './types.js'
+import * as testContext from './test.contex.js'
 
 /**
  * This hook is used to access the internal state of Nextra, you should never
@@ -10,6 +11,7 @@ import type { NextraInternalGlobal } from './types.js'
 export function useInternals() {
   const __nextra_internal__ = (globalThis as NextraInternalGlobal)[NEXTRA_INTERNAL]
 
+  console.log('__nextra_internal__', __nextra_internal__)
   const { route } = useRouter()
   const rerender = useState({})[1]
 
@@ -20,16 +22,14 @@ export function useInternals() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       const trigger = () => rerender({})
-
       const listeners = __nextra_internal__.refreshListeners
-
       listeners[route] ||= []
       listeners[route].push(trigger)
-
       return () => {
         listeners[route].splice(listeners[route].indexOf(trigger), 1)
       }
     }, [route, __nextra_internal__.refreshListeners, rerender])
+    // }, [])
   }
 
   const context = __nextra_internal__.context[route]

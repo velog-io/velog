@@ -4,21 +4,11 @@
     "baseUrl": "./",
     "rootDir": "./",
     "typeRoots": ["node_modules/@types/", "./src/types/", "./node_modules/@packages/**/**/*.d.ts"],
-    "plugins": [
-      {
-        "name": "next"
-      },
-      {
-        "name": "typescript-plugin-css-modules"
-      }
-    ],
     "paths": {
       "@/*": ["./src/*"],
       "@/public/*": ["./public/*"]
     },
-    "strictNullChecks": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext"
+    "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",

@@ -149,7 +149,6 @@ const InnerLayout = ({
   const isRTL = localeConfig ? localeConfig.direction === 'rtl' : config.direction === 'rtl'
 
   const direction = isRTL ? 'rtl' : 'ltr'
-
   return (
     // This makes sure that selectors like `[dir=ltr] .nextra-container` work
     // before hydration as Tailwind expects the `dir` attribute to exist on the
@@ -233,9 +232,10 @@ export {
   NotFoundPage,
   ServerSideErrorPage,
   Navbar,
+  Sidebar,
   SkipNavContent,
   SkipNavLink,
   ThemeSwitch,
   LocaleSwitch,
 } from './components'
-export { PageMapItem, PageOpts, ThemeConfig } from './nextra/types'
+export { PageMapItem, PageOpts } from 'nextra'

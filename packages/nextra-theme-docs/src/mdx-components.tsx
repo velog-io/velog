@@ -36,7 +36,7 @@ function HeadingLink({
     return () => {
       observer?.disconnect()
       slugs.delete(heading)
-      setActiveAnchor(f => {
+      setActiveAnchor((f) => {
         const ret = { ...f }
         delete ret[id]
         return ret
@@ -57,8 +57,8 @@ function HeadingLink({
                 h3: 'nx-mt-8 nx-text-2xl',
                 h4: 'nx-mt-8 nx-text-xl',
                 h5: 'nx-mt-8 nx-text-lg',
-                h6: 'nx-mt-8 nx-text-base'
-              }[Tag]
+                h6: 'nx-mt-8 nx-text-base',
+              }[Tag],
             )
       }
       {...props}
@@ -101,7 +101,7 @@ const findSummary = (children: ReactNode) => {
       c = cloneElement(child, {
         ...child.props,
         children: result[1]?.length ? result[1] : undefined,
-        key: index
+        key: index,
       })
     }
     restChildren.push(c)
@@ -110,11 +110,7 @@ const findSummary = (children: ReactNode) => {
   return [summary, restChildren]
 }
 
-const Details = ({
-  children,
-  open,
-  ...props
-}: ComponentProps<'details'>): ReactElement => {
+const Details = ({ children, open, ...props }: ComponentProps<'details'>): ReactElement => {
   const [openState, setOpen] = useState(!!open)
   const [summary, restChildren] = findSummary(children)
 
@@ -149,12 +145,12 @@ const Summary = (props: ComponentProps<'summary'>): ReactElement => {
       className={cn(
         'nx-flex nx-items-center nx-cursor-pointer nx-list-none nx-p-1 nx-transition-colors hover:nx-bg-gray-100 dark:hover:nx-bg-neutral-800',
         "before:nx-mr-1 before:nx-inline-block before:nx-transition-transform before:nx-content-[''] dark:before:nx-invert before:nx-shrink-0",
-        'rtl:before:nx-rotate-180 [[data-expanded]>&]:before:nx-rotate-90'
+        'rtl:before:nx-rotate-180 [[data-expanded]>&]:before:nx-rotate-90',
       )}
       {...props}
-      onClick={e => {
+      onClick={(e) => {
         e.preventDefault()
-        setOpen(v => !v)
+        setOpen((v) => !v)
       }}
     />
   )
@@ -168,7 +164,7 @@ export const Link = ({ href = '', className, ...props }: AnchorProps) => (
     newWindow={EXTERNAL_HREF_REGEX.test(href)}
     className={cn(
       'nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]',
-      className
+      className,
     )}
     {...props}
   />
@@ -180,7 +176,7 @@ const A = ({ href = '', ...props }) => (
 
 export const getComponents = ({
   isRawLayout,
-  components
+  components,
 }: {
   isRawLayout?: boolean
   components?: DocsThemeConfig['components']
@@ -191,53 +187,44 @@ export const getComponents = ({
 
   const context = { index: 0 }
   return {
-    h1: props => (
+    h1: (props) => (
       <h1
         className="nx-mt-2 nx-text-4xl nx-font-bold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100"
         {...props}
       />
     ),
-    h2: props => <HeadingLink tag="h2" context={context} {...props} />,
-    h3: props => <HeadingLink tag="h3" context={context} {...props} />,
-    h4: props => <HeadingLink tag="h4" context={context} {...props} />,
-    h5: props => <HeadingLink tag="h5" context={context} {...props} />,
-    h6: props => <HeadingLink tag="h6" context={context} {...props} />,
-    ul: props => (
-      <ul
-        className="nx-mt-6 nx-list-disc first:nx-mt-0 ltr:nx-ml-6 rtl:nx-mr-6"
-        {...props}
-      />
+    h2: (props) => <HeadingLink tag="h2" context={context} {...props} />,
+    h3: (props) => <HeadingLink tag="h3" context={context} {...props} />,
+    h4: (props) => <HeadingLink tag="h4" context={context} {...props} />,
+    h5: (props) => <HeadingLink tag="h5" context={context} {...props} />,
+    h6: (props) => <HeadingLink tag="h6" context={context} {...props} />,
+    ul: (props) => (
+      <ul className="nx-mt-6 nx-list-disc first:nx-mt-0 ltr:nx-ml-6 rtl:nx-mr-6" {...props} />
     ),
-    ol: props => (
-      <ol
-        className="nx-mt-6 nx-list-decimal first:nx-mt-0 ltr:nx-ml-6 rtl:nx-mr-6"
-        {...props}
-      />
+    ol: (props) => (
+      <ol className="nx-mt-6 nx-list-decimal first:nx-mt-0 ltr:nx-ml-6 rtl:nx-mr-6" {...props} />
     ),
-    li: props => <li className="nx-my-2" {...props} />,
-    blockquote: props => (
+    li: (props) => <li className="nx-my-2" {...props} />,
+    blockquote: (props) => (
       <blockquote
         className={cn(
           'nx-mt-6 nx-border-gray-300 nx-italic nx-text-gray-700 dark:nx-border-gray-700 dark:nx-text-gray-400',
-          'first:nx-mt-0 ltr:nx-border-l-2 ltr:nx-pl-6 rtl:nx-border-r-2 rtl:nx-pr-6'
+          'first:nx-mt-0 ltr:nx-border-l-2 ltr:nx-pl-6 rtl:nx-border-r-2 rtl:nx-pr-6',
         )}
         {...props}
       />
     ),
-    hr: props => (
+    hr: (props) => (
       <hr
         className="nx-my-8 nx-border-neutral-200/70 contrast-more:nx-border-neutral-400 dark:nx-border-primary-100/10 contrast-more:dark:nx-border-neutral-400"
         {...props}
       />
     ),
     a: Link,
-    table: props => (
-      <Table
-        className="nextra-scrollbar nx-mt-6 nx-p-0 first:nx-mt-0"
-        {...props}
-      />
+    table: (props) => (
+      <Table className="nextra-scrollbar nx-mt-6 nx-p-0 first:nx-mt-0" {...props} />
     ),
-    p: props => <p className="nx-mt-6 nx-leading-7 first:nx-mt-0" {...props} />,
+    p: (props) => <p className="nx-mt-6 nx-leading-7 first:nx-mt-0" {...props} />,
     tr: Tr,
     th: Th,
     td: Td,
@@ -245,6 +232,6 @@ export const getComponents = ({
     summary: Summary,
     pre: Pre,
     code: Code,
-    ...components
+    ...components,
   }
 }

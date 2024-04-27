@@ -266,16 +266,15 @@ export function Flexsearch({ className }: { className?: string }): ReactElement 
     doSearch(value)
   }
 
-  return (
-    <Search
-      loading={loading}
-      error={error}
-      value={search}
-      onChange={handleChange}
-      onActive={preload}
-      className={className}
-      overlayClassName="nx-w-screen nx-min-h-[100px] nx-max-w-[min(calc(100vw-2rem),calc(100%+20rem))]"
-      results={results}
-    />
-  )
+  return <></>
+  // <Search
+  //   loading={loading}
+  //   error={error}
+  //   value={search}
+  //   onChange={handleChange}
+  //   onActive={preload}
+  //   className={className}
+  //   overlayClassName="nx-w-screen nx-min-h-[100px] nx-max-w-[min(calc(100vw-2rem),calc(100%+20rem))]"
+  //   results={results}
+  // />
 }
