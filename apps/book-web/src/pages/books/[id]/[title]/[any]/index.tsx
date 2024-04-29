@@ -1,8 +1,7 @@
-import { serialize } from 'next-mdx-remote/serialize'
-import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import NextraLayout from '@/layouts/NextraLayout'
-
-import { GetStaticProps } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
+import { MDXRemoteSerializeResult } from 'next-mdx-remote'
+import { serialize } from 'next-mdx-remote/serialize'
 
 type Props = {
   mdxSource: MDXRemoteSerializeResult
@@ -13,6 +12,13 @@ const Home = ({ mdxSource }: Props) => {
 }
 
 export default Home
+
+export const getStaticPaths = (async () => {
+  return {
+    paths: [],
+    fallback: 'blocking', // false or "blocking"
+  }
+}) satisfies GetStaticPaths
 
 export const getStaticProps = (async () => {
   const mdxText = `
@@ -105,7 +111,6 @@ del proyecto.
 Sientase libre de unirse a
 [discusiones en GitHub](https://github.com/vercel/swr/discussions)!
   `
-
   const mdxSource = await serialize(mdxText)
   return { props: { mdxSource } }
 }) satisfies GetStaticProps<{

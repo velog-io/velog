@@ -52,7 +52,7 @@ recuperación (revalidación), y finalmente entrege los datos actualizados.
 
 ## Resumen
 
-\`\`\`jsx {2-3}
+\`\`\`jsx
 import useSWR from 'swr'
 
 function Profile() {
@@ -117,7 +117,9 @@ del proyecto.
 Sientase libre de unirse a
 [discusiones en GitHub](https://github.com/vercel/swr/discussions)!
   `
+  console.log('mdxSource', mdxText)
   const mdxSource = await serialize(mdxText)
+
   return { props: { mdxSource } }
 }) satisfies GetStaticProps<{
   mdxSource: MDXRemoteSerializeResult

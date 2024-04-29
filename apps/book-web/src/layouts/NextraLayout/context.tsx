@@ -12,34 +12,34 @@ export const pageMap: PageMapItem[] = [
       about: { title: 'About' },
     },
   },
+  { kind: 'MdxPage', name: 'advanced', route: '/books/6625a5de37b7152cdd4969ed/advanced' },
   {
     kind: 'Folder',
     name: 'advanced',
     route: '/books/6625a5de37b7152cdd4969ed/advanced',
     children: [
       { kind: 'Meta', data: { satori: { title: 'Satori' }, hello: { title: 'hello' } } },
+      { kind: 'MdxPage', name: 'hello', route: '/books/6625a5de37b7152cdd4969ed/advanced/hello' },
       {
         kind: 'Folder',
         name: 'hello',
-        route: '/books/6625a5de37b7152cdd4969ed/hello',
+        route: '/books/6625a5de37b7152cdd4969ed/advanced/hello',
         children: [
           { kind: 'Meta', data: { hi: { title: 'Hi' } } },
           {
             kind: 'MdxPage',
             name: 'hi',
-            route: '/books/6625a5de37b7152cdd4969ed/hi',
+            route: '/books/6625a5de37b7152cdd4969ed/advanced/hello/hi',
           },
         ],
       },
       {
         kind: 'MdxPage',
         name: 'satori',
-        route: '/books/6625a5de37b7152cdd4969ed/satori',
+        route: '/books/6625a5de37b7152cdd4969ed/advanced/satori',
       },
-      { kind: 'MdxPage', name: 'hello', route: '/books/6625a5de37b7152cdd4969ed/hello' },
     ],
   },
-  { kind: 'MdxPage', name: 'advanced', route: '/books/6625a5de37b7152cdd4969ed/advanced' },
   { kind: 'MdxPage', name: 'another', route: '/books/6625a5de37b7152cdd4969ed/another' },
   { kind: 'MdxPage', name: 'index', route: '/books/6625a5de37b7152cdd4969ed' },
 ]
@@ -55,6 +55,9 @@ export const pageOpts: PageOpts = {
 }
 
 export const themeConfig: DocsThemeConfig = {
+  toc:{
+    
+  },
   logo: <span>Learning bunJS is Fun!</span>,
   editLink: {
     text: '',
@@ -74,7 +77,6 @@ export const themeConfig: DocsThemeConfig = {
       return <>{title}</>
     },
     defaultMenuCollapseLevel: 1,
-    toggleButton: true,
   },
   useNextSeoProps() {
     const { asPath } = useRouter()
