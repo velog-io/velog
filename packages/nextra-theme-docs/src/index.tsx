@@ -1,4 +1,4 @@
-import type { NextraThemeLayoutProps, PageOpts } from 'nextra'
+import type { NextraThemeLayoutProps, PageOpts, LoaderOptions } from 'nextra'
 import type { ReactElement, ReactNode } from 'react'
 import { useMemo } from 'react'
 import 'focus-visible'
@@ -14,7 +14,8 @@ import { ActiveAnchorProvider, ConfigProvider, useConfig } from './contexts'
 import { getComponents } from './mdx-components'
 import { renderComponent } from './utils'
 import { MDXRemote, type MDXRemoteSerializeResult } from 'next-mdx-remote'
-
+import type { ProcessorOptions } from '@mdx-js/mdx'
+import theme from './theme.json'
 interface BodyProps {
   themeContext: PageTheme
   breadcrumb: ReactNode
@@ -46,12 +47,12 @@ const Body = ({
 
   const gitTimestampEl =
     // Because a user's time zone may be different from the server page
-    date ? (
+    mounted && date ? (
       <div className="nx-mt-12 nx-mb-8 nx-block nx-text-xs nx-text-gray-500 ltr:nx-text-right rtl:nx-text-left dark:nx-text-gray-400">
         {renderComponent(config.gitTimestamp, { timestamp: date })}
       </div>
     ) : (
-      <div className="nx-mt-16">nothing???</div>
+      <div className="nx-mt-16" />
     )
 
   const content = (
@@ -164,7 +165,9 @@ const InnerLayout = ({
             }
           >
             <MDXRemote
-              {...mdxSource}
+              compiledSource={mdxSource.compiledSource}
+              frontmatter={mdxSource.frontmatter}
+              scope={mdxSource.scope}
               components={getComponents({
                 isRawLayout: themeContext.layout === 'raw',
                 components: config.components,
@@ -178,11 +181,15 @@ const InnerLayout = ({
   )
 }
 
+type NextraDocLayoutProps = NextraThemeLayoutProps & {
+  mdxSource: MDXRemoteSerializeResult
+}
+
 export default function NextraDocLayout({
   children,
   mdxSource,
   ...context
-}: NextraThemeLayoutProps): ReactElement {
+}: NextraDocLayoutProps): ReactElement {
   return (
     <ConfigProvider value={context}>
       <InnerLayout {...context.pageOpts} mdxSource={mdxSource}>
@@ -192,13 +199,13 @@ export default function NextraDocLayout({
   )
 }
 
-export { useConfig, PartialDocsThemeConfig as DocsThemeConfig }
+export { useConfig, type PartialDocsThemeConfig as DocsThemeConfig, theme }
 export { useMDXComponents } from 'nextra/mdx'
 export { Callout, Steps, Tabs, Tab, Cards, Card, FileTree } from 'nextra/components'
 export { useTheme } from 'next-themes'
 export { Link } from './mdx-components'
-export { Item, PageItem } from 'nextra/normalize-pages'
-export { Heading } from 'nextra'
+export type { Item, PageItem } from 'nextra/normalize-pages'
+export type { Heading, PageMapItem, PageOpts } from 'nextra'
 export {
   Bleed,
   Collapse,
@@ -211,4 +218,30 @@ export {
   ThemeSwitch,
   LocaleSwitch,
 } from './components'
-export { PageMapItem, PageOpts } from 'nextra'
+
+// for compiler
+export type MdxOptions = LoaderOptions['mdxOptions'] &
+  Pick<ProcessorOptions, 'jsx' | 'outputFormat'>
+export type MdxCompilerOptions = Pick<
+  LoaderOptions,
+  'staticImage' | 'flexsearch' | 'defaultShowCopyCode' | 'readingTime' | 'latex' | 'codeHighlight'
+> & {
+  mdxOptions?: MdxOptions
+  route?: string
+  locale?: string
+  filePath?: string
+  useCachedCompiler?: boolean
+  isPageImport?: boolean
+}
+export {
+  attachMeta,
+  parseMeta,
+  remarkCustomHeadingId,
+  remarkHeadings,
+  remarkLinkRewrite,
+  remarkMdxDisableExplicitJsx,
+  remarkRemoveImports,
+  remarkReplaceImports,
+  remarkStaticImage,
+  remarkStructurize,
+} from 'nextra/mdx-plugins'

@@ -3,6 +3,7 @@ import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import NextraLayout from '@/layouts/NextraLayout'
 
 import { GetStaticProps } from 'next'
+import { mdxCompiler } from '@/lib/compileMdx'
 
 type Props = {
   mdxSource: MDXRemoteSerializeResult
@@ -107,7 +108,10 @@ Sientase libre de unirse a
   `
 
   const mdxSource = await serialize(mdxText)
-  return { props: { mdxSource } }
+
+  await mdxCompiler(mdxText)
+
+  return { props: { mdxSource: mdxSource } }
 }) satisfies GetStaticProps<{
-  mdxSource: MDXRemoteSerializeResult
+  mdxSource?: MDXRemoteSerializeResult
 }>
