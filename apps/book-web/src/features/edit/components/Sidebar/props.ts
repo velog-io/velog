@@ -1,5 +1,4 @@
-import { Item, PageItem } from '@packages/nextra/dist/normalize-pages'
-import { Heading } from '@packages/nextra/dist/types'
+import type { PageItem, Item, Heading } from '@packages/nextra-theme-docs'
 
 export const docsDirectories: PageItem[] = [
   {
