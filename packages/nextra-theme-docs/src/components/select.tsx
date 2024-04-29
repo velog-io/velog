@@ -19,13 +19,7 @@ interface MenuProps {
   className?: string
 }
 
-export function Select({
-  options,
-  selected,
-  onChange,
-  title,
-  className
-}: MenuProps): ReactElement {
+export function Select({ options, selected, onChange, title, className }: MenuProps): ReactElement {
   const [trigger, container] = usePopper({
     strategy: 'fixed',
     placement: 'top-start',
@@ -38,9 +32,9 @@ export function Select({
           state.styles.popper.minWidth = `${state.rects.reference.width}px`
         },
         phase: 'beforeWrite',
-        requires: ['computeStyles']
-      }
-    ]
+        requires: ['computeStyles'],
+      },
+    ],
   })
 
   return (
@@ -54,10 +48,10 @@ export function Select({
             open
               ? 'nx-bg-gray-200 nx-text-gray-900 dark:nx-bg-primary-100/10 dark:nx-text-gray-50'
               : 'hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
-            className
+            className,
           )}
         >
-          {selected.name}
+          <span>{selected.name}</span>
           <Portal>
             <Transition
               ref={container}
@@ -68,7 +62,7 @@ export function Select({
               leaveFrom="nx-opacity-100"
               leaveTo="nx-opacity-0"
             >
-              {options.map(option => (
+              {options.map((option) => (
                 <Listbox.Option
                   key={option.key}
                   value={option}
@@ -78,11 +72,11 @@ export function Select({
                         ? 'nx-bg-primary-50 nx-text-primary-600 dark:nx-bg-primary-500/10'
                         : 'nx-text-gray-800 dark:nx-text-gray-100',
                       'nx-relative nx-cursor-pointer nx-whitespace-nowrap nx-py-1.5',
-                      'nx-transition-colors ltr:nx-pl-3 ltr:nx-pr-9 rtl:nx-pr-3 rtl:nx-pl-9'
+                      'nx-transition-colors ltr:nx-pl-3 ltr:nx-pr-9 rtl:nx-pr-3 rtl:nx-pl-9',
                     )
                   }
                 >
-                  {option.name}
+                  <span>{option.name}</span>
                   {option.key === selected.key && (
                     <span className="nx-absolute nx-inset-y-0 nx-flex nx-items-center ltr:nx-right-3 rtl:nx-left-3">
                       <CheckIcon />

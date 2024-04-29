@@ -1,6 +1,13 @@
 import '@packages/nextra-theme-docs/style.css'
+
 import type { AppProps } from 'next/app'
 
-export default function App({ Component, pageProps }: AppProps) {
+type Props = {
+  mdxSource: string
+} & AppProps
+
+const App = ({ Component, pageProps }: Props) => {
   return <Component {...pageProps} />
 }
+
+export default App

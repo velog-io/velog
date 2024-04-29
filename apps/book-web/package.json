@@ -18,6 +18,7 @@
     "@packages/nextra-theme-docs": "workspace:*",
     "@types/mdx": "^2.0.13",
     "next": "14.2.3",
+    "next-mdx-remote": "4.2.1",
     "nextra": "^2.13.4",
     "nextra-theme-docs": "^2.13.4",
     "react": "^18",

@@ -1,8 +1,7 @@
-import { serialize } from 'next-mdx-remote/serialize'
-import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import NextraLayout from '@/layouts/NextraLayout'
-
-import { GetStaticProps } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
+import { MDXRemoteSerializeResult } from 'next-mdx-remote'
+import { serialize } from 'next-mdx-remote/serialize'
 
 type Props = {
   mdxSource: MDXRemoteSerializeResult
@@ -13,6 +12,19 @@ const Home = ({ mdxSource }: Props) => {
 }
 
 export default Home
+
+export const getStaticPaths = (async () => {
+  return {
+    paths: [
+      {
+        params: {
+          id: '66272fed0ed78e04d5f6c86a',
+        },
+      }, // See the "paths" section below
+    ],
+    fallback: 'blocking', // false or "blocking"
+  }
+}) satisfies GetStaticPaths
 
 export const getStaticProps = (async () => {
   const mdxText = `

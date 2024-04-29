@@ -1,10 +1,7 @@
 import type { VFile } from '@mdx-js/mdx/lib/compile'
 import prettier from 'prettier'
 
-export async function clean(
-  content: VFile | string,
-  minify = true
-): Promise<string> {
+export async function clean(content: VFile | string, minify = true): Promise<string> {
   if (typeof content !== 'string') {
     content = String(content)
   }
@@ -20,6 +17,6 @@ export async function clean(
     trailingComma: 'none',
     singleQuote: true,
     printWidth: 120,
-    arrowParens: 'avoid'
+    arrowParens: 'avoid',
   })
 }

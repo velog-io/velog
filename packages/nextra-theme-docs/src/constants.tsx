@@ -5,8 +5,7 @@ import type { Item } from 'nextra/normalize-pages'
 import type { FC, ReactNode } from 'react'
 import { isValidElement } from 'react'
 import { z } from 'zod'
-import { Anchor, Flexsearch, Footer, Navbar, TOC } from './components'
-import { MatchSorterSearch } from './components/match-sorter-search'
+import { Anchor, Footer, Navbar, TOC } from './components'
 import type { NavBarProps } from './components/navbar'
 import { themeOptionsSchema, ThemeSwitch } from './components/theme-switch'
 import type { TOCProps } from './components/toc'
@@ -218,20 +217,6 @@ export const DEFAULT_THEME: DocsThemeConfig = {
     component: Footer,
     text: `MIT ${new Date().getFullYear()} © Nextra.`,
   },
-  gitTimestamp: function GitTimestamp({ timestamp }) {
-    return (
-      <>
-        Last updated on{' '}
-        <time dateTime={timestamp.toISOString()}>
-          {timestamp.toLocaleDateString(DEFAULT_LOCALE, {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })}
-        </time>
-      </>
-    )
-  },
   head: (
     <>
       <meta name="msapplication-TileColor" content="#fff" />
@@ -283,16 +268,16 @@ export const DEFAULT_THEME: DocsThemeConfig = {
     ),
   },
   search: {
-    component: function Search({ className, directories }) {
-      const config = useConfig()
-      return config.flexsearch ? (
-        // <Flexsearch className={className} />
-        <></>
-      ) : (
-        // <MatchSorterSearch className={className} directories={directories} />
-        <></>
-      )
-    },
+    // component: function Search({ className, directories }) {
+    //   const config = useConfig()
+    //   return config.flexsearch ? (
+    //     <Flexsearch className={className} />
+    //     <></>
+    //   ) : (
+    //     <MatchSorterSearch className={className} directories={directories} />
+    //     <></>
+    //   )
+    // },
     emptyResult: (
       <span className="nx-block nx-select-none nx-p-8 nx-text-center nx-text-sm nx-text-gray-400">
         No results found.

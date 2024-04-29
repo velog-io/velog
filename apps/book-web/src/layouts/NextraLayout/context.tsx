@@ -15,24 +15,33 @@ export const pageMap: PageMapItem[] = [
   {
     kind: 'Folder',
     name: 'advanced',
-    route: '/books/advanced',
+    route: '/books/6625a5de37b7152cdd4969ed/advanced',
     children: [
+      { kind: 'Meta', data: { satori: { title: 'Satori' }, hello: { title: 'hello' } } },
       {
         kind: 'Folder',
-        name: ' hello',
-        route: '/books/advanced/hello',
+        name: 'hello',
+        route: '/books/6625a5de37b7152cdd4969ed/hello',
         children: [
-          { kind: 'MdxPage', name: 'hi', route: '/books/advanced/hello/hi' },
           { kind: 'Meta', data: { hi: { title: 'Hi' } } },
+          {
+            kind: 'MdxPage',
+            name: 'hi',
+            route: '/books/6625a5de37b7152cdd4969ed/hi',
+          },
         ],
       },
-      { kind: 'MdxPage', name: 'satori', route: '/books/advanced/satori' },
-      { kind: 'Meta', data: { satori: { title: 'Satori' } } },
+      {
+        kind: 'MdxPage',
+        name: 'satori',
+        route: '/books/6625a5de37b7152cdd4969ed/satori',
+      },
+      { kind: 'MdxPage', name: 'hello', route: '/books/6625a5de37b7152cdd4969ed/hello' },
     ],
   },
-  { kind: 'MdxPage', name: 'advanced', route: '/books/advanced' },
-  { kind: 'MdxPage', name: 'another', route: '/books/another' },
-  { kind: 'MdxPage', name: 'index', route: '/books' },
+  { kind: 'MdxPage', name: 'advanced', route: '/books/6625a5de37b7152cdd4969ed/advanced' },
+  { kind: 'MdxPage', name: 'another', route: '/books/6625a5de37b7152cdd4969ed/another' },
+  { kind: 'MdxPage', name: 'index', route: '/books/6625a5de37b7152cdd4969ed' },
 ]
 
 export const pageOpts: PageOpts = {
