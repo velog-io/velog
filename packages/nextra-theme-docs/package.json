@@ -52,6 +52,7 @@
     "gray-matter": "4.0.3",
     "intersection-observer": "^0.12.2",
     "match-sorter": "^6.3.1",
+    "@theguild/remark-mermaid": "^0.0.5",
     "next-mdx-remote": "4.2.1",
     "next-seo": "^6.0.0",
     "next-themes": "^0.2.1",

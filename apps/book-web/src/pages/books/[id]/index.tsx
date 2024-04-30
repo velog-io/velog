@@ -3,8 +3,8 @@ import { mdxCompiler, MdxCompilerResult } from '@/lib/mdx/compileMdx'
 import { GetStaticPaths, GetStaticProps } from 'next'
 
 type Props = {
-  mdxSource: MdxCompilerResult
-  body: string
+  mdxSource?: MdxCompilerResult
+  body?: string
 }
 
 const Home = ({ mdxSource, body }: Props) => {
@@ -26,7 +26,7 @@ export const getStaticPaths = (async () => {
   }
 }) satisfies GetStaticPaths
 
-export const getStaticProps = (async () => {
+export const getStaticProps = async () => {
   const mdxText = `
 
 <Callout>  Upgrade to the latest version (≥ 1.0.0) to experience this customization.</Callout>
@@ -122,10 +122,7 @@ Sientase libre de unirse a
 [discusiones en GitHub](https://github.com/vercel/swr/discussions)!
   `
 
-  const mdxSource = await mdxCompiler(mdxText)
+  // const mdxSource = await mdxCompiler(mdxText)
 
-  return { props: { mdxSource, body: mdxText } }
-}) satisfies GetStaticProps<{
-  mdxSource: MdxCompilerResult
-  body: string
-}>
+  return { props: { mdxSource: undefined } }
+}

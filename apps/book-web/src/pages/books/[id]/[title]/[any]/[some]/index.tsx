@@ -1,7 +1,6 @@
 import NextraLayout from '@/layouts/NextraLayout'
 import { mdxCompiler, MdxCompilerResult } from '@/lib/mdx/compileMdx'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import type { MDXRemoteSerializeResult } from 'next-mdx-remote'
 
 type Props = {
   mdxSource: MdxCompilerResult
@@ -126,9 +125,9 @@ Sientase libre de unirse a
 [discusiones en GitHub](https://github.com/vercel/swr/discussions)!
   `
 
-  const mdxSource = await mdxCompiler(mdxText)
+  // const mdxSource = await mdxCompiler(mdxText)
 
-  return { props: { mdxSource } }
+  return { props: { mdxSource: undefined } }
 }) satisfies GetStaticProps<{
-  mdxSource: MDXRemoteSerializeResult
+  mdxSource?: MdxCompilerResult
 }>

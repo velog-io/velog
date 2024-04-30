@@ -3,6 +3,7 @@ import grayMatter from 'gray-matter'
 import { createProcessor } from '@mdx-js/mdx'
 import type { Processor } from '@mdx-js/mdx/lib/core'
 import { remarkNpm2Yarn } from '@theguild/remark-npm2yarn'
+import { remarkMermaid } from '@theguild/remark-mermaid'
 import type { Pluggable } from 'unified'
 import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
 // import rehypeRaw from 'rehype-raw'
@@ -24,6 +25,9 @@ import {
   theme,
 } from '@packages/nextra-theme-docs'
 import { truthy } from './utils'
+import { loadWasm } from '@shikijs/core'
+
+// await loadWasm(import('shiki/onig.wasm'))
 
 const clonedRemarkLinkRewrite = remarkLinkRewrite.bind(null as any)
 
@@ -91,26 +95,27 @@ export const mdxCompiler = async (
   try {
     const processor = compiler()
 
-    const vFile = await processor.process(content)
+    // const vFile = await processor.process(content)
 
-    const result = String(vFile).replaceAll('__esModule', '_\\_esModule')
+    // const result = String(vFile).replaceAll('__esModule', '_\\_esModule')
 
-    const { title, hasJsxInH1, readingTime, headings } = vFile.data as {
-      readingTime?: ReadingTime
-      title?: string
-      hasJsxInH1?: boolean
-      headings: Headings
-    }
+    // const { title, hasJsxInH1, readingTime, headings } = vFile.data as {
+    //   readingTime?: ReadingTime
+    //   title?: string
+    //   hasJsxInH1?: boolean
+    //   headings: Headings
+    // }
 
     return {
-      compiledSource: result,
-      ...(title && { title }),
-      ...(hasJsxInH1 && { hasJsxInH1 }),
-      ...(readingTime && { readingTime }),
-      ...(headings && { headings: vFile.data.headings as Headings }),
+      compiledSource: '',
+      // ...(title && { title }),
+      // ...(hasJsxInH1 && { hasJsxInH1 }),
+      // ...(readingTime && { readingTime }),
+      // ...(headings && { headings: vFile.data.headings as Headings }),
       frontmatter,
     }
   } catch (error) {
+    console.error(error)
     throw error
   }
 
@@ -121,7 +126,7 @@ export const mdxCompiler = async (
       providerImportSource: 'nextra/mdx',
       remarkPlugins: [
         ...(remarkPlugins || []),
-        // should be before remarkRemoveImports because contains `import { Mermaid } from ...`
+        // remarkMermaid, // should be before remarkRemoveImports because contains `import { Mermaid } from ...`
         [
           remarkNpm2Yarn, // should be before remarkRemoveImports because contains `import { Tabs as $Tabs, Tab as $Tab } from ...`
           {

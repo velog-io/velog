@@ -124,9 +124,9 @@ Sientase libre de unirse a
 [discusiones en GitHub](https://github.com/vercel/swr/discussions)!
   `
 
-  const mdxSource = await mdxCompiler(mdxText)
+  // const mdxSource = await mdxCompiler(mdxText)
 
-  return { props: { mdxSource } }
+  return { props: { mdxSource: undefined } }
 }) satisfies GetStaticProps<{
-  mdxSource: MdxCompilerResult
+  mdxSource?: MdxCompilerResult
 }>
