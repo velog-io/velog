@@ -35,19 +35,20 @@
   },
   "peerDependencies": {
     "next": ">=9.5.3",
-    "nextra": "2.13.4",
     "react": ">=16.13.1",
     "react-dom": ">=16.13.1"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@mdx-js/mdx": "2.3.0",
+    "@mdx-js/react": "2.3.0",
     "@popperjs/core": "^2.11.8",
     "clsx": "^2.0.0",
     "escape-string-regexp": "^5.0.0",
     "flexsearch": "^0.7.31",
     "focus-visible": "^5.2.0",
     "git-url-parse": "^13.1.0",
+    "github-slugger": "^2.0.0",
     "gray-matter": "4.0.3",
     "intersection-observer": "^0.12.2",
     "match-sorter": "^6.3.1",
@@ -58,6 +59,8 @@
     "scroll-into-view-if-needed": "^3.1.0",
     "slash": "3.0.0",
     "title": "3.5.3",
+    "unist-util-remove": "^4.0.0",
+    "unist-util-visit": "^5.0.0",
     "zod": "^3.22.3"
   },
   "devDependencies": {
@@ -69,12 +72,12 @@
     "@types/mdast": "3.0.12",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
+    "@types/title": "^3.4.3",
     "@vitejs/plugin-react": "^3.0.1",
     "concurrently": "^8.0.0",
     "eslint": "^9.0.0",
     "jsdom": "^23.0.0",
     "next": "^13.5.6",
-    "nextra": "2.13.4",
     "postcss": "^8.4.31",
     "postcss-cli": "^10.1.0",
     "postcss-import": "^15.1.0",
@@ -83,6 +86,7 @@
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.3.3",
     "tsup": "7.2.0",
+    "unified": "^10.1.2",
     "vitest": "^0.34.0"
   },
   "sideEffects": [

@@ -1,4 +1,4 @@
-import { useMounted } from 'nextra/hooks'
+import { useMounted } from '../nextra/hooks'
 import type { ReactElement } from 'react'
 import { useConfig } from '../contexts'
 import { getGitIssueUrl, renderComponent } from '../utils'

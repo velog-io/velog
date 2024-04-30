@@ -1,9 +1,10 @@
-import cn from 'clsx'
-import type { Heading } from 'nextra'
-import { useFSRoute, useMounted } from 'nextra/hooks'
-import { ArrowRightIcon, ExpandIcon } from 'nextra/icons'
-import type { Item, MenuItem, PageItem } from 'nextra/normalize-pages'
+import type { Heading, PageMapItem } from '../nextra/types'
+import type { Item, MenuItem, PageItem } from '../nextra/normalize-pages'
 import type { ReactElement } from 'react'
+
+import cn from 'clsx'
+import { useFSRoute, useMounted } from '../nextra/hooks'
+import { ArrowRightIcon, ExpandIcon } from '../nextra/icons'
 import { createContext, memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { useActiveAnchor, useConfig, useMenu } from '../contexts'
@@ -51,7 +52,7 @@ const classes = {
 }
 
 type FolderProps = {
-  item: PageItem | MenuItem | Item
+  item: PageMapItem | MenuItem | Item | any
   anchors: Heading[]
 }
 

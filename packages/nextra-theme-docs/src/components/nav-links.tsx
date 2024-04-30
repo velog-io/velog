@@ -1,6 +1,6 @@
 import cn from 'clsx'
-import { ArrowRightIcon } from 'nextra/icons'
-import type { Item } from 'nextra/normalize-pages'
+import { ArrowRightIcon } from '../nextra/icons'
+import type { Item } from '../nextra/normalize-pages'
 import type { ReactElement } from 'react'
 import { useConfig } from '../contexts'
 import type { DocsThemeConfig } from '../index'
@@ -13,15 +13,12 @@ interface NavLinkProps {
 
 const classes = {
   link: cn(
-    'nx-flex nx-max-w-[50%] nx-items-center nx-gap-1 nx-py-4 nx-text-base nx-font-medium nx-text-gray-600 nx-transition-colors [word-break:break-word] hover:nx-text-primary-600 dark:nx-text-gray-300 md:nx-text-lg'
+    'nx-flex nx-max-w-[50%] nx-items-center nx-gap-1 nx-py-4 nx-text-base nx-font-medium nx-text-gray-600 nx-transition-colors [word-break:break-word] hover:nx-text-primary-600 dark:nx-text-gray-300 md:nx-text-lg',
   ),
-  icon: cn('nx-inline nx-h-5 nx-shrink-0')
+  icon: cn('nx-inline nx-h-5 nx-shrink-0'),
 }
 
-export const NavLinks = ({
-  flatDirectories,
-  currentIndex
-}: NavLinkProps): ReactElement | null => {
+export const NavLinks = ({ flatDirectories, currentIndex }: NavLinkProps): ReactElement | null => {
   const config = useConfig()
   const nav = config.navigation
   const navigation: Exclude<DocsThemeConfig['navigation'], boolean> =
@@ -39,7 +36,7 @@ export const NavLinks = ({
       className={cn(
         'nx-mb-8 nx-flex nx-items-center nx-border-t nx-pt-8 dark:nx-border-neutral-800',
         'contrast-more:nx-border-neutral-400 dark:contrast-more:nx-border-neutral-400',
-        'print:nx-hidden'
+        'print:nx-hidden',
       )}
     >
       {prev && (
@@ -58,7 +55,7 @@ export const NavLinks = ({
           title={next.title}
           className={cn(
             classes.link,
-            'ltr:nx-ml-auto ltr:nx-pl-4 ltr:nx-text-right rtl:nx-mr-auto rtl:nx-pr-4 rtl:nx-text-left'
+            'ltr:nx-ml-auto ltr:nx-pl-4 ltr:nx-text-right rtl:nx-mr-auto rtl:nx-pr-4 rtl:nx-text-left',
           )}
         >
           {next.title}

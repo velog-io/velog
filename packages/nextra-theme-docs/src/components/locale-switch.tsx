@@ -1,5 +1,5 @@
 import { addBasePath } from 'next/dist/client/add-base-path'
-import { GlobeIcon } from 'nextra/icons'
+import { GlobeIcon } from '../nextra/icons'
 import type { ReactElement } from 'react'
 import { useConfig } from '../contexts'
 import { Select } from './select'

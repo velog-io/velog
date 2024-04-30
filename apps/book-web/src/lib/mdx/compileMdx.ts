@@ -2,7 +2,6 @@ import type { MdxCompilerOptions, MdxOptions } from '@packages/nextra-theme-docs
 import grayMatter from 'gray-matter'
 import { createProcessor } from '@mdx-js/mdx'
 import type { Processor } from '@mdx-js/mdx/lib/core'
-import { remarkMermaid } from '@theguild/remark-mermaid'
 import { remarkNpm2Yarn } from '@theguild/remark-npm2yarn'
 import type { Pluggable } from 'unified'
 import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
@@ -21,7 +20,7 @@ import {
   remarkMdxDisableExplicitJsx,
   remarkRemoveImports,
   remarkStaticImage,
-  remarkReplaceImports,
+  // remarkReplaceImports,
   theme,
 } from '@packages/nextra-theme-docs'
 import { truthy } from './utils'
@@ -61,7 +60,7 @@ export type MdxCompilerResult = {
   }
 }
 
-export const mdxCompiler = (
+export const mdxCompiler = async (
   source: string,
   {
     staticImage = true,
@@ -71,7 +70,7 @@ export const mdxCompiler = (
     defaultShowCopyCode = true,
     mdxOptions,
   }: MdxCompilerOptions = {},
-): MdxCompilerResult => {
+): Promise<MdxCompilerResult> => {
   const { data: frontmatter, content } = grayMatter(source)
 
   const {
@@ -92,7 +91,7 @@ export const mdxCompiler = (
   try {
     const processor = compiler()
 
-    const vFile = processor.processSync(content)
+    const vFile = await processor.process(content)
 
     const result = String(vFile).replaceAll('__esModule', '_\\_esModule')
 
@@ -122,7 +121,7 @@ export const mdxCompiler = (
       providerImportSource: 'nextra/mdx',
       remarkPlugins: [
         ...(remarkPlugins || []),
-        remarkMermaid, // should be before remarkRemoveImports because contains `import { Mermaid } from ...`
+        // should be before remarkRemoveImports because contains `import { Mermaid } from ...`
         [
           remarkNpm2Yarn, // should be before remarkRemoveImports because contains `import { Tabs as $Tabs, Tab as $Tab } from ...`
           {
@@ -145,7 +144,7 @@ export const mdxCompiler = (
         staticImage && remarkStaticImage,
         readingTime && remarkReadingTime,
         latex && remarkMath,
-        remarkReplaceImports,
+        // remarkReplaceImports,
         // Remove the markdown file extension from links
         [
           clonedRemarkLinkRewrite,

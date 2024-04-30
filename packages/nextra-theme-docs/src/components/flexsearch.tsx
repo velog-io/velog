@@ -1,13 +1,12 @@
 import cn from 'clsx'
 // flexsearch types are incorrect, they were overwritten in tsconfig.json
 import FlexSearch from 'flexsearch'
-import type { SearchData } from 'nextra'
+import type { SearchData } from '../nextra/types'
 import type { ReactElement, ReactNode } from 'react'
 import { useCallback, useState } from 'react'
 import { DEFAULT_LOCALE } from '../constants'
 import type { SearchResult } from '../types'
 import { HighlightMatches } from './highlight-matches'
-import { Search } from './search'
 
 type SectionIndex = FlexSearch.Document<
   {

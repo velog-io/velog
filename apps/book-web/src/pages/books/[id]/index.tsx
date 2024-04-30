@@ -4,10 +4,11 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 
 type Props = {
   mdxSource: MdxCompilerResult
+  body: string
 }
 
-const Home = ({ mdxSource }: Props) => {
-  return <NextraLayout mdxSource={mdxSource} />
+const Home = ({ mdxSource, body }: Props) => {
+  return <NextraLayout mdxSource={mdxSource} body={body} />
 }
 
 export default Home
@@ -28,9 +29,7 @@ export const getStaticPaths = (async () => {
 export const getStaticProps = (async () => {
   const mdxText = `
 
-<Callout>
-  Upgrade to the latest version (≥ 1.0.0) to experience this customization.
-</Callout>
+<Callout>  Upgrade to the latest version (≥ 1.0.0) to experience this customization.</Callout>
 
 
 {/* wrapped with {} to mark it as javascript so mdx will not put it under a p tag */}
@@ -57,7 +56,7 @@ recuperación (revalidación), y finalmente entrege los datos actualizados.
 
 ## Resumen
 
-\`\`\`jsx
+\`\`\`jsx filename="hello.js" {4-4}
 import useSWR from 'swr'
 
 function Profile() {
@@ -125,7 +124,8 @@ Sientase libre de unirse a
 
   const mdxSource = await mdxCompiler(mdxText)
 
-  return { props: { mdxSource } }
+  return { props: { mdxSource, body: mdxText } }
 }) satisfies GetStaticProps<{
   mdxSource: MdxCompilerResult
+  body: string
 }>

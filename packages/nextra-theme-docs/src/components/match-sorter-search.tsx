@@ -1,5 +1,5 @@
 import { matchSorter } from 'match-sorter'
-import type { Item as NormalItem } from 'nextra/normalize-pages'
+import type { Item as NormalItem } from '../nextra/normalize-pages'
 import type { ReactElement } from 'react'
 import { useMemo, useState } from 'react'
 import type { SearchResult } from '../types'
@@ -8,7 +8,7 @@ import { Search } from './search'
 
 export function MatchSorterSearch({
   className,
-  directories
+  directories,
 }: {
   className?: string
   directories: NormalItem[]
@@ -20,15 +20,13 @@ export function MatchSorterSearch({
       // (similar to what we already do to render the hash links in sidebar)
       // We could also try to search the entire string text from each page
       search
-        ? matchSorter(directories, search, { keys: ['title'] }).map(
-            ({ route, title }) => ({
-              id: route + title,
-              route,
-              children: <HighlightMatches value={title} match={search} />
-            })
-          )
+        ? matchSorter(directories, search, { keys: ['title'] }).map(({ route, title }) => ({
+            id: route + title,
+            route,
+            children: <HighlightMatches value={title} match={search} />,
+          }))
         : [],
-    [search, directories]
+    [search, directories],
   )
 
   return (

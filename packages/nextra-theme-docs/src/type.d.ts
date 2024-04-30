@@ -1,7 +1,7 @@
-import { a as PageOpts } from 'nextra/dist/types-2e9b0ab5.js'
 import * as react from 'react'
 import 'gray-matter'
 import 'mdast'
+import { PageOpts } from './nextra/types'
 
 /**
  * This hook is used to access the internal state of Nextra, you should never

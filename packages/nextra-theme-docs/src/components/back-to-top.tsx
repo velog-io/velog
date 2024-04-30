@@ -1,5 +1,5 @@
 import cn from 'clsx'
-import { ArrowRightIcon } from 'nextra/icons'
+import { ArrowRightIcon } from '../nextra/icons'
 import type { ReactElement } from 'react'
 import { useEffect, useRef } from 'react'
 
@@ -26,10 +26,7 @@ export function BackToTop({ className }: { className?: string }): ReactElement {
       ref={ref}
       aria-hidden="true"
       onClick={scrollToTop}
-      className={cn(
-        'nx-flex nx-items-center nx-gap-1.5 nx-transition nx-opacity-0',
-        className
-      )}
+      className={cn('nx-flex nx-items-center nx-gap-1.5 nx-transition nx-opacity-0', className)}
     >
       Scroll to top
       <ArrowRightIcon className="-nx-rotate-90 nx-w-3.5 nx-h-3.5 nx-border nx-rounded-full nx-border-current" />

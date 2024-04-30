@@ -1,6 +1,6 @@
 import { useTheme } from 'next-themes'
-import { useMounted } from 'nextra/hooks'
-import { MoonIcon, SunIcon } from 'nextra/icons'
+import { useMounted } from '../nextra/hooks'
+import { MoonIcon, SunIcon } from '../nextra/icons'
 import type { ReactElement } from 'react'
 import { z } from 'zod'
 import { useConfig } from '../contexts'
@@ -14,24 +14,19 @@ type ThemeSwitchProps = {
 export const themeOptionsSchema = z.strictObject({
   light: z.string(),
   dark: z.string(),
-  system: z.string()
+  system: z.string(),
 })
 
 type ThemeOptions = z.infer<typeof themeOptionsSchema>
 
-export function ThemeSwitch({
-  lite,
-  className
-}: ThemeSwitchProps): ReactElement {
+export function ThemeSwitch({ lite, className }: ThemeSwitchProps): ReactElement {
   const { setTheme, resolvedTheme, theme = '' } = useTheme()
   const mounted = useMounted()
   const config = useConfig().themeSwitch
 
   const IconToUse = mounted && resolvedTheme === 'dark' ? MoonIcon : SunIcon
   const options: ThemeOptions =
-    typeof config.useOptions === 'function'
-      ? config.useOptions()
-      : config.useOptions
+    typeof config.useOptions === 'function' ? config.useOptions() : config.useOptions
 
   return (
     <Select
@@ -40,9 +35,9 @@ export function ThemeSwitch({
       options={[
         { key: 'light', name: options.light },
         { key: 'dark', name: options.dark },
-        { key: 'system', name: options.system }
+        { key: 'system', name: options.system },
       ]}
-      onChange={option => {
+      onChange={(option) => {
         setTheme(option.key)
       }}
       selected={{
@@ -54,7 +49,7 @@ export function ThemeSwitch({
               {mounted ? options[theme as keyof typeof options] : options.light}
             </span>
           </div>
-        )
+        ),
       }}
     />
   )

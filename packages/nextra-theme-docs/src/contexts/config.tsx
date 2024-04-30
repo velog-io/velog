@@ -1,6 +1,6 @@
 import { ThemeProvider } from 'next-themes'
-import type { FrontMatter, PageMapItem, PageOpts } from 'nextra'
-import { metaSchema } from 'nextra/normalize-pages'
+import type { FrontMatter, PageMapItem, PageOpts } from '../nextra/types'
+import { metaSchema } from '../nextra/normalize-pages'
 import type { ReactElement, ReactNode } from 'react'
 import { createContext, useContext, useState } from 'react'
 import type { ZodError } from 'zod'
@@ -10,15 +10,12 @@ import type { Context } from '../types'
 import { MenuProvider } from './menu'
 
 type Config<FrontMatterType = FrontMatter> = DocsThemeConfig &
-  Pick<
-    PageOpts<FrontMatterType>,
-    'flexsearch' | 'newNextLinkBehavior' | 'title' | 'frontMatter'
-  >
+  Pick<PageOpts<FrontMatterType>, 'flexsearch' | 'newNextLinkBehavior' | 'title' | 'frontMatter'>
 
 const ConfigContext = createContext<Config>({
   title: '',
   frontMatter: {},
-  ...DEFAULT_THEME
+  ...DEFAULT_THEME,
 })
 
 export function useConfig<FrontMatterType = FrontMatter>() {
@@ -31,15 +28,10 @@ let isValidated = false
 
 function normalizeZodMessage(error: unknown): string {
   return (error as ZodError).issues
-    .flatMap(issue => {
-      const themePath =
-        issue.path.length > 0 && `Path: "${issue.path.join('.')}"`
-      const unionErrors =
-        'unionErrors' in issue ? issue.unionErrors.map(normalizeZodMessage) : []
-      return [
-        [issue.message, themePath].filter(Boolean).join('. '),
-        ...unionErrors
-      ]
+    .flatMap((issue) => {
+      const themePath = issue.path.length > 0 && `Path: "${issue.path.join('.')}"`
+      const unionErrors = 'unionErrors' in issue ? issue.unionErrors.map(normalizeZodMessage) : []
+      return [[issue.message, themePath].filter(Boolean).join('. '), ...unionErrors]
     })
     .join('\n')
 }
@@ -53,8 +45,8 @@ function validateMeta(pageMap: PageMapItem[]) {
         } catch (error) {
           console.error(
             `[nextra-theme-docs] Error validating _meta.json file for "${key}" property.\n\n${normalizeZodMessage(
-              error
-            )}`
+              error,
+            )}`,
           )
         }
       }
@@ -66,7 +58,7 @@ function validateMeta(pageMap: PageMapItem[]) {
 
 export const ConfigProvider = ({
   children,
-  value: { themeConfig, pageOpts }
+  value: { themeConfig, pageOpts },
 }: {
   children: ReactNode
   value: Context
@@ -81,18 +73,16 @@ export const ConfigProvider = ({
         value && typeof value === 'object' && DEEP_OBJECT_KEYS.includes(key)
           ? // @ts-expect-error -- key has always object value
             { ...DEFAULT_THEME[key], ...value }
-          : value
-      ])
-    )
+          : value,
+      ]),
+    ),
   }
   if (process.env.NODE_ENV !== 'production' && !isValidated) {
     try {
       themeSchema.parse(theme)
     } catch (error) {
       console.error(
-        `[nextra-theme-docs] Error validating theme config file.\n\n${normalizeZodMessage(
-          error
-        )}`
+        `[nextra-theme-docs] Error validating theme config file.\n\n${normalizeZodMessage(error)}`,
       )
     }
     validateMeta(pageOpts.pageMap)
@@ -102,10 +92,10 @@ export const ConfigProvider = ({
     ...theme,
     flexsearch: pageOpts.flexsearch,
     ...(typeof pageOpts.newNextLinkBehavior === 'boolean' && {
-      newNextLinkBehavior: pageOpts.newNextLinkBehavior
+      newNextLinkBehavior: pageOpts.newNextLinkBehavior,
     }),
     title: pageOpts.title,
-    frontMatter: pageOpts.frontMatter
+    frontMatter: pageOpts.frontMatter,
   }
 
   const { nextThemes } = extendedConfig

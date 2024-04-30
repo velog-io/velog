@@ -1,4 +1,4 @@
-import type { PageOpts } from 'nextra'
+import type { PageOpts } from './nextra/types'
 import type { ReactNode } from 'react'
 import type { DocsThemeConfig } from './constants'
 

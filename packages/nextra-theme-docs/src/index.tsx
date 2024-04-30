@@ -1,5 +1,3 @@
-import type { NextraThemeLayoutProps, PageOpts, LoaderOptions } from 'nextra'
-import type { PageTheme } from 'nextra/normalize-pages'
 import type { ReactElement, ReactNode } from 'react'
 import { useMemo } from 'react'
 import 'focus-visible'
@@ -13,6 +11,9 @@ import { renderComponent } from './utils'
 import { MDXRemote, type MDXRemoteSerializeResult } from 'next-mdx-remote'
 import type { ProcessorOptions } from '@mdx-js/mdx'
 import theme from './theme.json'
+import { normalizePages, PageTheme } from './nextra/normalize-pages'
+import { useFSRoute } from './nextra/hooks/use-fs-route'
+import { LoaderOptions, NextraThemeLayoutProps, PageOpts } from './nextra/types'
 interface BodyProps {
   themeContext: PageTheme
   breadcrumb: ReactNode
@@ -26,13 +27,7 @@ const classes = {
   main: cn('nx-w-full nx-break-words'),
 }
 
-const Body = ({
-  themeContext,
-  breadcrumb,
-  timestamp,
-  navigation,
-  children,
-}: BodyProps): ReactElement => {
+const Body = ({ themeContext, breadcrumb, navigation, children }: BodyProps): ReactElement => {
   const config = useConfig()
 
   if (themeContext.layout === 'raw') {
@@ -94,7 +89,6 @@ const InnerLayout = ({
   pageMap,
   frontMatter,
   headings,
-  timestamp,
   children,
   mdxSource,
 }: PageOpts & { children: ReactNode; mdxSource: MDXRemoteSerializeResult }): ReactElement => {
@@ -117,7 +111,7 @@ const InnerLayout = ({
         list: pageMap,
         locale: DEFAULT_LOCALE,
         defaultLocale: DEFAULT_LOCALE,
-        route: fsPath,
+        route: '/',
       }),
     [pageMap, fsPath],
   )
@@ -196,12 +190,11 @@ export default function NextraDocLayout({
 }
 
 export { useConfig, type PartialDocsThemeConfig as DocsThemeConfig, theme }
-export { useMDXComponents } from 'nextra/mdx'
-export { Callout, Steps, Tabs, Tab, Cards, Card, FileTree } from 'nextra/components'
+export { Callout, Steps, Tabs, Tab, Cards, Card, FileTree } from './nextra/components'
 export { useTheme } from 'next-themes'
 export { Link } from './mdx-components'
-export type { Item, PageItem } from 'nextra/normalize-pages'
-export type { Heading, PageMapItem, PageOpts } from 'nextra'
+export type { Item, PageItem } from './nextra/normalize-pages'
+export type { Heading, PageMapItem, PageOpts } from './nextra/types'
 export {
   Bleed,
   Collapse,
@@ -218,17 +211,20 @@ export {
 // for compiler
 export type MdxOptions = LoaderOptions['mdxOptions'] &
   Pick<ProcessorOptions, 'jsx' | 'outputFormat'>
-export type MdxCompilerOptions = Pick<
-  LoaderOptions,
-  'staticImage' | 'flexsearch' | 'defaultShowCopyCode' | 'readingTime' | 'latex' | 'codeHighlight'
-> & {
-  mdxOptions?: MdxOptions
-  route?: string
-  locale?: string
-  filePath?: string
-  useCachedCompiler?: boolean
-  isPageImport?: boolean
-}
+export type MdxCompilerOptions = Partial<
+  Pick<
+    LoaderOptions,
+    'staticImage' | 'flexsearch' | 'defaultShowCopyCode' | 'readingTime' | 'latex' | 'codeHighlight'
+  > & {
+    mdxOptions?: MdxOptions
+    route?: string
+    locale?: string
+    filePath?: string
+    useCachedCompiler?: boolean
+    isPageImport?: boolean
+  }
+>
+
 export {
   attachMeta,
   parseMeta,
@@ -237,7 +233,7 @@ export {
   remarkLinkRewrite,
   remarkMdxDisableExplicitJsx,
   remarkRemoveImports,
-  remarkReplaceImports,
+  // remarkReplaceImports,
   remarkStaticImage,
   remarkStructurize,
-} from 'nextra/mdx-plugins'
+} from './nextra/mdx-plugins'
