@@ -233,7 +233,7 @@ export {
   remarkLinkRewrite,
   remarkMdxDisableExplicitJsx,
   remarkRemoveImports,
-  // remarkReplaceImports,
+  remarkReplaceImports,
   remarkStaticImage,
   remarkStructurize,
 } from './nextra/mdx-plugins'

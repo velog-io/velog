@@ -4,16 +4,16 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 
 type Props = {
   mdxSource: MdxCompilerResult
+  mdxText: string
 }
 
-const Home = ({ mdxSource }: Props) => {
-  return <NextraLayout mdxSource={mdxSource} />
+const Home = ({ mdxSource, mdxText }: Props) => {
+  return <NextraLayout mdxSource={mdxSource} body={mdxText} />
 }
 
 export default Home
 
-export const getStaticPaths = (async (ctx) => {
-  console.log(ctx)
+export const getStaticPaths = (async () => {
   return {
     paths: [
       {
@@ -128,7 +128,8 @@ Sientase libre de unirse a
 
   const mdxSource = await mdxCompiler(mdxText)
 
-  return { props: { mdxSource } }
+  return { props: { mdxSource, mdxText } }
 }) satisfies GetStaticProps<{
   mdxSource: MdxCompilerResult
+  mdxText: string
 }>

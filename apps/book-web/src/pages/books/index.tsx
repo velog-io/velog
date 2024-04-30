@@ -44,7 +44,7 @@ recuperación (revalidación), y finalmente entrege los datos actualizados.
 
 ## Resumen
 
-\`\`\`jsx
+\`\`\`jsx filename="hello.jsx" {3-4}
 import useSWR from 'swr'
 
 function Profile() {
@@ -112,7 +112,8 @@ Sientase libre de unirse a
 
   const mdxSource = await mdxCompiler(mdxText)
 
-  return { props: { mdxSource } }
+  return { props: { mdxSource, mdxText } }
 }) satisfies GetStaticProps<{
   mdxSource: MdxCompilerResult
+  mdxText: string
 }>

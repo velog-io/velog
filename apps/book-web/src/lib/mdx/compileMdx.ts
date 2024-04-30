@@ -6,8 +6,9 @@ import { remarkNpm2Yarn } from '@theguild/remark-npm2yarn'
 import { remarkMermaid } from '@theguild/remark-mermaid'
 import type { Pluggable } from 'unified'
 import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
-// import rehypeRaw from 'rehype-raw'
 import rehypePrettyCode from 'rehype-pretty-code'
+import rehypeRaw from 'rehype-raw'
+import { getHighlighter, setWasm } from 'shiki'
 import rehypeKatex from 'rehype-katex'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -21,13 +22,12 @@ import {
   remarkMdxDisableExplicitJsx,
   remarkRemoveImports,
   remarkStaticImage,
-  // remarkReplaceImports,
-  theme,
+  remarkReplaceImports,
 } from '@packages/nextra-theme-docs'
 import { truthy } from './utils'
-import { loadWasm } from '@shikijs/core'
-
-// await loadWasm(import('shiki/onig.wasm'))
+import theme from './theme'
+import rehypeShiki from '@shikijs/rehype'
+// import { loadWasm } from '@shikijs/core'
 
 const clonedRemarkLinkRewrite = remarkLinkRewrite.bind(null as any)
 
@@ -45,7 +45,7 @@ const DEFAULT_REHYPE_PRETTY_CODE_OPTIONS: RehypePrettyCodeOptions = {
     }
   },
   onVisitHighlightedLine(node: any) {
-    node.properties.className.push('highlighted')
+    node.properties.className?.push('highlighted')
   },
   onVisitHighlightedWord(node: any) {
     node.properties.className = ['highlighted']
@@ -90,28 +90,31 @@ export const mdxCompiler = async (
     ...frontmatter.mdxOptions,
   }
 
-  const compiler = createCompiler()
+  const onig = await fetch('http://localhost:3000/wasm/onig.wasm')
+  setWasm(onig)
+
+  const compiler = await createCompiler()
 
   try {
     const processor = compiler()
 
-    // const vFile = await processor.process(content)
+    const vFile = await processor.process(content)
 
-    // const result = String(vFile).replaceAll('__esModule', '_\\_esModule')
+    const result = String(vFile).replaceAll('__esModule', '_\\_esModule')
 
-    // const { title, hasJsxInH1, readingTime, headings } = vFile.data as {
-    //   readingTime?: ReadingTime
-    //   title?: string
-    //   hasJsxInH1?: boolean
-    //   headings: Headings
-    // }
+    const { title, hasJsxInH1, readingTime, headings } = vFile.data as {
+      readingTime?: ReadingTime
+      title?: string
+      hasJsxInH1?: boolean
+      headings: Headings
+    }
 
     return {
-      compiledSource: '',
-      // ...(title && { title }),
-      // ...(hasJsxInH1 && { hasJsxInH1 }),
-      // ...(readingTime && { readingTime }),
-      // ...(headings && { headings: vFile.data.headings as Headings }),
+      compiledSource: result,
+      ...(title && { title }),
+      ...(hasJsxInH1 && { hasJsxInH1 }),
+      ...(readingTime && { readingTime }),
+      ...(headings && { headings: vFile.data.headings as Headings }),
       frontmatter,
     }
   } catch (error) {
@@ -119,7 +122,12 @@ export const mdxCompiler = async (
     throw error
   }
 
-  function createCompiler(): Processor {
+  async function createCompiler(): Promise<Processor> {
+    // const highlighter = await getHighlighter({
+    //   themes: Object.keys(bundledThemes),
+    //   langs: Object.keys(bundledLanguages),
+    // })
+
     return createProcessor({
       jsx,
       outputFormat,
@@ -149,7 +157,7 @@ export const mdxCompiler = async (
         staticImage && remarkStaticImage,
         readingTime && remarkReadingTime,
         latex && remarkMath,
-        // remarkReplaceImports,
+        remarkReplaceImports,
         // Remove the markdown file extension from links
         [
           clonedRemarkLinkRewrite,
@@ -171,14 +179,13 @@ export const mdxCompiler = async (
         [parseMeta, { defaultShowCopyCode }],
         // Should be before `rehypePrettyCode`
         latex && rehypeKatex,
-        codeHighlight !== false &&
-          ([
-            rehypePrettyCode,
-            {
-              ...DEFAULT_REHYPE_PRETTY_CODE_OPTIONS,
-              ...rehypePrettyCodeOptions,
-            },
-          ] as any),
+        [
+          rehypePrettyCode,
+          {
+            ...DEFAULT_REHYPE_PRETTY_CODE_OPTIONS,
+            ...rehypePrettyCodeOptions,
+          },
+        ] as any,
         attachMeta,
       ].filter(truthy),
     })

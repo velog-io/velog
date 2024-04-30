@@ -4,10 +4,11 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 
 type Props = {
   mdxSource: MdxCompilerResult
+  mdxText: string
 }
 
-const Home = ({ mdxSource }: Props) => {
-  return <NextraLayout mdxSource={mdxSource} />
+const Home = ({ mdxSource, mdxText }: Props) => {
+  return <NextraLayout mdxSource={mdxSource} body={mdxText} />
 }
 
 export default Home
@@ -125,9 +126,10 @@ Sientase libre de unirse a
 [discusiones en GitHub](https://github.com/vercel/swr/discussions)!
   `
 
-  // const mdxSource = await mdxCompiler(mdxText)
+  const mdxSource = await mdxCompiler(mdxText)
 
-  return { props: { mdxSource: undefined } }
+  return { props: { mdxSource, mdxText } }
 }) satisfies GetStaticProps<{
-  mdxSource?: MdxCompilerResult
+  mdxSource: MdxCompilerResult
+  mdxText: string
 }>

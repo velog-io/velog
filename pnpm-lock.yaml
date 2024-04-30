@@ -216,9 +216,9 @@ importers:
       '@packages/nextra-theme-docs':
         specifier: workspace:*
         version: link:../../packages/nextra-theme-docs
-      '@shikijs/core':
-        specifier: ^1.3.0
-        version: 1.3.0
+      '@shikijs/rehype':
+        specifier: ^1.4.0
+        version: 1.4.0
       '@theguild/remark-mermaid':
         specifier: ^0.0.5
         version: 0.0.5(react@18.2.0)
@@ -253,14 +253,20 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       remark-math:
-        specifier: ^6.0.0
-        version: 6.0.0
+        specifier: ^5.1.1
+        version: 5.1.1
       remark-reading-time:
         specifier: ^2.0.1
         version: 2.0.1
+      shiki:
+        specifier: ^0.14.3
+        version: 0.14.7
       unified:
         specifier: ^10.1.2
         version: 10.1.2
+      vscode-oniguruma:
+        specifier: ^2.0.1
+        version: 2.0.1
     devDependencies:
       '@packages/eslint-config':
         specifier: workspace:*
@@ -289,9 +295,6 @@ importers:
       postcss:
         specifier: ^8
         version: 8.4.38
-      shiki:
-        specifier: ^0.14.7
-        version: 0.14.7
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.3
@@ -6698,8 +6701,25 @@ packages:
       '@sentry/types': 7.110.1
     dev: false
 
-  /@shikijs/core@1.3.0:
-    resolution: {integrity: sha512-7fedsBfuILDTBmrYZNFI8B6ATTxhQAasUHllHmjvSZPnoq4bULWoTpHwmuQvZ8Aq03/tAa2IGo6RXqWtHdWaCA==}
+  /@shikijs/core@1.4.0:
+    resolution: {integrity: sha512-CxpKLntAi64h3j+TwWqVIQObPTED0FyXLHTTh3MKXtqiQNn2JGcMQQ362LftDbc9kYbDtrksNMNoVmVXzKFYUQ==}
+    dev: false
+
+  /@shikijs/rehype@1.4.0:
+    resolution: {integrity: sha512-Ba6QHYx+EIEvmqyNy/B49KAz3rXsTfAqYRY3KTZjPWonytokGOiJ1q/FV9l13D/ad6Qv+eWKhkAz6ITxx6ziFA==}
+    dependencies:
+      '@shikijs/transformers': 1.4.0
+      '@types/hast': 3.0.4
+      hast-util-to-string: 3.0.0
+      shiki: 1.4.0
+      unified: 11.0.4
+      unist-util-visit: 5.0.0
+    dev: false
+
+  /@shikijs/transformers@1.4.0:
+    resolution: {integrity: sha512-kzvlWmWYYSeaLKRce/kgmFFORUtBtFahfXRKndor0b60ocYiXufBQM6d6w1PlMuUkdk55aor9xLvy9wy7hTEJg==}
+    dependencies:
+      shiki: 1.4.0
     dev: false
 
   /@sigstore/bundle@2.3.1:
@@ -8723,6 +8743,7 @@ packages:
 
   /ansi-sequence-parser@1.1.1:
     resolution: {integrity: sha512-vJXt3yiaUL4UU546s3rPXlsry/RnM730G1+HkpKE012AN0sx1eOrxSu95oKDIonskeLTijMgqWZ3uDEe3NFvyg==}
+    dev: false
 
   /ansi-styles@3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
@@ -12486,6 +12507,12 @@ packages:
       zwitch: 2.0.4
     dev: false
 
+  /hast-util-to-string@3.0.0:
+    resolution: {integrity: sha512-OGkAxX1Ua3cbcW6EJ5pT/tslVb90uViVkcJ4ZZIMW/R33DX/AkcJcRrPebPwJkHYwlDHXz4aIwvAAaAdtrACFA==}
+    dependencies:
+      '@types/hast': 3.0.4
+    dev: false
+
   /hast-util-to-text@2.0.1:
     resolution: {integrity: sha512-8nsgCARfs6VkwH2jJU9b8LNTuR4700na+0h3PqCaEk4MAnMDeu5P0tP8mjk9LLNGxIeQRLbiDbZVw6rku+pYsQ==}
     dependencies:
@@ -14106,6 +14133,7 @@ packages:
 
   /jsonc-parser@3.2.1:
     resolution: {integrity: sha512-AilxAyFOAcK5wA1+LeaySVBrHsGQvUFCDWXKpZjzaL0PqW+xfBOttn8GNtWKFWqneyMZj41MWF9Kl6iPWLwgOA==}
+    dev: false
 
   /jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
@@ -14889,20 +14917,6 @@ packages:
       mdast-util-to-markdown: 1.5.0
     dev: false
 
-  /mdast-util-math@3.0.0:
-    resolution: {integrity: sha512-Tl9GBNeG/AhJnQM221bJR2HPvLOSnLE/T9cJI9tlc6zwQk2nPk/4f0cHkOdEixQPC/j8UtKDdITswvLAy1OZ1w==}
-    dependencies:
-      '@types/hast': 3.0.4
-      '@types/mdast': 4.0.3
-      devlop: 1.1.0
-      longest-streak: 3.1.0
-      mdast-util-from-markdown: 2.0.0
-      mdast-util-to-markdown: 2.1.0
-      unist-util-remove-position: 5.0.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /mdast-util-mdx-expression@1.3.2:
     resolution: {integrity: sha512-xIPmR5ReJDu/DHH1OoIT1HkuybIfRGYRywC+gJtI7qHjCJp/M9jrmBEJW22O8lskDWm562BX2W8TiAwRTb0rKA==}
     dependencies:
@@ -15346,18 +15360,6 @@ packages:
       micromark-util-symbol: 1.1.0
       micromark-util-types: 1.1.0
       uvu: 0.5.6
-    dev: false
-
-  /micromark-extension-math@3.0.0:
-    resolution: {integrity: sha512-iJ2Q28vBoEovLN5o3GO12CpqorQRYDPT+p4zW50tGwTfJB+iv/VnB6Ini+gqa24K97DwptMBBIvVX6Bjk49oyQ==}
-    dependencies:
-      '@types/katex': 0.16.7
-      devlop: 1.1.0
-      katex: 0.16.10
-      micromark-factory-space: 2.0.0
-      micromark-util-character: 2.1.0
-      micromark-util-symbol: 2.0.0
-      micromark-util-types: 2.0.0
     dev: false
 
   /micromark-extension-mdx-expression@1.0.8:
@@ -18075,17 +18077,6 @@ packages:
       unified: 10.1.2
     dev: false
 
-  /remark-math@6.0.0:
-    resolution: {integrity: sha512-MMqgnP74Igy+S3WwnhQ7kqGlEerTETXMvJhrUzDikVZ2/uogJCb+WHUg97hK9/jcfc0dkD73s3LN8zU49cTEtA==}
-    dependencies:
-      '@types/mdast': 4.0.3
-      mdast-util-math: 3.0.0
-      micromark-extension-math: 3.0.0
-      unified: 11.0.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /remark-mdx@2.3.0:
     resolution: {integrity: sha512-g53hMkpM0I98MU266IzDFMrTD980gNF3BJnkyFcmN+dD873mQeD5rdMO3Y2X+x8umQfbSE0PcoEDl7ledSA+2g==}
     dependencies:
@@ -18670,6 +18661,13 @@ packages:
       jsonc-parser: 3.2.1
       vscode-oniguruma: 1.7.0
       vscode-textmate: 8.0.0
+    dev: false
+
+  /shiki@1.4.0:
+    resolution: {integrity: sha512-5WIn0OL8PWm7JhnTwRWXniy6eEDY234mRrERVlFa646V2ErQqwIFd2UML7e0Pq9eqSKLoMa3Ke+xbsF+DAuy+Q==}
+    dependencies:
+      '@shikijs/core': 1.4.0
+    dev: false
 
   /shimmer@1.2.1:
     resolution: {integrity: sha512-sQTKC1Re/rM6XyFM6fIAGHRPVGvyXfgzIDvzoq608vM+jeyVD0Tu1E6Np0Kc2zAIFWIj963V2800iF/9LPieQw==}
@@ -20653,9 +20651,15 @@ packages:
 
   /vscode-oniguruma@1.7.0:
     resolution: {integrity: sha512-L9WMGRfrjOhgHSdOYgCt/yRMsXzLDJSL7BPrOZt73gU0iWO4mpqzqQzOz5srxqTvMBaR0XZTSrVWo4j55Rc6cA==}
+    dev: false
+
+  /vscode-oniguruma@2.0.1:
+    resolution: {integrity: sha512-poJU8iHIWnC3vgphJnrLZyI3YdqRlR27xzqDmpPXYzA93R4Gk8z7T6oqDzDoHjoikA2aS82crdXFkjELCdJsjQ==}
+    dev: false
 
   /vscode-textmate@8.0.0:
     resolution: {integrity: sha512-AFbieoL7a5LMqcnOF04ji+rpXadgOXnZsxQr//r83kLPr7biP7am3g9zbaZIaBGwBRWeSvoMD4mgPdX3e4NWBg==}
+    dev: false
 
   /w3c-xmlserializer@5.0.0:
     resolution: {integrity: sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA==}

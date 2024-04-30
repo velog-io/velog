@@ -11,8 +11,7 @@ export const remarkReplaceImports: Plugin<[], Root> = () => {
   return (tree, _file, done) => {
     visit(tree, 'mdxjsEsm', (node: any) => {
       const { source } = node.data.estree.body[0]
-      // const absolutePath = require.resolve(source.value)
-      const absolutePath = source.value
+      const absolutePath = require.resolve(source.value)
 
       source.value = absolutePath
       source.raw = `"${absolutePath}"`
