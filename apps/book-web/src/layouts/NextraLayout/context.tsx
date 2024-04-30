@@ -47,8 +47,8 @@ export const pageMap: PageMapItem[] = [
 
 export const pageOpts: PageOpts = {
   frontMatter: {},
-  filePath: 'pages/index.mdx',
-  route: '/',
+  filePath: '',
+  route: '',
   timestamp: 1712618681000,
   pageMap: pageMap,
   title: 'Welcome to Nextra',

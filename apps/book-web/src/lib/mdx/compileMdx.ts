@@ -6,8 +6,8 @@ import { remarkMermaid } from '@theguild/remark-mermaid'
 import { remarkNpm2Yarn } from '@theguild/remark-npm2yarn'
 import type { Pluggable } from 'unified'
 import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
-import rehypePrettyCode from 'rehype-pretty-code'
 // import rehypeRaw from 'rehype-raw'
+import rehypePrettyCode from 'rehype-pretty-code'
 import rehypeKatex from 'rehype-katex'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -61,7 +61,7 @@ export type MdxCompilerResult = {
   }
 }
 
-export const mdxCompiler = async (
+export const mdxCompiler = (
   source: string,
   {
     staticImage = true,
@@ -71,7 +71,7 @@ export const mdxCompiler = async (
     defaultShowCopyCode = true,
     mdxOptions,
   }: MdxCompilerOptions = {},
-): Promise<MdxCompilerResult> => {
+): MdxCompilerResult => {
   const { data: frontmatter, content } = grayMatter(source)
 
   const {
@@ -92,7 +92,7 @@ export const mdxCompiler = async (
   try {
     const processor = compiler()
 
-    const vFile = await processor.process(content)
+    const vFile = processor.processSync(content)
 
     const result = String(vFile).replaceAll('__esModule', '_\\_esModule')
 

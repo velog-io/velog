@@ -1,14 +1,10 @@
 import type { NextraThemeLayoutProps, PageOpts, LoaderOptions } from 'nextra'
+import type { PageTheme } from 'nextra/normalize-pages'
 import type { ReactElement, ReactNode } from 'react'
 import { useMemo } from 'react'
 import 'focus-visible'
 import cn from 'clsx'
-import { useFSRoute, useMounted } from 'nextra/hooks'
-import { Callout } from 'nextra/components'
-
 import './polyfill'
-import type { PageTheme } from 'nextra/normalize-pages'
-import { normalizePages } from 'nextra/normalize-pages'
 import { Banner, Breadcrumb, Head, NavLinks, Sidebar } from './components'
 import { DEFAULT_LOCALE, PartialDocsThemeConfig } from './constants'
 import { ActiveAnchorProvider, ConfigProvider, useConfig } from './contexts'
@@ -38,7 +34,6 @@ const Body = ({
   children,
 }: BodyProps): ReactElement => {
   const config = useConfig()
-  const mounted = useMounted()
 
   if (themeContext.layout === 'raw') {
     return <div className={classes.main}>{children}</div>
@@ -48,7 +43,7 @@ const Body = ({
 
   const gitTimestampEl =
     // Because a user's time zone may be different from the server page
-    mounted && date ? (
+    date ? (
       <div className="nx-mt-12 nx-mb-8 nx-block nx-text-xs nx-text-gray-500 ltr:nx-text-right rtl:nx-text-left dark:nx-text-gray-400">
         {renderComponent(config.gitTimestamp, { timestamp: date })}
       </div>

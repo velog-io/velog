@@ -1,6 +1,6 @@
 import NextraDocLayout from '@packages/nextra-theme-docs'
 import { pageOpts, themeConfig } from './context'
-import type { MdxCompilerResult } from '@/lib/mdx/compileMdx'
+import { mdxCompiler, type MdxCompilerResult } from '@/lib/mdx/compileMdx'
 
 type Props = {
   mdxSource: MdxCompilerResult
@@ -8,6 +8,8 @@ type Props = {
 }
 
 function NextraLayout({ mdxSource, children }: Props) {
+  const a = mdxCompiler('#Hello World')
+  console.log('a', a)
   return (
     <NextraDocLayout
       pageOpts={pageOpts}
