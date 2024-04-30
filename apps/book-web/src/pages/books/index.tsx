@@ -1,12 +1,9 @@
-import { serialize } from 'next-mdx-remote/serialize'
-import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import NextraLayout from '@/layouts/NextraLayout'
-
+import { mdxCompiler, MdxCompilerResult } from '@/lib/mdx/compileMdx'
 import { GetStaticProps } from 'next'
-import { mdxCompiler } from '@/lib/compileMdx'
 
 type Props = {
-  mdxSource: MDXRemoteSerializeResult
+  mdxSource: MdxCompilerResult
 }
 
 const Home = ({ mdxSource }: Props) => {
@@ -17,6 +14,12 @@ export default Home
 
 export const getStaticProps = (async () => {
   const mdxText = `
+
+<Callout>
+  Upgrade to the latest version (≥ 1.0.0) to experience this customization.
+</Callout>
+
+
 {/* wrapped with {} to mark it as javascript so mdx will not put it under a p tag */}
 {<h1 className="text-center font-extrabold md:text-5xl mt-8">SWR</h1>}
 
@@ -41,7 +44,7 @@ recuperación (revalidación), y finalmente entrege los datos actualizados.
 
 ## Resumen
 
-\`\`\`jsx {2-3}
+\`\`\`jsx
 import useSWR from 'swr'
 
 function Profile() {
@@ -107,11 +110,9 @@ Sientase libre de unirse a
 [discusiones en GitHub](https://github.com/vercel/swr/discussions)!
   `
 
-  const mdxSource = await serialize(mdxText)
+  const mdxSource = await mdxCompiler(mdxText)
 
-  await mdxCompiler(mdxText)
-
-  return { props: { mdxSource: mdxSource } }
+  return { props: { mdxSource } }
 }) satisfies GetStaticProps<{
-  mdxSource?: MDXRemoteSerializeResult
+  mdxSource: MdxCompilerResult
 }>

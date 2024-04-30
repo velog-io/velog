@@ -21,6 +21,7 @@ import {
   remarkMdxDisableExplicitJsx,
   remarkRemoveImports,
   remarkStaticImage,
+  remarkReplaceImports,
   theme,
 } from '@packages/nextra-theme-docs'
 import { truthy } from './utils'
@@ -49,6 +50,17 @@ const DEFAULT_REHYPE_PRETTY_CODE_OPTIONS: RehypePrettyCodeOptions = {
   filterMetaString: (meta: string) => meta.replace(CODE_BLOCK_FILENAME_REGEX, ''),
 }
 
+export type MdxCompilerResult = {
+  compiledSource: string
+  title?: string
+  hasJsxInH1?: boolean
+  readingTime?: ReadingTime
+  headings?: Headings
+  frontmatter: {
+    [key: string]: any
+  }
+}
+
 export const mdxCompiler = async (
   source: string,
   {
@@ -59,8 +71,8 @@ export const mdxCompiler = async (
     defaultShowCopyCode = true,
     mdxOptions,
   }: MdxCompilerOptions = {},
-) => {
-  const { data: frontMatter, content } = grayMatter(source)
+): Promise<MdxCompilerResult> => {
+  const { data: frontmatter, content } = grayMatter(source)
 
   const {
     jsx = false,
@@ -72,7 +84,7 @@ export const mdxCompiler = async (
   }: MdxOptions = {
     ...mdxOptions,
     // You can override MDX options in the frontMatter too.
-    ...frontMatter.mdxOptions,
+    ...frontmatter.mdxOptions,
   }
 
   const compiler = createCompiler()
@@ -92,12 +104,12 @@ export const mdxCompiler = async (
     }
 
     return {
-      result,
+      compiledSource: result,
       ...(title && { title }),
       ...(hasJsxInH1 && { hasJsxInH1 }),
       ...(readingTime && { readingTime }),
-      ...(headings && { headings: vFile.data.headings }),
-      frontMatter,
+      ...(headings && { headings: vFile.data.headings as Headings }),
+      frontmatter,
     }
   } catch (error) {
     throw error
@@ -106,8 +118,8 @@ export const mdxCompiler = async (
   function createCompiler(): Processor {
     return createProcessor({
       jsx,
-      format: 'mdx',
       outputFormat,
+      providerImportSource: 'nextra/mdx',
       remarkPlugins: [
         ...(remarkPlugins || []),
         remarkMermaid, // should be before remarkRemoveImports because contains `import { Mermaid } from ...`
@@ -133,7 +145,7 @@ export const mdxCompiler = async (
         staticImage && remarkStaticImage,
         readingTime && remarkReadingTime,
         latex && remarkMath,
-        // isFileOutsideCWD && remarkReplaceImports,
+        remarkReplaceImports,
         // Remove the markdown file extension from links
         [
           clonedRemarkLinkRewrite,

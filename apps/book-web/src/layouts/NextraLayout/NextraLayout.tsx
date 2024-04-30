@@ -1,9 +1,9 @@
 import NextraDocLayout from '@packages/nextra-theme-docs'
 import { pageOpts, themeConfig } from './context'
-import { MDXRemoteSerializeResult } from 'next-mdx-remote'
+import type { MdxCompilerResult } from '@/lib/mdx/compileMdx'
 
 type Props = {
-  mdxSource: MDXRemoteSerializeResult
+  mdxSource: MdxCompilerResult
   children?: React.ReactNode
 }
 

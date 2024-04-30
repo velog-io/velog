@@ -1,5 +1,6 @@
 import cn from 'clsx'
 import { Code, Pre, Table, Td, Th, Tr } from 'nextra/components'
+import { Callout, Steps, Tabs, Tab, Cards, Card, FileTree } from 'nextra/components'
 import type { Components } from 'nextra/mdx'
 import type { ComponentProps, ReactElement, ReactNode } from 'react'
 import { Children, cloneElement, useEffect, useRef, useState } from 'react'
@@ -232,6 +233,13 @@ export const getComponents = ({
     summary: Summary,
     pre: Pre,
     code: Code,
+    Callout,
+    Steps,
+    Tabs,
+    Tab,
+    Cards,
+    Card,
+    FileTree,
     ...components,
   }
 }

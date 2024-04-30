@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import 'focus-visible'
 import cn from 'clsx'
 import { useFSRoute, useMounted } from 'nextra/hooks'
+import { Callout } from 'nextra/components'
 
 import './polyfill'
 import type { PageTheme } from 'nextra/normalize-pages'

@@ -1,10 +1,9 @@
 import NextraLayout from '@/layouts/NextraLayout'
+import { mdxCompiler, MdxCompilerResult } from '@/lib/mdx/compileMdx'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import { MDXRemoteSerializeResult } from 'next-mdx-remote'
-import { serialize } from 'next-mdx-remote/serialize'
 
 type Props = {
-  mdxSource: MDXRemoteSerializeResult
+  mdxSource: MdxCompilerResult
 }
 
 const Home = ({ mdxSource }: Props) => {
@@ -28,6 +27,12 @@ export const getStaticPaths = (async () => {
 
 export const getStaticProps = (async () => {
   const mdxText = `
+
+<Callout>
+  Upgrade to the latest version (≥ 1.0.0) to experience this customization.
+</Callout>
+
+
 {/* wrapped with {} to mark it as javascript so mdx will not put it under a p tag */}
 {<h1 className="text-center font-extrabold md:text-5xl mt-8">SWR</h1>}
 
@@ -117,10 +122,10 @@ del proyecto.
 Sientase libre de unirse a
 [discusiones en GitHub](https://github.com/vercel/swr/discussions)!
   `
-  console.log('mdxSource', mdxText)
-  const mdxSource = await serialize(mdxText)
+
+  const mdxSource = await mdxCompiler(mdxText)
 
   return { props: { mdxSource } }
 }) satisfies GetStaticProps<{
-  mdxSource: MDXRemoteSerializeResult
+  mdxSource: MdxCompilerResult
 }>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-theme-docs'
+import type { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-theme-docs'
 
 export const pageMap: PageMapItem[] = [
   {
@@ -12,6 +12,7 @@ export const pageMap: PageMapItem[] = [
       about: { title: 'About' },
     },
   },
+  { kind: 'MdxPage', name: 'index', route: '/books/6625a5de37b7152cdd4969ed' },
   { kind: 'MdxPage', name: 'advanced', route: '/books/6625a5de37b7152cdd4969ed/advanced' },
   {
     kind: 'Folder',
@@ -41,7 +42,7 @@ export const pageMap: PageMapItem[] = [
     ],
   },
   { kind: 'MdxPage', name: 'another', route: '/books/6625a5de37b7152cdd4969ed/another' },
-  { kind: 'MdxPage', name: 'index', route: '/books/6625a5de37b7152cdd4969ed' },
+  { kind: 'MdxPage', name: 'about', route: '/books/6625a5de37b7152cdd4969ed/about' },
 ]
 
 export const pageOpts: PageOpts = {
@@ -55,10 +56,9 @@ export const pageOpts: PageOpts = {
 }
 
 export const themeConfig: DocsThemeConfig = {
-  toc:{
-    
-  },
+  toc: {},
   logo: <span>Learning bunJS is Fun!</span>,
+  logoLink: '/books/6625a5de37b7152cdd4969ed',
   editLink: {
     text: '',
   },

@@ -1,10 +1,10 @@
 import NextraLayout from '@/layouts/NextraLayout'
+import { mdxCompiler, MdxCompilerResult } from '@/lib/mdx/compileMdx'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import { MDXRemoteSerializeResult } from 'next-mdx-remote'
-import { serialize } from 'next-mdx-remote/serialize'
+import type { MDXRemoteSerializeResult } from 'next-mdx-remote'
 
 type Props = {
-  mdxSource: MDXRemoteSerializeResult
+  mdxSource: MdxCompilerResult
 }
 
 const Home = ({ mdxSource }: Props) => {
@@ -15,13 +15,27 @@ export default Home
 
 export const getStaticPaths = (async () => {
   return {
-    paths: [],
+    paths: [
+      {
+        params: {
+          id: 'id',
+          title: 'another',
+          any: 'any',
+          some: 'some',
+        },
+      }, // See the "paths" section below
+    ],
     fallback: 'blocking', // false or "blocking"
   }
 }) satisfies GetStaticPaths
 
 export const getStaticProps = (async () => {
   const mdxText = `
+<Callout>
+  Upgrade to the latest version (≥ 1.0.0) to experience this customization.
+</Callout>
+
+
 {/* wrapped with {} to mark it as javascript so mdx will not put it under a p tag */}
 {<h1 className="text-center font-extrabold md:text-5xl mt-8">SWR</h1>}
 
@@ -46,7 +60,7 @@ recuperación (revalidación), y finalmente entrege los datos actualizados.
 
 ## Resumen
 
-\`\`\`jsx {2-3}
+\`\`\`jsx
 import useSWR from 'swr'
 
 function Profile() {
@@ -111,7 +125,9 @@ del proyecto.
 Sientase libre de unirse a
 [discusiones en GitHub](https://github.com/vercel/swr/discussions)!
   `
-  const mdxSource = await serialize(mdxText)
+
+  const mdxSource = await mdxCompiler(mdxText)
+
   return { props: { mdxSource } }
 }) satisfies GetStaticProps<{
   mdxSource: MDXRemoteSerializeResult
