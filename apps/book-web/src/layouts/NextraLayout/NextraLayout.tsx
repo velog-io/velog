@@ -10,7 +10,7 @@ type Props = {
 }
 
 function NextraLayout({ mdxSource, children, body }: Props) {
-  const [sourceString, setSourceString] = useState(body)
+  const [sourceString] = useState(body)
   const [source, setSource] = useState(mdxSource)
 
   useEffect(() => {

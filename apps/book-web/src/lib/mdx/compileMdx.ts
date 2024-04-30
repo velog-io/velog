@@ -3,12 +3,10 @@ import grayMatter from 'gray-matter'
 import { createProcessor } from '@mdx-js/mdx'
 import type { Processor } from '@mdx-js/mdx/lib/core'
 import { remarkNpm2Yarn } from '@theguild/remark-npm2yarn'
-import { remarkMermaid } from '@theguild/remark-mermaid'
 import type { Pluggable } from 'unified'
 import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
 import rehypePrettyCode from 'rehype-pretty-code'
-import rehypeRaw from 'rehype-raw'
-import { getHighlighter, setWasm } from 'shiki'
+import {setWasm } from 'shiki'
 import rehypeKatex from 'rehype-katex'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -26,8 +24,6 @@ import {
 } from '@packages/nextra-theme-docs'
 import { truthy } from './utils'
 import theme from './theme'
-import rehypeShiki from '@shikijs/rehype'
-// import { loadWasm } from '@shikijs/core'
 
 const clonedRemarkLinkRewrite = remarkLinkRewrite.bind(null as any)
 
@@ -70,7 +66,6 @@ export const mdxCompiler = async (
     staticImage = true,
     readingTime = true,
     latex = true,
-    codeHighlight = true,
     defaultShowCopyCode = true,
     mdxOptions,
   }: MdxCompilerOptions = {},
