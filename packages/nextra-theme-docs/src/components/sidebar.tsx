@@ -367,7 +367,9 @@ export function Sidebar({
         onClick={() => setMenu(false)}
       />
       <aside
+        
         className={cn(
+          'nx-overflow-y-auto nx-h-screen',
           'nextra-sidebar-container nx-flex nx-flex-col',
           'md:nx-top-16 md:nx-shrink-0 motion-reduce:nx-transform-none',
           'nx-transform-gpu nx-transition-all nx-ease-in-out',

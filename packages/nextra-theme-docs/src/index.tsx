@@ -28,7 +28,7 @@ const classes = {
   main: cn('nx-w-full nx-break-words'),
 }
 
-const Body = ({ themeContext, breadcrumb, navigation, children }: BodyProps): ReactElement => {
+const Body = ({ themeContext, navigation, children }: BodyProps): ReactElement => {
   const config = useConfig()
   const isMount = useMounted()
 
@@ -80,7 +80,7 @@ const Body = ({ themeContext, breadcrumb, navigation, children }: BodyProps): Re
         'nextra-content nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-pl-[max(env(safe-area-inset-left),1.5rem)] nx-pr-[max(env(safe-area-inset-right),1.5rem)]',
       )}
     >
-      <main className="nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6 nx-pt-4 md:nx-px-12">
+      <main className="nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6 nx-pt-4">
         {/* {breadcrumb} */}
         {body}
       </main>
@@ -94,7 +94,14 @@ const InnerLayout = ({
   headings,
   children,
   mdxSource,
-}: PageOpts & { children: ReactNode; mdxSource: MDXRemoteSerializeResult }): ReactElement => {
+  editorValue,
+  onEditorChange,
+}: PageOpts & {
+  children: ReactNode
+  mdxSource: MDXRemoteSerializeResult
+  editorValue: string
+  onEditorChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+}): ReactElement => {
   const config = useConfig()
   const fsPath = useFSRoute()
 
@@ -122,7 +129,7 @@ const InnerLayout = ({
   const themeContext = { ...activeThemeContext, ...frontMatter }
   const direction = 'ltr'
   return (
-    <div dir={direction}>
+    <div dir={direction} className={cn('nx-overflow-hidden')}>
       <script
         dangerouslySetInnerHTML={{
           __html: `document.documentElement.setAttribute('dir','${direction}')`,
@@ -147,14 +154,22 @@ const InnerLayout = ({
             asPopover={false}
             includePlaceholder={themeContext.layout === 'default'}
           />
-          <div className={cn('nx-flex')}>
-            <div className={cn('nx-w-1/2')}>
+          <div className={cn('nx-flex nx-w-full')}>
+            <div
+              className={cn('sm:nx-hidden nx-overflow-y-auto nx-mt-4')}
+              style={{ flex: 1, height: '100vh' }}
+            >
               <div className={cn('nx-container nx-w-full nx-bg-white nx-max-h-screen')}>
-                {/* {config.editor.component && renderComponent(config.editor.component)} */}
-                <textarea value="hello" />
+                <textarea
+                  className={cn('nx-w-full nx-max-h-screen nx-pl-6 nx-pr-6 nx-outline-none')}
+                  defaultValue={editorValue}
+                  onChange={onEditorChange}
+                  minLength={10000}
+                  style={{ height: '2000px', outline: 'none' }}
+                />
               </div>
             </div>
-            <div className={cn('nx-w-1/2')}>
+            <div className={cn('nx-overflow-y-auto')} style={{ flex: 1, height: '100vh' }}>
               <Body
                 themeContext={themeContext}
                 breadcrumb={<Breadcrumb activePath={activePath} />}
@@ -186,16 +201,25 @@ const InnerLayout = ({
 
 type NextraDocLayoutProps = NextraThemeLayoutProps & {
   mdxSource: MDXRemoteSerializeResult
+  editorValue: string
+  onEditorChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
 }
 
 export default function NextraDocLayout({
   children,
   mdxSource,
+  editorValue,
+  onEditorChange,
   ...context
 }: NextraDocLayoutProps): ReactElement {
   return (
     <ConfigProvider value={context}>
-      <InnerLayout {...context.pageOpts} mdxSource={mdxSource}>
+      <InnerLayout
+        {...context.pageOpts}
+        mdxSource={mdxSource}
+        editorValue={editorValue}
+        onEditorChange={onEditorChange}
+      >
         {children}
       </InnerLayout>
     </ConfigProvider>
