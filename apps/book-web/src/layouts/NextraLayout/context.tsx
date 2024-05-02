@@ -80,8 +80,11 @@ export const themeConfig: DocsThemeConfig = {
     toggleButton: true,
   },
   useNextSeoProps() {
-    return {
-      titleTemplate: '%s – Learning bunJS is Fun!',
+    const { asPath } = useRouter()
+    if (asPath !== '/') {
+      return {
+        titleTemplate: '%s – Learning bunJS is Fun!',
+      }
     }
   },
   head: function useHead() {

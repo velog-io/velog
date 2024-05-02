@@ -128,9 +128,13 @@ Sientase libre de unirse a
 [discusiones en GitHub](https://github.com/vercel/swr/discussions)!
   `
 
-  const mdxSource = await mdxCompiler(mdxText)
+  try {
+    const mdxSource = await mdxCompiler(mdxText)
 
-  return { props: { mdxSource, mdxText } }
+    return { props: { mdxSource, mdxText } }
+  } catch (error) {
+    throw new Error(`Error compiling MDX: ${JSON.stringify(error)}`)
+  }
 }) satisfies GetStaticProps<
   {
     mdxSource: MdxCompilerResult

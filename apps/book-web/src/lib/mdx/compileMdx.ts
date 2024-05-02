@@ -64,6 +64,7 @@ export const mdxCompiler = async (
   source: string,
   { latex = true, defaultShowCopyCode = true, mdxOptions }: MdxCompilerOptions = {},
 ): Promise<MdxCompilerResult> => {
+  console.log('hello')
   const { data: frontmatter, content } = grayMatter(source)
 
   const {
@@ -78,28 +79,32 @@ export const mdxCompiler = async (
     // You can override MDX options in the frontMatter too.
     ...frontmatter.mdxOptions,
   }
+  try {
+    const onig = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_HOST}/wasm/onig.wasm`)
+    setWasm(onig)
+    const compiler = await createCompiler()
+    const processor = compiler()
+    const vFile = await processor.process(content)
 
-  const onig = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_HOST}/wasm/onig.wasm`)
-  setWasm(onig)
-  const compiler = await createCompiler()
-  const processor = compiler()
-  const vFile = await processor.process(content)
-  const result = String(vFile).replaceAll('__esModule', '_\\_esModule')
+    const result = String(vFile).replaceAll('__esModule', '_\\_esModule')
 
-  const { title, hasJsxInH1, readingTime, headings } = vFile.data as {
-    readingTime?: ReadingTime
-    title?: string
-    hasJsxInH1?: boolean
-    headings: Headings
-  }
+    const { title, hasJsxInH1, readingTime, headings } = vFile.data as {
+      readingTime?: ReadingTime
+      title?: string
+      hasJsxInH1?: boolean
+      headings: Headings
+    }
 
-  return {
-    compiledSource: result,
-    ...(title && { title }),
-    ...(hasJsxInH1 && { hasJsxInH1 }),
-    ...(readingTime && { readingTime }),
-    ...(headings && { headings: vFile.data.headings as Headings }),
-    frontmatter,
+    return {
+      compiledSource: result,
+      ...(title && { title }),
+      ...(hasJsxInH1 && { hasJsxInH1 }),
+      ...(readingTime && { readingTime }),
+      ...(headings && { headings: vFile.data.headings as Headings }),
+      frontmatter,
+    }
+  } catch (error) {
+    throw error
   }
 
   // console.log(error)

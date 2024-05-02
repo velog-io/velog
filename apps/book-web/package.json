@@ -10,7 +10,7 @@
     "lint": "next lint",
     "env:copy": "tsx ./scripts/copyEnv.mts",
     "create-component": "tsx ./scripts/createComponent.ts",
-    "ssm": "tsx ./scripts/ssm.ts"
+    "ssm": "tsx ./scripts/ssm.mts"
   },
   "dependencies": {
     "@mdx-js/mdx": "2.3.0",

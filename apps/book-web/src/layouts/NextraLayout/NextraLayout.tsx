@@ -6,24 +6,30 @@ import { useEffect, useState } from 'react'
 type Props = {
   mdxSource: MdxCompilerResult
   children?: React.ReactNode
-  body?: string
+  body: string
 }
 
 function NextraLayout({ mdxSource, children, body }: Props) {
-  const [sourceString] = useState(body)
+  const [editorBody, setEditorBody] = useState(body)
   const [source, setSource] = useState(mdxSource)
 
   useEffect(() => {
     async function compileSource() {
       try {
-        if (!body) return
-        const result: MdxCompilerResult = await mdxCompiler(body)
-        setSource(result)
-      } catch (_) {}
+        // const result: MdxCompilerResult = await mdxCompiler(editorBody)
+        // console.log(result)
+        // setSource(result)
+      } catch (error) {
+        console.log('err', error)
+      }
     }
 
-    compileSource()
-  }, [sourceString])
+    // compileSource()
+  }, [editorBody])
+
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditorBody(e.target.value)
+  }
 
   if (!source) {
     return <div>not found source Loading...</div>
@@ -34,7 +40,9 @@ function NextraLayout({ mdxSource, children, body }: Props) {
       pageOpts={pageOpts}
       themeConfig={themeConfig}
       pageProps={{}}
-      mdxSource={source}
+      mdxSource={mdxSource}
+      editorValue={''}
+      onEditorChange={onChange}
     >
       {children}
     </NextraDocLayout>
