@@ -1,10 +1,10 @@
-import type { Heading, PageMapItem } from '../nextra/types'
-import type { Item, MenuItem, PageItem } from '../nextra/normalize-pages'
-import type { ReactElement } from 'react'
-
 import cn from 'clsx'
+import { useRouter } from 'next/router'
+import type { Heading } from '../nextra/types'
 import { useFSRoute, useMounted } from '../nextra/hooks'
 import { ArrowRightIcon, ExpandIcon } from '../nextra/icons'
+import type { Item, MenuItem, PageItem } from '../nextra/normalize-pages'
+import type { ReactElement } from 'react'
 import { createContext, memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { useActiveAnchor, useConfig, useMenu } from '../contexts'
@@ -52,7 +52,7 @@ const classes = {
 }
 
 type FolderProps = {
-  item: PageMapItem | MenuItem | Item | any
+  item: PageItem | MenuItem | Item
   anchors: Heading[]
 }
 
@@ -305,8 +305,8 @@ export function Sidebar({
   includePlaceholder,
 }: SideBarProps): ReactElement {
   const config = useConfig()
-
   const { menu, setMenu } = useMenu()
+  const router = useRouter()
   const [focused, setFocused] = useState<null | string>(null)
   const [showSidebar, setSidebar] = useState(true)
   const [showToggleAnimation, setToggleAnimation] = useState(false)
@@ -316,11 +316,11 @@ export function Sidebar({
   const containerRef = useRef<HTMLDivElement>(null)
   const mounted = useMounted()
   useEffect(() => {
-    // if (menu) {
-    //   document.body.classList.add('nx-overflow-hidden', 'md:nx-overflow-auto')
-    // } else {
-    //   document.body.classList.remove('nx-overflow-hidden', 'md:nx-overflow-auto')
-    // }
+    if (menu) {
+      document.body.classList.add('nx-overflow-hidden', 'md:nx-overflow-auto')
+    } else {
+      document.body.classList.remove('nx-overflow-hidden', 'md:nx-overflow-auto')
+    }
   }, [menu])
 
   useEffect(() => {
@@ -347,7 +347,7 @@ export function Sidebar({
   // Always close mobile nav when route was changed (e.g. logo click)
   useEffect(() => {
     setMenu(false)
-  }, [setMenu])
+  }, [router.asPath, setMenu])
 
   const hasI18n = config.i18n.length > 0
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton
