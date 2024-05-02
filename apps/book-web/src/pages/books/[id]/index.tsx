@@ -33,9 +33,9 @@ export const getStaticPaths = (async () => {
   }
 }) satisfies GetStaticPaths
 
-export const getStaticProps = (async ({ params }: { params: { id: string } }) => {
+export const getStaticProps = (async ({ params }) => {
   const mdxText = `
-<Callout>  ${params.id} Upgrade to the latest version (≥ 1.0.0) to experience this customization.</Callout>
+<Callout>  ${params?.id} Upgrade to the latest version (≥ 1.0.0) to experience this customization.</Callout>
 
 
 {/* wrapped with {} to mark it as javascript so mdx will not put it under a p tag */}
@@ -131,7 +131,10 @@ Sientase libre de unirse a
   const mdxSource = await mdxCompiler(mdxText)
 
   return { props: { mdxSource, mdxText } }
-}) satisfies GetStaticProps<{
-  mdxSource: MdxCompilerResult
-  mdxText: string
-}>
+}) satisfies GetStaticProps<
+  {
+    mdxSource: MdxCompilerResult
+    mdxText: string
+  },
+  { id: string }
+>

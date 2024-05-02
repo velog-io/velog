@@ -72,13 +72,17 @@ export function Select({ options, selected, onChange, title, className }: MenuPr
                         ? 'nx-bg-primary-50 nx-text-primary-600 dark:nx-bg-primary-500/10'
                         : 'nx-text-gray-800 dark:nx-text-gray-100',
                       'nx-relative nx-cursor-pointer nx-whitespace-nowrap nx-py-1.5',
-                      'nx-transition-colors ltr:nx-pl-3 ltr:nx-pr-9 rtl:nx-pr-3 rtl:nx-pl-9',
+                      'nx-transition-colors nx-pl-3 nx-pr-9',
                     )
                   }
+                  style={{ paddingRight: '2.25rem', paddingLeft: '0.75rem' }}
                 >
                   <span>{option.name}</span>
                   {option.key === selected.key && (
-                    <span className="nx-absolute nx-inset-y-0 nx-flex nx-items-center ltr:nx-right-3 rtl:nx-left-3">
+                    <span
+                      className="nx-absolute nx-inset-y-0 nx-flex nx-items-center nx-right-3"
+                      style={{ right: '0.75rem' }}
+                    >
                       <CheckIcon />
                     </span>
                   )}

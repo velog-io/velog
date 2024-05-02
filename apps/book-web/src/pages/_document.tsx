@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head />
-      <body suppressHydrationWarning={true}>
+      <body>
         <Main />
         <NextScript />
       </body>

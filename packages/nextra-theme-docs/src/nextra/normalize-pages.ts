@@ -5,8 +5,8 @@ import type { Folder, MdxFile, PageMapItem } from './types'
 const DEFAULT_PAGE_THEME: PageTheme = {
   breadcrumb: true,
   collapsed: false,
-  footer: true,
-  layout: 'default',
+  footer: false,
+  layout: 'full',
   navbar: true,
   pagination: true,
   sidebar: true,

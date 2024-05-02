@@ -63,6 +63,9 @@ export const themeSchema = z.strictObject({
       .or(z.null()),
     text: z.custom<ReactNode | FC>(...reactNode),
   }),
+  editor: z.strictObject({
+    component: z.custom<ReactNode | FC>(...reactNode),
+  }),
   faviconGlyph: z.string().optional(),
   feedback: z.strictObject({
     content: z.custom<ReactNode | FC>(...reactNode),
@@ -201,6 +204,7 @@ export const DEFAULT_THEME: DocsThemeConfig = {
     },
     text: 'Edit this page',
   },
+  editor: {},
   feedback: {
     content: 'Question? Give us feedback →',
     labels: 'feedback',
@@ -242,7 +246,7 @@ export const DEFAULT_THEME: DocsThemeConfig = {
   navbar: {
     component: Navbar,
   },
-  navigation: true,
+  navigation: false,
   nextThemes: {
     defaultTheme: 'system',
     storageKey: 'theme',

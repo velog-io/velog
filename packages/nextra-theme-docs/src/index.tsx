@@ -58,29 +58,30 @@ const Body = ({ themeContext, breadcrumb, navigation, children }: BodyProps): Re
 
   const body = config.main?.({ children: content }) || content
 
-  if (themeContext.layout === 'full') {
-    return (
-      <article
-        className={cn(
-          classes.main,
-          'nextra-content nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-pl-[max(env(safe-area-inset-left),1.5rem)] nx-pr-[max(env(safe-area-inset-right),1.5rem)]',
-        )}
-      >
-        {body}
-      </article>
-    )
-  }
+  // if (themeContext.layout === 'full') {
+  //   return (
+  //     <article
+  //       className={cn(
+  //         classes.main,
+  //         'nextra-content nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-pl-[max(env(safe-area-inset-left),1.5rem)] nx-pr-[max(env(safe-area-inset-right),1.5rem)]',
+  //       )}
+  //     >
+  //       {body}
+  //     </article>
+  //   )
+  // }
 
   return (
     <article
       className={cn(
         classes.main,
-        'nextra-content nx-flex nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-min-w-0 nx-justify-center nx-pb-8 nx-pr-[calc(env(safe-area-inset-right)-1.5rem)]',
-        themeContext.typesetting === 'article' && 'nextra-body-typesetting-article',
+        // 'nextra-content nx-flex nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-min-w-0 nx-justify-center nx-pb-8 nx-pr-[calc(env(safe-area-inset-right)-1.5rem)]',
+        // themeContext.typesetting === 'article' && 'nextra-body-typesetting-article',
+        'nextra-content nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-pl-[max(env(safe-area-inset-left),1.5rem)] nx-pr-[max(env(safe-area-inset-right),1.5rem)]',
       )}
     >
       <main className="nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6 nx-pt-4 md:nx-px-12">
-        {breadcrumb}
+        {/* {breadcrumb} */}
         {body}
       </main>
     </article>
@@ -119,7 +120,7 @@ const InnerLayout = ({
   )
 
   const themeContext = { ...activeThemeContext, ...frontMatter }
-  const direction = config.direction === 'rtl' ? 'rtl' : 'ltr'
+  const direction = 'ltr'
   return (
     <div dir={direction}>
       <script
@@ -135,7 +136,7 @@ const InnerLayout = ({
           items: topLevelNavbarItems,
         })}
       <div
-        className={cn('nx-mx-auto nx-flex', themeContext.layout !== 'raw' && 'nx-max-w-[90rem]')}
+        className={cn('nx-mx-auto nx-flex', themeContext.layout === 'raw' && 'nx-max-w-[90rem]')}
       >
         <ActiveAnchorProvider>
           <Sidebar
@@ -146,27 +147,37 @@ const InnerLayout = ({
             asPopover={false}
             includePlaceholder={themeContext.layout === 'default'}
           />
-          <Body
-            themeContext={themeContext}
-            breadcrumb={<Breadcrumb activePath={activePath} />}
-            timestamp={new Date().getTime()}
-            navigation={
-              activeType !== 'page' && themeContext.pagination ? (
-                <NavLinks flatDirectories={flatDocsDirectories} currentIndex={activeIndex} />
-              ) : null
-            }
-          >
-            <MDXRemote
-              compiledSource={mdxSource.compiledSource}
-              frontmatter={mdxSource.frontmatter}
-              scope={mdxSource.scope}
-              components={getComponents({
-                isRawLayout: themeContext.layout === 'raw',
-                components: config.components,
-              })}
-            />
-            {children}
-          </Body>
+          <div className={cn('nx-flex')}>
+            <div className={cn('nx-w-1/2')}>
+              <div className={cn('nx-container nx-w-full nx-bg-white nx-max-h-screen')}>
+                {/* {config.editor.component && renderComponent(config.editor.component)} */}
+                <textarea value="hello" />
+              </div>
+            </div>
+            <div className={cn('nx-w-1/2')}>
+              <Body
+                themeContext={themeContext}
+                breadcrumb={<Breadcrumb activePath={activePath} />}
+                timestamp={new Date().getTime()}
+                navigation={
+                  activeType !== 'page' && themeContext.pagination ? (
+                    <NavLinks flatDirectories={flatDocsDirectories} currentIndex={activeIndex} />
+                  ) : null
+                }
+              >
+                <MDXRemote
+                  compiledSource={mdxSource.compiledSource}
+                  frontmatter={mdxSource.frontmatter}
+                  scope={mdxSource.scope}
+                  components={getComponents({
+                    isRawLayout: themeContext.layout === 'raw',
+                    components: config.components,
+                  })}
+                />
+                {children}
+              </Body>
+            </div>
+          </div>
         </ActiveAnchorProvider>
       </div>
     </div>
