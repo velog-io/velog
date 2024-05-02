@@ -1,34 +1,34 @@
 import NextraDocLayout from '@packages/nextra-theme-docs'
 import { pageOpts, themeConfig } from './context'
-import { mdxCompiler, type MdxCompilerResult } from '@/lib/mdx/compileMdx'
+import { mdxCompiler } from '@/lib/mdx/compileMdx'
 import { useEffect, useState } from 'react'
+import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 
 type Props = {
-  mdxSource: MdxCompilerResult
+  mdxSource: MDXRemoteSerializeResult
   children?: React.ReactNode
   body: string
 }
 
 function NextraLayout({ mdxSource, children, body }: Props) {
-  const [editorBody, setEditorBody] = useState(body)
-  const [source, setSource] = useState(mdxSource)
+  const [editorValue, setEditorValue] = useState(body)
+  const [source, setSource] = useState<MDXRemoteSerializeResult>(mdxSource)
 
   useEffect(() => {
     async function compileSource() {
       try {
-        // const result: MdxCompilerResult = await mdxCompiler(editorBody)
-        // console.log(result)
-        // setSource(result)
+        const result: MDXRemoteSerializeResult = await mdxCompiler(editorValue)
+        setSource(result)
       } catch (error) {
         console.log('err', error)
       }
     }
 
-    // compileSource()
-  }, [editorBody])
+    compileSource()
+  }, [editorValue])
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setEditorBody(e.target.value)
+    setEditorValue(e.target.value)
   }
 
   if (!source) {
@@ -40,8 +40,8 @@ function NextraLayout({ mdxSource, children, body }: Props) {
       pageOpts={pageOpts}
       themeConfig={themeConfig}
       pageProps={{}}
-      mdxSource={mdxSource}
-      editorValue={''}
+      mdxSource={source}
+      editorValue={editorValue}
       onEditorChange={onChange}
     >
       {children}

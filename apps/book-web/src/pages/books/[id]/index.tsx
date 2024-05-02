@@ -1,10 +1,11 @@
 import NextraLayout from '@/layouts/NextraLayout'
-import { mdxCompiler, MdxCompilerResult } from '@/lib/mdx/compileMdx'
+import { mdxCompiler } from '@/lib/mdx/compileMdx'
 import { GetStaticPaths, GetStaticProps } from 'next'
+import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import { useRouter } from 'next/router'
 
 type Props = {
-  mdxSource: MdxCompilerResult
+  mdxSource: MDXRemoteSerializeResult
   mdxText: string
 }
 
@@ -35,7 +36,7 @@ export const getStaticPaths = (async () => {
 
 export const getStaticProps = (async ({ params }) => {
   const mdxText = `
-<Callout>  ${params?.id} Upgrade to the latest version (≥ 1.0.0) to experience this customization.</Callout>
+  <Callout>${params?.id} hello!</Callout>
 
 
 {/* wrapped with {} to mark it as javascript so mdx will not put it under a p tag */}
@@ -137,7 +138,7 @@ Sientase libre de unirse a
   }
 }) satisfies GetStaticProps<
   {
-    mdxSource: MdxCompilerResult
+    mdxSource: MDXRemoteSerializeResult
     mdxText: string
   },
   { id: string }
