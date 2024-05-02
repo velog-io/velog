@@ -13,7 +13,6 @@
     "ssm": "tsx ./scripts/ssm.ts"
   },
   "dependencies": {
-    "@mdx-js/loader": "^3.0.1",
     "@mdx-js/mdx": "2.3.0",
     "@next/mdx": "^14.2.3",
     "@packages/nextra-theme-docs": "workspace:*",
