@@ -316,11 +316,11 @@ export function Sidebar({
   const containerRef = useRef<HTMLDivElement>(null)
   const mounted = useMounted()
   useEffect(() => {
-    if (menu) {
-      document.body.classList.add('nx-overflow-hidden', 'md:nx-overflow-auto')
-    } else {
-      document.body.classList.remove('nx-overflow-hidden', 'md:nx-overflow-auto')
-    }
+    // if (menu) {
+    //   document.body.classList.add('nx-overflow-hidden', 'md:nx-overflow-auto')
+    // } else {
+    //   document.body.classList.remove('nx-overflow-hidden', 'md:nx-overflow-auto')
+    // }
   }, [menu])
 
   useEffect(() => {

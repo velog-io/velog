@@ -6,7 +6,7 @@ import { remarkNpm2Yarn } from '@theguild/remark-npm2yarn'
 import type { Pluggable } from 'unified'
 import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
 import rehypePrettyCode from 'rehype-pretty-code'
-import {setWasm } from 'shiki'
+import { setWasm } from 'shiki'
 import rehypeKatex from 'rehype-katex'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -62,13 +62,7 @@ export type MdxCompilerResult = {
 
 export const mdxCompiler = async (
   source: string,
-  {
-    staticImage = true,
-    readingTime = true,
-    latex = true,
-    defaultShowCopyCode = true,
-    mdxOptions,
-  }: MdxCompilerOptions = {},
+  { latex = true, defaultShowCopyCode = true, mdxOptions }: MdxCompilerOptions = {},
 ): Promise<MdxCompilerResult> => {
   const { data: frontmatter, content } = grayMatter(source)
 
@@ -85,37 +79,31 @@ export const mdxCompiler = async (
     ...frontmatter.mdxOptions,
   }
 
-  const onig = await fetch('http://localhost:3000/wasm/onig.wasm')
+  const onig = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_HOST}/wasm/onig.wasm`)
   setWasm(onig)
-
   const compiler = await createCompiler()
+  const processor = compiler()
+  const vFile = await processor.process(content)
+  const result = String(vFile).replaceAll('__esModule', '_\\_esModule')
 
-  try {
-    const processor = compiler()
-
-    const vFile = await processor.process(content)
-
-    const result = String(vFile).replaceAll('__esModule', '_\\_esModule')
-
-    const { title, hasJsxInH1, readingTime, headings } = vFile.data as {
-      readingTime?: ReadingTime
-      title?: string
-      hasJsxInH1?: boolean
-      headings: Headings
-    }
-
-    return {
-      compiledSource: result,
-      ...(title && { title }),
-      ...(hasJsxInH1 && { hasJsxInH1 }),
-      ...(readingTime && { readingTime }),
-      ...(headings && { headings: vFile.data.headings as Headings }),
-      frontmatter,
-    }
-  } catch (error) {
-    console.error(error)
-    throw error
+  const { title, hasJsxInH1, readingTime, headings } = vFile.data as {
+    readingTime?: ReadingTime
+    title?: string
+    hasJsxInH1?: boolean
+    headings: Headings
   }
+
+  return {
+    compiledSource: result,
+    ...(title && { title }),
+    ...(hasJsxInH1 && { hasJsxInH1 }),
+    ...(readingTime && { readingTime }),
+    ...(headings && { headings: vFile.data.headings as Headings }),
+    frontmatter,
+  }
+
+  // console.log(error)
+  // throw new Error(`Error compiling MDX: ${JSON.stringify(error)}`)
 
   async function createCompiler(): Promise<Processor> {
     // const highlighter = await getHighlighter({
@@ -149,9 +137,9 @@ export const mdxCompiler = async (
         [remarkHeadings, { isRemoteContent: true }] satisfies Pluggable,
         // structurize should be before remarkHeadings because we attach #id attribute to heading node
         // flexsearch && ([remarkStructurize, flexsearch] satisfies Pluggable),
-        staticImage && remarkStaticImage,
-        readingTime && remarkReadingTime,
-        latex && remarkMath,
+        remarkStaticImage,
+        remarkReadingTime,
+        remarkMath,
         remarkReplaceImports,
         // Remove the markdown file extension from links
         [

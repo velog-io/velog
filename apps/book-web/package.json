@@ -4,11 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "pnpm env:copy -e development && next dev -p 3002 --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "create-component": "tsx ./scripts/createComponent.ts"
+    "env:copy": "tsx ./scripts/copyEnv.mts",
+    "create-component": "tsx ./scripts/createComponent.ts",
+    "ssm": "tsx ./scripts/ssm.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.0.1",
@@ -34,6 +36,7 @@
     "vscode-oniguruma": "^2.0.1"
   },
   "devDependencies": {
+    "@packages/scripts": "workspace:*",
     "@packages/eslint-config": "workspace:*",
     "@packages/tsconfig": "workspace:*",
     "@types/inquirer": "^9.0.7",

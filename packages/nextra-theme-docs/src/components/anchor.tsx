@@ -1,4 +1,3 @@
- 
 import NextLink from 'next/link'
 import next from 'next/package.json'
 import type { ComponentProps, ReactElement } from 'react'
@@ -14,24 +13,9 @@ const nextVersion = Number(next.version.split('.')[0])
 export const Anchor = forwardRef<HTMLAnchorElement, AnchorProps>(function (
   { href = '', children, newWindow, ...props },
   // ref is used in <NavbarMenu />
-  forwardedRef
+  forwardedRef,
 ): ReactElement {
   const config = useConfig()
-
-  if (newWindow) {
-    return (
-      <a
-        ref={forwardedRef}
-        href={href}
-        target="_blank"
-        rel="noreferrer"
-        {...props}
-      >
-        {children}
-        <span className="nx-sr-only nx-select-none"> (opens in a new tab)</span>
-      </a>
-    )
-  }
 
   if (!href) {
     return (

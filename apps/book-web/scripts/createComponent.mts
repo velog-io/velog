@@ -81,7 +81,7 @@ async function main() {
   })
 
   if (type === 'features') {
-    fs.writeFileSync(path.resolve(__dirname, './.cache'), answers.feature, 'utf8')
+    fs.writeFileSync(path.resolve(__dirname, './templates/.cache'), answers.feature, 'utf8')
   }
 }
 

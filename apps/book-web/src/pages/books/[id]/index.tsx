@@ -1,6 +1,7 @@
 import NextraLayout from '@/layouts/NextraLayout'
 import { mdxCompiler, MdxCompilerResult } from '@/lib/mdx/compileMdx'
 import { GetStaticPaths, GetStaticProps } from 'next'
+import { useRouter } from 'next/router'
 
 type Props = {
   mdxSource: MdxCompilerResult
@@ -8,6 +9,12 @@ type Props = {
 }
 
 const Home = ({ mdxSource, mdxText }: Props) => {
+  const router = useRouter()
+
+  if (router.isFallback) {
+    return <div>isFallback Loading...</div>
+  }
+
   return <NextraLayout mdxSource={mdxSource} body={mdxText} />
 }
 
@@ -22,14 +29,13 @@ export const getStaticPaths = (async () => {
         },
       }, // See the "paths" section below
     ],
-    fallback: 'blocking', // false or "blocking"
+    fallback: true, // false or "blocking"
   }
 }) satisfies GetStaticPaths
 
-export const getStaticProps = (async () => {
+export const getStaticProps = (async ({ params }: { params: { id: string } }) => {
   const mdxText = `
-
-<Callout>  Upgrade to the latest version (≥ 1.0.0) to experience this customization.</Callout>
+<Callout>  ${params.id} Upgrade to the latest version (≥ 1.0.0) to experience this customization.</Callout>
 
 
 {/* wrapped with {} to mark it as javascript so mdx will not put it under a p tag */}

@@ -14,6 +14,7 @@ import theme from './theme.json'
 import { normalizePages, PageTheme } from './nextra/normalize-pages'
 import { useFSRoute } from './nextra/hooks/use-fs-route'
 import { LoaderOptions, NextraThemeLayoutProps, PageOpts } from './nextra/types'
+import { useMounted } from './nextra/hooks'
 interface BodyProps {
   themeContext: PageTheme
   breadcrumb: ReactNode
@@ -29,6 +30,7 @@ const classes = {
 
 const Body = ({ themeContext, breadcrumb, navigation, children }: BodyProps): ReactElement => {
   const config = useConfig()
+  const isMount = useMounted()
 
   if (themeContext.layout === 'raw') {
     return <div className={classes.main}>{children}</div>
@@ -38,7 +40,7 @@ const Body = ({ themeContext, breadcrumb, navigation, children }: BodyProps): Re
 
   const gitTimestampEl =
     // Because a user's time zone may be different from the server page
-    date ? (
+    isMount && date ? (
       <div className="nx-mt-12 nx-mb-8 nx-block nx-text-xs nx-text-gray-500 ltr:nx-text-right rtl:nx-text-left dark:nx-text-gray-400">
         {renderComponent(config.gitTimestamp, { timestamp: date })}
       </div>

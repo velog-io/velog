@@ -7,18 +7,34 @@ const choices = ['development', 'stage', 'production', 'test', 'cancel']
 type Environment = 'development' | 'stage' | 'production' | 'test'
 
 export class CopyEnvScript {
-  envFolderPath: string
+  private envFolderPath: string
   constructor(envFolderPath = './env') {
     this.envFolderPath = envFolderPath
   }
   public async excute() {
     try {
-      const envName = await this.getEnvName()
-      this.createEnv(envName)
+      const envName = this.getEnvironment() || (await this.getEnvName())
+
+      if (!choices.includes(envName ?? '')) {
+        throw new Error(`${envName} is not allowed environment`)
+      }
+
+      this.createEnv(envName as Environment)
     } catch (error: any) {
       console.log(error.message)
       process.exit(130) // The value is the same as the Prisma migration error code.
     }
+  }
+  private getEnvironment = () => {
+    const args = process.argv.slice(2)
+    const eFlagIndex = args.indexOf('-e')
+
+    const flag = { environment: '' }
+    if (eFlagIndex !== -1) {
+      const environment = args[eFlagIndex + 1]
+      Object.assign(flag, { environment })
+    }
+    return flag.environment
   }
   private getEnvPath(filename: Environment) {
     const envPath = path.resolve(process.cwd(), `${this.envFolderPath}/.env.${filename}`)

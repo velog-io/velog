@@ -18,18 +18,17 @@ function NextraLayout({ mdxSource, children, body }: Props) {
       try {
         if (!body) return
         const result: MdxCompilerResult = await mdxCompiler(body)
-        console.log('result', result)
-
         setSource(result)
-      } catch (error) {
-        console.error(error)
-      }
+      } catch (_) {}
     }
 
     compileSource()
   }, [sourceString])
 
-  if (!source) return <div> loading</div>
+  if (!source) {
+    return <div>not found source Loading...</div>
+  }
+
   return (
     <NextraDocLayout
       pageOpts={pageOpts}

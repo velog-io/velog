@@ -271,6 +271,9 @@ importers:
       '@packages/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@packages/scripts':
+        specifier: workspace:*
+        version: link:../../packages/scripts
       '@packages/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
