@@ -1,10 +1,10 @@
 type Props = {
   bucketUrl: string
-  penName: string
+  username: string
   urlSlug: string
 }
 
-export const nextConfigTempate = ({ bucketUrl, penName, urlSlug }: Props) => {
+export const nextConfigTempate = ({ bucketUrl, username, urlSlug }: Props) => {
   return `
   import nextra from 'nextra'
 
@@ -23,8 +23,8 @@ export const nextConfigTempate = ({ bucketUrl, penName, urlSlug }: Props) => {
     images: {
       unoptimized: true,
     },
-    assetPrefix: process.env.NODE_ENV === 'production' ? '${bucketUrl}/@${penName}/${urlSlug}' : undefined,
-    basePath: '/@${penName}/${urlSlug}',
+    assetPrefix: process.env.NODE_ENV === 'production' ? '${bucketUrl}/@${username}/${urlSlug}' : undefined,
+    basePath: '/@${username}/${urlSlug}',
     trailingSlash: false
   }
   

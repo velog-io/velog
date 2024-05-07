@@ -3,10 +3,10 @@ import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { getMockPages } from 'test/mock/mockBook.mjs'
 import { Writer } from '@packages/database/velog-book-mongo'
 import { faker } from '@faker-js/faker'
-import { urlAlphabet, random, customRandom } from 'nanoid'
+import { UtilsService } from '@lib/utils/UtilsService.mjs'
 
 class Seeder {
-  constructor(private readonly mongo: MongoService) {}
+  constructor(private readonly mongo: MongoService, private readonly utils: UtilsService) {}
   async createWriter() {
     const exists = await this.mongo.writer.findFirst({})
 
@@ -14,35 +14,29 @@ class Seeder {
       return exists
     }
 
+    const username = 'test_carrick'
     return this.mongo.writer.create({
       data: {
         fk_user_id: '6152b185-2efb-4d79-88f9-b9cfa96cbb9a',
-        pen_name: 'test',
+        username,
         email: 'test@velog.com',
         short_bio: 'Hello, I am test writer',
+        display_name: 'carrick',
+        thumbnail: faker.image.dataUri(),
       },
     })
   }
 
-  private escapeForUrl(text: string): string {
-    return text
-      .replace(
-        /[^0-9a-zA-Zㄱ-힣.\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf -]/g,
-        '',
-      )
-      .trim()
-      .replace(/ /g, '-')
-      .replace(/--+/g, '-')
-      .replace(/\.+$/, '')
-  }
   public async createBook(writer: Writer) {
     const mockPages = getMockPages(100).map((page) => ({
-      writer_id: writer.id,
       ...page,
+      writer_id: writer.id,
+      url_slug: '',
     }))
 
     const title = 'Learning bunJS is Fun!'
-    const urlSlug = `${title}-${customRandom(urlAlphabet, 10, random)().toLocaleLowerCase()}`
+    const escpaedTitle = this.utils.escapeForUrl(title).toLocaleLowerCase()
+    const url_slug = `/@${writer.username}/${escpaedTitle}`
 
     const book = await this.mongo.book.create({
       data: {
@@ -53,7 +47,7 @@ class Seeder {
         is_temp: false,
         is_private: false,
         is_published: true,
-        url_slug: this.escapeForUrl(urlSlug),
+        url_slug,
         pages: {
           createMany: {
             data: mockPages,
@@ -108,7 +102,8 @@ class Seeder {
 
 const main = async () => {
   const mongo = new MongoService()
-  const seeder = new Seeder(mongo)
+  const utils = new UtilsService()
+  const seeder = new Seeder(mongo, utils)
 
   try {
     const writer = await seeder.createWriter()

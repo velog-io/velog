@@ -1,9 +1,20 @@
+enum PageType {
+  page
+  separator
+}
+
 type Page {
   id: ID!
+  writer_id: ID!
   book_id: ID!
   title: String!
   body: String!
+  type: PageType!
   parent_id: ID
+  index: Int!
+  url_slug: String!
+  code: String!
+  level: Int!
+  created_at: Date!
   childrens: [Page!]!
-  type: String!
 }

@@ -1,7 +1,7 @@
 type Writer {
   id: ID!
   fk_user_id: String!
-  pen_name: String!
+  username: String!
   email: String!
   short_bio: String
 }

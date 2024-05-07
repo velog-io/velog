@@ -1005,6 +1005,12 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
+      nanoid:
+        specifier: ^5.0.7
+        version: 5.0.7
+      nanoid-dictionary:
+        specifier: ^4.3.0
+        version: 4.3.0
     devDependencies:
       '@packages/eslint-config':
         specifier: workspace:*
@@ -1018,6 +1024,9 @@ importers:
       '@types/jsonwebtoken':
         specifier: ^9.0.2
         version: 9.0.6
+      '@types/nanoid-dictionary':
+        specifier: ^4.2.3
+        version: 4.2.3
       eslint:
         specifier: ^9.0.0
         version: 9.0.0

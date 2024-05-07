@@ -6,7 +6,7 @@ import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { injectable, singleton } from 'tsyringe'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
-import { PageData, PageService } from '../PageService/index.mjs'
+import { PageService } from '../PageService/index.mjs'
 import { themeConfigTemplate } from '@templates/themeConfigTemplate.js'
 import { urlAlphabet, random, customRandom } from 'nanoid'
 import { MqService } from '@lib/mq/MqService.mjs'
@@ -14,6 +14,7 @@ import { nextConfigTempate } from '@templates/nextConfigTemplate.js'
 import { WriterService } from '../WriterService/index.mjs'
 import { ENV } from '@env'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
+import { Page } from '@packages/database/velog-book-mongo'
 
 const exec = promisify(execCb)
 
@@ -85,17 +86,40 @@ export class BookBuildService implements Service {
     }
 
     // json to files
-    const bookData = await this.pageService.organizePages(bookId)
+    const bookData = await this.mongo.book.findUnique({
+      where: {
+        id: bookId,
+      },
+      include: {
+        pages: {
+          include: {
+            childrens: {
+              include: {
+                childrens: {
+                  include: {
+                    childrens: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    })
 
     // create meta.json
     const pagePathOfBook = `${dest}/pages`
-    await this.writeMetaJson({ book: bookData, baseDest: pagePathOfBook, isRecursive: false })
+    await this.writeMetaJson({
+      pages: bookData?.pages || [],
+      baseDest: pagePathOfBook,
+      isRecursive: false,
+    })
 
     fs.writeFileSync(
       `${dest}/next.config.mjs`,
       nextConfigTempate({
         bucketUrl: ENV.bookBucketUrl,
-        penName: writer.pen_name,
+        username: writer.username,
         urlSlug: book.url_slug,
       }),
     )
@@ -135,9 +159,9 @@ export class BookBuildService implements Service {
       console.error(`exec error: ${error}`)
     }
   }
-  private async writeMetaJson({ book, baseDest, isRecursive }: WriteMetaJsonArgs) {
-    const books = this.insertKey(book)
-    const meta = books.reduce((acc, page, index) => {
+  private async writeMetaJson({ pages: _pages, baseDest, isRecursive }: WriteMetaJsonArgs) {
+    const pages = this.insertKey(_pages)
+    const meta = pages.reduce((acc, page, index) => {
       if (!isRecursive && index === 0) {
         acc['index'] = page.title
         return acc
@@ -163,23 +187,27 @@ export class BookBuildService implements Service {
 
     fs.writeFileSync(`${baseDest}/_meta.json`, JSON.stringify(meta, null, 2))
 
-    const promises = books.map((page, index) => {
+    const promises = pages.map((page, index) => {
       const filename = index === 0 && !isRecursive ? 'index' : page.key
       const mdxTarget = path.resolve(baseDest, `${filename}.mdx`)
       fs.writeFileSync(mdxTarget, page.body)
 
-      if (page.type !== 'separator' && page.childrens.length > 0) {
+      if (page.type !== 'separator' && page.childrens?.length > 0) {
         const folderPath = page.key
         const targetPath = `${baseDest}/${folderPath}`
         fs.mkdirSync(targetPath)
-        return this.writeMetaJson({ book: page.childrens, baseDest: targetPath, isRecursive: true })
+        return this.writeMetaJson({
+          pages: page.childrens || [],
+          baseDest: targetPath,
+          isRecursive: true,
+        })
       }
     })
 
     await Promise.all(promises)
-    return books
+    return pages
   }
-  private insertKey = (book: BookResult[]) => {
+  private insertKey = (book: PageData[]) => {
     return book.map((page) => ({
       key: `${page.title}_${customRandom(urlAlphabet, 10, random)().toLocaleLowerCase()}`.replace(
         /[^a-zA-Z0-9-_]/g,
@@ -190,13 +218,16 @@ export class BookBuildService implements Service {
   }
 }
 
-type BookResult = PageData
 type MetaJsonSerpator = { type: 'separator'; title: string }
 type MetaJsonValue = string | MetaJsonSerpator
 type MetaJson = Record<string, MetaJsonValue>
 
 type WriteMetaJsonArgs = {
-  book: BookResult[]
+  pages: PageData[]
   baseDest: string
   isRecursive: boolean
 }
+
+type PageData = {
+  childrens: PageData[]
+} & Page

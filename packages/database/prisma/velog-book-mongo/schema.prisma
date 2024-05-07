@@ -11,31 +11,35 @@ datasource db {
 model Writer {
   id               String   @id @default(auto()) @map("_id") @db.ObjectId
   fk_user_id       String   @unique
-  pen_name         String   @unique
+  username         String   @unique
+  display_name     String   @db.String
+  thumbnail        String   @db.String
   email            String   @unique
   short_bio        String?  @db.String
   last_accessed_at DateTime @default(now()) @db.Timestamp
   books            Book[]
 
+  created_at DateTime @default(now()) @db.Timestamp
+
   @@map("writers")
 }
 
 model Book {
-  id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  title        String  @db.String
-  thumbnail    String  @db.String
-  writer_id    String  @db.ObjectId
-  is_published Boolean @default(false)
-  is_private   Boolean @default(true)
-  is_temp      Boolean @default(true)
-  writer       Writer  @relation(fields: [writer_id], references: [id])
-  pages        Page[]
-  url_slug     String  @unique
-  description  String  @db.String
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  title         String    @db.String
+  thumbnail     String    @db.String
+  writer_id     String    @db.ObjectId
+  is_published  Boolean   @default(false)
+  is_private    Boolean   @default(true)
+  is_temp       Boolean   @default(true)
+  writer        Writer    @relation(fields: [writer_id], references: [id])
+  pages         Page[]
+  description   String    @db.String
+  released_at   DateTime? @db.Timestamp
+  url_slug String    @unique // example $@{username}/${escapeUrl(title).toLowerCase()}
 
-  released_at DateTime? @db.Timestamp
-  created_at  DateTime  @default(now()) @db.Timestamp
-  updated_at  DateTime  @default(now()) @db.Timestamp
+  created_at DateTime @default(now()) @db.Timestamp
+  updated_at DateTime @default(now()) @db.Timestamp
 
   @@map("books")
 }
@@ -47,10 +51,20 @@ model Page {
   title     String  @db.String
   body      String  @db.String
   type      String  @db.String
-  parent_id String? @db.String
+  parent_id String? @db.ObjectId
   index     Int     @db.Int
-  book      Book    @relation(fields: [book_id], references: [id])
+  url_slug  String  @unique // example /${escapeUrl(${parent.title}/${title}).toLowerCase()}}-${code}
+  code      String  @unique
+  level     Int     @default(0) @db.Int
 
+  created_at DateTime @default(now()) @db.Timestamp
+  updated_at DateTime @default(now()) @db.Timestamp
+
+  parent    Page?  @relation("ParentChildren", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  childrens Page[] @relation("ParentChildren")
+  book      Book   @relation(fields: [book_id], references: [id])
+
+  @@index([url_slug, code])
   @@map("pages")
 }
 

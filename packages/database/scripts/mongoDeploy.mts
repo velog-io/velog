@@ -7,13 +7,11 @@ const main = async () => {
     {
       type: 'list',
       name: 'answer',
-      message: `🤔 Are you sure?`,
+      message: `Target Database Info: ${ENV.velogBookMongoUrl}\n🤔 Are you sure?`,
       choices: ['No', 'Yes'],
       default: 'No',
     },
   ])
-
-  console.log(`Target Database Info: ${ENV.velogBookMongoUrl}`)
 
   if (answer === 'No') {
     console.info('🚫 db push process stopped by user.')

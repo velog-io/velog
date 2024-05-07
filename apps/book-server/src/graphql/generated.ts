@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
-
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql'
-import { Book as BookModel, Writer as WriterModel } from '@packages/database/velog-book-mongo'
+import {
+  Book as BookModel,
+  Writer as WriterModel,
+  Page as PageModel,
+} from '@packages/database/velog-book-mongo'
 import { GraphQLContext } from '../common/interfaces/graphql.mjs'
 export type Maybe<T> = T | null | undefined
 export type InputMaybe<T> = T | undefined
@@ -57,11 +60,19 @@ export type Page = {
   body: Scalars['String']['output']
   book_id: Scalars['ID']['output']
   childrens: Array<Page>
+  code: Scalars['String']['output']
+  created_at: Scalars['Date']['output']
   id: Scalars['ID']['output']
+  index: Scalars['Int']['output']
+  level: Scalars['Int']['output']
   parent_id?: Maybe<Scalars['ID']['output']>
   title: Scalars['String']['output']
-  type: Scalars['String']['output']
+  type: PageType
+  url_slug: Scalars['String']['output']
+  writer_id: Scalars['ID']['output']
 }
+
+export type PageType = 'page' | 'separator'
 
 export type Query = {
   book?: Maybe<Book>
@@ -97,8 +108,8 @@ export type Writer = {
   email: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
   id: Scalars['ID']['output']
-  pen_name: Scalars['String']['output']
   short_bio?: Maybe<Scalars['String']['output']>
+  username: Scalars['String']['output']
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
@@ -190,9 +201,11 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
   Mutation: ResolverTypeWrapper<{}>
-  Page: ResolverTypeWrapper<Page>
+  Page: ResolverTypeWrapper<PageModel>
+  PageType: PageType
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Query: ResolverTypeWrapper<{}>
   String: ResolverTypeWrapper<Scalars['String']['output']>
@@ -209,9 +222,10 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output']
   Date: Scalars['Date']['output']
   ID: Scalars['ID']['output']
+  Int: Scalars['Int']['output']
   JSON: Scalars['JSON']['output']
   Mutation: {}
-  Page: Page
+  Page: PageModel
   PositiveInt: Scalars['PositiveInt']['output']
   Query: {}
   String: Scalars['String']['output']
@@ -220,6 +234,15 @@ export type ResolversParentTypes = {
   Void: Scalars['Void']['output']
   Writer: WriterModel
 }
+
+export type AuthDirectiveArgs = {}
+
+export type AuthDirectiveResolver<
+  Result,
+  Parent,
+  ContextType = GraphQLContext,
+  Args = AuthDirectiveArgs,
+> = DirectiveResolverFn<Result, Parent, ContextType, Args>
 
 export type BookResolvers<
   ContextType = GraphQLContext,
@@ -266,10 +289,16 @@ export type PageResolvers<
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   book_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   childrens?: Resolver<Array<ResolversTypes['Page']>, ParentType, ContextType>
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  level?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   parent_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  type?: Resolver<ResolversTypes['PageType'], ParentType, ContextType>
+  url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  writer_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -292,7 +321,8 @@ export type QueryResolvers<
 
 export type SubScriptionPayloadResolvers<
   ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['SubScriptionPayload'] = ResolversParentTypes['SubScriptionPayload'],
+  ParentType extends
+    ResolversParentTypes['SubScriptionPayload'] = ResolversParentTypes['SubScriptionPayload'],
 > = {
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
@@ -336,8 +366,8 @@ export type WriterResolvers<
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   fk_user_id?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  pen_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   short_bio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -353,4 +383,8 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Subscription?: SubscriptionResolvers<ContextType>
   Void?: GraphQLScalarType
   Writer?: WriterResolvers<ContextType>
+}
+
+export type DirectiveResolvers<ContextType = GraphQLContext> = {
+  auth?: AuthDirectiveResolver<any, any, ContextType>
 }

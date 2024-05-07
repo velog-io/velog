@@ -70,7 +70,7 @@ export class BookDeployService implements Service {
       const contentType = mime.getType(filePath)
       await this.awsS3.uploadFile({
         bucketName: ENV.bookBucketName,
-        key: `@${writer.pen_name}/${book.url_slug}${relativePath}`,
+        key: `@${writer.username}/${book.url_slug}${relativePath}`,
         body: body,
         ContentType: contentType ?? 'application/octet-stream',
         ACL: 'public-read',
@@ -81,7 +81,7 @@ export class BookDeployService implements Service {
       await Promise.all(promises)
 
       console.log(
-        `Deployed URL: , https://books.velog.io/@${writer.pen_name}/${book.url_slug}/index.html`,
+        `Deployed URL: , https://books.velog.io/@${writer.username}/${book.url_slug}/index.html`,
       )
     } catch (error) {
       console.error(error)

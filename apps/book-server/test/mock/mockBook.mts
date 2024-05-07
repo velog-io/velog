@@ -1,4 +1,8 @@
 import { faker } from '@faker-js/faker'
+import { UtilsService } from '@lib/utils/UtilsService.mjs'
+import { container } from 'tsyringe'
+
+const utils = container.resolve(UtilsService)
 
 export const getMockPages = (count: number) =>
   Array(count)
@@ -9,6 +13,7 @@ export const getMockPages = (count: number) =>
           title: 'Introduction',
           index: index,
           type: 'page',
+          code: utils.randomString(8),
           body: `# Introduction_${index}
           - ${faker.lorem.paragraph(2)}
           - ${faker.lorem.paragraph(1)}
@@ -38,6 +43,7 @@ export const getMockPages = (count: number) =>
           index: index,
           body: '',
           type: 'separator',
+          code: utils.randomString(8),
         }
       }
 
@@ -47,6 +53,7 @@ export const getMockPages = (count: number) =>
           index: index,
           body: '',
           type: 'separator',
+          code: utils.randomString(8),
         }
       }
       const title = faker.company.catchPhrase()
@@ -54,6 +61,7 @@ export const getMockPages = (count: number) =>
         title,
         index: index,
         type: 'page',
+        code: utils.randomString(8),
         body: `# ${title}_${index}
         - ${faker.lorem.paragraph(2)}
         - ${faker.lorem.paragraph(1)}

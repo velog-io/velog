@@ -15,17 +15,18 @@ const config: CodegenConfig = {
         'typescript-resolvers',
         {
           add: {
-            content: `/* eslint-disable @typescript-eslint/ban-types */
-            /* eslint-disable @typescript-eslint/no-unused-vars */`,
+            content: `/* eslint-disable @typescript-eslint/ban-types */`,
           },
         },
       ],
       config: {
+        enumsAsTypes: true,
         skipTypename: true,
         contextType: '../common/interfaces/graphql.mjs#GraphQLContext',
         mappers: {
           Book: '@packages/database/velog-book-mongo#Book as BookModel',
           Writer: '@packages/database/velog-book-mongo#Writer as WriterModel',
+          Page: '@packages/database/velog-book-mongo#Page as PageModel',
         },
         inputMaybeValue: 'T | undefined',
         maybeValue: 'T | null | undefined',

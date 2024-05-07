@@ -28,6 +28,10 @@
     "./jwt": {
       "default": "./dist/jwt/JwtService.mjs",
       "types": "./dist/jwt/JwtService.d.mts"
+    },
+    "./utils": {
+      "default": "./dist/utils/UtilsService.mjs",
+      "types:": "./dist/utils/UtilsService.d.mts"
     }
   },
   "scripts": {
@@ -40,13 +44,16 @@
     "@fastify/cookie": "^9.3.1",
     "@packages/scripts": "workspace:*",
     "fastify": "^4.26.2",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "nanoid": "^5.0.7",
+    "nanoid-dictionary": "^4.3.0"
   },
   "devDependencies": {
     "@packages/eslint-config": "workspace:*",
     "@packages/tsconfig": "workspace:*",
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.2",
+    "@types/nanoid-dictionary": "^4.2.3",
     "eslint": "^9.0.0",
     "tsx": "^4.7.2",
     "typescript": "^5.4.5"

@@ -23,25 +23,15 @@ export default Home
 
 export const getStaticPaths = (async () => {
   return {
-    paths: [
-      {
-        params: {
-          id: 'id',
-          title: 'another',
-          any: 'any',
-          some: 'some',
-        },
-      }, // See the "paths" section below
-    ],
-    fallback: true, // false or "blocking"
+    paths: [],
+    fallback: false, // false or "blocking"
   }
 }) satisfies GetStaticPaths
 
-export const getStaticProps = (async () => {
+export const getStaticProps = (async ({ params }) => {
+  console.log('params', params)
   const mdxText = `
-<Callout>
-  Upgrade to the latest version (≥ 1.0.0) to experience this customization.
-</Callout>
+  <Callout>${params?.id} hello!</Callout>
 
 
 {/* wrapped with {} to mark it as javascript so mdx will not put it under a p tag */}
@@ -68,7 +58,7 @@ recuperación (revalidación), y finalmente entrege los datos actualizados.
 
 ## Resumen
 
-\`\`\`jsx
+\`\`\`jsx filename="hello.js" {4-4}
 import useSWR from 'swr'
 
 function Profile() {
@@ -134,10 +124,17 @@ Sientase libre de unirse a
 [discusiones en GitHub](https://github.com/vercel/swr/discussions)!
   `
 
-  const mdxSource = await mdxCompiler(mdxText)
+  try {
+    const mdxSource = await mdxCompiler(mdxText)
 
-  return { props: { mdxSource, mdxText } }
-}) satisfies GetStaticProps<{
-  mdxSource: MDXRemoteSerializeResult
-  mdxText: string
-}>
+    return { props: { mdxSource, mdxText } }
+  } catch (error) {
+    throw new Error(`Error compiling MDX: ${JSON.stringify(error)}`)
+  }
+}) satisfies GetStaticProps<
+  {
+    mdxSource: MDXRemoteSerializeResult
+    mdxText: string
+  },
+  { id: string }
+>

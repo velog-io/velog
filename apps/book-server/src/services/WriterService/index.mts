@@ -29,7 +29,14 @@ export class WriterService implements Service {
       },
     })
   }
-  public async create({ fk_user_id, pen_name, email, short_bio }: CreateArgs): Promise<Writer> {
+  public async create({
+    fk_user_id,
+    username,
+    email,
+    short_bio,
+    display_name,
+    thumbnail,
+  }: CreateArgs): Promise<Writer> {
     const exists = await this.mongo.writer.findUnique({
       where: {
         fk_user_id,
@@ -43,9 +50,11 @@ export class WriterService implements Service {
     const writer = await this.mongo.writer.create({
       data: {
         fk_user_id,
-        pen_name,
+        username,
         email,
         short_bio,
+        display_name,
+        thumbnail,
       },
     })
 
@@ -68,7 +77,9 @@ export class WriterService implements Service {
 
 type CreateArgs = {
   fk_user_id: string
-  pen_name: string
+  username: string
   email: string
   short_bio: string | null
+  display_name: string
+  thumbnail: string
 }
