@@ -1,12 +1,12 @@
 import type { MdxCompilerOptions, MdxOptions } from '@packages/nextra-theme-docs'
 import { serialize } from 'next-mdx-remote/serialize'
 import grayMatter from 'gray-matter'
-import { createProcessor } from '@mdx-js/mdx'
-import type { Processor } from '@mdx-js/mdx/lib/core'
+// import { createProcessor } from '@mdx-js/mdx'
+// import type { Processor } from '@mdx-js/mdx/lib/core'
 import { remarkNpm2Yarn } from '@theguild/remark-npm2yarn'
 import type { Pluggable } from 'unified'
-import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
-import rehypePrettyCode from 'rehype-pretty-code'
+// import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
+// import rehypePrettyCode from 'rehype-pretty-code'
 // import rehypeRaw from 'rehype-raw'
 import { setWasm } from 'shiki'
 import rehypeKatex from 'rehype-katex'
@@ -25,32 +25,32 @@ import {
   remarkReplaceImports,
 } from '@packages/nextra-theme-docs'
 import { truthy } from './utils'
-import theme from './theme'
+// import theme from './theme'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 
 const clonedRemarkLinkRewrite = remarkLinkRewrite.bind(null as any)
 
 const MARKDOWN_URL_EXTENSION_REGEX = /\.mdx?(?:(?=[#?])|$)/
 
-const CODE_BLOCK_FILENAME_REGEX = /filename="([^"]+)"/
+// const CODE_BLOCK_FILENAME_REGEX = /filename="([^"]+)"/
 
-const DEFAULT_REHYPE_PRETTY_CODE_OPTIONS: RehypePrettyCodeOptions = {
-  theme: theme as any,
-  onVisitLine(node: any) {
-    // Prevent lines from collapsing in `display: grid` mode, and
-    // allow empty lines to be copy/pasted
-    if (node.children.length === 0) {
-      node.children = [{ type: 'text', value: ' ' }]
-    }
-  },
-  onVisitHighlightedLine(node: any) {
-    node.properties.className?.push('highlighted')
-  },
-  onVisitHighlightedWord(node: any) {
-    node.properties.className = ['highlighted']
-  },
-  filterMetaString: (meta: string) => meta.replace(CODE_BLOCK_FILENAME_REGEX, ''),
-}
+// const DEFAULT_REHYPE_PRETTY_CODE_OPTIONS: RehypePrettyCodeOptions = {
+//   theme: theme as any,
+//   onVisitLine(node: any) {
+//     // Prevent lines from collapsing in `display: grid` mode, and
+//     // allow empty lines to be copy/pasted
+//     if (node.children.length === 0) {
+//       node.children = [{ type: 'text', value: ' ' }]
+//     }
+//   },
+//   onVisitHighlightedLine(node: any) {
+//     node.properties.className?.push('highlighted')
+//   },
+//   onVisitHighlightedChars(node: any) {
+//     node.properties.className = ['highlighted']
+//   },
+//   filterMetaString: (meta: string) => meta.replace(CODE_BLOCK_FILENAME_REGEX, ''),
+// }
 
 export const mdxCompiler = async (
   source: string,
@@ -58,7 +58,7 @@ export const mdxCompiler = async (
 ): Promise<MDXRemoteSerializeResult> => {
   const { data: frontmatter, content } = grayMatter(source)
 
-  const { remarkPlugins, rehypePlugins, rehypePrettyCodeOptions }: MdxOptions = {
+  const { remarkPlugins, rehypePlugins }: MdxOptions = {
     ...mdxOptions,
     // You can override MDX options in the frontMatter too.
     ...frontmatter.mdxOptions,

@@ -114,6 +114,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
   }
 
   const isLink = 'withIndexPage' in item && item.withIndexPage
+
   // use button when link don't have href because it impacts on SEO
   const ComponentToUse = isLink ? Anchor : 'button'
 
@@ -367,9 +368,7 @@ export function Sidebar({
         onClick={() => setMenu(false)}
       />
       <aside
-        
         className={cn(
-          'nx-overflow-y-auto nx-h-screen',
           'nextra-sidebar-container nx-flex nx-flex-col',
           'md:nx-top-16 md:nx-shrink-0 motion-reduce:nx-transform-none',
           'nx-transform-gpu nx-transition-all nx-ease-in-out',
@@ -430,6 +429,7 @@ export function Sidebar({
 
         {hasMenu && (
           <div
+            style={{ marginTop: showSidebar ? '0px' : '-30px' }}
             className={cn(
               'nx-sticky nx-bottom-0',
               'nx-bg-white dark:nx-bg-dark', // when banner is showed, sidebar links can be behind menu, set bg color as body bg color

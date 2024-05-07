@@ -1,10 +1,11 @@
 import NextraLayout from '@/layouts/NextraLayout'
-import { mdxCompiler, MdxCompilerResult } from '@/lib/mdx/compileMdx'
+import { mdxCompiler } from '@/lib/mdx/compileMdx'
 import { GetStaticPaths, GetStaticProps } from 'next'
+import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import { useRouter } from 'next/router'
 
 type Props = {
-  mdxSource: MdxCompilerResult
+  mdxSource: MDXRemoteSerializeResult
   mdxText: string
 }
 
@@ -137,6 +138,6 @@ Sientase libre de unirse a
 
   return { props: { mdxSource, mdxText } }
 }) satisfies GetStaticProps<{
-  mdxSource: MdxCompilerResult
+  mdxSource: MDXRemoteSerializeResult
   mdxText: string
 }>

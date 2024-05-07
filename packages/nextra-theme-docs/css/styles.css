@@ -1,14 +1,15 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-@import 'nextra/styles/variables.css';
-@import 'nextra/styles/code-block.css';
-@import 'nextra/styles/subheading-anchor.css';
-@import 'nextra/styles/scrollbar.css';
-@import 'nextra/styles/steps.css';
-@import 'nextra/styles/cards.css';
+@import './nextra/variables.css';
+@import './nextra/code-block.css';
+@import './nextra/subheading-anchor.css';
+@import './nextra/scrollbar.css';
+@import './nextra/steps.css';
+@import './nextra/cards.css';
 @import './hamburger.css';
 @import './typesetting-article.css';
+@import './editor.css';
 
 html {
   @apply nx-antialiased nx-text-base nx-scroll-pt-[--nextra-navbar-height];

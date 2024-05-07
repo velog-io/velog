@@ -17,7 +17,7 @@ function NextraLayout({ mdxSource, children, body }: Props) {
   useEffect(() => {
     async function compileSource() {
       try {
-        const result: MDXRemoteSerializeResult = await mdxCompiler(editorValue)
+        const result = await mdxCompiler(editorValue)
         setSource(result)
       } catch (error) {
         console.log('err', error)
