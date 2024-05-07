@@ -1,4 +1,4 @@
-import NextraDocLayout from '@packages/nextra-theme-docs'
+import NextraDocLayout from '@packages/nextra-editor'
 import { pageOpts, themeConfig } from './context'
 import { mdxCompiler } from '@/lib/mdx/compileMdx'
 import { useEffect, useState } from 'react'

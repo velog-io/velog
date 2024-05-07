@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import type { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-theme-docs'
+import type { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-editor'
 
 export const pageMap: PageMapItem[] = [
   {

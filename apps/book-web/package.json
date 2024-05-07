@@ -15,7 +15,7 @@
   "dependencies": {
     "@mdx-js/mdx": "2.3.0",
     "@next/mdx": "^14.2.3",
-    "@packages/nextra-theme-docs": "workspace:*",
+    "@packages/nextra-editor": "workspace:*",
     "@shikijs/rehype": "^1.4.0",
     "@theguild/remark-mermaid": "^0.0.5",
     "@theguild/remark-npm2yarn": "0.2.0",

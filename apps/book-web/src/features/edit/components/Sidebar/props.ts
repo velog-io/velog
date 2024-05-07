@@ -1,4 +1,4 @@
-import type { PageItem, Item, Heading } from '@packages/nextra-theme-docs'
+import type { PageItem, Item, Heading } from '@packages/nextra-editor'
 
 export const docsDirectories: PageItem[] = [
   {

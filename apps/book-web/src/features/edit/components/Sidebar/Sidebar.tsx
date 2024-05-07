@@ -1,6 +1,6 @@
 'use client'
 
-import { Sidebar as NextraSidebar } from '@packages/nextra-theme-docs'
+import { Sidebar as NextraSidebar } from '@packages/nextra-editor'
 import { sidebarProps } from './props.js'
 
 function Sidebar() {

@@ -210,9 +210,9 @@ importers:
       '@next/mdx':
         specifier: ^14.2.3
         version: 14.2.3
-      '@packages/nextra-theme-docs':
+      '@packages/nextra-editor':
         specifier: workspace:*
-        version: link:../../packages/nextra-theme-docs
+        version: link:../../packages/nextra-editor
       '@shikijs/rehype':
         specifier: ^1.4.0
         version: 1.4.0
@@ -808,9 +808,9 @@ importers:
       '@packages/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@packages/nextra-theme-docs':
+      '@packages/nextra-editor':
         specifier: workspace:*
-        version: link:../../packages/nextra-theme-docs
+        version: link:../../packages/nextra-editor
       '@packages/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
@@ -1028,7 +1028,7 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
 
-  packages/nextra-theme-docs:
+  packages/nextra-editor:
     dependencies:
       '@headlessui/react':
         specifier: ^1.7.17
@@ -1141,7 +1141,7 @@ importers:
         version: 8.2.2
       eslint:
         specifier: ^9.0.0
-        version: 9.0.0
+        version: 9.1.1
       jsdom:
         specifier: ^23.0.0
         version: 23.2.0
@@ -18734,7 +18734,7 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       psl: 1.9.0
-      punycode: 2.3.0
+      punycode: 2.3.1
       universalify: 0.2.0
       url-parse: 1.5.10
     dev: true

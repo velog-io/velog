@@ -1,4 +1,4 @@
-import type { MdxCompilerOptions, MdxOptions } from '@packages/nextra-theme-docs'
+import type { MdxCompilerOptions, MdxOptions } from '@packages/nextra-editor'
 import { serialize } from 'next-mdx-remote/serialize'
 import grayMatter from 'gray-matter'
 // import { createProcessor } from '@mdx-js/mdx'
@@ -23,7 +23,7 @@ import {
   remarkRemoveImports,
   remarkStaticImage,
   remarkReplaceImports,
-} from '@packages/nextra-theme-docs'
+} from '@packages/nextra-editor'
 import { truthy } from './utils'
 // import theme from './theme'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'

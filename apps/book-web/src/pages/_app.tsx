@@ -1,4 +1,4 @@
-import '@packages/nextra-theme-docs/style.css'
+import '@packages/nextra-editor/style.css'
 import '../styles/global.css'
 
 import type { AppProps } from 'next/app'
