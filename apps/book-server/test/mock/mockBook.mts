@@ -9,11 +9,13 @@ export const getMockPages = (count: number) =>
     .fill(0)
     .map((_, index) => {
       if (index === 0) {
+        const code = utils.randomString(8)
         return {
           title: 'Introduction',
           index: index,
           type: 'page',
-          code: utils.randomString(8),
+          code,
+          url_slug: `${utils.escapeForUrl('Introduction')}-${code}`,
           body: `# Introduction_${index}
           - ${faker.lorem.paragraph(2)}
           - ${faker.lorem.paragraph(1)}
@@ -38,30 +40,37 @@ export const getMockPages = (count: number) =>
       }
 
       if (index === 2) {
+        const code = utils.randomString(8)
         return {
           title: 'Getting Started',
           index: index,
           body: '',
           type: 'separator',
-          code: utils.randomString(8),
+          code,
+          url_slug: `${utils.escapeForUrl('Getting Started')}-${code}`,
         }
       }
 
       if (index === 6) {
+        const code = utils.randomString(8)
         return {
           title: 'API Reference',
           index: index,
           body: '',
           type: 'separator',
-          code: utils.randomString(8),
+          code: code,
+          url_slug: `${utils.escapeForUrl('API Reference')}-${code}`,
         }
       }
-      const title = faker.company.catchPhrase()
+
+      const title = faker.lorem.sentence({ min: 1, max: 3 })
+      const code = utils.randomString(8)
       return {
         title,
         index: index,
         type: 'page',
-        code: utils.randomString(8),
+        code: code,
+        url_slug: `${utils.escapeForUrl(title)}-${code}`,
         body: `# ${title}_${index}
         - ${faker.lorem.paragraph(2)}
         - ${faker.lorem.paragraph(1)}

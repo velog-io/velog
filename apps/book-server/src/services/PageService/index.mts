@@ -7,6 +7,7 @@ import { injectable, singleton } from 'tsyringe'
 
 interface Service {
   organizePages(bookId: string): Promise<Page[]>
+  updatePageAndChildrenUrlSlug(args: UpdatePageAndChildrenUrlSlugArgs): Promise<void>
 }
 
 @injectable()
@@ -52,8 +53,8 @@ export class PageService implements Service {
     pageId,
     signedWriterId,
     urlPrefix = '',
-  }: UpdateUrlSlugArgs) {
-    if (signedWriterId) {
+  }: UpdatePageAndChildrenUrlSlugArgs) {
+    if (!signedWriterId) {
       throw new UnauthorizedError('Unauthorized')
     }
 
@@ -83,7 +84,7 @@ export class PageService implements Service {
       }
     }
 
-    const escapedTitle = `${urlPrefix}/${this.utils.escapeForUrl(page.title).toLocaleLowerCase()}`
+    const escapedTitle = `${urlPrefix}/${this.utils.escapeForUrl(page.title).toLowerCase()}`
     const newUrlSlug = `${escapedTitle}-${page.code}`
     await this.mongo.page.update({
       where: {
@@ -104,7 +105,7 @@ export class PageService implements Service {
       await this.updatePageAndChildrenUrlSlug({
         pageId: child.id,
         signedWriterId,
-        urlPrefix: `${urlPrefix}/${page.url_slug}`,
+        urlPrefix: `${escapedTitle}`,
       })
     }
   }
@@ -114,7 +115,7 @@ export type PageData = {
   childrens: Page[]
 } & Page
 
-type UpdateUrlSlugArgs = {
+type UpdatePageAndChildrenUrlSlugArgs = {
   pageId: string
   signedWriterId?: string
   urlPrefix?: string

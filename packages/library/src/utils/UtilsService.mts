@@ -1,5 +1,5 @@
 import { customAlphabet } from 'nanoid'
-import { alphanumeric } from 'nanoid-dictionary'
+import nanoidDictionary from 'nanoid-dictionary'
 
 interface Service {
   escapeForUrl(text: string): string
@@ -19,7 +19,7 @@ export class UtilsService implements Service {
       .replace(/\.+$/, '')
   }
   public randomString(size = 10) {
-    const generateCode = customAlphabet(alphanumeric, size)
+    const generateCode = customAlphabet(nanoidDictionary.alphanumeric, size)
     return generateCode()
   }
 }

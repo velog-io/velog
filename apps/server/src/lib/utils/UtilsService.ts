@@ -4,7 +4,7 @@ import { injectable, singleton } from 'tsyringe'
 import { fileURLToPath } from 'url'
 import { z } from 'zod'
 import { customAlphabet } from 'nanoid'
-import { alphanumeric } from 'nanoid-dictionary'
+import nanoidDictionary from 'nanoid-dictionary'
 
 interface Service {
   resolveDir(dir: string): string
@@ -149,7 +149,7 @@ export class UtilsService implements Service {
     }
   }
   public alphanumeric(size = 10) {
-    const generateCode = customAlphabet(alphanumeric, size)
+    const generateCode = customAlphabet(nanoidDictionary.alphanumeric, size)
     return generateCode()
   }
   public randomNumber(max: number) {

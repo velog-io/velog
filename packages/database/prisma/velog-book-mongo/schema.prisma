@@ -25,21 +25,22 @@ model Writer {
 }
 
 model Book {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  title         String    @db.String
-  thumbnail     String    @db.String
-  writer_id     String    @db.ObjectId
-  is_published  Boolean   @default(false)
-  is_private    Boolean   @default(true)
-  is_temp       Boolean   @default(true)
-  writer        Writer    @relation(fields: [writer_id], references: [id])
-  pages         Page[]
-  description   String    @db.String
-  released_at   DateTime? @db.Timestamp
-  url_slug String    @unique // example $@{username}/${escapeUrl(title).toLowerCase()}
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  title        String    @db.String
+  thumbnail    String    @db.String
+  writer_id    String    @db.ObjectId
+  is_published Boolean   @default(false)
+  is_private   Boolean   @default(true)
+  is_temp      Boolean   @default(true)
+  description  String    @db.String
+  released_at  DateTime? @db.Timestamp
+  url_slug     String    @unique // example $@{username}/${escapeUrl(title).toLowerCase()}
 
   created_at DateTime @default(now()) @db.Timestamp
   updated_at DateTime @default(now()) @db.Timestamp
+
+  writer Writer @relation(fields: [writer_id], references: [id])
+  pages  Page[]
 
   @@map("books")
 }
@@ -55,7 +56,7 @@ model Page {
   index     Int     @db.Int
   url_slug  String  @unique // example /${escapeUrl(${parent.title}/${title}).toLowerCase()}}-${code}
   code      String  @unique
-  level     Int     @default(0) @db.Int
+  level     Int     @default(1) @db.Int // max level 3
 
   created_at DateTime @default(now()) @db.Timestamp
   updated_at DateTime @default(now()) @db.Timestamp

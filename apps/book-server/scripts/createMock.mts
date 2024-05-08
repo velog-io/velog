@@ -4,9 +4,14 @@ import { getMockPages } from 'test/mock/mockBook.mjs'
 import { Writer } from '@packages/database/velog-book-mongo'
 import { faker } from '@faker-js/faker'
 import { UtilsService } from '@lib/utils/UtilsService.mjs'
+import { PageService } from '@services/PageService/index.mjs'
 
 class Seeder {
-  constructor(private readonly mongo: MongoService, private readonly utils: UtilsService) {}
+  constructor(
+    private readonly mongo: MongoService,
+    private readonly utils: UtilsService,
+    private readonly pageService: PageService,
+  ) {}
   async createWriter() {
     const exists = await this.mongo.writer.findFirst({})
 
@@ -31,11 +36,10 @@ class Seeder {
     const mockPages = getMockPages(100).map((page) => ({
       ...page,
       writer_id: writer.id,
-      url_slug: '',
     }))
 
     const title = 'Learning bunJS is Fun!'
-    const escpaedTitle = this.utils.escapeForUrl(title).toLocaleLowerCase()
+    const escpaedTitle = this.utils.escapeForUrl(title).toLowerCase()
     const url_slug = `/@${writer.username}/${escpaedTitle}`
 
     const book = await this.mongo.book.create({
@@ -64,6 +68,7 @@ class Seeder {
     const topLevel = pages
       .slice(0, 10)
       .filter((_, index) => index !== 0 && index !== 2 && index !== 6)
+
     const secondLevel = pages.slice(10, 50)
 
     for (let i = 11; i < 51; i++) {
@@ -76,6 +81,7 @@ class Seeder {
         },
         data: {
           parent_id: parentId,
+          level: 2,
         },
       })
     }
@@ -94,7 +100,15 @@ class Seeder {
         },
         data: {
           parent_id: parentId,
+          level: 3,
         },
+      })
+    }
+
+    for (const topLevelPage of topLevel) {
+      await this.pageService.updatePageAndChildrenUrlSlug({
+        pageId: topLevelPage.id,
+        signedWriterId: writer.id,
       })
     }
   }
@@ -103,7 +117,8 @@ class Seeder {
 const main = async () => {
   const mongo = new MongoService()
   const utils = new UtilsService()
-  const seeder = new Seeder(mongo, utils)
+  const pageService = new PageService(mongo, utils)
+  const seeder = new Seeder(mongo, utils, pageService)
 
   try {
     const writer = await seeder.createWriter()
