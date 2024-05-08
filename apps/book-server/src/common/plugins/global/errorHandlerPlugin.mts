@@ -1,6 +1,6 @@
 import { ENV } from '@env'
-import { isHttpError } from '@errors/HttpError.js'
-import { DiscordService } from '@lib/discord/DiscordService.js'
+import { isHttpError } from '@errors/HttpError.mjs'
+import { DiscordService } from '@lib/discord/DiscordService.mjs'
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 import fp from 'fastify-plugin'
@@ -17,15 +17,19 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
     request.log.error(error, 'fastify onError')
     const discord = container.resolve(DiscordService)
     discord
-      .sendMessage('error', {
-        type: 'fastify OnError',
-        body: request?.body,
-        query: request?.query,
-        error,
-        user: request?.user,
-        ip: request?.ip,
-      })
+      .sendMessage(
+        'error',
+        JSON.stringify({
+          type: 'fastify OnError',
+          body: request?.body,
+          query: request?.query,
+          error,
+          writer: request?.writer,
+          ip: request?.ip,
+        }),
+      )
       .catch(console.error)
+
     done()
   })
   fastify.setErrorHandler((error, request, reply) => {
@@ -48,14 +52,17 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
     } else {
       const discord = container.resolve(DiscordService)
       discord
-        .sendMessage('error', {
-          type: 'fastify handleError',
-          body: request?.body,
-          query: request?.query,
-          error,
-          user: request?.user,
-          ip: request?.ip,
-        })
+        .sendMessage(
+          'error',
+          JSON.stringify({
+            type: 'fastify handleError',
+            body: request?.body,
+            query: request?.query,
+            error,
+            writer: request?.writer,
+            ip: request?.ip,
+          }),
+        )
         .catch(console.error)
     }
   })

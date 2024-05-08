@@ -4,6 +4,7 @@ import { container } from 'tsyringe'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { DiscordService } from '@lib/discord/DiscordService.mjs'
 import { ENV } from '@env'
+import { RedisService } from '@lib/redis/RedisService.mjs'
 
 async function main() {
   const mongo = container.resolve(MongoService)
@@ -12,6 +13,9 @@ async function main() {
 
   const discord = container.resolve(DiscordService)
   discord.connection()
+
+  const redis = container.resolve(RedisService)
+  redis.connection()
 
   app.listen({ port: ENV.port, host: '::' })
 }

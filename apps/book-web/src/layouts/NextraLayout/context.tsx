@@ -8,6 +8,10 @@ export const pageMap: PageMapItem[] = [
     kind: 'Meta',
     data: {
       index: { title: 'Introduction' },
+      themes: {
+        title: 'Themes',
+        type: 'separator',
+      },
       another: { title: 'Another Page' },
       advanced: { title: 'Advanced (A Folder)' },
       hello: { title: 'hello' },
