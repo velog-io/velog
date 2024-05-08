@@ -43,6 +43,10 @@ export type BookIdInput = {
   book_id: Scalars['ID']['input']
 }
 
+export type GetPageMetadataInput = {
+  book_url_slug: Scalars['String']['input']
+}
+
 export type Mutation = {
   build?: Maybe<Scalars['Void']['output']>
   deploy?: Maybe<Scalars['Void']['output']>
@@ -75,6 +79,7 @@ export type Page = {
 export type PageMetadata = {
   childrens: Array<PageMetadata>
   code: Scalars['String']['output']
+  id: Scalars['ID']['output']
   level: Scalars['Int']['output']
   parent_id?: Maybe<Scalars['String']['output']>
   title: Scalars['String']['output']
@@ -94,7 +99,7 @@ export type QueryBookArgs = {
 }
 
 export type QueryGetPageMetadataArgs = {
-  input: BookIdInput
+  input: GetPageMetadataInput
 }
 
 export type SubScriptionPayload = {
@@ -215,6 +220,7 @@ export type ResolversTypes = {
   BookIDInput: BookIdInput
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
+  GetPageMetadataInput: GetPageMetadataInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
   Int: ResolverTypeWrapper<Scalars['Int']['output']>
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
@@ -237,6 +243,7 @@ export type ResolversParentTypes = {
   BookIDInput: BookIdInput
   Boolean: Scalars['Boolean']['output']
   Date: Scalars['Date']['output']
+  GetPageMetadataInput: GetPageMetadataInput
   ID: Scalars['ID']['output']
   Int: Scalars['Int']['output']
   JSON: Scalars['JSON']['output']
@@ -325,6 +332,7 @@ export type PageMetadataResolvers<
 > = {
   childrens?: Resolver<Array<ResolversTypes['PageMetadata']>, ParentType, ContextType>
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   level?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   parent_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>

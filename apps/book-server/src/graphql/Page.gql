@@ -31,9 +31,9 @@ type PageMetadata {
 }
 
 type Query {
-  getPageMetadata(input: BookIDInput!): [PageMetadata!]!
+  getPageMetadata(input: GetPageMetadataInput!): [PageMetadata!]!
 }
 
-input BookIDInput {
-  book_id: ID!
+input GetPageMetadataInput {
+  book_url_slug: String!
 }

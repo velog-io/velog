@@ -81,14 +81,14 @@ export class PageService implements Service {
   }
 
   public async getPageMetadata(
-    bookId: string,
+    bookUrlSlug: string,
     signedWriterId?: string,
   ): Promise<PageMetadataResult[]> {
     if (!signedWriterId) {
       throw new UnauthorizedError('Not authorized')
     }
 
-    const book = await this.bookSerivce.findById(bookId)
+    const book = await this.bookSerivce.findByUrlSlug(bookUrlSlug)
 
     if (!book) {
       throw new NotFoundError('Not found book')
@@ -110,7 +110,7 @@ export class PageService implements Service {
 
     const pages = await this.mongo.page.findMany({
       where: {
-        book_id: bookId,
+        book_id: book.id,
       },
       select: {
         ...select,

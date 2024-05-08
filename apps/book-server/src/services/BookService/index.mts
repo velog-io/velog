@@ -7,6 +7,7 @@ import { Book } from '@packages/database/velog-book-mongo'
 
 interface Service {
   findById(bookId: string): Promise<Book | null>
+  findByUrlSlug(urlSlug: string): Promise<Book | null>
   getBook(bookId: string, signedUserId?: string): Promise<Book>
 }
 
@@ -18,6 +19,13 @@ export class BookService implements Service {
     return await this.mongo.book.findUnique({
       where: {
         id: bookId,
+      },
+    })
+  }
+  public async findByUrlSlug(urlSlug: string): Promise<Book | null> {
+    return await this.mongo.book.findUnique({
+      where: {
+        url_slug: urlSlug,
       },
     })
   }
