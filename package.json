@@ -37,5 +37,9 @@
     "@packages/tsconfig": "workspace:*",
     "husky": "^8.0.0",
     "lint-staged": "^13.2.3"
+  },
+  "resolutions": {
+    "graphql": "16.8.1",
+    "next": "14.2.3"
   }
 }

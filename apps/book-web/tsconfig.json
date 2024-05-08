@@ -20,6 +20,6 @@
     "next.config.mjs",
     "eslint.config.js",
     ".next/types/**/*.ts"
-  ],
+, "src/env.mts"  ],
   "exclude": ["node_modules", "dist"]
 }
