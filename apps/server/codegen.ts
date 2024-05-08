@@ -5,7 +5,7 @@ const config: CodegenConfig = {
   schema: 'src/graphql/**/*.gql',
   documents: undefined,
   hooks: {
-    afterOneFileWrite: ['pnpm lint'],
+    afterOneFileWrite: ['prettier --write .'],
   },
   generates: {
     'src/graphql/helpers/generated.ts': {

@@ -19,7 +19,10 @@ interface Service {
 @injectable()
 @singleton()
 export class ExternalIntegrationService implements Service {
-  constructor(private readonly db: DbService, private readonly jwt: JwtService) {}
+  constructor(
+    private readonly db: DbService,
+    private readonly jwt: JwtService,
+  ) {}
   public async createIntegrationCode(signedUserId?: string): Promise<string> {
     if (!signedUserId) {
       throw new UnauthorizedError('Not logged in')

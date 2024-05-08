@@ -1333,8 +1333,7 @@ export type QueryResolvers<
 
 export type ReadCountByDayResolvers<
   ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['ReadCountByDay'] = ResolversParentTypes['ReadCountByDay'],
+  ParentType extends ResolversParentTypes['ReadCountByDay'] = ResolversParentTypes['ReadCountByDay'],
 > = {
   count?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   day?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>
@@ -1352,8 +1351,7 @@ export type SearchResultResolvers<
 
 export type SendMailResponseResolvers<
   ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['SendMailResponse'] = ResolversParentTypes['SendMailResponse'],
+  ParentType extends ResolversParentTypes['SendMailResponse'] = ResolversParentTypes['SendMailResponse'],
 > = {
   registered?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
@@ -1415,8 +1413,7 @@ export type TagResolvers<
 
 export type TrendingWriterResolvers<
   ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['TrendingWriter'] = ResolversParentTypes['TrendingWriter'],
+  ParentType extends ResolversParentTypes['TrendingWriter'] = ResolversParentTypes['TrendingWriter'],
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
@@ -1427,8 +1424,7 @@ export type TrendingWriterResolvers<
 
 export type TrendingWriterPostsResolvers<
   ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['TrendingWriterPosts'] = ResolversParentTypes['TrendingWriterPosts'],
+  ParentType extends ResolversParentTypes['TrendingWriterPosts'] = ResolversParentTypes['TrendingWriterPosts'],
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>
@@ -1439,8 +1435,7 @@ export type TrendingWriterPostsResolvers<
 
 export type TrendingWriterProfileResolvers<
   ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['TrendingWriterProfile'] = ResolversParentTypes['TrendingWriterProfile'],
+  ParentType extends ResolversParentTypes['TrendingWriterProfile'] = ResolversParentTypes['TrendingWriterProfile'],
 > = {
   display_name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   short_bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>
@@ -1450,8 +1445,7 @@ export type TrendingWriterProfileResolvers<
 
 export type TrendingWriterUserResolvers<
   ContextType = GraphQLContext,
-  ParentType extends
-    ResolversParentTypes['TrendingWriterUser'] = ResolversParentTypes['TrendingWriterUser'],
+  ParentType extends ResolversParentTypes['TrendingWriterUser'] = ResolversParentTypes['TrendingWriterUser'],
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   profile?: Resolver<ResolversTypes['TrendingWriterProfile'], ParentType, ContextType>

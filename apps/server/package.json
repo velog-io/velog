@@ -46,7 +46,7 @@
     "ajv": "^8.12.0",
     "axios": "^1.4.0",
     "backblaze-b2": "^1.7.0",
-    "dataloader": "^2.2.2", 
+    "dataloader": "^2.2.2",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
     "discord.js": "^14.14.1",
@@ -82,7 +82,7 @@
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
     "@graphql-codegen/add": "^5.0.0",
-    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/typescript": "^4.0.0",
     "@graphql-codegen/typescript-operations": "^4.0.0",
     "@graphql-codegen/typescript-resolvers": "^4.0.0",
