@@ -18,3 +18,22 @@ type Page {
   created_at: Date!
   childrens: [Page!]!
 }
+
+type PageMetadata {
+  id: ID!
+  title: String!
+  code: String!
+  url_slug: String!
+  parent_id: String
+  type: String!
+  level: Int!
+  childrens: [PageMetadata!]!
+}
+
+type Query {
+  getPageMetadata(input: BookIDInput!): [PageMetadata!]!
+}
+
+input BookIDInput {
+  book_id: ID!
+}

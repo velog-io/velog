@@ -3,17 +3,9 @@ import { MqService } from '@lib/mq/MqService.mjs'
 import { BookBuildService } from 'src/services/BookBuildService/index.mjs'
 import { BookDeployService } from 'src/services/BookDeployService/index.mjs'
 import { BookService } from 'src/services/BookService/index.mjs'
-import { PageService } from 'src/services/PageService/index.mjs'
 import { container } from 'tsyringe'
 
 const bookResolvers: Resolvers = {
-  Book: {
-    pages: async (parent) => {
-      if (!parent) return []
-      const pageService = container.resolve(PageService)
-      return await pageService.organizePages(parent.id)
-    },
-  },
   Query: {
     book: async (_, { input }) => {
       const bookService = container.resolve(BookService)

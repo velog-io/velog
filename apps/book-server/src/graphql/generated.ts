@@ -72,13 +72,28 @@ export type Page = {
   writer_id: Scalars['ID']['output']
 }
 
+export type PageMetadata = {
+  childrens: Array<PageMetadata>
+  code: Scalars['String']['output']
+  level: Scalars['Int']['output']
+  parent_id?: Maybe<Scalars['String']['output']>
+  title: Scalars['String']['output']
+  type: Scalars['String']['output']
+  url_slug: Scalars['String']['output']
+}
+
 export type PageType = 'page' | 'separator'
 
 export type Query = {
   book?: Maybe<Book>
+  getPageMetadata: Array<PageMetadata>
 }
 
 export type QueryBookArgs = {
+  input: BookIdInput
+}
+
+export type QueryGetPageMetadataArgs = {
   input: BookIdInput
 }
 
@@ -205,6 +220,7 @@ export type ResolversTypes = {
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
   Mutation: ResolverTypeWrapper<{}>
   Page: ResolverTypeWrapper<PageModel>
+  PageMetadata: ResolverTypeWrapper<PageMetadata>
   PageType: PageType
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Query: ResolverTypeWrapper<{}>
@@ -226,6 +242,7 @@ export type ResolversParentTypes = {
   JSON: Scalars['JSON']['output']
   Mutation: {}
   Page: PageModel
+  PageMetadata: PageMetadata
   PositiveInt: Scalars['PositiveInt']['output']
   Query: {}
   String: Scalars['String']['output']
@@ -302,6 +319,20 @@ export type PageResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
+export type PageMetadataResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['PageMetadata'] = ResolversParentTypes['PageMetadata'],
+> = {
+  childrens?: Resolver<Array<ResolversTypes['PageMetadata']>, ParentType, ContextType>
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  level?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  parent_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
 export interface PositiveIntScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['PositiveInt'], any> {
   name: 'PositiveInt'
@@ -316,6 +347,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryBookArgs, 'input'>
+  >
+  getPageMetadata?: Resolver<
+    Array<ResolversTypes['PageMetadata']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetPageMetadataArgs, 'input'>
   >
 }
 
@@ -377,6 +414,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   JSON?: GraphQLScalarType
   Mutation?: MutationResolvers<ContextType>
   Page?: PageResolvers<ContextType>
+  PageMetadata?: PageMetadataResolvers<ContextType>
   PositiveInt?: GraphQLScalarType
   Query?: QueryResolvers<ContextType>
   SubScriptionPayload?: SubScriptionPayloadResolvers<ContextType>

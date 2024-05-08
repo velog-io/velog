@@ -1,54 +1,24 @@
+import { ConfilctError } from '@errors/ConfilctError.mjs'
 import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { UtilsService } from '@lib/utils/UtilsService.mjs'
 import { Page } from '@packages/database/velog-book-mongo'
+import { BookService } from '@services/BookService/index.mjs'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
-  organizePages(bookId: string): Promise<Page[]>
   updatePageAndChildrenUrlSlug(args: UpdatePageAndChildrenUrlSlugArgs): Promise<void>
 }
 
 @injectable()
 @singleton()
 export class PageService implements Service {
-  constructor(private readonly mongo: MongoService, private readonly utils: UtilsService) {}
-  public async organizePages(bookId: string): Promise<Page[]> {
-    const pages = await this.mongo.page.findMany({
-      where: {
-        book_id: bookId,
-      },
-      include: {
-        childrens: true,
-      },
-      orderBy: [{ index: 'asc' }],
-    })
-
-    // const bookMap = new Map()
-    // const topLevelBooks: Page[] = []
-
-    // pages.forEach((page) => {
-    //   if (page.parent_id === null) {
-    //     topLevelBooks.push(page)
-    //   } else {
-    //     if (!bookMap.has(page.parent_id)) {
-    //       bookMap.set(page.parent_id, [])
-    //     }
-    //     bookMap.get(page.parent_id).push(page)
-    //   }
-    // })
-
-    // function buildHierarchy(page: Page) {
-    //   if (bookMap.has(page.id)) {
-    //     page.childrens = bookMap.get(page.id)
-    //     page.childrens?.forEach(buildHierarchy)
-    //   }
-    // }
-
-    // topLevelBooks.forEach(buildHierarchy)
-    return pages
-  }
+  constructor(
+    private readonly mongo: MongoService,
+    private readonly utils: UtilsService,
+    private readonly bookSerivce: BookService,
+  ) {}
   public async updatePageAndChildrenUrlSlug({
     pageId,
     signedWriterId,
@@ -109,6 +79,57 @@ export class PageService implements Service {
       })
     }
   }
+
+  public async getPageMetadata(
+    bookId: string,
+    signedWriterId?: string,
+  ): Promise<PageMetadataResult[]> {
+    if (!signedWriterId) {
+      throw new UnauthorizedError('Not authorized')
+    }
+
+    const book = await this.bookSerivce.findById(bookId)
+
+    if (!book) {
+      throw new NotFoundError('Not found book')
+    }
+
+    if (book.writer_id !== signedWriterId) {
+      throw new ConfilctError('Not owner of book')
+    }
+
+    const select = {
+      id: true,
+      title: true,
+      code: true,
+      url_slug: true,
+      parent_id: true,
+      type: true,
+      level: true,
+    }
+
+    const pages = await this.mongo.page.findMany({
+      where: {
+        book_id: bookId,
+      },
+      select: {
+        ...select,
+        childrens: {
+          select: {
+            ...select,
+            childrens: {
+              select: {
+                ...select,
+              },
+            },
+          },
+        },
+      },
+      orderBy: [{ index: 'asc' }],
+    })
+
+    return pages
+  }
 }
 
 export type PageData = {
@@ -119,4 +140,15 @@ type UpdatePageAndChildrenUrlSlugArgs = {
   pageId: string
   signedWriterId?: string
   urlPrefix?: string
+}
+
+export type PageMetadataResult = {
+  id: string
+  title: string
+  code: string
+  url_slug: string
+  parent_id: string | null
+  type: string
+  level: number
+  childrens: PageMetadataResult[]
 }

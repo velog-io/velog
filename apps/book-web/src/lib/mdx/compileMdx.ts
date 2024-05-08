@@ -63,6 +63,7 @@ export const mdxCompiler = async (
     // You can override MDX options in the frontMatter too.
     ...frontmatter.mdxOptions,
   }
+
   try {
     const onig = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_HOST}/wasm/onig.wasm`)
     setWasm(onig)

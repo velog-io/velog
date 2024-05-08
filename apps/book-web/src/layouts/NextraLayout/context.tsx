@@ -2,6 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import type { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-editor'
 
+const bookUrl = `/@test_carrick/learning-bunjs-is-fun`
 export const pageMap: PageMapItem[] = [
   {
     kind: 'Meta',
@@ -12,44 +13,43 @@ export const pageMap: PageMapItem[] = [
       about: { title: 'About' },
     },
   },
-  { kind: 'MdxPage', name: 'index', route: '/books/6625a5de37b7152cdd4969ed' },
-  { kind: 'MdxPage', name: 'advanced', route: '/books/6625a5de37b7152cdd4969ed/advanced' },
+  { kind: 'MdxPage', name: 'index', route: bookUrl },
+  { kind: 'MdxPage', name: 'advanced', route: `${bookUrl}/advanced` },
   {
     kind: 'Folder',
     name: 'advanced',
-    route: '/books/6625a5de37b7152cdd4969ed/advanced',
+    route: `${bookUrl}/advanced`,
     children: [
       { kind: 'Meta', data: { satori: { title: 'Satori' }, hello: { title: 'hello' } } },
-      { kind: 'MdxPage', name: 'hello', route: '/books/6625a5de37b7152cdd4969ed/advanced/hello' },
+      { kind: 'MdxPage', name: 'hello', route: `${bookUrl}/advanced/hello` },
       {
         kind: 'Folder',
         name: 'hello',
-        route: '/books/6625a5de37b7152cdd4969ed/advanced/hello',
+        route: `${bookUrl}/advanced/hello`,
         children: [
           { kind: 'Meta', data: { hi: { title: 'Hi' } } },
           {
             kind: 'MdxPage',
             name: 'hi',
-            route: '/books/6625a5de37b7152cdd4969ed/advanced/hello/hi',
+            route: `${bookUrl}/advanced/hello/hi`,
           },
         ],
       },
       {
         kind: 'MdxPage',
         name: 'satori',
-        route: '/books/6625a5de37b7152cdd4969ed/advanced/satori',
+        route: `${bookUrl}/advanced/satori`,
       },
     ],
   },
-  { kind: 'MdxPage', name: 'another', route: '/books/6625a5de37b7152cdd4969ed/another' },
-  { kind: 'MdxPage', name: 'about', route: '/books/6625a5de37b7152cdd4969ed/about' },
+  { kind: 'MdxPage', name: 'another', route: `${bookUrl}/another` },
+  { kind: 'MdxPage', name: 'about', route: `${bookUrl}/about` },
 ]
 
 export const pageOpts: PageOpts = {
   frontMatter: {},
   filePath: '',
   route: '',
-  timestamp: 1712618681000,
   pageMap: pageMap,
   title: 'Welcome to Nextra',
   headings: [],
@@ -58,7 +58,7 @@ export const pageOpts: PageOpts = {
 export const themeConfig: DocsThemeConfig = {
   toc: {},
   logo: <span>Learning bunJS is Fun!</span>,
-  logoLink: '/books/6625a5de37b7152cdd4969ed',
+  logoLink: `${bookUrl}`,
   editLink: {
     text: '',
   },
