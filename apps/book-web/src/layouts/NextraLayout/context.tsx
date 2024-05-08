@@ -10,6 +10,7 @@ export const pageMap: PageMapItem[] = [
       index: { title: 'Introduction' },
       another: { title: 'Another Page' },
       advanced: { title: 'Advanced (A Folder)' },
+      hello: { title: 'hello' },
       about: { title: 'About' },
     },
   },

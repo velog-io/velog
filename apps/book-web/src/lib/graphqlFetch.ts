@@ -1,4 +1,4 @@
-import { ENV } from '@/env.mjs'
+import { ENV } from '@/env'
 
 export default async function graphqlFetch<T>({
   url = `${ENV.bookApiHost}/graphql`,

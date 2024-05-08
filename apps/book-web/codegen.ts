@@ -1,4 +1,4 @@
-import { ENV } from './src/env.mjs'
+import { ENV } from './src/env.js'
 import type { CodegenConfig } from '@graphql-codegen/cli'
 import type { Types } from '@graphql-codegen/plugin-helpers'
 
@@ -37,7 +37,7 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
 const config: CodegenConfig = {
   overwrite: true,
   hooks: {
-    afterOneFileWrite: ['pnpm lint'],
+    afterOneFileWrite: ['prettier --write .'],
   },
   generates: {
     // 'src/graphql/server/generated/server.ts': {

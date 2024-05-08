@@ -19,7 +19,9 @@
     "scripts/*",
     "next.config.mjs",
     "eslint.config.js",
-    ".next/types/**/*.ts"
-, "src/env.mts"  ],
+    ".next/types/**/*.ts",
+    "src/env.ts",
+    "src/**/*.mts"
+  ],
   "exclude": ["node_modules", "dist"]
 }

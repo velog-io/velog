@@ -1,6 +1,8 @@
 import NextraLayout from '@/layouts/NextraLayout'
 import { mdxCompiler } from '@/lib/mdx/compileMdx'
-import { GetStaticPaths, GetStaticProps } from 'next'
+import getPageMetadata from '@/prefetch/getPageMetadata'
+
+import { GetServerSideProps } from 'next'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import { useRouter } from 'next/router'
 
@@ -21,17 +23,15 @@ const Home = ({ mdxSource, mdxText }: Props) => {
 
 export default Home
 
-export const getStaticPaths = (async () => {
-  return {
-    paths: [],
-    fallback: false, // false or "blocking"
-  }
-}) satisfies GetStaticPaths
+export const getServerSideProps = (async (ctx) => {
+  const { params, req } = ctx
+  const bookUrlSlug = `/${params?.username}/${params?.book_title}`
+  const result = await getPageMetadata(bookUrlSlug, req.cookies)
 
-export const getStaticProps = (async ({ params }) => {
-  console.log('params', params)
+  console.log(result)
+
   const mdxText = `
-  <Callout>${params?.id} hello!</Callout>
+  <Callout>${bookUrlSlug} hello!</Callout>
 
 
 {/* wrapped with {} to mark it as javascript so mdx will not put it under a p tag */}
@@ -131,10 +131,10 @@ Sientase libre de unirse a
   } catch (error) {
     throw new Error(`Error compiling MDX: ${JSON.stringify(error)}`)
   }
-}) satisfies GetStaticProps<
+}) satisfies GetServerSideProps<
   {
     mdxSource: MDXRemoteSerializeResult
     mdxText: string
   },
-  { id: string }
+  { username: string; book_title: string; page_url_slug: string[] }
 >

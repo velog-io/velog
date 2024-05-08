@@ -1,4 +1,4 @@
-import { ENV } from '@/env.mjs'
+import { ENV } from '@/env'
 import graphqlFetch from '@/lib/graphqlFetch'
 
 export function fetcher<TData, TVariables extends Record<string, any>>(
