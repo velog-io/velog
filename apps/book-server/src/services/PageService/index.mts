@@ -99,6 +99,7 @@ export class PageService implements Service {
     const pages = await this.mongo.page.findMany({
       where: {
         book_id: book.id,
+        parent_id: null,
       },
       include: {
         childrens: {

@@ -5,6 +5,7 @@ import { Writer } from '@packages/database/velog-book-mongo'
 import { faker } from '@faker-js/faker'
 import { UtilsService } from '@lib/utils/UtilsService.mjs'
 import { PageService } from '@services/PageService/index.mjs'
+import { BookService } from '@services/BookService/index.mjs'
 
 class Seeder {
   constructor(
@@ -117,7 +118,8 @@ class Seeder {
 const main = async () => {
   const mongo = new MongoService()
   const utils = new UtilsService()
-  const pageService = new PageService(mongo, utils)
+  const bookService = new BookService(mongo)
+  const pageService = new PageService(mongo, utils, bookService)
   const seeder = new Seeder(mongo, utils, pageService)
 
   try {

@@ -15,7 +15,8 @@ export const getMockPages = (count: number) =>
           index: index,
           type: 'page',
           code,
-          url_slug: `${utils.escapeForUrl('Introduction')}-${code}`,
+          url_slug: `/${utils.escapeForUrl('Introduction')}-${code}`,
+          parent_id: null,
           body: `# Introduction_${index}
           - ${faker.lorem.paragraph(2)}
           - ${faker.lorem.paragraph(1)}
@@ -46,8 +47,9 @@ export const getMockPages = (count: number) =>
           index: index,
           body: '',
           type: 'separator',
+          parent_id: null,
           code,
-          url_slug: `${utils.escapeForUrl('Getting Started')}-${code}`,
+          url_slug: `/${utils.escapeForUrl('Getting Started')}-${code}`,
         }
       }
 
@@ -58,8 +60,9 @@ export const getMockPages = (count: number) =>
           index: index,
           body: '',
           type: 'separator',
+          parent_id: null,
           code: code,
-          url_slug: `${utils.escapeForUrl('API Reference')}-${code}`,
+          url_slug: `/${utils.escapeForUrl('API Reference')}-${code}`,
         }
       }
 
@@ -70,7 +73,8 @@ export const getMockPages = (count: number) =>
         index: index,
         type: 'page',
         code: code,
-        url_slug: `${utils.escapeForUrl(title)}-${code}`,
+        url_slug: `/${utils.escapeForUrl(title)}-${code}`,
+        parent_id: null,
         body: `# ${title}_${index}
         - ${faker.lorem.paragraph(2)}
         - ${faker.lorem.paragraph(1)}

@@ -25,7 +25,6 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
 
       if (!accessToken) return
       const accessTokenData = await jwtService.decodeToken<AccessTokenData>(accessToken)
-      console.log(accessTokenData)
       const writerId = await writerService.checkExistsWriter(accessTokenData.user_id)
       if (!writerId) return
       request.writer = { id: writerId }
