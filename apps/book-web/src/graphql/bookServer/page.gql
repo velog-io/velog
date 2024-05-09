@@ -1,16 +1,22 @@
-query getPageMetadata($input: GetPageMetadataInput!) {
-  getPageMetadata(input: $input) {
+query getPages($input: GetPagesInput!) {
+  pages(input: $input) {
     title
     url_slug
     type
+    parent_id
+    code
     childrens {
       title
       url_slug
       type
+      parent_id
+      code
       childrens {
         title
         url_slug
         type
+        parent_id
+        code
       }
     }
   }

@@ -192,15 +192,18 @@ export function normalizePages({
 
   // Normalize items based on files and _meta.json.
   const items = list
-    .filter(
-      (a): a is MdxFile | Folder =>
-        // not meta
+    .filter((a): a is MdxFile | Folder => {
+      if (a?.name) {
+        console.log('aaaaaa', a)
+      }
+      return (
         a.kind !== 'Meta' &&
         // not hidden routes
         !a.name.startsWith('_') &&
         // locale matches, or fallback to default locale
-        (!('locale' in a) || !a.locale || [locale, defaultLocale].includes(a.locale)),
-    )
+        (!('locale' in a) || !a.locale || [locale, defaultLocale].includes(a.locale))
+      )
+    })
     .sort((a, b) => {
       const indexA = metaKeys.indexOf(a.name)
       const indexB = metaKeys.indexOf(b.name)

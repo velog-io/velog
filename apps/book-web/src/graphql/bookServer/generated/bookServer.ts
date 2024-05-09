@@ -43,7 +43,7 @@ export type BookIdInput = {
   book_id: Scalars['ID']['input']
 }
 
-export type GetPageMetadataInput = {
+export type GetPagesInput = {
   book_url_slug: Scalars['String']['input']
 }
 
@@ -71,35 +71,25 @@ export type Page = {
   level: Scalars['Int']['output']
   parent_id: Maybe<Scalars['ID']['output']>
   title: Scalars['String']['output']
-  type: PageType
+  type: Scalars['String']['output']
+  updated_at: Scalars['Date']['output']
   url_slug: Scalars['String']['output']
   writer_id: Scalars['ID']['output']
-}
-
-export type PageMetadata = {
-  childrens: Array<PageMetadata>
-  code: Scalars['String']['output']
-  id: Scalars['ID']['output']
-  level: Scalars['Int']['output']
-  parent_id: Maybe<Scalars['String']['output']>
-  title: Scalars['String']['output']
-  type: Scalars['String']['output']
-  url_slug: Scalars['String']['output']
 }
 
 export type PageType = 'page' | 'separator'
 
 export type Query = {
   book: Maybe<Book>
-  getPageMetadata: Array<PageMetadata>
+  pages: Array<Page>
 }
 
 export type QueryBookArgs = {
   input: BookIdInput
 }
 
-export type QueryGetPageMetadataArgs = {
-  input: GetPageMetadataInput
+export type QueryPagesArgs = {
+  input: GetPagesInput
 }
 
 export type SubScriptionPayload = {
@@ -138,20 +128,30 @@ export type DeployMutationVariables = Exact<{
 
 export type DeployMutation = { deploy: void | null }
 
-export type GetPageMetadataQueryVariables = Exact<{
-  input: GetPageMetadataInput
+export type GetPagesQueryVariables = Exact<{
+  input: GetPagesInput
 }>
 
-export type GetPageMetadataQuery = {
-  getPageMetadata: Array<{
+export type GetPagesQuery = {
+  pages: Array<{
     title: string
     url_slug: string
     type: string
+    parent_id: string | null
+    code: string
     childrens: Array<{
       title: string
       url_slug: string
       type: string
-      childrens: Array<{ title: string; url_slug: string; type: string }>
+      parent_id: string | null
+      code: string
+      childrens: Array<{
+        title: string
+        url_slug: string
+        type: string
+        parent_id: string | null
+        code: string
+      }>
     }>
   }>
 }
@@ -180,74 +180,64 @@ useDeployMutation.fetcher = (
   options?: RequestInit['headers'],
 ) => fetcher<DeployMutation, DeployMutationVariables>(DeployDocument, variables, options)
 
-export const GetPageMetadataDocument = `
-    query getPageMetadata($input: GetPageMetadataInput!) {
-  getPageMetadata(input: $input) {
+export const GetPagesDocument = `
+    query getPages($input: GetPagesInput!) {
+  pages(input: $input) {
     title
     url_slug
     type
+    parent_id
+    code
     childrens {
       title
       url_slug
       type
+      parent_id
+      code
       childrens {
         title
         url_slug
         type
+        parent_id
+        code
       }
     }
   }
 }
     `
 
-export const useGetPageMetadataQuery = <TData = GetPageMetadataQuery, TError = unknown>(
-  variables: GetPageMetadataQueryVariables,
-  options?: Omit<UseQueryOptions<GetPageMetadataQuery, TError, TData>, 'queryKey'> & {
-    queryKey?: UseQueryOptions<GetPageMetadataQuery, TError, TData>['queryKey']
+export const useGetPagesQuery = <TData = GetPagesQuery, TError = unknown>(
+  variables: GetPagesQueryVariables,
+  options?: Omit<UseQueryOptions<GetPagesQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<GetPagesQuery, TError, TData>['queryKey']
   },
 ) => {
-  return useQuery<GetPageMetadataQuery, TError, TData>({
-    queryKey: ['getPageMetadata', variables],
-    queryFn: fetcher<GetPageMetadataQuery, GetPageMetadataQueryVariables>(
-      GetPageMetadataDocument,
-      variables,
-    ),
+  return useQuery<GetPagesQuery, TError, TData>({
+    queryKey: ['getPages', variables],
+    queryFn: fetcher<GetPagesQuery, GetPagesQueryVariables>(GetPagesDocument, variables),
     ...options,
   })
 }
 
-useGetPageMetadataQuery.getKey = (variables: GetPageMetadataQueryVariables) => [
-  'getPageMetadata',
-  variables,
-]
+useGetPagesQuery.getKey = (variables: GetPagesQueryVariables) => ['getPages', variables]
 
-export const useSuspenseGetPageMetadataQuery = <TData = GetPageMetadataQuery, TError = unknown>(
-  variables: GetPageMetadataQueryVariables,
-  options?: Omit<UseSuspenseQueryOptions<GetPageMetadataQuery, TError, TData>, 'queryKey'> & {
-    queryKey?: UseSuspenseQueryOptions<GetPageMetadataQuery, TError, TData>['queryKey']
+export const useSuspenseGetPagesQuery = <TData = GetPagesQuery, TError = unknown>(
+  variables: GetPagesQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<GetPagesQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<GetPagesQuery, TError, TData>['queryKey']
   },
 ) => {
-  return useSuspenseQuery<GetPageMetadataQuery, TError, TData>({
-    queryKey: ['getPageMetadataSuspense', variables],
-    queryFn: fetcher<GetPageMetadataQuery, GetPageMetadataQueryVariables>(
-      GetPageMetadataDocument,
-      variables,
-    ),
+  return useSuspenseQuery<GetPagesQuery, TError, TData>({
+    queryKey: ['getPagesSuspense', variables],
+    queryFn: fetcher<GetPagesQuery, GetPagesQueryVariables>(GetPagesDocument, variables),
     ...options,
   })
 }
 
-useSuspenseGetPageMetadataQuery.getKey = (variables: GetPageMetadataQueryVariables) => [
-  'getPageMetadataSuspense',
+useSuspenseGetPagesQuery.getKey = (variables: GetPagesQueryVariables) => [
+  'getPagesSuspense',
   variables,
 ]
 
-useGetPageMetadataQuery.fetcher = (
-  variables: GetPageMetadataQueryVariables,
-  options?: RequestInit['headers'],
-) =>
-  fetcher<GetPageMetadataQuery, GetPageMetadataQueryVariables>(
-    GetPageMetadataDocument,
-    variables,
-    options,
-  )
+useGetPagesQuery.fetcher = (variables: GetPagesQueryVariables, options?: RequestInit['headers']) =>
+  fetcher<GetPagesQuery, GetPagesQueryVariables>(GetPagesDocument, variables, options)

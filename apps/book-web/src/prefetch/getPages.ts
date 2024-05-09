@@ -1,7 +1,4 @@
-import {
-  GetPageMetadataDocument,
-  GetPageMetadataQuery,
-} from '@/graphql/bookServer/generated/bookServer'
+import { GetPagesDocument, GetPagesQuery } from '@/graphql/bookServer/generated/bookServer'
 import graphqlFetch, { type GraphqlRequestBody } from '@/lib/graphqlFetch'
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 
@@ -15,8 +12,8 @@ export default async function getPages(bookUrlSlug: string, cookies: NextApiRequ
     }
 
     const body: GraphqlRequestBody = {
-      operationName: 'getPageMetadata',
-      query: GetPageMetadataDocument,
+      operationName: 'getPages',
+      query: GetPagesDocument,
       variables: {
         input: {
           book_url_slug: bookUrlSlug,
@@ -24,13 +21,13 @@ export default async function getPages(bookUrlSlug: string, cookies: NextApiRequ
       },
     }
 
-    const { getPageMetadata } = await graphqlFetch<GetPageMetadataQuery>({
+    const { pages } = await graphqlFetch<GetPagesQuery>({
       method: 'GET',
       body,
       headers,
     })
 
-    return getPageMetadata
+    return pages
   } catch (_) {
     return null
   }

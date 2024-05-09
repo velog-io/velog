@@ -1,24 +1,28 @@
 import NextraLayout from '@/layouts/NextraLayout'
+import { BookMetadata, generateBookMetadata } from '@/lib/generateBookMetadata'
 import { mdxCompiler } from '@/lib/mdx/compileMdx'
 import getPages from '@/prefetch/getPages'
 
 import { GetServerSideProps } from 'next'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
+import { notFound } from 'next/navigation'
+
 import { useRouter } from 'next/router'
 
 type Props = {
   mdxSource: MDXRemoteSerializeResult
   mdxText: string
+  bookMetadata: BookMetadata
 }
 
-const Home = ({ mdxSource, mdxText }: Props) => {
+const Home = ({ mdxSource, mdxText, bookMetadata }: Props) => {
   const router = useRouter()
 
   if (router.isFallback) {
     return <div>isFallback Loading...</div>
   }
 
-  return <NextraLayout mdxSource={mdxSource} body={mdxText} />
+  return <NextraLayout mdxSource={mdxSource} body={mdxText} bookMetadata={bookMetadata} />
 }
 
 export default Home
@@ -28,7 +32,11 @@ export const getServerSideProps = (async (ctx) => {
   const bookUrlSlug = `/${params?.username}/${params?.book_title}`
   const pages = await getPages(bookUrlSlug, req.cookies)
 
-  console.log('pages', pages)
+  if (!pages) {
+    notFound()
+  }
+
+  const bookMetadata = generateBookMetadata({ pages, bookUrl: bookUrlSlug })
 
   const mdxText = `
   <Callout>${bookUrlSlug} hello!</Callout>
@@ -127,7 +135,7 @@ Sientase libre de unirse a
   try {
     const mdxSource = await mdxCompiler(mdxText)
 
-    return { props: { mdxSource, mdxText } }
+    return { props: { mdxSource, mdxText, bookMetadata } }
   } catch (error) {
     throw new Error(`Error compiling MDX: ${JSON.stringify(error)}`)
   }
@@ -135,6 +143,7 @@ Sientase libre de unirse a
   {
     mdxSource: MDXRemoteSerializeResult
     mdxText: string
+    bookMetadata: BookMetadata
   },
   { username: string; book_title: string; page_url_slug: string[] }
 >

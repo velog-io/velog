@@ -3,14 +3,16 @@ import { pageOpts, themeConfig } from './context'
 import { mdxCompiler } from '@/lib/mdx/compileMdx'
 import { useEffect, useState } from 'react'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
+import { BookMetadata } from '@/lib/generateBookMetadata'
 
 type Props = {
   mdxSource: MDXRemoteSerializeResult
   children?: React.ReactNode
+  bookMetadata: BookMetadata
   body: string
 }
 
-function NextraLayout({ mdxSource, children, body }: Props) {
+function NextraLayout({ mdxSource, children, body, bookMetadata }: Props) {
   const [editorValue, setEditorValue] = useState(body)
   const [source, setSource] = useState<MDXRemoteSerializeResult>(mdxSource)
 
@@ -37,7 +39,7 @@ function NextraLayout({ mdxSource, children, body }: Props) {
 
   return (
     <NextraDocLayout
-      pageOpts={pageOpts}
+      pageOpts={bookMetadata.pageOpts}
       themeConfig={themeConfig}
       pageProps={{}}
       mdxSource={source}
