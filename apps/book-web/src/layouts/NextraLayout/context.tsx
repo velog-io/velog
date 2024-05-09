@@ -12,7 +12,7 @@ export const pageMap: PageMapItem[] = [
         title: 'Themes',
         type: 'separator',
       },
-      another: { title: 'Another Page' },
+      another: { title: 'Pectus bardus' },
       advanced: { title: 'Advanced (A Folder)' },
       hello: { title: 'hello' },
       about: { title: 'About' },

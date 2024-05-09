@@ -9,31 +9,21 @@ type Page {
   book_id: ID!
   title: String!
   body: String!
-  type: PageType!
+  type: String!
   parent_id: ID
   index: Int!
   url_slug: String!
   code: String!
   level: Int!
   created_at: Date!
+  updated_at: Date!
   childrens: [Page!]!
 }
 
-type PageMetadata {
-  id: ID!
-  title: String!
-  code: String!
-  url_slug: String!
-  parent_id: String
-  type: String!
-  level: Int!
-  childrens: [PageMetadata!]!
-}
-
 type Query {
-  getPageMetadata(input: GetPageMetadataInput!): [PageMetadata!]!
+  pages(input: GetPagesInput!): [Page!]!
 }
 
-input GetPageMetadataInput {
+input GetPagesInput {
   book_url_slug: String!
 }

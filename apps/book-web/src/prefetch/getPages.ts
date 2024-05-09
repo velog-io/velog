@@ -5,7 +5,7 @@ import {
 import graphqlFetch, { type GraphqlRequestBody } from '@/lib/graphqlFetch'
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 
-export default async function getPageMetadata(bookUrlSlug: string, cookies: NextApiRequestCookies) {
+export default async function getPages(bookUrlSlug: string, cookies: NextApiRequestCookies) {
   try {
     const headers = {}
     const token = cookies.access_token
@@ -31,8 +31,7 @@ export default async function getPageMetadata(bookUrlSlug: string, cookies: Next
     })
 
     return getPageMetadata
-  } catch (error) {
-    console.log('getPageMetadata error', error)
+  } catch (_) {
     return null
   }
 }

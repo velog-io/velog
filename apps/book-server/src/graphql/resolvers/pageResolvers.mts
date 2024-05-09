@@ -4,9 +4,9 @@ import { container } from 'tsyringe'
 
 const pageResolvers: Resolvers = {
   Query: {
-    getPageMetadata: async (_, { input }, ctx) => {
+    pages: async (_, { input }, ctx) => {
       const pageService = container.resolve(PageService)
-      return await pageService.getPageMetadata(input.book_url_slug, ctx.writer?.id)
+      return await pageService.getPages(input.book_url_slug, ctx.writer?.id)
     },
   },
 }

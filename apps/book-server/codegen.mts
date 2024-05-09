@@ -28,8 +28,8 @@ const config: CodegenConfig = {
           Writer: '@packages/database/velog-book-mongo#Writer as WriterModel',
           Page: '@packages/database/velog-book-mongo#Page as PageModel',
         },
-        inputMaybeValue: 'T | undefined',
-        maybeValue: 'T | null | undefined',
+        inputMaybeValue: 'T | null',
+        maybeValue: 'T | null',
         scalars: {
           Date: 'Date',
           JSON: 'Record<string, any>',

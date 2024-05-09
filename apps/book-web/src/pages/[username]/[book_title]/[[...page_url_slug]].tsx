@@ -1,6 +1,6 @@
 import NextraLayout from '@/layouts/NextraLayout'
 import { mdxCompiler } from '@/lib/mdx/compileMdx'
-import getPageMetadata from '@/prefetch/getPageMetadata'
+import getPages from '@/prefetch/getPages'
 
 import { GetServerSideProps } from 'next'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
@@ -26,9 +26,9 @@ export default Home
 export const getServerSideProps = (async (ctx) => {
   const { params, req } = ctx
   const bookUrlSlug = `/${params?.username}/${params?.book_title}`
-  const result = await getPageMetadata(bookUrlSlug, req.cookies)
+  const pages = await getPages(bookUrlSlug, req.cookies)
 
-  console.log(result)
+  console.log('pages', pages)
 
   const mdxText = `
   <Callout>${bookUrlSlug} hello!</Callout>

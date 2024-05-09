@@ -6,8 +6,8 @@ import {
   Page as PageModel,
 } from '@packages/database/velog-book-mongo'
 import { GraphQLContext } from '../common/interfaces/graphql.mjs'
-export type Maybe<T> = T | null | undefined
-export type InputMaybe<T> = T | undefined
+export type Maybe<T> = T | null
+export type InputMaybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
@@ -43,7 +43,7 @@ export type BookIdInput = {
   book_id: Scalars['ID']['input']
 }
 
-export type GetPageMetadataInput = {
+export type GetPagesInput = {
   book_url_slug: Scalars['String']['input']
 }
 
@@ -71,35 +71,25 @@ export type Page = {
   level: Scalars['Int']['output']
   parent_id?: Maybe<Scalars['ID']['output']>
   title: Scalars['String']['output']
-  type: PageType
+  type: Scalars['String']['output']
+  updated_at: Scalars['Date']['output']
   url_slug: Scalars['String']['output']
   writer_id: Scalars['ID']['output']
-}
-
-export type PageMetadata = {
-  childrens: Array<PageMetadata>
-  code: Scalars['String']['output']
-  id: Scalars['ID']['output']
-  level: Scalars['Int']['output']
-  parent_id?: Maybe<Scalars['String']['output']>
-  title: Scalars['String']['output']
-  type: Scalars['String']['output']
-  url_slug: Scalars['String']['output']
 }
 
 export type PageType = 'page' | 'separator'
 
 export type Query = {
   book?: Maybe<Book>
-  getPageMetadata: Array<PageMetadata>
+  pages: Array<Page>
 }
 
 export type QueryBookArgs = {
   input: BookIdInput
 }
 
-export type QueryGetPageMetadataArgs = {
-  input: GetPageMetadataInput
+export type QueryPagesArgs = {
+  input: GetPagesInput
 }
 
 export type SubScriptionPayload = {
@@ -220,13 +210,12 @@ export type ResolversTypes = {
   BookIDInput: BookIdInput
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
-  GetPageMetadataInput: GetPageMetadataInput
+  GetPagesInput: GetPagesInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
   Int: ResolverTypeWrapper<Scalars['Int']['output']>
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>
   Mutation: ResolverTypeWrapper<{}>
   Page: ResolverTypeWrapper<PageModel>
-  PageMetadata: ResolverTypeWrapper<PageMetadata>
   PageType: PageType
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Query: ResolverTypeWrapper<{}>
@@ -243,13 +232,12 @@ export type ResolversParentTypes = {
   BookIDInput: BookIdInput
   Boolean: Scalars['Boolean']['output']
   Date: Scalars['Date']['output']
-  GetPageMetadataInput: GetPageMetadataInput
+  GetPagesInput: GetPagesInput
   ID: Scalars['ID']['output']
   Int: Scalars['Int']['output']
   JSON: Scalars['JSON']['output']
   Mutation: {}
   Page: PageModel
-  PageMetadata: PageMetadata
   PositiveInt: Scalars['PositiveInt']['output']
   Query: {}
   String: Scalars['String']['output']
@@ -320,24 +308,10 @@ export type PageResolvers<
   level?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   parent_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  type?: Resolver<ResolversTypes['PageType'], ParentType, ContextType>
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  updated_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   writer_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
-}
-
-export type PageMetadataResolvers<
-  ContextType = GraphQLContext,
-  ParentType extends ResolversParentTypes['PageMetadata'] = ResolversParentTypes['PageMetadata'],
-> = {
-  childrens?: Resolver<Array<ResolversTypes['PageMetadata']>, ParentType, ContextType>
-  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
-  level?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-  parent_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  url_slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
@@ -356,11 +330,11 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryBookArgs, 'input'>
   >
-  getPageMetadata?: Resolver<
-    Array<ResolversTypes['PageMetadata']>,
+  pages?: Resolver<
+    Array<ResolversTypes['Page']>,
     ParentType,
     ContextType,
-    RequireFields<QueryGetPageMetadataArgs, 'input'>
+    RequireFields<QueryPagesArgs, 'input'>
   >
 }
 
@@ -422,7 +396,6 @@ export type Resolvers<ContextType = GraphQLContext> = {
   JSON?: GraphQLScalarType
   Mutation?: MutationResolvers<ContextType>
   Page?: PageResolvers<ContextType>
-  PageMetadata?: PageMetadataResolvers<ContextType>
   PositiveInt?: GraphQLScalarType
   Query?: QueryResolvers<ContextType>
   SubScriptionPayload?: SubScriptionPayloadResolvers<ContextType>

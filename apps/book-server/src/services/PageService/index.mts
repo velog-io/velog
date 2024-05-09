@@ -1,6 +1,7 @@
 import { ConfilctError } from '@errors/ConfilctError.mjs'
 import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
+
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { UtilsService } from '@lib/utils/UtilsService.mjs'
 import { Page } from '@packages/database/velog-book-mongo'
@@ -80,10 +81,7 @@ export class PageService implements Service {
     }
   }
 
-  public async getPageMetadata(
-    bookUrlSlug: string,
-    signedWriterId?: string,
-  ): Promise<PageMetadataResult[]> {
+  public async getPages(bookUrlSlug: string, signedWriterId?: string): Promise<Page[]> {
     if (!signedWriterId) {
       throw new UnauthorizedError('Not authorized')
     }
@@ -98,28 +96,16 @@ export class PageService implements Service {
       throw new ConfilctError('Not owner of book')
     }
 
-    const select = {
-      id: true,
-      title: true,
-      code: true,
-      url_slug: true,
-      parent_id: true,
-      type: true,
-      level: true,
-    }
-
     const pages = await this.mongo.page.findMany({
       where: {
         book_id: book.id,
       },
-      select: {
-        ...select,
+      include: {
         childrens: {
-          select: {
-            ...select,
+          include: {
             childrens: {
-              select: {
-                ...select,
+              include: {
+                childrens: true,
               },
             },
           },
@@ -140,15 +126,4 @@ type UpdatePageAndChildrenUrlSlugArgs = {
   pageId: string
   signedWriterId?: string
   urlPrefix?: string
-}
-
-export type PageMetadataResult = {
-  id: string
-  title: string
-  code: string
-  url_slug: string
-  parent_id: string | null
-  type: string
-  level: number
-  childrens: PageMetadataResult[]
 }
