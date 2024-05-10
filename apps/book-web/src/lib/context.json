@@ -36,6 +36,10 @@
             },
             "Deprecator-apostolus.-awN4AKyl": {
                 "title": "Deprecator apostolus.-10"
+            },
+            "new-file": {
+                "title": "newfile",
+                "type": "newFile"
             }
         }
     },
@@ -1215,5 +1219,10 @@
         "kind": "MdxPage",
         "name": "Deprecator-apostolus.-awN4AKyl",
         "route": "/@test_carrick/learning-bunjs-is-fun/Deprecator-apostolus-awN4AKyl"
+    },
+    {
+        "kind": "MdxPage",
+        "name": "new-file",
+        "route": "/"
     }
 ]

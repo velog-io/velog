@@ -37,7 +37,7 @@ export const getServerSideProps = (async (ctx) => {
   }
 
   const bookMetadata = generateBookMetadata({ pages, bookUrl: bookUrlSlug })
-
+  
   const mdxText = `
   <Callout>${bookUrlSlug} hello!</Callout>
 

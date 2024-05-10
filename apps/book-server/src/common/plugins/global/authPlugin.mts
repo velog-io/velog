@@ -11,7 +11,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.addHook('onRequest', async (request, reply) => {
     if (request.url.includes('/auth/logout')) return
 
-    const cookieService = container.resolve(CookieService)
+    const cookie = container.resolve(CookieService)
     try {
       const writerService = container.resolve(WriterService)
       const jwtService = container.resolve(JwtService)
@@ -26,12 +26,17 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
       if (!accessToken) return
       const accessTokenData = await jwtService.decodeToken<AccessTokenData>(accessToken)
       const writerId = await writerService.checkExistsWriter(accessTokenData.user_id)
-      if (!writerId) return
+
+      if (!writerId) {
+        // TODO: automatic register to writer
+        throw new Error('Writer not found')
+      }
+
       request.writer = { id: writerId }
     } catch (error) {
       console.log('auth Plugin error', error)
-      cookieService.clearCookie(reply, 'access_token')
-      cookieService.clearCookie(reply, 'refresh_token')
+      cookie.clearCookie(reply, 'access_token')
+      cookie.clearCookie(reply, 'refresh_token')
     }
   })
 }

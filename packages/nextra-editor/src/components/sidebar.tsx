@@ -205,6 +205,14 @@ function Separator({ title }: { title: string }): ReactElement {
   )
 }
 
+function NewFile(): ReactElement {
+  return (
+    <li className={cn('[word-break:break-word] nx-my-4')}>
+      <input value={'hello'} />
+    </li>
+  )
+}
+
 function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }): ReactElement {
   const route = useFSRoute()
   const onFocus = useContext(OnFocusItemContext)
@@ -214,9 +222,16 @@ function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }):
   const activeAnchor = useActiveAnchor()
   const { setMenu } = useMenu()
   const config = useConfig()
+  if (item.type !== 'doc') {
+    console.log('item', item.type)
+  }
 
   if (item.type === 'separator') {
     return <Separator title={item.title} />
+  }
+
+  if (item.type === 'newFile') {
+    return <NewFile />
   }
 
   return (

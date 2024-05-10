@@ -63,7 +63,7 @@ export class WriterService implements Service {
   public async checkExistsWriter(fkUserId?: string): Promise<string | null> {
     if (!fkUserId) return null
 
-    const key = this.redis.generateKey.existsUser(fkUserId)
+    const key = this.redis.generateKey.existsWriter(fkUserId)
     const value = await this.redis.get(key)
     if (value) return value
 

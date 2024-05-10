@@ -226,7 +226,7 @@ export { Callout, Steps, Tabs, Tab, Cards, Card, FileTree } from './nextra/compo
 export { useTheme } from 'next-themes'
 export { Link } from './mdx-components'
 export type { Item, PageItem } from './nextra/normalize-pages'
-export type { Heading, PageMapItem, PageOpts } from './nextra/types'
+export type { Heading, PageMapItem, PageOpts, MetaJsonFile, Folder, MdxFile } from './nextra/types'
 export {
   Bleed,
   Collapse,
