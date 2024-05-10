@@ -18,3 +18,4 @@ export function XIcon(props: ComponentProps<'svg'>): ReactElement {
     </svg>
   )
 }
+

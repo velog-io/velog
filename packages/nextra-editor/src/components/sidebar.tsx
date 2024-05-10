@@ -12,6 +12,9 @@ import { renderComponent } from '../utils'
 import { Anchor } from './anchor'
 import { Collapse } from './collapse'
 import { LocaleSwitch } from './locale-switch'
+import { SeparatorIcon } from '../nextra/icons/seperator'
+import { NewFileIcon } from '../nextra/icons/new-file'
+import { NewFolderIcon } from '../nextra/icons/new-folder'
 
 const TreeState: Record<string, boolean> = Object.create(null)
 
@@ -373,6 +376,7 @@ export function Sidebar({
           'md:nx-top-16 md:nx-shrink-0 motion-reduce:nx-transform-none',
           'nx-transform-gpu nx-transition-all nx-ease-in-out',
           'print:nx-hidden',
+          'nx-select-none',
           showSidebar ? 'md:nx-w-80' : 'md:nx-w-20',
           asPopover ? 'md:nx-hidden' : 'md:nx-sticky md:nx-self-start',
           menu
@@ -400,6 +404,37 @@ export function Sidebar({
               )}
               ref={sidebarRef}
             >
+              <div
+                className={cn(
+                  'nx-flex nx-flex-row nx-justify-end nx-p-1',
+                  showSidebar ? 'nx-block' : 'nx-hidden',
+                )}
+              >
+                <span
+                  className={cn(
+                    'nx-cursor-pointer nx-p-1',
+                    'nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 nx-rounded-md',
+                  )}
+                >
+                  <NewFileIcon />
+                </span>
+                <span
+                  className={cn(
+                    'nx-pl-2 nx-cursor-pointer nx-p-1',
+                    'nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
+                  )}
+                >
+                  <NewFolderIcon />
+                </span>
+                <span
+                  className={cn(
+                    'nx-cursor-pointer nx-p-1',
+                    'nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
+                  )}
+                >
+                  <SeparatorIcon />
+                </span>
+              </div>
               {/* without asPopover check <Collapse />'s inner.clientWidth on `layout: "raw"` will be 0 and element will not have width on initial loading */}
               {(!asPopover || !showSidebar) && (
                 <Collapse isOpen={showSidebar} horizontal>
