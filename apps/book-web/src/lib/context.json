@@ -36,6 +36,10 @@
             },
             "Bis-amoveo-virgo.-N2HZ1AF8": {
                 "title": "Bis amoveo virgo.-10"
+            },
+            "new-file": {
+                "title": "newfile",
+                "type": "newFile"
             }
         }
     },
@@ -1191,5 +1195,10 @@
                 "route": "/@test_carrick/learning-bunjs-is-fun/Aranea-cauda-30rL2Xs3"
             }
         ]
+    },
+    {
+        "kind": "MdxPage",
+        "name": "new-file",
+        "route": "/"
     }
 ]
