@@ -34,6 +34,7 @@ export type MetaJsonFile = {
   }
   // The path to the _meta.json file. This is a private property needed by the loader.
   __nextra_src?: string
+  route: string
 }
 
 export type DynamicFolder = {

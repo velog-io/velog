@@ -29,10 +29,11 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
   let init = false
   const map = new Map()
 
-  const createMeta = (pages: Page[]) => {
+  const createMeta = (pages: Page[], route: string) => {
     return [
       {
         kind: 'Meta',
+        route,
         data: pages.reduce((acc, page, index) => {
           // create unique key
           const key =
@@ -94,7 +95,8 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
 
   const recursive = (result: any[], page: Page, index: number, origin: Page[]) => {
     if (index === 0) {
-      result.push(createMeta(origin))
+      const route = page.parent_id === null ? '/' : page.url_slug.split('/').slice(0, -1).join('/')
+      result.push(createMeta(origin, route))
     }
     if (page.type !== 'separator') {
       result.push(createMdxPage(page))

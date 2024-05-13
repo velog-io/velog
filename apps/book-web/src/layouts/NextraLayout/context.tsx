@@ -6,6 +6,7 @@ const bookUrl = `/@test_carrick/learning-bunjs-is-fun`
 export const pageMap: PageMapItem[] = [
   {
     kind: 'Meta',
+    route: '/',
     data: {
       index: { title: 'Introduction' },
       themes: {
@@ -25,14 +26,18 @@ export const pageMap: PageMapItem[] = [
     name: 'advanced',
     route: `${bookUrl}/advanced`,
     children: [
-      { kind: 'Meta', data: { satori: { title: 'Satori' }, hello: { title: 'hello' } } },
+      {
+        kind: 'Meta',
+        data: { satori: { title: 'Satori' }, hello: { title: 'hello' } },
+        route: `/advanced`,
+      },
       { kind: 'MdxPage', name: 'hello', route: `${bookUrl}/advanced/hello` },
       {
         kind: 'Folder',
         name: 'hello',
         route: `${bookUrl}/advanced/hello`,
         children: [
-          { kind: 'Meta', data: { hi: { title: 'Hi' } } },
+          { kind: 'Meta', data: { hi: { title: 'Hi' } }, route: `${bookUrl}/advanced/hello` },
           {
             kind: 'MdxPage',
             name: 'hi',
