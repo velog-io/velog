@@ -5,7 +5,7 @@ import { useFSRoute, useMounted } from '../nextra/hooks'
 import { ArrowRightIcon, ExpandIcon } from '../nextra/icons'
 import type { Item, MenuItem, PageItem } from '../nextra/normalize-pages'
 import type { ReactElement } from 'react'
-import { createContext, memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, memo, use, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { useActiveAnchor, useConfig, useMenu } from '../contexts'
 import { renderComponent } from '../utils'
@@ -206,9 +206,14 @@ function Separator({ title }: { title: string }): ReactElement {
 }
 
 function NewFile(): ReactElement {
+  const [value, setValue] = useState('')
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value)
+  }
+
   return (
     <li className={cn('[word-break:break-word] nx-my-4')}>
-      <input value={'hello'} />
+      <input value={value} onChange={onChange} />
     </li>
   )
 }
@@ -222,9 +227,6 @@ function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }):
   const activeAnchor = useActiveAnchor()
   const { setMenu } = useMenu()
   const config = useConfig()
-  if (item.type !== 'doc') {
-    console.log('item', item.type)
-  }
 
   if (item.type === 'separator') {
     return <Separator title={item.title} />

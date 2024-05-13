@@ -8,7 +8,7 @@ interface Service {
   findById(writerId: string): Promise<Writer | null>
   findByFkUserId(fkUserId: string): Promise<Writer | null>
   create(args: CreateArgs): Promise<Writer>
-  checkExistsWriter(fkUserId: string): Promise<string | null>
+  checkExistsWriter(fkUserId?: string): Promise<CheckExistsWriterResult>
 }
 
 @injectable()
@@ -60,18 +60,27 @@ export class WriterService implements Service {
 
     return writer
   }
-  public async checkExistsWriter(fkUserId?: string): Promise<string | null> {
-    if (!fkUserId) return null
+  public async checkExistsWriter(fkUserId?: string): Promise<CheckExistsWriterResult> {
+    if (!fkUserId) return { exists: false }
 
     const key = this.redis.generateKey.existsWriter(fkUserId)
-    const value = await this.redis.get(key)
-    if (value) return value
+    const [value, writer] = await Promise.all([this.redis.get(key), this.findByFkUserId(fkUserId)])
 
-    const writer = await this.findByFkUserId(fkUserId)
-    if (!writer) return null
+    if (value) {
+      return {
+        exists: true,
+        writerId: value,
+      }
+    }
+
+    if (!writer) return { exists: false }
 
     await this.redis.set(key, writer.id, 'EX', Time.ONE_MINUTE_IN_S * 10)
-    return writer.id
+
+    return {
+      exists: true,
+      writerId: writer.id,
+    }
   }
 }
 
@@ -83,3 +92,10 @@ type CreateArgs = {
   display_name: string
   thumbnail: string
 }
+
+type CheckExistsWriterResult =
+  | {
+      exists: false
+      writerId?: undefined
+    }
+  | { exists: true; writerId: string }

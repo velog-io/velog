@@ -37,10 +37,9 @@ export const getServerSideProps = (async (ctx) => {
   }
 
   const bookMetadata = generateBookMetadata({ pages, bookUrl: bookUrlSlug })
-  
+
   const mdxText = `
   <Callout>${bookUrlSlug} hello!</Callout>
-
 
 {/* wrapped with {} to mark it as javascript so mdx will not put it under a p tag */}
 {<h1 className="text-center font-extrabold md:text-5xl mt-8">SWR</h1>}

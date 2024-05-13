@@ -25,9 +25,9 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
 
       if (!accessToken) return
       const accessTokenData = await jwtService.decodeToken<AccessTokenData>(accessToken)
-      const writerId = await writerService.checkExistsWriter(accessTokenData.user_id)
+      const { exists, writerId } = await writerService.checkExistsWriter(accessTokenData.user_id)
 
-      if (!writerId) {
+      if (!exists) {
         // TODO: automatic register to writer
         throw new Error('Writer not found')
       }

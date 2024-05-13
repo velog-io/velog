@@ -1,5 +1,5 @@
 import NextraDocLayout from '@packages/nextra-editor'
-import { pageOpts, themeConfig } from './context'
+import { themeConfig } from './context'
 import { mdxCompiler } from '@/lib/mdx/compileMdx'
 import { useEffect, useState } from 'react'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
