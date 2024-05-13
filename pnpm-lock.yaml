@@ -1126,7 +1126,7 @@ importers:
         version: 0.2.1(next@14.2.3)(react-dom@18.2.0)(react@18.2.0)
       rehype-pretty-code:
         specifier: 0.9.11
-        version: 0.9.11(shiki@0.14.7)
+        version: 0.9.11(shiki@1.4.0)
       scroll-into-view-if-needed:
         specifier: ^3.1.0
         version: 3.1.0
@@ -16679,6 +16679,18 @@ packages:
       hash-obj: 4.0.0
       parse-numeric-range: 1.3.0
       shiki: 0.14.7
+    dev: false
+
+  /rehype-pretty-code@0.9.11(shiki@1.4.0):
+    resolution: {integrity: sha512-Eq90eCYXQJISktfRZ8PPtwc5SUyH6fJcxS8XOMnHPUQZBtC6RYo67gGlley9X2nR8vlniPj0/7oCDEYHKQa/oA==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      shiki: '*'
+    dependencies:
+      '@types/hast': 2.3.10
+      hash-obj: 4.0.0
+      parse-numeric-range: 1.3.0
+      shiki: 1.4.0
     dev: false
 
   /rehype-raw@4.0.2:

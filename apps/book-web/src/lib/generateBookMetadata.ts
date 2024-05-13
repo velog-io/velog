@@ -1,4 +1,4 @@
-import type { DocsThemeConfig, PageMapItem, PageOpts, MetaJsonFile } from '@packages/nextra-editor'
+import type { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-editor'
 import fs from 'node:fs'
 import path from 'node:path'
 import { escapeForUrl } from './utils'
@@ -96,33 +96,21 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
     if (index === 0) {
       result.push(createMeta(origin))
     }
-
     if (page.type !== 'separator') {
       result.push(createMdxPage(page))
     }
-
     if (page.childrens?.length > 0) {
       result.push(createFolder(page))
     }
     return result
   }
 
-  const pageMap = pages
-    .filter((page) => !page.parent_id)
-    .reduce(recursive, [])
-    .flat()
+  const pageMap = pages.reduce(recursive, []).flat()
   return pageMap as PageMapItem[]
 }
 
 export const generateBookMetadata = ({ pages, bookUrl }: Args): BookMetadata => {
   const pageMap = generatePageMap(pages, bookUrl)
-
-  ;(pageMap[0] as MetaJsonFile).data['new-file'] = { title: 'newfile', type: 'newFile' }
-  pageMap.push({
-    kind: 'MdxPage',
-    name: 'new-file',
-    route: '/',
-  })
 
   fs.writeFileSync(
     path.resolve(process.cwd(), './src/lib/', './context.json'),

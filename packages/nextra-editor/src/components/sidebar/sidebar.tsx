@@ -1,20 +1,19 @@
 import cn from 'clsx'
 import { useRouter } from 'next/router'
-import type { Heading } from '../nextra/types'
-import { useFSRoute, useMounted } from '../nextra/hooks'
-import { ArrowRightIcon, ExpandIcon } from '../nextra/icons'
-import type { Item, MenuItem, PageItem } from '../nextra/normalize-pages'
+import type { Heading } from '../../nextra/types'
+import { useFSRoute, useMounted } from '../../nextra/hooks'
+import { ArrowRightIcon, ExpandIcon } from '../../nextra/icons'
+import type { Item, MenuItem, PageItem } from '../../nextra/normalize-pages'
 import type { ReactElement } from 'react'
-import { createContext, memo, use, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
-import { useActiveAnchor, useConfig, useMenu } from '../contexts'
-import { renderComponent } from '../utils'
-import { Anchor } from './anchor'
-import { Collapse } from './collapse'
-import { LocaleSwitch } from './locale-switch'
-import { SeparatorIcon } from '../nextra/icons/seperator'
-import { NewFileIcon } from '../nextra/icons/new-file'
-import { NewFolderIcon } from '../nextra/icons/new-folder'
+import { useActiveAnchor, useConfig, useMenu } from '../../contexts'
+import { renderComponent } from '../../utils'
+import { Anchor } from '../anchor'
+import { Collapse } from '../collapse'
+import { LocaleSwitch } from '../locale-switch'
+import { SidebarController } from './sidebar-controller'
+import NewFileInput from './newFileInput'
 
 const TreeState: Record<string, boolean> = Object.create(null)
 
@@ -205,19 +204,6 @@ function Separator({ title }: { title: string }): ReactElement {
   )
 }
 
-function NewFile(): ReactElement {
-  const [value, setValue] = useState('')
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
-  }
-
-  return (
-    <li className={cn('[word-break:break-word] nx-my-4')}>
-      <input value={value} onChange={onChange} />
-    </li>
-  )
-}
-
 function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }): ReactElement {
   const route = useFSRoute()
   const onFocus = useContext(OnFocusItemContext)
@@ -233,7 +219,7 @@ function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }):
   }
 
   if (item.type === 'newFile') {
-    return <NewFile />
+    return <NewFileInput />
   }
 
   return (
@@ -373,6 +359,7 @@ export function Sidebar({
   const hasI18n = config.i18n.length > 0
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton
 
+  console.log('focused', focused)
   return (
     <>
       {includePlaceholder && asPopover ? (
@@ -421,37 +408,7 @@ export function Sidebar({
               )}
               ref={sidebarRef}
             >
-              <div
-                className={cn(
-                  'nx-flex nx-flex-row nx-justify-end nx-p-1',
-                  showSidebar ? 'nx-block' : 'nx-hidden',
-                )}
-              >
-                <span
-                  className={cn(
-                    'nx-cursor-pointer nx-p-1',
-                    'nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 nx-rounded-md',
-                  )}
-                >
-                  <NewFileIcon />
-                </span>
-                <span
-                  className={cn(
-                    'nx-pl-2 nx-cursor-pointer nx-p-1',
-                    'nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
-                  )}
-                >
-                  <NewFolderIcon />
-                </span>
-                <span
-                  className={cn(
-                    'nx-cursor-pointer nx-p-1',
-                    'nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
-                  )}
-                >
-                  <SeparatorIcon />
-                </span>
-              </div>
+              <SidebarController showSidebar={showSidebar} />
               {/* without asPopover check <Collapse />'s inner.clientWidth on `layout: "raw"` will be 0 and element will not have width on initial loading */}
               {(!asPopover || !showSidebar) && (
                 <Collapse isOpen={showSidebar} horizontal>

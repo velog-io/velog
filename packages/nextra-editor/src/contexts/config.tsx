@@ -10,12 +10,19 @@ import type { Context } from '../types'
 import { MenuProvider } from './menu'
 
 type Config<FrontMatterType = FrontMatter> = DocsThemeConfig &
-  Pick<PageOpts<FrontMatterType>, 'flexsearch' | 'newNextLinkBehavior' | 'title' | 'frontMatter'>
+  Pick<
+    PageOpts<FrontMatterType>,
+    'flexsearch' | 'newNextLinkBehavior' | 'title' | 'frontMatter' | 'pageMap'
+  > & {
+    setPageMap: (pageMap: PageMapItem[]) => void
+  }
 
 const ConfigContext = createContext<Config>({
   title: '',
   frontMatter: {},
+  pageMap: [],
   ...DEFAULT_THEME,
+  setPageMap: () => {},
 })
 
 export function useConfig<FrontMatterType = FrontMatter>() {
@@ -64,6 +71,7 @@ export const ConfigProvider = ({
   value: Context
 }): ReactElement => {
   const [menu, setMenu] = useState(false)
+  const [pageMap, setPageMapState] = useState(pageOpts.pageMap)
   // Merge only on first load
   theme ||= {
     ...DEFAULT_THEME,
@@ -88,6 +96,11 @@ export const ConfigProvider = ({
     validateMeta(pageOpts.pageMap)
     isValidated = true
   }
+
+  const setPageMap = (pageMap: PageMapItem[]) => {
+    setPageMapState(pageMap)
+  }
+
   const extendedConfig: Config = {
     ...theme,
     flexsearch: pageOpts.flexsearch,
@@ -96,6 +109,8 @@ export const ConfigProvider = ({
     }),
     title: pageOpts.title,
     frontMatter: pageOpts.frontMatter,
+    pageMap,
+    setPageMap,
   }
 
   const { nextThemes } = extendedConfig

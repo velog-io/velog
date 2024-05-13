@@ -15,6 +15,7 @@ import { normalizePages, PageTheme } from './nextra/normalize-pages'
 import { useFSRoute } from './nextra/hooks/use-fs-route'
 import { LoaderOptions, NextraThemeLayoutProps, PageOpts } from './nextra/types'
 import { useMounted } from './nextra/hooks'
+
 interface BodyProps {
   themeContext: PageTheme
   breadcrumb: ReactNode
@@ -89,7 +90,6 @@ const Body = ({ themeContext, navigation, children }: BodyProps): ReactElement =
 }
 
 const InnerLayout = ({
-  pageMap,
   frontMatter,
   headings,
   children,
@@ -105,6 +105,7 @@ const InnerLayout = ({
   const config = useConfig()
   const fsPath = useFSRoute()
 
+  const { pageMap } = config
   const {
     activeType,
     activeIndex,
