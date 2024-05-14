@@ -15,6 +15,7 @@ import { normalizePages, PageTheme } from './nextra/normalize-pages'
 import { useFSRoute } from './nextra/hooks/use-fs-route'
 import { LoaderOptions, NextraThemeLayoutProps, PageOpts } from './nextra/types'
 import { useMounted } from './nextra/hooks'
+import { SidebarProvider, useSidebar } from './contexts/sidebar'
 
 interface BodyProps {
   themeContext: PageTheme
@@ -104,8 +105,10 @@ const InnerLayout = ({
 }): ReactElement => {
   const config = useConfig()
   const fsPath = useFSRoute()
+  const sidebar = useSidebar()
 
-  const { pageMap } = config
+  const { pageMap, addFileActive } = sidebar
+
   const {
     activeType,
     activeIndex,
@@ -116,16 +119,15 @@ const InnerLayout = ({
     flatDocsDirectories,
     directories,
     topLevelNavbarItems,
-  } = useMemo(
-    () =>
-      normalizePages({
-        list: pageMap,
-        locale: DEFAULT_LOCALE,
-        defaultLocale: DEFAULT_LOCALE,
-        route: '/',
-      }),
-    [pageMap, fsPath],
-  )
+  } = useMemo(() => {
+    console.log('newPageMap', pageMap)
+    return normalizePages({
+      list: pageMap,
+      locale: DEFAULT_LOCALE,
+      defaultLocale: DEFAULT_LOCALE,
+      route: '/',
+    })
+  }, [pageMap, fsPath, addFileActive])
 
   const themeContext = { ...activeThemeContext, ...frontMatter }
   const direction = 'ltr'
@@ -210,14 +212,16 @@ export default function NextraDocLayout({
 }: NextraDocLayoutProps): ReactElement {
   return (
     <ConfigProvider value={context}>
-      <InnerLayout
-        {...context.pageOpts}
-        mdxSource={mdxSource}
-        editorValue={editorValue}
-        onEditorChange={onEditorChange}
-      >
-        {children}
-      </InnerLayout>
+      <SidebarProvider value={context}>
+        <InnerLayout
+          {...context.pageOpts}
+          mdxSource={mdxSource}
+          editorValue={editorValue}
+          onEditorChange={onEditorChange}
+        >
+          {children}
+        </InnerLayout>
+      </SidebarProvider>
     </ConfigProvider>
   )
 }

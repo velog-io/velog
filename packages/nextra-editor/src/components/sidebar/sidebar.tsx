@@ -13,7 +13,7 @@ import { Anchor } from '../anchor'
 import { Collapse } from '../collapse'
 import { LocaleSwitch } from '../locale-switch'
 import SidebarController from './sidebar-controller'
-import AddNewFile from './add-new-file'
+import AddNewFileInput from './add-new-file-input'
 
 const TreeState: Record<string, boolean> = Object.create(null)
 
@@ -219,7 +219,7 @@ function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }):
   }
 
   if (item.type === 'newFile') {
-    return <AddNewFile />
+    return <AddNewFileInput />
   }
 
   return (
