@@ -14,7 +14,15 @@ function AddNewFileInput(): ReactElement {
 
   const onCacnel = () => {
     if (!sidebar.addFileActive) return
-    sidebar.setAddFileCancel(true)
+    if (value === '') sidebar.setAddFileCancel(true)
+  }
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const { parentUrlSlug, index } = sidebar.addFileInfo
+      const event = new CustomEvent('addNewFileEvent', { detail: { value, parentUrlSlug, index } })
+      window.dispatchEvent(event)
+    }
   }
 
   const { ref } = useOutsideClick<HTMLLIElement>(onCacnel)
@@ -28,7 +36,7 @@ function AddNewFileInput(): ReactElement {
       >
         <EmptyFileIcon />
       </span>
-      <input value={value} onChange={onChange} autoFocus={true} />
+      <input value={value} onChange={onChange} autoFocus={true} onKeyDown={onKeyDown} />
     </li>
   )
 }

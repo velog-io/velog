@@ -23,10 +23,7 @@ const AddNewFileIcon = ({ className }: Props) => {
   }, [sidebar.addFileCancel])
 
   const onClickAddFileIcon = () => {
-    if (sidebar.addFileActive) {
-      console.log('add file active')
-      return
-    }
+    if (sidebar.addFileActive) return
 
     const timeout = setTimeout(() => sidebar.setAddFileActive(true), 100)
     timeoutRef.current = timeout
@@ -37,10 +34,7 @@ const AddNewFileIcon = ({ className }: Props) => {
     const urlSlug = Array.isArray(query.page_url_slug) ? query.page_url_slug.join('/') : '/'
     const targetRoute = `/${urlSlug.split('-').slice(0, -1).join('-').trim()}`
 
-    console.log('targetRoute', targetRoute)
     const coppeidPageMap = structuredClone(sidebar.pageMap)
-
-    const ran = Math.random().toString(36).substring(7).slice(0, 9)
 
     function addInputToPageMap(pageMap: PageMapItem[]) {
       for (const page of pageMap) {
@@ -59,8 +53,14 @@ const AddNewFileIcon = ({ className }: Props) => {
 
         const isTarget = page.route === targetRoute
         if (isTarget) {
-          const key = `${ran}`
+          const key = Math.random().toString(36).substring(7).slice(0, 9)
           const newPageData = { ...page.data, [key]: { title: key, type: 'newFile' } }
+
+          sidebar.setAddFileInfo({
+            parentUrlSlug: page.route,
+            index: Object.keys(newPageData).length - 1,
+          })
+
           page.data = newPageData
           sidebar.setPageMap(coppeidPageMap)
           break

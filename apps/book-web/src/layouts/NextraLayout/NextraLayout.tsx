@@ -33,6 +33,17 @@ function NextraLayout({ mdxSource, children, body, bookMetadata }: Props) {
     setEditorValue(e.target.value)
   }
 
+  useEffect(() => {
+    const addNewFile = (e: CustomEventInit<{ value: string }>) => {
+      console.log('e', e.detail)
+    }
+
+    window.addEventListener('addNewFileEvent', addNewFile)
+    return () => {
+      window.removeEventListener('addNewFileEvent', addNewFile)
+    }
+  })
+
   if (!source) {
     return <div>not found source Loading...</div>
   }

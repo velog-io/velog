@@ -96,6 +96,9 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
   const recursive = (result: any[], page: Page, index: number, origin: Page[]) => {
     if (index === 0) {
       const route = page.parent_id === null ? '/' : page.url_slug.split('/').slice(0, -1).join('/')
+      if (route === '') {
+        console.log('page.', page)
+      }
       result.push(createMeta(origin, route))
     }
     if (page.type !== 'separator') {

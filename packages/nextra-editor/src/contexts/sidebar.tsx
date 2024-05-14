@@ -10,6 +10,8 @@ type Sidebar = {
   setAddFileActive: (value: boolean) => void
   addFileCancel: boolean
   setAddFileCancel: (value: boolean) => void
+  addFileInfo: { parentUrlSlug: string; index: number }
+  setAddFileInfo: (args: { parentUrlSlug: string; index: number }) => void
 }
 
 const SidebarContext = createContext<Sidebar>({
@@ -20,6 +22,8 @@ const SidebarContext = createContext<Sidebar>({
   setAddFileActive: () => {},
   addFileCancel: false,
   setAddFileCancel: () => {},
+  addFileInfo: { parentUrlSlug: '/', index: 0 },
+  setAddFileInfo: () => {},
 })
 
 export function useSidebar() {
@@ -36,6 +40,7 @@ export const SidebarProvider = ({
   const [pageMap, setPageMap] = useState(pageOpts.pageMap)
   const [addFileCancel, setAddFileCancel] = useState(false)
   const [addFileActive, setAddFileActive] = useState(false)
+  const [addFileInfo, setAddFileInfo] = useState({ parentUrlSlug: '/', index: 0 })
 
   const reset = (originPageMap: PageMapItem[]) => {
     setPageMap(originPageMap)
@@ -51,6 +56,8 @@ export const SidebarProvider = ({
     setAddFileCancel,
     addFileActive,
     setAddFileActive,
+    addFileInfo,
+    setAddFileInfo,
   }
 
   return <SidebarContext.Provider value={option}>{children}</SidebarContext.Provider>

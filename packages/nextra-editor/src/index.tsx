@@ -119,15 +119,16 @@ const InnerLayout = ({
     flatDocsDirectories,
     directories,
     topLevelNavbarItems,
-  } = useMemo(() => {
-    console.log('newPageMap', pageMap)
-    return normalizePages({
-      list: pageMap,
-      locale: DEFAULT_LOCALE,
-      defaultLocale: DEFAULT_LOCALE,
-      route: '/',
-    })
-  }, [pageMap, fsPath, addFileActive])
+  } = useMemo(
+    () =>
+      normalizePages({
+        list: pageMap,
+        locale: DEFAULT_LOCALE,
+        defaultLocale: DEFAULT_LOCALE,
+        route: '/',
+      }),
+    [pageMap, fsPath, addFileActive],
+  )
 
   const themeContext = { ...activeThemeContext, ...frontMatter }
   const direction = 'ltr'
@@ -160,14 +161,19 @@ const InnerLayout = ({
           <div className={cn('nx-flex nx-w-full')}>
             <div className={cn('nextra-editor-container nx-mt-4')}>
               <textarea
-                className={cn('nx-w-full nx-max-h-screen nx-pl-6 nx-pr-6 nx-outline-none')}
+                className={cn(
+                  'nextra-scrollbar nx-w-full nx-max-h-screen nx-pl-6 nx-pr-6 nx-outline-none',
+                )}
                 defaultValue={editorValue}
                 onChange={onEditorChange}
                 minLength={10000}
                 style={{ height: '2000px', outline: 'none' }}
               />
             </div>
-            <div className={cn('nx-overflow-y-auto')} style={{ flex: 1, height: '100vh' }}>
+            <div
+              className={cn('nextra-scrollbar nx-overflow-y-auto')}
+              style={{ flex: 1, height: '100vh' }}
+            >
               <Body
                 themeContext={themeContext}
                 breadcrumb={<Breadcrumb activePath={activePath} />}
