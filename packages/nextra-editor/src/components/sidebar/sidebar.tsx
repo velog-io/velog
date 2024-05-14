@@ -12,8 +12,8 @@ import { renderComponent } from '../../utils'
 import { Anchor } from '../anchor'
 import { Collapse } from '../collapse'
 import { LocaleSwitch } from '../locale-switch'
-import { SidebarController } from './sidebar-controller'
-import NewFileInput from './newFileInput'
+import SidebarController from './sidebar-controller'
+import AddNewFile from './add-new-file'
 
 const TreeState: Record<string, boolean> = Object.create(null)
 
@@ -219,7 +219,7 @@ function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }):
   }
 
   if (item.type === 'newFile') {
-    return <NewFileInput />
+    return <AddNewFile />
   }
 
   return (
@@ -359,7 +359,6 @@ export function Sidebar({
   const hasI18n = config.i18n.length > 0
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton
 
-  console.log('focused', focused)
   return (
     <>
       {includePlaceholder && asPopover ? (

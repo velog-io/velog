@@ -2,8 +2,9 @@ import { ReactElement, useState } from 'react'
 import cn from 'clsx'
 import { EmptyFileIcon } from '../../nextra/icons/empty-file'
 
-function NewFileInput(): ReactElement {
+function AddNewFile(): ReactElement {
   const [value, setValue] = useState('')
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
   }
@@ -22,4 +23,4 @@ function NewFileInput(): ReactElement {
   )
 }
 
-export default NewFileInput
+export default AddNewFile

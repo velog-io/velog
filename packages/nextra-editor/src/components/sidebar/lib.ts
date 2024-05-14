@@ -1,22 +1,28 @@
 import type { PageMapItem } from '../../nextra/types'
 
-function findDepth(
-  type: 'file' | 'folder',
-  pageMap: PageMapItem[],
-  targetRoute: string,
-): PageMapItem[] {
-  const isFined = false
-  const result = null
-  for (const page of pageMap) {
-    if (isFined) break
-    const findMetaData = page.kind === 'Meta'
+export const findDepth = (pageMap: PageMapItem[], targetRoute: string): PageMapItem[] => {
+  if (targetRoute === '/') return pageMap
 
-    if (!findMetaData) continue
+  for (const page of pageMap) {
+    const mdxPage = page.kind === 'MdxPage'
+    if (mdxPage) continue
+
+    const metaPage = page.kind === 'Meta'
+    const folderPage = page.kind === 'Folder'
+
+    if (folderPage && page.children.length > 0) {
+      const result = findDepth(page.children, targetRoute)
+      if (result) return result
+      continue
+    }
+
+    if (!metaPage) continue
 
     const isTarget = page.route === targetRoute
-
     if (isTarget) {
+      return pageMap
     }
-    // const isFocused = page.
   }
+
+  return pageMap
 }

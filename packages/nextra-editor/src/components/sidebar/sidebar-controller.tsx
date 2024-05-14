@@ -4,32 +4,36 @@ import { SeparatorIcon } from '../../nextra/icons/seperator'
 import { NewFileIcon } from '../../nextra/icons/new-file'
 import { NewFolderIcon } from '../../nextra/icons/new-folder'
 import { CollapseAllIcon } from '../../nextra/icons/collapse-all'
+import { useRouter } from 'next/router'
+import { findDepth } from './lib'
 
 type Props = {
   showSidebar: boolean
 }
 
-export function SidebarController({ showSidebar }: Props) {
+function SidebarController({ showSidebar }: Props) {
   const config = useConfig()
+  const router = useRouter()
 
-  const handleAddFile = () => {
-    const newPageMap = config.pageMap.map((page) => {
-      if (page.kind !== 'Meta') return page
-      const newPageData = { ...page.data, 'new-file': { title: 'newfile', type: 'newFile' } }
-      return {
-        ...page,
-        data: newPageData,
-      }
-    })
+  const onAddFileInput = () => {
+    const { query } = router
+    const urlSlug = Array.isArray(query.page_url_slug) ? query.page_url_slug.join('/') : '/'
+    const targetRoute = `/${urlSlug.split('-').slice(0, -1).join('-').trim()}`
 
-    newPageMap.push({
-      kind: 'MdxPage',
-      name: 'new-file',
-      route: '/',
-    })
+    const coppeidPageMap = structuredClone(config.pageMap)
+    const targetPageMap = findDepth(coppeidPageMap, targetRoute)
 
-    config.setPageMap(newPageMap)
+    const ran = Math.random().toString(36).substring(7)
+
+    for (const page of targetPageMap) {
+      if (page.kind !== 'Meta') continue
+      const key = `${ran}`
+      const newPageData = { ...page.data, [key]: { title: key, type: 'newFile' } }
+      page.data = newPageData
+    }
+    config.setPageMap(coppeidPageMap)
   }
+
   return (
     <div
       className={cn(
@@ -43,7 +47,7 @@ export function SidebarController({ showSidebar }: Props) {
           'nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 nx-rounded-md',
         )}
       >
-        <NewFileIcon onClick={handleAddFile} />
+        <NewFileIcon onClick={onAddFileInput} />
       </span>
       <span
         className={cn(
@@ -72,3 +76,5 @@ export function SidebarController({ showSidebar }: Props) {
     </div>
   )
 }
+
+export default SidebarController
