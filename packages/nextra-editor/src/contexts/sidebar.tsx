@@ -5,11 +5,11 @@ import { Context } from '../types'
 type Sidebar = {
   pageMap: PageMapItem[]
   setPageMap: (pageMap: PageMapItem[]) => void
-  reset: (pageMap: PageMapItem[]) => void
+  addFileReset: (pageMap: PageMapItem[]) => void
   addFileActive: boolean
   setAddFileActive: (value: boolean) => void
-  addFileCancel: boolean
-  setAddFileCancel: (value: boolean) => void
+  addFileComplete: boolean
+  setAddFileComplete: (value: boolean) => void
   addFileInfo: { parentUrlSlug: string; index: number }
   setAddFileInfo: (args: { parentUrlSlug: string; index: number }) => void
 }
@@ -17,11 +17,11 @@ type Sidebar = {
 const SidebarContext = createContext<Sidebar>({
   pageMap: [],
   setPageMap: () => {},
-  reset: () => {},
+  addFileReset: () => {},
   addFileActive: false,
   setAddFileActive: () => {},
-  addFileCancel: false,
-  setAddFileCancel: () => {},
+  addFileComplete: false,
+  setAddFileComplete: () => {},
   addFileInfo: { parentUrlSlug: '/', index: 0 },
   setAddFileInfo: () => {},
 })
@@ -38,22 +38,22 @@ export const SidebarProvider = ({
   value: Context
 }): ReactElement => {
   const [pageMap, setPageMap] = useState(pageOpts.pageMap)
-  const [addFileCancel, setAddFileCancel] = useState(false)
+  const [addFileComplete, setAddFileComplete] = useState(false)
   const [addFileActive, setAddFileActive] = useState(false)
   const [addFileInfo, setAddFileInfo] = useState({ parentUrlSlug: '/', index: 0 })
 
-  const reset = (originPageMap: PageMapItem[]) => {
+  const addFileReset = (originPageMap: PageMapItem[]) => {
     setPageMap(originPageMap)
-    setAddFileCancel(false)
+    setAddFileComplete(false)
     setAddFileActive(false)
   }
 
   const option: Sidebar = {
     pageMap,
     setPageMap,
-    reset,
-    addFileCancel,
-    setAddFileCancel,
+    addFileReset,
+    addFileComplete,
+    setAddFileComplete,
     addFileActive,
     setAddFileActive,
     addFileInfo,

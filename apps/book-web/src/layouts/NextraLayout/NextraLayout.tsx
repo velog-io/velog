@@ -1,4 +1,4 @@
-import NextraDocLayout from '@packages/nextra-editor'
+import NextraDocLayout, { CustomEventDetail, nextraCustomEventName } from '@packages/nextra-editor'
 import { themeConfig } from './context'
 import { mdxCompiler } from '@/lib/mdx/compileMdx'
 import { useEffect, useState } from 'react'
@@ -34,13 +34,13 @@ function NextraLayout({ mdxSource, children, body, bookMetadata }: Props) {
   }
 
   useEffect(() => {
-    const addNewFile = (e: CustomEventInit<{ value: string }>) => {
+    const addFile = (e: CustomEventInit<CustomEventDetail['AddFileEventDetail']>) => {
       console.log('e', e.detail)
     }
 
-    window.addEventListener('addNewFileEvent', addNewFile)
+    window.addEventListener(nextraCustomEventName.addFile, addFile)
     return () => {
-      window.removeEventListener('addNewFileEvent', addNewFile)
+      window.removeEventListener(nextraCustomEventName.addFile, addFile)
     }
   })
 

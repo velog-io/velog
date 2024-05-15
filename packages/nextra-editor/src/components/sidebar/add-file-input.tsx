@@ -3,8 +3,9 @@ import cn from 'clsx'
 import { EmptyFileIcon } from '../../nextra/icons/empty-file'
 import { useSidebar } from '../../contexts/sidebar'
 import useOutsideClick from '../../hooks/useOutsideClick'
+import { nextraCustomEventName } from '../..'
 
-function AddNewFileInput(): ReactElement {
+function addFileInput(): ReactElement {
   const sidebar = useSidebar()
   const [value, setValue] = useState('')
 
@@ -12,20 +13,23 @@ function AddNewFileInput(): ReactElement {
     setValue(e.target.value)
   }
 
-  const onCacnel = () => {
+  const onComplete = () => {
     if (!sidebar.addFileActive) return
-    if (value === '') sidebar.setAddFileCancel(true)
+    sidebar.setAddFileComplete(true)
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       const { parentUrlSlug, index } = sidebar.addFileInfo
-      const event = new CustomEvent('addNewFileEvent', { detail: { value, parentUrlSlug, index } })
+      const event = new CustomEvent(nextraCustomEventName.addFile, {
+        detail: { value, parentUrlSlug, index },
+      })
       window.dispatchEvent(event)
+      onComplete()
     }
   }
 
-  const { ref } = useOutsideClick<HTMLLIElement>(onCacnel)
+  const { ref } = useOutsideClick<HTMLLIElement>(onComplete)
 
   return (
     <li ref={ref} className={cn('[word-break:break-word] nx-flex nx-my-4')}>
@@ -41,4 +45,4 @@ function AddNewFileInput(): ReactElement {
   )
 }
 
-export default AddNewFileInput
+export default addFileInput

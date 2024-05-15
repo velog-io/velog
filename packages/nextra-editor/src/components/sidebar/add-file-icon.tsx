@@ -3,24 +3,25 @@ import { useSidebar } from '../../contexts/sidebar'
 import { NewFileIcon } from '../../nextra/icons/new-file'
 import { useEffect, useRef, useState } from 'react'
 import { PageMapItem } from '../../nextra/types'
+import { findFolder } from './utils'
 
 type Props = {
   className?: string
 }
 
-const AddNewFileIcon = ({ className }: Props) => {
+const AddFileIcon = ({ className }: Props) => {
   const sidebar = useSidebar()
   const router = useRouter()
   const timeoutRef = useRef<NodeJS.Timeout>()
   const [originPageMap, setOriginPageMap] = useState<PageMapItem[]>([])
 
   useEffect(() => {
-    if (!sidebar.addFileCancel) return
-    sidebar.reset(originPageMap)
+    if (!sidebar.addFileComplete) return
+    sidebar.addFileReset(originPageMap)
     return () => {
       clearTimeout(timeoutRef.current)
     }
-  }, [sidebar.addFileCancel])
+  }, [sidebar.addFileComplete])
 
   const onClickAddFileIcon = () => {
     if (sidebar.addFileActive) return
@@ -28,11 +29,19 @@ const AddNewFileIcon = ({ className }: Props) => {
     const timeout = setTimeout(() => sidebar.setAddFileActive(true), 100)
     timeoutRef.current = timeout
 
-    setOriginPageMap(sidebar.pageMap)
-
     const { query } = router
-    const urlSlug = Array.isArray(query.page_url_slug) ? query.page_url_slug.join('/') : '/'
-    const targetRoute = `/${urlSlug.split('-').slice(0, -1).join('-').trim()}`
+    const urlSlug = Array.isArray(query.pageUrlSlug) ? query.pageUrlSlug.join('/') : '/'
+    let targetRoute = `/${urlSlug.split('-').slice(0, -1).join('-').trim()}`
+
+    const fullRoute = `/${query.username}/${query.bookTitle}/${urlSlug}`
+    const isFolder = !!findFolder(sidebar.pageMap, fullRoute)
+
+    // 폴더 타입이 아닐 경우 부모 폴더로 targetRoute를 변경
+    if (!isFolder && targetRoute !== '/') {
+      targetRoute = targetRoute.split('/').slice(0, -1).join('/')
+    }
+
+    setOriginPageMap(sidebar.pageMap)
 
     const coppeidPageMap = structuredClone(sidebar.pageMap)
 
@@ -78,4 +87,4 @@ const AddNewFileIcon = ({ className }: Props) => {
   )
 }
 
-export default AddNewFileIcon
+export default AddFileIcon

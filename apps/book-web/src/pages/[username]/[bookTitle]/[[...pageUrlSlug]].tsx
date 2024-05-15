@@ -29,7 +29,7 @@ export default Home
 
 export const getServerSideProps = (async (ctx) => {
   const { params, req } = ctx
-  const bookUrlSlug = `/${params?.username}/${params?.book_title}`
+  const bookUrlSlug = `/${params?.username}/${params?.bookTitle}`
   const pages = await getPages(bookUrlSlug, req.cookies)
 
   if (!pages) {
@@ -144,5 +144,5 @@ Sientase libre de unirse a
     mdxText: string
     bookMetadata: BookMetadata
   },
-  { username: string; book_title: string; page_url_slug: string[] }
+  { username: string; bookTitle: string; pageUrlSlug: string[] }
 >

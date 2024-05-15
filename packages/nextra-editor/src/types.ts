@@ -1,6 +1,7 @@
-import type { PageOpts } from './nextra/types'
+import type { LoaderOptions, PageOpts } from './nextra/types'
 import type { ReactNode } from 'react'
 import type { DocsThemeConfig } from './constants'
+import { ProcessorOptions } from '@mdx-js/mdx'
 
 export type Context = {
   pageOpts: PageOpts
@@ -13,3 +14,30 @@ export type SearchResult = {
   prefix?: ReactNode
   route: string
 }
+
+export interface CustomEventDetail {
+  AddFileEventDetail: AddFileEventDetail
+}
+
+type AddFileEventDetail = {
+  title: string
+  parentUrl: string
+  index: number
+}
+
+// for compiler
+export type MdxOptions = LoaderOptions['mdxOptions'] &
+  Pick<ProcessorOptions, 'jsx' | 'outputFormat'>
+export type MdxCompilerOptions = Partial<
+  Pick<
+    LoaderOptions,
+    'staticImage' | 'flexsearch' | 'defaultShowCopyCode' | 'readingTime' | 'latex' | 'codeHighlight'
+  > & {
+    mdxOptions?: MdxOptions
+    route?: string
+    locale?: string
+    filePath?: string
+    useCachedCompiler?: boolean
+    isPageImport?: boolean
+  }
+>

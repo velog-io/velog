@@ -9,11 +9,10 @@ import { ActiveAnchorProvider, ConfigProvider, useConfig } from './contexts'
 import { getComponents } from './mdx-components'
 import { renderComponent } from './utils'
 import { MDXRemote, type MDXRemoteSerializeResult } from 'next-mdx-remote'
-import type { ProcessorOptions } from '@mdx-js/mdx'
 import theme from './theme.json'
 import { normalizePages, PageTheme } from './nextra/normalize-pages'
 import { useFSRoute } from './nextra/hooks/use-fs-route'
-import { LoaderOptions, NextraThemeLayoutProps, PageOpts } from './nextra/types'
+import { NextraThemeLayoutProps, PageOpts } from './nextra/types'
 import { useMounted } from './nextra/hooks'
 import { SidebarProvider, useSidebar } from './contexts/sidebar'
 
@@ -251,22 +250,11 @@ export {
   LocaleSwitch,
 } from './components'
 
-// for compiler
-export type MdxOptions = LoaderOptions['mdxOptions'] &
-  Pick<ProcessorOptions, 'jsx' | 'outputFormat'>
-export type MdxCompilerOptions = Partial<
-  Pick<
-    LoaderOptions,
-    'staticImage' | 'flexsearch' | 'defaultShowCopyCode' | 'readingTime' | 'latex' | 'codeHighlight'
-  > & {
-    mdxOptions?: MdxOptions
-    route?: string
-    locale?: string
-    filePath?: string
-    useCachedCompiler?: boolean
-    isPageImport?: boolean
-  }
->
+export const nextraCustomEventName = {
+  addFile: 'addFileEvent',
+}
+
+export { CustomEventDetail, MdxCompilerOptions, MdxOptions, SearchResult } from './types'
 
 export {
   attachMeta,
