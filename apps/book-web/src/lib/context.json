@@ -34,6 +34,12 @@
             },
             "Crudelis.-FIMw6t93": {
                 "title": "Crudelis.-9"
+            },
+            "fdsafds-oPfZFaDT": {
+                "title": "fdsafds-10"
+            },
+            "dsfasdf-rXZ2ayIc": {
+                "title": "dsfasdf-11"
             }
         }
     },
@@ -1243,5 +1249,15 @@
                 ]
             }
         ]
+    },
+    {
+        "kind": "MdxPage",
+        "name": "fdsafds-oPfZFaDT",
+        "route": "/@test_carrick/learning-bunjs-is-fun/fdsafds-oPfZFaDT"
+    },
+    {
+        "kind": "MdxPage",
+        "name": "dsfasdf-rXZ2ayIc",
+        "route": "/@test_carrick/learning-bunjs-is-fun/dsfasdf-rXZ2ayIc"
     }
 ]

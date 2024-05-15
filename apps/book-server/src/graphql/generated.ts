@@ -43,17 +43,30 @@ export type BookIdInput = {
   book_id: Scalars['ID']['input']
 }
 
+export type CreatePageInput = {
+  book_url_slug: Scalars['String']['input']
+  index: Scalars['Int']['input']
+  parent_url_slug: Scalars['String']['input']
+  title: Scalars['String']['input']
+  type: PageType
+}
+
 export type GetPagesInput = {
   book_url_slug: Scalars['String']['input']
 }
 
 export type Mutation = {
   build?: Maybe<Scalars['Void']['output']>
+  create?: Maybe<Page>
   deploy?: Maybe<Scalars['Void']['output']>
 }
 
 export type MutationBuildArgs = {
   input: BookIdInput
+}
+
+export type MutationCreateArgs = {
+  input: CreatePageInput
 }
 
 export type MutationDeployArgs = {
@@ -209,6 +222,7 @@ export type ResolversTypes = {
   Book: ResolverTypeWrapper<BookModel>
   BookIDInput: BookIdInput
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
+  CreatePageInput: CreatePageInput
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
   GetPagesInput: GetPagesInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
@@ -231,6 +245,7 @@ export type ResolversParentTypes = {
   Book: BookModel
   BookIDInput: BookIdInput
   Boolean: Scalars['Boolean']['output']
+  CreatePageInput: CreatePageInput
   Date: Scalars['Date']['output']
   GetPagesInput: GetPagesInput
   ID: Scalars['ID']['output']
@@ -285,6 +300,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationBuildArgs, 'input'>
+  >
+  create?: Resolver<
+    Maybe<ResolversTypes['Page']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateArgs, 'input'>
   >
   deploy?: Resolver<
     Maybe<ResolversTypes['Void']>,

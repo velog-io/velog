@@ -1,9 +1,9 @@
-import { useRouter } from 'next/router'
 import { useSidebar } from '../../contexts/sidebar'
 import { NewFileIcon } from '../../nextra/icons/new-file'
 import { useEffect, useRef, useState } from 'react'
-import { PageMapItem } from '../../nextra/types'
+import { Folder, PageMapItem } from '../../nextra/types'
 import { findFolder } from './utils'
+import { useUrlSlug } from '../../hooks/useUrlSlug'
 
 type Props = {
   className?: string
@@ -11,7 +11,8 @@ type Props = {
 
 const AddFileIcon = ({ className }: Props) => {
   const sidebar = useSidebar()
-  const router = useRouter()
+  const { bookUrlSlug, pageUrlSlug, fullUrlSlug } = useUrlSlug()
+
   const timeoutRef = useRef<NodeJS.Timeout>()
   const [originPageMap, setOriginPageMap] = useState<PageMapItem[]>([])
 
@@ -29,23 +30,20 @@ const AddFileIcon = ({ className }: Props) => {
     const timeout = setTimeout(() => sidebar.setAddFileActive(true), 100)
     timeoutRef.current = timeout
 
-    const { query } = router
-    const urlSlug = Array.isArray(query.pageUrlSlug) ? query.pageUrlSlug.join('/') : '/'
-    let targetRoute = `/${urlSlug.split('-').slice(0, -1).join('-').trim()}`
-
-    const fullRoute = `/${query.username}/${query.bookTitle}/${urlSlug}`
-    const isFolder = !!findFolder(sidebar.pageMap, fullRoute)
+    // remove code
+    let targetRoute = `/${pageUrlSlug.split('-').slice(0, -1).join('-').trim()}`
+    const isFolder = !!findFolder(sidebar.pageMap, fullUrlSlug)
 
     // 폴더 타입이 아닐 경우 부모 폴더로 targetRoute를 변경
-    if (!isFolder && targetRoute !== '/') {
-      targetRoute = targetRoute.split('/').slice(0, -1).join('/')
+    if (!isFolder) {
+      targetRoute = targetRoute.split('/').slice(0, -1).join('/') || '/'
     }
 
     setOriginPageMap(sidebar.pageMap)
 
     const coppeidPageMap = structuredClone(sidebar.pageMap)
 
-    function addInputToPageMap(pageMap: PageMapItem[]) {
+    function addInputToPageMap(pageMap: PageMapItem[], parent?: Folder) {
       for (const page of pageMap) {
         const mdxPage = page.kind === 'MdxPage'
         if (mdxPage) continue
@@ -54,7 +52,7 @@ const AddFileIcon = ({ className }: Props) => {
         const folderPage = page.kind === 'Folder'
 
         if (folderPage && page.children.length > 0) {
-          addInputToPageMap(page.children)
+          addInputToPageMap(page.children, page)
           continue
         }
 
@@ -65,9 +63,11 @@ const AddFileIcon = ({ className }: Props) => {
           const key = Math.random().toString(36).substring(7).slice(0, 9)
           const newPageData = { ...page.data, [key]: { title: key, type: 'newFile' } }
 
+          const removeBookUrlSlug = parent?.route.replace(bookUrlSlug, '')
           sidebar.setAddFileInfo({
-            parentUrlSlug: page.route,
+            parentUrlSlug: removeBookUrlSlug ?? '',
             index: Object.keys(newPageData).length - 1,
+            bookUrlSlug,
           })
 
           page.data = newPageData

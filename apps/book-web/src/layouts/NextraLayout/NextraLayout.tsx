@@ -4,6 +4,7 @@ import { mdxCompiler } from '@/lib/mdx/compileMdx'
 import { useEffect, useState } from 'react'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import { BookMetadata } from '@/lib/generateBookMetadata'
+import { useCreatePageMutation } from '@/graphql/bookServer/generated/bookServer'
 
 type Props = {
   mdxSource: MDXRemoteSerializeResult
@@ -16,13 +17,15 @@ function NextraLayout({ mdxSource, children, body, bookMetadata }: Props) {
   const [editorValue, setEditorValue] = useState(body)
   const [source, setSource] = useState<MDXRemoteSerializeResult>(mdxSource)
 
+  const { mutate: createPageMutate } = useCreatePageMutation()
+
   useEffect(() => {
     async function compileSource() {
       try {
         const result = await mdxCompiler(editorValue)
         setSource(result)
       } catch (error) {
-        console.log('err', error)
+        console.log('failed mdx compile: ', error)
       }
     }
 
@@ -34,8 +37,19 @@ function NextraLayout({ mdxSource, children, body, bookMetadata }: Props) {
   }
 
   useEffect(() => {
-    const addFile = (e: CustomEventInit<CustomEventDetail['AddFileEventDetail']>) => {
-      console.log('e', e.detail)
+    const addFile = async (e: CustomEventInit<CustomEventDetail['AddFileEventDetail']>) => {
+      if (!e.detail) return
+      console.log(e.detail)
+      const { title, parentUrlSlug, index, bookUrlSlug } = e.detail
+      createPageMutate({
+        input: {
+          title,
+          parent_url_slug: parentUrlSlug,
+          index,
+          book_url_slug: bookUrlSlug,
+          type: 'page',
+        },
+      })
     }
 
     window.addEventListener(nextraCustomEventName.addFile, addFile)

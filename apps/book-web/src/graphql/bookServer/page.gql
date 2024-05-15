@@ -21,3 +21,9 @@ query getPages($input: GetPagesInput!) {
     }
   }
 }
+
+mutation createPage($input: CreatePageInput!) {
+  create(input: $input) {
+    id
+  }
+}

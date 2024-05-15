@@ -2,6 +2,12 @@ import { PageMapItem } from '../nextra/types'
 import { createContext, ReactElement, ReactNode, useContext, useState } from 'react'
 import { Context } from '../types'
 
+export type AddFileInfo = {
+  parentUrlSlug: string
+  index: number
+  bookUrlSlug: string
+}
+
 type Sidebar = {
   pageMap: PageMapItem[]
   setPageMap: (pageMap: PageMapItem[]) => void
@@ -10,8 +16,8 @@ type Sidebar = {
   setAddFileActive: (value: boolean) => void
   addFileComplete: boolean
   setAddFileComplete: (value: boolean) => void
-  addFileInfo: { parentUrlSlug: string; index: number }
-  setAddFileInfo: (args: { parentUrlSlug: string; index: number }) => void
+  addFileInfo: AddFileInfo
+  setAddFileInfo: (args: AddFileInfo) => void
 }
 
 const SidebarContext = createContext<Sidebar>({
@@ -22,7 +28,7 @@ const SidebarContext = createContext<Sidebar>({
   setAddFileActive: () => {},
   addFileComplete: false,
   setAddFileComplete: () => {},
-  addFileInfo: { parentUrlSlug: '/', index: 0 },
+  addFileInfo: { parentUrlSlug: '/', index: 0, bookUrlSlug: '/' },
   setAddFileInfo: () => {},
 })
 
@@ -40,7 +46,7 @@ export const SidebarProvider = ({
   const [pageMap, setPageMap] = useState(pageOpts.pageMap)
   const [addFileComplete, setAddFileComplete] = useState(false)
   const [addFileActive, setAddFileActive] = useState(false)
-  const [addFileInfo, setAddFileInfo] = useState({ parentUrlSlug: '/', index: 0 })
+  const [addFileInfo, setAddFileInfo] = useState({ parentUrlSlug: '/', index: 0, bookUrlSlug: '/' })
 
   const addFileReset = (originPageMap: PageMapItem[]) => {
     setPageMap(originPageMap)
@@ -48,7 +54,7 @@ export const SidebarProvider = ({
     setAddFileActive(false)
   }
 
-  const option: Sidebar = {
+  const value: Sidebar = {
     pageMap,
     setPageMap,
     addFileReset,
@@ -60,5 +66,5 @@ export const SidebarProvider = ({
     setAddFileInfo,
   }
 
-  return <SidebarContext.Provider value={option}>{children}</SidebarContext.Provider>
+  return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>
 }

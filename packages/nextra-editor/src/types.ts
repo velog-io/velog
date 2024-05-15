@@ -21,8 +21,9 @@ export interface CustomEventDetail {
 
 type AddFileEventDetail = {
   title: string
-  parentUrl: string
+  parentUrlSlug: string
   index: number
+  bookUrlSlug: string
 }
 
 // for compiler

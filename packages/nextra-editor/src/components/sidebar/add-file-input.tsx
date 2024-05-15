@@ -3,14 +3,14 @@ import cn from 'clsx'
 import { EmptyFileIcon } from '../../nextra/icons/empty-file'
 import { useSidebar } from '../../contexts/sidebar'
 import useOutsideClick from '../../hooks/useOutsideClick'
-import { nextraCustomEventName } from '../..'
+import { CustomEventDetail, nextraCustomEventName } from '../..'
 
 function addFileInput(): ReactElement {
   const sidebar = useSidebar()
-  const [value, setValue] = useState('')
+  const [title, setTitle] = useState('')
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
+    setTitle(e.target.value)
   }
 
   const onComplete = () => {
@@ -20,10 +20,13 @@ function addFileInput(): ReactElement {
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      const { parentUrlSlug, index } = sidebar.addFileInfo
-      const event = new CustomEvent(nextraCustomEventName.addFile, {
-        detail: { value, parentUrlSlug, index },
-      })
+      const { parentUrlSlug, bookUrlSlug, index } = sidebar.addFileInfo
+      const event = new CustomEvent<CustomEventDetail['AddFileEventDetail']>(
+        nextraCustomEventName.addFile,
+        {
+          detail: { title, parentUrlSlug, index, bookUrlSlug },
+        },
+      )
       window.dispatchEvent(event)
       onComplete()
     }
@@ -40,7 +43,7 @@ function addFileInput(): ReactElement {
       >
         <EmptyFileIcon />
       </span>
-      <input value={value} onChange={onChange} autoFocus={true} onKeyDown={onKeyDown} />
+      <input value={title} onChange={onChange} autoFocus={true} onKeyDown={onKeyDown} />
     </li>
   )
 }

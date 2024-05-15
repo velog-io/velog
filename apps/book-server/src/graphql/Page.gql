@@ -24,6 +24,18 @@ type Query {
   pages(input: GetPagesInput!): [Page!]!
 }
 
+type Mutation {
+  create(input: CreatePageInput!): Page
+}
+
 input GetPagesInput {
   book_url_slug: String!
+}
+
+input CreatePageInput {
+  title: String!
+  index: Int!
+  parent_url_slug: String!
+  book_url_slug: String!
+  type: PageType!
 }

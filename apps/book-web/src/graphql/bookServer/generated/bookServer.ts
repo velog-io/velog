@@ -43,17 +43,30 @@ export type BookIdInput = {
   book_id: Scalars['ID']['input']
 }
 
+export type CreatePageInput = {
+  book_url_slug: Scalars['String']['input']
+  index: Scalars['Int']['input']
+  parent_url_slug: Scalars['String']['input']
+  title: Scalars['String']['input']
+  type: PageType
+}
+
 export type GetPagesInput = {
   book_url_slug: Scalars['String']['input']
 }
 
 export type Mutation = {
   build: Maybe<Scalars['Void']['output']>
+  create: Maybe<Page>
   deploy: Maybe<Scalars['Void']['output']>
 }
 
 export type MutationBuildArgs = {
   input: BookIdInput
+}
+
+export type MutationCreateArgs = {
+  input: CreatePageInput
 }
 
 export type MutationDeployArgs = {
@@ -156,6 +169,12 @@ export type GetPagesQuery = {
   }>
 }
 
+export type CreatePageMutationVariables = Exact<{
+  input: CreatePageInput
+}>
+
+export type CreatePageMutation = { create: { id: string } | null }
+
 export const DeployDocument = `
     mutation deploy($input: BookIDInput!) {
   deploy(input: $input)
@@ -241,3 +260,30 @@ useSuspenseGetPagesQuery.getKey = (variables: GetPagesQueryVariables) => [
 
 useGetPagesQuery.fetcher = (variables: GetPagesQueryVariables, options?: RequestInit['headers']) =>
   fetcher<GetPagesQuery, GetPagesQueryVariables>(GetPagesDocument, variables, options)
+
+export const CreatePageDocument = `
+    mutation createPage($input: CreatePageInput!) {
+  create(input: $input) {
+    id
+  }
+}
+    `
+
+export const useCreatePageMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<CreatePageMutation, TError, CreatePageMutationVariables, TContext>,
+) => {
+  return useMutation<CreatePageMutation, TError, CreatePageMutationVariables, TContext>({
+    mutationKey: ['createPage'],
+    mutationFn: (variables?: CreatePageMutationVariables) =>
+      fetcher<CreatePageMutation, CreatePageMutationVariables>(CreatePageDocument, variables)(),
+    ...options,
+  })
+}
+
+useCreatePageMutation.getKey = () => ['createPage']
+
+useCreatePageMutation.fetcher = (
+  variables: CreatePageMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<CreatePageMutation, CreatePageMutationVariables>(CreatePageDocument, variables, options)

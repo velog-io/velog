@@ -36,7 +36,7 @@ export const getServerSideProps = (async (ctx) => {
     notFound()
   }
 
-  const bookMetadata = generateBookMetadata({ pages: pages.slice(0, -1), bookUrl: bookUrlSlug })
+  const bookMetadata = generateBookMetadata({ pages: pages, bookUrl: bookUrlSlug })
 
   const mdxText = `
   <Callout>${bookUrlSlug} hello!</Callout>

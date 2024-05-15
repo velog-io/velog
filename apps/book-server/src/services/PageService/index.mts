@@ -1,6 +1,7 @@
 import { ConfilctError } from '@errors/ConfilctError.mjs'
 import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
+import { CreatePageInput } from '@graphql/generated.js'
 
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { UtilsService } from '@lib/utils/UtilsService.mjs'
@@ -10,6 +11,8 @@ import { injectable, singleton } from 'tsyringe'
 
 interface Service {
   updatePageAndChildrenUrlSlug(args: UpdatePageAndChildrenUrlSlugArgs): Promise<void>
+  getPages(bookUrlSlug: string, signedWriterId?: string): Promise<Page[]>
+  create(args: CreatePageInput, signedWriterId?: string): Promise<Page>
 }
 
 @injectable()
@@ -116,6 +119,58 @@ export class PageService implements Service {
     })
 
     return pages
+  }
+
+  public async create(input: CreatePageInput, signedWriterId?: string): Promise<Page> {
+    if (!signedWriterId) {
+      throw new UnauthorizedError('Not authorized')
+    }
+
+    const { book_url_slug, index, parent_url_slug, title, type } = input
+
+    const book = await this.bookSerivce.findByUrlSlug(book_url_slug)
+
+    if (!book) {
+      throw new NotFoundError('Not found book')
+    }
+
+    if (book.writer_id !== signedWriterId) {
+      throw new ConfilctError('Not owner of book')
+    }
+
+    let parentPage: Page | null = null
+
+    if (parent_url_slug !== '') {
+      parentPage = await this.mongo.page.findUnique({
+        where: {
+          url_slug: parent_url_slug,
+        },
+      })
+
+      if (!parentPage) {
+        throw new NotFoundError('Not found parent page')
+      }
+    }
+
+    const code = this.utils.randomString(8)
+    const urlSlug = `${this.utils.removeCodeFromUrlSlug(parent_url_slug)}/${this.utils.escapeForUrl(title).toLowerCase()}-${code}`
+
+    const page = await this.mongo.page.create({
+      data: {
+        title,
+        url_slug: urlSlug,
+        index,
+        code,
+        body: '',
+        writer_id: signedWriterId,
+        book_id: book.id,
+        type,
+        level: parentPage ? parentPage.level + 1 : 1,
+        parent_id: parentPage ? parentPage!.id : null,
+      },
+    })
+
+    return page
   }
 }
 

@@ -17,4 +17,8 @@ export class UtilsService extends Utils implements Service {
     const cwd = splited.slice(0, -1).join('/src')
     return join(cwd, dir)
   }
+  public removeCodeFromUrlSlug(urlSlug: string): string {
+    if (urlSlug === '') return urlSlug
+    return urlSlug.split('-').slice(0, -1).join('-').trim()
+  }
 }
