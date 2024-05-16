@@ -1,42 +1,37 @@
 import NextraLayout from '@/layouts/NextraLayout'
-import { BookMetadata, generateBookMetadata } from '@/lib/generateBookMetadata'
 import { mdxCompiler } from '@/lib/mdx/compileMdx'
-import getPages from '@/prefetch/getPages'
 
 import { GetServerSideProps } from 'next'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
-import { notFound } from 'next/navigation'
 
 import { useRouter } from 'next/router'
 
 type Props = {
   mdxSource: MDXRemoteSerializeResult
   mdxText: string
-  bookMetadata: BookMetadata
 }
 
-const Home = ({ mdxSource, mdxText, bookMetadata }: Props) => {
+const Home = ({ mdxSource, mdxText }: Props) => {
   const router = useRouter()
 
   if (router.isFallback) {
     return <div>isFallback Loading...</div>
   }
 
-  return <NextraLayout mdxSource={mdxSource} body={mdxText} bookMetadata={bookMetadata} />
+  return <NextraLayout mdxSource={mdxSource} body={mdxText} />
 }
 
 export default Home
 
 export const getServerSideProps = (async (ctx) => {
-  const { params, req } = ctx
+  const { params } = ctx
   const bookUrlSlug = `/${params?.username}/${params?.bookTitle}`
-  const pages = await getPages(bookUrlSlug, req.cookies)
 
-  if (!pages) {
-    notFound()
-  }
-
-  const bookMetadata = generateBookMetadata({ pages: pages, bookUrl: bookUrlSlug })
+  // const queryClient = new QueryClient()
+  // await queryClient.prefetchQuery({
+  //   queryKey: useGetPagesQuery.getKey({ input: { book_url_slug: bookUrlSlug } }),
+  //   queryFn: async () => await getPages(bookUrlSlug, req.cookies),
+  // })
 
   const mdxText = `
   <Callout>${bookUrlSlug} hello!</Callout>
@@ -134,7 +129,7 @@ Sientase libre de unirse a
   try {
     const mdxSource = await mdxCompiler(mdxText)
 
-    return { props: { mdxSource, mdxText, bookMetadata } }
+    return { props: { mdxSource, mdxText } }
   } catch (error) {
     throw new Error(`Error compiling MDX: ${JSON.stringify(error)}`)
   }
@@ -142,7 +137,6 @@ Sientase libre de unirse a
   {
     mdxSource: MDXRemoteSerializeResult
     mdxText: string
-    bookMetadata: BookMetadata
   },
   { username: string; bookTitle: string; pageUrlSlug: string[] }
 >

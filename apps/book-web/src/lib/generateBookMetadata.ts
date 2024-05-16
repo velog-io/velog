@@ -1,7 +1,7 @@
 import type { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-editor'
-import fs from 'node:fs'
-import path from 'node:path'
 import { escapeForUrl } from './utils'
+// import fs from 'node:fs'
+// import path from 'node:path'
 
 type Pages = Page[]
 type Page = {
@@ -117,10 +117,10 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
 export const generateBookMetadata = ({ pages, bookUrl }: Args): BookMetadata => {
   const pageMap = generatePageMap(pages, bookUrl)
 
-  fs.writeFileSync(
-    path.resolve(process.cwd(), './src/lib/', './context.json'),
-    JSON.stringify(pageMap, null, 4),
-  )
+  // fs.writeFileSync(
+  //   path.resolve(process.cwd(), './src/lib/', './context.json'),
+  //   JSON.stringify(pageMap, null, 4),
+  // )
 
   return {
     pageOpts: {

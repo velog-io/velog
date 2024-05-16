@@ -3,6 +3,7 @@ import '../styles/global.css'
 
 import type { AppProps } from 'next/app'
 import CoreProvider from '@/provider/CoreProvider'
+import { HydrationBoundary } from '@tanstack/react-query'
 
 type Props = {
   mdxSource: string
@@ -11,7 +12,9 @@ type Props = {
 const App = ({ Component, pageProps }: Props) => {
   return (
     <CoreProvider>
-      <Component {...pageProps} />
+      <HydrationBoundary state={pageProps.dehydratedProps}>
+        <Component {...pageProps} />
+      </HydrationBoundary>
     </CoreProvider>
   )
 }

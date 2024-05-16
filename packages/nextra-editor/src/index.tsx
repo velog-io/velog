@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import 'focus-visible'
 import cn from 'clsx'
 import './polyfill'
@@ -96,6 +96,7 @@ const InnerLayout = ({
   mdxSource,
   editorValue,
   onEditorChange,
+  pageMap: initPageMap,
 }: PageOpts & {
   children: ReactNode
   mdxSource: MDXRemoteSerializeResult
@@ -106,7 +107,11 @@ const InnerLayout = ({
   const fsPath = useFSRoute()
   const sidebar = useSidebar()
 
-  const { pageMap, addFileActive } = sidebar
+  const { pageMap, addFileActive, setPageMap } = sidebar
+
+  useEffect(() => {
+    setPageMap(initPageMap)
+  }, [initPageMap])
 
   const {
     activeType,

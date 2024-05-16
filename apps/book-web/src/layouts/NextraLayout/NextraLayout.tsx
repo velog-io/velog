@@ -3,21 +3,35 @@ import { themeConfig } from './context'
 import { mdxCompiler } from '@/lib/mdx/compileMdx'
 import { useEffect, useState } from 'react'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
-import { BookMetadata } from '@/lib/generateBookMetadata'
-import { useCreatePageMutation } from '@/graphql/bookServer/generated/bookServer'
+import { BookMetadata, generateBookMetadata } from '@/lib/generateBookMetadata'
+import { useCreatePageMutation, useGetPagesQuery } from '@/graphql/bookServer/generated/bookServer'
+import { useUrlSlug } from '@/hooks/useUrlSlug'
 
 type Props = {
   mdxSource: MDXRemoteSerializeResult
   children?: React.ReactNode
-  bookMetadata: BookMetadata
   body: string
 }
 
-function NextraLayout({ mdxSource, children, body, bookMetadata }: Props) {
+function NextraLayout({ mdxSource, children, body }: Props) {
+  const { bookUrlSlug } = useUrlSlug()
+  const {
+    data: getPagesData,
+    refetch: getPagesRefetch,
+    isLoading,
+  } = useGetPagesQuery({ input: { book_url_slug: bookUrlSlug } })
+
   const [editorValue, setEditorValue] = useState(body)
+  const [bookMetadata, setBookMetadata] = useState<BookMetadata | null>(null)
   const [source, setSource] = useState<MDXRemoteSerializeResult>(mdxSource)
 
-  const { mutate: createPageMutate } = useCreatePageMutation()
+  const { mutateAsync: createPageAsyncMutate } = useCreatePageMutation()
+
+  useEffect(() => {
+    if (!getPagesData?.pages) return
+    const metadata = generateBookMetadata({ pages: getPagesData.pages, bookUrl: bookUrlSlug })
+    setBookMetadata(metadata)
+  }, [getPagesData?.pages])
 
   useEffect(() => {
     async function compileSource() {
@@ -32,16 +46,11 @@ function NextraLayout({ mdxSource, children, body, bookMetadata }: Props) {
     compileSource()
   }, [editorValue])
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setEditorValue(e.target.value)
-  }
-
   useEffect(() => {
     const addFile = async (e: CustomEventInit<CustomEventDetail['AddFileEventDetail']>) => {
       if (!e.detail) return
-      console.log(e.detail)
       const { title, parentUrlSlug, index, bookUrlSlug } = e.detail
-      createPageMutate({
+      await createPageAsyncMutate({
         input: {
           title,
           parent_url_slug: parentUrlSlug,
@@ -50,6 +59,7 @@ function NextraLayout({ mdxSource, children, body, bookMetadata }: Props) {
           type: 'page',
         },
       })
+      getPagesRefetch()
     }
 
     window.addEventListener(nextraCustomEventName.addFile, addFile)
@@ -58,13 +68,18 @@ function NextraLayout({ mdxSource, children, body, bookMetadata }: Props) {
     }
   })
 
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditorValue(e.target.value)
+  }
+
   if (!source) {
     return <div>not found source Loading...</div>
   }
 
+  if (isLoading || !bookMetadata) return <div>loading...</div>
   return (
     <NextraDocLayout
-      pageOpts={bookMetadata.pageOpts}
+      pageOpts={bookMetadata!.pageOpts}
       themeConfig={themeConfig}
       pageProps={{}}
       mdxSource={source}
