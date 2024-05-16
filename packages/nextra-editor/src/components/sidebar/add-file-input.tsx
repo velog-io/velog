@@ -14,12 +14,12 @@ function addFileInput(): ReactElement {
   }
 
   const onComplete = () => {
-    if (!sidebar.addFileActive) return
     sidebar.setAddFileComplete(true)
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      onComplete()
       const { parentUrlSlug, bookUrlSlug, index } = sidebar.addFileInfo
       const event = new CustomEvent<CustomEventDetail['AddFileEventDetail']>(
         nextraCustomEventName.addFile,
@@ -28,7 +28,6 @@ function addFileInput(): ReactElement {
         },
       )
       window.dispatchEvent(event)
-      onComplete()
     }
   }
 

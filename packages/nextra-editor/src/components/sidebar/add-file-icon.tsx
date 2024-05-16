@@ -25,8 +25,10 @@ const AddFileIcon = ({ className }: Props) => {
   }, [sidebar.addFileComplete])
 
   const onClickAddFileIcon = () => {
-    if (sidebar.addFileActive) return
-
+    if (sidebar.addFileActive) {
+      sidebar.addFileReset(originPageMap)
+      return
+    }
     const timeout = setTimeout(() => sidebar.setAddFileActive(true), 100)
     timeoutRef.current = timeout
 
@@ -45,8 +47,8 @@ const AddFileIcon = ({ className }: Props) => {
 
     function addInputToPageMap(pageMap: PageMapItem[], parent?: Folder) {
       for (const page of pageMap) {
-        const mdxPage = page.kind === 'MdxPage'
-        if (mdxPage) continue
+        const isMdxPage = page.kind === 'MdxPage'
+        if (isMdxPage) continue
 
         const metaPage = page.kind === 'Meta'
         const folderPage = page.kind === 'Folder'

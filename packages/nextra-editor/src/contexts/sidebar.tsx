@@ -50,8 +50,8 @@ export const SidebarProvider = ({
 
   const addFileReset = (originPageMap: PageMapItem[]) => {
     setPageMap(originPageMap)
-    setAddFileComplete(false)
     setAddFileActive(false)
+    setAddFileComplete(false)
   }
 
   const value: Sidebar = {

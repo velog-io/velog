@@ -1,5 +1,7 @@
 import NextraLayout from '@/layouts/NextraLayout'
+import { generateBookMetadata } from '@/lib/generateBookMetadata'
 import { mdxCompiler } from '@/lib/mdx/compileMdx'
+import getPages from '@/prefetch/getPages'
 
 import { GetServerSideProps } from 'next'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
@@ -24,7 +26,7 @@ const Home = ({ mdxSource, mdxText }: Props) => {
 export default Home
 
 export const getServerSideProps = (async (ctx) => {
-  const { params } = ctx
+  const { params, req } = ctx
   const bookUrlSlug = `/${params?.username}/${params?.bookTitle}`
 
   // const queryClient = new QueryClient()
@@ -32,6 +34,12 @@ export const getServerSideProps = (async (ctx) => {
   //   queryKey: useGetPagesQuery.getKey({ input: { book_url_slug: bookUrlSlug } }),
   //   queryFn: async () => await getPages(bookUrlSlug, req.cookies),
   // })
+
+  const pages = await getPages(bookUrlSlug, req.cookies)
+
+  if (pages) {
+    generateBookMetadata({ pages: pages, bookUrl: bookUrlSlug })
+  }
 
   const mdxText = `
   <Callout>${bookUrlSlug} hello!</Callout>

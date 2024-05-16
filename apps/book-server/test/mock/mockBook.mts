@@ -71,9 +71,9 @@ export const getMockPages = (count: number) =>
       return {
         title,
         index: index,
-        type: 'page',
+        type: index > 9 ? 'page' : 'folder',
         code: code,
-        url_slug: `/${utils.escapeForUrl(title)}-${code}`,
+        url_slug: `/${utils.escapeForUrl(title).toLocaleLowerCase()}-${code}`,
         parent_id: null,
         body: `# ${title}_${index}
         - ${faker.lorem.paragraph(2)}

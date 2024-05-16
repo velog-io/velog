@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import type { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-editor'
 import { escapeForUrl } from './utils'
 // import fs from 'node:fs'
@@ -24,6 +25,17 @@ export type BookMetadata = {
 }
 
 type Data = { [key: string]: { title: string; type?: string } }
+
+const getRoute = (page: Page) => {
+  let route = page.parent_id === null ? '/' : page.url_slug.split('/').slice(0, -1).join('/')
+  if (route === '') {
+    route = page.url_slug.split('-')[0]
+    if (!route) {
+      console.log('route is empty', route)
+    }
+  }
+  return route
+}
 
 const generatePageMap = (pages: Pages, bookUrl: string) => {
   let init = false
@@ -90,21 +102,25 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
       Object.assign(result, { children })
       return result
     }
+
+    if (page.childrens.length === 0) {
+      const route = page.url_slug.split('-').slice(0, -1).join('-')
+      const metaJson = createMeta([], route)[0] as PageMapItem
+      ;(result.children as PageMapItem[]).push(metaJson)
+    }
+
     return result
   }
 
   const recursive = (result: any[], page: Page, index: number, origin: Page[]) => {
     if (index === 0) {
-      const route = page.parent_id === null ? '/' : page.url_slug.split('/').slice(0, -1).join('/')
-      if (route === '') {
-        console.log('page.', page)
-      }
+      const route = getRoute(page)
       result.push(createMeta(origin, route))
     }
     if (page.type !== 'separator') {
       result.push(createMdxPage(page))
     }
-    if (page.childrens?.length > 0) {
+    if (page.childrens?.length > 0 || page.type === 'folder') {
       result.push(createFolder(page))
     }
     return result
@@ -117,10 +133,15 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
 export const generateBookMetadata = ({ pages, bookUrl }: Args): BookMetadata => {
   const pageMap = generatePageMap(pages, bookUrl)
 
-  // fs.writeFileSync(
-  //   path.resolve(process.cwd(), './src/lib/', './context.json'),
-  //   JSON.stringify(pageMap, null, 4),
-  // )
+  if (global.window === undefined) {
+    const fs = require('node:fs')
+    const path = require('node:path')
+
+    fs.writeFileSync(
+      path.resolve(process.cwd(), './src/lib/', './context.json'),
+      JSON.stringify(pageMap, null, 4),
+    )
+  }
 
   return {
     pageOpts: {

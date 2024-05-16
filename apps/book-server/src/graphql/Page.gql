@@ -1,5 +1,6 @@
 enum PageType {
   page
+  folder
   separator
 }
 

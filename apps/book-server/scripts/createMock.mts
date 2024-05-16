@@ -68,7 +68,7 @@ class Seeder {
     })
     const topLevel = pages
       .slice(0, 10)
-      .filter((_, index) => index !== 0 && index !== 2 && index !== 6)
+      .filter((_, index) => index !== 0 && index !== 2 && index !== 6 && index === 9)
 
     const secondLevel = pages.slice(10, 50)
 
@@ -83,6 +83,15 @@ class Seeder {
         data: {
           parent_id: parentId,
           level: 2,
+        },
+      })
+
+      await this.mongo.page.update({
+        where: {
+          id: parentId,
+        },
+        data: {
+          type: 'folder',
         },
       })
     }
@@ -102,6 +111,15 @@ class Seeder {
         data: {
           parent_id: parentId,
           level: 3,
+        },
+      })
+
+      await this.mongo.page.update({
+        where: {
+          id: parentId,
+        },
+        data: {
+          type: 'folder',
         },
       })
     }
