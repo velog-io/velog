@@ -29,6 +29,7 @@ type Data = { [key: string]: { title: string; type?: string } }
 const getRoute = (page: Page) => {
   let route = page.parent_id === null ? '/' : page.url_slug.split('/').slice(0, -1).join('/')
   if (route === '') {
+    console.log('page!', page)
     route = page.url_slug.split('-')[0]
     if (!route) {
       console.log('route is empty', route)

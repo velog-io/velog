@@ -283,8 +283,8 @@ function Menu({ directories, anchors, className, onlyCurrentDocs }: MenuProps): 
       {directories.map((item) =>
         !onlyCurrentDocs || item.isUnderCurrentDocsTree ? (
           item.type === 'menu' ||
-          (item.children && (item.children.length || !item.withIndexPage)) ||
-          Array.isArray(item.children) ? (
+          item.kind === 'Folder' ||
+          (item.children && (item.children.length || !item.withIndexPage)) ? (
             <Folder key={item.name} item={item} anchors={anchors} />
           ) : (
             <File key={item.name} item={item} anchors={anchors} />

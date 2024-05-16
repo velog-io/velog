@@ -50,15 +50,20 @@ const AddFileIcon = ({ className }: Props) => {
         const isMdxPage = page.kind === 'MdxPage'
         if (isMdxPage) continue
 
-        const metaPage = page.kind === 'Meta'
-        const folderPage = page.kind === 'Folder'
+        const isMetaPage = page.kind === 'Meta'
+        const isFolderPage = page.kind === 'Folder'
 
-        if (folderPage && page.children.length > 0) {
+        if (isFolderPage && page.name === 'Appello-porro.-cRChvwvx') {
+          console.log('targetRoute', targetRoute)
+          console.log(page)
+        }
+
+        if (isFolderPage && page.children.length > 0) {
           addInputToPageMap(page.children, page)
           continue
         }
 
-        if (!metaPage) continue
+        if (!isMetaPage) continue
 
         const isTarget = page.route === targetRoute
         if (isTarget) {

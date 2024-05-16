@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { ERROR_ROUTES } from './constants'
-import type { Folder, MdxFile, PageMapItem } from './types'
+import type { Folder, MdxFile, MetaJsonFile, PageMapItem } from './types'
 
 const DEFAULT_PAGE_THEME: PageTheme = {
   breadcrumb: true,
@@ -89,7 +89,7 @@ function extendMeta(meta: string | Record<string, any> = {}, fallback: Record<st
   return Object.assign({}, fallback, meta, { theme })
 }
 
-type FolderWithoutChildren = Omit<Folder, 'children'>
+type FolderWithoutChildren = Omit<Folder, 'children'> | MetaJsonFile
 
 export type Item = (MdxFile | FolderWithoutChildren) & {
   title: string

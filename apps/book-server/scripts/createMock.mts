@@ -68,7 +68,7 @@ class Seeder {
     })
     const topLevel = pages
       .slice(0, 10)
-      .filter((_, index) => index !== 0 && index !== 2 && index !== 6 && index === 9)
+      .filter((_, index) => index !== 0 && index !== 2 && index !== 6)
 
     const secondLevel = pages.slice(10, 50)
 
@@ -124,7 +124,14 @@ class Seeder {
       })
     }
 
-    for (const topLevelPage of topLevel) {
+    const targetUrlSlugUpdatePage = await this.mongo.page.findMany({
+      where: {
+        parent_id: null,
+        type: 'folder',
+      },
+    })
+
+    for (const topLevelPage of targetUrlSlugUpdatePage) {
       await this.pageService.updatePageAndChildrenUrlSlug({
         pageId: topLevelPage.id,
         signedWriterId: writer.id,

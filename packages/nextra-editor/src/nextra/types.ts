@@ -27,6 +27,7 @@ export interface Folder<FileType = PageMapItem> {
 }
 
 export type MetaJsonFile = {
+  name?: string
   kind: 'Meta'
   locale?: string
   data: {

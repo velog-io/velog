@@ -14,6 +14,7 @@ function addFileInput(): ReactElement {
   }
 
   const onComplete = () => {
+    if (!sidebar.addFileActive) return
     sidebar.setAddFileComplete(true)
   }
 
