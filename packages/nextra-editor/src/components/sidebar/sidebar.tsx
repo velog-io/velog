@@ -61,14 +61,13 @@ type FolderProps = {
 }
 
 function FolderImpl({ item, anchors }: FolderProps): ReactElement {
-  const { isFolding } = useSidebar()
+  const { isFolding, actionActive } = useSidebar()
   const { setMenu } = useMenu()
   const routeOriginal = useFSRoute()
   const [route] = routeOriginal.split('#')
+
   const active = [route, route + '/'].includes(item.route + '/')
-
   const activeRouteInside: boolean = active || route.startsWith(item.route + '/')
-
   const focusedRoute = useContext(FocusedItemContext)
   const focusedRouteInside = !!focusedRoute?.startsWith(item.route + '/')
   const level = useContext(FolderLevelContext)
@@ -124,6 +123,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
 
   // use button when link don't have href because it impacts on SEO
   const ComponentToUse = isLink ? Anchor : 'button'
+  const isCollapseOpen = isFolding ? false : actionActive && route === focusedRoute ? true : open
   return (
     <li className={cn({ open, active })}>
       <ComponentToUse
@@ -170,7 +170,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
           )}
         />
       </ComponentToUse>
-      <Collapse className="ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1" isOpen={isFolding ? false : open}>
+      <Collapse className="ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1" isOpen={isCollapseOpen}>
         {Array.isArray(item.children) ? (
           <Menu
             className={cn(classes.border, 'ltr:nx-ml-3 rtl:nx-mr-3')}
