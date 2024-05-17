@@ -6,6 +6,7 @@ export type ActionInfo = {
   parentUrlSlug: string
   index: number
   bookUrlSlug: string
+  type: 'folder' | 'page'
 }
 
 type Sidebar = {
@@ -28,7 +29,7 @@ const SidebarContext = createContext<Sidebar>({
   setActionActive: () => {},
   actionComplete: false,
   setActionComplete: () => {},
-  actionInfo: { parentUrlSlug: '/', index: 0, bookUrlSlug: '/' },
+  actionInfo: { parentUrlSlug: '/', index: 0, bookUrlSlug: '/', type: 'page' },
   setActionInfo: () => {},
 })
 
@@ -46,7 +47,12 @@ export const SidebarProvider = ({
   const [pageMap, setPageMap] = useState(pageOpts.pageMap)
   const [actionComplete, setActionComplete] = useState(false)
   const [actionActive, setActionActive] = useState(false)
-  const [actionInfo, setActionInfo] = useState({ parentUrlSlug: '/', index: 0, bookUrlSlug: '/' })
+  const [actionInfo, setActionInfo] = useState<ActionInfo>({
+    parentUrlSlug: '/',
+    index: 0,
+    bookUrlSlug: '/',
+    type: 'page',
+  })
 
   const reset = (originPageMap: PageMapItem[]) => {
     setPageMap(originPageMap)

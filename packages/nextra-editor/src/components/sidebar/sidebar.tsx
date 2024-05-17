@@ -13,7 +13,8 @@ import { Anchor } from '../anchor'
 import { Collapse } from '../collapse'
 import { LocaleSwitch } from '../locale-switch'
 import SidebarController from './sidebar-controller'
-import AddFileInput from './add-file-input'
+import AddPageInput from './add-page-input'
+import AddFolderInput from './add-folder-input'
 
 const TreeState: Record<string, boolean> = Object.create(null)
 
@@ -218,14 +219,13 @@ function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }):
     return <Separator title={item.title} />
   }
 
-  if (item.type === 'newFile') {
-    console.log('type', item)
-    return <AddFileInput />
+  if (item.type === 'newPage') {
+    return <AddPageInput />
   }
 
-  // if (item.type === 'newFolder') {
-  //   return <div>hello</div>
-  // }
+  if (item.type === 'newFolder') {
+    return <AddFolderInput />
+  }
 
   return (
     <li className={cn(classes.list, { active })}>

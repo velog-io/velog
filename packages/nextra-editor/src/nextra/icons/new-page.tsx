@@ -1,6 +1,6 @@
 import { ComponentProps, ReactElement } from 'react'
 
-export function NewFileIcon(props: ComponentProps<'svg'>): ReactElement {
+export function NewPageIcon(props: ComponentProps<'svg'>): ReactElement {
   return (
     <svg
       width="16"

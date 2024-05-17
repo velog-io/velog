@@ -5,7 +5,7 @@ import { useSidebar } from '../../contexts/sidebar'
 import useOutsideClick from '../../hooks/useOutsideClick'
 import { CustomEventDetail, nextraCustomEventName } from '../..'
 
-function addFileInput(): ReactElement {
+function AddPageInput(): ReactElement {
   const sidebar = useSidebar()
   const [title, setTitle] = useState('')
 
@@ -14,18 +14,18 @@ function addFileInput(): ReactElement {
   }
 
   const onComplete = () => {
-    if (!sidebar.addFileActive) return
-    sidebar.setAddFileComplete(true)
+    if (!sidebar.actionActive) return
+    sidebar.setActionComplete(true)
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onComplete()
-      const { parentUrlSlug, bookUrlSlug, index } = sidebar.addFileInfo
-      const event = new CustomEvent<CustomEventDetail['AddFileEventDetail']>(
-        nextraCustomEventName.addFile,
+      const { parentUrlSlug, bookUrlSlug, index, type } = sidebar.actionInfo
+      const event = new CustomEvent<CustomEventDetail['AddActionEventDetail']>(
+        nextraCustomEventName.addAction,
         {
-          detail: { title, parentUrlSlug, index, bookUrlSlug },
+          detail: { title, parentUrlSlug, index, bookUrlSlug, type },
         },
       )
       window.dispatchEvent(event)
@@ -48,4 +48,4 @@ function addFileInput(): ReactElement {
   )
 }
 
-export default addFileInput
+export default AddPageInput

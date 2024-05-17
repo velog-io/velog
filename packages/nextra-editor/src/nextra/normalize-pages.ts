@@ -57,9 +57,9 @@ const separatorItemSchema = z.strictObject({
   type: z.literal('separator'),
 })
 
-const newFileItemSchema = z.strictObject({
+const newPageItemSchema = z.strictObject({
   title: titleSchema.optional(),
-  type: z.literal('newFile'),
+  type: z.literal('newPage'),
 })
 
 const newFolderItemSchema = z.strictObject({
@@ -84,8 +84,8 @@ export const metaSchema = z
   .or(menuItemSchema)
   .or(separatorItemSchema)
   .or(itemSchema)
-  .or(newFileItemSchema)
-// .or(newFolderItemSchema)
+  .or(newPageItemSchema)
+  .or(newFolderItemSchema)
 
 function extendMeta(meta: string | Record<string, any> = {}, fallback: Record<string, any>) {
   if (typeof meta === 'string') {
@@ -297,7 +297,7 @@ export function normalizePages({
 
     const title =
       extendedMeta.title ||
-      (type !== 'separator' && type !== 'newFile' && type !== 'newFolder' && a.name)
+      (type !== 'separator' && type !== 'newPage' && type !== 'newFolder' && a.name)
     const getItem = (): Item => ({
       ...a,
       type,
@@ -310,7 +310,7 @@ export function normalizePages({
     const pageItem: PageItem = getItem()
 
     docsItem.isUnderCurrentDocsTree = isCurrentDocsTree
-    if (type === 'separator' || type === 'newFile' || type === 'newFolder') {
+    if (type === 'separator' || type === 'newPage' || type === 'newFolder') {
       item.isUnderCurrentDocsTree = isCurrentDocsTree
     }
 
@@ -428,7 +428,7 @@ export function normalizePages({
       case 'separator':
         docsDirectories.push(item)
         break
-      case 'newFile':
+      case 'newPage':
         docsDirectories.push(item)
         break
       case 'newFolder':

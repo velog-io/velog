@@ -256,7 +256,7 @@ export {
 } from './components'
 
 export const nextraCustomEventName = {
-  addFile: 'addFileEvent',
+  addAction: 'addAction',
 }
 
 export { CustomEventDetail, MdxCompilerOptions, MdxOptions, SearchResult } from './types'

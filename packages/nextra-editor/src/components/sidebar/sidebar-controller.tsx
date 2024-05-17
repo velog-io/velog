@@ -1,6 +1,6 @@
 import cn from 'clsx'
 import CollapseAllIcon from './collapse-all-icon'
-import AddFileIcon from './add-file-icon'
+import AddFileIcon from './add-page-icon'
 import AddFolderIcon from './add-folder-icon'
 import AddSeperatorIcon from './add-seperator-icon'
 

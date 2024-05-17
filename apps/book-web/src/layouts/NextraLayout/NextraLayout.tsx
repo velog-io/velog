@@ -68,24 +68,24 @@ function NextraLayout({ mdxSource, children, body }: Props) {
   }, [editorValue])
 
   useEffect(() => {
-    const addFile = async (e: CustomEventInit<CustomEventDetail['AddFileEventDetail']>) => {
+    const addAction = async (e: CustomEventInit<CustomEventDetail['AddActionEventDetail']>) => {
       if (!e.detail) return
-      const { title, parentUrlSlug, index, bookUrlSlug } = e.detail
+      const { title, parentUrlSlug, index, bookUrlSlug, type } = e.detail
       await createPageAsyncMutate({
         input: {
           title,
           parent_url_slug: parentUrlSlug,
           index,
           book_url_slug: bookUrlSlug,
-          type: 'page',
+          type: type,
         },
       })
       getPagesRefetch()
     }
 
-    window.addEventListener(nextraCustomEventName.addFile, addFile)
+    window.addEventListener(nextraCustomEventName.addAction, addAction)
     return () => {
-      window.removeEventListener(nextraCustomEventName.addFile, addFile)
+      window.removeEventListener(nextraCustomEventName.addAction, addAction)
     }
   })
 

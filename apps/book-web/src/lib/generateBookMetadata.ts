@@ -104,7 +104,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
       return result
     }
 
-    if (page.childrens.length === 0) {
+    if (page.childrens?.length === 0) {
       const route = page.url_slug.split('-').slice(0, -1).join('-')
       const metaJson = createMeta([], route)[0] as PageMapItem
       ;(result.children as PageMapItem[]).push(metaJson)

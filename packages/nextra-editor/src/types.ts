@@ -16,14 +16,15 @@ export type SearchResult = {
 }
 
 export interface CustomEventDetail {
-  AddFileEventDetail: AddFileEventDetail
+  AddActionEventDetail: AddActionEventDetail
 }
 
-type AddFileEventDetail = {
+type AddActionEventDetail = {
   title: string
   parentUrlSlug: string
   index: number
   bookUrlSlug: string
+  type: 'page' | 'folder'
 }
 
 // for compiler

@@ -90,7 +90,7 @@ export type Page = {
   writer_id: Scalars['ID']['output']
 }
 
-export type PageType = 'page' | 'separator'
+export type PageType = 'folder' | 'page' | 'separator'
 
 export type Query = {
   book: Maybe<Book>

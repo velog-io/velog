@@ -1,5 +1,5 @@
 import { useSidebar } from '../../contexts/sidebar'
-import { NewFileIcon } from '../../nextra/icons/new-file'
+import { NewPageIcon } from '../../nextra/icons/new-page'
 import { useEffect, useRef, useState } from 'react'
 import { Folder, PageMapItem } from '../../nextra/types'
 import { findFolder } from './utils'
@@ -63,12 +63,13 @@ const AddFileIcon = ({ className }: Props) => {
         const isTarget = page.route === targetRoute
         if (isTarget) {
           const key = Math.random().toString(36).substring(7).slice(0, 9)
-          const newPageData = { ...page.data, [key]: { title: key, type: 'newFile' } }
+          const newPageData = { ...page.data, [key]: { title: key, type: 'newPage' } }
           const removeBookUrlSlug = parent?.route.replace(bookUrlSlug, '')
           sidebar.setActionInfo({
             parentUrlSlug: removeBookUrlSlug ?? '',
             index: Object.keys(newPageData).length - 1,
             bookUrlSlug,
+            type: 'page',
           })
 
           page.data = newPageData
@@ -83,7 +84,7 @@ const AddFileIcon = ({ className }: Props) => {
 
   return (
     <span className={className} onClick={onClickAddFileIcon}>
-      <NewFileIcon />
+      <NewPageIcon />
     </span>
   )
 }

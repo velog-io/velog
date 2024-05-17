@@ -71,6 +71,7 @@ const AddFolderIcon = ({ className }: Props) => {
             parentUrlSlug: removeBookUrlSlug ?? '',
             index: Object.keys(newPageData).length - 1,
             bookUrlSlug,
+            type: 'folder',
           })
 
           page.data = newPageData
