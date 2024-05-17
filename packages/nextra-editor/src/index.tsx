@@ -107,7 +107,7 @@ const InnerLayout = ({
   const fsPath = useFSRoute()
   const sidebar = useSidebar()
 
-  const { pageMap, addFileActive, setPageMap } = sidebar
+  const { pageMap, actionActive, setPageMap } = sidebar
 
   useEffect(() => {
     setPageMap(initPageMap)
@@ -131,7 +131,7 @@ const InnerLayout = ({
         defaultLocale: DEFAULT_LOCALE,
         route: '/',
       }),
-    [pageMap, fsPath, addFileActive],
+    [pageMap, fsPath, actionActive],
   )
 
   const themeContext = { ...activeThemeContext, ...frontMatter }

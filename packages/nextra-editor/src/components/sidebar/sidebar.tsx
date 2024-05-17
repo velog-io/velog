@@ -219,8 +219,13 @@ function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }):
   }
 
   if (item.type === 'newFile') {
+    console.log('type', item)
     return <AddFileInput />
   }
+
+  // if (item.type === 'newFolder') {
+  //   return <div>hello</div>
+  // }
 
   return (
     <li className={cn(classes.list, { active })}>

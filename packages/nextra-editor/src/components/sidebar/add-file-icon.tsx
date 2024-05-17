@@ -17,19 +17,19 @@ const AddFileIcon = ({ className }: Props) => {
   const [originPageMap, setOriginPageMap] = useState<PageMapItem[]>([])
 
   useEffect(() => {
-    if (!sidebar.addFileComplete) return
-    sidebar.addFileReset(originPageMap)
+    if (!sidebar.actionComplete) return
+    sidebar.reset(originPageMap)
     return () => {
       clearTimeout(timeoutRef.current)
     }
-  }, [sidebar.addFileComplete])
+  }, [sidebar.actionComplete])
 
   const onClickAddFileIcon = () => {
-    if (sidebar.addFileActive) {
-      sidebar.addFileReset(originPageMap)
+    if (sidebar.actionActive) {
+      sidebar.reset(originPageMap)
       return
     }
-    const timeout = setTimeout(() => sidebar.setAddFileActive(true), 100)
+    const timeout = setTimeout(() => sidebar.setActionActive(true), 100)
     timeoutRef.current = timeout
 
     // remove code
@@ -45,7 +45,7 @@ const AddFileIcon = ({ className }: Props) => {
 
     const coppeidPageMap = structuredClone(sidebar.pageMap)
 
-    function addInputToPageMap(pageMap: PageMapItem[], parent?: Folder) {
+    function addNewPageToPageMap(pageMap: PageMapItem[], parent?: Folder) {
       for (const page of pageMap) {
         const isMdxPage = page.kind === 'MdxPage'
         if (isMdxPage) continue
@@ -53,13 +53,8 @@ const AddFileIcon = ({ className }: Props) => {
         const isMetaPage = page.kind === 'Meta'
         const isFolderPage = page.kind === 'Folder'
 
-        if (isFolderPage && page.name === 'Appello-porro.-cRChvwvx') {
-          console.log('targetRoute', targetRoute)
-          console.log(page)
-        }
-
         if (isFolderPage && page.children.length > 0) {
-          addInputToPageMap(page.children, page)
+          addNewPageToPageMap(page.children, page)
           continue
         }
 
@@ -69,9 +64,8 @@ const AddFileIcon = ({ className }: Props) => {
         if (isTarget) {
           const key = Math.random().toString(36).substring(7).slice(0, 9)
           const newPageData = { ...page.data, [key]: { title: key, type: 'newFile' } }
-
           const removeBookUrlSlug = parent?.route.replace(bookUrlSlug, '')
-          sidebar.setAddFileInfo({
+          sidebar.setActionInfo({
             parentUrlSlug: removeBookUrlSlug ?? '',
             index: Object.keys(newPageData).length - 1,
             bookUrlSlug,
@@ -84,7 +78,7 @@ const AddFileIcon = ({ className }: Props) => {
       }
     }
 
-    addInputToPageMap(coppeidPageMap)
+    addNewPageToPageMap(coppeidPageMap)
   }
 
   return (
