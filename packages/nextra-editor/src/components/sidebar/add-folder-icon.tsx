@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useSidebar } from '../../contexts/sidebar'
 import { NewFolderIcon } from '../../nextra/icons/new-folder'
 import { Folder, PageMapItem } from '../../nextra/types'
-import { useUrlSlug } from '../../hooks/useUrlSlug'
+import { useUrlSlug } from '../../hooks/use-url-slug'
 import { findFolder } from './utils'
 
 type Props = {
@@ -20,6 +20,7 @@ const AddFolderIcon = ({ className }: Props) => {
     if (!sidebar.actionComplete) return
     sidebar.reset(originPageMap)
     return () => {
+      if (!timeoutRef.current) return
       clearTimeout(timeoutRef.current)
     }
   }, [sidebar.actionComplete])

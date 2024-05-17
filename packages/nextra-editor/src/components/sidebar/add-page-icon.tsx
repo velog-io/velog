@@ -3,7 +3,7 @@ import { NewPageIcon } from '../../nextra/icons/new-page'
 import { useEffect, useRef, useState } from 'react'
 import { Folder, PageMapItem } from '../../nextra/types'
 import { findFolder } from './utils'
-import { useUrlSlug } from '../../hooks/useUrlSlug'
+import { useUrlSlug } from '../../hooks/use-url-slug'
 
 type Props = {
   className?: string

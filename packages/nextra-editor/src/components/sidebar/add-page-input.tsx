@@ -2,7 +2,7 @@ import { ReactElement, useState } from 'react'
 import cn from 'clsx'
 import { EmptyFileIcon } from '../../nextra/icons/empty-file'
 import { useSidebar } from '../../contexts/sidebar'
-import useOutsideClick from '../../hooks/useOutsideClick'
+import useOutsideClick from '../../hooks/use-outside-click'
 import { CustomEventDetail, nextraCustomEventName } from '../..'
 
 function AddPageInput(): ReactElement {

@@ -15,8 +15,9 @@ import { LocaleSwitch } from '../locale-switch'
 import SidebarController from './sidebar-controller'
 import AddPageInput from './add-page-input'
 import AddFolderInput from './add-folder-input'
+import { useSidebar } from '../../contexts/sidebar'
 
-const TreeState: Record<string, boolean> = Object.create(null)
+let TreeState: Record<string, boolean> = Object.create(null)
 
 const FocusedItemContext = createContext<null | string>(null)
 const OnFocusItemContext = createContext<null | ((item: string | null) => any)>(null)
@@ -60,18 +61,21 @@ type FolderProps = {
 }
 
 function FolderImpl({ item, anchors }: FolderProps): ReactElement {
+  const { isFolding } = useSidebar()
+  const { setMenu } = useMenu()
   const routeOriginal = useFSRoute()
   const [route] = routeOriginal.split('#')
   const active = [route, route + '/'].includes(item.route + '/')
-  const activeRouteInside = active || route.startsWith(item.route + '/')
+
+  const activeRouteInside: boolean = active || route.startsWith(item.route + '/')
 
   const focusedRoute = useContext(FocusedItemContext)
   const focusedRouteInside = !!focusedRoute?.startsWith(item.route + '/')
   const level = useContext(FolderLevelContext)
 
-  const { setMenu } = useMenu()
   const config = useConfig()
   const { theme } = item as Item
+
   const open =
     TreeState[item.route] === undefined
       ? active ||
@@ -120,7 +124,6 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
 
   // use button when link don't have href because it impacts on SEO
   const ComponentToUse = isLink ? Anchor : 'button'
-
   return (
     <li className={cn({ open, active })}>
       <ComponentToUse
@@ -167,7 +170,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
           )}
         />
       </ComponentToUse>
-      <Collapse className="ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1" isOpen={open}>
+      <Collapse className="ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1" isOpen={isFolding ? false : open}>
         {Array.isArray(item.children) ? (
           <Menu
             className={cn(classes.border, 'ltr:nx-ml-3 rtl:nx-mr-3')}
@@ -317,6 +320,7 @@ export function Sidebar({
   headings,
   includePlaceholder,
 }: SideBarProps): ReactElement {
+  const { isFolding, setIsFolding } = useSidebar()
   const config = useConfig()
   const { menu, setMenu } = useMenu()
   const router = useRouter()
@@ -361,6 +365,14 @@ export function Sidebar({
   useEffect(() => {
     setMenu(false)
   }, [router.asPath, setMenu])
+
+  useEffect(() => {
+    if (!isFolding) return
+    setFocused(null)
+    setIsFolding(false)
+    setMenu(false)
+    TreeState = Object.create(null)
+  }, [isFolding])
 
   const hasI18n = config.i18n.length > 0
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton

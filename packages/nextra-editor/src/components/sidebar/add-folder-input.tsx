@@ -2,7 +2,7 @@ import { ReactElement, useState } from 'react'
 import cn from 'clsx'
 
 import { useSidebar } from '../../contexts/sidebar'
-import useOutsideClick from '../../hooks/useOutsideClick'
+import useOutsideClick from '../../hooks/use-outside-click'
 import { CustomEventDetail, nextraCustomEventName } from '../..'
 import { EmptyFolderIcon } from '../../nextra/icons/empty-folder'
 

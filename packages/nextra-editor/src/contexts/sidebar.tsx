@@ -19,6 +19,8 @@ type Sidebar = {
   setActionComplete: (value: boolean) => void
   actionInfo: ActionInfo
   setActionInfo: (args: ActionInfo) => void
+  isFolding: boolean
+  setIsFolding: (value: boolean) => void
 }
 
 const SidebarContext = createContext<Sidebar>({
@@ -31,6 +33,8 @@ const SidebarContext = createContext<Sidebar>({
   setActionComplete: () => {},
   actionInfo: { parentUrlSlug: '/', index: 0, bookUrlSlug: '/', type: 'page' },
   setActionInfo: () => {},
+  isFolding: false,
+  setIsFolding: () => {},
 })
 
 export function useSidebar() {
@@ -45,6 +49,7 @@ export const SidebarProvider = ({
   value: Context
 }): ReactElement => {
   const [pageMap, setPageMap] = useState(pageOpts.pageMap)
+  const [isFolding, setIsFolding] = useState(false)
   const [actionComplete, setActionComplete] = useState(false)
   const [actionActive, setActionActive] = useState(false)
   const [actionInfo, setActionInfo] = useState<ActionInfo>({
@@ -70,6 +75,8 @@ export const SidebarProvider = ({
     setActionActive,
     actionInfo,
     setActionInfo,
+    isFolding,
+    setIsFolding,
   }
 
   return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>
