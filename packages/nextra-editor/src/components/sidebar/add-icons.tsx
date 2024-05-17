@@ -78,7 +78,6 @@ const AddIcons = ({ className, type }: Props) => {
           }
 
           const newPageType = pageTypeMap[type]
-          console.log('newPageType', newPageType)
           const newPageData = { ...page.data, [key]: { title: key, type: newPageType } }
 
           const removeBookUrlSlug = parent?.route.replace(bookUrlSlug, '')
