@@ -61,7 +61,7 @@ type FolderProps = {
 }
 
 function FolderImpl({ item, anchors }: FolderProps): ReactElement {
-  const { isFolding, actionActive } = useSidebar()
+  const { isFolding } = useSidebar()
   const { setMenu } = useMenu()
   const routeOriginal = useFSRoute()
   const [route] = routeOriginal.split('#')
@@ -123,7 +123,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
 
   // use button when link don't have href because it impacts on SEO
   const ComponentToUse = isLink ? Anchor : 'button'
-  const isCollapseOpen = isFolding ? false : actionActive && route === focusedRoute ? true : open
+  const isCollapseOpen = isFolding ? false : open
   return (
     <li className={cn({ open, active })}>
       <ComponentToUse

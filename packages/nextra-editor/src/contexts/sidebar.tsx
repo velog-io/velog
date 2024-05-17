@@ -6,8 +6,10 @@ export type ActionInfo = {
   parentUrlSlug: string
   index: number
   bookUrlSlug: string
-  type: 'folder' | 'page'
+  type: ActionType
 }
+
+export type ActionType = 'folder' | 'page' | ''
 
 type Sidebar = {
   pageMap: PageMapItem[]
@@ -21,6 +23,8 @@ type Sidebar = {
   setActionInfo: (args: ActionInfo) => void
   isFolding: boolean
   setIsFolding: (value: boolean) => void
+  actionType: ActionType
+  setActionType: (value: ActionType) => void
 }
 
 const SidebarContext = createContext<Sidebar>({
@@ -35,6 +39,8 @@ const SidebarContext = createContext<Sidebar>({
   setActionInfo: () => {},
   isFolding: false,
   setIsFolding: () => {},
+  actionType: '',
+  setActionType: () => {},
 })
 
 export function useSidebar() {
@@ -52,6 +58,7 @@ export const SidebarProvider = ({
   const [isFolding, setIsFolding] = useState(false)
   const [actionComplete, setActionComplete] = useState(false)
   const [actionActive, setActionActive] = useState(false)
+  const [actionType, setActionType] = useState<ActionType>('')
   const [actionInfo, setActionInfo] = useState<ActionInfo>({
     parentUrlSlug: '/',
     index: 0,
@@ -63,6 +70,7 @@ export const SidebarProvider = ({
     setPageMap(originPageMap)
     setActionActive(false)
     setActionComplete(false)
+    setActionType('')
   }
 
   const value: Sidebar = {
@@ -77,6 +85,8 @@ export const SidebarProvider = ({
     setActionInfo,
     isFolding,
     setIsFolding,
+    actionType,
+    setActionType,
   }
 
   return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>

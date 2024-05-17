@@ -17,6 +17,7 @@ const AddFolderIcon = ({ className }: Props) => {
   const [originPageMap, setOriginPageMap] = useState<PageMapItem[]>([])
 
   useEffect(() => {
+    if (sidebar.actionType !== 'folder') return
     if (!sidebar.actionComplete) return
     sidebar.reset(originPageMap)
     return () => {
@@ -30,6 +31,8 @@ const AddFolderIcon = ({ className }: Props) => {
       sidebar.reset(originPageMap)
       return
     }
+
+    sidebar.setActionType('folder')
 
     const timeout = setTimeout(() => sidebar.setActionActive(true), 100)
     timeoutRef.current = timeout

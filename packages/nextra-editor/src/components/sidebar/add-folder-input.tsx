@@ -23,6 +23,7 @@ function AddFolderInput(): ReactElement {
     if (e.key === 'Enter') {
       onComplete()
       const { parentUrlSlug, bookUrlSlug, index, type } = sidebar.actionInfo
+      if (type === '') return
       const event = new CustomEvent<CustomEventDetail['AddActionEventDetail']>(
         nextraCustomEventName.addAction,
         {

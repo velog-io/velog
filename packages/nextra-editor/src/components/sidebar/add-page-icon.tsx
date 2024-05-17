@@ -17,6 +17,7 @@ const AddFileIcon = ({ className }: Props) => {
   const [originPageMap, setOriginPageMap] = useState<PageMapItem[]>([])
 
   useEffect(() => {
+    if (sidebar.actionType !== 'page') return
     if (!sidebar.actionComplete) return
     sidebar.reset(originPageMap)
     return () => {
@@ -29,6 +30,9 @@ const AddFileIcon = ({ className }: Props) => {
       sidebar.reset(originPageMap)
       return
     }
+
+    sidebar.setActionType('page')
+
     const timeout = setTimeout(() => sidebar.setActionActive(true), 100)
     timeoutRef.current = timeout
 
