@@ -1,15 +1,18 @@
-import { useSidebar } from '../../contexts/sidebar'
-import { NewPageIcon } from '../../nextra/icons/new-page'
 import { useEffect, useRef, useState } from 'react'
+import { useSidebar } from '../../contexts/sidebar'
+import { NewFolderIcon } from '../../nextra/icons/new-folder'
 import { Folder, PageMapItem } from '../../nextra/types'
-import { findFolder } from './utils'
 import { useUrlSlug } from '../../hooks/use-url-slug'
+import { findFolder } from './utils'
+import { NewPageIcon } from '../../nextra/icons/new-page'
+import { SeparatorIcon } from '../../nextra/icons/separator'
 
 type Props = {
-  className?: string
+  className: string
+  type: 'page' | 'folder' | 'separator'
 }
 
-const AddFileIcon = ({ className }: Props) => {
+const AddIcons = ({ className, type }: Props) => {
   const sidebar = useSidebar()
   const { bookUrlSlug, pageUrlSlug, fullUrlSlug } = useUrlSlug()
 
@@ -17,21 +20,22 @@ const AddFileIcon = ({ className }: Props) => {
   const [originPageMap, setOriginPageMap] = useState<PageMapItem[]>([])
 
   useEffect(() => {
-    if (sidebar.actionType !== 'page') return
+    if (sidebar.actionType !== type) return
     if (!sidebar.actionComplete) return
     sidebar.reset(originPageMap)
     return () => {
+      if (!timeoutRef.current) return
       clearTimeout(timeoutRef.current)
     }
   }, [sidebar.actionComplete])
 
-  const onClickAddFileIcon = () => {
+  const onClick = () => {
     if (sidebar.actionActive) {
       sidebar.reset(originPageMap)
       return
     }
 
-    sidebar.setActionType('page')
+    sidebar.setActionType(type)
 
     const timeout = setTimeout(() => sidebar.setActionActive(true), 100)
     timeoutRef.current = timeout
@@ -49,7 +53,7 @@ const AddFileIcon = ({ className }: Props) => {
 
     const coppeidPageMap = structuredClone(sidebar.pageMap)
 
-    function addNewPageToPageMap(pageMap: PageMapItem[], parent?: Folder) {
+    function addNewFolderToPageMap(pageMap: PageMapItem[], parent?: Folder) {
       for (const page of pageMap) {
         const isMdxPage = page.kind === 'MdxPage'
         if (isMdxPage) continue
@@ -58,7 +62,7 @@ const AddFileIcon = ({ className }: Props) => {
         const isFolderPage = page.kind === 'Folder'
 
         if (isFolderPage && page.children.length > 0) {
-          addNewPageToPageMap(page.children, page)
+          addNewFolderToPageMap(page.children, page)
           continue
         }
 
@@ -67,13 +71,22 @@ const AddFileIcon = ({ className }: Props) => {
         const isTarget = page.route === targetRoute
         if (isTarget) {
           const key = Math.random().toString(36).substring(7).slice(0, 9)
-          const newPageData = { ...page.data, [key]: { title: key, type: 'newPage' } }
+          const pageTypeMap = {
+            page: 'newPage',
+            folder: 'newFolder',
+            separator: 'newSeparator',
+          }
+
+          const newPageType = pageTypeMap[type]
+          console.log('newPageType', newPageType)
+          const newPageData = { ...page.data, [key]: { title: key, type: newPageType } }
+
           const removeBookUrlSlug = parent?.route.replace(bookUrlSlug, '')
           sidebar.setActionInfo({
             parentUrlSlug: removeBookUrlSlug ?? '',
             index: Object.keys(newPageData).length - 1,
             bookUrlSlug,
-            type: 'page',
+            type,
           })
 
           page.data = newPageData
@@ -83,14 +96,15 @@ const AddFileIcon = ({ className }: Props) => {
       }
     }
 
-    addNewPageToPageMap(coppeidPageMap)
+    addNewFolderToPageMap(coppeidPageMap)
   }
-
   return (
-    <span className={className} onClick={onClickAddFileIcon}>
-      <NewPageIcon />
+    <span className={className} onClick={onClick}>
+      {type === 'page' && <NewPageIcon />}
+      {type === 'folder' && <NewFolderIcon />}
+      {type === 'separator' && <SeparatorIcon />}
     </span>
   )
 }
 
-export default AddFileIcon
+export default AddIcons

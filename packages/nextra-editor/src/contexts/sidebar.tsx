@@ -9,7 +9,7 @@ export type ActionInfo = {
   type: ActionType
 }
 
-export type ActionType = 'folder' | 'page' | ''
+export type ActionType = 'folder' | 'page'  | 'separator' | ''
 
 type Sidebar = {
   pageMap: PageMapItem[]

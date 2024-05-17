@@ -1,8 +1,6 @@
 import cn from 'clsx'
 import CollapseAllIcon from './collapse-all-icon'
-import AddFileIcon from './add-page-icon'
-import AddFolderIcon from './add-folder-icon'
-import AddSeperatorIcon from './add-seperator-icon'
+import AddIcons from './add-icons'
 
 type Props = {
   showSidebar: boolean
@@ -24,9 +22,9 @@ function SidebarController({ showSidebar }: Props) {
         showSidebar ? 'nx-block' : 'nx-hidden',
       )}
     >
-      <AddFileIcon className={style} />
-      <AddFolderIcon className={style} />
-      <AddSeperatorIcon className={style} />
+      <AddIcons className={style} type="page" />
+      <AddIcons className={style} type="folder" />
+      <AddIcons className={style} type="separator" />
       <CollapseAllIcon className={style} />
     </div>
   )

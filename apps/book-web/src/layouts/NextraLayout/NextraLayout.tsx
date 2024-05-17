@@ -30,26 +30,26 @@ function NextraLayout({ mdxSource, children, body }: Props) {
   useEffect(() => {
     if (!getPagesData?.pages) return
     const metadata = generateBookMetadata({ pages: getPagesData.pages, bookUrl: bookUrlSlug })
-    const { data } = metadata.pageOpts.pageMap[0] as any
-    ;(metadata.pageOpts.pageMap[0]! as any).data = {
-      ...data,
-      'Accommododd.-BAeWHZBm': {
-        title: 'Accommododd.-11',
-      },
-    }
+    // const { data } = metadata.pageOpts.pageMap[0] as any
+    // ;(metadata.pageOpts.pageMap[0]! as any).data = {
+    //   ...data,
+    //   'Accommododd.-BAeWHZBm': {
+    //     title: 'Accommododd.-11',
+    //   },
+    // }
 
-    metadata.pageOpts.pageMap.push({
-      kind: 'MdxPage',
-      name: 'Accommododd.-BAeWHZBm',
-      route: '/@test_carrick/learning-bunjs-is-fun/accommododd-BAeWHZBm',
-    })
+    // metadata.pageOpts.pageMap.push({
+    //   kind: 'MdxPage',
+    //   name: 'Accommododd.-BAeWHZBm',
+    //   route: '/@test_carrick/learning-bunjs-is-fun/accommododd-BAeWHZBm',
+    // })
 
-    metadata.pageOpts.pageMap.push({
-      kind: 'Folder',
-      name: 'Accommododd.-BAeWHZBm',
-      route: '/@test_carrick/learning-bunjs-is-fun/accommododd-BAeWHZBm',
-      children: [{ kind: 'Meta', route: '/accommododd', data: {} }],
-    } as any)
+    // metadata.pageOpts.pageMap.push({
+    //   kind: 'Folder',
+    //   name: 'Accommododd.-BAeWHZBm',
+    //   route: '/@test_carrick/learning-bunjs-is-fun/accommododd-BAeWHZBm',
+    //   children: [{ kind: 'Meta', route: '/accommododd', data: {} }],
+    // } as any)
 
     setBookMetadata(metadata)
   }, [getPagesData?.pages])

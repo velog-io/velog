@@ -24,7 +24,7 @@ type AddActionEventDetail = {
   parentUrlSlug: string
   index: number
   bookUrlSlug: string
-  type: 'page' | 'folder'
+  type: 'page' | 'folder' | 'separator'
 }
 
 // for compiler

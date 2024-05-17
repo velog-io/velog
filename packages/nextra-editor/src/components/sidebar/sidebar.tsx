@@ -13,9 +13,8 @@ import { Anchor } from '../anchor'
 import { Collapse } from '../collapse'
 import { LocaleSwitch } from '../locale-switch'
 import SidebarController from './sidebar-controller'
-import AddPageInput from './add-page-input'
-import AddFolderInput from './add-folder-input'
-import { useSidebar } from '../../contexts/sidebar'
+import { ActionType, useSidebar } from '../../contexts/sidebar'
+import AddInputs from './add-inputs'
 
 let TreeState: Record<string, boolean> = Object.create(null)
 
@@ -222,12 +221,14 @@ function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }):
     return <Separator title={item.title} />
   }
 
-  if (item.type === 'newPage') {
-    return <AddPageInput />
-  }
+  if (['newPage', 'newFolder', 'newSeparator'].includes(item.type)) {
+    const map: Record<string, ActionType> = {
+      newPage: 'page',
+      newFolder: 'folder',
+      newSeparator: 'separator',
+    }
 
-  if (item.type === 'newFolder') {
-    return <AddFolderInput />
+    return <AddInputs type={map[item.type]} />
   }
 
   return (
