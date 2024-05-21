@@ -6,6 +6,7 @@ import { escapeForUrl } from './utils'
 
 type Pages = Page[]
 type Page = {
+  id: string
   title: string
   url_slug: string
   type: string
@@ -26,7 +27,7 @@ export type BookMetadata = {
 
 type Data = { [key: string]: { title: string; type?: string } }
 
-const getRoute = (page: Page) => {
+const removeCode = (page: Page) => {
   let route = page.parent_id === null ? '/' : page.url_slug.split('/').slice(0, -1).join('/')
   if (route === '') {
     console.log('page!', page)
@@ -45,6 +46,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
   const createMeta = (pages: Page[], route: string) => {
     return [
       {
+        id: route,
         kind: 'Meta',
         route,
         data: pages.reduce((acc, page, index) => {
@@ -73,6 +75,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
       const key = map.get(page.url_slug)
       return [
         {
+          id: `${bookUrl}${page.url_slug}`,
           kind: 'MdxPage',
           name: key,
           route: `${bookUrl}${page.url_slug}`,
@@ -82,6 +85,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
     init = true
     return [
       {
+        id: `${bookUrl}`,
         kind: 'MdxPage',
         name: 'index',
         route: `${bookUrl}`,
@@ -92,6 +96,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
   const createFolder = (page: Page) => {
     const key = map.get(page.url_slug)
     const result = {
+      id: `${bookUrl}${page.url_slug}`,
       kind: 'Folder',
       name: key,
       route: `${bookUrl}${page.url_slug}`,
@@ -115,7 +120,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
 
   const recursive = (result: any[], page: Page, index: number, origin: Page[]) => {
     if (index === 0) {
-      const route = getRoute(page)
+      const route = removeCode(page)
       result.push(createMeta(origin, route))
     }
     if (page.type !== 'separator') {

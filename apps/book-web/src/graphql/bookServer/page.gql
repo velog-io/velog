@@ -1,17 +1,20 @@
 query getPages($input: GetPagesInput!) {
   pages(input: $input) {
+    id
     title
     url_slug
     type
     parent_id
     code
     childrens {
+      id
       title
       url_slug
       type
       parent_id
       code
       childrens {
+        id
         title
         url_slug
         type

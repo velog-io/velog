@@ -147,18 +147,21 @@ export type GetPagesQueryVariables = Exact<{
 
 export type GetPagesQuery = {
   pages: Array<{
+    id: string
     title: string
     url_slug: string
     type: string
     parent_id: string | null
     code: string
     childrens: Array<{
+      id: string
       title: string
       url_slug: string
       type: string
       parent_id: string | null
       code: string
       childrens: Array<{
+        id: string
         title: string
         url_slug: string
         type: string
@@ -202,18 +205,21 @@ useDeployMutation.fetcher = (
 export const GetPagesDocument = `
     query getPages($input: GetPagesInput!) {
   pages(input: $input) {
+    id
     title
     url_slug
     type
     parent_id
     code
     childrens {
+      id
       title
       url_slug
       type
       parent_id
       code
       childrens {
+        id
         title
         url_slug
         type
