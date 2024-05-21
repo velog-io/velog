@@ -15,6 +15,9 @@ import { LocaleSwitch } from '../locale-switch'
 import SidebarController from './sidebar-controller'
 import { ActionType, useSidebar } from '../../contexts/sidebar'
 import AddInputs from './add-inputs'
+import { useDraggable } from '@dnd-kit/core'
+import { CSS } from '@dnd-kit/utilities'
+import DndTree from './dnd-tree'
 
 let TreeState: Record<string, boolean> = Object.create(null)
 
@@ -210,6 +213,9 @@ function Separator({ title }: { title: string }): ReactElement {
 function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }): ReactElement {
   const route = useFSRoute()
   const onFocus = useContext(OnFocusItemContext)
+  const { setNodeRef, listeners, attributes, transform } = useDraggable({
+    id: item?.id || item.route,
+  })
 
   // It is possible that the item doesn't have any route - for example an external link.
   const active = item.route && [route, route + '/'].includes(item.route + '/')
@@ -231,8 +237,18 @@ function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }):
     return <AddInputs type={map[item.type]} />
   }
 
+  const style = {
+    transform: CSS.Translate.toString(transform),
+  }
+
   return (
-    <li className={cn(classes.list, { active })}>
+    <li
+      className={cn(classes.list, { active })}
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      style={style}
+    >
       <Anchor
         href={(item as PageItem).href || item.route}
         newWindow={(item as PageItem).newWindow}
@@ -321,7 +337,7 @@ export function Sidebar({
   headings,
   includePlaceholder,
 }: SideBarProps): ReactElement {
-  const { isFolding, setIsFolding } = useSidebar()
+  const { isFolding, setIsFolding, pageMap } = useSidebar()
   const config = useConfig()
   const { menu, setMenu } = useMenu()
   const router = useRouter()
@@ -412,49 +428,50 @@ export function Sidebar({
             directories: flatDirectories,
           })}
         </div>
-        <FocusedItemContext.Provider value={focused}>
-          <OnFocusItemContext.Provider
-            value={(item) => {
-              setFocused(item)
-            }}
-          >
-            <div
-              className={cn(
-                'nx-overflow-y-auto nx-overflow-x-hidden',
-                'nx-px-4 nx-grow md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]',
-                'nx-pb-4',
-                showSidebar ? 'nextra-scrollbar' : 'no-scrollbar',
-              )}
-              ref={sidebarRef}
+        <DndTree items={pageMap}>
+          <FocusedItemContext.Provider value={focused}>
+            <OnFocusItemContext.Provider
+              value={(item) => {
+                setFocused(item)
+              }}
             >
-              <SidebarController showSidebar={showSidebar} />
-              {/* without asPopover check <Collapse />'s inner.clientWidth on `layout: "raw"` will be 0 and element will not have width on initial loading */}
-              {(!asPopover || !showSidebar) && (
-                <Collapse isOpen={showSidebar} horizontal>
+              <div
+                className={cn(
+                  'nx-overflow-y-auto nx-overflow-x-hidden',
+                  'nx-px-4 nx-grow md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]',
+                  'nx-pb-4',
+                  showSidebar ? 'nextra-scrollbar' : 'no-scrollbar',
+                )}
+                ref={sidebarRef}
+              >
+                <SidebarController showSidebar={showSidebar} />
+                {/* without asPopover check <Collapse />'s inner.clientWidth on `layout: "raw"` will be 0 and element will not have width on initial loading */}
+                {(!asPopover || !showSidebar) && (
+                  <Collapse isOpen={showSidebar} horizontal>
+                    <Menu
+                      className="nextra-menu-desktop max-md:nx-hidden"
+                      // The sidebar menu, shows only the docs directories.
+                      directories={docsDirectories}
+                      // When the viewport size is larger than `md`, hide the anchors in
+                      // the sidebar when `floatTOC` is enabled.
+                      anchors={config.toc.float ? [] : anchors}
+                      onlyCurrentDocs
+                    />
+                  </Collapse>
+                )}
+                {mounted && window.innerWidth < 768 && (
                   <Menu
-                    className="nextra-menu-desktop max-md:nx-hidden"
-                    // The sidebar menu, shows only the docs directories.
-                    directories={docsDirectories}
-                    // When the viewport size is larger than `md`, hide the anchors in
-                    // the sidebar when `floatTOC` is enabled.
-                    anchors={config.toc.float ? [] : anchors}
-                    onlyCurrentDocs
+                    className="nextra-menu-mobile md:nx-hidden"
+                    // The mobile dropdown menu, shows all the directories.
+                    directories={fullDirectories}
+                    // Always show the anchor links on mobile (`md`).
+                    anchors={anchors}
                   />
-                </Collapse>
-              )}
-              {mounted && window.innerWidth < 768 && (
-                <Menu
-                  className="nextra-menu-mobile md:nx-hidden"
-                  // The mobile dropdown menu, shows all the directories.
-                  directories={fullDirectories}
-                  // Always show the anchor links on mobile (`md`).
-                  anchors={anchors}
-                />
-              )}
-            </div>
-          </OnFocusItemContext.Provider>
-        </FocusedItemContext.Provider>
-
+                )}
+              </div>
+            </OnFocusItemContext.Provider>
+          </FocusedItemContext.Provider>
+        </DndTree>
         {hasMenu && (
           <div
             style={{ marginTop: showSidebar ? '0px' : '-30px' }}

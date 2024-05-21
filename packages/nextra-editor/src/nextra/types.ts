@@ -20,6 +20,7 @@ export interface LoaderOptions extends NextraConfig {
 }
 
 export interface Folder<FileType = PageMapItem> {
+  id: string
   kind: 'Folder'
   name: string
   route: string
@@ -27,6 +28,7 @@ export interface Folder<FileType = PageMapItem> {
 }
 
 export type MetaJsonFile = {
+  id: string
   name?: string
   kind: 'Meta'
   locale?: string
@@ -58,6 +60,7 @@ export type FrontMatter = GrayMatterFile<string>['data']
 export type Meta = string | Record<string, any>
 
 export type MdxFile<FrontMatterType = FrontMatter> = {
+  id: string
   kind: 'MdxPage'
   name: string
   route: string
