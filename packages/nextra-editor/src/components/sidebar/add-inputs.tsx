@@ -26,18 +26,17 @@ function AddInputs({ type }: Props): ReactElement {
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onComplete()
-      const { parentUrlSlug, bookUrlSlug, index, type } = sidebar.actionInfo
-      if (type === '') return
-      const event = new CustomEvent<CustomEventDetail['AddActionEventDetail']>(
-        nextraCustomEventName.addAction,
-        {
-          detail: { title, parentUrlSlug, index, bookUrlSlug, type },
-        },
-      )
-      window.dispatchEvent(event)
-    }
+    if (e.key !== 'Enter') return
+    onComplete()
+    const { parentUrlSlug, bookUrlSlug, index, type } = sidebar.actionInfo
+    if (type === '') return
+    const event = new CustomEvent<CustomEventDetail['AddActionEventDetail']>(
+      nextraCustomEventName.addAction,
+      {
+        detail: { title, parentUrlSlug, index, bookUrlSlug, type },
+      },
+    )
+    window.dispatchEvent(event)
   }
 
   const { ref } = useOutsideClick<HTMLLIElement>(onComplete)
