@@ -1,11 +1,20 @@
 import cn from 'clsx'
 import { useRouter } from 'next/router'
-import type { Heading } from '../../nextra/types'
+import type { Heading, PageMapItem } from '../../nextra/types'
 import { useFSRoute, useMounted } from '../../nextra/hooks'
 import { ArrowRightIcon, ExpandIcon } from '../../nextra/icons'
 import type { Item, MenuItem, PageItem } from '../../nextra/normalize-pages'
-import type { ReactElement } from 'react'
-import { createContext, memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import type { ForwardedRef, ReactElement } from 'react'
+import {
+  createContext,
+  forwardRef,
+  memo,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { useActiveAnchor, useConfig, useMenu } from '../../contexts'
 import { renderComponent } from '../../utils'
@@ -18,6 +27,12 @@ import AddInputs from './add-inputs'
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import DndTree from './dnd-tree'
+import {
+  FolderTreeItemWrapper,
+  SimpleTreeItemWrapper,
+  SortableTree,
+  TreeItemComponentProps,
+} from 'dnd-kit-sortable-tree'
 
 let TreeState: Record<string, boolean> = Object.create(null)
 
@@ -320,6 +335,22 @@ function Menu({ directories, anchors, className, onlyCurrentDocs }: MenuProps): 
   )
 }
 
+type SortableMenuProps = {
+  props: TreeItemComponentProps<PageItem | Item>
+  ref: ForwardedRef<HTMLDivElement>
+}
+
+const SortableMenu = ({ props, ref }: SortableMenuProps): ReactElement => {
+  const { item } = props
+  const isFolder = item.kind === 'Folder'
+  return (
+    <SimpleTreeItemWrapper ref={ref} {...props}>
+      {isFolder && <Folder key={item.name} item={item} anchors={[]} />}
+      {!isFolder && <File key={item.name} item={item} anchors={[]} />}
+    </SimpleTreeItemWrapper>
+  )
+}
+
 interface SideBarProps {
   docsDirectories: PageItem[]
   flatDirectories: Item[]
@@ -337,7 +368,7 @@ export function Sidebar({
   headings,
   includePlaceholder,
 }: SideBarProps): ReactElement {
-  const { isFolding, setIsFolding, pageMap } = useSidebar()
+  const { isFolding, setIsFolding, pageMap, setPageMap } = useSidebar()
   const config = useConfig()
   const { menu, setMenu } = useMenu()
   const router = useRouter()
@@ -394,6 +425,7 @@ export function Sidebar({
   const hasI18n = config.i18n.length > 0
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton
 
+  const [directories, setDirectories] = useState(docsDirectories)
   return (
     <>
       {includePlaceholder && asPopover ? (
@@ -428,50 +460,66 @@ export function Sidebar({
             directories: flatDirectories,
           })}
         </div>
-        <DndTree items={pageMap}>
-          <FocusedItemContext.Provider value={focused}>
-            <OnFocusItemContext.Provider
-              value={(item) => {
-                setFocused(item)
-              }}
+        {/* <SortableTree items={pageMap} onItemsChanged={setPageMap}> */}
+        <FocusedItemContext.Provider value={focused}>
+          <OnFocusItemContext.Provider
+            value={(item) => {
+              setFocused(item)
+            }}
+          >
+            <div
+              className={cn(
+                'nx-overflow-y-auto nx-overflow-x-hidden',
+                'nx-px-4 nx-grow md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]',
+                'nx-pb-4',
+                showSidebar ? 'nextra-scrollbar' : 'no-scrollbar',
+              )}
+              ref={sidebarRef}
             >
-              <div
-                className={cn(
-                  'nx-overflow-y-auto nx-overflow-x-hidden',
-                  'nx-px-4 nx-grow md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]',
-                  'nx-pb-4',
-                  showSidebar ? 'nextra-scrollbar' : 'no-scrollbar',
-                )}
-                ref={sidebarRef}
-              >
-                <SidebarController showSidebar={showSidebar} />
-                {/* without asPopover check <Collapse />'s inner.clientWidth on `layout: "raw"` will be 0 and element will not have width on initial loading */}
-                {(!asPopover || !showSidebar) && (
-                  <Collapse isOpen={showSidebar} horizontal>
-                    <Menu
-                      className="nextra-menu-desktop max-md:nx-hidden"
-                      // The sidebar menu, shows only the docs directories.
-                      directories={docsDirectories}
-                      // When the viewport size is larger than `md`, hide the anchors in
-                      // the sidebar when `floatTOC` is enabled.
-                      anchors={config.toc.float ? [] : anchors}
-                      onlyCurrentDocs
-                    />
-                  </Collapse>
-                )}
-                {mounted && window.innerWidth < 768 && (
-                  <Menu
-                    className="nextra-menu-mobile md:nx-hidden"
-                    // The mobile dropdown menu, shows all the directories.
-                    directories={fullDirectories}
-                    // Always show the anchor links on mobile (`md`).
-                    anchors={anchors}
+              <SidebarController showSidebar={showSidebar} />
+              {/* without asPopover check <Collapse />'s inner.clientWidth on `layout: "raw"` will be 0 and element will not have width on initial loading */}
+              {(!asPopover || !showSidebar) && (
+                <Collapse isOpen={showSidebar} horizontal>
+                  <SortableTree
+                    items={directories}
+                    onItemsChanged={setDirectories}
+                    indentationWidth={0}
+                    keepGhostInPlace={true}
+                    TreeItemComponent={forwardRef<
+                      HTMLDivElement,
+                      TreeItemComponentProps<PageItem | Item>
+                    >((props, ref) => {
+                      return (
+                        <div className={cn('nextra-menu-desktop max-md:nx-hidden')}>
+                          <SortableMenu props={props} ref={ref} />
+                        </div>
+                      )
+                    })}
                   />
-                )}
-              </div>
-            </OnFocusItemContext.Provider>
-          </FocusedItemContext.Provider>
-        </DndTree>
+                  {/* <Menu
+                    className="nextra-menu-desktop max-md:nx-hidden"
+                    // The sidebar menu, shows only the docs directories.
+                    directories={docsDirectories}
+                    // When the viewport size is larger than `md`, hide the anchors in
+                    // the sidebar when `floatTOC` is enabled.
+                    anchors={config.toc.float ? [] : anchors}
+                    onlyCurrentDocs
+                  /> */}
+                </Collapse>
+              )}
+              {mounted && window.innerWidth < 768 && (
+                <Menu
+                  className="nextra-menu-mobile md:nx-hidden"
+                  // The mobile dropdown menu, shows all the directories.
+                  directories={fullDirectories}
+                  // Always show the anchor links on mobile (`md`).
+                  anchors={anchors}
+                />
+              )}
+            </div>
+          </OnFocusItemContext.Provider>
+        </FocusedItemContext.Provider>
+        {/* </SortableTree> */}
         {hasMenu && (
           <div
             style={{ marginTop: showSidebar ? '0px' : '-30px' }}

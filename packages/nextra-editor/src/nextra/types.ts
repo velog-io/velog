@@ -64,6 +64,8 @@ export type MdxFile<FrontMatterType = FrontMatter> = {
   kind: 'MdxPage'
   name: string
   route: string
+  type: string
+  title: string
   locale?: string
   frontMatter?: FrontMatterType
 }
