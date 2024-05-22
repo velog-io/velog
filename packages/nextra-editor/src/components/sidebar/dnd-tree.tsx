@@ -1,16 +1,25 @@
-import { Announcements, DndContext, UniqueIdentifier } from '@dnd-kit/core'
+import {
+  Announcements,
+  DndContext,
+  DragEndEvent,
+  DragMoveEvent,
+  DragOverEvent,
+  DragStartEvent,
+  UniqueIdentifier,
+} from '@dnd-kit/core'
 import { useMemo, useState } from 'react'
-import { flattenTree, getProjection, removeChildrenOf } from './utils'
+import { buildTree, flattenTree, getProjection, removeChildrenOf } from './utils'
 import { PageMapItem } from '../../nextra/types'
-import { FlattenedItem } from '../../types'
+import { FlattenedItem, ItemChangedReason } from '../../types'
 import { arrayMove } from '@dnd-kit/sortable'
 
 type Props = {
   children: React.ReactNode
   items: PageMapItem[]
+  onItemsChanged: (items: PageMapItem[], reason: ItemChangedReason<PageMapItem>) => void
 }
 
-function DndTree({ children, items }: Props) {
+function DndTree({ children, items, onItemsChanged }: Props) {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
   const [overId, setOverId] = useState<UniqueIdentifier | null>(null)
   const [offsetLeft, setOffsetLeft] = useState(0)
@@ -46,34 +55,11 @@ function DndTree({ children, items }: Props) {
     canRootHaveChildren,
   )
 
-  const announcements: Announcements = useMemo(
-    () => ({
-      onDragStart({ active }) {
-        return `Picked up ${active.id}.`
-      },
-      onDragMove({ active, over }) {
-        return getMovementAnnouncement('onDragMove', active.id, over?.id)
-      },
-      onDragOver({ active, over }) {
-        return getMovementAnnouncement('onDragOver', active.id, over?.id)
-      },
-      onDragEnd({ active, over }) {
-        return getMovementAnnouncement('onDragEnd', active.id, over?.id)
-      },
-      onDragCancel({ active }) {
-        return `Moving was cancelled. ${active.id} was dropped in its original position.`
-      },
-    }),
-    [],
-  )
-
-  return <DndContext accessibility={{ announcements }}>{children}</DndContext>
-
-  function getMovementAnnouncement(
+  const getMovementAnnouncement = (
     eventName: string,
     activeId: UniqueIdentifier,
     overId?: UniqueIdentifier,
-  ) {
+  ) => {
     if (overId && projected) {
       if (eventName !== 'onDragEnd') {
         if (
@@ -125,6 +111,112 @@ function DndTree({ children, items }: Props) {
 
     return
   }
+
+  const announcements: Announcements = useMemo(
+    () => ({
+      onDragStart({ active }) {
+        return `Picked up ${active.id}.`
+      },
+      onDragMove({ active, over }) {
+        return getMovementAnnouncement('onDragMove', active.id, over?.id)
+      },
+      onDragOver({ active, over }) {
+        return getMovementAnnouncement('onDragOver', active.id, over?.id)
+      },
+      onDragEnd({ active, over }) {
+        return getMovementAnnouncement('onDragEnd', active.id, over?.id)
+      },
+      onDragCancel({ active }) {
+        return `Moving was cancelled. ${active.id} was dropped in its original position.`
+      },
+    }),
+    [],
+  )
+
+  const handleDragStart = ({ active: { id: activeId } }: DragStartEvent) => {
+    setActiveId(activeId)
+    setOverId(activeId)
+
+    const activeItem = flattenedItems.find(({ id }) => id === activeId)
+
+    if (activeItem) {
+      setCurrentPosition({
+        parentId: activeItem.parentId,
+        overId: activeId,
+      })
+    }
+
+    document.body.style.setProperty('cursor', 'grabbing')
+  }
+
+  const handleDragMove = ({ delta }: DragMoveEvent) => {
+    setOffsetLeft(delta.x)
+  }
+
+  const handleDragOver = ({ over }: DragOverEvent) => {
+    setOverId(over?.id ?? null)
+  }
+
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    resetState()
+
+    if (projected && over) {
+      const { depth, parentId } = projected
+      if (keepGhostInPlace && over.id === active.id) return
+      const clonedItems: FlattenedItem<PageMapItem>[] = flattenTree(items)
+      const overIndex = clonedItems.findIndex(({ id }) => id === over.id)
+      const activeIndex = clonedItems.findIndex(({ id }) => id === active.id)
+      const activeTreeItem = clonedItems[activeIndex]
+
+      clonedItems[activeIndex] = { ...activeTreeItem, depth, parentId }
+      const draggedFromParent = activeTreeItem.parent
+      const sortedItems = arrayMove(clonedItems, activeIndex, overIndex)
+      const newItems = buildTree(sortedItems)
+      const newActiveItem = sortedItems.find((x) => x.id === active.id)!
+      const currentParent = newActiveItem.parentId
+        ? sortedItems.find((x) => x.id === newActiveItem.parentId)!
+        : null
+      // removing setTimeout leads to an unwanted scrolling
+      // Use case:
+      //   There are a lot of items in a tree (so that the scroll exists).
+      //   You take the node from the bottom and move it to the top
+      //   Without `setTimeout` when you drop the node the list gets scrolled to the bottom.
+      setTimeout(() =>
+        onItemsChanged(newItems, {
+          type: 'dropped',
+          draggedItem: newActiveItem,
+          draggedFromParent: draggedFromParent,
+          droppedToParent: currentParent,
+        }),
+      )
+    }
+  }
+
+  const handleDragCancel = () => {
+    resetState()
+  }
+
+  const resetState = () => {
+    setOverId(null)
+    setActiveId(null)
+    setOffsetLeft(0)
+    setCurrentPosition(null)
+
+    document.body.style.setProperty('cursor', '')
+  }
+
+  return (
+    <DndContext
+      accessibility={{ announcements }}
+      onDragStart={handleDragStart}
+      onDragMove={handleDragMove}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+    >
+      {children}
+    </DndContext>
+  )
 }
 
 export default DndTree
