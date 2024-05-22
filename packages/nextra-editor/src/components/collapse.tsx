@@ -66,7 +66,7 @@ export function Collapse({
       ref={containerRef}
       className={cn(
         'nx-transform-gpu nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none',
-        isDragging ? 'nx-overflow-visible' : 'nx-overflow-hidden',
+        isDragging ? '' : 'nx-overflow-hidden',
       )}
       style={initialOpen.current || horizontal ? undefined : { height: 0 }}
     >

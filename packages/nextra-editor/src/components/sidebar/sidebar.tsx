@@ -4,8 +4,8 @@ import type { Heading } from '../../nextra/types'
 import { useFSRoute, useMounted } from '../../nextra/hooks'
 import { ArrowRightIcon, ExpandIcon } from '../../nextra/icons'
 import type { Item, MenuItem, PageItem } from '../../nextra/normalize-pages'
-import type { ReactElement } from 'react'
-import { createContext, memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import type { CSSProperties, ReactElement } from 'react'
+import { createContext, memo, use, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { useConfig, useMenu } from '../../contexts'
 import { renderComponent } from '../../utils'
@@ -14,9 +14,10 @@ import { LocaleSwitch } from '../locale-switch'
 import SidebarController from './sidebar-controller'
 import { ActionType, useSidebar } from '../../contexts/sidebar'
 import AddInputs from './add-inputs'
-import { useDraggable } from '@dnd-kit/core'
+import { defaultDropAnimation, DragOverlay, useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
-import DndTree from './dnd-tree'
+import DndTree, { useDndTree } from './dnd-tree'
+import { dropAnimation } from './utils/dropAnimation'
 
 let TreeState: Record<string, boolean> = Object.create(null)
 
@@ -50,12 +51,22 @@ const classes = {
   ),
   list: cn('nx-flex nx-flex-col nx-gap-1'),
   border: cn(
-    'nx-relative before:nx-absolute before:nx-inset-y-1',
+    'nx-relative  before:nx-inset-y-1',
     'before:nx-w-px before:nx-bg-gray-200 before:nx-content-[""] dark:before:nx-bg-neutral-800',
     'ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0',
   ),
-  drag: cn('nx-bg-primary-50 nx-z-10'),
+  drag: cn('nx-transform-gpu nx-bg-primary-50'),
 }
+
+const dragableStyle = (transform: any, isDragActive: boolean): CSSProperties =>
+  isDragActive
+    ? {
+        transform: CSS.Transform.toString(transform),
+        zIndex: 1,
+        width: '100%',
+        position: 'relative',
+      }
+    : {}
 
 type FolderProps = {
   item: PageItem | MenuItem | Item
@@ -63,6 +74,7 @@ type FolderProps = {
 }
 
 function FolderImpl({ item, anchors }: FolderProps): ReactElement {
+  const { isDragging } = useDndTree()
   const router = useRouter()
   const { isFolding } = useSidebar()
   const { setMenu } = useMenu()
@@ -73,7 +85,6 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
     listeners,
     attributes,
     transform,
-    isDragging,
     active: dragActive,
   } = useDraggable({
     id: item?.id || item.route,
@@ -138,18 +149,16 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
   const ComponentToUse = 'div'
   const isCollapseOpen = isFolding ? false : open
 
-  const isDraggingActive = dragActive?.id === item.id
-  const style = {
-    transform: CSS.Translate.toString(transform),
-  }
+  const isDragActive = dragActive?.id === item.id
+  const style = dragableStyle(transform, isDragActive)
 
   return (
     <li
-      className={cn({ open, active }, isDraggingActive && classes.drag)}
+      className={cn({ open, active }, isDragActive && classes.drag)}
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      style={isDraggingActive ? style : {}}
+      style={isDragActive ? style : { background: 'skyblue' }}
     >
       <ComponentToUse
         className={cn(
@@ -163,7 +172,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
             e.preventDefault()
             return
           }
-          router.push((item as PageItem).href || item.route)
+          router.push(item.route, item.route, { shallow: true })
           const clickedToggleIcon = ['svg', 'path'].includes(
             (e.target as HTMLElement).tagName.toLowerCase(),
           )
@@ -202,7 +211,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
       <Collapse className="ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1" isOpen={isCollapseOpen}>
         {Array.isArray(item.children) ? (
           <Menu
-            className={cn(classes.border, 'ltr:nx-ml-3 rtl:nx-mr-3')}
+            className={cn(isDragging ? '' : classes.border, 'ltr:nx-ml-3 rtl:nx-mr-3')}
             directories={item.children}
             base={item.route}
             anchors={anchors}
@@ -225,11 +234,9 @@ function Separator({ id, title }: { id: string; title: string }): ReactElement {
     id,
   })
 
-  const style = {
-    transform: CSS.Translate.toString(transform),
-  }
-
   const isDragActive = dragActive?.id === id
+  const style = dragableStyle(transform, isDragActive)
+
   return (
     <li
       ref={setNodeRef}
@@ -258,6 +265,7 @@ function Separator({ id, title }: { id: string; title: string }): ReactElement {
 }
 
 function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactElement {
+  const { isDragging } = useDndTree()
   const route = useFSRoute()
   const onFocus = useContext(OnFocusItemContext)
   const {
@@ -265,7 +273,6 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
     listeners,
     attributes,
     transform,
-    isDragging,
     active: dragActive,
   } = useDraggable({
     id: item?.id || item.route,
@@ -291,22 +298,19 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
     return <AddInputs type={map[item.type]} />
   }
 
-  const style = {
-    transform: CSS.Translate.toString(transform),
-  }
-
   const isDragActive = dragActive?.id === item.id
+  const style = dragableStyle(transform, isDragActive)
 
   return (
     <li
-      className={cn(classes.list, { active }, isDragActive && classes.drag)}
+      className={cn(classes.list, { active: active && !isDragging }, isDragActive && classes.drag)}
       ref={setNodeRef}
       {...listeners}
       {...attributes}
       style={style}
     >
       <div
-        className={cn(classes.link, active ? classes.active : classes.inactive)}
+        className={cn(classes.link, active && !isDragging ? classes.active : classes.inactive)}
         onClick={(e) => {
           if (isDragging) {
             e.preventDefault()
@@ -345,8 +349,16 @@ interface MenuProps {
 }
 
 function Menu({ directories, anchors, className, onlyCurrentDocs }: MenuProps): ReactElement {
+  const { isDragging } = useDndTree()
   return (
-    <ul className={cn(classes.list, className)}>
+    <ul
+      className={cn(classes.list, className)}
+      style={
+        !isDragging
+          ? { position: 'relative', background: 'red' }
+          : { position: 'relative', background: 'gold', zIndex: 0 }
+      }
+    >
       {directories.map((item) =>
         !onlyCurrentDocs || item.isUnderCurrentDocsTree ? (
           item.type === 'menu' ||
