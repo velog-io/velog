@@ -12,11 +12,12 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 import { buildTree, flattenTree, getProjection, removeChildrenOf } from './utils'
 import { FlattenedItem, ItemChangedReason } from '../../types'
-import { arrayMove } from '@dnd-kit/sortable'
+import { arrayMove, SortableContext } from '@dnd-kit/sortable'
 import { PageItem } from '../../nextra/normalize-pages'
+import { customListSortingStrategy } from './utils/customListSortingStrategy'
 
 type Props = {
   children: React.ReactNode
@@ -25,6 +26,7 @@ type Props = {
 }
 
 type DndTreeContextType = {
+  activeId: UniqueIdentifier | null
   isDragging: boolean
   setDragging: (isDragging: boolean) => void
 }
@@ -32,6 +34,7 @@ type DndTreeContextType = {
 const DndTreeContext = createContext<DndTreeContextType>({
   isDragging: false,
   setDragging: () => {},
+  activeId: null,
 })
 
 export const useDndTree = () => useContext(DndTreeContext)
@@ -168,6 +171,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
   )
 
   const handleDragStart = ({ active: { id: activeId } }: DragStartEvent) => {
+    console.log('start!', activeId)
     setDragging(true)
     setActiveId(activeId)
     setOverId(activeId)
@@ -240,6 +244,11 @@ function DndTree({ children, items, onItemsChanged }: Props) {
     document.body.style.setProperty('cursor', '')
   }
 
+  const sortedIds = useMemo(() => flattenedItems.map(({ id }) => id), [flattenedItems])
+  const strategyCallback = useCallback(() => {
+    return !!projected
+  }, [projected])
+
   return (
     <DndContext
       accessibility={{ announcements }}
@@ -250,9 +259,11 @@ function DndTree({ children, items, onItemsChanged }: Props) {
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <DndTreeContext.Provider value={{ isDragging, setDragging }}>
-        {children}
-      </DndTreeContext.Provider>
+      <SortableContext items={sortedIds} strategy={customListSortingStrategy(strategyCallback)}>
+        <DndTreeContext.Provider value={{ isDragging, setDragging, activeId }}>
+          {children}
+        </DndTreeContext.Provider>
+      </SortableContext>
     </DndContext>
   )
 }

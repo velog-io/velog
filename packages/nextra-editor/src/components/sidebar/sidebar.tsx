@@ -7,9 +7,8 @@ import type { Item, MenuItem, PageItem } from '../../nextra/normalize-pages'
 import type { ReactElement } from 'react'
 import { createContext, memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
-import { useActiveAnchor, useConfig, useMenu } from '../../contexts'
+import { useConfig, useMenu } from '../../contexts'
 import { renderComponent } from '../../utils'
-import { Anchor } from '../anchor'
 import { Collapse } from '../collapse'
 import { LocaleSwitch } from '../locale-switch'
 import SidebarController from './sidebar-controller'
@@ -17,8 +16,7 @@ import { ActionType, useSidebar } from '../../contexts/sidebar'
 import AddInputs from './add-inputs'
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
-import DndTree, { useDndTree } from './dnd-tree'
-import Link from 'next/link'
+import DndTree from './dnd-tree'
 
 let TreeState: Record<string, boolean> = Object.create(null)
 
@@ -56,6 +54,7 @@ const classes = {
     'before:nx-w-px before:nx-bg-gray-200 before:nx-content-[""] dark:before:nx-bg-neutral-800',
     'ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0',
   ),
+  drag: cn('nx-bg-primary-50 nx-z-10'),
 }
 
 type FolderProps = {
@@ -64,10 +63,21 @@ type FolderProps = {
 }
 
 function FolderImpl({ item, anchors }: FolderProps): ReactElement {
+  const router = useRouter()
   const { isFolding } = useSidebar()
   const { setMenu } = useMenu()
   const routeOriginal = useFSRoute()
   const [route] = routeOriginal.split('#')
+  const {
+    setNodeRef,
+    listeners,
+    attributes,
+    transform,
+    isDragging,
+    active: dragActive,
+  } = useDraggable({
+    id: item?.id || item.route,
+  })
 
   const active = [route, route + '/'].includes(item.route + '/')
   const activeRouteInside: boolean = active || route.startsWith(item.route + '/')
@@ -125,19 +135,35 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
   const isLink = 'withIndexPage' in item && item.withIndexPage
 
   // use button when link don't have href because it impacts on SEO
-  const ComponentToUse = isLink ? Anchor : 'button'
+  const ComponentToUse = 'div'
   const isCollapseOpen = isFolding ? false : open
+
+  const isDraggingActive = dragActive?.id === item.id
+  const style = {
+    transform: CSS.Translate.toString(transform),
+  }
+
   return (
-    <li className={cn({ open, active })}>
+    <li
+      className={cn({ open, active }, isDraggingActive && classes.drag)}
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      style={isDraggingActive ? style : {}}
+    >
       <ComponentToUse
-        href={isLink ? item.route : undefined}
         className={cn(
-          'nx-items-center nx-justify-between nx-gap-2',
+          'nx-items-center nx-justify-between nx-gap-2 nx-w-full',
           !isLink && 'nx-text-left nx-w-full',
           classes.link,
           active ? classes.active : classes.inactive,
         )}
         onClick={(e) => {
+          if (isDragging) {
+            e.preventDefault()
+            return
+          }
+          router.push((item as PageItem).href || item.route)
           const clickedToggleIcon = ['svg', 'path'].includes(
             (e.target as HTMLElement).tagName.toLowerCase(),
           )
@@ -189,15 +215,21 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
 
 function Separator({ id, title }: { id: string; title: string }): ReactElement {
   const config = useConfig()
-  const { setNodeRef, listeners, attributes, transform } = useDraggable({
+  const {
+    setNodeRef,
+    listeners,
+    attributes,
+    transform,
+    active: dragActive,
+  } = useDraggable({
     id,
   })
 
   const style = {
     transform: CSS.Translate.toString(transform),
-    background: 'gold',
   }
 
+  const isDragActive = dragActive?.id === id
   return (
     <li
       ref={setNodeRef}
@@ -206,6 +238,7 @@ function Separator({ id, title }: { id: string; title: string }): ReactElement {
       {...attributes}
       className={cn(
         '[word-break:break-word]',
+        isDragActive && classes.drag,
         title
           ? 'nx-mt-5 nx-mb-2 nx-px-2 nx-py-1.5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100'
           : 'nx-my-4',
@@ -225,10 +258,16 @@ function Separator({ id, title }: { id: string; title: string }): ReactElement {
 }
 
 function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactElement {
-  const { isDragging } = useDndTree()
   const route = useFSRoute()
   const onFocus = useContext(OnFocusItemContext)
-  const { setNodeRef, listeners, attributes, transform } = useDraggable({
+  const {
+    setNodeRef,
+    listeners,
+    attributes,
+    transform,
+    isDragging,
+    active: dragActive,
+  } = useDraggable({
     id: item?.id || item.route,
   })
 
@@ -254,12 +293,13 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
 
   const style = {
     transform: CSS.Translate.toString(transform),
-    background: 'red',
   }
+
+  const isDragActive = dragActive?.id === item.id
 
   return (
     <li
-      className={cn(classes.list, { active })}
+      className={cn(classes.list, { active }, isDragActive && classes.drag)}
       ref={setNodeRef}
       {...listeners}
       {...attributes}
@@ -418,7 +458,7 @@ export function Sidebar({
           'md:nx-top-16 md:nx-shrink-0 motion-reduce:nx-transform-none',
           'nx-transform-gpu nx-transition-all nx-ease-in-out',
           'print:nx-hidden',
-          'nx-select-none',
+          'nx-select-none nx-relative nx-overflow-hidden',
           showSidebar ? 'md:nx-w-80' : 'md:nx-w-20',
           asPopover ? 'md:nx-hidden' : 'md:nx-sticky md:nx-self-start',
           menu

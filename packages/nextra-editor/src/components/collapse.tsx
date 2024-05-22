@@ -1,12 +1,13 @@
 import cn from 'clsx'
 import type { ReactElement, ReactNode } from 'react'
 import { useEffect, useRef } from 'react'
+import { useDndTree } from './sidebar/dnd-tree'
 
 export function Collapse({
   children,
   className,
   isOpen,
-  horizontal = false
+  horizontal = false,
 }: {
   children: ReactNode
   className?: string
@@ -18,6 +19,7 @@ export function Collapse({
   const animationRef = useRef(0)
   const initialOpen = useRef(isOpen)
   const initialRender = useRef(true)
+  const { isDragging } = useDndTree()
 
   useEffect(() => {
     const container = containerRef.current
@@ -62,7 +64,10 @@ export function Collapse({
   return (
     <div
       ref={containerRef}
-      className="nx-transform-gpu nx-overflow-hidden nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none"
+      className={cn(
+        'nx-transform-gpu nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none',
+        isDragging ? 'nx-overflow-visible' : 'nx-overflow-hidden',
+      )}
       style={initialOpen.current || horizontal ? undefined : { height: 0 }}
     >
       <div
@@ -70,7 +75,7 @@ export function Collapse({
         className={cn(
           'nx-transition-opacity nx-duration-500 nx-ease-in-out motion-reduce:nx-transition-none',
           isOpen ? 'nx-opacity-100' : 'nx-opacity-0',
-          className
+          className,
         )}
       >
         {children}

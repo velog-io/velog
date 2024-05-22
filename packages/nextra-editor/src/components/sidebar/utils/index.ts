@@ -1,7 +1,7 @@
 import { arrayMove } from '@dnd-kit/sortable'
 import { UniqueIdentifier } from '@dnd-kit/core'
-import { Folder, PageMapItem } from '../../nextra/types'
-import { FlattenedItem, TreeItem, TreeItems } from '../../types'
+import { Folder, PageMapItem } from '../../../nextra/types'
+import { FlattenedItem, TreeItem, TreeItems } from '../../../types'
 
 export function findFolder(pageMap: PageMapItem[], route: string): Folder | undefined {
   const folders = pageMap.filter((page) => page.kind === 'Folder')
