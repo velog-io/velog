@@ -53,6 +53,7 @@ const menuItemSchema = z.strictObject({
 })
 
 const separatorItemSchema = z.strictObject({
+  id: z.string(),
   title: titleSchema.optional(),
   type: z.literal('separator'),
 })

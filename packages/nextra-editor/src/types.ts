@@ -1,8 +1,9 @@
 import type { LoaderOptions, PageMapItem, PageOpts } from './nextra/types'
 import type { ReactNode } from 'react'
 import type { DocsThemeConfig } from './constants'
-import { ProcessorOptions } from '@mdx-js/mdx'
-import { UniqueIdentifier } from '@dnd-kit/core'
+import type { ProcessorOptions } from '@mdx-js/mdx'
+import type { UniqueIdentifier } from '@dnd-kit/core'
+import type { PageItem } from './nextra/normalize-pages'
 
 export type Context = {
   pageOpts: PageOpts
@@ -86,3 +87,48 @@ export type FlattenedItem<T = PageMapItem> = {
   isLast: boolean
   parent: FlattenedItem<T> | null
 } & TreeItem<T>
+
+export type ItemChangedReason<T = PageItem> =
+  | {
+      /*
+       * User removed some node (e.g. by clicking on Delete button within the item)
+       */
+      type: 'removed'
+
+      /*
+       * Item that was removed
+       */
+      item: TreeItem<T>
+    }
+  | {
+      /*
+       * User finished dragging an item and dropped it somewhere
+       */
+      type: 'dropped'
+
+      /*
+       * Item that was dragged
+       */
+      draggedItem: TreeItem<T>
+
+      /*
+       * New parent of dragged item. Null if it became a root item
+       */
+      droppedToParent: TreeItem<T> | null
+
+      /*
+       * Old parent of dragged item. Null if it was one of the root items
+       */
+      draggedFromParent: TreeItem<T> | null
+    }
+  | {
+      /*
+       * User collapsed/expanded some item, so that their children are not visible anymore (if type is `collapsed`) or become visible (if type is `expanded`)
+       */
+      type: 'collapsed' | 'expanded'
+
+      /*
+       * Item that was collapsed or expanded
+       */
+      item: TreeItem<T>
+    }

@@ -5,21 +5,39 @@ import {
   DragMoveEvent,
   DragOverEvent,
   DragStartEvent,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
   UniqueIdentifier,
+  useSensor,
+  useSensors,
 } from '@dnd-kit/core'
-import { useMemo, useState } from 'react'
+import { createContext, useContext, useMemo, useState } from 'react'
 import { buildTree, flattenTree, getProjection, removeChildrenOf } from './utils'
-import { PageMapItem } from '../../nextra/types'
 import { FlattenedItem, ItemChangedReason } from '../../types'
 import { arrayMove } from '@dnd-kit/sortable'
+import { PageItem } from '../../nextra/normalize-pages'
 
 type Props = {
   children: React.ReactNode
-  items: PageMapItem[]
-  onItemsChanged: (items: PageMapItem[], reason: ItemChangedReason<PageMapItem>) => void
+  items: PageItem[]
+  onItemsChanged: (items: PageItem[], reason: ItemChangedReason<PageItem>) => void
 }
 
+type DndTreeContextType = {
+  isDragging: boolean
+  setDragging: (isDragging: boolean) => void
+}
+
+const DndTreeContext = createContext<DndTreeContextType>({
+  isDragging: false,
+  setDragging: () => {},
+})
+
+export const useDndTree = () => useContext(DndTreeContext)
+
 function DndTree({ children, items, onItemsChanged }: Props) {
+  const [isDragging, setDragging] = useState(false)
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
   const [overId, setOverId] = useState<UniqueIdentifier | null>(null)
   const [offsetLeft, setOffsetLeft] = useState(0)
@@ -45,6 +63,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
   const keepGhostInPlace = true
   const indentationWidth = 20
   const canRootHaveChildren = false
+
   const projected = getProjection(
     flattenedItems,
     activeId,
@@ -54,6 +73,21 @@ function DndTree({ children, items, onItemsChanged }: Props) {
     keepGhostInPlace,
     canRootHaveChildren,
   )
+
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 10,
+    },
+  })
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 550,
+      tolerance: 5,
+    },
+  })
+  const keyboardSensor = useSensor(KeyboardSensor)
+
+  const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor)
 
   const getMovementAnnouncement = (
     eventName: string,
@@ -76,7 +110,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
         }
       }
 
-      const clonedItems: FlattenedItem<PageMapItem>[] = flattenTree(items)
+      const clonedItems: FlattenedItem<PageItem>[] = flattenTree(items)
       const overIndex = clonedItems.findIndex(({ id }) => id === overId)
       const activeIndex = clonedItems.findIndex(({ id }) => id === activeId)
       const sortedItems = arrayMove(clonedItems, activeIndex, overIndex)
@@ -94,7 +128,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
         if (projected.depth > previousItem.depth) {
           announcement = `${activeId} was ${nestedVerb} under ${previousItem.id}.`
         } else {
-          let previousSibling: FlattenedItem<PageMapItem> | undefined = previousItem
+          let previousSibling: FlattenedItem<PageItem> | undefined = previousItem
           while (previousSibling && projected.depth < previousSibling.depth) {
             const parentId: UniqueIdentifier | null = previousSibling.parentId
             previousSibling = sortedItems.find(({ id }) => id === parentId)
@@ -134,11 +168,11 @@ function DndTree({ children, items, onItemsChanged }: Props) {
   )
 
   const handleDragStart = ({ active: { id: activeId } }: DragStartEvent) => {
+    setDragging(true)
     setActiveId(activeId)
     setOverId(activeId)
 
     const activeItem = flattenedItems.find(({ id }) => id === activeId)
-
     if (activeItem) {
       setCurrentPosition({
         parentId: activeItem.parentId,
@@ -163,7 +197,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
     if (projected && over) {
       const { depth, parentId } = projected
       if (keepGhostInPlace && over.id === active.id) return
-      const clonedItems: FlattenedItem<PageMapItem>[] = flattenTree(items)
+      const clonedItems: FlattenedItem<PageItem>[] = flattenTree(items)
       const overIndex = clonedItems.findIndex(({ id }) => id === over.id)
       const activeIndex = clonedItems.findIndex(({ id }) => id === active.id)
       const activeTreeItem = clonedItems[activeIndex]
@@ -197,6 +231,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
   }
 
   const resetState = () => {
+    setDragging(false)
     setOverId(null)
     setActiveId(null)
     setOffsetLeft(0)
@@ -208,13 +243,16 @@ function DndTree({ children, items, onItemsChanged }: Props) {
   return (
     <DndContext
       accessibility={{ announcements }}
+      sensors={sensors}
       onDragStart={handleDragStart}
       onDragMove={handleDragMove}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      {children}
+      <DndTreeContext.Provider value={{ isDragging, setDragging }}>
+        {children}
+      </DndTreeContext.Provider>
     </DndContext>
   )
 }

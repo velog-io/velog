@@ -176,6 +176,7 @@ export class BookBuildService implements Service {
       if (page.type === 'separator') {
         const key = page.key
         acc[key] = {
+          id: page.id,
           type: 'separator',
           title: page.title,
         }
@@ -218,7 +219,7 @@ export class BookBuildService implements Service {
   }
 }
 
-type MetaJsonSerpator = { type: 'separator'; title: string }
+type MetaJsonSerpator = { id: string; type: 'separator'; title: string }
 type MetaJsonValue = string | MetaJsonSerpator
 type MetaJson = Record<string, MetaJsonValue>
 

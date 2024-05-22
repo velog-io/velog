@@ -17,7 +17,8 @@ import { ActionType, useSidebar } from '../../contexts/sidebar'
 import AddInputs from './add-inputs'
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
-import DndTree from './dnd-tree'
+import DndTree, { useDndTree } from './dnd-tree'
+import Link from 'next/link'
 
 let TreeState: Record<string, boolean> = Object.create(null)
 
@@ -186,10 +187,23 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
   )
 }
 
-function Separator({ title }: { title: string }): ReactElement {
+function Separator({ id, title }: { id: string; title: string }): ReactElement {
   const config = useConfig()
+  const { setNodeRef, listeners, attributes, transform } = useDraggable({
+    id,
+  })
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    background: 'gold',
+  }
+
   return (
     <li
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
       className={cn(
         '[word-break:break-word]',
         title
@@ -210,21 +224,22 @@ function Separator({ title }: { title: string }): ReactElement {
   )
 }
 
-function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }): ReactElement {
+function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactElement {
+  const { isDragging } = useDndTree()
   const route = useFSRoute()
   const onFocus = useContext(OnFocusItemContext)
   const { setNodeRef, listeners, attributes, transform } = useDraggable({
     id: item?.id || item.route,
   })
 
+  const router = useRouter()
+
   // It is possible that the item doesn't have any route - for example an external link.
   const active = item.route && [route, route + '/'].includes(item.route + '/')
-  const activeAnchor = useActiveAnchor()
   const { setMenu } = useMenu()
-  const config = useConfig()
 
   if (item.type === 'separator') {
-    return <Separator title={item.title} />
+    return <Separator id={item.id} title={item.title} />
   }
 
   if (['newPage', 'newFolder', 'newSeparator'].includes(item.type)) {
@@ -239,6 +254,7 @@ function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }):
 
   const style = {
     transform: CSS.Translate.toString(transform),
+    background: 'red',
   }
 
   return (
@@ -249,47 +265,33 @@ function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }):
       {...attributes}
       style={style}
     >
-      <Anchor
-        href={(item as PageItem).href || item.route}
-        newWindow={(item as PageItem).newWindow}
+      <div
         className={cn(classes.link, active ? classes.active : classes.inactive)}
-        onClick={() => {
+        onClick={(e) => {
+          if (isDragging) {
+            e.preventDefault()
+            return
+          }
+          router.push((item as PageItem).href || item.route)
           setMenu(false)
         }}
-        onFocus={() => {
+        onFocus={(e) => {
+          if (isDragging) {
+            e.preventDefault()
+            return
+          }
           onFocus?.(item.route)
         }}
-        onBlur={() => {
+        onBlur={(e) => {
+          if (isDragging) {
+            e.preventDefault()
+            return
+          }
           onFocus?.(null)
         }}
       >
-        {renderComponent(config.sidebar.titleComponent, {
-          title: item.title,
-          type: item.type,
-          route: item.route,
-        })}
-      </Anchor>
-      {active && anchors.length > 0 && (
-        <ul className={cn(classes.list, classes.border, 'ltr:nx-ml-3 rtl:nx-mr-3')}>
-          {anchors.map(({ id, value }) => (
-            <li key={id}>
-              <a
-                href={`#${id}`}
-                className={cn(
-                  classes.link,
-                  'nx-flex nx-gap-2 before:nx-opacity-25 before:nx-content-["#"]',
-                  activeAnchor[id]?.isActive ? classes.active : classes.inactive,
-                )}
-                onClick={() => {
-                  setMenu(false)
-                }}
-              >
-                {value}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
+        {item.title}
+      </div>
     </li>
   )
 }
@@ -337,7 +339,7 @@ export function Sidebar({
   headings,
   includePlaceholder,
 }: SideBarProps): ReactElement {
-  const { isFolding, setIsFolding, pageMap } = useSidebar()
+  const { isFolding, setIsFolding } = useSidebar()
   const config = useConfig()
   const { menu, setMenu } = useMenu()
   const router = useRouter()
@@ -394,6 +396,8 @@ export function Sidebar({
   const hasI18n = config.i18n.length > 0
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton
 
+  const [directories, setDirectories] = useState(docsDirectories)
+
   return (
     <>
       {includePlaceholder && asPopover ? (
@@ -428,7 +432,7 @@ export function Sidebar({
             directories: flatDirectories,
           })}
         </div>
-        <DndTree items={pageMap}>
+        <DndTree items={directories} onItemsChanged={setDirectories}>
           <FocusedItemContext.Provider value={focused}>
             <OnFocusItemContext.Provider
               value={(item) => {

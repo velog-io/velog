@@ -30,7 +30,6 @@ type Data = { [key: string]: { title: string; type?: string } }
 const removeCode = (page: Page) => {
   let route = page.parent_id === null ? '/' : page.url_slug.split('/').slice(0, -1).join('/')
   if (route === '') {
-    console.log('page!', page)
     route = page.url_slug.split('-')[0]
     if (!route) {
       console.log('route is empty', route)
@@ -60,7 +59,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
           map.set(page.url_slug, key)
 
           if (page.type === 'separator') {
-            Object.assign(value, { type: 'separator' })
+            Object.assign(value, { id: page.id, type: 'separator' })
           }
 
           acc[key] = value
@@ -73,6 +72,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
   const createMdxPage = (page: Page) => {
     if (init) {
       const key = map.get(page.url_slug)
+
       return [
         {
           id: `${bookUrl}${page.url_slug}`,
@@ -85,7 +85,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
     init = true
     return [
       {
-        id: `${bookUrl}`,
+        id: `${bookUrl}${page.url_slug}`,
         kind: 'MdxPage',
         name: 'index',
         route: `${bookUrl}`,
@@ -96,7 +96,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
   const createFolder = (page: Page) => {
     const key = map.get(page.url_slug)
     const result = {
-      id: `${bookUrl}${page.url_slug}`,
+      id: page.id,
       kind: 'Folder',
       name: key,
       route: `${bookUrl}${page.url_slug}`,
