@@ -61,10 +61,8 @@ const classes = {
 const dragableStyle = (transform: any, isDragActive: boolean): CSSProperties =>
   isDragActive
     ? {
-        transform: CSS.Transform.toString(transform),
-        zIndex: 1,
-        width: '100%',
-        position: 'relative',
+        // transform: CSS.Transform.toString(transform),
+        visibility: 'hidden',
       }
     : {}
 
@@ -74,7 +72,7 @@ type FolderProps = {
 }
 
 function FolderImpl({ item, anchors }: FolderProps): ReactElement {
-  const { isDragging } = useDndTree()
+  const { isDragging, setDragItem } = useDndTree()
   const router = useRouter()
   const { isFolding } = useSidebar()
   const { setMenu } = useMenu()
@@ -151,14 +149,20 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
 
   const isDragActive = dragActive?.id === item.id
   const style = dragableStyle(transform, isDragActive)
+  const gripped = isDragActive ? 'gripped' : ''
+
+  useEffect(() => {
+    if (!isDragActive) return
+    setDragItem(item)
+  }, [isDragActive])
 
   return (
     <li
-      className={cn({ open, active }, isDragActive && classes.drag)}
+      className={cn({ open, active, gripped }, isDragActive && classes.drag)}
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      style={isDragActive ? style : { background: 'skyblue' }}
+      style={style}
     >
       <ComponentToUse
         className={cn(
@@ -211,7 +215,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
       <Collapse className="ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1" isOpen={isCollapseOpen}>
         {Array.isArray(item.children) ? (
           <Menu
-            className={cn(isDragging ? '' : classes.border, 'ltr:nx-ml-3 rtl:nx-mr-3')}
+            className={cn(classes.border, 'ltr:nx-ml-3 rtl:nx-mr-3')}
             directories={item.children}
             base={item.route}
             anchors={anchors}
@@ -222,7 +226,9 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
   )
 }
 
-function Separator({ id, title }: { id: string; title: string }): ReactElement {
+function Separator({ item }: { item: PageItem | Item }): ReactElement {
+  const { id, title } = item
+  const { setDragItem } = useDndTree()
   const config = useConfig()
   const {
     setNodeRef,
@@ -236,6 +242,12 @@ function Separator({ id, title }: { id: string; title: string }): ReactElement {
 
   const isDragActive = dragActive?.id === id
   const style = dragableStyle(transform, isDragActive)
+  const gripped = isDragActive ? 'gripped' : ''
+
+  useEffect(() => {
+    if (!isDragActive) return
+    setDragItem(item)
+  }, [isDragActive])
 
   return (
     <li
@@ -244,8 +256,8 @@ function Separator({ id, title }: { id: string; title: string }): ReactElement {
       {...listeners}
       {...attributes}
       className={cn(
+        gripped,
         '[word-break:break-word]',
-        isDragActive && classes.drag,
         title
           ? 'nx-mt-5 nx-mb-2 nx-px-2 nx-py-1.5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100'
           : 'nx-my-4',
@@ -265,7 +277,7 @@ function Separator({ id, title }: { id: string; title: string }): ReactElement {
 }
 
 function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactElement {
-  const { isDragging } = useDndTree()
+  const { isDragging, setDragItem } = useDndTree()
   const route = useFSRoute()
   const onFocus = useContext(OnFocusItemContext)
   const {
@@ -285,7 +297,7 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
   const { setMenu } = useMenu()
 
   if (item.type === 'separator') {
-    return <Separator id={item.id} title={item.title} />
+    return <Separator item={item} />
   }
 
   if (['newPage', 'newFolder', 'newSeparator'].includes(item.type)) {
@@ -300,17 +312,23 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
 
   const isDragActive = dragActive?.id === item.id
   const style = dragableStyle(transform, isDragActive)
+  const gripped = isDragActive ? 'gripped' : ''
+
+  useEffect(() => {
+    if (!isDragActive) return
+    setDragItem(item)
+  }, [isDragActive])
 
   return (
     <li
-      className={cn(classes.list, { active: active && !isDragging }, isDragActive && classes.drag)}
+      className={cn(classes.list, { active, gripped }, isDragActive && classes.drag)}
       ref={setNodeRef}
       {...listeners}
       {...attributes}
       style={style}
     >
       <div
-        className={cn(classes.link, active && !isDragging ? classes.active : classes.inactive)}
+        className={cn(classes.link, active ? classes.active : classes.inactive)}
         onClick={(e) => {
           if (isDragging) {
             e.preventDefault()
@@ -348,17 +366,14 @@ interface MenuProps {
   onlyCurrentDocs?: boolean
 }
 
-function Menu({ directories, anchors, className, onlyCurrentDocs }: MenuProps): ReactElement {
-  const { isDragging } = useDndTree()
+export function Menu({
+  directories,
+  anchors,
+  className,
+  onlyCurrentDocs,
+}: MenuProps): ReactElement {
   return (
-    <ul
-      className={cn(classes.list, className)}
-      style={
-        !isDragging
-          ? { position: 'relative', background: 'red' }
-          : { position: 'relative', background: 'gold', zIndex: 0 }
-      }
-    >
+    <ul className={cn(classes.list, className, 'nx-relative')}>
       {directories.map((item) =>
         !onlyCurrentDocs || item.isUnderCurrentDocsTree ? (
           item.type === 'menu' ||
@@ -448,7 +463,7 @@ export function Sidebar({
   const hasI18n = config.i18n.length > 0
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton
 
-  const [directories, setDirectories] = useState(docsDirectories)
+  const [directories, setDragItem] = useState(docsDirectories)
 
   return (
     <>
@@ -467,12 +482,12 @@ export function Sidebar({
       <aside
         className={cn(
           'nextra-sidebar-container nx-flex nx-flex-col',
-          'md:nx-top-16 md:nx-shrink-0 motion-reduce:nx-transform-none',
+          'md:nx-shrink-0 motion-reduce:nx-transform-none',
           'nx-transform-gpu nx-transition-all nx-ease-in-out',
           'print:nx-hidden',
           'nx-select-none nx-relative nx-overflow-hidden',
           showSidebar ? 'md:nx-w-80' : 'md:nx-w-20',
-          asPopover ? 'md:nx-hidden' : 'md:nx-sticky md:nx-self-start',
+          asPopover ? 'md:nx-hidden' : 'md:nx-relative md:nx-self-start md:nx-top-0',
           menu
             ? 'max-md:[transform:translate3d(0,0,0)]'
             : 'max-md:[transform:translate3d(0,-100%,0)]',
@@ -484,7 +499,7 @@ export function Sidebar({
             directories: flatDirectories,
           })}
         </div>
-        <DndTree items={directories} onItemsChanged={setDirectories}>
+        <DndTree items={directories} onItemsChanged={setDragItem}>
           <FocusedItemContext.Provider value={focused}>
             <OnFocusItemContext.Provider
               value={(item) => {

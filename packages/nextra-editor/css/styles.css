@@ -18,7 +18,7 @@ html {
 }
 
 body {
-  @apply nx-w-full nx-bg-white dark:nx-bg-dark dark:nx-text-gray-100;
+  @apply nx-w-full nx-bg-white dark:nx-bg-dark dark:nx-text-gray-100 nx-max-h-screen;
 }
 
 a,

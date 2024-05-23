@@ -4,20 +4,25 @@ import {
   DragEndEvent,
   DragMoveEvent,
   DragOverEvent,
+  DragOverlay,
   DragStartEvent,
   KeyboardSensor,
+  Modifier,
   MouseSensor,
   TouchSensor,
   UniqueIdentifier,
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { buildTree, flattenTree, getProjection, removeChildrenOf } from './utils'
 import { FlattenedItem, ItemChangedReason } from '../../types'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
-import { PageItem } from '../../nextra/normalize-pages'
+import { Item, PageItem } from '../../nextra/normalize-pages'
 import { customListSortingStrategy } from './utils/customListSortingStrategy'
+import { Menu } from './sidebar'
+import cn from 'clsx'
+import { dropAnimation } from './utils/dropAnimation'
 
 type Props = {
   children: React.ReactNode
@@ -29,18 +34,24 @@ type DndTreeContextType = {
   activeId: UniqueIdentifier | null
   isDragging: boolean
   setDragging: (isDragging: boolean) => void
+  dragItem: PageItem | Item | null
+  setDragItem: (directories: PageItem | Item) => void
 }
 
 const DndTreeContext = createContext<DndTreeContextType>({
   isDragging: false,
   setDragging: () => {},
   activeId: null,
+  dragItem: null,
+  setDragItem: () => {},
 })
 
 export const useDndTree = () => useContext(DndTreeContext)
 
 function DndTree({ children, items, onItemsChanged }: Props) {
   const [isDragging, setDragging] = useState(false)
+  const [dragItem, setDragItem] = useState<PageItem | Item | null>(null)
+
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
   const [overId, setOverId] = useState<UniqueIdentifier | null>(null)
   const [offsetLeft, setOffsetLeft] = useState(0)
@@ -83,10 +94,10 @@ function DndTree({ children, items, onItemsChanged }: Props) {
     },
   })
   const touchSensor = useSensor(TouchSensor, {
-    activationConstraint: {
-      delay: 550,
-      tolerance: 5,
-    },
+    // activationConstraint: {
+    //   // delay: 550,
+    //   // tolerance: 5,
+    // },
   })
   const keyboardSensor = useSensor(KeyboardSensor)
 
@@ -236,6 +247,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
 
   const resetState = () => {
     setDragging(false)
+    setDragItem(null)
     setOverId(null)
     setActiveId(null)
     setOffsetLeft(0)
@@ -249,6 +261,17 @@ function DndTree({ children, items, onItemsChanged }: Props) {
     return !!projected
   }, [projected])
 
+  const snapToGrid = (args: any) => {
+    const { transform, activatorEvent } = args
+    console.log('activatorEvent', activatorEvent)
+    console.log('c', activatorEvent?.clientX)
+    console.log('y', activatorEvent?.clientY)
+
+    const result = { ...transform, y: transform.y - 60 }
+    console.log(result)
+    return result
+  }
+
   return (
     <DndContext
       accessibility={{ announcements }}
@@ -260,10 +283,19 @@ function DndTree({ children, items, onItemsChanged }: Props) {
       onDragCancel={handleDragCancel}
     >
       <SortableContext items={sortedIds} strategy={customListSortingStrategy(strategyCallback)}>
-        <DndTreeContext.Provider value={{ isDragging, setDragging, activeId }}>
+        <DndTreeContext.Provider
+          value={{ isDragging, setDragging, activeId, dragItem, setDragItem }}
+        >
           {children}
         </DndTreeContext.Provider>
       </SortableContext>
+      <DragOverlay modifiers={[snapToGrid]}>
+        {dragItem && (
+          <div className={cn('nx-absoulte nx-bg-primary-50')}>
+            <Menu directories={[dragItem]} anchors={[]} />
+          </div>
+        )}
+      </DragOverlay>
     </DndContext>
   )
 }

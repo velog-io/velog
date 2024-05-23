@@ -78,7 +78,7 @@ const Body = ({ themeContext, navigation, children }: BodyProps): ReactElement =
         classes.main,
         // 'nextra-content nx-flex nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-min-w-0 nx-justify-center nx-pb-8 nx-pr-[calc(env(safe-area-inset-right)-1.5rem)]',
         // themeContext.typesetting === 'article' && 'nextra-body-typesetting-article',
-        'nextra-content nx-min-h-[calc(100vh-var(--nextra-navbar-height))]',
+        'nextra-content nx-max-h-[calc(100vh-var(--nextra-navbar-height))]',
       )}
     >
       <main className="nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6 nx-pt-4">
@@ -163,21 +163,16 @@ const InnerLayout = ({
             includePlaceholder={themeContext.layout === 'default'}
           />
           <div className={cn('nx-flex nx-w-full')}>
-            <div className={cn('nextra-editor-container nx-mt-4')}>
+            <div className={cn('nextra-editor-container nx-overflow-y-auto nx-mt-4')}>
               <textarea
-                className={cn(
-                  'nextra-scrollbar nx-w-full nx-max-h-screen nx-pl-6 nx-pr-6 nx-outline-none',
-                )}
+                className={cn('nextra-scrollbar nx-w-full nx-pl-6 nx-pr-6 nx-outline-none ')}
                 defaultValue={editorValue}
                 onChange={onEditorChange}
                 minLength={10000}
-                style={{ height: '2000px', outline: 'none' }}
+                style={{ height: '200px', outline: 'none' }}
               />
             </div>
-            <div
-              className={cn('nextra-scrollbar nx-overflow-y-auto')}
-              style={{ flex: 1, height: '100vh' }}
-            >
+            <div className={cn('nextra-scrollbar nx-overflow-y-auto')} style={{ flex: 1 }}>
               <Body
                 themeContext={themeContext}
                 breadcrumb={<Breadcrumb activePath={activePath} />}
