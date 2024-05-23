@@ -33,6 +33,7 @@ class Runner implements IRunner {
       try {
         const user = await this.findUsersByUsername(username)
         const posts = await this.findWritenPostsByUserId(user.id)
+        const comments = await this.findWritenCommentByUserId(user.id)
 
         const blockList = await this.blockList.readBlockList()
 
@@ -46,7 +47,7 @@ class Runner implements IRunner {
 
         if (posts.length === 0) {
           console.log(`${user.username} 유저의 비공개 처리 할 게시글이 없습니다.`)
-          continue
+          // continue
         }
 
         const askResult = await this.askUpdatePrivatePosts(
@@ -57,12 +58,18 @@ class Runner implements IRunner {
           user.created_at,
         )
 
-        if (!askResult.is_set_private) continue
+        if (!askResult.is_set_private) {
+          console.log('비공개 처리를 거부하셨습니다.')
+          continue
+        }
 
         const postIds = posts.map(({ id }) => id!)
+        const commentIds = comments.map(({ id }) => id!)
 
         // set private = true
         await this.setIsPrivatePost(postIds)
+        // set deleted = true
+        await this.setDeletedComment(commentIds)
 
         const blockUesrInfo: BlockUserInfo = {
           id: user.id,
@@ -88,7 +95,7 @@ class Runner implements IRunner {
         await this.discord.sendMessage(
           ENV.discordPrivatePostsChannelId!,
           JSON.stringify({
-            title: '해당 유저의 글들이 비공개 처리 되었습니다.',
+            title: '해당 유저의 글과 댓글들이 비공개 처리 되었습니다.',
             userInfo: userInfo,
           }),
         )
@@ -125,6 +132,14 @@ class Runner implements IRunner {
     }
 
     return user
+  }
+  private async findWritenCommentByUserId(userId: string) {
+    const comments = await this.db.comment.findMany({
+      where: {
+        fk_user_id: userId,
+      },
+    })
+    return comments
   }
   private async findWritenPostsByUserId(userId: string) {
     const posts = await this.db.post.findMany({
@@ -184,6 +199,18 @@ class Runner implements IRunner {
       },
       data: {
         is_private: true,
+      },
+    })
+  }
+  private async setDeletedComment(commentIds: string[]) {
+    return await this.db.comment.updateMany({
+      where: {
+        id: {
+          in: commentIds,
+        },
+      },
+      data: {
+        deleted: true,
       },
     })
   }
