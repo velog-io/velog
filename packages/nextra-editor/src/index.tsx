@@ -26,7 +26,7 @@ interface BodyProps {
 
 const classes = {
   toc: cn('nextra-toc nx-order-last nx-hidden nx-w-64 nx-shrink-0 xl:nx-block print:nx-hidden'),
-  main: cn('nx-w-full nx-break-words'),
+  main: cn('nextra-scrollbar nx-break-words nx-h-screen nx-overflow-y-auto'),
 }
 
 const Body = ({ themeContext, navigation, children }: BodyProps): ReactElement => {
@@ -78,10 +78,14 @@ const Body = ({ themeContext, navigation, children }: BodyProps): ReactElement =
         classes.main,
         // 'nextra-content nx-flex nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-min-w-0 nx-justify-center nx-pb-8 nx-pr-[calc(env(safe-area-inset-right)-1.5rem)]',
         // themeContext.typesetting === 'article' && 'nextra-body-typesetting-article',
-        'nextra-content nx-max-h-[calc(100vh-var(--nextra-navbar-height))]',
+        // 'nextra-content nx-max-h-[calc(100vh-var(--nextra-navbar-height))]',
       )}
+      style={{ marginTop: '-24px' }}
     >
-      <main className="nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6 nx-pt-4">
+      <main
+        className="nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6"
+        style={{ marginTop: '24px', paddingTop: '24px' }}
+      >
         {/* {breadcrumb} */}
         {body}
       </main>
@@ -137,7 +141,7 @@ const InnerLayout = ({
   const themeContext = { ...activeThemeContext, ...frontMatter }
   const direction = 'ltr'
   return (
-    <div dir={direction} className={cn('nx-overflow-hidden')}>
+    <div dir={direction} className={cn('nx-overflow-hidden nx-h-screen')}>
       <script
         dangerouslySetInnerHTML={{
           __html: `document.documentElement.setAttribute('dir','${direction}')`,
@@ -163,16 +167,18 @@ const InnerLayout = ({
             includePlaceholder={themeContext.layout === 'default'}
           />
           <div className={cn('nx-flex nx-w-full')}>
-            <div className={cn('nextra-editor-container nx-overflow-y-auto nx-mt-4')}>
+            <div className={cn('nextra-editor-container')}>
               <textarea
-                className={cn('nextra-scrollbar nx-w-full nx-pl-6 nx-pr-6 nx-outline-none ')}
+                className={cn(
+                  'nextra-scrollbar nx-outline-none nx-overflow-y-auto',
+                  'nx-w-full nx-pl-6 nx-pr-6 nx-outline-none',
+                )}
+                style={{ height: 'calc(100vh - 64px)' }}
                 defaultValue={editorValue}
                 onChange={onEditorChange}
-                minLength={10000}
-                style={{ height: '200px', outline: 'none' }}
               />
             </div>
-            <div className={cn('nextra-scrollbar nx-overflow-y-auto')} style={{ flex: 1 }}>
+            <div className={cn('nextra-preview-container')} style={{ flex: 1 }}>
               <Body
                 themeContext={themeContext}
                 breadcrumb={<Breadcrumb activePath={activePath} />}

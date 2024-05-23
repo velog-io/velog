@@ -171,3 +171,7 @@ input[type='search'] {
     opacity: 1;
   }
 }
+
+.nx-h-scren {
+  @apply nx-h-screen;
+}
