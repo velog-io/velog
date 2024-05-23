@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { Post, User, UserProfile } from '@packages/database/velog-rds'
+import { Comment, Post, User, UserProfile } from '@packages/database/velog-rds'
 import { DbService } from '../lib/db/DbService.mjs'
 import { container, injectable } from 'tsyringe'
 import inquirer from 'inquirer'
@@ -52,6 +52,7 @@ class Runner implements IRunner {
 
         const askResult = await this.askUpdatePrivatePosts(
           posts,
+          comments,
           user.id,
           username,
           user.profile?.display_name || null,
@@ -138,6 +139,9 @@ class Runner implements IRunner {
       where: {
         fk_user_id: userId,
       },
+      orderBy: {
+        created_at: 'desc',
+      },
     })
     return comments
   }
@@ -157,6 +161,7 @@ class Runner implements IRunner {
   }
   private async askUpdatePrivatePosts(
     posts: Post[],
+    comments: Comment[],
     userId: string,
     username: string,
     displayName: string | null,
@@ -171,6 +176,9 @@ class Runner implements IRunner {
       '최근 작성된 글': posts.slice(0, 5).map((post) => ({
         title: post.title,
         body: post.body?.trim().slice(0, 150),
+      })),
+      '최근 작성된 댓글': comments.slice(0, 5).map((comment) => ({
+        body: comment.text?.trim().slice(0, 150),
       })),
     })
 
