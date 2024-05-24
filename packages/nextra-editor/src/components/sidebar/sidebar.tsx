@@ -63,7 +63,6 @@ const dragableStyle = (transform: any, isDragActive: boolean): CSSProperties =>
     ? {
         // transform: CSS.Transform.toString(transform),
         display: 'none',
-        width: '100%',
       }
     : {}
 
@@ -74,8 +73,8 @@ type FolderProps = {
 
 function FolderImpl({ item, anchors }: FolderProps): ReactElement {
   const { isDragging, setDragItem } = useDndTree()
-  const router = useRouter()
   const { isFolding } = useSidebar()
+  const router = useRouter()
   const { setMenu } = useMenu()
   const routeOriginal = useFSRoute()
   const [route] = routeOriginal.split('#')
@@ -226,7 +225,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
   )
 }
 
-function Separator({ item }: { item: PageItem | Item }): ReactElement {
+export function Separator({ item }: { item: PageItem | Item }): ReactElement {
   const { id, title } = item
   const { setDragItem } = useDndTree()
   const config = useConfig()
@@ -236,9 +235,14 @@ function Separator({ item }: { item: PageItem | Item }): ReactElement {
     attributes,
     transform,
     active: dragActive,
+    over,
   } = useDraggable({
     id,
   })
+
+  if (over) {
+    console.log('over', over)
+  }
 
   const isDragActive = dragActive?.id === id
   const style = dragableStyle(transform, isDragActive)
@@ -286,6 +290,7 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
     active: dragActive,
   } = useDraggable({
     id: item?.id || item.route,
+    disabled: item.name === 'index',
   })
 
   const router = useRouter()
@@ -293,10 +298,6 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
   // It is possible that the item doesn't have any route - for example an external link.
   const active = item.route && [route, route + '/'].includes(item.route + '/')
   const { setMenu } = useMenu()
-
-  if (item.type === 'separator') {
-    return <Separator item={item} />
-  }
 
   if (['newPage', 'newFolder', 'newSeparator'].includes(item.type)) {
     const map: Record<string, ActionType> = {
@@ -377,6 +378,8 @@ export function Menu({
           item.kind === 'Folder' ||
           (item.children && (item.children.length || !item.withIndexPage)) ? (
             <Folder key={item.name} item={item} anchors={anchors} />
+          ) : item.type === 'separator' ? (
+            <Separator item={item} />
           ) : (
             <File key={item.name} item={item} anchors={anchors} />
           )

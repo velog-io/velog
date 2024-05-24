@@ -23,6 +23,7 @@ import { Menu } from './sidebar'
 import cn from 'clsx'
 import { dropAnimation } from './utils/dropAnimation'
 import { useSidebar } from '../../contexts/sidebar'
+import { SeparatorIcon } from '../../nextra/icons/separator'
 
 type Props = {
   children: React.ReactNode
@@ -267,6 +268,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
     return { ...transform, y: transform.y + clientY - 75 }
   }
 
+  console.log('dragItem', dragItem)
   return (
     <DndContext
       accessibility={{ announcements }}
@@ -286,7 +288,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
       </SortableContext>
       <DragOverlay modifiers={[snapToGrid]} style={{ width: '100%' }} dropAnimation={dropAnimation}>
         {dragItem && (
-          <div className={cn('nx-bg-primary-50')}>
+          <div className={cn('nx-bg-primary-50 nx-w-full')}>
             <Menu directories={[dragItem]} anchors={[]} />
           </div>
         )}
