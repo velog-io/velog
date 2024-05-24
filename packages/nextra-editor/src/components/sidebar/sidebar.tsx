@@ -56,7 +56,7 @@ const classes = {
   drag: cn(
     'nx-transform-gpu nx-w-full nx-max-h-px nx-overflow-hidden nx-bg-transparent nx-text-transparent',
   ),
-  over: cn('nx-bg-primary-50 dark:nx-bg-neutral-800'),
+  over: cn('nx-bg-red-100 dark:nx-bg-neutral-800'),
 }
 
 type FolderProps = {
@@ -71,16 +71,21 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
   const { setMenu } = useMenu()
   const routeOriginal = useFSRoute()
   const [route] = routeOriginal.split('#')
+
   const {
     setNodeRef,
     listeners,
     attributes,
-    active: dragActive,
+    isDragging: isDragActive,
+    isOver,
+    setActivatorNodeRef,
+    setDroppableNodeRef,
+    setDraggableNodeRef,
   } = useSortable({
-    id: item?.id || item.route,
+    id: item.id,
+    data: item,
   })
 
-  const isDragActive = dragActive?.id === item.id
   const active = !isDragActive && [route, route + '/'].includes(item.route + '/')
   const activeRouteInside: boolean = active || route.startsWith(item.route + '/')
   const focusedRoute = useContext(FocusedItemContext)
@@ -118,41 +123,36 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
     config.sidebar.autoCollapse ? updateAndPruneTreeState() : updateTreeState()
   }, [activeRouteInside, focusedRouteInside, item.route, config.sidebar.autoCollapse])
 
-  if (item.type === 'menu') {
-    const menu = item as MenuItem
-    const routes = Object.fromEntries((menu.children || []).map((route) => [route.name, route]))
-    item.children = Object.entries(menu.items || {}).map(([key, item]) => {
-      const route = routes[key] || {
-        name: key,
-        ...('locale' in menu && { locale: menu.locale }),
-        route: menu.route + '/' + key,
-      }
-      return {
-        ...route,
-        ...item,
-      }
-    })
-  }
-
-  const isLink = 'withIndexPage' in item && item.withIndexPage
-
-  // use button when link don't have href because it impacts on SEO
-  const ComponentToUse = 'div'
-  const isCollapseOpen = isFolding ? false : open
-
   useEffect(() => {
     if (!isDragActive) return
     setDragItem(item)
   }, [isDragActive])
 
+  // if (item.type === 'menu') {
+  //   const menu = item as MenuItem
+  //   const routes = Object.fromEntries((menu.children || []).map((route) => [route.name, route]))
+  //   item.children = Object.entries(menu.items || {}).map(([key, item]) => {
+  //     const route = routes[key] || {
+  //       name: key,
+  //       ...('locale' in menu && { locale: menu.locale }),
+  //       route: menu.route + '/' + key,
+  //     }
+  //     return {
+  //       ...route,
+  //       ...item,
+  //     }
+  //   })
+  // }
+
+  const isLink = 'withIndexPage' in item && item.withIndexPage
+
+  // use button when link don't have href because it impacts on SEO
+  const isCollapseOpen = isDragActive || isFolding ? false : open
+
   return (
-    <li
-      className={cn({ open, active }, isDragActive && classes.drag, 'nx-bg-red-300')}
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-    >
-      <ComponentToUse
+    <li className={cn({ open, active }, isDragActive && classes.drag, isOver && classes.over)}>
+      <div
+        ref={setDroppableNodeRef}
         className={cn(
           'nx-w-full nx-items-center nx-justify-between nx-gap-2',
           !isLink && 'nx-w-full nx-text-left',
@@ -161,6 +161,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
           !isDragging
             ? 'hover:nx-bg-blue-100 dark:hover:nx-bg-primary-100/5'
             : 'nx-bg-transparent hover:nx-bg-transparent',
+          active && isDragActive && 'nx-bg-blue-100',
         )}
         onClick={(e) => {
           e.preventDefault()
@@ -175,12 +176,10 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
 
           if (isLink) {
             if (active || clickedToggleIcon) {
-              console.log('oeoeoeoeoe')
               // If it's focused, we toggle it. Otherwise, always open it.
 
               TreeState[item.route] = !open
             } else {
-              console.log('open!?')
               TreeState[item.route] = true
               setMenu(false)
             }
@@ -192,11 +191,15 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
           rerender({})
         }}
       >
-        {renderComponent(config.sidebar.titleComponent, {
-          title: item.title,
-          type: item.type,
-          route: item.route,
-        })}
+        <div
+          ref={setNodeRef}
+          {...listeners}
+          {...attributes}
+          className={cn('nx-w-full [word-break:break-word]')}
+          style={{ background: 'gold' }}
+        >
+          {item.title}
+        </div>
         <ArrowRightIcon
           className="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5"
           pathClassName={cn(
@@ -204,8 +207,12 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
             open && 'ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]',
           )}
         />
-      </ComponentToUse>
-      <Collapse className="nx-pt-1 ltr:nx-pr-0 rtl:nx-pl-0" isOpen={isCollapseOpen}>
+      </div>
+      <Collapse
+        className={cn('nx-pt-1 ltr:nx-pr-0 rtl:nx-pl-0')}
+        isOpen={isCollapseOpen}
+        isDragActive={isDragActive}
+      >
         {Array.isArray(item.children) ? (
           <Menu
             className={cn(classes.border, 'ltr:nx-ml-3 rtl:nx-mr-3')}
@@ -222,22 +229,15 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
 export function Separator({ item }: { item: PageItem | Item }): ReactElement {
   const { id, title } = item
   const { setDragItem } = useDndTree()
-  const config = useConfig()
   const {
     setNodeRef,
     listeners,
     attributes,
-    active: dragActive,
-    isOver,
+    isDragging: isDragActive,
   } = useSortable({
     id,
+    data: item,
   })
-
-  if (isOver) {
-    console.log('isOver')
-  }
-
-  const isDragActive = dragActive?.id === id
 
   useEffect(() => {
     if (!isDragActive) return
@@ -255,15 +255,10 @@ export function Separator({ item }: { item: PageItem | Item }): ReactElement {
           ? 'nx-mb-2 nx-mt-5 nx-px-2 nx-py-1.5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100'
           : 'nx-my-4',
         isDragActive && classes.drag,
-        isOver && classes.over,
       )}
     >
       {title ? (
-        renderComponent(config.sidebar.titleComponent, {
-          title,
-          type: 'separator',
-          route: '',
-        })
+        <span className="cursor-default">{title}</span>
       ) : (
         <hr className="nx-mx-2 nx-border-t nx-border-gray-200 dark:nx-border-primary-100/10" />
       )}
@@ -275,17 +270,18 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
   const { isDragging, setDragItem } = useDndTree()
   const route = useFSRoute()
   const onFocus = useContext(OnFocusItemContext)
+
+  const disabled = item.name === 'index'
   const {
     setNodeRef,
     listeners,
     attributes,
-    active: dragActive,
+    isDragging: isDragActive,
   } = useSortable({
-    id: item?.id || item.route,
-    disabled: item.name === 'index',
+    id: item.id,
+    data: item,
+    disabled,
   })
-
-  const isDragActive = dragActive?.id === item.id
 
   const router = useRouter()
 
@@ -508,7 +504,7 @@ export function Sidebar({
                 <SidebarController showSidebar={showSidebar} />
                 {/* without asPopover check <Collapse />'s inner.clientWidth on `layout: "raw"` will be 0 and element will not have width on initial loading */}
                 {(!asPopover || !showSidebar) && (
-                  <Collapse isOpen={showSidebar} horizontal>
+                  <Collapse isOpen={showSidebar} horizontal={true}>
                     <Menu
                       className="nextra-menu-desktop max-md:nx-hidden"
                       // The sidebar menu, shows only the docs directories.

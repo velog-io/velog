@@ -1,25 +1,33 @@
 import cn from 'clsx'
 import type { ReactElement, ReactNode } from 'react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDndTree } from './sidebar/dnd-tree'
 
 export function Collapse({
   children,
   className,
-  isOpen,
+  isOpen: initOpen,
   horizontal = false,
+  isDragActive = false,
 }: {
   children: ReactNode
   className?: string
   isOpen: boolean
   horizontal?: boolean
+  isDragActive?: boolean
 }): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef(0)
-  const initialOpen = useRef(isOpen)
+  const [isOpen, setIsOpen] = useState(initOpen && !isDragActive)
+  const initialOpen = useRef(initOpen)
   const initialRender = useRef(true)
   const { isDragging } = useDndTree()
+
+  useEffect(() => {
+    const open = initOpen && !isDragActive
+    setIsOpen(open)
+  }, [isDragActive, initOpen])
 
   useEffect(() => {
     const container = containerRef.current
@@ -55,7 +63,7 @@ export function Collapse({
         }
       }, 0)
     }
-  }, [horizontal, isOpen])
+  }, [horizontal, isOpen, isDragActive])
 
   useEffect(() => {
     initialRender.current = false

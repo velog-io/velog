@@ -1,5 +1,6 @@
 import {
   Announcements,
+  closestCenter,
   DndContext,
   DragEndEvent,
   DragMoveEvent,
@@ -13,17 +14,15 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useContext, useMemo, useState } from 'react'
 import { buildTree, flattenTree, getProjection, removeChildrenOf } from './utils'
 import { FlattenedItem, ItemChangedReason } from '../../types'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
 import { Item, PageItem } from '../../nextra/normalize-pages'
-import { customListSortingStrategy } from './utils/customListSortingStrategy'
 import { Menu } from './sidebar'
 import cn from 'clsx'
 import { dropAnimation } from './utils/dropAnimation'
-import { useSidebar } from '../../contexts/sidebar'
-import { SeparatorIcon } from '../../nextra/icons/separator'
+import { customCollisionDetectionAlgorithm } from './utils/customCollisionDetection'
 
 type Props = {
   children: React.ReactNode
@@ -257,13 +256,8 @@ function DndTree({ children, items, onItemsChanged }: Props) {
   }
 
   const sortedIds = useMemo(() => flattenedItems.map(({ id }) => id), [flattenedItems])
-  const strategyCallback = useCallback(() => {
-    return !!projected
-  }, [projected])
-
   const snapToGrid = (args: any) => {
     const { transform } = args
-    const clientY = args?.activatorEvent?.clientY ?? 0
     return { ...transform, y: transform.y + 0 - 64 }
   }
 
@@ -276,8 +270,9 @@ function DndTree({ children, items, onItemsChanged }: Props) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
+      collisionDetection={closestCenter}
     >
-      <SortableContext items={sortedIds} strategy={customListSortingStrategy(strategyCallback)}>
+      <SortableContext items={sortedIds}>
         <DndTreeContext.Provider
           value={{ isDragging, setDragging, activeId, dragItem, setDragItem }}
         >
@@ -287,29 +282,14 @@ function DndTree({ children, items, onItemsChanged }: Props) {
       <DragOverlay
         modifiers={[snapToGrid]}
         dropAnimation={dropAnimation}
-        className={cn('nx-bg-sky-50 nx-w-full nx-opacity-90')}
+        className={cn('nx-bg-sky-50 nx-opacity-90')}
+        style={{ width: '90%' }}
       >
         {dragItem && (
           <div className={cn('nx-bg-sky-50')}>
             <Menu directories={[dragItem]} anchors={[]} />
           </div>
         )}
-        {/* // test */}
-        {/* <div>
-          <Menu
-            directories={[
-              {
-                id: 'test-hello-123456',
-                name: 'hello',
-                type: 'page',
-                title: 'hello',
-                kind: 'MdxPage',
-                route: '/',
-              },
-            ]}
-            anchors={[]}
-          />
-        </div> */}
       </DragOverlay>
     </DndContext>
   )
