@@ -1,69 +1,8 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import type { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-editor'
+import type { DocsThemeConfig } from '@packages/nextra-editor'
 
 const bookUrl = `/@test_carrick/learning-bunjs-is-fun`
-export const pageMap: PageMapItem[] = [
-  {
-    kind: 'Meta',
-    route: '/',
-    data: {
-      index: { title: 'Introduction' },
-      themes: {
-        title: 'Themes',
-        type: 'separator',
-      },
-      another: { title: 'Pectus bardus' },
-      advanced: { title: 'Advanced (A Folder)' },
-      hello: { title: 'hello' },
-      about: { title: 'About' },
-    },
-  },
-  { kind: 'MdxPage', name: 'index', route: bookUrl },
-  { kind: 'MdxPage', name: 'advanced', route: `${bookUrl}/advanced` },
-  {
-    kind: 'Folder',
-    name: 'advanced',
-    route: `${bookUrl}/advanced`,
-    children: [
-      {
-        kind: 'Meta',
-        data: { satori: { title: 'Satori' }, hello: { title: 'hello' } },
-        route: `/advanced`,
-      },
-      { kind: 'MdxPage', name: 'hello', route: `${bookUrl}/advanced/hello` },
-      {
-        kind: 'Folder',
-        name: 'hello',
-        route: `${bookUrl}/advanced/hello`,
-        children: [
-          { kind: 'Meta', data: { hi: { title: 'Hi' } }, route: `${bookUrl}/advanced/hello` },
-          {
-            kind: 'MdxPage',
-            name: 'hi',
-            route: `${bookUrl}/advanced/hello/hi`,
-          },
-        ],
-      },
-      {
-        kind: 'MdxPage',
-        name: 'satori',
-        route: `${bookUrl}/advanced/satori`,
-      },
-    ],
-  },
-  { kind: 'MdxPage', name: 'another', route: `${bookUrl}/another` },
-  { kind: 'MdxPage', name: 'about', route: `${bookUrl}/about` },
-]
-
-export const pageOpts: PageOpts = {
-  frontMatter: {},
-  filePath: '',
-  route: '',
-  pageMap: pageMap,
-  title: 'Welcome to Nextra',
-  headings: [],
-}
 
 export const themeConfig: DocsThemeConfig = {
   toc: {},
@@ -80,12 +19,6 @@ export const themeConfig: DocsThemeConfig = {
     text: '',
   },
   sidebar: {
-    titleComponent({ title, type }) {
-      if (type === 'separator') {
-        return <span className="cursor-default">{title}</span>
-      }
-      return <>{title}</>
-    },
     defaultMenuCollapseLevel: 1,
     toggleButton: true,
   },
