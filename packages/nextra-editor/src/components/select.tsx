@@ -57,7 +57,7 @@ export function Select({ options, selected, onChange, title, className }: MenuPr
               ref={container}
               show={open}
               as={Listbox.Options}
-              className="nx-z-20 nx-max-h-64 nx-overflow-auto nx-rounded-md nx-ring-1 nx-ring-black/5 nx-bg-white nx-py-1 nx-text-sm nx-shadow-lg dark:nx-ring-white/20 dark:nx-bg-neutral-800"
+              className="nx-z-20 nx-max-h-64 nx-overflow-auto nx-rounded-md nx-bg-white nx-py-1 nx-text-sm nx-shadow-lg nx-ring-1 nx-ring-black/5 dark:nx-bg-neutral-800 dark:nx-ring-white/20"
               leave="nx-transition-opacity"
               leaveFrom="nx-opacity-100"
               leaveTo="nx-opacity-0"
@@ -72,7 +72,7 @@ export function Select({ options, selected, onChange, title, className }: MenuPr
                         ? 'nx-bg-primary-50 nx-text-primary-600 dark:nx-bg-primary-500/10'
                         : 'nx-text-gray-800 dark:nx-text-gray-100',
                       'nx-relative nx-cursor-pointer nx-whitespace-nowrap nx-py-1.5',
-                      'nx-transition-colors nx-pl-3 nx-pr-9',
+                      'nx-pl-3 nx-pr-9 nx-transition-colors',
                     )
                   }
                   style={{ paddingRight: '2.25rem', paddingLeft: '0.75rem' }}
@@ -80,7 +80,7 @@ export function Select({ options, selected, onChange, title, className }: MenuPr
                   <span>{option.name}</span>
                   {option.key === selected.key && (
                     <span
-                      className="nx-absolute nx-inset-y-0 nx-flex nx-items-center nx-right-3"
+                      className="nx-absolute nx-inset-y-0 nx-right-3 nx-flex nx-items-center"
                       style={{ right: '0.75rem' }}
                     >
                       <CheckIcon />

@@ -46,14 +46,14 @@ function NavbarMenu({
           {children}
         </Menu.Button>
         <Transition leave="nx-transition-opacity" leaveFrom="nx-opacity-100" leaveTo="nx-opacity-0">
-          <Menu.Items className="nx-absolute nx-right-0 nx-z-20 nx-mt-1 nx-max-h-64 nx-min-w-full nx-overflow-auto nx-rounded-md nx-ring-1 nx-ring-black/5 nx-bg-white nx-py-1 nx-text-sm nx-shadow-lg dark:nx-ring-white/20 dark:nx-bg-neutral-800">
+          <Menu.Items className="nx-absolute nx-right-0 nx-z-20 nx-mt-1 nx-max-h-64 nx-min-w-full nx-overflow-auto nx-rounded-md nx-bg-white nx-py-1 nx-text-sm nx-shadow-lg nx-ring-1 nx-ring-black/5 dark:nx-bg-neutral-800 dark:nx-ring-white/20">
             {Object.entries(items || {}).map(([key, item]) => (
               <Menu.Item key={key}>
                 <Anchor
                   href={item.href || routes[key]?.route || menu.route + '/' + key}
                   className={cn(
                     'nx-relative nx-hidden nx-w-full nx-select-none nx-whitespace-nowrap nx-text-gray-600 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-100 md:nx-inline-block',
-                    'nx-py-1.5 nx-transition-colors ltr:nx-pl-3 ltr:nx-pr-9 rtl:nx-pr-3 rtl:nx-pl-9',
+                    'nx-py-1.5 nx-transition-colors ltr:nx-pl-3 ltr:nx-pr-9 rtl:nx-pl-9 rtl:nx-pr-3',
                   )}
                   newWindow={item.newWindow}
                 >
@@ -74,7 +74,7 @@ export function Navbar({ flatDirectories, items }: NavBarProps): ReactElement {
   const { menu, setMenu } = useMenu()
 
   return (
-    <div className="nextra-nav-container nx-sticky nx-top-0 nx-w-full nx-bg-transparent print:nx-hidden nx-z-20">
+    <div className="nextra-nav-container nx-sticky nx-top-0 nx-z-20 nx-w-full nx-bg-transparent print:nx-hidden">
       <div
         className={cn(
           'nextra-nav-container-blur',

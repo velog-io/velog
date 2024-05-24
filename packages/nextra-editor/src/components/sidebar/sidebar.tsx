@@ -4,8 +4,8 @@ import type { Heading } from '../../nextra/types'
 import { useFSRoute, useMounted } from '../../nextra/hooks'
 import { ArrowRightIcon, ExpandIcon } from '../../nextra/icons'
 import type { Item, MenuItem, PageItem } from '../../nextra/normalize-pages'
-import type { CSSProperties, ReactElement } from 'react'
-import { createContext, memo, use, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import type { ReactElement } from 'react'
+import { createContext, memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { useConfig, useMenu } from '../../contexts'
 import { renderComponent } from '../../utils'
@@ -14,10 +14,8 @@ import { LocaleSwitch } from '../locale-switch'
 import SidebarController from './sidebar-controller'
 import { ActionType, useSidebar } from '../../contexts/sidebar'
 import AddInputs from './add-inputs'
-import { defaultDropAnimation, DragOverlay, useDraggable } from '@dnd-kit/core'
-import { CSS } from '@dnd-kit/utilities'
 import DndTree, { useDndTree } from './dnd-tree'
-import { dropAnimation } from './utils/dropAnimation'
+import { useSortable } from '@dnd-kit/sortable'
 
 let TreeState: Record<string, boolean> = Object.create(null)
 
@@ -40,8 +38,8 @@ const classes = {
     'nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border',
   ),
   inactive: cn(
-    'nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900',
-    'dark:nx-text-neutral-400 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
+    'nx-text-gray-500 hover:nx-text-gray-900',
+    'dark:nx-text-neutral-400 dark:hover:nx-text-gray-50',
     'contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50',
     'contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50',
   ),
@@ -55,16 +53,11 @@ const classes = {
     'before:nx-w-px before:nx-bg-gray-200 before:nx-content-[""] dark:before:nx-bg-neutral-800',
     'ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0',
   ),
-  drag: cn('nx-transform-gpu nx-bg-primary-50'),
+  drag: cn(
+    'nx-transform-gpu nx-w-full nx-max-h-px nx-overflow-hidden nx-bg-transparent nx-text-transparent',
+  ),
+  over: cn('nx-bg-primary-50 dark:nx-bg-neutral-800'),
 }
-
-const dragableStyle = (transform: any, isDragActive: boolean): CSSProperties =>
-  isDragActive
-    ? {
-        // transform: CSS.Transform.toString(transform),
-        display: 'none',
-      }
-    : {}
 
 type FolderProps = {
   item: PageItem | MenuItem | Item
@@ -82,13 +75,13 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
     setNodeRef,
     listeners,
     attributes,
-    transform,
     active: dragActive,
-  } = useDraggable({
+  } = useSortable({
     id: item?.id || item.route,
   })
 
-  const active = [route, route + '/'].includes(item.route + '/')
+  const isDragActive = dragActive?.id === item.id
+  const active = !isDragActive && [route, route + '/'].includes(item.route + '/')
   const activeRouteInside: boolean = active || route.startsWith(item.route + '/')
   const focusedRoute = useContext(FocusedItemContext)
   const focusedRouteInside = !!focusedRoute?.startsWith(item.route + '/')
@@ -147,9 +140,6 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
   const ComponentToUse = 'div'
   const isCollapseOpen = isFolding ? false : open
 
-  const isDragActive = dragActive?.id === item.id
-  const style = dragableStyle(transform, isDragActive)
-
   useEffect(() => {
     if (!isDragActive) return
     setDragItem(item)
@@ -157,24 +147,24 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
 
   return (
     <li
-      className={cn({ open, active }, isDragActive && classes.drag)}
+      className={cn({ open, active }, isDragActive && classes.drag, 'nx-bg-red-300')}
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      style={style}
     >
       <ComponentToUse
         className={cn(
-          'nx-items-center nx-justify-between nx-gap-2 nx-w-full',
-          !isLink && 'nx-text-left nx-w-full',
+          'nx-w-full nx-items-center nx-justify-between nx-gap-2',
+          !isLink && 'nx-w-full nx-text-left',
           classes.link,
           active ? classes.active : classes.inactive,
+          !isDragging
+            ? 'hover:nx-bg-blue-100 dark:hover:nx-bg-primary-100/5'
+            : 'nx-bg-transparent hover:nx-bg-transparent',
         )}
         onClick={(e) => {
-          if (isDragging) {
-            e.preventDefault()
-            return
-          }
+          e.preventDefault()
+          if (isDragActive) return
           router.push(item.route, item.route, { shallow: true })
           const clickedToggleIcon = ['svg', 'path'].includes(
             (e.target as HTMLElement).tagName.toLowerCase(),
@@ -182,11 +172,15 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
           if (clickedToggleIcon) {
             e.preventDefault()
           }
+
           if (isLink) {
-            // If it's focused, we toggle it. Otherwise, always open it.
             if (active || clickedToggleIcon) {
+              console.log('oeoeoeoeoe')
+              // If it's focused, we toggle it. Otherwise, always open it.
+
               TreeState[item.route] = !open
             } else {
+              console.log('open!?')
               TreeState[item.route] = true
               setMenu(false)
             }
@@ -211,7 +205,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
           )}
         />
       </ComponentToUse>
-      <Collapse className="ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1" isOpen={isCollapseOpen}>
+      <Collapse className="nx-pt-1 ltr:nx-pr-0 rtl:nx-pl-0" isOpen={isCollapseOpen}>
         {Array.isArray(item.children) ? (
           <Menu
             className={cn(classes.border, 'ltr:nx-ml-3 rtl:nx-mr-3')}
@@ -233,19 +227,17 @@ export function Separator({ item }: { item: PageItem | Item }): ReactElement {
     setNodeRef,
     listeners,
     attributes,
-    transform,
     active: dragActive,
-    over,
-  } = useDraggable({
+    isOver,
+  } = useSortable({
     id,
   })
 
-  if (over) {
-    console.log('over', over)
+  if (isOver) {
+    console.log('isOver')
   }
 
   const isDragActive = dragActive?.id === id
-  const style = dragableStyle(transform, isDragActive)
 
   useEffect(() => {
     if (!isDragActive) return
@@ -255,14 +247,15 @@ export function Separator({ item }: { item: PageItem | Item }): ReactElement {
   return (
     <li
       ref={setNodeRef}
-      style={style}
       {...listeners}
       {...attributes}
       className={cn(
         '[word-break:break-word]',
         title
-          ? 'nx-mt-5 nx-mb-2 nx-px-2 nx-py-1.5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100'
+          ? 'nx-mb-2 nx-mt-5 nx-px-2 nx-py-1.5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100'
           : 'nx-my-4',
+        isDragActive && classes.drag,
+        isOver && classes.over,
       )}
     >
       {title ? (
@@ -286,17 +279,18 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
     setNodeRef,
     listeners,
     attributes,
-    transform,
     active: dragActive,
-  } = useDraggable({
+  } = useSortable({
     id: item?.id || item.route,
     disabled: item.name === 'index',
   })
 
+  const isDragActive = dragActive?.id === item.id
+
   const router = useRouter()
 
   // It is possible that the item doesn't have any route - for example an external link.
-  const active = item.route && [route, route + '/'].includes(item.route + '/')
+  const active = !isDragActive && item.route && [route, route + '/'].includes(item.route + '/')
   const { setMenu } = useMenu()
 
   if (['newPage', 'newFolder', 'newSeparator'].includes(item.type)) {
@@ -309,9 +303,6 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
     return <AddInputs type={map[item.type]} />
   }
 
-  const isDragActive = dragActive?.id === item.id
-  const style = dragableStyle(transform, isDragActive)
-
   useEffect(() => {
     if (!isDragActive) return
     setDragItem(item)
@@ -323,10 +314,9 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      style={style}
     >
       <div
-        className={cn(classes.link, active ? classes.active : classes.inactive)}
+        className={cn(classes.link, !isDragging && active ? classes.active : classes.inactive)}
         onClick={(e) => {
           if (isDragging) {
             e.preventDefault()
@@ -377,11 +367,11 @@ export function Menu({
           item.type === 'menu' ||
           item.kind === 'Folder' ||
           (item.children && (item.children.length || !item.withIndexPage)) ? (
-            <Folder key={item.name} item={item} anchors={anchors} />
+            <Folder key={item.id} item={item} anchors={anchors} />
           ) : item.type === 'separator' ? (
-            <Separator item={item} />
+            <Separator key={item.id} item={item} />
           ) : (
-            <File key={item.name} item={item} anchors={anchors} />
+            <File key={item.id} item={item} anchors={anchors} />
           )
         ) : null,
       )}
@@ -468,11 +458,11 @@ export function Sidebar({
   return (
     <>
       {includePlaceholder && asPopover ? (
-        <div className="max-xl:nx-hidden nx-h-0 nx-w-80 nx-shrink-0" />
+        <div className="nx-h-0 nx-w-80 nx-shrink-0 max-xl:nx-hidden" />
       ) : null}
       <div
         className={cn(
-          'motion-reduce:nx-transition-none [transition:background-color_1.5s_ease]',
+          '[transition:background-color_1.5s_ease] motion-reduce:nx-transition-none',
           menu
             ? 'nx-fixed nx-inset-0 nx-z-10 nx-bg-black/80 dark:nx-bg-black/60'
             : 'nx-bg-transparent',
@@ -482,12 +472,12 @@ export function Sidebar({
       <aside
         className={cn(
           'nextra-sidebar-container nx-flex nx-flex-col',
-          'md:nx-shrink-0 motion-reduce:nx-transform-none',
+          'motion-reduce:nx-transform-none md:nx-shrink-0',
           'nx-transform-gpu nx-transition-all nx-ease-in-out',
           'print:nx-hidden',
-          'nx-select-none nx-relative nx-overflow-hidden',
+          'nx-relative nx-select-none nx-overflow-hidden',
           showSidebar ? 'md:nx-w-80' : 'md:nx-w-20',
-          asPopover ? 'md:nx-hidden' : 'md:nx-relative md:nx-self-start md:nx-top-0',
+          asPopover ? 'md:nx-hidden' : 'md:nx-relative md:nx-top-0 md:nx-self-start',
           menu
             ? 'max-md:[transform:translate3d(0,0,0)]'
             : 'max-md:[transform:translate3d(0,-100%,0)]',
@@ -509,7 +499,7 @@ export function Sidebar({
               <div
                 className={cn(
                   'nx-overflow-y-auto nx-overflow-x-hidden',
-                  'nx-px-4 nx-grow md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]',
+                  'nx-grow nx-px-4 md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]',
                   'nx-pb-4',
                   showSidebar ? 'nextra-scrollbar' : 'no-scrollbar',
                 )}
@@ -555,7 +545,7 @@ export function Sidebar({
               'contrast-more:nx-border-neutral-400 contrast-more:nx-shadow-none contrast-more:dark:nx-shadow-none',
               showSidebar
                 ? cn(hasI18n && 'nx-justify-end', 'nx-border-t')
-                : 'nx-py-4 nx-flex-wrap nx-justify-center',
+                : 'nx-flex-wrap nx-justify-center nx-py-4',
             )}
             data-toggle-animation={showToggleAnimation ? (showSidebar ? 'show' : 'hide') : 'off'}
           >
@@ -564,7 +554,7 @@ export function Sidebar({
               className={cn(showSidebar ? 'nx-grow' : 'max-md:nx-grow')}
             />
             {config.darkMode && (
-              <div className={showSidebar && !hasI18n ? 'nx-grow nx-flex nx-flex-col' : ''}>
+              <div className={showSidebar && !hasI18n ? 'nx-flex nx-grow nx-flex-col' : ''}>
                 {renderComponent(config.themeSwitch.component, {
                   lite: !showSidebar || hasI18n,
                 })}
@@ -573,7 +563,7 @@ export function Sidebar({
             {config.sidebar.toggleButton && (
               <button
                 title={showSidebar ? 'Hide sidebar' : 'Show sidebar'}
-                className="max-md:nx-hidden nx-h-7 nx-rounded-md nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 nx-px-2 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50"
+                className="nx-h-7 nx-rounded-md nx-px-2 nx-text-gray-600 nx-transition-colors hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50 max-md:nx-hidden"
                 onClick={() => {
                   setSidebar(!showSidebar)
                   setToggleAnimation(true)

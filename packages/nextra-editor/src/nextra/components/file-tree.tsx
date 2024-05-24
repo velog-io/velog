@@ -28,7 +28,7 @@ function Tree({ children }: { children: ReactNode }): ReactElement {
     <div
       className={cn(
         'nextra-filetree nx-mt-6 nx-select-none nx-text-sm nx-text-gray-800 dark:nx-text-gray-300',
-        'nx-not-prose' // for nextra-theme-blog
+        'nx-not-prose', // for nextra-theme-blog
       )}
     >
       <div className="nx-inline-block nx-rounded-lg nx-border nx-px-4 nx-py-2 dark:nx-border-neutral-800">
@@ -92,7 +92,7 @@ const Folder = memo<FolderProps>(
         )}
       </li>
     )
-  }
+  },
 )
 Folder.displayName = 'Folder'
 
@@ -100,7 +100,7 @@ const File = memo<FileProps>(({ label, name, active }) => (
   <li
     className={cn(
       'nx-flex nx-list-none',
-      active && 'nx-text-primary-600 contrast-more:nx-underline'
+      active && 'nx-text-primary-600 contrast-more:nx-underline',
     )}
   >
     <span className="nx-inline-flex nx-cursor-default nx-items-center nx-py-1">

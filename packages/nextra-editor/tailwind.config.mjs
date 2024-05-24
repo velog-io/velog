@@ -11,6 +11,7 @@ const makePrimaryColor =
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  mode: 'all',
   prefix: 'nx-',
   content: ['./src/**/*.tsx', '../nextra/src/icons/*.tsx', '../nextra/src/components/*.tsx'],
   theme: {
@@ -48,6 +49,8 @@ module.exports = {
       orange: colors.orange,
       blue: colors.blue,
       yellow: colors.yellow,
+      indigo: colors.indigo,
+      sky: colors.sky,
       primary: {
         50: makePrimaryColor(97),
         100: makePrimaryColor(94),

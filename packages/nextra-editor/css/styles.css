@@ -10,6 +10,7 @@
 @import './hamburger.css';
 @import './typesetting-article.css';
 @import './editor.css';
+@import './missing-tailwind.css';
 
 html {
   @apply nx-antialiased nx-text-base nx-scroll-pt-[--nextra-navbar-height];
@@ -170,8 +171,4 @@ input[type='search'] {
   100% {
     opacity: 1;
   }
-}
-
-.nx-h-scren {
-  @apply nx-h-screen;
 }

@@ -17,13 +17,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           'nx-bg-black/[.05] dark:nx-bg-gray-50/10',
           'focus:nx-bg-white dark:focus:nx-bg-dark',
           'placeholder:nx-text-gray-500 dark:placeholder:nx-text-gray-400',
-          'contrast-more:nx-border contrast-more:nx-border-current'
+          'contrast-more:nx-border contrast-more:nx-border-current',
         )}
         {...props}
       />
       {suffix}
     </div>
-  )
+  ),
 )
 
 Input.displayName = 'Input'

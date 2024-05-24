@@ -20,7 +20,7 @@ function _Tabs({
   defaultIndex = 0,
   onChange,
   children,
-  storageKey
+  storageKey,
 }: {
   items: (TabItem | TabObjectItem)[]
   selectedIndex?: number
@@ -56,7 +56,7 @@ function _Tabs({
     return () => {
       window.removeEventListener('storage', fn)
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps -- only on mount
+  }, [])
 
   const handleChange = useCallback((index: number) => {
     if (storageKey) {
@@ -65,14 +65,12 @@ function _Tabs({
 
       // the storage event only get picked up (by the listener) if the localStorage was changed in
       // another browser's tab/window (of the same app), but not within the context of the current tab.
-      window.dispatchEvent(
-        new StorageEvent('storage', { key: storageKey, newValue })
-      )
+      window.dispatchEvent(new StorageEvent('storage', { key: storageKey, newValue }))
       return
     }
     setSelectedIndex(index)
     onChange?.(index)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps -- only on mount
+  }, [])
 
   return (
     <HeadlessTab.Group
@@ -95,8 +93,7 @@ function _Tabs({
                     selected
                       ? 'nx-border-primary-500 nx-text-primary-600'
                       : 'nx-border-transparent nx-text-gray-600 hover:nx-border-gray-200 hover:nx-text-black dark:nx-text-gray-200 dark:hover:nx-border-neutral-800 dark:hover:nx-text-white',
-                    disabled &&
-                      'nx-pointer-events-none nx-text-gray-400 dark:nx-text-neutral-600'
+                    disabled && 'nx-pointer-events-none nx-text-gray-400 dark:nx-text-neutral-600',
                   )
                 }
               >

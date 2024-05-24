@@ -9,7 +9,7 @@ type MatchArgs = {
 
 export const HighlightMatches = memo<MatchArgs>(function HighlightMatches({
   value,
-  match
+  match,
 }: MatchArgs): ReactElement | null {
   if (!value) {
     return null
@@ -26,14 +26,12 @@ export const HighlightMatches = memo<MatchArgs>(function HighlightMatches({
       regexp.lastIndex++
     } else {
       const before = splitText.splice(0, result.index - index).join('')
-      const after = splitText
-        .splice(0, regexp.lastIndex - result.index)
-        .join('')
+      const after = splitText.splice(0, regexp.lastIndex - result.index).join('')
       content.push(
         before,
         <span key={result.index} className="nx-text-primary-600">
           {after}
-        </span>
+        </span>,
       )
       index = regexp.lastIndex
     }

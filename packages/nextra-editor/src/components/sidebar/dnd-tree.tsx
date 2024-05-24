@@ -50,7 +50,6 @@ const DndTreeContext = createContext<DndTreeContextType>({
 export const useDndTree = () => useContext(DndTreeContext)
 
 function DndTree({ children, items, onItemsChanged }: Props) {
-  const { actionActive } = useSidebar()
   const [isDragging, setDragging] = useState(false)
   const [dragItem, setDragItem] = useState<PageItem | Item | null>(null)
 
@@ -96,10 +95,10 @@ function DndTree({ children, items, onItemsChanged }: Props) {
     },
   })
   const touchSensor = useSensor(TouchSensor, {
-    // activationConstraint: {
-    //   // delay: 550,
-    //   // tolerance: 5,
-    // },
+    activationConstraint: {
+      delay: 550,
+      tolerance: 5,
+    },
   })
   const keyboardSensor = useSensor(KeyboardSensor)
 
@@ -265,10 +264,9 @@ function DndTree({ children, items, onItemsChanged }: Props) {
   const snapToGrid = (args: any) => {
     const { transform } = args
     const clientY = args?.activatorEvent?.clientY ?? 0
-    return { ...transform, y: transform.y + clientY - 75 }
+    return { ...transform, y: transform.y + 0 - 64 }
   }
 
-  console.log('dragItem', dragItem)
   return (
     <DndContext
       accessibility={{ announcements }}
@@ -286,12 +284,32 @@ function DndTree({ children, items, onItemsChanged }: Props) {
           {children}
         </DndTreeContext.Provider>
       </SortableContext>
-      <DragOverlay modifiers={[snapToGrid]} style={{ width: '100%' }} dropAnimation={dropAnimation}>
+      <DragOverlay
+        modifiers={[snapToGrid]}
+        dropAnimation={dropAnimation}
+        className={cn('nx-bg-sky-50 nx-w-full nx-opacity-90')}
+      >
         {dragItem && (
-          <div className={cn('nx-bg-primary-50 nx-w-full')}>
+          <div className={cn('nx-bg-sky-50')}>
             <Menu directories={[dragItem]} anchors={[]} />
           </div>
         )}
+        {/* // test */}
+        {/* <div>
+          <Menu
+            directories={[
+              {
+                id: 'test-hello-123456',
+                name: 'hello',
+                type: 'page',
+                title: 'hello',
+                kind: 'MdxPage',
+                route: '/',
+              },
+            ]}
+            anchors={[]}
+          />
+        </div> */}
       </DragOverlay>
     </DndContext>
   )
