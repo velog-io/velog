@@ -27,6 +27,7 @@ function AddInputs({ type }: Props): ReactElement {
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter') return
+    e.preventDefault()
     onComplete()
     const { parentUrlSlug, bookUrlSlug, index, type } = sidebar.actionInfo
     if (type === '') return

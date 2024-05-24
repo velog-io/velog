@@ -62,7 +62,8 @@ const dragableStyle = (transform: any, isDragActive: boolean): CSSProperties =>
   isDragActive
     ? {
         // transform: CSS.Transform.toString(transform),
-        visibility: 'hidden',
+        display: 'none',
+        width: '100%',
       }
     : {}
 
@@ -149,7 +150,6 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
 
   const isDragActive = dragActive?.id === item.id
   const style = dragableStyle(transform, isDragActive)
-  const gripped = isDragActive ? 'gripped' : ''
 
   useEffect(() => {
     if (!isDragActive) return
@@ -158,7 +158,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
 
   return (
     <li
-      className={cn({ open, active, gripped }, isDragActive && classes.drag)}
+      className={cn({ open, active }, isDragActive && classes.drag)}
       ref={setNodeRef}
       {...listeners}
       {...attributes}
@@ -242,7 +242,6 @@ function Separator({ item }: { item: PageItem | Item }): ReactElement {
 
   const isDragActive = dragActive?.id === id
   const style = dragableStyle(transform, isDragActive)
-  const gripped = isDragActive ? 'gripped' : ''
 
   useEffect(() => {
     if (!isDragActive) return
@@ -256,7 +255,6 @@ function Separator({ item }: { item: PageItem | Item }): ReactElement {
       {...listeners}
       {...attributes}
       className={cn(
-        gripped,
         '[word-break:break-word]',
         title
           ? 'nx-mt-5 nx-mb-2 nx-px-2 nx-py-1.5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100'
@@ -312,7 +310,6 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
 
   const isDragActive = dragActive?.id === item.id
   const style = dragableStyle(transform, isDragActive)
-  const gripped = isDragActive ? 'gripped' : ''
 
   useEffect(() => {
     if (!isDragActive) return
@@ -321,7 +318,7 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
 
   return (
     <li
-      className={cn(classes.list, { active, gripped }, isDragActive && classes.drag)}
+      className={cn(classes.list, { active }, isDragActive && classes.drag)}
       ref={setNodeRef}
       {...listeners}
       {...attributes}

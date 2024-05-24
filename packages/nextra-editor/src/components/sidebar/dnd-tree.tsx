@@ -7,7 +7,6 @@ import {
   DragOverlay,
   DragStartEvent,
   KeyboardSensor,
-  Modifier,
   MouseSensor,
   TouchSensor,
   UniqueIdentifier,
@@ -23,6 +22,7 @@ import { customListSortingStrategy } from './utils/customListSortingStrategy'
 import { Menu } from './sidebar'
 import cn from 'clsx'
 import { dropAnimation } from './utils/dropAnimation'
+import { useSidebar } from '../../contexts/sidebar'
 
 type Props = {
   children: React.ReactNode
@@ -49,6 +49,7 @@ const DndTreeContext = createContext<DndTreeContextType>({
 export const useDndTree = () => useContext(DndTreeContext)
 
 function DndTree({ children, items, onItemsChanged }: Props) {
+  const { actionActive } = useSidebar()
   const [isDragging, setDragging] = useState(false)
   const [dragItem, setDragItem] = useState<PageItem | Item | null>(null)
 
@@ -182,7 +183,6 @@ function DndTree({ children, items, onItemsChanged }: Props) {
   )
 
   const handleDragStart = ({ active: { id: activeId } }: DragStartEvent) => {
-    console.log('start!', activeId)
     setDragging(true)
     setActiveId(activeId)
     setOverId(activeId)
@@ -262,14 +262,9 @@ function DndTree({ children, items, onItemsChanged }: Props) {
   }, [projected])
 
   const snapToGrid = (args: any) => {
-    const { transform, activatorEvent } = args
-    console.log('activatorEvent', activatorEvent)
-    console.log('c', activatorEvent?.clientX)
-    console.log('y', activatorEvent?.clientY)
-
-    const result = { ...transform, y: transform.y - 60 }
-    console.log(result)
-    return result
+    const { transform } = args
+    const clientY = args?.activatorEvent?.clientY ?? 0
+    return { ...transform, y: transform.y + clientY - 75 }
   }
 
   return (
@@ -289,9 +284,9 @@ function DndTree({ children, items, onItemsChanged }: Props) {
           {children}
         </DndTreeContext.Provider>
       </SortableContext>
-      <DragOverlay modifiers={[snapToGrid]}>
+      <DragOverlay modifiers={[snapToGrid]} style={{ width: '100%' }} dropAnimation={dropAnimation}>
         {dragItem && (
-          <div className={cn('nx-absoulte nx-bg-primary-50')}>
+          <div className={cn('nx-bg-primary-50')}>
             <Menu directories={[dragItem]} anchors={[]} />
           </div>
         )}
