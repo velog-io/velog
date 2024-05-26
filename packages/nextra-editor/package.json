@@ -47,6 +47,7 @@
     "@popperjs/core": "^2.11.8",
     "@theguild/remark-mermaid": "^0.0.5",
     "clsx": "^2.0.0",
+    "dnd-kit-sortable-tree": "^0.1.73",
     "escape-string-regexp": "^5.0.0",
     "flexsearch": "^0.7.31",
     "focus-visible": "^5.2.0",

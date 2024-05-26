@@ -2,10 +2,19 @@ import cn from 'clsx'
 import { useRouter } from 'next/router'
 import type { Heading } from '../../nextra/types'
 import { useFSRoute, useMounted } from '../../nextra/hooks'
-import { ArrowRightIcon, ExpandIcon } from '../../nextra/icons'
+import { ExpandIcon } from '../../nextra/icons'
 import type { Item, MenuItem, PageItem } from '../../nextra/normalize-pages'
 import type { ReactElement } from 'react'
-import { createContext, memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  createContext,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { useConfig, useMenu } from '../../contexts'
 import { renderComponent } from '../../utils'
@@ -14,8 +23,9 @@ import { LocaleSwitch } from '../locale-switch'
 import SidebarController from './sidebar-controller'
 import { ActionType, useSidebar } from '../../contexts/sidebar'
 import AddInputs from './add-inputs'
-import DndTree, { useDndTree } from './dnd-tree'
-import { useSortable } from '@dnd-kit/sortable'
+import { SortableTree, TreeItemComponentProps } from './sortable-tree'
+import styles from './folder-tree-item.module.css'
+import { SimpleTreeItemWrapper } from './sortable-tree/simple-tree-item'
 
 let TreeState: Record<string, boolean> = Object.create(null)
 
@@ -32,7 +42,7 @@ const Folder = memo(function FolderInner(props: FolderProps) {
   )
 })
 
-const classes = {
+export const classes = {
   link: cn(
     'nx-flex nx-rounded nx-text-sm nx-transition-colors [word-break:break-word]',
     'nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border',
@@ -47,44 +57,30 @@ const classes = {
     'nx-bg-primary-100 nx-font-semibold nx-text-primary-800 dark:nx-bg-primary-400/10 dark:nx-text-primary-600',
     'contrast-more:nx-border-primary-500 contrast-more:dark:nx-border-primary-500',
   ),
-  list: cn('nx-flex nx-flex-col nx-gap-1'),
+  list: cn('nx-w-full nx-flex nx-flex-col nx-gap-1'),
   border: cn(
     'nx-relative  before:nx-inset-y-1',
     'before:nx-w-px before:nx-bg-gray-200 before:nx-content-[""] dark:before:nx-bg-neutral-800',
     'ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0',
   ),
   drag: cn(
-    'nx-transform-gpu nx-w-full nx-max-h-px nx-overflow-hidden nx-bg-transparent nx-text-transparent nx-opcity-80',
+    'nx-transform-gpu nx-w-full nx-max-h-px nx-overflow-hidden nx-bg-primary-50 nx-opcity-80',
   ),
-  over: cn('nx-bg-red-100 dark:nx-bg-neutral-800'),
+  over: cn(''),
 }
 
 type FolderProps = {
   item: PageItem | MenuItem | Item
-  anchors: Heading[]
+  anchors?: Heading[]
 }
 
-function FolderImpl({ item, anchors }: FolderProps): ReactElement {
-  const { isDragging, setDragItem } = useDndTree()
-  const { isFolding } = useSidebar()
+function FolderImpl({ item }: FolderProps): ReactElement {
   const router = useRouter()
   const { setMenu } = useMenu()
   const routeOriginal = useFSRoute()
   const [route] = routeOriginal.split('#')
 
-  const {
-    listeners,
-    attributes,
-    isDragging: isDragActive,
-    isOver,
-    setNodeRef,
-    setActivatorNodeRef,
-  } = useSortable({
-    id: item.id,
-    data: item,
-  })
-
-  const active = !isDragActive && [route, route + '/'].includes(item.route + '/')
+  const active = [route, route + '/'].includes(item.route + '/')
   const activeRouteInside: boolean = active || route.startsWith(item.route + '/')
   const focusedRoute = useContext(FocusedItemContext)
   const focusedRouteInside = !!focusedRoute?.startsWith(item.route + '/')
@@ -121,50 +117,20 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
     config.sidebar.autoCollapse ? updateAndPruneTreeState() : updateTreeState()
   }, [activeRouteInside, focusedRouteInside, item.route, config.sidebar.autoCollapse])
 
-  useEffect(() => {
-    if (!isDragActive) return
-    setDragItem(item)
-  }, [isDragActive])
-
-  // if (item.type === 'menu') {
-  //   const menu = item as MenuItem
-  //   const routes = Object.fromEntries((menu.children || []).map((route) => [route.name, route]))
-  //   item.children = Object.entries(menu.items || {}).map(([key, item]) => {
-  //     const route = routes[key] || {
-  //       name: key,
-  //       ...('locale' in menu && { locale: menu.locale }),
-  //       route: menu.route + '/' + key,
-  //     }
-  //     return {
-  //       ...route,
-  //       ...item,
-  //     }
-  //   })
-  // }
-
   const isLink = 'withIndexPage' in item && item.withIndexPage
 
-  // use button when link don't have href because it impacts on SEO
-  const isCollapseOpen = isDragActive || isFolding ? false : open
-
   return (
-    <li className={cn({ open, active }, isDragActive && classes.drag, isOver && classes.over)}>
+    <div className={cn('nx-w-full', { open, active })}>
       <div
-        ref={setNodeRef}
-        {...attributes}
         className={cn(
           'nx-w-full nx-items-center nx-justify-between nx-gap-2',
           !isLink && 'nx-w-full nx-text-left',
           classes.link,
           active ? classes.active : classes.inactive,
-          !isDragging
-            ? 'hover:nx-bg-blue-100 dark:hover:nx-bg-primary-100/5'
-            : 'nx-bg-transparent hover:nx-bg-transparent',
-          active && isDragActive && 'nx-bg-blue-100',
+          'hover:nx-bg-blue-100 dark:hover:nx-bg-primary-100/5',
         )}
         onClick={(e) => {
           e.preventDefault()
-          if (isDragActive) return
           router.push(item.route, item.route, { shallow: true })
           const clickedToggleIcon = ['svg', 'path'].includes(
             (e.target as HTMLElement).tagName.toLowerCase(),
@@ -190,105 +156,37 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
           rerender({})
         }}
       >
-        <div
-          ref={setActivatorNodeRef}
-          {...listeners}
-          className={cn('nx-w-full nx-px-2 nx-py-1.5 [word-break:break-word]')}
-          // style={{ background: 'gold' }}
-        >
+        <div className={cn('nx-w-full nx-px-2 nx-py-1.5 [word-break:break-word]')}>
           {item.title}
         </div>
-        <ArrowRightIcon
-          className="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5"
-          pathClassName={cn(
-            'nx-origin-center nx-transition-transform rtl:-nx-rotate-180',
-            open && 'ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]',
-          )}
-        />
       </div>
-      {/* <Collapse
-        className={cn('ltr:nx-pr-0 rtl:nx-pl-0')}
-        isOpen={isCollapseOpen}
-        isDragActive={isDragActive}
-      >
-        {Array.isArray(item.children) ? (
-          <Menu
-            className={cn(classes.border, 'ltr:nx-ml-3 rtl:nx-mr-3')}
-            directories={item.children}
-            base={item.route}
-            anchors={anchors}
-          />
-        ) : null}
-      </Collapse> */}
-    </li>
+    </div>
   )
 }
 
 export function Separator({ item }: { item: PageItem | Item }): ReactElement {
-  const { id, title } = item
-  const { setDragItem } = useDndTree()
-  const {
-    setNodeRef,
-    setActivatorNodeRef,
-    listeners,
-    attributes,
-    isDragging: isDragActive,
-    isOver,
-  } = useSortable({
-    id,
-    data: item,
-  })
-
-  useEffect(() => {
-    if (!isDragActive) return
-    setDragItem(item)
-  }, [isDragActive])
+  const { title } = item
 
   return (
-    <li
-      ref={setNodeRef}
-      {...attributes}
+    <div
       className={cn(
         '[word-break:break-word]',
         'nx-mb-2 nx-mt-5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100',
-        isDragActive && classes.drag,
-        isOver && classes.over,
       )}
     >
-      <div
-        ref={setActivatorNodeRef}
-        {...listeners}
-        className={cn('cursor-default', 'nx-px-2 nx-py-1.5')}
-      >
-        {title}
-      </div>
-    </li>
+      <div className={cn('cursor-default', 'nx-px-2 nx-py-1.5')}>{title}</div>
+    </div>
   )
 }
 
 function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactElement {
-  const { isDragging, setDragItem } = useDndTree()
   const route = useFSRoute()
   const onFocus = useContext(OnFocusItemContext)
-
-  const disabled = item.name === 'index'
-  const {
-    setNodeRef,
-    setActivatorNodeRef,
-    listeners,
-    attributes,
-    isDragging: isDragActive,
-    isOver,
-  } = useSortable({
-    id: item.id,
-    data: item,
-    disabled,
-  })
 
   const router = useRouter()
 
   // It is possible that the item doesn't have any route - for example an external link.
-  const active = !isDragActive && item.route && [route, route + '/'].includes(item.route + '/')
+  const active = item.route && [route, route + '/'].includes(item.route + '/')
   const { setMenu } = useMenu()
 
   if (['newPage', 'newFolder', 'newSeparator'].includes(item.type)) {
@@ -301,51 +199,24 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
     return <AddInputs type={map[item.type]} />
   }
 
-  useEffect(() => {
-    if (!isDragActive) return
-    setDragItem(item)
-  }, [isDragActive])
-
   return (
-    <li
-      className={cn(classes.list, { active }, isDragActive && classes.drag, isOver && classes.over)}
-      ref={setNodeRef}
-      {...attributes}
-    >
+    <div className={cn(classes.list, { active })}>
       <div
-        {...listeners}
-        ref={setActivatorNodeRef}
-        className={cn(
-          'nx-px-2 nx-py-1.5',
-          classes.link,
-          !isDragging && active ? classes.active : classes.inactive,
-        )}
-        onClick={(e) => {
-          if (isDragging) {
-            e.preventDefault()
-            return
-          }
+        className={cn('nx-px-2 nx-py-1.5', classes.link)}
+        onClick={() => {
           router.push((item as PageItem).href || item.route)
           setMenu(false)
         }}
-        onFocus={(e) => {
-          if (isDragging) {
-            e.preventDefault()
-            return
-          }
+        onFocus={() => {
           onFocus?.(item.route)
         }}
-        onBlur={(e) => {
-          if (isDragging) {
-            e.preventDefault()
-            return
-          }
+        onBlur={() => {
           onFocus?.(null)
         }}
       >
         {item.title}
       </div>
-    </li>
+    </div>
   )
 }
 
@@ -356,6 +227,32 @@ interface MenuProps {
   className?: string
   onlyCurrentDocs?: boolean
 }
+// MenuProps
+export const SortableMenu = React.forwardRef<HTMLDivElement, TreeItemComponentProps<PageItem>>(
+  (props, ref) => {
+    // const { className, directories, onlyCurrentDocs, anchors } = props
+    const { item, className} = props
+    return (
+      <SimpleTreeItemWrapper
+        {...props}
+        ref={ref}
+        style={{ width: '100%', ...props.style }}
+        className={cn(className, 'nx-w-full')}
+        hideCollapseButton={true}
+        indicator={false}
+        showDragHandle={false}
+      >
+        {item.kind === 'Folder' ? (
+          <Folder key={item.id} item={item} anchors={[]} />
+        ) : item.type === 'separator' ? (
+          <Separator key={item.id} item={item} />
+        ) : (
+          <File key={item.id} item={item} anchors={[]} />
+        )}
+      </SimpleTreeItemWrapper>
+    )
+  },
+)
 
 export function Menu({
   directories,
@@ -456,7 +353,7 @@ export function Sidebar({
   const hasI18n = config.i18n.length > 0
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton
 
-  const [directories, setDragItem] = useState(docsDirectories)
+  const [directories, setDirectories] = useState(docsDirectories)
 
   return (
     <>
@@ -492,50 +389,51 @@ export function Sidebar({
             directories: flatDirectories,
           })}
         </div>
-        <DndTree items={directories} onItemsChanged={setDragItem}>
-          <FocusedItemContext.Provider value={focused}>
-            <OnFocusItemContext.Provider
-              value={(item) => {
-                setFocused(item)
-              }}
+        <FocusedItemContext.Provider value={focused}>
+          <OnFocusItemContext.Provider
+            value={(item) => {
+              setFocused(item)
+            }}
+          >
+            <div
+              className={cn(
+                'nx-overflow-y-auto nx-overflow-x-hidden',
+                'nx-grow nx-px-4 md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]',
+                'nx-pb-4',
+                showSidebar ? 'nextra-scrollbar' : 'no-scrollbar',
+              )}
+              ref={sidebarRef}
             >
-              <div
-                className={cn(
-                  'nx-overflow-y-auto nx-overflow-x-hidden',
-                  'nx-grow nx-px-4 md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]',
-                  'nx-pb-4',
-                  showSidebar ? 'nextra-scrollbar' : 'no-scrollbar',
-                )}
-                ref={sidebarRef}
-              >
-                <SidebarController showSidebar={showSidebar} />
-                {/* without asPopover check <Collapse />'s inner.clientWidth on `layout: "raw"` will be 0 and element will not have width on initial loading */}
-                {(!asPopover || !showSidebar) && (
-                  <Collapse isOpen={showSidebar} horizontal={true}>
-                    <Menu
-                      className="nextra-menu-desktop max-md:nx-hidden"
-                      // The sidebar menu, shows only the docs directories.
-                      directories={docsDirectories}
-                      // When the viewport size is larger than `md`, hide the anchors in
-                      // the sidebar when `floatTOC` is enabled.
-                      anchors={config.toc.float ? [] : anchors}
-                      onlyCurrentDocs
-                    />
-                  </Collapse>
-                )}
-                {mounted && window.innerWidth < 768 && (
-                  <Menu
-                    className="nextra-menu-mobile md:nx-hidden"
-                    // The mobile dropdown menu, shows all the directories.
-                    directories={fullDirectories}
-                    // Always show the anchor links on mobile (`md`).
-                    anchors={anchors}
+              <SidebarController showSidebar={showSidebar} />
+              {/* without asPopover check <Collapse />'s inner.clientWidth on `layout: "raw"` will be 0 and element will not have width on initial loading */}
+              {(!asPopover || !showSidebar) && (
+                <Collapse isOpen={showSidebar} horizontal={true}>
+                  <SortableTree
+                    items={directories}
+                    onItemsChanged={useCallback(
+                      (newDirectories, reason) => {
+                        console.log('change reason', reason)
+                        setDirectories(newDirectories)
+                      },
+                      [setDirectories],
+                    )}
+                    TreeItemComponent={SortableMenu}
+                    indentationWidth={20}
                   />
-                )}
-              </div>
-            </OnFocusItemContext.Provider>
-          </FocusedItemContext.Provider>
-        </DndTree>
+                </Collapse>
+              )}
+              {mounted && window.innerWidth < 768 && (
+                <Menu
+                  className="nextra-menu-mobile md:nx-hidden"
+                  // The mobile dropdown menu, shows all the directories.
+                  directories={fullDirectories}
+                  // Always show the anchor links on mobile (`md`).
+                  anchors={anchors}
+                />
+              )}
+            </div>
+          </OnFocusItemContext.Provider>
+        </FocusedItemContext.Provider>
         {hasMenu && (
           <div
             style={{ marginTop: showSidebar ? '0px' : '-30px' }}

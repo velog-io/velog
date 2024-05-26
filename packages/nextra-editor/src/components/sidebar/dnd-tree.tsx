@@ -1,5 +1,6 @@
 import {
   Announcements,
+  closestCenter,
   DndContext,
   DragEndEvent,
   DragMoveEvent,
@@ -19,10 +20,8 @@ import { buildTree, flattenTree, getProjection, removeChildrenOf } from './utils
 import { FlattenedItem, ItemChangedReason } from '../../types'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
 import { Item, PageItem } from '../../nextra/normalize-pages'
-import { Menu } from './sidebar'
 import cn from 'clsx'
 import { dropAnimation } from './utils/dropAnimation'
-import { customCollisionDetectionAlgorithm } from './utils/customCollisionDetection'
 import { customListSortingStrategy } from './utils/customListSortingStrategy'
 
 type Props = {
@@ -270,7 +269,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
-      collisionDetection={customCollisionDetectionAlgorithm}
+      collisionDetection={closestCenter}
     >
       <SortableContext items={sortedIds} strategy={customListSortingStrategy(strategyCallback)}>
         <DndTreeContext.Provider
@@ -287,7 +286,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
       >
         {dragItem && (
           <div className={cn('nx-bg-sky-50')}>
-            <Menu directories={[{ ...dragItem, children: [] }]} anchors={[]} />
+            {/* <Menu directories={[{ ...dragItem, children: [] }]} anchors={[]} /> */}
           </div>
         )}
       </DragOverlay>
