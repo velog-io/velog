@@ -13,10 +13,15 @@ export function customCollisionDetectionAlgorithm(args: any) {
     return pointerWithinCollisions
   }
 
-  const closetCornersCollisions = closestCorners(args)
-  if (closetCornersCollisions.length > 0) {
-    return closetCornersCollisions
+  // const closetCornersCollisions = closestCorners(args)
+  // if (closetCornersCollisions.length > 0) {
+  //   return closetCornersCollisions
+  // }
+
+  const recIntersectionCollisions = rectIntersection(args)
+  if (recIntersectionCollisions.length > 0) {
+    return recIntersectionCollisions
   }
 
-  return rectIntersection(args)
+  return closestCorners(args)
 }

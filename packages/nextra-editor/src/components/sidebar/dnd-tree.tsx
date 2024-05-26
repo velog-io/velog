@@ -1,6 +1,5 @@
 import {
   Announcements,
-  closestCenter,
   DndContext,
   DragEndEvent,
   DragMoveEvent,
@@ -8,13 +7,14 @@ import {
   DragOverlay,
   DragStartEvent,
   KeyboardSensor,
+  Modifier,
   MouseSensor,
   TouchSensor,
   UniqueIdentifier,
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 import { buildTree, flattenTree, getProjection, removeChildrenOf } from './utils'
 import { FlattenedItem, ItemChangedReason } from '../../types'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
@@ -23,6 +23,7 @@ import { Menu } from './sidebar'
 import cn from 'clsx'
 import { dropAnimation } from './utils/dropAnimation'
 import { customCollisionDetectionAlgorithm } from './utils/customCollisionDetection'
+import { customListSortingStrategy } from './utils/customListSortingStrategy'
 
 type Props = {
   children: React.ReactNode
@@ -256,10 +257,9 @@ function DndTree({ children, items, onItemsChanged }: Props) {
   }
 
   const sortedIds = useMemo(() => flattenedItems.map(({ id }) => id), [flattenedItems])
-  const snapToGrid = (args: any) => {
-    const { transform } = args
-    return { ...transform, y: transform.y + 0 - 64 }
-  }
+  const strategyCallback = useCallback(() => {
+    return !!projected
+  }, [projected])
 
   return (
     <DndContext
@@ -270,9 +270,9 @@ function DndTree({ children, items, onItemsChanged }: Props) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
-      collisionDetection={closestCenter}
+      collisionDetection={customCollisionDetectionAlgorithm}
     >
-      <SortableContext items={sortedIds}>
+      <SortableContext items={sortedIds} strategy={customListSortingStrategy(strategyCallback)}>
         <DndTreeContext.Provider
           value={{ isDragging, setDragging, activeId, dragItem, setDragItem }}
         >
@@ -280,19 +280,25 @@ function DndTree({ children, items, onItemsChanged }: Props) {
         </DndTreeContext.Provider>
       </SortableContext>
       <DragOverlay
-        modifiers={[snapToGrid]}
+        modifiers={modifiersArray}
         dropAnimation={dropAnimation}
         className={cn('nx-bg-sky-50 nx-opacity-90')}
         style={{ width: '90%' }}
       >
         {dragItem && (
           <div className={cn('nx-bg-sky-50')}>
-            <Menu directories={[dragItem]} anchors={[]} />
+            <Menu directories={[{ ...dragItem, children: [] }]} anchors={[]} />
           </div>
         )}
       </DragOverlay>
     </DndContext>
   )
 }
+
+const adjustTranslate: Modifier = ({ transform }) => {
+  return { ...transform, y: transform.y + 0 - 64 }
+}
+
+const modifiersArray = [adjustTranslate]
 
 export default DndTree

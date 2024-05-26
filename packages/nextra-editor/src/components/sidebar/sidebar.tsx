@@ -34,7 +34,7 @@ const Folder = memo(function FolderInner(props: FolderProps) {
 
 const classes = {
   link: cn(
-    'nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word]',
+    'nx-flex nx-rounded nx-text-sm nx-transition-colors [word-break:break-word]',
     'nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border',
   ),
   inactive: cn(
@@ -54,7 +54,7 @@ const classes = {
     'ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0',
   ),
   drag: cn(
-    'nx-transform-gpu nx-w-full nx-max-h-px nx-overflow-hidden nx-bg-transparent nx-text-transparent',
+    'nx-transform-gpu nx-w-full nx-max-h-px nx-overflow-hidden nx-bg-transparent nx-text-transparent nx-opcity-80',
   ),
   over: cn('nx-bg-red-100 dark:nx-bg-neutral-800'),
 }
@@ -73,14 +73,12 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
   const [route] = routeOriginal.split('#')
 
   const {
-    setNodeRef,
     listeners,
     attributes,
     isDragging: isDragActive,
     isOver,
+    setNodeRef,
     setActivatorNodeRef,
-    setDroppableNodeRef,
-    setDraggableNodeRef,
   } = useSortable({
     id: item.id,
     data: item,
@@ -152,7 +150,8 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
   return (
     <li className={cn({ open, active }, isDragActive && classes.drag, isOver && classes.over)}>
       <div
-        ref={setDroppableNodeRef}
+        ref={setNodeRef}
+        {...attributes}
         className={cn(
           'nx-w-full nx-items-center nx-justify-between nx-gap-2',
           !isLink && 'nx-w-full nx-text-left',
@@ -192,11 +191,10 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
         }}
       >
         <div
-          ref={setNodeRef}
+          ref={setActivatorNodeRef}
           {...listeners}
-          {...attributes}
-          className={cn('nx-w-full [word-break:break-word]')}
-          style={{ background: 'gold' }}
+          className={cn('nx-w-full nx-px-2 nx-py-1.5 [word-break:break-word]')}
+          // style={{ background: 'gold' }}
         >
           {item.title}
         </div>
@@ -208,8 +206,8 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
           )}
         />
       </div>
-      <Collapse
-        className={cn('nx-pt-1 ltr:nx-pr-0 rtl:nx-pl-0')}
+      {/* <Collapse
+        className={cn('ltr:nx-pr-0 rtl:nx-pl-0')}
         isOpen={isCollapseOpen}
         isDragActive={isDragActive}
       >
@@ -221,7 +219,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
             anchors={anchors}
           />
         ) : null}
-      </Collapse>
+      </Collapse> */}
     </li>
   )
 }
@@ -231,9 +229,11 @@ export function Separator({ item }: { item: PageItem | Item }): ReactElement {
   const { setDragItem } = useDndTree()
   const {
     setNodeRef,
+    setActivatorNodeRef,
     listeners,
     attributes,
     isDragging: isDragActive,
+    isOver,
   } = useSortable({
     id,
     data: item,
@@ -247,21 +247,21 @@ export function Separator({ item }: { item: PageItem | Item }): ReactElement {
   return (
     <li
       ref={setNodeRef}
-      {...listeners}
       {...attributes}
       className={cn(
         '[word-break:break-word]',
-        title
-          ? 'nx-mb-2 nx-mt-5 nx-px-2 nx-py-1.5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100'
-          : 'nx-my-4',
+        'nx-mb-2 nx-mt-5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100',
         isDragActive && classes.drag,
+        isOver && classes.over,
       )}
     >
-      {title ? (
-        <span className="cursor-default">{title}</span>
-      ) : (
-        <hr className="nx-mx-2 nx-border-t nx-border-gray-200 dark:nx-border-primary-100/10" />
-      )}
+      <div
+        ref={setActivatorNodeRef}
+        {...listeners}
+        className={cn('cursor-default', 'nx-px-2 nx-py-1.5')}
+      >
+        {title}
+      </div>
     </li>
   )
 }
@@ -274,9 +274,11 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
   const disabled = item.name === 'index'
   const {
     setNodeRef,
+    setActivatorNodeRef,
     listeners,
     attributes,
     isDragging: isDragActive,
+    isOver,
   } = useSortable({
     id: item.id,
     data: item,
@@ -306,13 +308,18 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
 
   return (
     <li
-      className={cn(classes.list, { active }, isDragActive && classes.drag)}
+      className={cn(classes.list, { active }, isDragActive && classes.drag, isOver && classes.over)}
       ref={setNodeRef}
-      {...listeners}
       {...attributes}
     >
       <div
-        className={cn(classes.link, !isDragging && active ? classes.active : classes.inactive)}
+        {...listeners}
+        ref={setActivatorNodeRef}
+        className={cn(
+          'nx-px-2 nx-py-1.5',
+          classes.link,
+          !isDragging && active ? classes.active : classes.inactive,
+        )}
         onClick={(e) => {
           if (isDragging) {
             e.preventDefault()
