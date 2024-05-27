@@ -6,6 +6,7 @@ import { useUrlSlug } from '../../hooks/use-url-slug'
 import { findFolder } from './utils'
 import { NewPageIcon } from '../../nextra/icons/new-page'
 import { SeparatorIcon } from '../../nextra/icons/separator'
+import { removeCodeFromRoute } from '../../utils'
 
 type Props = {
   className: string
@@ -41,7 +42,7 @@ const AddIcons = ({ className, type }: Props) => {
     timeoutRef.current = timeout
 
     // remove code
-    let targetRoute = `/${pageUrlSlug.split('-').slice(0, -1).join('-').trim()}`
+    let targetRoute = `/${removeCodeFromRoute(pageUrlSlug)}`
     const isFolder = !!findFolder(sidebar.pageMap, fullUrlSlug)
 
     // 폴더 타입이 아닐 경우 부모 폴더로 targetRoute를 변경

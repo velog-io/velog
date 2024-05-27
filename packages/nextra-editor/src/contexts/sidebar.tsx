@@ -25,6 +25,8 @@ type Sidebar = {
   setIsFolding: (value: boolean) => void
   actionType: ActionType
   setActionType: (value: ActionType) => void
+  focused: null | string
+  setFocused: (value: null | string) => void
 }
 
 const SidebarContext = createContext<Sidebar>({
@@ -41,6 +43,8 @@ const SidebarContext = createContext<Sidebar>({
   setIsFolding: () => {},
   actionType: '',
   setActionType: () => {},
+  focused: null,
+  setFocused: () => {},
 })
 
 export function useSidebar() {
@@ -58,6 +62,7 @@ export const SidebarProvider = ({
   const [isFolding, setIsFolding] = useState(false)
   const [actionComplete, setActionComplete] = useState(false)
   const [actionActive, setActionActive] = useState(false)
+  const [focused, setFocused] = useState<null | string>(null)
   const [actionType, setActionType] = useState<ActionType>('')
   const [actionInfo, setActionInfo] = useState<ActionInfo>({
     parentUrlSlug: '/',
@@ -71,6 +76,7 @@ export const SidebarProvider = ({
     setActionActive(false)
     setActionComplete(false)
     setActionType('')
+    setFocused(null)
   }
 
   const value: Sidebar = {
@@ -87,6 +93,8 @@ export const SidebarProvider = ({
     setIsFolding,
     actionType,
     setActionType,
+    focused,
+    setFocused,
   }
 
   return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>

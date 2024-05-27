@@ -309,6 +309,7 @@ export function normalizePages({
         type !== 'newFolder' &&
         type !== 'newSeparator' &&
         a.name)
+
     const getItem = (): Item => ({
       ...a,
       type,
@@ -322,6 +323,7 @@ export function normalizePages({
 
     docsItem.isUnderCurrentDocsTree = isCurrentDocsTree
     if (['separator', 'newPage', 'newFolder', 'newSeparator'].includes(type)) {
+      item.id = a.name
       item.isUnderCurrentDocsTree = isCurrentDocsTree
     }
 

@@ -19,11 +19,12 @@ import { buildTree, flattenTree, getProjection, removeChildrenOf } from './utils
 import { FlattenedItem, ItemChangedReason } from '../../types'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
 import { Item, PageItem } from '../../nextra/normalize-pages'
-import { Menu } from './sidebar'
 import cn from 'clsx'
 import { dropAnimation } from './utils/dropAnimation'
 import { customCollisionDetectionAlgorithm } from './utils/customCollisionDetection'
 import { customListSortingStrategy } from './utils/customListSortingStrategy'
+import { createPortal } from 'react-dom'
+import { Menu } from './menu'
 
 type Props = {
   children: React.ReactNode
@@ -279,24 +280,27 @@ function DndTree({ children, items, onItemsChanged }: Props) {
           {children}
         </DndTreeContext.Provider>
       </SortableContext>
-      <DragOverlay
-        modifiers={modifiersArray}
-        dropAnimation={dropAnimation}
-        className={cn('nx-bg-sky-50 nx-opacity-90')}
-        style={{ width: '90%' }}
-      >
-        {dragItem && (
-          <div className={cn('nx-bg-sky-50')}>
-            <Menu directories={[{ ...dragItem, children: [] }]} anchors={[]} />
-          </div>
-        )}
-      </DragOverlay>
+      {createPortal(
+        <DragOverlay
+          modifiers={modifiersArray}
+          dropAnimation={dropAnimation}
+          className={cn('nx-bg-sky-50 nx-opacity-80')}
+          style={{ width: '90%', maxWidth: '250px' }}
+        >
+          {dragItem && (
+            <div className={cn('nx-bg-sky-50')}>
+              <Menu directories={[{ ...dragItem, children: [] }]} anchors={[]} />
+            </div>
+          )}
+        </DragOverlay>,
+        document.body,
+      )}
     </DndContext>
   )
 }
 
 const adjustTranslate: Modifier = ({ transform }) => {
-  return { ...transform, y: transform.y + 0 - 64 }
+  return { ...transform, y: transform.y }
 }
 
 const modifiersArray = [adjustTranslate]

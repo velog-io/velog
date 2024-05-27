@@ -1,33 +1,37 @@
 import cn from 'clsx'
-import type { ReactElement, ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { useDndTree } from './sidebar/dnd-tree'
+
+type CollapseProps = {
+  children: ReactNode
+  className?: string
+  isOpen: boolean
+  horizontal?: boolean
+  isDragTarget?: boolean
+  style?: CSSProperties
+}
 
 export function Collapse({
   children,
   className,
   isOpen: initOpen,
   horizontal = false,
-  isDragActive = false,
-}: {
-  children: ReactNode
-  className?: string
-  isOpen: boolean
-  horizontal?: boolean
-  isDragActive?: boolean
-}): ReactElement {
+  isDragTarget = false,
+  style,
+}: CollapseProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef(0)
-  const [isOpen, setIsOpen] = useState(initOpen && !isDragActive)
+  const [isOpen, setIsOpen] = useState(initOpen && !isDragTarget)
   const initialOpen = useRef(initOpen)
   const initialRender = useRef(true)
   const { isDragging } = useDndTree()
 
   useEffect(() => {
-    const open = initOpen && !isDragActive
+    const open = initOpen && !isDragTarget
     setIsOpen(open)
-  }, [isDragActive, initOpen])
+  }, [isDragTarget, initOpen])
 
   useEffect(() => {
     const container = containerRef.current
@@ -63,7 +67,7 @@ export function Collapse({
         }
       }, 0)
     }
-  }, [horizontal, isOpen, isDragActive])
+  }, [horizontal, isOpen, isDragTarget])
 
   useEffect(() => {
     initialRender.current = false
@@ -76,7 +80,7 @@ export function Collapse({
         'nx-transform-gpu nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none',
         isDragging ? '' : 'nx-overflow-hidden',
       )}
-      style={initialOpen.current || horizontal ? undefined : { height: 0 }}
+      style={initialOpen.current || horizontal ? { ...style } : { height: 0, ...style }}
     >
       <div
         ref={innerRef}
