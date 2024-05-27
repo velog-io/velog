@@ -23,9 +23,8 @@ import { LocaleSwitch } from '../locale-switch'
 import SidebarController from './sidebar-controller'
 import { ActionType, useSidebar } from '../../contexts/sidebar'
 import AddInputs from './add-inputs'
-import { SortableTree, TreeItemComponentProps } from './sortable-tree'
-import styles from './folder-tree-item.module.css'
-import { SimpleTreeItemWrapper } from './sortable-tree/simple-tree-item'
+import { SortableTree, TreeItemComponentProps } from '../../sortable-tree'
+import { SimpleTreeItemWrapper } from '../../sortable-tree/simple-tree-item'
 
 let TreeState: Record<string, boolean> = Object.create(null)
 
@@ -231,7 +230,7 @@ interface MenuProps {
 export const SortableMenu = React.forwardRef<HTMLDivElement, TreeItemComponentProps<PageItem>>(
   (props, ref) => {
     // const { className, directories, onlyCurrentDocs, anchors } = props
-    const { item, className} = props
+    const { item, className } = props
     return (
       <SimpleTreeItemWrapper
         {...props}
