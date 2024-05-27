@@ -62,7 +62,6 @@ const SortableTreeItemNotMemoized = function SortableTreeItem<T, TElement extend
     over,
   } = useSortable({
     id,
-    animateLayoutChanges,
     disabled: disableSorting,
     ...sortableProps,
   })

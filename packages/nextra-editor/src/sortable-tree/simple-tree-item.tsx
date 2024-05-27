@@ -2,8 +2,8 @@ import cn from 'clsx'
 import React, { forwardRef } from 'react'
 
 import { TreeItemComponentProps } from './types'
-import { ArrowRightIcon } from '../../../nextra/icons'
-import { PageItem } from '../../../nextra/normalize-pages'
+import { PageItem } from '../nextra/normalize-pages'
+import { ArrowRightIcon } from '../nextra/icons'
 
 const classes = {
   link: cn(
@@ -63,6 +63,7 @@ export const SimpleTreeItemWrapper = forwardRef<
     contentClassName,
     isOver,
     isOverParent,
+    isDragging,
     ...rest
   } = props
 
@@ -122,7 +123,7 @@ export const SimpleTreeItemWrapper = forwardRef<
             className="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5"
             pathClassName={cn(
               'nx-origin-center nx-transition-transform rtl:-nx-rotate-180',
-              !collapsed && 'ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]',
+              collapsed && 'ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]',
             )}
           />
         </span>

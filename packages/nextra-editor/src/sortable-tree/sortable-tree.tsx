@@ -44,7 +44,7 @@ import type {
 // import { sortableTreeKeyboardCoordinates } from './keyboardCoordinates';
 import { SortableTreeItem } from './sortable-tree-item'
 import { customListSortingStrategy } from './sorting-strategy'
-import { useFSRoute } from '../../../nextra/hooks'
+import { useFSRoute } from '../nextra/hooks'
 
 export type SortableTreeProps<TData extends Record<string, any>, TElement extends HTMLElement> = {
   items: TreeItems<TData>
@@ -62,14 +62,14 @@ export type SortableTreeProps<TData extends Record<string, any>, TElement extend
 }
 const defaultPointerSensorOptions: PointerSensorOptions = {
   activationConstraint: {
-    distance: 3,
+    distance: 5,
   },
 }
 
 export const dropAnimationDefaultConfig: DropAnimation = {
   keyframes({ transform }) {
     return [
-      { opacity: 1, transform: CSS.Transform.toString(transform.initial) },
+      { opacity: 0, transform: CSS.Transform.toString(transform.initial) },
       {
         opacity: 0,
         transform: CSS.Transform.toString({
@@ -82,7 +82,7 @@ export const dropAnimationDefaultConfig: DropAnimation = {
   },
   easing: 'ease-out',
   sideEffects({ active }) {
-    active.node.animate([{ opacity: 0 }, { opacity: 1 }], {
+    active.node.animate([{ opacity: 0 }, { opacity: 0 }], {
       duration: defaultDropAnimation.duration,
       easing: defaultDropAnimation.easing,
     })
@@ -268,6 +268,14 @@ export function SortableTree<
         {createPortal(
           <DragOverlay
             dropAnimation={dropAnimation === undefined ? dropAnimationDefaultConfig : dropAnimation}
+            style={{
+              display: 'flex',
+              width: '100%',
+              maxWidth: '250px',
+              height: 'auto',
+              visibility: 'hidden',
+            }}
+            className={cn('nx-bg-primary-50 nx-opacity-80')}
           >
             {activeId && activeItem ? (
               <TreeItemComponent

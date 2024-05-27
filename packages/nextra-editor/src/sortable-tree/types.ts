@@ -136,6 +136,7 @@ export type TreeItemComponentProps<T = Record<any, any>> = {
   onCollapse?(): void
   onRemove?(): void
   wrapperRef?(node: HTMLLIElement): void
+  isDragging?: boolean
 }
 export type TreeItemComponentType<T, TElement extends HTMLElement> = React.FC<
   React.PropsWithChildren<TreeItemComponentProps<T> & RefAttributes<TElement>>

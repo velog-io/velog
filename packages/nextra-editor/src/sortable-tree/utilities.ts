@@ -237,7 +237,6 @@ export function setProperty<TData extends Record<string, any>, T extends keyof T
       item.children = setProperty(item.children, id, property, setter)
     }
   }
-
   return [...items]
 }
 

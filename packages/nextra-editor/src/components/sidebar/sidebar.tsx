@@ -23,8 +23,8 @@ import { LocaleSwitch } from '../locale-switch'
 import SidebarController from './sidebar-controller'
 import { ActionType, useSidebar } from '../../contexts/sidebar'
 import AddInputs from './add-inputs'
-import { SortableTree, TreeItemComponentProps } from '../../sortable-tree'
-import { SimpleTreeItemWrapper } from '../../sortable-tree/simple-tree-item'
+import { FolderTreeItemWrapper, SortableTree, TreeItemComponentProps } from '../../sortable-tree'
+import { useSortable } from '@dnd-kit/sortable'
 
 let TreeState: Record<string, boolean> = Object.create(null)
 
@@ -116,48 +116,15 @@ function FolderImpl({ item }: FolderProps): ReactElement {
     config.sidebar.autoCollapse ? updateAndPruneTreeState() : updateTreeState()
   }, [activeRouteInside, focusedRouteInside, item.route, config.sidebar.autoCollapse])
 
-  const isLink = 'withIndexPage' in item && item.withIndexPage
-
   return (
-    <div className={cn('nx-w-full', { open, active })}>
+    <div className={cn('nx-w-full')}>
       <div
         className={cn(
           'nx-w-full nx-items-center nx-justify-between nx-gap-2',
-          !isLink && 'nx-w-full nx-text-left',
-          classes.link,
-          active ? classes.active : classes.inactive,
-          'hover:nx-bg-blue-100 dark:hover:nx-bg-primary-100/5',
+          'nx-w-full nx-text-left',
         )}
-        onClick={(e) => {
-          e.preventDefault()
-          router.push(item.route, item.route, { shallow: true })
-          const clickedToggleIcon = ['svg', 'path'].includes(
-            (e.target as HTMLElement).tagName.toLowerCase(),
-          )
-          if (clickedToggleIcon) {
-            e.preventDefault()
-          }
-
-          if (isLink) {
-            if (active || clickedToggleIcon) {
-              // If it's focused, we toggle it. Otherwise, always open it.
-
-              TreeState[item.route] = !open
-            } else {
-              TreeState[item.route] = true
-              setMenu(false)
-            }
-            rerender({})
-            return
-          }
-          if (active) return
-          TreeState[item.route] = !open
-          rerender({})
-        }}
       >
-        <div className={cn('nx-w-full nx-px-2 nx-py-1.5 [word-break:break-word]')}>
-          {item.title}
-        </div>
+        <div className={cn('nx-w-full [word-break:break-word]')}>{item.title}</div>
       </div>
     </div>
   )
@@ -169,23 +136,21 @@ export function Separator({ item }: { item: PageItem | Item }): ReactElement {
   return (
     <div
       className={cn(
+        'nx-w-full',
         '[word-break:break-word]',
-        'nx-mb-2 nx-mt-5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100',
+        'nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100',
       )}
     >
-      <div className={cn('cursor-default', 'nx-px-2 nx-py-1.5')}>{title}</div>
+      <div className={cn('cursor-default')}>{title}</div>
     </div>
   )
 }
 
 function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactElement {
-  const route = useFSRoute()
   const onFocus = useContext(OnFocusItemContext)
-
   const router = useRouter()
 
-  // It is possible that the item doesn't have any route - for example an external link.
-  const active = item.route && [route, route + '/'].includes(item.route + '/')
+  // It is possible that the item doesn't have any route - for example an external link
   const { setMenu } = useMenu()
 
   if (['newPage', 'newFolder', 'newSeparator'].includes(item.type)) {
@@ -199,9 +164,8 @@ function File({ item }: { item: PageItem | Item; anchors: Heading[] }): ReactEle
   }
 
   return (
-    <div className={cn(classes.list, { active })}>
+    <div className={cn('nx-w-full')}>
       <div
-        className={cn('nx-px-2 nx-py-1.5', classes.link)}
         onClick={() => {
           router.push((item as PageItem).href || item.route)
           setMenu(false)
@@ -231,8 +195,11 @@ export const SortableMenu = React.forwardRef<HTMLDivElement, TreeItemComponentPr
   (props, ref) => {
     // const { className, directories, onlyCurrentDocs, anchors } = props
     const { item, className } = props
+    const { isDragging } = useSortable({
+      id: item.id,
+    })
     return (
-      <SimpleTreeItemWrapper
+      <FolderTreeItemWrapper
         {...props}
         ref={ref}
         style={{ width: '100%', ...props.style }}
@@ -240,6 +207,7 @@ export const SortableMenu = React.forwardRef<HTMLDivElement, TreeItemComponentPr
         hideCollapseButton={true}
         indicator={false}
         showDragHandle={false}
+        isDragging={isDragging}
       >
         {item.kind === 'Folder' ? (
           <Folder key={item.id} item={item} anchors={[]} />
@@ -248,7 +216,7 @@ export const SortableMenu = React.forwardRef<HTMLDivElement, TreeItemComponentPr
         ) : (
           <File key={item.id} item={item} anchors={[]} />
         )}
-      </SimpleTreeItemWrapper>
+      </FolderTreeItemWrapper>
     )
   },
 )
