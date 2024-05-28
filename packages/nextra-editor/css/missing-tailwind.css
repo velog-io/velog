@@ -13,3 +13,11 @@
 .nx-h-scren {
   @apply nx-h-screen;
 }
+
+.nx-top-0 {
+  top: 0;
+}
+
+.nx-left-0 {
+  left: 0;
+}

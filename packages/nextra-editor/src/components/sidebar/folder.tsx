@@ -160,9 +160,10 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
       >
         {isCollapseOpen && Array.isArray(item.children) ? (
           <Menu
-            className={cn(classes.border, 'ltr:nx-ml-3 rtl:nx-mr-3')}
+            className={cn('nx-relative ltr:nx-ml-3 rtl:nx-mr-3')}
             directories={item.children}
             base={item.route}
+            border={true}
           />
         ) : null}
       </Collapse>

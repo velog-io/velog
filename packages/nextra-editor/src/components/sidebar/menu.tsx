@@ -17,6 +17,7 @@ interface MenuProps {
   base?: string
   className?: string
   onlyCurrentDocs?: boolean
+  border?: boolean
 }
 
 export type MenuItemProps = {
@@ -32,14 +33,24 @@ export type MenuItemProps = {
   over: Over | null
 }
 
-export function Menu({ directories, className }: MenuProps): ReactElement {
+export function Menu({ directories, className, border }: MenuProps): ReactElement {
   return (
-    <ul className={cn(classes.list, className, 'nx-relative')}>
-      {directories.map((item) => {
-        const key = item.id || item.name || item.route
-        return <MenuInner key={key} item={item} />
-      })}
-    </ul>
+    <div className={cn('nx-relative')}>
+      <ul className={cn(classes.list, className, 'nx-pl-3')}>
+        {directories.map((item) => {
+          const key = item.id || item.name || item.route
+          return <MenuInner key={key} item={item} />
+        })}
+      </ul>
+      {border && (
+        <div
+          className={cn(
+            'nx-y-full nx-absolute nx-inset-y-1 nx-left-0 nx-ml-3 nx-w-px',
+            'nx-bg-gray-200 dark:nx-bg-neutral-800',
+          )}
+        />
+      )}
+    </div>
   )
 }
 

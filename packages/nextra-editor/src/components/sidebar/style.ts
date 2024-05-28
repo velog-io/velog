@@ -17,9 +17,7 @@ export const classes = {
   ),
   list: cn('nx-flex nx-flex-col nx-gap-1'),
   border: cn(
-    'nx-relative  before:nx-inset-y-1',
-    'before:nx-w-px before:nx-bg-gray-200 before:nx-content-[""] dark:before:nx-bg-neutral-800',
-    'ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0',
+    'nx-absolute nx-inset-y-1 nx-y-full nx-w-px nx-bg-red-200 dark:nx-bg-neutral-800 nx-pr-3 nx-left-0 nx-top-0',
   ),
   drag: cn(
     'nx-transform-gpu nx-w-full nx-max-h-px nx-overflow-hidden nx-bg-transparent nx-text-transparent nx-opcity-80',
