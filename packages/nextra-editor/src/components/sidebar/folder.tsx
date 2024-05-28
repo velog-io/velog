@@ -141,7 +141,6 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
           {...attributes}
           {...listeners}
           className={cn('nx-w-full nx-px-2 nx-py-1.5 [word-break:break-word]')}
-          // style={{ background: 'gold' }}
         >
           {item.title}
         </div>
@@ -158,7 +157,7 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
         isOpen={isCollapseOpen}
         isDragTarget={isDragTarget}
       >
-        {isCollapseOpen && Array.isArray(item.children) ? (
+        {Array.isArray(item.children) ? (
           <Menu
             className={cn('nx-relative ltr:nx-ml-3 rtl:nx-mr-3')}
             directories={item.children}
