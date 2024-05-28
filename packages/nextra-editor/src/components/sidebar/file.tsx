@@ -1,8 +1,8 @@
 import cn from 'clsx'
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { ActionType, useSidebar } from '../../contexts/sidebar'
 import { useFSRoute } from '../../nextra/hooks'
-import { Item, PageItem } from '../../nextra/normalize-pages'
+import { PageItem, SortableItem } from '../../nextra/normalize-pages'
 import { useDndTree } from './dnd-tree'
 import { useRouter } from 'next/router'
 import { useMenu } from '../../contexts'
@@ -10,9 +10,10 @@ import AddInputs from './add-inputs'
 import { classes } from './style'
 import { removeCodeFromRoute } from '../../utils'
 import { MenuItemProps } from './menu'
+import NewOrder from './new-order'
 
 type FileProps = {
-  item: PageItem | Item
+  item: SortableItem
 } & MenuItemProps
 
 export function File({ item, ...props }: FileProps): ReactElement {
@@ -42,45 +43,60 @@ export function File({ item, ...props }: FileProps): ReactElement {
     setDragItem(item)
   }, [isDragTarget])
 
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    if (!isOver) return
+    setVisible(true)
+  }, [isOver])
+
   return (
-    <li
-      className={cn(classes.list, { active }, isDragTarget && classes.drag, isOver && classes.over)}
-      ref={setDroppableNodeRef}
-    >
-      <div
-        {...attributes}
-        {...listeners}
-        ref={setDraggableNodeRef}
+    <>
+      {visible && <NewOrder item={item} />}
+      <li
         className={cn(
-          'nx-px-2 nx-py-1.5',
-          classes.link,
-          !isDragging && active ? classes.active : classes.inactive,
+          classes.list,
+          { active },
+          isDragTarget && classes.drag,
+          isOver && classes.over,
         )}
-        onClick={(e) => {
-          if (isDragging) {
-            e.preventDefault()
-            return
-          }
-          router.push((item as PageItem).href || item.route)
-          setMenu(false)
-        }}
-        onFocus={(e) => {
-          if (isDragging) {
-            e.preventDefault()
-            return
-          }
-          setFocused?.(removeCodeFromRoute(item.route))
-        }}
-        onBlur={(e) => {
-          if (isDragging) {
-            e.preventDefault()
-            return
-          }
-          setFocused?.(null)
-        }}
+        ref={setDroppableNodeRef}
+        onMouseOut={() => setVisible(false)}
       >
-        {item.title}
-      </div>
-    </li>
+        <div
+          className={cn(
+            'nx-px-2 nx-py-1.5',
+            classes.link,
+            !isDragging && active ? classes.active : classes.inactive,
+          )}
+          onClick={(e) => {
+            if (isDragging) {
+              e.preventDefault()
+              return
+            }
+            router.push((item as PageItem).href || item.route)
+            setMenu(false)
+          }}
+          onFocus={(e) => {
+            if (isDragging) {
+              e.preventDefault()
+              return
+            }
+            setFocused?.(removeCodeFromRoute(item.route))
+          }}
+          onBlur={(e) => {
+            if (isDragging) {
+              e.preventDefault()
+              return
+            }
+            setFocused?.(null)
+          }}
+        >
+          <div {...attributes} {...listeners} ref={setDraggableNodeRef}>
+            {item.title}
+          </div>
+        </div>
+      </li>
+    </>
   )
 }

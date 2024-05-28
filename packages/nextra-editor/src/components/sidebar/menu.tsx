@@ -1,26 +1,20 @@
 import cn from 'clsx'
-import { ReactElement } from 'react'
-import { Item, PageItem } from '../../nextra/normalize-pages'
+import { CSSProperties, ReactElement } from 'react'
+import { Item, PageItem, SortableItem } from '../../nextra/normalize-pages'
 import { Heading } from '../../nextra/types'
 import { classes } from './style'
 import { Folder } from './folder'
 import { File } from './file'
 import { Separator } from './separator'
 import { AnimateLayoutChanges, useSortable } from '@dnd-kit/sortable'
-import { DraggableAttributes, Over } from '@dnd-kit/core'
+import { Active, DraggableAttributes, Over } from '@dnd-kit/core'
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities'
-import { Transform } from '@dnd-kit/utilities'
-
-interface MenuProps {
-  directories: PageItem[] | Item[]
-  anchors?: Heading[]
-  base?: string
-  className?: string
-  onlyCurrentDocs?: boolean
-  border?: boolean
-}
+import { CSS, Transform } from '@dnd-kit/utilities'
+import { findParent, getIsParentOver } from './utils'
 
 export type MenuItemProps = {
+  setNodeRef: (node: HTMLElement | null) => void
+  setActivatorNodeRef: (node: HTMLElement | null) => void
   setDraggableNodeRef: (node: HTMLElement | null) => void
   setDroppableNodeRef: (node: HTMLElement | null) => void
   attributes: DraggableAttributes
@@ -30,7 +24,21 @@ export type MenuItemProps = {
   transform: Transform | null
   transition: string | undefined
   isOver: boolean
+  isParentOver: boolean
   over: Over | null
+  active: Active | null
+  style: CSSProperties
+  parent: PageItem | Item | null
+  isChildrenOver: boolean
+}
+
+interface MenuProps {
+  directories: SortableItem[]
+  anchors?: Heading[]
+  base?: string
+  className?: string
+  onlyCurrentDocs?: boolean
+  border?: boolean
 }
 
 export function Menu({ directories, className, border }: MenuProps): ReactElement {
@@ -39,7 +47,7 @@ export function Menu({ directories, className, border }: MenuProps): ReactElemen
       <ul className={cn(classes.list, className, 'nx-pl-3')}>
         {directories.map((item) => {
           const key = item.id || item.name || item.route
-          return <MenuInner key={key} item={item} />
+          return <MenuInner key={key} item={item} items={directories} />
         })}
       </ul>
       {border && (
@@ -57,7 +65,12 @@ export function Menu({ directories, className, border }: MenuProps): ReactElemen
 const animateLayoutChanges: AnimateLayoutChanges = ({ isSorting, isDragging }) =>
   isSorting || isDragging ? false : true
 
-function MenuInner({ item }: { item: PageItem | Item }) {
+type MenuInnerProps = {
+  item: SortableItem
+  items: SortableItem[]
+}
+
+function MenuInner({ item, items }: MenuInnerProps) {
   const disabled = item.name === 'index'
   const {
     attributes,
@@ -70,6 +83,9 @@ function MenuInner({ item }: { item: PageItem | Item }) {
     transition,
     isOver,
     over,
+    active,
+    setNodeRef,
+    setActivatorNodeRef,
   } = useSortable({
     id: item.id || item.name || item.route,
     data: item,
@@ -77,12 +93,16 @@ function MenuInner({ item }: { item: PageItem | Item }) {
     animateLayoutChanges,
   })
 
-  if (!item.id) {
-    console.log('No id found for item', item)
-    return null
+  const style: CSSProperties = {
+    transform: CSS.Translate.toString(transform),
+    transition: transition ?? undefined,
   }
 
-  const props = {
+  const parent = findParent(items, active)
+
+  const props: MenuItemProps = {
+    setNodeRef,
+    setActivatorNodeRef,
     attributes,
     listeners,
     isDragTarget,
@@ -93,6 +113,11 @@ function MenuInner({ item }: { item: PageItem | Item }) {
     transition,
     isOver,
     over,
+    active,
+    style,
+    parent: item.parent,
+    isParentOver: getIsParentOver(parent, over?.id),
+    isChildrenOver: over ? item.childrenIds.includes(over?.id) : false,
   }
 
   return item.kind === 'Folder' ? (

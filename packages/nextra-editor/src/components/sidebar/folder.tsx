@@ -1,6 +1,6 @@
 import { createContext, memo, ReactElement, useContext, useEffect, useState } from 'react'
 import cn from 'clsx'
-import { Item, MenuItem, PageItem } from '../../nextra/normalize-pages'
+import { Item, SortableItem } from '../../nextra/normalize-pages'
 import { useDndTree } from './dnd-tree'
 import { useSidebar } from '../../contexts/sidebar'
 import { useRouter } from 'next/router'
@@ -15,7 +15,7 @@ import { removeCodeFromRoute } from '../../utils'
 let TreeState: Record<string, boolean> = Object.create(null)
 
 type FolderProps = {
-  item: PageItem | MenuItem | Item
+  item: SortableItem
 } & MenuItemProps
 
 const FolderLevelContext = createContext(0)
@@ -37,8 +37,15 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
   const routeOriginal = useFSRoute()
   const [route] = routeOriginal.split('#')
 
-  const { setDraggableNodeRef, setDroppableNodeRef, attributes, isDragTarget, isOver, listeners } =
-    props
+  const {
+    setDraggableNodeRef,
+    setDroppableNodeRef,
+    attributes,
+    listeners,
+    isDragTarget,
+    isOver,
+    style,
+  } = props
 
   const active = !isDragTarget && [route, route + '/'].includes(item.route + '/')
   const activeRouteInside: boolean = active || route.startsWith(item.route + '/')
@@ -89,11 +96,12 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
 
   const isLink = 'withIndexPage' in item && item.withIndexPage
 
-  // use button when link don't have href because it impacts on SEO
   const isCollapseOpen = isDragTarget || isFolding ? false : open
+  // 드래그가 활성화되어 있고 타깃이면 메뉴를 숨김
+  const menuVisible = isDragging && isDragTarget ? false : true
 
   return (
-    <li className={cn({ open, active }, isDragTarget && classes.drag, isOver && classes.over)}>
+    <li className={cn({ active, open }, isOver && classes.over, isDragTarget && classes.drag)}>
       <div
         ref={setDroppableNodeRef}
         className={cn(
@@ -105,11 +113,12 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
             ? 'hover:nx-bg-blue-100 dark:hover:nx-bg-primary-100/5'
             : 'nx-bg-transparent hover:nx-bg-transparent',
           active && isDragTarget && 'nx-bg-blue-100',
-          isDragTarget && 'nx-opacity-50',
+          isDragTarget && classes.drag,
         )}
         onClick={(e) => {
           e.preventDefault()
           if (isDragTarget) return
+
           router.push(item.route, item.route, { shallow: true })
           setFocused(removeCodeFromRoute(item.route))
           const clickedToggleIcon = ['svg', 'path'].includes(
@@ -157,7 +166,7 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
         isOpen={isCollapseOpen}
         isDragTarget={isDragTarget}
       >
-        {Array.isArray(item.children) ? (
+        {menuVisible && Array.isArray(item.children) ? (
           <Menu
             className={cn('nx-relative ltr:nx-ml-3 rtl:nx-mr-3')}
             directories={item.children}

@@ -1,12 +1,12 @@
 import cn from 'clsx'
 import { ReactElement, useEffect } from 'react'
-import { Item, PageItem } from '../../nextra/normalize-pages'
+import { SortableItem } from '../../nextra/normalize-pages'
 import { useDndTree } from './dnd-tree'
 import { classes } from './style'
 import { MenuItemProps } from './menu'
 
 type SeparatorProps = {
-  item: PageItem | Item
+  item: SortableItem
 } & MenuItemProps
 
 export function Separator({ item, ...props }: SeparatorProps): ReactElement {

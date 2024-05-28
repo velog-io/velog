@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import type { Heading } from '../../nextra/types'
 import { useMounted } from '../../nextra/hooks'
 import { ExpandIcon } from '../../nextra/icons'
-import type { Item, PageItem } from '../../nextra/normalize-pages'
+import type { Item, PageItem, SortableItem } from '../../nextra/normalize-pages'
 import type { ReactElement } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
@@ -15,6 +15,7 @@ import SidebarController from './sidebar-controller'
 import { useSidebar } from '../../contexts/sidebar'
 import DndTree from './dnd-tree'
 import { Menu } from './menu'
+import { initilizeDirectories } from './utils'
 
 interface SideBarProps {
   docsDirectories: PageItem[]
@@ -88,7 +89,18 @@ export function Sidebar({
   const hasI18n = config.i18n.length > 0
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton
 
-  const [directories, setDragItem] = useState(docsDirectories)
+  const initDocDirectories: SortableItem[] = useMemo(
+    () => initilizeDirectories(docsDirectories),
+    [docsDirectories],
+  )
+
+  const [docDirectories, setDocDragItem] = useState<SortableItem[]>(initDocDirectories)
+
+  const initFullDirectories: SortableItem[] = useMemo(
+    () => initilizeDirectories(fullDirectories),
+    [],
+  )
+
   return (
     <>
       {includePlaceholder && asPopover ? (
@@ -123,7 +135,7 @@ export function Sidebar({
             directories: flatDirectories,
           })}
         </div>
-        <DndTree items={directories} onItemsChanged={setDragItem}>
+        <DndTree items={docDirectories} onItemsChanged={setDocDragItem}>
           <div
             className={cn(
               'nx-overflow-y-auto nx-overflow-x-hidden',
@@ -140,7 +152,7 @@ export function Sidebar({
                 <Menu
                   className="nextra-menu-desktop max-md:nx-hidden"
                   // The sidebar menu, shows only the docs directories.
-                  directories={docsDirectories}
+                  directories={initDocDirectories}
                   // When the viewport size is larger than `md`, hide the anchors in
                   // the sidebar when `floatTOC` is enabled.
                   anchors={config.toc.float ? [] : anchors}
@@ -152,7 +164,7 @@ export function Sidebar({
               <Menu
                 className="nextra-menu-mobile md:nx-hidden"
                 // The mobile dropdown menu, shows all the directories.
-                directories={fullDirectories}
+                directories={initFullDirectories}
                 // Always show the anchor links on mobile (`md`).
                 anchors={anchors}
               />

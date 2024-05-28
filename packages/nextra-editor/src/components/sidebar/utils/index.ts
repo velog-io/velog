@@ -1,7 +1,8 @@
 import { arrayMove } from '@dnd-kit/sortable'
-import { UniqueIdentifier } from '@dnd-kit/core'
+import { Active, UniqueIdentifier } from '@dnd-kit/core'
 import { Folder, PageMapItem } from '../../../nextra/types'
 import { FlattenedItem, TreeItem, TreeItems } from '../../../types'
+import { Item, PageItem, SortableItem } from '../../../nextra/normalize-pages'
 
 export function findFolder(pageMap: PageMapItem[], route: string): Folder | undefined {
   const folders = pageMap.filter((page) => page.kind === 'Folder')
@@ -18,7 +19,29 @@ export function findFolder(pageMap: PageMapItem[], route: string): Folder | unde
   return undefined
 }
 
-function flatten<T extends Record<string, any>>(
+export function initilizeDirectories(
+  items: PageItem[] | Item[],
+  parentId: UniqueIdentifier | null = null,
+  level = 0,
+  parent: PageItem | Item | null = null,
+): SortableItem[] {
+  return items.map((item, index) => {
+    const data: Omit<SortableItem, 'childrenIds'> = {
+      ...item,
+      parentId,
+      level,
+      isLast: items.length === index + 1,
+      parent,
+      children: item.children ? initilizeDirectories(item.children, item.id, level + 1, item) : [],
+    }
+    return {
+      ...data,
+      childrenIds: data.children.map((child: SortableItem) => child.id),
+    } as SortableItem
+  })
+}
+
+function flatten<T extends SortableItem>(
   items: TreeItems<T>,
   parentId: UniqueIdentifier | null = null,
   depth = 0,
@@ -41,9 +64,7 @@ function flatten<T extends Record<string, any>>(
   }, [])
 }
 
-export function flattenTree<T extends Record<string, any>>(
-  items: TreeItems<T>,
-): FlattenedItem<T>[] {
+export function flattenTree<T extends SortableItem>(items: TreeItems<T>): FlattenedItem<T>[] {
   return flatten(items)
 }
 
@@ -246,4 +267,31 @@ export function getProjection<T>(
 
     return newParent ?? null
   }
+}
+
+export const findParent = (
+  items: PageItem[] | Item[],
+  active: Active | null,
+): PageItem | Item | null => {
+  if (!active) return null
+  for (const item of items) {
+    if (item.id === active.id) {
+      return item
+    }
+
+    if (Array.isArray(item.children)) {
+      const parent = findParent(item.children, active)
+      if (parent) return parent
+    }
+  }
+  return null
+}
+
+export const getIsParentOver = (
+  parent: PageItem | Item | null,
+  overId: UniqueIdentifier | undefined,
+): boolean => {
+  if (!parent || !overId) return false
+  if (parent.id === overId) return true
+  return false
 }

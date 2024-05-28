@@ -3,7 +3,7 @@ import cn from 'clsx'
 export const classes = {
   link: cn(
     'nx-flex nx-rounded nx-text-sm nx-transition-colors [word-break:break-word]',
-    'nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border',
+    'nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border nx-pr-2',
   ),
   inactive: cn(
     'nx-text-gray-500 hover:nx-text-gray-900',
@@ -16,11 +16,9 @@ export const classes = {
     'contrast-more:nx-border-primary-500 contrast-more:dark:nx-border-primary-500',
   ),
   list: cn('nx-flex nx-flex-col nx-gap-1'),
-  border: cn(
-    'nx-absolute nx-inset-y-1 nx-y-full nx-w-px nx-bg-red-200 dark:nx-bg-neutral-800 nx-pr-3 nx-left-0 nx-top-0',
-  ),
-  drag: cn(
-    'nx-transform-gpu nx-w-full nx-max-h-px nx-overflow-hidden nx-bg-transparent nx-text-transparent nx-opcity-80',
-  ),
+  // drag: cn(
+  //   'nx-transform-gpu nx-w-full nx-max-h-px nx-overflow-hidden nx-bg-transparent nx-text-transparent nx-opcity-80',
+  // ),
   over: cn('nx-bg-red-100 dark:nx-bg-neutral-800'),
+  drag: cn('nx-opacity-50'),
 }

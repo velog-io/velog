@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { ERROR_ROUTES } from './constants'
 import type { Folder, MdxFile, MetaJsonFile, PageMapItem } from './types'
+import { UniqueIdentifier } from '@dnd-kit/core'
 
 const DEFAULT_PAGE_THEME: PageTheme = {
   breadcrumb: true,
@@ -125,6 +126,16 @@ export type PageItem = (MdxFile | FolderWithoutChildren) & {
   withIndexPage?: boolean
   isUnderCurrentDocsTree?: boolean
 }
+
+export type SortableItem = {
+  parentId: UniqueIdentifier | null
+  level: number
+  isLast: boolean
+  parent: PageItem | Item | null
+  children: SortableItem[]
+  childrenIds: UniqueIdentifier[]
+} & PageItem &
+  Item
 
 export type MenuItem = (MdxFile | FolderWithoutChildren) &
   IMenuItem & {

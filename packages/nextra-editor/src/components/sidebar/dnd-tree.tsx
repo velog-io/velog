@@ -9,18 +9,18 @@ import {
   KeyboardSensor,
   Modifier,
   MouseSensor,
+  PointerSensor,
   TouchSensor,
   UniqueIdentifier,
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
 import { createContext, useCallback, useContext, useMemo, useState } from 'react'
-import { buildTree, flattenTree, getProjection, removeChildrenOf } from './utils'
+import { flattenTree, getProjection, removeChildrenOf } from './utils'
 import { FlattenedItem, ItemChangedReason } from '../../types'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
-import { Item, PageItem } from '../../nextra/normalize-pages'
+import { SortableItem } from '../../nextra/normalize-pages'
 import cn from 'clsx'
-import { dropAnimation } from './utils/dropAnimation'
 import { customCollisionDetectionAlgorithm } from './utils/customCollisionDetection'
 import { customListSortingStrategy } from './utils/customListSortingStrategy'
 import { createPortal } from 'react-dom'
@@ -28,16 +28,16 @@ import { Menu } from './menu'
 
 type Props = {
   children: React.ReactNode
-  items: PageItem[]
-  onItemsChanged: (items: PageItem[], reason: ItemChangedReason<PageItem>) => void
+  items: SortableItem[]
+  onItemsChanged: (items: SortableItem[], reason: ItemChangedReason<SortableItem>) => void
 }
 
 type DndTreeContextType = {
   activeId: UniqueIdentifier | null
   isDragging: boolean
   setDragging: (isDragging: boolean) => void
-  dragItem: PageItem | Item | null
-  setDragItem: (directories: PageItem | Item) => void
+  dragItem: SortableItem | null
+  setDragItem: (directories: SortableItem) => void
 }
 
 const DndTreeContext = createContext<DndTreeContextType>({
@@ -50,9 +50,9 @@ const DndTreeContext = createContext<DndTreeContextType>({
 
 export const useDndTree = () => useContext(DndTreeContext)
 
-function DndTree({ children, items, onItemsChanged }: Props) {
+function DndTree({ children, items }: Props) {
   const [isDragging, setDragging] = useState(false)
-  const [dragItem, setDragItem] = useState<PageItem | Item | null>(null)
+  const [dragItem, setDragItem] = useState<SortableItem | null>(null)
 
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
   const [overId, setOverId] = useState<UniqueIdentifier | null>(null)
@@ -103,7 +103,13 @@ function DndTree({ children, items, onItemsChanged }: Props) {
   })
   const keyboardSensor = useSensor(KeyboardSensor)
 
-  const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor)
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 3,
+    },
+  })
+
+  const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor, pointerSensor)
 
   const getMovementAnnouncement = (
     eventName: string,
@@ -126,7 +132,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
         }
       }
 
-      const clonedItems: FlattenedItem<PageItem>[] = flattenTree(items)
+      const clonedItems: FlattenedItem<SortableItem>[] = flattenTree(items)
       const overIndex = clonedItems.findIndex(({ id }) => id === overId)
       const activeIndex = clonedItems.findIndex(({ id }) => id === activeId)
       const sortedItems = arrayMove(clonedItems, activeIndex, overIndex)
@@ -144,7 +150,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
         if (projected.depth > previousItem.depth) {
           announcement = `${activeId} was ${nestedVerb} under ${previousItem.id}.`
         } else {
-          let previousSibling: FlattenedItem<PageItem> | undefined = previousItem
+          let previousSibling: FlattenedItem<SortableItem> | undefined = previousItem
           while (previousSibling && projected.depth < previousSibling.depth) {
             const parentId: UniqueIdentifier | null = previousSibling.parentId
             previousSibling = sortedItems.find(({ id }) => id === parentId)
@@ -209,37 +215,6 @@ function DndTree({ children, items, onItemsChanged }: Props) {
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     resetState()
-
-    if (projected && over) {
-      const { depth, parentId } = projected
-      if (keepGhostInPlace && over.id === active.id) return
-      const clonedItems: FlattenedItem<PageItem>[] = flattenTree(items)
-      const overIndex = clonedItems.findIndex(({ id }) => id === over.id)
-      const activeIndex = clonedItems.findIndex(({ id }) => id === active.id)
-      const activeTreeItem = clonedItems[activeIndex]
-
-      clonedItems[activeIndex] = { ...activeTreeItem, depth, parentId }
-      const draggedFromParent = activeTreeItem.parent
-      const sortedItems = arrayMove(clonedItems, activeIndex, overIndex)
-      const newItems = buildTree(sortedItems)
-      const newActiveItem = sortedItems.find((x) => x.id === active.id)!
-      const currentParent = newActiveItem.parentId
-        ? sortedItems.find((x) => x.id === newActiveItem.parentId)!
-        : null
-      // removing setTimeout leads to an unwanted scrolling
-      // Use case:
-      //   There are a lot of items in a tree (so that the scroll exists).
-      //   You take the node from the bottom and move it to the top
-      //   Without `setTimeout` when you drop the node the list gets scrolled to the bottom.
-      setTimeout(() =>
-        onItemsChanged(newItems, {
-          type: 'dropped',
-          draggedItem: newActiveItem,
-          draggedFromParent: draggedFromParent,
-          droppedToParent: currentParent,
-        }),
-      )
-    }
   }
 
   const handleDragCancel = () => {
@@ -258,6 +233,7 @@ function DndTree({ children, items, onItemsChanged }: Props) {
   }
 
   const sortedIds = useMemo(() => flattenedItems.map(({ id }) => id), [flattenedItems])
+
   const strategyCallback = useCallback(() => {
     return !!projected
   }, [projected])
@@ -283,14 +259,20 @@ function DndTree({ children, items, onItemsChanged }: Props) {
       {createPortal(
         <DragOverlay
           modifiers={modifiersArray}
-          dropAnimation={dropAnimation}
-          className={cn('nx-bg-sky-50 nx-opacity-80')}
+          // dropAnimation={dropAnimation}
+          className={cn('nx-opacity-80')}
           style={{ width: '90%', maxWidth: '250px' }}
         >
           {dragItem && (
-            <div className={cn('nx-bg-sky-50')}>
-              <Menu directories={[{ ...dragItem, children: [] }]} anchors={[]} />
-            </div>
+            <Menu
+              directories={[
+                {
+                  ...dragItem,
+                  children: [],
+                },
+              ]}
+              anchors={[]}
+            />
           )}
         </DragOverlay>,
         document.body,
@@ -300,7 +282,9 @@ function DndTree({ children, items, onItemsChanged }: Props) {
 }
 
 const adjustTranslate: Modifier = ({ transform }) => {
-  return { ...transform, y: transform.y }
+  return {
+    ...transform,
+  }
 }
 
 const modifiersArray = [adjustTranslate]
