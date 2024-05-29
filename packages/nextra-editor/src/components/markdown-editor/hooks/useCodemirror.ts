@@ -6,7 +6,7 @@ import { useTheme } from 'next-themes'
 import { RefObject, useEffect, useState } from 'react'
 import { useMarkdownEditor } from '../../../contexts/markdown-editor'
 import { getEditorStat } from '../lib/getEditorStat'
-import cn from 'clsx'
+import { javascript } from '@codemirror/lang-javascript'
 
 type Config = {
   autoFocus?: boolean
@@ -38,6 +38,7 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
 
   const defaultThemeOption = EditorView.theme({
     '&': {
+      outline: 'none !important',
       height,
       minHeight,
       maxHeight,
@@ -46,7 +47,7 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
       maxWidth,
     },
     '& .cm-scroller': {
-      // height: '100% !important',
+      height: '100% !important',
       scrollbarWidth: 'thin',
       scrollbarColor: 'oklch(55.55% 0 0 / 40%) transparent',
       scrollbarGutter: 'stable',
@@ -73,10 +74,17 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
       history: true,
       foldGutter: true,
       foldKeymap: true,
+      dropCursor: true,
     },
   })
 
-  const extenstions = [updateListener, defaultThemeOption, ...defaultExtensions, markdown()]
+  const extenstions = [
+    updateListener,
+    defaultThemeOption,
+    ...defaultExtensions,
+    markdown(),
+    javascript({ jsx: true }),
+  ]
 
   useEffect(() => {
     if (container?.current && !state) {

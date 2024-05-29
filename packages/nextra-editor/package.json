@@ -1,9 +1,9 @@
 {
   "name": "@packages/nextra-editor",
-  "version": "2.13.4",
-  "description": "A Nextra theme for documentation sites.",
-  "repository": "https://github.com/shuding/nextra",
-  "author": "Shu Ding <g@shud.in>",
+  "version": "1.0.0",
+  "description": "A Nextra theme with codemirrro markdown editor",
+  "repository": "https://github.com/velog-io/velog",
+  "author": "Winverse <public.winverse@gmail.com>",
   "license": "MIT",
   "exports": {
     "./style.css": "./style.css",
@@ -39,6 +39,7 @@
   "dependencies": {
     "@codemirror/autocomplete": "^6.16.0",
     "@codemirror/commands": "^6.5.0",
+    "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/lang-markdown": "^6.2.5",
     "@codemirror/state": "^6.4.1",
     "@codemirror/theme-one-dark": "^6.1.2",
@@ -55,8 +56,8 @@
     "@theguild/remark-mermaid": "^0.0.5",
     "@theguild/remark-npm2yarn": "0.2.0",
     "@uiw/codemirror-extensions-basic-setup": "^4.22.1",
-    "@uiw/codemirror-theme-material": "^4.22.1",
     "@uiw/codemirror-themes": "^4.22.1",
+    "@uiw/codemirror-themes-all": "^4.22.1",
     "clsx": "^2.0.0",
     "codemirror": "6.0.1",
     "escape-string-regexp": "^5.0.0",

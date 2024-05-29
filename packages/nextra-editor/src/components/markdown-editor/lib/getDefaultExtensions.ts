@@ -43,10 +43,10 @@ export const getDefaultExtensions = (options: ExtensionOptions) => {
 
   switch (theme) {
     case 'light':
-      getExtensions.push(lightTheme)
+      getExtensions.push(lightTheme.quietlight)
       break
     case 'dark':
-      getExtensions.push(darkTheme)
+      getExtensions.push(darkTheme.material)
       break
     case 'none':
       break

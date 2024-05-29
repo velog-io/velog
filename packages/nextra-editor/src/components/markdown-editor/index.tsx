@@ -1,12 +1,10 @@
-import cn from 'clsx'
-import { useEffect, useRef } from 'react'
-import styles from './markdown-editor.module.css'
+import { useRef } from 'react'
 import { useCodemirror } from './hooks/useCodemirror'
 
 const MarkdownEditor = () => {
   const container = useRef<HTMLDivElement>(null)
   const containerHeight = 'calc(100vh - 64px)'
-  const { value } = useCodemirror(container, {
+  useCodemirror(container, {
     autoFocus: true,
     minHeight: '100%',
     maxHeight: '100%',

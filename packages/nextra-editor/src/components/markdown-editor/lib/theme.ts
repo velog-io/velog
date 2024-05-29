@@ -1,5 +1,58 @@
-import { materialDark, materialLight } from '@uiw/codemirror-theme-material'
+// https://www.npmjs.com/package/@uiw/codemirror-themes-all
+import {
+  atomone,
+  abcdef,
+  aura,
+  basicLight,
+  basicDark,
+  bbedit,
+  bespin,
+  copilot,
+  darcula,
+  duotoneLight,
+  githubLight,
+  githubDark,
+  monokaiDimmed,
+  monokai,
+  noctisLilac,
+  quietlight,
+  tokyoNight,
+  tokyoNightDay,
+  xcodeLight,
+  xcodeDark,
+  materialLight,
+  materialDark,
+  consoleLight,
+  whiteLight,
+} from '@uiw/codemirror-themes-all'
 
-export const lightTheme = materialLight
+export const lightTheme = {
+  material: materialLight,
+  basic: basicLight,
+  bbedit,
+  duotone: duotoneLight,
+  github: githubLight,
+  noctisLilac,
+  quietlight,
+  tokyoNightDay,
+  xcode: xcodeLight,
+  console: consoleLight,
+  white: whiteLight,
+}
 
-export const darkTheme = materialDark
+export const darkTheme = {
+  material: materialDark,
+  atomone,
+  abcdef,
+  aura,
+  basic: basicDark,
+  bespin,
+  copilot,
+  darcula,
+  duotone: duotoneLight,
+  github: githubDark,
+  monokaiDimmed,
+  monokai,
+  tokyoNight,
+  xcode: xcodeDark,
+}
