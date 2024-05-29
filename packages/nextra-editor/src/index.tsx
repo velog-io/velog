@@ -42,7 +42,7 @@ const Body = ({ themeContext, navigation, children }: BodyProps): ReactElement =
   const gitTimestampEl =
     // Because a user's time zone may be different from the server page
     isMount && date ? (
-      <div className="nx-mt-12 nx-mb-8 nx-block nx-text-xs nx-text-gray-500 ltr:nx-text-right rtl:nx-text-left dark:nx-text-gray-400">
+      <div className="nx-mb-8 nx-mt-12 nx-block nx-text-xs nx-text-gray-500 dark:nx-text-gray-400 ltr:nx-text-right rtl:nx-text-left">
         {renderComponent(config.gitTimestamp, { timestamp: date })}
       </div>
     ) : (
@@ -141,7 +141,7 @@ const InnerLayout = ({
   const themeContext = { ...activeThemeContext, ...frontMatter }
   const direction = 'ltr'
   return (
-    <div dir={direction} className={cn('nx-overflow-hidden nx-h-screen')}>
+    <div dir={direction} className={cn('nx-h-screen nx-overflow-hidden')}>
       <script
         dangerouslySetInnerHTML={{
           __html: `document.documentElement.setAttribute('dir','${direction}')`,
@@ -170,7 +170,7 @@ const InnerLayout = ({
             <div className={cn('nextra-editor-container')}>
               <textarea
                 className={cn(
-                  'nextra-scrollbar nx-outline-none nx-overflow-y-auto',
+                  'nextra-scrollbar nx-overflow-y-auto nx-outline-none',
                   'nx-w-full nx-pl-6 nx-pr-6 nx-outline-none',
                 )}
                 style={{ height: 'calc(100vh - 64px)' }}
@@ -274,3 +274,4 @@ export {
   remarkStaticImage,
   remarkStructurize,
 } from './nextra/mdx-plugins'
+export { mdxCompiler } from './mdx-compiler'

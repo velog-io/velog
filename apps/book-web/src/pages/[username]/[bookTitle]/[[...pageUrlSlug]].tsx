@@ -1,7 +1,7 @@
 import NextraLayout from '@/layouts/NextraLayout'
 import { generateBookMetadata } from '@/lib/generateBookMetadata'
-import { mdxCompiler } from '@/lib/mdx/compileMdx'
 import getPages from '@/prefetch/getPages'
+import { mdxCompiler } from '@packages/nextra-editor'
 
 import { GetServerSideProps } from 'next'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
@@ -135,7 +135,9 @@ Sientase libre de unirse a
   `
 
   try {
-    const mdxSource = await mdxCompiler(mdxText)
+    const mdxSource = await mdxCompiler(mdxText, {
+      onigHostUrl: process.env.NEXT_PUBLIC_CLIENT_HOST,
+    })
 
     return { props: { mdxSource, mdxText } }
   } catch (error) {

@@ -49,6 +49,7 @@
     "@packages/eslint-config": "workspace:*",
     "@packages/scripts": "workspace:*",
     "@packages/tsconfig": "workspace:*",
+    "@testing-library/react": "^14.0.0",
     "@types/inquirer": "^9.0.7",
     "@types/node": "^20",
     "@types/react": "^18",

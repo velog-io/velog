@@ -17,6 +17,7 @@ const authPlugin: FastifyPluginAsync = async (fastify) => {
       const jwtService = container.resolve(JwtService)
 
       let accessToken: string | undefined = request.cookies['access_token']
+
       const authorization = request.headers['authorization']
 
       if (!accessToken && !!authorization && typeof authorization === 'string') {

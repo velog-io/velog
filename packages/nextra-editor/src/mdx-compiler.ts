@@ -1,4 +1,4 @@
-import type { MdxCompilerOptions, MdxOptions } from '@packages/nextra-editor'
+import type { MdxCompilerOptions, MdxOptions } from './index'
 import { serialize } from 'next-mdx-remote/serialize'
 import grayMatter from 'gray-matter'
 // import { createProcessor } from '@mdx-js/mdx'
@@ -23,10 +23,11 @@ import {
   remarkRemoveImports,
   remarkStaticImage,
   remarkReplaceImports,
-} from '@packages/nextra-editor'
-import { truthy } from './utils'
+} from './index'
+
 // import theme from './theme'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
+import { truthy } from './nextra/utils'
 
 const clonedRemarkLinkRewrite = remarkLinkRewrite.bind(null as any)
 
@@ -54,7 +55,7 @@ const MARKDOWN_URL_EXTENSION_REGEX = /\.mdx?(?:(?=[#?])|$)/
 
 export const mdxCompiler = async (
   source: string,
-  { defaultShowCopyCode = true, mdxOptions }: MdxCompilerOptions = {},
+  { defaultShowCopyCode = true, mdxOptions, onigHostUrl = '' }: MdxCompilerOptions = {},
 ): Promise<MDXRemoteSerializeResult> => {
   const { data: frontmatter, content } = grayMatter(source)
 
@@ -64,8 +65,12 @@ export const mdxCompiler = async (
     ...frontmatter.mdxOptions,
   }
 
+  if (!onigHostUrl) {
+    throw new Error('onigHostUrl is required')
+  }
+
   try {
-    const onig = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_HOST}/wasm/onig.wasm`)
+    const onig = await fetch(`${onigHostUrl}/wasm/onig.wasm`)
     setWasm(onig)
 
     const result = await serialize(content, {

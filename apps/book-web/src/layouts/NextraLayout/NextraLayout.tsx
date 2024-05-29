@@ -1,6 +1,9 @@
-import NextraDocLayout, { CustomEventDetail, nextraCustomEventName } from '@packages/nextra-editor'
+import NextraDocLayout, {
+  CustomEventDetail,
+  nextraCustomEventName,
+  mdxCompiler,
+} from '@packages/nextra-editor'
 import { themeConfig } from './context'
-import { mdxCompiler } from '@/lib/mdx/compileMdx'
 import { useEffect, useState } from 'react'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import { BookMetadata, generateBookMetadata } from '@/lib/generateBookMetadata'
@@ -57,7 +60,9 @@ function NextraLayout({ mdxSource, children, body }: Props) {
   useEffect(() => {
     async function compileSource() {
       try {
-        const result = await mdxCompiler(editorValue)
+        const result = await mdxCompiler(editorValue, {
+          onigHostUrl: process.env.NEXT_PUBLIC_CLIENT_HOST,
+        })
         setSource(result)
       } catch (error) {
         console.log('failed mdx compile: ', error)
