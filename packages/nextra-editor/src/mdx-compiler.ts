@@ -13,6 +13,7 @@ import rehypeKatex from 'rehype-katex'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import remarkReadingTime from 'remark-reading-time'
+
 import {
   attachMeta,
   parseMeta,
@@ -21,9 +22,9 @@ import {
   remarkLinkRewrite,
   remarkMdxDisableExplicitJsx,
   remarkRemoveImports,
-  remarkStaticImage,
   remarkReplaceImports,
-} from './index'
+  remarkStaticImage,
+} from './nextra/mdx-plugins'
 
 // import theme from './theme'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'

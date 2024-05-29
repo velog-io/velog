@@ -8,13 +8,15 @@ import { DEFAULT_LOCALE, PartialDocsThemeConfig } from './constants'
 import { ActiveAnchorProvider, ConfigProvider, useConfig } from './contexts'
 import { getComponents } from './mdx-components'
 import { renderComponent } from './utils'
-import { MDXRemote, type MDXRemoteSerializeResult } from 'next-mdx-remote'
+import { MDXRemote } from 'next-mdx-remote'
 import theme from './theme.json'
 import { normalizePages, PageTheme } from './nextra/normalize-pages'
 import { useFSRoute } from './nextra/hooks/use-fs-route'
 import { NextraThemeLayoutProps, PageOpts } from './nextra/types'
 import { useMounted } from './nextra/hooks'
 import { SidebarProvider, useSidebar } from './contexts/sidebar'
+import MarkdownEditor from './components/markdown-editor'
+import { MarkdownEditorProvider, useMarkdownEditor } from './contexts/markdown-editor'
 
 interface BodyProps {
   themeContext: PageTheme
@@ -93,25 +95,23 @@ const Body = ({ themeContext, navigation, children }: BodyProps): ReactElement =
   )
 }
 
+type InnerLayoutProps = PageOpts & {
+  children: ReactNode
+}
+
 const InnerLayout = ({
   frontMatter,
   headings,
   children,
-  mdxSource,
-  editorValue,
-  onEditorChange,
   pageMap: initPageMap,
-}: PageOpts & {
-  children: ReactNode
-  mdxSource: MDXRemoteSerializeResult
-  editorValue: string
-  onEditorChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
-}): ReactElement => {
+}: InnerLayoutProps): ReactElement => {
   const config = useConfig()
   const fsPath = useFSRoute()
   const sidebar = useSidebar()
+  const markdownEditor = useMarkdownEditor()
 
   const { pageMap, actionActive, setPageMap } = sidebar
+  const { mdxSource } = markdownEditor
 
   useEffect(() => {
     setPageMap(initPageMap)
@@ -140,6 +140,11 @@ const InnerLayout = ({
 
   const themeContext = { ...activeThemeContext, ...frontMatter }
   const direction = 'ltr'
+
+  if (!mdxSource) {
+    return <div>not found source Loading...</div>
+  }
+
   return (
     <div dir={direction} className={cn('nx-h-screen nx-overflow-hidden')}>
       <script
@@ -168,15 +173,7 @@ const InnerLayout = ({
           />
           <div className={cn('nx-flex nx-w-full')}>
             <div className={cn('nextra-editor-container')}>
-              <textarea
-                className={cn(
-                  'nextra-scrollbar nx-overflow-y-auto nx-outline-none',
-                  'nx-w-full nx-pl-6 nx-pr-6 nx-outline-none',
-                )}
-                style={{ height: 'calc(100vh - 64px)' }}
-                defaultValue={editorValue}
-                onChange={onEditorChange}
-              />
+              <MarkdownEditor />
             </div>
             <div className={cn('nextra-preview-container')} style={{ flex: 1 }}>
               <Body
@@ -209,30 +206,21 @@ const InnerLayout = ({
 }
 
 type NextraDocLayoutProps = NextraThemeLayoutProps & {
-  mdxSource: MDXRemoteSerializeResult
   editorValue: string
-  onEditorChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
 }
 
 export default function NextraDocLayout({
   children,
-  mdxSource,
   editorValue,
-  onEditorChange,
   ...context
 }: NextraDocLayoutProps): ReactElement {
   return (
     <ConfigProvider value={context}>
-      <SidebarProvider value={context}>
-        <InnerLayout
-          {...context.pageOpts}
-          mdxSource={mdxSource}
-          editorValue={editorValue}
-          onEditorChange={onEditorChange}
-        >
-          {children}
-        </InnerLayout>
-      </SidebarProvider>
+      <MarkdownEditorProvider value={{ editorValue }}>
+        <SidebarProvider value={context}>
+          <InnerLayout {...context.pageOpts}>{children}</InnerLayout>
+        </SidebarProvider>
+      </MarkdownEditorProvider>
     </ConfigProvider>
   )
 }

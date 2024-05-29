@@ -4,23 +4,21 @@ import getPages from '@/prefetch/getPages'
 import { mdxCompiler } from '@packages/nextra-editor'
 
 import { GetServerSideProps } from 'next'
-import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 
 import { useRouter } from 'next/router'
 
 type Props = {
-  mdxSource: MDXRemoteSerializeResult
   mdxText: string
 }
 
-const Home = ({ mdxSource, mdxText }: Props) => {
+const Home = ({ mdxText }: Props) => {
   const router = useRouter()
 
   if (router.isFallback) {
     return <div>isFallback Loading...</div>
   }
 
-  return <NextraLayout mdxSource={mdxSource} body={mdxText} />
+  return <NextraLayout body={mdxText} />
 }
 
 export default Home
@@ -145,7 +143,6 @@ Sientase libre de unirse a
   }
 }) satisfies GetServerSideProps<
   {
-    mdxSource: MDXRemoteSerializeResult
     mdxText: string
   },
   { username: string; bookTitle: string; pageUrlSlug: string[] }
