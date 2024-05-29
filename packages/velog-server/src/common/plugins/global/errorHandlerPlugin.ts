@@ -3,6 +3,7 @@ import { isHttpError } from '@errors/HttpError.js'
 import { DiscordService } from '@lib/discord/DiscordService.js'
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
+import fp from 'fastify-plugin'
 
 const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
   fastify.addHook('preHandler', function (request, reply, done) {
@@ -62,4 +63,4 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
   done()
 }
 
-export default errorHandlerPlugin
+export default fp(errorHandlerPlugin)

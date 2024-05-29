@@ -6,6 +6,7 @@ import { ENV } from '@env'
 import { isHttpError } from '@errors/HttpError.js'
 import { container } from 'tsyringe'
 import { DiscordService } from '@lib/discord/DiscordService.js'
+import fp from 'fastify-plugin'
 
 const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.register(mercurius, {
@@ -88,4 +89,4 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
   })
 }
 
-export default mercuriusPlugin
+export default fp(mercuriusPlugin)

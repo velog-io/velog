@@ -2,6 +2,7 @@ import { FastifyPluginAsync } from 'fastify'
 import cors from '@fastify/cors'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
 import { ENV } from '@env'
+import fp from 'fastify-plugin'
 
 const corsPlugin: FastifyPluginAsync = async (fastify) => {
   const corsWhitelist: RegExp[] = [
@@ -28,4 +29,4 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
   })
 }
 
-export default corsPlugin
+export default fp(corsPlugin)
