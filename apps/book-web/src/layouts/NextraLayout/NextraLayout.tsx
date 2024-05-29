@@ -12,20 +12,17 @@ type Props = {
 
 function NextraLayout({ children, body }: Props) {
   const { bookUrlSlug } = useUrlSlug()
+  const [bookMetadata, setBookMetadata] = useState<BookMetadata | null>(null)
+  const { mutateAsync: createPageAsyncMutate } = useCreatePageMutation()
   const {
     data: getPagesData,
     refetch: getPagesRefetch,
     isLoading,
   } = useGetPagesQuery({ input: { book_url_slug: bookUrlSlug } })
 
-  const [bookMetadata, setBookMetadata] = useState<BookMetadata | null>(null)
-
-  const { mutateAsync: createPageAsyncMutate } = useCreatePageMutation()
-
   useEffect(() => {
     if (!getPagesData?.pages) return
     const metadata = generateBookMetadata({ pages: getPagesData.pages, bookUrl: bookUrlSlug })
-
     setBookMetadata(metadata)
   }, [getPagesData?.pages])
 
@@ -44,7 +41,6 @@ function NextraLayout({ children, body }: Props) {
       })
       getPagesRefetch()
     }
-
     window.addEventListener(nextraCustomEventName.addAction, addAction)
     return () => {
       window.removeEventListener(nextraCustomEventName.addAction, addAction)

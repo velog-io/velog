@@ -1,12 +1,16 @@
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { mdxCompiler } from '../mdx-compiler'
+import { Statistics } from '../components/markdown-editor/lib/getEditorStat'
+import { ViewUpdate } from '@codemirror/view'
 
 type MarkdownEditorContext = {
   value: string
-  setValue: (value: string) => void
+  setValue: (value: string, viewUpdate: ViewUpdate) => void
   mdxSource: MDXRemoteSerializeResult | null
   setMdxSource: (value: MDXRemoteSerializeResult | null) => void
+  stat: Statistics | null
+  setStat: (value: Statistics) => void
 }
 
 const MarkdownEditorConext = createContext<MarkdownEditorContext>({
@@ -14,6 +18,8 @@ const MarkdownEditorConext = createContext<MarkdownEditorContext>({
   setValue: () => {},
   mdxSource: null,
   setMdxSource: () => {},
+  stat: null,
+  setStat: () => {},
 })
 
 export function useMarkdownEditor() {
@@ -30,6 +36,7 @@ type Props = {
 export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Props) => {
   const [value, setValue] = useState<string>(editorValue)
   const [mdxSource, setMdxSource] = useState<MDXRemoteSerializeResult | null>(null)
+  const [stat, setStat] = useState<Statistics | null>(null)
 
   useEffect(() => {
     async function compileSource() {
@@ -51,6 +58,8 @@ export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Pro
     setValue,
     mdxSource,
     setMdxSource,
+    stat,
+    setStat,
   }
 
   return <MarkdownEditorConext.Provider value={context}>{children}</MarkdownEditorConext.Provider>

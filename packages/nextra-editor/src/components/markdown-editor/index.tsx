@@ -1,24 +1,18 @@
 import cn from 'clsx'
-import { useMarkdownEditor } from '../../contexts/markdown-editor'
+import { useEffect, useRef } from 'react'
+import styles from './markdown-editor.module.css'
+import { useCodemirror } from './hooks/useCodemirror'
 
 const MarkdownEditor = () => {
-  const { value, setValue } = useMarkdownEditor()
+  const container = useRef<HTMLDivElement>(null)
+  const containerHeight = 'calc(100vh - 64px)'
+  const { value } = useCodemirror(container, {
+    autoFocus: true,
+    minHeight: '100%',
+    maxHeight: '100%',
+  })
 
-  const onChangeInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.target.value)
-  }
-
-  return (
-    <textarea
-      className={cn(
-        'nextra-scrollbar nx-overflow-y-auto nx-outline-none',
-        'nx-w-full nx-pl-6 nx-pr-6 nx-outline-none',
-      )}
-      style={{ height: 'calc(100vh - 64px)' }}
-      value={value}
-      onChange={onChangeInput}
-    />
-  )
+  return <div ref={container} style={{ height: containerHeight }} />
 }
 
 export default MarkdownEditor

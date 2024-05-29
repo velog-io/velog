@@ -142,7 +142,7 @@ const InnerLayout = ({
   const direction = 'ltr'
 
   if (!mdxSource) {
-    return <div>not found source Loading...</div>
+    return <div>Mdx source Loading...</div>
   }
 
   return (
