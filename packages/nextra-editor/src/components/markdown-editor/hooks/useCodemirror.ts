@@ -1,12 +1,13 @@
 import { getDefaultExtensions } from './../lib/getDefaultExtensions'
 import { Annotation, EditorState, StateEffect } from '@codemirror/state'
 import { EditorView, ViewUpdate } from '@codemirror/view'
-import { markdown } from '@codemirror/lang-markdown'
 import { useTheme } from 'next-themes'
 import { RefObject, useEffect, useState } from 'react'
 import { useMarkdownEditor } from '../../../contexts/markdown-editor'
 import { getEditorStat } from '../lib/getEditorStat'
-import { javascript } from '@codemirror/lang-javascript'
+import { hyperLink } from '@uiw/codemirror-extensions-hyper-link'
+import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
+import { languages } from '@codemirror/language-data'
 
 type Config = {
   autoFocus?: boolean
@@ -70,20 +71,20 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
     placeholder: '당신의 이야기를 적어주세요...',
     indentWithTab: true,
     basicSetup: {
-      lineNumbers: true,
-      history: true,
-      foldGutter: true,
-      foldKeymap: true,
-      dropCursor: true,
+      // lineNumbers: true,
+      // history: true,
+      // foldGutter: true,
+      // foldKeymap: true,
+      // dropCursor: true,
     },
   })
 
   const extenstions = [
+    markdown({ base: markdownLanguage, codeLanguages: languages }),
+    hyperLink,
     updateListener,
     defaultThemeOption,
     ...defaultExtensions,
-    markdown(),
-    javascript({ jsx: true }),
   ]
 
   useEffect(() => {

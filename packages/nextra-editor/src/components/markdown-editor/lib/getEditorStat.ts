@@ -1,6 +1,7 @@
 import type { EditorSelection, SelectionRange, Line } from '@codemirror/state'
 import type { ViewUpdate } from '@codemirror/view'
 
+// https://uiwjs.github.io/react-codemirror/
 export interface Statistics {
   /** total length of the document */
   length: number

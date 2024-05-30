@@ -37,15 +37,8 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
   const routeOriginal = useFSRoute()
   const [route] = routeOriginal.split('#')
 
-  const {
-    setDraggableNodeRef,
-    setDroppableNodeRef,
-    attributes,
-    listeners,
-    isDragTarget,
-    isOver,
-    style,
-  } = props
+  const { setDraggableNodeRef, setDroppableNodeRef, attributes, listeners, isDragTarget, isOver } =
+    props
 
   const active = !isDragTarget && [route, route + '/'].includes(item.route + '/')
   const activeRouteInside: boolean = active || route.startsWith(item.route + '/')
