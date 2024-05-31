@@ -48,7 +48,7 @@
   "devDependencies": {
     "@packages/eslint-config": "workspace:*",
     "@packages/tsconfig": "workspace:*",
-    "@swc-node/register": "^1.9.0",
+    "@swc-node/register": "^1.9.1",
     "@types/geoip-country": "^4.0.2",
     "@types/inquirer": "^9.0.3",
     "@types/jest": "^29.5.2",

@@ -91,7 +91,7 @@
     "@types/throttle-debounce": "^5.0.1",
     "encoding": "^0.1.13",
     "eslint": "^9.0.0",
-    "typescript": "^5.4.4",
+    "typescript": "^5.4.5",
     "typescript-plugin-css-modules": "^5.0.1"
   }
 }
