@@ -16,7 +16,7 @@
       "@routes/*": ["src/routes/*"],
       "@services/*": ["src/services/*"],
       "@env": ["src/env.mts"],
-      "@template/*": ["src/template/*"]
+      "@template/*": ["src/template/*"],
     }
   },
   "include": [

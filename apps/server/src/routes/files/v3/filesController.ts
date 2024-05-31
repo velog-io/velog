@@ -1,4 +1,3 @@
-import Axios from 'axios'
 import { injectable, singleton } from 'tsyringe'
 import { AwsService } from '@lib/aws/AwsService.js'
 import { CreateUrlBody, UploadBody } from './schema.js'
@@ -15,6 +14,7 @@ import { PostService } from '@services/PostService/index.js'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
 import { B2ManagerService } from '@lib/b2Manager/B2ManagerService.js'
 import { InternalServerError } from '@errors/InternalServerError.js'
+import { axios } from 'src/commonjs/axios.js'
 
 interface Controller {
   createUrl({ body, ipaddr, signedUserId, ip }: CreateUrlArgs): Promise<CreateUrlResult>
@@ -59,7 +59,7 @@ export class FilesController implements Controller {
       const path = this.file.generateUploadPath({ type, id: userImage.id, username: user.username })
 
       if (ENV.blacklistUsername.includes(user.username) || ENV.blacklistIp.includes(ipaddr || ip)) {
-        await Axios.post(ENV.slackUrl, {
+        await axios.post(ENV.slackUrl, {
           text: `blacklist uploaded image | ${ip} ${user.username}`,
         })
       }

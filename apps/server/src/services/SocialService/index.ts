@@ -3,7 +3,7 @@ import { DbService } from '@lib/db/DbService.js'
 import { injectable, singleton } from 'tsyringe'
 import { google } from 'googleapis'
 import qs from 'qs'
-import axios from 'axios'
+
 import { Octokit } from '@octokit/rest'
 import { SocialAccount } from '@packages/database/velog-rds'
 import {
@@ -15,6 +15,7 @@ import {
   GithubOAuthResult,
   SocialProfile,
 } from '@services/SocialService/SocialServiceInterface.js'
+import { axios } from 'src/commonjs/axios.js'
 
 interface Service {
   getSocialAccount({ uid, provider }: GetSocialAccountParams): Promise<SocialAccount | null>

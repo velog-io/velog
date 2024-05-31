@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { injectable, singleton } from 'tsyringe'
 import mimeTypes from 'mime-types'
 import tmp from 'tmp'
@@ -6,6 +5,7 @@ import fs from 'fs'
 import path from 'path'
 import multer from 'fastify-multer'
 import { StorageEngine } from 'fastify-multer/lib/interfaces.js'
+import { axios } from 'src/commonjs/axios.js'
 
 interface Service {
   get multerStorage(): StorageEngine

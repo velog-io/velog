@@ -1,6 +1,6 @@
 import { ENV } from '@env'
+import { axios } from 'src/commonjs/axios.js'
 import { injectable, singleton } from 'tsyringe'
-import axios from 'axios'
 
 interface Service {
   verifyToken(token: string): Promise<boolean>

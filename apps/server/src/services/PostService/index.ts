@@ -16,12 +16,12 @@ import { CacheService } from '@lib/cache/CacheService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { PostReadLogService } from '@services/PostReadLogService/index.js'
 import { subDays, subYears } from 'date-fns'
-import axios from 'axios'
 import { ENV } from '@env'
 import { RedisService } from '@lib/redis/RedisService.js'
 import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 import { Time } from '@constants/TimeConstants.js'
 import { TagService } from '@services/TagService/index.js'
+import { axios } from 'src/commonjs/axios.js'
 interface Service {
   findById(id: string, include?: Prisma.PostInclude): Promise<Post | null>
   findPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>

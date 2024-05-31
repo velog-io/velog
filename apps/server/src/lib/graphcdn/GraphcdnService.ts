@@ -1,6 +1,8 @@
 import { injectable, singleton } from 'tsyringe'
-import axios, { AxiosResponse } from 'axios'
+
 import { ENV } from '@env'
+import { axios } from 'src/commonjs/axios.js'
+import { AxiosResponse } from 'axios'
 
 interface Service {
   purgePost(id: string): Promise<AxiosResponse>
