@@ -1,5 +1,7 @@
+import cn from 'clsx'
 import { useRef } from 'react'
 import { useCodemirror } from './hooks/useCodemirror'
+import Toolbar from './toolbar'
 
 const MarkdownEditor = () => {
   const container = useRef<HTMLDivElement>(null)
@@ -10,7 +12,14 @@ const MarkdownEditor = () => {
     maxHeight: '100%',
   })
 
-  return <div ref={container} style={{ height: containerHeight }} />
+  return (
+    <div>
+      <Toolbar />
+      <div className={cn('nx-py-4')}>
+      <div ref={container} style={{ height: containerHeight }} />
+      </div>
+    </div>
+  )
 }
 
 export default MarkdownEditor
