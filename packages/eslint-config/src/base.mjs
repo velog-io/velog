@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Linter } from 'eslint'
 import { resolve } from 'path'
 import { FlatCompat } from '@eslint/eslintrc'
 

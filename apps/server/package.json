@@ -58,7 +58,7 @@
     "googleapis": "^124.0.0",
     "graphql": "^16.7.1",
     "graphql-scalars": "^1.22.2",
-    "inquirer": "^9.2.12",
+    "inquirer": "^9.2.23",
     "json-schema-to-ts": "^3.0.1",
     "jsonwebtoken": "^9.0.2",
     "lru-cache": "^10.0.0",

@@ -15,6 +15,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["./scripts/*.mts", "./lib", "./env", "./data", "eslint.config.js", "index.mts"],
+  "include": ["./scripts/*.mts", "./lib", "./env", "./data", "eslint.config.js", "index.mts", "scripts/privatePostsOfSpamAccount.mts"],
   "exclude": ["dist"]
 }

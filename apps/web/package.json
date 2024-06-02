@@ -39,7 +39,7 @@
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",
     "html-react-parser": "^5.0.6",
-    "inquirer": "^9.2.7",
+    "inquirer": "^9.2.23",
     "nanoid": "^5.0.7",
     "next": "^14.2.1",
     "next-seo": "^6.0.0",

@@ -2,10 +2,11 @@ import 'reflect-metadata'
 import { Comment, Post, User, UserProfile } from '@packages/database/velog-rds'
 import { DbService } from '../lib/db/DbService.mjs'
 import { container, injectable } from 'tsyringe'
-import inquirer from 'inquirer'
+
 import { DiscordService } from '../lib/discord/DiscordService.mjs'
 import { BlockListService } from '../lib/blockList/BlockListService.mjs'
 import { format } from 'date-fns'
+// import inquirer from 'inquirer'
 
 const ENV = {
   discordPrivatePostsChannelId: process.env.DISCORD_PRIVATE_POSTS_CHANNEL_ID,
@@ -182,21 +183,21 @@ class Runner implements IRunner {
       })),
     })
 
-    const { answer } = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'answer',
-        message: `${username} 유저의 모든 게시글을 비공개 설정하고, 영구적으로 blockList에 등록하시겠습니까?`,
-        choices: ['yes', 'no'],
-        default: 'yes',
-      },
-    ])
+    // const { answer } = await inquirer.prompt([
+    //   {
+    //     type: 'list',
+    //     name: 'answer',
+    //     message: `${username} 유저의 모든 게시글을 비공개 설정하고, 영구적으로 blockList에 등록하시겠습니까?`,
+    //     choices: ['yes', 'no'],
+    //     default: 'yes',
+    //   },
+    // ])
 
-    if (!['yes', 'no'].includes(answer)) {
-      throw new Error('Wrong Answer')
-    }
+    // if (!['yes', 'no'].includes(answer)) {
+    //   throw new Error('Wrong Answer')
+    // }
 
-    return { posts, is_set_private: answer === 'yes' }
+    return { posts, is_set_private: true }
   }
   private async setIsPrivatePost(postIds: string[]) {
     return await this.db.post.updateMany({

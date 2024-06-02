@@ -6,10 +6,6 @@
     "email": "public.velopert@gmail.com"
   },
   "description": "The database used in the Velog project include pg, mongo, redis, etc",
-  "keywords": [
-    "velog",
-    "cron"
-  ],
   "exports": {
     "./velog-rds": {
       "default": "./dist/velog-rds/index.mjs",
@@ -45,7 +41,7 @@
     "@prisma/client": "^5.11.0",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.2.1",
-    "inquirer": "^9.2.7",
+    "inquirer": "^9.2.23",
     "ioredis": "^5.3.2",
     "prisma": "^5.11.0",
     "tsx": "^4.7.1",

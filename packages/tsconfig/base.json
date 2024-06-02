@@ -14,5 +14,6 @@
     "skipLibCheck": true,
     "baseUrl": "./",
     "rootDir": "./",
+    "declaration": false
   }
 }

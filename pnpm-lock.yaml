@@ -188,8 +188,8 @@ importers:
         specifier: ^9.0.0
         version: 9.3.0
       inquirer:
-        specifier: ^9.2.15
-        version: 9.2.22
+        specifier: ^9.2.23
+        version: 9.2.23
       jest:
         specifier: ^29.6.4
         version: 29.7.0(@types/node@20.12.13)(ts-node@10.9.2(@swc/core@1.5.24(@swc/helpers@0.5.5))(@types/node@20.12.13)(typescript@5.4.5))
@@ -330,8 +330,8 @@ importers:
         specifier: ^9.0.0
         version: 9.3.0
       inquirer:
-        specifier: ^9.2.20
-        version: 9.2.22
+        specifier: ^9.2.23
+        version: 9.2.23
       postcss:
         specifier: ^8
         version: 8.4.38
@@ -387,8 +387,8 @@ importers:
         specifier: ^4.2.68
         version: 4.2.101
       inquirer:
-        specifier: ^9.2.7
-        version: 9.2.22
+        specifier: ^9.2.23
+        version: 9.2.23
       ioredis:
         specifier: ^5.3.2
         version: 5.4.1
@@ -544,8 +544,8 @@ importers:
         specifier: ^1.22.2
         version: 1.23.0(graphql@16.8.1)
       inquirer:
-        specifier: ^9.2.12
-        version: 9.2.22
+        specifier: ^9.2.23
+        version: 9.2.23
       json-schema-to-ts:
         specifier: ^3.0.1
         version: 3.1.0
@@ -746,8 +746,8 @@ importers:
         specifier: ^5.0.6
         version: 5.1.10(@types/react@18.3.3)(react@18.3.1)
       inquirer:
-        specifier: ^9.2.7
-        version: 9.2.22
+        specifier: ^9.2.23
+        version: 9.2.23
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
@@ -946,6 +946,31 @@ importers:
         specifier: ^5.3.3
         version: 5.4.5
 
+  packages/commonjs:
+    dependencies:
+      '@packages/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@packages/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      axios:
+        specifier: ^1.4.0
+        version: 1.7.2
+      inquirer:
+        specifier: ^9.2.23
+        version: 9.2.23
+    devDependencies:
+      '@types/inquirer':
+        specifier: ^9.0.7
+        version: 9.0.7
+      eslint:
+        specifier: ^9.0.0
+        version: 9.3.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+
   packages/database:
     dependencies:
       '@packages/scripts':
@@ -961,8 +986,8 @@ importers:
         specifier: ^7.2.1
         version: 7.4.2
       inquirer:
-        specifier: ^9.2.7
-        version: 9.2.22
+        specifier: ^9.2.23
+        version: 9.2.23
       ioredis:
         specifier: ^5.3.2
         version: 5.4.1
@@ -1308,6 +1333,9 @@ importers:
 
   packages/not-shared:
     dependencies:
+      '@packages/commonjs':
+        specifier: workspace:*
+        version: link:../commonjs
       '@packages/database':
         specifier: workspace:*
         version: link:../database
@@ -1327,8 +1355,8 @@ importers:
         specifier: ^16.3.1
         version: 16.4.5
       inquirer:
-        specifier: ^9.2.12
-        version: 9.2.22
+        specifier: ^9.2.23
+        version: 9.2.23
       ioredis:
         specifier: ^5.3.2
         version: 5.4.1
@@ -1382,8 +1410,8 @@ importers:
         specifier: ^3.540.0
         version: 3.587.0
       inquirer:
-        specifier: ^9.2.16
-        version: 9.2.22
+        specifier: ^9.2.23
+        version: 9.2.23
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.14
@@ -2803,8 +2831,8 @@ packages:
     resolution: {integrity: sha512-d2CGZR2o7fS6sWB7DG/3a95bGKQyHMACZ5aW8qGkkqQpUoZV6C0X7Pc7l4ZNMZkfNBf4VWNe9E1jRsf0G146Ew==}
     engines: {node: '>=18.18'}
 
-  '@inquirer/figures@1.0.2':
-    resolution: {integrity: sha512-4F1MBwVr3c/m4bAUef6LgkvBfSjzwH+OfldgHqcuacWwSUetFebM2wi58WfG9uk1rR98U6GwLed4asLJbwdV5w==}
+  '@inquirer/figures@1.0.3':
+    resolution: {integrity: sha512-ErXXzENMH5pJt5/ssXV0DfWUZqly8nGzf0UcBV9xTnP+KyffE2mqyxIMBrZ8ijQck2nU0TQm40EQB53YreyWHw==}
     engines: {node: '>=18'}
 
   '@ioredis/commands@1.2.0':
@@ -6636,8 +6664,8 @@ packages:
     resolution: {integrity: sha512-M1WuAmb7pn9zdFRtQYk26ZBoY043Sse0wVDdk4Bppr+JOXyQYybdtvK+l9wUibhtjdjvtoiNy8tk+EgsYIUqKg==}
     engines: {node: '>=12.0.0'}
 
-  inquirer@9.2.22:
-    resolution: {integrity: sha512-SqLLa/Oe5rZUagTR9z+Zd6izyatHglbmbvVofo1KzuVB54YHleWzeHNLoR7FOICGOeQSqeLh1cordb3MzhGcEw==}
+  inquirer@9.2.23:
+    resolution: {integrity: sha512-kod5s+FBPIDM2xiy9fu+6wdU/SkK5le5GS9lh4FEBjBHqiMgD9lLFbCbuqFNAjNL2ZOy9Wd9F694IOzN9pZHBA==}
     engines: {node: '>=18'}
 
   int64-buffer@0.1.10:
@@ -10985,7 +11013,7 @@ snapshots:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
       '@aws-sdk/client-sso-oidc': 3.587.0
-      '@aws-sdk/client-sts': 3.587.0(@aws-sdk/client-sso-oidc@3.587.0)
+      '@aws-sdk/client-sts': 3.587.0
       '@aws-sdk/core': 3.587.0
       '@aws-sdk/credential-provider-node': 3.587.0(@aws-sdk/client-sso-oidc@3.587.0)(@aws-sdk/client-sts@3.587.0(@aws-sdk/client-sso-oidc@3.587.0))
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -11079,7 +11107,7 @@ snapshots:
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sts': 3.587.0(@aws-sdk/client-sso-oidc@3.587.0)
+      '@aws-sdk/client-sts': 3.587.0
       '@aws-sdk/core': 3.587.0
       '@aws-sdk/credential-provider-node': 3.587.0(@aws-sdk/client-sso-oidc@3.587.0)(@aws-sdk/client-sts@3.587.0(@aws-sdk/client-sso-oidc@3.587.0))
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -11215,7 +11243,7 @@ snapshots:
       '@aws-crypto/sha256-js': 3.0.0
       '@aws-sdk/client-sso-oidc': 3.587.0
       '@aws-sdk/core': 3.587.0
-      '@aws-sdk/credential-provider-node': 3.587.0(@aws-sdk/client-sso-oidc@3.587.0)(@aws-sdk/client-sts@3.587.0(@aws-sdk/client-sso-oidc@3.587.0))
+      '@aws-sdk/credential-provider-node': 3.587.0(@aws-sdk/client-sso-oidc@3.587.0(@aws-sdk/client-sts@3.587.0))(@aws-sdk/client-sts@3.587.0)
       '@aws-sdk/middleware-host-header': 3.577.0
       '@aws-sdk/middleware-logger': 3.577.0
       '@aws-sdk/middleware-recursion-detection': 3.577.0
@@ -11354,7 +11382,7 @@ snapshots:
       '@aws-sdk/credential-provider-http': 3.587.0
       '@aws-sdk/credential-provider-process': 3.587.0
       '@aws-sdk/credential-provider-sso': 3.587.0(@aws-sdk/client-sso-oidc@3.587.0)
-      '@aws-sdk/credential-provider-web-identity': 3.587.0(@aws-sdk/client-sts@3.587.0(@aws-sdk/client-sso-oidc@3.587.0))
+      '@aws-sdk/credential-provider-web-identity': 3.587.0(@aws-sdk/client-sts@3.587.0)
       '@aws-sdk/types': 3.577.0
       '@smithy/credential-provider-imds': 3.1.0
       '@smithy/property-provider': 3.1.0
@@ -11391,7 +11419,7 @@ snapshots:
       '@aws-sdk/credential-provider-ini': 3.587.0(@aws-sdk/client-sso-oidc@3.587.0)(@aws-sdk/client-sts@3.587.0(@aws-sdk/client-sso-oidc@3.587.0))
       '@aws-sdk/credential-provider-process': 3.587.0
       '@aws-sdk/credential-provider-sso': 3.587.0(@aws-sdk/client-sso-oidc@3.587.0)
-      '@aws-sdk/credential-provider-web-identity': 3.587.0(@aws-sdk/client-sts@3.587.0(@aws-sdk/client-sso-oidc@3.587.0))
+      '@aws-sdk/credential-provider-web-identity': 3.587.0(@aws-sdk/client-sts@3.587.0)
       '@aws-sdk/types': 3.577.0
       '@smithy/credential-provider-imds': 3.1.0
       '@smithy/property-provider': 3.1.0
@@ -11436,14 +11464,6 @@ snapshots:
     transitivePeerDependencies:
       - '@aws-sdk/client-sso-oidc'
       - aws-crt
-
-  '@aws-sdk/credential-provider-web-identity@3.587.0(@aws-sdk/client-sts@3.587.0(@aws-sdk/client-sso-oidc@3.587.0))':
-    dependencies:
-      '@aws-sdk/client-sts': 3.587.0(@aws-sdk/client-sso-oidc@3.587.0)
-      '@aws-sdk/types': 3.577.0
-      '@smithy/property-provider': 3.1.0
-      '@smithy/types': 3.0.0
-      tslib: 2.6.2
 
   '@aws-sdk/credential-provider-web-identity@3.587.0(@aws-sdk/client-sts@3.587.0)':
     dependencies:
@@ -13179,7 +13199,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.3.0': {}
 
-  '@inquirer/figures@1.0.2': {}
+  '@inquirer/figures@1.0.3': {}
 
   '@ioredis/commands@1.2.0': {}
 
@@ -18099,9 +18119,9 @@ snapshots:
       through: 2.3.8
       wrap-ansi: 6.2.0
 
-  inquirer@9.2.22:
+  inquirer@9.2.23:
     dependencies:
-      '@inquirer/figures': 1.0.2
+      '@inquirer/figures': 1.0.3
       '@ljharb/through': 2.3.13
       ansi-escapes: 4.3.2
       chalk: 5.3.0

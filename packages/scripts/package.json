@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.540.0",
-    "inquirer": "^9.2.16",
+    "inquirer": "^9.2.23",
     "reflect-metadata": "^0.1.13",
     "tsx": "^4.7.1",
     "tsyringe": "^4.7.0",
