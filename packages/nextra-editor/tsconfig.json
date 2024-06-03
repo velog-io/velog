@@ -2,30 +2,19 @@
   "compilerOptions": {
     "target": "es2016",
     "module": "ESNext",
-    "declaration": false,
+    "declaration": true,
     "noEmit": true,
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
     "allowJs": true,
     "jsx": "react-jsx",
+    "lib": ["es2023", "dom"],
     "moduleResolution": "node",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "types": ["vitest/globals"],
     "resolveJsonModule": true,
     "paths": {
-      // fixes incorrect types for flexsearch https://github.com/nextapps-de/flexsearch/issues/392#issuecomment-1552286514
-      "flexsearch": ["./node_modules/@types/flexsearch"]
+      "unified": ["./node_modules/unified"]
     }
-  },
-  "include": [
-    "./eslint.config.js",
-    "./src",
-    "./css",
-    "postcss.config.cjs",
-    "tailwind.config.mjs",
-    "./tsup.config.ts",
-    "./vite.config.ts"
-  ],
-  "exclude": ["node_modules", "dist", "./style.css"]
+  }
 }

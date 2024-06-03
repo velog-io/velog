@@ -12,9 +12,9 @@ const image: ToolbarCommand = {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
       <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
       <circle cx="9" cy="9" r="2" />
@@ -24,15 +24,12 @@ const image: ToolbarCommand = {
   execute: ({ state, view }) => {
     if (!view || !state) return
     const main = view.state.selection.main
-    const txt = view.state.sliceDoc(
-      view.state.selection.main.from,
-      view.state.selection.main.to,
-    )
+    const text = view.state.sliceDoc(view.state.selection.main.from, view.state.selection.main.to)
     view.dispatch({
       changes: {
         from: main.from,
         to: main.to,
-        insert: `![](${txt})`,
+        insert: `![](${text})`,
       },
       selection: EditorSelection.range(main.from + 4, main.to + 4),
     })

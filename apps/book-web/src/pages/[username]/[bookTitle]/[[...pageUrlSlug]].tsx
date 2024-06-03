@@ -139,7 +139,8 @@ Sientase libre de unirse a
 
     return { props: { mdxSource, mdxText } }
   } catch (error) {
-    throw new Error(`Error compiling MDX: ${JSON.stringify(error)}`)
+    console.log('error', error)
+    throw error
   }
 }) satisfies GetServerSideProps<
   {

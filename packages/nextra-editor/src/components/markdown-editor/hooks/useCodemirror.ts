@@ -24,8 +24,8 @@ const External = Annotation.define<boolean>()
 export const useCodemirror = (container: RefObject<HTMLElement>, config: Config = {}) => {
   const { theme: currentTheme } = useTheme()
   const { value, setValue, setStat } = useMarkdownEditor()
-  const [state, setState] = useState<EditorState>()
-  const [view, setView] = useState<EditorView>()
+  const [state, setState] = useState<EditorState | null>(null)
+  const [view, setView] = useState<EditorView | null>(null)
 
   const {
     autoFocus = true,
@@ -109,7 +109,7 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
     return () => {
       if (!view) return
       view.destroy()
-      setView(undefined)
+      setView(null)
     }
   }, [container, state, view])
 
@@ -117,7 +117,7 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
     () => () => {
       if (!view) return
       view.destroy()
-      setView(undefined)
+      setView(null)
     },
     [view],
   )

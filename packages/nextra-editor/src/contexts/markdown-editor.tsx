@@ -46,10 +46,10 @@ export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Pro
         })
         setMdxSource(result)
       } catch (error) {
-        console.log('failed mdx compile: ', error)
+        console.error('failed mdx compile: ', error)
+        throw error
       }
     }
-
     compileSource()
   }, [value])
 
