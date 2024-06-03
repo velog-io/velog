@@ -21,7 +21,7 @@ import { RedisService } from '@lib/redis/RedisService.js'
 import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 import { Time } from '@constants/TimeConstants.js'
 import { TagService } from '@services/TagService/index.js'
-import { axios } from 'src/commonjs/axios.js'
+import { axios } from '@packages/commonjs'
 interface Service {
   findById(id: string, include?: Prisma.PostInclude): Promise<Post | null>
   findPostsByIds(ids: string[], include?: Prisma.PostInclude): Promise<Post[]>

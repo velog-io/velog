@@ -7,7 +7,7 @@ import { ENV } from '@env'
 
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { SerializePost } from '@services/PostService/index.js'
-import { axios } from 'src/commonjs/axios.js'
+import { axios } from '@packages/commonjs'
 
 interface Service {
   createIntegrationCode(userId: string): Promise<string>

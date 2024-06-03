@@ -1,6 +1,3 @@
-import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader'
-import { loadSchemaSync } from '@graphql-tools/load'
-import { mergeResolvers } from '@graphql-tools/merge'
 import { Resolvers } from '@graphql/helpers/generated.js'
 import { readdirSync } from 'fs'
 import { DateTimeISOResolver, VoidResolver, PositiveIntResolver } from 'graphql-scalars'
@@ -8,6 +5,7 @@ import { IResolvers, MercuriusContext } from 'mercurius'
 import { basename, dirname, resolve } from 'path'
 import { ENV } from '@env'
 import { fileURLToPath } from 'url'
+import { GraphQLFileLoader, loadSchemaSync, mergeResolvers } from '@packages/commonjs'
 
 async function resolverAutoLoader(): Promise<Resolvers[]> {
   const __filename = fileURLToPath(import.meta.url)

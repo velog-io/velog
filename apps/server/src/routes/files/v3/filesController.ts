@@ -14,7 +14,7 @@ import { PostService } from '@services/PostService/index.js'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
 import { B2ManagerService } from '@lib/b2Manager/B2ManagerService.js'
 import { InternalServerError } from '@errors/InternalServerError.js'
-import { axios } from 'src/commonjs/axios.js'
+import { axios } from '@packages/commonjs'
 
 interface Controller {
   createUrl({ body, ipaddr, signedUserId, ip }: CreateUrlArgs): Promise<CreateUrlResult>

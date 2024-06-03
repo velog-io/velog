@@ -30,7 +30,7 @@ const run_exec = () => {
       if (error) {
         console.log(_stderr)
       }
-      console.log(stdout)
+      console.log('stdout', stdout)
     },
   )
 }

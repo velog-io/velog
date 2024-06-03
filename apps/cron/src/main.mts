@@ -15,7 +15,7 @@ async function main() {
   await dbService.$connect()
 
   const redis = container.resolve(RedisService)
-  await redis.connection().then((message) => console.log(message))
+  await redis.connection()
 
   console.info(`INFO: Database connected to "${ENV.databaseUrl.split('@')[1]}"`)
   process.on('SIGINT', async () => {

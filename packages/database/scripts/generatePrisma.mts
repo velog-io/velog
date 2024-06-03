@@ -11,7 +11,7 @@ function main() {
       `prisma generate --schema='./prisma/velog-rds/schema.prisma'`,
       (error, stdout, _stderr) => {
         if (error) {
-          console.log(_stderr)
+          console.log('error', _stderr)
         }
       },
     )
@@ -22,7 +22,7 @@ function main() {
       `prisma generate --schema='./prisma/velog-book-mongo/schema.prisma'`,
       (error, stdout, _stderr) => {
         if (error) {
-          console.log(_stderr)
+          console.log('error', _stderr)
         }
       },
     )

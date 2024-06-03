@@ -5,7 +5,7 @@ import fs from 'fs'
 import path from 'path'
 import multer from 'fastify-multer'
 import { StorageEngine } from 'fastify-multer/lib/interfaces.js'
-import { axios } from 'src/commonjs/axios.js'
+import { axios } from '@packages/commonjs'
 
 interface Service {
   get multerStorage(): StorageEngine

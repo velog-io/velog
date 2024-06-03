@@ -6,6 +6,8 @@ import { container, injectable } from 'tsyringe'
 import { DiscordService } from '../lib/discord/DiscordService.mjs'
 import { BlockListService } from '../lib/blockList/BlockListService.mjs'
 import { format } from 'date-fns'
+import select from '@inquirer/select'
+
 // import inquirer from 'inquirer'
 
 const ENV = {
@@ -183,21 +185,17 @@ class Runner implements IRunner {
       })),
     })
 
-    // const { answer } = await inquirer.prompt([
-    //   {
-    //     type: 'list',
-    //     name: 'answer',
-    //     message: `${username} 유저의 모든 게시글을 비공개 설정하고, 영구적으로 blockList에 등록하시겠습니까?`,
-    //     choices: ['yes', 'no'],
-    //     default: 'yes',
-    //   },
-    // ])
+    const answer = await select({
+      message: `${username} 유저의 모든 게시글을 비공개 설정하고, 영구적으로 blockList에 등록하시겠습니까?`,
+      choices: [{ name: 'yes', value: 'yes' }, { value: 'no' }],
+      default: 'yes',
+    })
 
-    // if (!['yes', 'no'].includes(answer)) {
-    //   throw new Error('Wrong Answer')
-    // }
+    if (!['yes', 'no'].includes(answer)) {
+      throw new Error('Wrong Answer')
+    }
 
-    return { posts, is_set_private: true }
+    return { posts, is_set_private: answer === 'yes' }
   }
   private async setIsPrivatePost(postIds: string[]) {
     return await this.db.post.updateMany({

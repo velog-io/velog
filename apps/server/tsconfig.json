@@ -17,6 +17,7 @@
       "@services/*": ["src/services/*"],
       "@env": ["src/env.mts"],
       "@template/*": ["src/template/*"],
+      "@commonjs/*": ["src/commonjs/*"]
     }
   },
   "include": [
@@ -27,7 +28,8 @@
     "scripts/**/*.ts",
     "scripts/**.mts",
     "scripts/**/*.mts",
-    "eslint.config.js"
+    "eslint.config.js",
+    "./src/**/*.d.mts"
   ],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist", "**/*.d.mts"]
 }

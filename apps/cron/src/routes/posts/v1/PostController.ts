@@ -3,7 +3,7 @@ import { NotFoundError } from '@errors/NotfoundError.js'
 import { DbService } from '@lib/db/DbService.js'
 import { PostService } from '@services/PostService/index.js'
 import { container, injectable, singleton } from 'tsyringe'
-import { utcToZonedTime } from 'date-fns-tz'
+import { toZonedTime } from 'date-fns-tz'
 import { startOfDay, subMonths } from 'date-fns'
 import { ENV } from '@env'
 import fs from 'fs'
@@ -18,7 +18,11 @@ interface Controller {
 @singleton()
 @injectable()
 export class PostController implements Controller {
-  constructor(private readonly db: DbService, private readonly postService: PostService) {}
+  constructor(
+    private readonly db: DbService,
+    private readonly utils: UtilsService,
+    private readonly postService: PostService,
+  ) {}
   async updatePostScore(postId: string): Promise<void> {
     const post = await this.postService.findById(postId)
 
@@ -33,10 +37,8 @@ export class PostController implements Controller {
       throw new BadRequestError('This operation is only allowed in development environment.')
     }
 
-    const utcTime = new Date()
-    const timezone = 'Asia/Seoul'
-    const tz = utcToZonedTime(utcTime, timezone)
-    const startOfToday = startOfDay(tz)
+    const now = this.utils.now
+    const startOfToday = startOfDay(now)
     const threeMonthsAgo = subMonths(startOfToday, 3)
 
     const posts = await this.db.post.findMany({

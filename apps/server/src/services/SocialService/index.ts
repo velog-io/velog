@@ -15,7 +15,7 @@ import {
   GithubOAuthResult,
   SocialProfile,
 } from '@services/SocialService/SocialServiceInterface.js'
-import { axios } from 'src/commonjs/axios.js'
+import { axios } from '@packages/commonjs'
 
 interface Service {
   getSocialAccount({ uid, provider }: GetSocialAccountParams): Promise<SocialAccount | null>

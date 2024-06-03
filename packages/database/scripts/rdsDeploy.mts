@@ -38,9 +38,9 @@ const main = async () => {
     'pnpm prisma migrate deploy --schema=./prisma/velog-rds/schema.prisma',
     (error, stdout, _stderr) => {
       if (error) {
-        console.log(_stderr)
+        console.log('_stderr', _stderr)
       }
-      console.log(stdout)
+      console.log('stdout', stdout)
     },
   )
 }

@@ -5,6 +5,7 @@
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
+      "types": "./dist/index.d.mts",
       "default": "./dist/index.mjs"
     }
   },
@@ -14,16 +15,15 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json"
+    "build": "tsc -p tsconfig.build.json && cp ./src/index.d.mts ./dist/index.d.mts"
   },
   "dependencies": {
     "@packages/eslint-config": "workspace:*",
     "@packages/tsconfig": "workspace:*",
-    "axios": "^1.4.0",
-    "inquirer": "^9.2.23"
+    "axios": "^1.4.0"
   },
   "devDependencies": {
-    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.14.0",
     "eslint": "^9.0.0",
     "typescript": "^5.4.5"
   }

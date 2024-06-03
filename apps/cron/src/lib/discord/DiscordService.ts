@@ -64,7 +64,7 @@ export class DiscordService {
         throw new Error('Wrong channel type')
       }
     } catch (error: any) {
-      console.log(error)
+      console.log('error', error)
       throw new Error('Failed to send meesage to discord channel')
     } finally {
       this.isSending = false

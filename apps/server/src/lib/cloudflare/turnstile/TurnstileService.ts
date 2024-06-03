@@ -1,5 +1,5 @@
 import { ENV } from '@env'
-import { axios } from 'src/commonjs/axios.js'
+import { axios } from '@packages/commonjs'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {

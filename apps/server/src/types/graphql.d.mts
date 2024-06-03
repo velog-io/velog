@@ -3,3 +3,5 @@ declare module '*.gql' {
   const value: DocumentNode
   export = value
 }
+
+declare module '@swc-node/register' {}

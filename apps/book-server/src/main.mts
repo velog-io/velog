@@ -15,7 +15,7 @@ async function main() {
   discord.connection()
 
   const redis = container.resolve(RedisService)
-  redis.connection()
+  await redis.connection()
 
   app.listen({ port: ENV.port, host: '::' })
 }

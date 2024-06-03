@@ -1,7 +1,4 @@
-import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader'
-import { loadSchemaSync } from '@graphql-tools/load'
-import { mergeResolvers } from '@graphql-tools/merge'
-
+import { GraphQLFileLoader, loadSchemaSync, mergeResolvers } from '@packages/commonjs'
 import { readdirSync } from 'fs'
 import { VoidResolver, PositiveIntResolver } from 'graphql-scalars'
 import { IResolvers, MercuriusContext } from 'mercurius'

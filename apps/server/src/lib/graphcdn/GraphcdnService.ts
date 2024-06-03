@@ -1,7 +1,7 @@
 import { injectable, singleton } from 'tsyringe'
 
 import { ENV } from '@env'
-import { axios } from 'src/commonjs/axios.js'
+import { axios } from '@packages/commonjs'
 import { AxiosResponse } from 'axios'
 
 interface Service {
