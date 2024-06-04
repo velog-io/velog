@@ -1,4 +1,4 @@
-import type { MdxCompilerOptions, MdxOptions } from './index'
+import type { MdxCompilerOptions } from './index'
 import { serialize } from 'next-mdx-remote/serialize'
 import grayMatter from 'gray-matter'
 // import { createProcessor } from '@mdx-js/mdx'
@@ -13,6 +13,8 @@ import rehypeKatex from 'rehype-katex'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import remarkReadingTime from 'remark-reading-time'
+import remarkParse from 'remark-parse'
+import rehypeStringify from 'rehype-stringify'
 
 import {
   attachMeta,
@@ -29,7 +31,6 @@ import {
 // import theme from './theme'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import { truthy } from './nextra/utils'
-import rehypeRaw from 'rehype-raw'
 
 const clonedRemarkLinkRewrite = remarkLinkRewrite.bind(null as any)
 
@@ -57,15 +58,9 @@ const MARKDOWN_URL_EXTENSION_REGEX = /\.mdx?(?:(?=[#?])|$)/
 
 export const mdxCompiler = async (
   source: string,
-  { defaultShowCopyCode = true, mdxOptions, onigHostUrl = '' }: MdxCompilerOptions = {},
+  { defaultShowCopyCode = true, onigHostUrl = '' }: MdxCompilerOptions = {},
 ): Promise<MDXRemoteSerializeResult> => {
-  const { data: frontmatter, content } = grayMatter(source)
-
-  const { remarkPlugins, rehypePlugins }: MdxOptions = {
-    ...mdxOptions,
-    // You can override MDX options in the frontMatter too.
-    ...frontmatter.mdxOptions,
-  }
+  const { content } = grayMatter(source)
 
   if (!onigHostUrl) {
     throw new Error('onigHostUrl is required')
@@ -77,9 +72,11 @@ export const mdxCompiler = async (
 
     const result = await serialize(content, {
       mdxOptions: {
-        format: 'md',
+        format: 'mdx',
         development: process.env.NODE_ENV === 'development',
         remarkPlugins: [
+          remarkParse,
+          // remarkMdx,
           // remarkMermaid, // should be before remarkRemoveImports because contains `import { Mermaid } from ...`
           [
             remarkNpm2Yarn, // should be before remarkRemoveImports because contains `import { Tabs as $Tabs, Tab as $Tab } from ...`
@@ -109,10 +106,11 @@ export const mdxCompiler = async (
         ].filter(truthy),
         rehypePlugins: (
           [
-            // [rehypeRaw, { passThrough: ['mdxjsEsm', 'mdxJsxFlowElement'] }],
+            // [rehypeRaw, { allowDangerousHtml: true }],
             [parseMeta, { defaultShowCopyCode }] satisfies Pluggable,
             rehypeKatex,
             attachMeta,
+            rehypeStringify,
           ] as any
         ).filter(truthy),
       },

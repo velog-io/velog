@@ -22,6 +22,8 @@ export const remarkStaticImage: Plugin<[], Root> = () => (tree, _file, done) => 
       return
     }
 
+    if (url.startsWith('blob:')) return
+
     if (EXTERNAL_URL_REGEX.test(url)) {
       // do nothing with images with external url
       return
@@ -94,7 +96,7 @@ export const remarkStaticImage: Plugin<[], Root> = () => (tree, _file, done) => 
                 ],
               },
             },
-          } as any),
+          }) as any,
       ),
     )
   }

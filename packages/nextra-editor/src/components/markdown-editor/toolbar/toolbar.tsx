@@ -1,10 +1,11 @@
 import cn from 'clsx'
-import { isValidElement, RefObject } from 'react'
+import { isValidElement, RefObject, useCallback } from 'react'
 import { titles, bold, italic, strike, quote, link, image, code } from './commands'
 import { ToolbarCommand } from './commands/type'
 import { EditorState } from '@codemirror/state'
 import { EditorView } from '@codemirror/view'
 import ToolbarSeparator from './toolbar-separator'
+import useClickImage from '@/hooks/use-click-img'
 
 type Props = {
   state: EditorState | null
@@ -17,6 +18,8 @@ const seperator = {
 }
 
 const Toolbar = ({ state, view }: Props) => {
+  const [onClickInput] = useClickImage()
+
   const commands: Partial<ToolbarCommand>[] = [
     ...titles,
     seperator,
@@ -34,6 +37,14 @@ const Toolbar = ({ state, view }: Props) => {
     excute({ state, view })
   }
 
+  const onClickImage = (excute: ToolbarCommand['execute']) => {
+    onClickInput().then((file) => {
+      if (!file) return
+      const tempUrl = URL.createObjectURL(file)
+      excute({ state, view, args: { file, tempUrl } })
+    })
+  }
+
   return (
     <div className={cn('nx-flex nx-flex-row nx-items-center')}>
       {commands.map((command, index) => {
@@ -44,7 +55,11 @@ const Toolbar = ({ state, view }: Props) => {
         return (
           <div key={key}>
             <button
-              onClick={() => onClick(command.execute!)}
+              onClick={() =>
+                command.name === 'image'
+                  ? onClickImage(command.execute!)
+                  : onClick(command.execute!)
+              }
               className={cn(
                 'nx-h-12 nx-w-12 nx-cursor-pointer',
                 'nx-flex nx-items-center nx-justify-center',

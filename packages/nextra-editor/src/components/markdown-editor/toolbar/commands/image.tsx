@@ -21,15 +21,28 @@ const image: ToolbarCommand = {
       <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
     </svg>
   ),
-  execute: ({ state, view }) => {
+  execute: ({ state, view, args }) => {
     if (!view || !state) return
     const main = view.state.selection.main
     const text = view.state.sliceDoc(view.state.selection.main.from, view.state.selection.main.to)
+
+    const isSelection = text.length > 0
+    let insert = `![]()`
+
+    // tempURl Logic
+    if (args.tempUrl) {
+      insert = `![업로드중...](${args.tempUrl})`
+    }
+
+    if (isSelection) {
+      insert = insert += '\n'
+    }
+
     view.dispatch({
       changes: {
         from: main.from,
         to: main.to,
-        insert: `![](${text})`,
+        insert,
       },
       selection: EditorSelection.range(main.from + 4, main.to + 4),
     })

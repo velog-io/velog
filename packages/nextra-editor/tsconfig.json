@@ -14,7 +14,8 @@
     "types": ["vitest/globals"],
     "resolveJsonModule": true,
     "paths": {
-      "unified": ["./node_modules/unified"]
+      "unified": ["./node_modules/unified"],
+      "@/*": ["./src/*"]
     }
   }
 }

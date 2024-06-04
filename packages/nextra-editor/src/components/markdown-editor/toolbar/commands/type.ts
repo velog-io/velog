@@ -6,6 +6,7 @@ type EditorRef = {
   container?: HTMLDivElement | HTMLElement | null
   state: EditorState | null
   view: EditorView | null
+  args?: any
 }
 
 export type ToolbarCommand = {
@@ -14,4 +15,5 @@ export type ToolbarCommand = {
   keyCommand?: string
   button?: React.ButtonHTMLAttributes<HTMLButtonElement>
   execute(editorRef: EditorRef): void
+  children?: (args?: any) => ReactElement
 }
