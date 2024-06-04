@@ -23,11 +23,16 @@ const code: ToolbarCommand = {
   ),
   execute: ({ state, view }) => {
     if (!view || !state) return
+    const line = view.state.doc.lineAt(view.state.selection.main.from)
+    let insert = '```\n'
+    if (line.text.length === 0) {
+      insert = insert.concat('코드를 입력하세요')
+    }
     view.dispatch(
       view.state.changeByRange((range) => ({
         changes: [
-          { from: range.from, insert: '```' },
-          { from: range.to, insert: '```' },
+          { from: range.from, insert },
+          { from: range.to, insert: '\n```' },
         ],
         range: EditorSelection.range(range.from + 3, range.to + 3),
       })),

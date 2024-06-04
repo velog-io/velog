@@ -29,7 +29,7 @@ const link: ToolbarCommand = {
       changes: {
         from: main.from,
         to: main.to,
-        insert: `[${text}]()`,
+        insert: `[${text}](){:target="_blank"}`,
       },
       selection: EditorSelection.range(main.from + 3 + text.length, main.to + 3),
     })
