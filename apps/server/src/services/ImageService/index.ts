@@ -1,3 +1,4 @@
+import { Time } from '@constants/TimeConstants.js'
 import { ENV } from '@env'
 import { DbService } from '@lib/db/DbService.js'
 import { SlackService } from '@lib/slack/SlackService.js'
@@ -94,8 +95,8 @@ export class ImageService implements Service {
     )
   }
   public async detectAbuse(userId: string) {
-    const oneHourAgo = new Date(Date.now() - 1000 * 60 * 60)
-    const oneMinuteAgo = new Date(Date.now() - 1000 * 60)
+    const oneHourAgo = new Date(Date.now() - Time.ONE_HOUR_IN_MS)
+    const oneMinuteAgo = new Date(Date.now() - Time.ONE_MINUTE_IN_MS)
 
     const imageCountLastHour = await this.db.userImageNext.count({
       where: {

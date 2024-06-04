@@ -12,6 +12,7 @@
       "@interfaces/*": ["src/common/interfaces/*"],
       "@templates/*": ["src/templates/*"],
       "@services/*": ["src/services/*"],
+      "@routes/*": ["src/routes/*"],
       "@env": ["src/env.mts"],
       "@constants/*": ["src/common/constants/*"]
     },

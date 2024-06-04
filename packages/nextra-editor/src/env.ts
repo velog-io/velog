@@ -9,10 +9,10 @@ const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
   : 'development'
 
 const env = z.object({
-  apiV3Host: z.string(),
+  graphqlBookServerHost: z.string(),
 })
 
 export const ENV = env.parse({
   appEnv,
-  apiV3Host: process.env.NEXT_PUBLIC_API_V3_HOST,
+  graphqlBookServerHost: process.env.NEXT_PUBLIC_GRAPHQL_BOOK_SERVER_HOST,
 })

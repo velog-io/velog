@@ -89,7 +89,7 @@ export class FilesController implements Controller {
 
     const { type, ref_id } = body
 
-    if (!['post', 'profile'].includes(type)) {
+    if (!['post', 'profile', 'book'].includes(type)) {
       throw new BadRequestError('Invalid type')
     }
 

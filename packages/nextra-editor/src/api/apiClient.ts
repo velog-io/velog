@@ -2,7 +2,7 @@ import { ENV } from '@/env'
 import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: ENV.apiV3Host,
+  baseURL: ENV.graphqlBookServerHost,
   withCredentials: true,
 })
 
