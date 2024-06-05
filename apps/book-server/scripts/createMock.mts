@@ -36,7 +36,7 @@ class Seeder {
   public async createBook(writer: Writer) {
     const mockPages = getMockPages(100).map((page) => ({
       ...page,
-      writer_id: writer.id,
+      fk_writer_id: writer.id,
     }))
 
     const title = 'Learning bunJS is Fun!'
@@ -45,7 +45,7 @@ class Seeder {
 
     const book = await this.mongo.book.create({
       data: {
-        writer_id: writer.id,
+        fk_writer_id: writer.id,
         title: title,
         thumbnail: faker.image.dataUri(),
         description: faker.lorem.paragraph(2),

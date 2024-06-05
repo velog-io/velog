@@ -1,34 +1,17 @@
 import { FromSchema, asConst } from 'json-schema-to-ts'
 
-export const createUrlBodySchema = asConst({
-  type: 'object',
-  required: ['type', 'filename'],
-  properties: {
-    type: {
-      type: 'string',
-    },
-    refId: {
-      type: 'string',
-    },
-    filename: {
-      type: 'string',
-    },
-    payload: true,
-  },
-  additionalProperties: false,
-})
-
-export type CreateUrlBody = FromSchema<typeof createUrlBodySchema>
-
 export const uploadBodySchema = asConst({
   type: 'object',
-  required: ['type'],
+  required: ['bookUrlSlug', 'type'],
   properties: {
+    ref_id: {
+      type: 'string',
+    },
     type: {
       type: 'string',
-      enum: ['post', 'profile'],
+      enum: ['book'],
     },
-    ref_id: {
+    bookUrlSlug: {
       type: 'string',
     },
   },

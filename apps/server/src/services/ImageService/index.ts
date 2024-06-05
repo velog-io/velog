@@ -109,19 +109,21 @@ export class ImageService implements Service {
 
     const user = await this.userService.findById(userId)
     const username = user?.username
+
+    if (imageCountLastHour > 150) {
+      this.slack.sendSlackMessage(
+        `User ${username} (${userId}) is blocked due to upload abuse.`,
+        ENV.slackImage,
+      )
+      return true
+    }
+
     if (imageCountLastHour > 100) {
       this.slack.sendSlackMessage(
         `User ${username} (${userId}) has uploaded ${imageCountLastHour} images in the last hour.`,
         ENV.slackImage,
       )
-
-      if (imageCountLastHour > 500) {
-        this.slack.sendSlackMessage(
-          `User ${username} (${userId}) is blocked due to upload abuse.`,
-          ENV.slackImage,
-        )
-        return true
-      }
+      return true
     }
 
     const imageCountLastMinute = await this.db.userImageNext.count({

@@ -10,7 +10,7 @@ import { axios } from '@packages/commonjs'
 interface Service {
   get multerStorage(): StorageEngine
   downloadFile(url: string): Promise<DownloadFileResult>
-  generateUploadPath(parmeter: GenerateUploadPathParameter): string
+  generateUploadPath(parmeter: GenerateUploadPathArgs): string
 }
 
 @injectable()
@@ -59,7 +59,7 @@ export class FileService implements Service {
       cleanup,
     }
   }
-  public generateUploadPath = ({ id, type, username }: GenerateUploadPathParameter) => {
+  public generateUploadPath = ({ id, type, username }: GenerateUploadPathArgs) => {
     return `images/${username}/${type}/${id}`
   }
 }
@@ -72,7 +72,7 @@ type DownloadFileResult = {
   cleanup: () => void
 }
 
-type GenerateUploadPathParameter = {
+type GenerateUploadPathArgs = {
   id: string
   type: string
   username: string

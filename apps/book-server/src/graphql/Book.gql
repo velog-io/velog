@@ -1,7 +1,7 @@
 type Book {
   id: ID!
   thumbnail: String!
-  writer_id: String!
+  fk_writer_id: String!
   is_published: Boolean!
   pages: [Page!]!
 }

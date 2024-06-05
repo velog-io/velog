@@ -44,7 +44,7 @@ export class BookService implements Service {
       throw new NotFoundError('Not found book')
     }
 
-    if (!book.is_published && book.writer_id !== signedUserId) {
+    if (!book.is_published && book.fk_writer_id !== signedUserId) {
       throw new ConfilctError('Not owner of book')
     }
 

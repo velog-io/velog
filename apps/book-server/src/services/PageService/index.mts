@@ -53,7 +53,7 @@ export class PageService implements Service {
         throw new NotFoundError('Book not found')
       }
 
-      if (book.writer_id !== signedWriterId) {
+      if (book.fk_writer_id !== signedWriterId) {
         throw new UnauthorizedError('Book is not yours')
       }
     }
@@ -95,7 +95,7 @@ export class PageService implements Service {
       throw new NotFoundError('Not found book')
     }
 
-    if (book.writer_id !== signedWriterId) {
+    if (book.fk_writer_id !== signedWriterId) {
       throw new ConfilctError('Not owner of book')
     }
 
@@ -134,7 +134,7 @@ export class PageService implements Service {
       throw new NotFoundError('Not found book')
     }
 
-    if (book.writer_id !== signedWriterId) {
+    if (book.fk_writer_id !== signedWriterId) {
       throw new ConfilctError('Not owner of book')
     }
 
@@ -162,7 +162,7 @@ export class PageService implements Service {
         index,
         code,
         body: '',
-        writer_id: signedWriterId,
+        fk_writer_id: signedWriterId,
         book_id: book.id,
         type,
         level: parentPage ? parentPage.level + 1 : 1,

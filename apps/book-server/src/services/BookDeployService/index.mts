@@ -38,7 +38,7 @@ export class BookDeployService implements Service {
       throw new NotFoundError('Not found book')
     }
 
-    if (book.writer_id !== writer.id) {
+    if (book.fk_writer_id !== writer.id) {
       throw new ConfilctError('Not owner of book')
     }
 

@@ -32,11 +32,11 @@ export type Scalars = {
 }
 
 export type Book = {
+  fk_writer_id: Scalars['String']['output']
   id: Scalars['ID']['output']
   is_published: Scalars['Boolean']['output']
   pages: Array<Page>
   thumbnail: Scalars['String']['output']
-  writer_id: Scalars['String']['output']
 }
 
 export type BookIdInput = {
@@ -79,6 +79,7 @@ export type Page = {
   childrens: Array<Page>
   code: Scalars['String']['output']
   created_at: Scalars['Date']['output']
+  fk_writer_id: Scalars['ID']['output']
   id: Scalars['ID']['output']
   index: Scalars['Int']['output']
   level: Scalars['Int']['output']
@@ -87,7 +88,6 @@ export type Page = {
   type: Scalars['String']['output']
   updated_at: Scalars['Date']['output']
   url_slug: Scalars['String']['output']
-  writer_id: Scalars['ID']['output']
 }
 
 export type PageType = 'folder' | 'page' | 'separator'
