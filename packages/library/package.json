@@ -28,6 +28,10 @@
       "default": "./dist/jwt/JwtService.mjs",
       "types": "./dist/jwt/JwtService.d.mts"
     },
+    "./r2": {
+      "default": "./dist/cloudflare/R2/R2Service.mjs",
+      "types": "./dist/cloudflare/R2/R2Service.d.mts"
+    },
     "./utils": {
       "default": "./dist/utils/UtilsService.mjs",
       "types:": "./dist/utils/UtilsService.d.mts"
@@ -39,15 +43,15 @@
     "lint": "eslint --fix"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.473.0",
+    "@aws-sdk/client-s3": "^3.587.0",
     "@fastify/cookie": "^9.3.1",
+    "@packages/commonjs": "workspace:*",
     "@packages/scripts": "workspace:*",
     "discord.js": "^14.14.1",
     "fastify": "^4.26.2",
     "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.0.7",
-    "nanoid-dictionary": "^4.3.0",
-    "tsyringe": "^4.7.0"
+    "nanoid-dictionary": "^4.3.0"
   },
   "devDependencies": {
     "@packages/eslint-config": "workspace:*",

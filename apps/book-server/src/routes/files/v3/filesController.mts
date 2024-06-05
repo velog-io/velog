@@ -11,6 +11,7 @@ import { WriterService } from '@services/WriterService/index.mjs'
 import { BookService } from '@services/BookService/index.mjs'
 import { ImageService } from '@services/ImageService/index.mjs'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
+import { R2Service } from '@lib/cloudflare/R2/R2Service.mjs'
 
 interface Controller {
   upload({ body, file, signedWriterId }: UploadArgs): Promise<UploadResult>
@@ -22,11 +23,14 @@ export class FilesController implements Controller {
   constructor(
     private readonly file: FileService,
     private readonly mongo: MongoService,
+    private readonly r2: R2Service,
     private readonly writerService: WriterService,
     private readonly bookService: BookService,
     private readonly imageService: ImageService,
   ) {}
   public async upload({ body, file, signedWriterId }: UploadArgs): Promise<UploadResult> {
+    console.log('hello', this.r2.getBuckets())
+
     if (!signedWriterId) {
       throw new UnauthorizedError('Not logged in')
     }

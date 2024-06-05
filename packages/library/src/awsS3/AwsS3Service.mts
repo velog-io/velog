@@ -1,8 +1,8 @@
 import fs from 'fs'
 import {
   S3Client,
-  ListBucketsCommand,
   Bucket,
+  ListBucketsCommand,
   PutObjectCommand,
   PutObjectCommandInput,
   PutObjectCommandOutput,

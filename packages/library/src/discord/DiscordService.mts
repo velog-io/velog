@@ -1,4 +1,3 @@
-import { injectable, singleton } from 'tsyringe'
 import { Client, GatewayIntentBits } from 'discord.js'
 
 type Channels<ChannelName extends string> = Record<ChannelName, string>
@@ -7,8 +6,6 @@ type DiscordArgs<ChannelName extends string> = {
   channels: Channels<ChannelName>
 }
 
-@injectable()
-@singleton()
 export class DiscordService<ChannelName extends string> {
   private client!: Client
   public isSending: boolean = false

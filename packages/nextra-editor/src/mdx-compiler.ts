@@ -15,6 +15,8 @@ import remarkMath from 'remark-math'
 import remarkReadingTime from 'remark-reading-time'
 import remarkParse from 'remark-parse'
 import rehypeStringify from 'rehype-stringify'
+import rehypeRaw from 'rehype-raw'
+import remarkMdx from 'remark-mdx'
 
 import {
   attachMeta,
@@ -73,10 +75,10 @@ export const mdxCompiler = async (
     const result = await serialize(content, {
       mdxOptions: {
         format: 'mdx',
-        development: process.env.NODE_ENV === 'development',
+        development: false,
         remarkPlugins: [
           remarkParse,
-          // remarkMdx,
+          remarkMdx,
           // remarkMermaid, // should be before remarkRemoveImports because contains `import { Mermaid } from ...`
           [
             remarkNpm2Yarn, // should be before remarkRemoveImports because contains `import { Tabs as $Tabs, Tab as $Tab } from ...`
@@ -87,22 +89,22 @@ export const mdxCompiler = async (
             },
           ] satisfies Pluggable,
           remarkRemoveImports,
-          remarkGfm,
+          // // remarkGfm, // error
           [remarkMdxDisableExplicitJsx, { whiteList: ['details', 'summary'] }] satisfies Pluggable,
-          remarkCustomHeadingId,
-          [remarkHeadings, { isRemoteContent: true }] satisfies Pluggable,
-          remarkStaticImage,
-          remarkReadingTime,
-          remarkMath,
-          remarkReplaceImports,
-          [
-            clonedRemarkLinkRewrite,
-            {
-              pattern: MARKDOWN_URL_EXTENSION_REGEX,
-              replace: '',
-              excludeExternalLinks: true,
-            },
-          ] satisfies Pluggable,
+          // remarkCustomHeadingId,
+          // [remarkHeadings, { isRemoteContent: true }] satisfies Pluggable,
+          // remarkStaticImage,
+          // remarkReadingTime,
+          // remarkMath,
+          // remarkReplaceImports,
+          // [
+          //   clonedRemarkLinkRewrite,
+          //   {
+          //     pattern: MARKDOWN_URL_EXTENSION_REGEX,
+          //     replace: '',
+          //     excludeExternalLinks: true,
+          //   },
+          // ] satisfies Pluggable,
         ].filter(truthy),
         rehypePlugins: (
           [
@@ -110,7 +112,7 @@ export const mdxCompiler = async (
             [parseMeta, { defaultShowCopyCode }] satisfies Pluggable,
             rehypeKatex,
             attachMeta,
-            rehypeStringify,
+            // rehypeStringify,
           ] as any
         ).filter(truthy),
       },

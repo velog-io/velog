@@ -1,7 +1,10 @@
 import type { FastifyPluginCallback } from 'fastify'
 import { format } from 'date-fns'
+import filesRoute from './files/index.mjs'
 
 const api: FastifyPluginCallback = (fastify, opts, done) => {
+  fastify.register(filesRoute, { prefix: '/files' })
+
   fastify.get('/ping', (request, reply) => {
     const now = new Date()
     const serverTime = format(now, 'yyyy-MM-dd HH:mm:ss')
