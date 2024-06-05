@@ -15,7 +15,6 @@ const v3: FastifyPluginCallback = (fastify, opts, done) => {
   })
 
   fastify.register(authGuardPlugin)
-
   fastify.post<{ Body: UploadBody }>(
     '/upload',
     {

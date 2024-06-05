@@ -8,6 +8,12 @@ interface Service {}
 @singleton()
 export class R2Service extends R2 implements Service {
   constructor() {
-    super({ r2ApiKey: ENV.cloudflareR2Api })
+    super({
+      accountId: ENV.cloudflareR2AccountId,
+      region: 'APAC',
+      accessKeyId: ENV.cloudflareR2AccessKeyId,
+      secretAccessKey: ENV.cloudflareR2SecretAccessKey,
+      bucketName: 'velog',
+    })
   }
 }

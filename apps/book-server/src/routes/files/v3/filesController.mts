@@ -29,8 +29,6 @@ export class FilesController implements Controller {
     private readonly imageService: ImageService,
   ) {}
   public async upload({ body, file, signedWriterId }: UploadArgs): Promise<UploadResult> {
-    console.log('hello', this.r2.getBuckets())
-
     if (!signedWriterId) {
       throw new UnauthorizedError('Not logged in')
     }
@@ -62,6 +60,12 @@ export class FilesController implements Controller {
       if (book?.fk_writer_id !== signedWriterId) {
         throw new ForbiddenError("Can't access the post")
       }
+    }
+
+    const exists = await this.r2.exists()
+
+    if (!exists) {
+      throw new InternalServerError('R2 Velog bucket not exists')
     }
 
     const originalFileName = file.originalname

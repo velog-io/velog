@@ -1,5 +1,6 @@
 import cookie from '@fastify/cookie'
 import Fastify from 'fastify'
+import multer from 'fastify-multer'
 import corsPlugin from '@plugins/global/corsPlugin.mjs'
 import ipaddrPlugin from '@plugins/global/ipaddrPlugin.mjs'
 import mercuriusPlugin from '@plugins/global/mercuriusPlugin.mjs'
@@ -19,6 +20,7 @@ app.register(corsPlugin)
 app.register(ipaddrPlugin)
 app.register(authPlugin)
 app.register(mercuriusPlugin)
+app.register(multer.contentParser)
 app.register(errorHandlerPlugin)
 
 app.register(routes)

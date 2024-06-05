@@ -58,7 +58,9 @@ const env = z.object({
   bookBucketUrl: z.string(),
   cookieSecretKey: z.string(),
   jwtSecretKey: z.string(),
-  cloudflareR2Api: z.string(),
+  cloudflareR2AccountId: z.string(),
+  cloudflareR2AccessKeyId: z.string(),
+  cloudflareR2SecretAccessKey: z.string(),
 })
 
 export const ENV = env.parse({
@@ -75,5 +77,7 @@ export const ENV = env.parse({
   bookBucketUrl: process.env.BOOK_BUCKET_URL,
   cookieSecretKey: process.env.COOKIE_SECRET_KEY,
   jwtSecretKey: process.env.JWT_SECRET_KEY,
-  cloudflareR2Api: process.env.CLOUDFLARE_R2_API_KEY,
+  cloudflareR2AccountId: process.env.CLOUDFLARE_R2_ACCOUNT_ID,
+  cloudflareR2AccessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID,
+  cloudflareR2SecretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
 })
