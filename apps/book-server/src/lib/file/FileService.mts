@@ -8,12 +8,12 @@ interface Service {
 @singleton()
 export class FileService implements Service {
   public generateUploadPath = ({ id, type, username }: GenerateUploadPathArgs) => {
-    return `images/${username}/${type}/${id}`
+    return `books/${username}/${type}/${id}`
   }
 }
 
 type GenerateUploadPathArgs = {
   id: string
-  type: string
+  type: 'book'
   username: string
 }

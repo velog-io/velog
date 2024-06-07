@@ -91,18 +91,24 @@ export class FilesController implements Controller {
 
     try {
       // TODO: upload file to R2
-      const result: string = ''
+      const result = await this.r2.upload({
+        contents: file.buffer!,
+        destination: filepath,
+        mimeType: file.mimetype,
+      })
+
       await this.mongo.image.update({
         where: {
           id: image.id,
         },
         data: {
-          path: filepath,
+          key: result.objectKey,
+          path: result.uri,
         },
       })
 
       return {
-        path: filepath,
+        path: result.uri,
       }
     } catch (error) {
       console.log('Upload file error', error)

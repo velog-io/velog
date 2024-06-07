@@ -87,6 +87,7 @@ model Image {
   path         String?  @db.String
   filesize     Int?     @db.Int
   type         String?  @db.String
+  key          String?  @default("") @db.String
   ref_id       String?  @db.ObjectId
   created_at   DateTime @default(now())
 
