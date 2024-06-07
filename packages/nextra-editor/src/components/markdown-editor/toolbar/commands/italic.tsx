@@ -22,8 +22,8 @@ const italic: ToolbarCommand = {
       <line x1="15" x2="9" y1="4" y2="20" />
     </svg>
   ),
-  execute: ({ state, view }) => {
-    if (!view || !state) return
+  execute: (view) => {
+    if (!view) return
     view.dispatch(
       view.state.changeByRange((range) => ({
         changes: [

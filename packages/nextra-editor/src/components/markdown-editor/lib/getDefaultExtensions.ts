@@ -3,6 +3,7 @@ import { EditorView, keymap, placeholder } from '@codemirror/view'
 import { indentWithTab } from '@codemirror/commands'
 import { darkTheme, lightTheme } from './theme'
 import { basicSetup, type BasicSetupOptions } from '@uiw/codemirror-extensions-basic-setup'
+import { codeKeymap } from '../toolbar/commands/code'
 
 export type ExtensionOptions = {
   indentWithTab?: boolean
@@ -26,7 +27,7 @@ export const getDefaultExtensions = (options: ExtensionOptions) => {
   const getExtensions: Extension[] = []
 
   if (defaultIndentWithTab) {
-    getExtensions.unshift(keymap.of([indentWithTab]))
+    getExtensions.unshift(keymap.of([indentWithTab, codeKeymap]))
   }
 
   if (defaultBasicSetup) {

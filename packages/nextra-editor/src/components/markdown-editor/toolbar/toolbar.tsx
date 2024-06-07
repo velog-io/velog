@@ -42,7 +42,7 @@ const Toolbar = ({ state, view }: Props) => {
   }
 
   const onClick = (excute: ToolbarCommand['execute']) => {
-    excute({ state, view })
+    excute(view)
   }
 
   const onClickImageButton = async () => {

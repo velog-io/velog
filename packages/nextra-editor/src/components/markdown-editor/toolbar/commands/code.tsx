@@ -1,5 +1,17 @@
-import { EditorSelection } from '@codemirror/state'
+import { TransactionSpec } from '@codemirror/state'
 import { ToolbarCommand } from './type'
+import { EditorView } from 'codemirror'
+import { KeyBinding } from '@codemirror/view'
+
+export const codeKeymap: KeyBinding = {
+  linux: 'Shift-Ctrl-c',
+  win: 'Shift-Ctrl-c',
+  mac: 'Shift-Meta-c',
+  run: (view) => {
+    execute(view)
+    return true
+  },
+}
 
 const code: ToolbarCommand = {
   name: 'code',
@@ -21,23 +33,40 @@ const code: ToolbarCommand = {
       <polyline points="8 6 2 12 8 18" />
     </svg>
   ),
-  execute: ({ state, view }) => {
-    if (!view || !state) return
-    const line = view.state.doc.lineAt(view.state.selection.main.from)
-    let insert = '```\n'
-    if (line.text.length === 0) {
-      insert = insert.concat('코드를 입력하세요')
+  execute,
+  keymap: codeKeymap,
+}
+
+export function execute(view: EditorView | null) {
+  if (!view) return
+  const { state, dispatch } = view
+  const selection = state.selection
+  const selectedText = state.doc.sliceString(selection.main.from, selection.main.to)
+
+  let transaction
+
+  if (selectedText.length === 0) {
+    transaction = state.update({
+      changes: { from: selection.main.from, insert: '```\n코드를 입력하세요\n```' },
+      selection: { anchor: selection.main.from + 4, head: selection.main.from + 13 },
+    })
+  } else {
+    const codeBlockRegex = /^```[\s\S]*```$/
+    let newText
+
+    if (codeBlockRegex.test(selectedText)) {
+      newText = selectedText.replace(/^```\n|\n```$/g, '')
+    } else {
+      newText = `\`\`\`\n${selectedText}\n\`\`\``
     }
-    view.dispatch(
-      view.state.changeByRange((range) => ({
-        changes: [
-          { from: range.from, insert },
-          { from: range.to, insert: '\n```' },
-        ],
-        range: EditorSelection.range(range.from + 3, range.to + 3),
-      })),
-    )
-  },
+
+    const transactionSpec: TransactionSpec = {
+      changes: { from: selection.main.from, to: selection.main.to, insert: newText },
+    }
+
+    transaction = state.update(transactionSpec)
+  }
+  dispatch(transaction)
 }
 
 export default code

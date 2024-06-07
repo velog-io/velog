@@ -22,8 +22,8 @@ const strike: ToolbarCommand = {
       <line x1="4" x2="20" y1="12" y2="12" />
     </svg>
   ),
-  execute: ({ state, view }) => {
-    if (!view || !state) return
+  execute: (view) => {
+    if (!view) return
     view.dispatch(
       view.state.changeByRange((range) => ({
         changes: [

@@ -21,8 +21,8 @@ const link: ToolbarCommand = {
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
     </svg>
   ),
-  execute: ({ state, view }) => {
-    if (!view || !state) return
+  execute: (view) => {
+    if (!view) return
     const main = view.state.selection.main
     const text = view.state.sliceDoc(view.state.selection.main.from, view.state.selection.main.to)
     view.dispatch({
