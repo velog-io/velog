@@ -11,6 +11,7 @@ export const codeKeymap: KeyBinding = {
     execute(view)
     return true
   },
+  preventDefault: true,
 }
 
 const code: ToolbarCommand = {
@@ -37,18 +38,18 @@ const code: ToolbarCommand = {
   keymap: codeKeymap,
 }
 
-export function execute(view: EditorView | null) {
+function execute(view: EditorView | null) {
   if (!view) return
   const { state, dispatch } = view
   const selection = state.selection
   const selectedText = state.doc.sliceString(selection.main.from, selection.main.to)
 
-  let transaction
+  let transaction: TransactionSpec
 
   if (selectedText.length === 0) {
     transaction = state.update({
       changes: { from: selection.main.from, insert: '```\n코드를 입력하세요\n```' },
-      selection: { anchor: selection.main.from + 4, head: selection.main.from + 13 },
+      selection: { anchor: selection.main.from, head: selection.main.from + 17 },
     })
   } else {
     const codeBlockRegex = /^```[\s\S]*```$/
@@ -60,13 +61,14 @@ export function execute(view: EditorView | null) {
       newText = `\`\`\`\n${selectedText}\n\`\`\``
     }
 
-    const transactionSpec: TransactionSpec = {
+    transaction = {
       changes: { from: selection.main.from, to: selection.main.to, insert: newText },
+      selection: { anchor: selection.main.from, head: selection.main.from + newText.length },
     }
-
-    transaction = state.update(transactionSpec)
   }
-  dispatch(transaction)
+
+  dispatch(state.update(transaction))
+  view.focus()
 }
 
 export default code

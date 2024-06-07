@@ -1,5 +1,17 @@
-import { EditorSelection } from '@codemirror/state'
+import { TransactionSpec } from '@codemirror/state'
 import { ToolbarCommand } from './type'
+import { EditorView, KeyBinding } from '@codemirror/view'
+
+export const linkKeymap: KeyBinding = {
+  linux: 'Shift-Ctrl-l',
+  win: 'Shift-Ctrl-l',
+  mac: 'Shift-Meta-l',
+  run: (view) => {
+    execute(view)
+    return true
+  },
+  preventDefault: true,
+}
 
 const link: ToolbarCommand = {
   name: 'link',
@@ -21,19 +33,39 @@ const link: ToolbarCommand = {
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
     </svg>
   ),
-  execute: (view) => {
-    if (!view) return
-    const main = view.state.selection.main
-    const text = view.state.sliceDoc(view.state.selection.main.from, view.state.selection.main.to)
-    view.dispatch({
+  execute,
+}
+
+function execute(view: EditorView | null) {
+  if (!view) return
+  const { state, dispatch } = view
+  const selection = state.selection
+  const selectedText = state.doc.sliceString(selection.main.from, selection.main.to)
+
+  let transaction: TransactionSpec
+  if (selectedText.length === 0) {
+    transaction = {
       changes: {
-        from: main.from,
-        to: main.to,
-        insert: `[${text}](){:target="_blank"}`,
+        from: selection.main.from,
+        insert: '[설명]()',
       },
-      selection: EditorSelection.range(main.from + 3 + text.length, main.to + 3),
-    })
-  },
+      selection: { anchor: selection.main.from + 5 },
+    }
+  } else {
+    const urlPattern = /^(https?:\/\/[^\s]+)$/
+    const isUrl = urlPattern.test(selectedText)
+    const linkText = isUrl ? `[](${selectedText})` : `[${selectedText}]()`
+
+    transaction = {
+      changes: { from: selection.main.from, to: selection.main.to, insert: linkText },
+      selection: {
+        anchor: isUrl ? selection.main.from + 1 : selection.main.from + linkText.length - 1,
+      },
+    }
+  }
+
+  dispatch(state.update(transaction))
+  view.focus()
 }
 
 export default link

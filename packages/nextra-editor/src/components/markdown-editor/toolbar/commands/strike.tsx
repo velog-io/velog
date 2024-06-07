@@ -1,5 +1,18 @@
-import { EditorSelection } from '@codemirror/state'
+import { TransactionSpec } from '@codemirror/state'
 import { ToolbarCommand } from './type'
+import { EditorView } from 'codemirror'
+import { KeyBinding } from '@codemirror/view'
+
+export const strikeKeymap: KeyBinding = {
+  linux: 'Ctrl-s',
+  win: 'Ctrl-s',
+  mac: 'Meta-s',
+  run: (view) => {
+    execute(view)
+    return true
+  },
+  preventDefault: true,
+}
 
 const strike: ToolbarCommand = {
   name: 'strike',
@@ -22,18 +35,45 @@ const strike: ToolbarCommand = {
       <line x1="4" x2="20" y1="12" y2="12" />
     </svg>
   ),
-  execute: (view) => {
-    if (!view) return
-    view.dispatch(
-      view.state.changeByRange((range) => ({
-        changes: [
-          { from: range.from, insert: '~~' },
-          { from: range.to, insert: '~~' },
-        ],
-        range: EditorSelection.range(range.from + 2, range.to + 2),
-      })),
-    )
-  },
+  execute,
+}
+
+function execute(view: EditorView | null) {
+  if (!view) return
+  const { state, dispatch } = view
+  const selection = state.selection
+  const selectedText = state.doc.sliceString(selection.main.from, selection.main.to)
+
+  let transaction: TransactionSpec
+  if (selectedText.length === 0) {
+    transaction = {
+      changes: {
+        from: selection.main.from,
+        insert: '~~텍스트~~',
+      },
+      selection: { anchor: selection.main.from, head: selection.main.from + 7 },
+    }
+  } else {
+    const strikePattern = /^~~(.*)~~$/
+    let newText
+
+    if (strikePattern.test(selectedText)) {
+      newText = selectedText.replace(/^~~|~~$/g, '')
+    } else {
+      newText = `~~${selectedText}~~`
+    }
+
+    transaction = {
+      changes: { from: selection.main.from, to: selection.main.to, insert: newText },
+      selection: {
+        anchor: selection.main.from,
+        head: selection.main.from + newText.length,
+      },
+    }
+  }
+
+  dispatch(state.update(transaction))
+  view.focus()
 }
 
 export default strike

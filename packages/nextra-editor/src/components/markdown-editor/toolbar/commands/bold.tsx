@@ -1,8 +1,23 @@
-import { EditorSelection } from '@codemirror/state'
+import { TransactionSpec } from '@codemirror/state'
 import { ToolbarCommand } from './type'
+import { EditorView, KeyBinding } from '@codemirror/view'
 
+// Bold 명령을 위한 keymap 정의
+export const boldKeymap: KeyBinding = {
+  linux: 'Shift-Ctrl-b',
+  win: 'Shift-Ctrl-b',
+  mac: 'Shift-Meta-b',
+  run: (view) => {
+    execute(view)
+    return true
+  },
+  preventDefault: true,
+}
+
+// Bold 명령 정의
 const bold: ToolbarCommand = {
   name: 'bold',
+  keyCommand: 'bold',
   button: { 'aria-label': 'Add bold text' },
   icon: (
     <svg
@@ -19,23 +34,43 @@ const bold: ToolbarCommand = {
       <path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8" />
     </svg>
   ),
-  execute: (view) => {
-    if (!view) return
-    const text = view.state.sliceDoc(view.state.selection.main.from, view.state.selection.main.to)
-    let insert = '**'
-    if (text.includes('**')) {
-      insert = ''
+  execute,
+  keymap: boldKeymap,
+}
+
+function execute(view: EditorView | null) {
+  if (!view) return
+  const { state, dispatch } = view
+  const selection = state.selection
+  const selectedText = state.doc.sliceString(selection.main.from, selection.main.to)
+
+  let transaction: TransactionSpec
+  if (selectedText.length === 0) {
+    transaction = {
+      changes: { from: selection.main.from, insert: '**텍스트**' },
+      selection: { anchor: selection.main.from, head: selection.main.from + 7 },
     }
-    view.dispatch(
-      view.state.changeByRange((range) => ({
-        changes: [
-          { from: range.from, insert },
-          { from: range.to, insert },
-        ],
-        range: EditorSelection.range(range.from + 2, range.to + 2),
-      })),
-    )
-  },
+  } else {
+    const boldRegex = /^\*\*[\s\S]*\*\*$/
+    let newText
+
+    if (boldRegex.test(selectedText)) {
+      newText = selectedText.replace(/^\*\*|\*\*$/g, '')
+    } else {
+      newText = `**${selectedText}**`
+    }
+
+    transaction = {
+      changes: { from: selection.main.from, to: selection.main.to, insert: newText },
+      selection: {
+        anchor: selection.main.from,
+        head: selection.main.from + newText.length,
+      },
+    }
+  }
+
+  dispatch(state.update(transaction))
+  view.focus()
 }
 
 export default bold

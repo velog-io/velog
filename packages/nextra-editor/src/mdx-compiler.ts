@@ -7,7 +7,7 @@ import { remarkNpm2Yarn } from '@theguild/remark-npm2yarn'
 import type { Pluggable } from 'unified'
 // import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
 // import rehypePrettyCode from 'rehype-pretty-code'
-// import rehypeRaw from 'rehype-raw'
+import remarkRehype from 'remark-rehype'
 import { setWasm } from 'shiki'
 import rehypeKatex from 'rehype-katex'
 import remarkGfm from 'remark-gfm'
@@ -76,43 +76,61 @@ export const mdxCompiler = async (
       mdxOptions: {
         format: 'mdx',
         development: false,
-        remarkPlugins: [
-          remarkParse,
-          remarkMdx,
-          // remarkMermaid, // should be before remarkRemoveImports because contains `import { Mermaid } from ...`
+        remarkPlugins: (
           [
-            remarkNpm2Yarn, // should be before remarkRemoveImports because contains `import { Tabs as $Tabs, Tab as $Tab } from ...`
-            {
-              packageName: 'nextra/components',
-              tabNamesProp: 'items',
-              storageKey: 'selectedPackageManager',
-            },
-          ] satisfies Pluggable,
-          remarkRemoveImports,
-          // // remarkGfm, // error
-          [remarkMdxDisableExplicitJsx, { whiteList: ['details', 'summary'] }] satisfies Pluggable,
-          // remarkCustomHeadingId,
-          // [remarkHeadings, { isRemoteContent: true }] satisfies Pluggable,
-          // remarkStaticImage,
-          // remarkReadingTime,
-          // remarkMath,
-          // remarkReplaceImports,
-          // [
-          //   clonedRemarkLinkRewrite,
-          //   {
-          //     pattern: MARKDOWN_URL_EXTENSION_REGEX,
-          //     replace: '',
-          //     excludeExternalLinks: true,
-          //   },
-          // ] satisfies Pluggable,
-        ].filter(truthy),
+            remarkParse,
+            remarkMdx,
+            // remarkMermaid, // should be before remarkRemoveImports because contains `import { Mermaid } from ...`
+            [
+              remarkNpm2Yarn, // should be before remarkRemoveImports because contains `import { Tabs as $Tabs, Tab as $Tab } from ...`
+              {
+                packageName: 'nextra/components',
+                tabNamesProp: 'items',
+                storageKey: 'selectedPackageManager',
+              },
+            ] satisfies Pluggable,
+            remarkRemoveImports,
+            remarkGfm,
+            [
+              remarkMdxDisableExplicitJsx,
+              { whiteList: ['details', 'summary'] },
+            ] satisfies Pluggable,
+            remarkCustomHeadingId,
+            [remarkHeadings, { isRemoteContent: true }] satisfies Pluggable,
+            remarkStaticImage,
+            remarkReadingTime,
+            remarkMath,
+            remarkReplaceImports,
+            [
+              remarkRehype,
+              {
+                allowDangerousHtml: true,
+                passThrough: [
+                  'mdxjsEsm',
+                  'mdxFlowExpression',
+                  'mdxJsxFlowElement',
+                  'mdxJsxTextElement',
+                  'mdxTextExpression',
+                ],
+              },
+            ],
+            [
+              clonedRemarkLinkRewrite,
+              {
+                pattern: MARKDOWN_URL_EXTENSION_REGEX,
+                replace: '',
+                excludeExternalLinks: true,
+              },
+            ] satisfies Pluggable,
+          ] as any
+        ).filter(truthy),
         rehypePlugins: (
           [
             // [rehypeRaw, { allowDangerousHtml: true }],
             [parseMeta, { defaultShowCopyCode }] satisfies Pluggable,
             rehypeKatex,
             attachMeta,
-            // rehypeStringify,
+            rehypeStringify,
           ] as any
         ).filter(truthy),
       },

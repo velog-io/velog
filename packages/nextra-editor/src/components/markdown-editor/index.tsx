@@ -16,7 +16,12 @@ const MarkdownEditor = () => {
     <div className={cn('nx-py-4')}>
       <Toolbar state={state} view={view} container={container} />
       <div className={cn('')}>
-        <div ref={container} style={{ height: containerHeight }} />
+        <div
+          ref={container}
+          style={{ height: containerHeight }}
+          suppressHydrationWarning={true}
+          suppressContentEditableWarning={true}
+        />
       </div>
     </div>
   )

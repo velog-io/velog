@@ -4,6 +4,11 @@ import { indentWithTab } from '@codemirror/commands'
 import { darkTheme, lightTheme } from './theme'
 import { basicSetup, type BasicSetupOptions } from '@uiw/codemirror-extensions-basic-setup'
 import { codeKeymap } from '../toolbar/commands/code'
+import { boldKeymap } from '../toolbar/commands/bold'
+import { italicKeymap } from '../toolbar/commands/italic'
+import { linkKeymap } from '../toolbar/commands/link'
+import { strikeKeymap } from '../toolbar/commands/strike'
+import { quoteKeymap } from '../toolbar/commands/quote'
 
 export type ExtensionOptions = {
   indentWithTab?: boolean
@@ -26,9 +31,13 @@ export const getDefaultExtensions = (options: ExtensionOptions) => {
 
   const getExtensions: Extension[] = []
 
+  const keymaps = [boldKeymap, italicKeymap, strikeKeymap, quoteKeymap, linkKeymap, codeKeymap]
+
   if (defaultIndentWithTab) {
-    getExtensions.unshift(keymap.of([indentWithTab, codeKeymap]))
+    keymaps.unshift(indentWithTab)
   }
+
+  getExtensions.unshift(keymap.of(keymaps))
 
   if (defaultBasicSetup) {
     if (typeof defaultBasicSetup === 'boolean') {
