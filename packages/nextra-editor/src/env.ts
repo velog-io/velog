@@ -9,6 +9,7 @@ const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
   : 'development'
 
 const env = z.object({
+  appEnv: z.string(),
   graphqlBookServerHost: z.string(),
 })
 

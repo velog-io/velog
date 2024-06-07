@@ -44,10 +44,12 @@ export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Pro
         const result = await mdxCompiler(value, {
           onigHostUrl: process.env.NEXT_PUBLIC_CLIENT_HOST,
         })
+
+        if (!result) return
+
         setMdxSource(result)
       } catch (error) {
         console.error('failed mdx compile: ', error)
-        throw error
       }
     }
     compileSource()

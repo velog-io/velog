@@ -1,7 +1,7 @@
 import { ENV } from '@/env'
 
 export default async function graphqlFetch<T>({
-  url = `${ENV.bookApiHost}/graphql`,
+  url = `${ENV.graphqlBookServerHost}/graphql`,
   method = 'POST',
   body,
   headers = {},

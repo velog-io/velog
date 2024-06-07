@@ -172,7 +172,7 @@ const InnerLayout = ({
             includePlaceholder={themeContext.layout === 'default'}
           />
           <div className={cn('nx-flex nx-w-full')}>
-            <div className={cn('nextra-editor-container')}>
+            <div className={cn('nextra-editor-container nx-w-1/2')}>
               <MarkdownEditor />
             </div>
             <div className={cn('nextra-preview-container')} style={{ flex: 1 }}>

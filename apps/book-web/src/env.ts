@@ -13,8 +13,8 @@ const env = z.object({
   appEnv: z.enum(['development', 'production']),
   publicUrl: z.string(),
   clientHost: z.string(),
-  apiV3Host: z.string(),
-  bookApiHost: z.string(),
+  graphqlServerHost: z.string(),
+  graphqlBookServerHost: z.string(),
 })
 
 export const ENV = env.parse({
@@ -23,6 +23,6 @@ export const ENV = env.parse({
   appEnv,
   publicUrl: process.env.NEXT_PUBLIC_PUBLIC_URL,
   clientHost: process.env.NEXT_PUBLIC_CLIENT_HOST,
-  apiV3Host: process.env.NEXT_PUBLIC_API_V3_HOST,
-  bookApiHost: process.env.NEXT_PUBLIC_BOOK_API_HOST,
+  graphqlServerHost: process.env.NEXT_PUBLIC_GRAPHQL_SERVER_HOST,
+  graphqlBookServerHost: process.env.NEXT_PUBLIC_GRAPHQL_BOOK_SERVER_HOST,
 })

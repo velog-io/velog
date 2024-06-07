@@ -1,3 +1,4 @@
+import { ENV } from '@/env'
 import NextraLayout from '@/layouts/NextraLayout'
 import { generateBookMetadata } from '@/lib/generateBookMetadata'
 import getPages from '@/prefetch/getPages'
@@ -139,9 +140,12 @@ Sientase libre de unirse a
 
     return { props: { mdxSource, mdxText } }
   } catch (error) {
-    console.log('error', error)
-    throw error
+    if (ENV.appEnv === 'development') {
+      console.log('error', error)
+    }
   }
+
+  return { props: { mdxText } }
 }) satisfies GetServerSideProps<
   {
     mdxText: string

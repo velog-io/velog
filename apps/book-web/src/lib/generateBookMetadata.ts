@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import type { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-editor'
 import { escapeForUrl } from './utils'
 // import fs from 'node:fs'
 // import path from 'node:path'
 
-type Pages = Page[]
+export type Pages = Page[]
 type Page = {
   id: string
   title: string
@@ -139,15 +138,15 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
 export const generateBookMetadata = ({ pages, bookUrl }: Args): BookMetadata => {
   const pageMap = generatePageMap(pages, bookUrl)
 
-  if (global.window === undefined) {
-    const fs = require('node:fs')
-    const path = require('node:path')
+  // if (global.window === undefined) {
+  //   const fs = require('fs')
+  //   const path = require('path')
 
-    fs.writeFileSync(
-      path.resolve(process.cwd(), './src/lib/', './context.json'),
-      JSON.stringify(pageMap, null, 4),
-    )
-  }
+  //   fs.writeFileSync(
+  //     path.resolve(process.cwd(), './src/lib/', './context.json'),
+  //     JSON.stringify(pageMap, null, 4),
+  //   )
+  // }
 
   return {
     pageOpts: {

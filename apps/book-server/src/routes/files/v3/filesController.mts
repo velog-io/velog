@@ -12,6 +12,7 @@ import { BookService } from '@services/BookService/index.mjs'
 import { ImageService } from '@services/ImageService/index.mjs'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { R2Service } from '@lib/cloudflare/R2/R2Service.mjs'
+import { ENV } from '@env'
 
 interface Controller {
   upload({ body, file, signedWriterId }: UploadArgs): Promise<UploadResult>
@@ -97,18 +98,20 @@ export class FilesController implements Controller {
         mimeType: file.mimetype,
       })
 
+      const resultPath = `${ENV.cloudflareR2CDN}/${result.objectKey}`
+
       await this.mongo.image.update({
         where: {
           id: image.id,
         },
         data: {
           key: result.objectKey,
-          path: result.uri,
+          path: resultPath,
         },
       })
 
       return {
-        path: result.uri,
+        path: resultPath,
       }
     } catch (error) {
       console.log('Upload file error', error)

@@ -61,6 +61,7 @@ const env = z.object({
   cloudflareR2AccountId: z.string(),
   cloudflareR2AccessKeyId: z.string(),
   cloudflareR2SecretAccessKey: z.string(),
+  cloudflareR2CDN: z.string(),
 })
 
 export const ENV = env.parse({
@@ -80,4 +81,5 @@ export const ENV = env.parse({
   cloudflareR2AccountId: process.env.CLOUDFLARE_R2_ACCOUNT_ID,
   cloudflareR2AccessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID,
   cloudflareR2SecretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
+  cloudflareR2CDN: process.env.CLOUDFLARE_R2_CDN,
 })

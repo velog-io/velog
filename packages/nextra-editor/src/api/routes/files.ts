@@ -25,6 +25,6 @@ export async function uploadImage({ file, info, onUploadProgress }: UploadImageA
 
 export type UploadImageArgs = {
   file: File
-  info: { type: 'post' | 'profile'; refId?: string }
+  info: { type: 'book'; refId?: string }
   onUploadProgress?: (event: AxiosProgressEvent) => void
 }

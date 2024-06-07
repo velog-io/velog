@@ -22,5 +22,9 @@ export default function useClickImage() {
     return promise
   }, [])
 
-  return [onClick, file] as [typeof onClick, typeof file]
+  return { onClick, file, setFile } as {
+    onClick: typeof onClick
+    file: typeof file
+    setFile: typeof setFile
+  }
 }

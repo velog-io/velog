@@ -1,7 +1,7 @@
 import NextraDocLayout, { CustomEventDetail, nextraCustomEventName } from '@packages/nextra-editor'
 import { themeConfig } from './context'
 import { useEffect, useState } from 'react'
-import { BookMetadata, generateBookMetadata } from '@/lib/generateBookMetadata'
+import { BookMetadata, generateBookMetadata, Pages } from '@/lib/generateBookMetadata'
 import { useCreatePageMutation, useGetPagesQuery } from '@/graphql/bookServer/generated/bookServer'
 import { useUrlSlug } from '@/hooks/useUrlSlug'
 
@@ -22,7 +22,7 @@ function NextraLayout({ children, body }: Props) {
 
   useEffect(() => {
     if (!getPagesData?.pages) return
-    const metadata = generateBookMetadata({ pages: getPagesData.pages, bookUrl: bookUrlSlug })
+    const metadata = generateBookMetadata({ pages: getPagesData.pages as Pages, bookUrl: bookUrlSlug })
     setBookMetadata(metadata)
   }, [getPagesData?.pages])
 

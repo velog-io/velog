@@ -61,7 +61,7 @@ const MARKDOWN_URL_EXTENSION_REGEX = /\.mdx?(?:(?=[#?])|$)/
 export const mdxCompiler = async (
   source: string,
   { defaultShowCopyCode = true, onigHostUrl = '' }: MdxCompilerOptions = {},
-): Promise<MDXRemoteSerializeResult> => {
+): Promise<MDXRemoteSerializeResult | null> => {
   const { content } = grayMatter(source)
 
   if (!onigHostUrl) {
@@ -120,6 +120,7 @@ export const mdxCompiler = async (
 
     return result
   } catch (error) {
-    throw error
+    console.log('serialize error', error)
+    return null
   }
 }

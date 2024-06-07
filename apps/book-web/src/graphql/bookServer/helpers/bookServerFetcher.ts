@@ -8,7 +8,7 @@ export function fetcher<TData, TVariables extends Record<string, any>>(
 ) {
   return async (): Promise<TData> => {
     const data = await graphqlFetch<TData>({
-      url: `${ENV.bookApiHost}/graphql`,
+      url: `${ENV.graphqlBookServerHost}/graphql`,
       method: 'POST',
       body: { query, variables: variables ?? {} },
       headers: {
