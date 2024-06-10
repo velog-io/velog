@@ -1,7 +1,7 @@
 import cn from 'clsx'
 import type { CSSProperties, ReactNode } from 'react'
 import { useEffect, useRef } from 'react'
-import { useDndTree } from './sidebar/dnd-tree'
+import { useDndTree } from './sidebar/sortable-tree'
 
 type CollapseProps = {
   children: ReactNode

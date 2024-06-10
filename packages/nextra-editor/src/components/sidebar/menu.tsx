@@ -10,7 +10,7 @@ import { AnimateLayoutChanges, useSortable } from '@dnd-kit/sortable'
 import { Active, DraggableAttributes, Over } from '@dnd-kit/core'
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities'
 import { CSS, Transform } from '@dnd-kit/utilities'
-import { findParent, getIsParentOver } from './utils'
+import { findParent, getIsParentOver } from './sortable-tree/utils'
 
 export type MenuItemProps = {
   setNodeRef: (node: HTMLElement | null) => void

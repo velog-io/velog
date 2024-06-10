@@ -2,7 +2,7 @@ import cn from 'clsx'
 import { ReactElement, useEffect } from 'react'
 import { useDndTree } from '..'
 import { SortableItem } from '@/nextra/normalize-pages'
-import { classes } from '../../style'
+import { classes, indentStyle } from '../../style'
 import { SortableTreeItemProps } from '../types'
 
 type SeparatorProps = {
@@ -37,10 +37,10 @@ export function SortableItemSeparator({ item, ...props }: SeparatorProps): React
         'nx-relative',
         '[word-break:break-word]',
         'nx-mb-2 nx-mt-5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100',
-        isDragTarget && classes.drag,
         isOver && classes.over,
+        isDragTarget && classes.drag,
       )}
-      style={style}
+      style={{ ...style, ...indentStyle(level, indentationWidth) }}
     >
       <div
         ref={setDraggableNodeRef}

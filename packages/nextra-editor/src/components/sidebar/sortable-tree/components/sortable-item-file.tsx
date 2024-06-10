@@ -9,7 +9,7 @@ import { useMenu } from '@/contexts'
 import { removeCodeFromRoute } from '@/utils'
 import { useDndTree } from '..'
 import AddInputs from '../../sidebar-controller/add-inputs'
-import { classes } from '../../style'
+import { classes, indentStyle } from '../../style'
 import { SortableTreeItemProps } from '../types'
 
 type FileProps = {
@@ -56,21 +56,19 @@ export function SortableItemFile({ item, ...props }: FileProps): ReactElement {
     <>
       <li
         className={cn(
-          'nx-relative',
-          classes.list,
-          { active },
-          isDragTarget && classes.drag,
+          {
+            active,
+          },
+          classes.link,
+          active ? classes.active : classes.inactive,
           isOver && classes.over,
+          isDragTarget && classes.drag,
         )}
         ref={setDroppableNodeRef}
-        style={{ ...style, marginLeft: `${level * indentationWidth}px` }}
+        style={{ ...style, ...indentStyle(level, indentationWidth) }}
       >
         <div
-          className={cn(
-            'nx-px-2 nx-py-1.5',
-            classes.link,
-            !isDragging && active ? classes.active : classes.inactive,
-          )}
+          className={cn('nx-px-2 nx-py-1.5')}
           onClick={(e) => {
             if (isDragging) {
               e.preventDefault()

@@ -12,7 +12,7 @@ import { ArrowRightIcon } from '@/nextra/icons'
 import { removeCodeFromRoute } from '@/utils'
 
 import { useDndTree } from '..'
-import { classes } from '../../style'
+import { classes, indentStyle } from '../../style'
 import { SortableTreeItemProps } from '../types'
 
 let TreeState: Record<string, boolean> = Object.create(null)
@@ -95,29 +95,22 @@ export const SortableItemFolder = forwardRef<HTMLDivElement, React.PropsWithChil
     // 드래그가 활성화되어 있고 타깃이면 메뉴를 숨김
     const menuVisible = isDragging && isDragTarget ? false : true
 
-    console.log(props)
     return (
       <li
         className={cn(
-          'nx-relative',
           { active, open },
+          classes.link,
+          active ? classes.active : classes.inactive,
           isOver && classes.over,
           isDragTarget && classes.drag,
         )}
-        style={{ ...style, marginLeft: `${level * indentationWidth}px` }}
+        style={{ ...style, ...indentStyle(level, indentationWidth) }}
       >
         <div
           ref={setDroppableNodeRef}
           className={cn(
-            'nx-w-full nx-items-center nx-justify-between nx-gap-2',
+            'nx-flex nx-w-full nx-items-center nx-justify-between nx-gap-2',
             !isLink && 'nx-w-full nx-text-left',
-            classes.link,
-            active ? classes.active : classes.inactive,
-            !isDragging
-              ? 'hover:nx-bg-blue-100 dark:hover:nx-bg-primary-100/5'
-              : 'nx-bg-transparent hover:nx-bg-transparent',
-            active && isDragTarget && 'nx-bg-blue-100',
-            isDragTarget && classes.drag,
           )}
           onClick={(e) => {
             e.preventDefault()

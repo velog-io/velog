@@ -1,23 +1,7 @@
 import { arrayMove } from '@dnd-kit/sortable'
 import { Active, UniqueIdentifier } from '@dnd-kit/core'
-import { Folder, PageMapItem } from '@/nextra/types'
 import { FlattenedItem, TreeItem, TreeItems } from '@/types'
 import { Item, PageItem, SortableItem } from '@/nextra/normalize-pages'
-
-export function findFolder(pageMap: PageMapItem[], route: string): Folder | undefined {
-  const folders = pageMap.filter((page) => page.kind === 'Folder')
-  for (const folder of folders) {
-    if (folder.route === route) {
-      return folder
-    }
-
-    if (folder.children.length === 0) continue
-
-    const found = findFolder(folder.children, route)
-    if (found) return found
-  }
-  return undefined
-}
 
 export function initilizeDirectories(
   items: PageItem[] | Item[],

@@ -14,8 +14,8 @@ import { LocaleSwitch } from '../locale-switch'
 
 import { useSidebar } from '../../contexts/sidebar'
 import { Menu } from './menu'
-import { initilizeDirectories } from './utils'
 import SortableTree from './sortable-tree'
+import { initilizeDirectories } from './sortable-tree/utils'
 
 interface SideBarProps {
   docsDirectories: PageItem[]
