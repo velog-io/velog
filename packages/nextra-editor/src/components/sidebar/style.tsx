@@ -15,7 +15,7 @@ export const classes = {
     'nx-bg-primary-100 nx-font-semibold nx-text-primary-800 dark:nx-bg-primary-400/10 dark:nx-text-primary-600',
     'contrast-more:nx-border-primary-500 contrast-more:dark:nx-border-primary-500',
   ),
-  list: cn('nx-flex nx-flex-col nx-gap-1'),
+  list: cn('nx-flex nx-flex-col nx-gap-2'),
   // drag: cn(
   //   'nx-transform-gpu nx-w-full nx-max-h-px nx-overflow-hidden nx-bg-transparent nx-text-transparent nx-opcity-80',
   // ),

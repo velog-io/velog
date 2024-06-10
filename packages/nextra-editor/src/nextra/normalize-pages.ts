@@ -134,6 +134,7 @@ export type SortableItem = {
   parent: PageItem | Item | null
   children: SortableItem[]
   childrenIds: UniqueIdentifier[]
+  collapsed: boolean
 } & PageItem &
   Item
 

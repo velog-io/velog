@@ -9,14 +9,13 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import { useConfig, useMenu } from '../../contexts'
 import { renderComponent } from '../../utils'
-import { Collapse } from '../collapse'
+
 import { LocaleSwitch } from '../locale-switch'
 
 import { useSidebar } from '../../contexts/sidebar'
-import DndTree from './dnd-tree'
 import { Menu } from './menu'
 import { initilizeDirectories } from './utils'
-import SidebarController from './sidebar-controller'
+import SortableTree from './sortable-tree'
 
 interface SideBarProps {
   docsDirectories: PageItem[]
@@ -46,6 +45,7 @@ export function Sidebar({
   const sidebarRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const mounted = useMounted()
+
   useEffect(() => {
     if (menu) {
       document.body.classList.add('nx-overflow-hidden', 'md:nx-overflow-auto')
@@ -136,42 +136,21 @@ export function Sidebar({
             directories: flatDirectories,
           })}
         </div>
-        <DndTree items={docDirectories} onItemsChanged={setDocDragItem}>
-          <div
-            className={cn(
-              'nx-overflow-y-auto nx-overflow-x-hidden',
-              'nx-grow nx-px-4 md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]',
-              'nx-pb-4',
-              showSidebar ? 'nextra-scrollbar' : 'no-scrollbar',
-            )}
-            ref={sidebarRef}
-          >
-            <SidebarController showSidebar={showSidebar} />
-            {/* without asPopover check <Collapse />'s inner.clientWidth on `layout: "raw"` will be 0 and element will not have width on initial loading */}
-            {(!asPopover || !showSidebar) && (
-              <Collapse isOpen={showSidebar} horizontal={true}>
-                <Menu
-                  className="nextra-menu-desktop max-md:nx-hidden"
-                  // The sidebar menu, shows only the docs directories.
-                  directories={initDocDirectories}
-                  // When the viewport size is larger than `md`, hide the anchors in
-                  // the sidebar when `floatTOC` is enabled.
-                  anchors={config.toc.float ? [] : anchors}
-                  onlyCurrentDocs
-                />
-              </Collapse>
-            )}
-            {mounted && window.innerWidth < 768 && (
-              <Menu
-                className="nextra-menu-mobile md:nx-hidden"
-                // The mobile dropdown menu, shows all the directories.
-                directories={initFullDirectories}
-                // Always show the anchor links on mobile (`md`).
-                anchors={anchors}
-              />
-            )}
-          </div>
-        </DndTree>
+        <SortableTree
+          items={docDirectories}
+          onItemsChanged={setDocDragItem}
+          showSidebar={showSidebar}
+          sidebarRef={sidebarRef}
+        />
+        {mounted && window.innerWidth < 768 && (
+          <Menu
+            className="nextra-menu-mobile md:nx-hidden"
+            // The mobile dropdown menu, shows all the directories.
+            directories={initFullDirectories}
+            // Always show the anchor links on mobile (`md`).
+            anchors={anchors}
+          />
+        )}
         {hasMenu && (
           <div
             style={{ marginTop: showSidebar ? '0px' : '-30px' }}

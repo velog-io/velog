@@ -30,6 +30,8 @@ export type MenuItemProps = {
   style: CSSProperties
   parent: PageItem | Item | null
   isChildrenOver: boolean
+  level: number
+  indentationWidth: number
 }
 
 interface MenuProps {
@@ -118,6 +120,8 @@ function MenuInner({ item, items }: MenuInnerProps) {
     parent: item.parent,
     isParentOver: getIsParentOver(parent, over?.id),
     isChildrenOver: over ? item.childrenIds.includes(over?.id) : false,
+    level: item.level,
+    indentationWidth: 10,
   }
 
   return item.kind === 'Folder' ? (

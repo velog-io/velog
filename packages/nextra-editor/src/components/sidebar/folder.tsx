@@ -1,7 +1,6 @@
 import { createContext, memo, ReactElement, useContext, useEffect, useState } from 'react'
 import cn from 'clsx'
 import { Item, SortableItem } from '../../nextra/normalize-pages'
-import { useDndTree } from './dnd-tree'
 import { useSidebar } from '../../contexts/sidebar'
 import { useRouter } from 'next/router'
 import { useConfig, useMenu } from '../../contexts'
@@ -11,6 +10,7 @@ import { ArrowRightIcon } from '../../nextra/icons'
 import { Collapse } from '../..'
 import { Menu, MenuItemProps } from './menu'
 import { removeCodeFromRoute } from '../../utils'
+import { useDndTree } from './sortable-tree'
 
 let TreeState: Record<string, boolean> = Object.create(null)
 

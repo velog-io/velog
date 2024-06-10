@@ -1,8 +1,8 @@
 import { arrayMove } from '@dnd-kit/sortable'
 import { Active, UniqueIdentifier } from '@dnd-kit/core'
-import { Folder, PageMapItem } from '../../../nextra/types'
-import { FlattenedItem, TreeItem, TreeItems } from '../../../types'
-import { Item, PageItem, SortableItem } from '../../../nextra/normalize-pages'
+import { Folder, PageMapItem } from '@/nextra/types'
+import { FlattenedItem, TreeItem, TreeItems } from '@/types'
+import { Item, PageItem, SortableItem } from '@/nextra/normalize-pages'
 
 export function findFolder(pageMap: PageMapItem[], route: string): Folder | undefined {
   const folders = pageMap.filter((page) => page.kind === 'Folder')
@@ -33,6 +33,7 @@ export function initilizeDirectories(
       isLast: items.length === index + 1,
       parent,
       children: item.children ? initilizeDirectories(item.children, item.id, level + 1, item) : [],
+      collapsed: false,
     }
     return {
       ...data,
@@ -112,6 +113,25 @@ export function findItemDeep<T extends Record<string, any>>(
   }
 
   return undefined
+}
+
+export function setProperty<T extends keyof SortableItem>(
+  items: SortableItem[],
+  id: UniqueIdentifier,
+  property: T,
+  setter: (value: SortableItem[T]) => SortableItem[T],
+): SortableItem[] {
+  for (const item of items) {
+    if (item.id === id) {
+      item[property] = setter(item[property])
+      continue
+    }
+
+    if (item.children?.length) {
+      item.children = setProperty(item.children, id, property, setter)
+    }
+  }
+  return [...items]
 }
 
 export function removeItem<T extends Record<string, any>>(items: TreeItems<T>, id: string) {

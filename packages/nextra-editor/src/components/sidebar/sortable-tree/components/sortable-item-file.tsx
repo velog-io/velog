@@ -3,27 +3,36 @@ import { ReactElement, useEffect } from 'react'
 import { ActionType, useSidebar } from '@/contexts/sidebar'
 import { useFSRoute } from '@/nextra/hooks'
 import { PageItem, SortableItem } from '@/nextra/normalize-pages'
-
 import { useRouter } from 'next/router'
 import { useMenu } from '@/contexts'
-import AddInputs from './sidebar-controller/add-inputs'
-import { classes } from './style'
+
 import { removeCodeFromRoute } from '@/utils'
-import { MenuItemProps } from './menu'
-import { useDndTree } from './sortable-tree'
+import { useDndTree } from '..'
+import AddInputs from '../../sidebar-controller/add-inputs'
+import { classes } from '../../style'
+import { SortableTreeItemProps } from '../types'
 
 type FileProps = {
   item: SortableItem
-} & MenuItemProps
+} & SortableTreeItemProps
 
-export function File({ item, ...props }: FileProps): ReactElement {
+export function SortableItemFile({ item, ...props }: FileProps): ReactElement {
   const { setFocused } = useSidebar()
   const { isDragging, setDragItem } = useDndTree()
   const route = useFSRoute()
   const router = useRouter()
 
-  const { setDraggableNodeRef, setDroppableNodeRef, attributes, isDragTarget, isOver, listeners } =
-    props
+  const {
+    setDraggableNodeRef,
+    setDroppableNodeRef,
+    attributes,
+    isDragTarget,
+    isOver,
+    listeners,
+    level,
+    indentationWidth,
+    style,
+  } = props
 
   // It is possible that the item doesn't have any route - for example an external link.
   const active = !isDragTarget && item.route && [route, route + '/'].includes(item.route + '/')
@@ -47,12 +56,14 @@ export function File({ item, ...props }: FileProps): ReactElement {
     <>
       <li
         className={cn(
+          'nx-relative',
           classes.list,
           { active },
           isDragTarget && classes.drag,
           isOver && classes.over,
         )}
         ref={setDroppableNodeRef}
+        style={{ ...style, marginLeft: `${level * indentationWidth}px` }}
       >
         <div
           className={cn(

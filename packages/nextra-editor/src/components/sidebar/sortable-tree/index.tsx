@@ -15,21 +15,26 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
-import { flattenTree, getProjection, removeChildrenOf } from './utils'
-import { FlattenedItem, ItemChangedReason } from '../../types'
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { flattenTree, getProjection, removeChildrenOf, setProperty } from '../utils'
+import { FlattenedItem } from '@/types'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
-import { SortableItem } from '../../nextra/normalize-pages'
+import { SortableItem } from '@/nextra/normalize-pages'
 import cn from 'clsx'
-import { customCollisionDetectionAlgorithm } from './utils/customCollisionDetection'
-import { customListSortingStrategy } from './utils/customListSortingStrategy'
+import { customCollisionDetectionAlgorithm } from '../utils/customCollisionDetection'
+import { customListSortingStrategy } from '../utils/customListSortingStrategy'
 import { createPortal } from 'react-dom'
-import { Menu } from './menu'
+import { Menu } from '../menu'
+import SidebarController from '../sidebar-controller'
+import { Collapse } from '@/index'
+import { classes } from '../style'
+import { SortableTreeItem } from './sortable-tree-item'
 
 type Props = {
-  children: React.ReactNode
   items: SortableItem[]
-  onItemsChanged: (items: SortableItem[], reason: ItemChangedReason<SortableItem>) => void
+  onItemsChanged: (newItems: any) => void
+  showSidebar: boolean
+  sidebarRef: React.RefObject<HTMLDivElement>
 }
 
 type DndTreeContextType = {
@@ -50,7 +55,7 @@ const DndTreeContext = createContext<DndTreeContextType>({
 
 export const useDndTree = () => useContext(DndTreeContext)
 
-function DndTree({ children, items }: Props) {
+function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props) {
   const [isDragging, setDragging] = useState(false)
   const [dragItem, setDragItem] = useState<SortableItem | null>(null)
 
@@ -89,6 +94,9 @@ function DndTree({ children, items }: Props) {
     keepGhostInPlace,
     canRootHaveChildren,
   )
+
+  const itemsRef = useRef<SortableItem[]>(items)
+  itemsRef.current = items
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -232,11 +240,22 @@ function DndTree({ children, items }: Props) {
     document.body.style.setProperty('cursor', '')
   }
 
-  const sortedIds = useMemo(() => flattenedItems.map(({ id }) => id), [flattenedItems])
-
   const strategyCallback = useCallback(() => {
     return !!projected
   }, [projected])
+
+  const sortedIds = useMemo(() => flattenedItems.map(({ id }) => id), [flattenedItems])
+
+  const onCollapse = useCallback(
+    (id: UniqueIdentifier) => {
+      onItemsChanged((items: SortableItem[]) =>
+        setProperty(items, id, 'collapsed', (value) => {
+          return !value
+        }),
+      )
+    },
+    [onItemsChanged],
+  )
 
   return (
     <DndContext
@@ -253,7 +272,37 @@ function DndTree({ children, items }: Props) {
         <DndTreeContext.Provider
           value={{ isDragging, setDragging, activeId, dragItem, setDragItem }}
         >
-          {children}
+          <div
+            className={cn(
+              'nx-overflow-y-auto nx-overflow-x-hidden',
+              'nx-grow nx-px-4 md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]',
+              'nx-pb-4',
+              showSidebar ? 'nextra-scrollbar' : 'no-scrollbar',
+            )}
+            ref={sidebarRef}
+          >
+            <SidebarController showSidebar={showSidebar} />
+            {showSidebar && (
+              <Collapse isOpen={showSidebar} horizontal={true}>
+                <div className={cn('nx-relative')}>
+                  <ul className={cn(classes.list, 'nextra-menu-desktop nx-pl-3 max-md:nx-hidden')}>
+                    {flattenedItems.map((item) => {
+                      const key = item.id || item.name || item.route
+                      return (
+                        <SortableTreeItem
+                          key={key}
+                          item={item}
+                          items={flattenedItems}
+                          collapsed={item.collapsed && !!item.children.length}
+                          onCollapse={onCollapse}
+                        />
+                      )
+                    })}
+                  </ul>
+                </div>
+              </Collapse>
+            )}
+          </div>
         </DndTreeContext.Provider>
       </SortableContext>
       {createPortal(
@@ -289,4 +338,4 @@ const adjustTranslate: Modifier = ({ transform }) => {
 
 const modifiersArray = [adjustTranslate]
 
-export default DndTree
+export default SortableTree
