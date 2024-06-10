@@ -1,16 +1,15 @@
 import cn from 'clsx'
-import { ReactElement, useEffect, useState } from 'react'
-import { ActionType, useSidebar } from '../../contexts/sidebar'
-import { useFSRoute } from '../../nextra/hooks'
-import { PageItem, SortableItem } from '../../nextra/normalize-pages'
+import { ReactElement, useEffect } from 'react'
+import { ActionType, useSidebar } from '@/contexts/sidebar'
+import { useFSRoute } from '@/nextra/hooks'
+import { PageItem, SortableItem } from '@/nextra/normalize-pages'
 import { useDndTree } from './dnd-tree'
 import { useRouter } from 'next/router'
-import { useMenu } from '../../contexts'
-import AddInputs from './add-inputs'
+import { useMenu } from '@/contexts'
+import AddInputs from './sidebar-controller/add-inputs'
 import { classes } from './style'
-import { removeCodeFromRoute } from '../../utils'
+import { removeCodeFromRoute } from '@/utils'
 import { MenuItemProps } from './menu'
-import NewOrder from './new-order'
 
 type FileProps = {
   item: SortableItem
@@ -43,16 +42,8 @@ export function File({ item, ...props }: FileProps): ReactElement {
     setDragItem(item)
   }, [isDragTarget])
 
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    if (!isOver) return
-    setVisible(true)
-  }, [isOver])
-
   return (
     <>
-      {visible && <NewOrder item={item} />}
       <li
         className={cn(
           classes.list,
@@ -61,7 +52,6 @@ export function File({ item, ...props }: FileProps): ReactElement {
           isOver && classes.over,
         )}
         ref={setDroppableNodeRef}
-        onMouseOut={() => setVisible(false)}
       >
         <div
           className={cn(

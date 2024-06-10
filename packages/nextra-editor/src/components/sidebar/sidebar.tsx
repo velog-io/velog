@@ -11,11 +11,12 @@ import { useConfig, useMenu } from '../../contexts'
 import { renderComponent } from '../../utils'
 import { Collapse } from '../collapse'
 import { LocaleSwitch } from '../locale-switch'
-import SidebarController from './sidebar-controller'
+
 import { useSidebar } from '../../contexts/sidebar'
 import DndTree from './dnd-tree'
 import { Menu } from './menu'
 import { initilizeDirectories } from './utils'
+import SidebarController from './sidebar-controller'
 
 interface SideBarProps {
   docsDirectories: PageItem[]
@@ -45,6 +46,7 @@ export function Sidebar({
   const sidebarRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const mounted = useMounted()
+
   useEffect(() => {
     if (menu) {
       document.body.classList.add('nx-overflow-hidden', 'md:nx-overflow-auto')
@@ -94,13 +96,13 @@ export function Sidebar({
     [docsDirectories],
   )
 
-  const [docDirectories, setDocDragItem] = useState<SortableItem[]>(initDocDirectories)
-
   const initFullDirectories: SortableItem[] = useMemo(
     () => initilizeDirectories(fullDirectories),
     [],
   )
 
+  const [docDirectories, setDocDragItem] = useState<SortableItem[]>(initDocDirectories)
+  
   return (
     <>
       {includePlaceholder && asPopover ? (

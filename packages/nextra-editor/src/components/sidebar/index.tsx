@@ -11,11 +11,12 @@ import { useConfig, useMenu } from '../../contexts'
 import { renderComponent } from '../../utils'
 import { Collapse } from '../collapse'
 import { LocaleSwitch } from '../locale-switch'
-import SidebarController from './sidebar-controller'
+
 import { useSidebar } from '../../contexts/sidebar'
 import DndTree from './dnd-tree'
 import { Menu } from './menu'
 import { initilizeDirectories } from './utils'
+import SidebarController from './sidebar-controller'
 
 interface SideBarProps {
   docsDirectories: PageItem[]

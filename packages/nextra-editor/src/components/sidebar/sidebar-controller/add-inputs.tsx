@@ -1,12 +1,12 @@
 import { ReactElement, useState } from 'react'
 import cn from 'clsx'
 
-import { ActionType, useSidebar } from '../../contexts/sidebar'
-import useOutsideClick from '../../hooks/use-outside-click'
-import { CustomEventDetail, nextraCustomEventName } from '../..'
-import { EmptyFolderIcon } from '../../nextra/icons/empty-folder'
-import { EmptyFileIcon } from '../../nextra/icons/empty-file'
-import { SeparatorIcon } from '../../nextra/icons/separator'
+import { ActionType, useSidebar } from '@/contexts/sidebar'
+import useOutsideClick from '@/hooks/use-outside-click'
+import { EmptyFolderIcon } from '@/nextra/icons/empty-folder'
+import { EmptyFileIcon } from '@/nextra/icons/empty-file'
+import { SeparatorIcon } from '@/nextra/icons/separator'
+import { type CustomEventDetail, nextraCustomEventName } from '@/index'
 
 type Props = {
   type: ActionType
@@ -44,10 +44,10 @@ function AddInputs({ type }: Props): ReactElement {
 
   if (type === '') return <></>
   return (
-    <li ref={ref} className={cn('[word-break:break-word] nx-flex nx-my-4')}>
+    <li ref={ref} className={cn('nx-my-4 nx-flex [word-break:break-word]')}>
       <span
         className={cn(
-          'nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
+          'nx-text-gray-600 nx-transition-colors hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
         )}
       >
         {type === 'folder' && <EmptyFolderIcon />}
