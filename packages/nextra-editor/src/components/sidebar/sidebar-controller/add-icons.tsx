@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { useSidebar } from '../../contexts/sidebar'
-import { NewFolderIcon } from '../../nextra/icons/new-folder'
-import { Folder, PageMapItem } from '../../nextra/types'
-import { useUrlSlug } from '../../hooks/use-url-slug'
-import { findFolder } from './utils'
-import { NewPageIcon } from '../../nextra/icons/new-page'
-import { SeparatorIcon } from '../../nextra/icons/separator'
-import { removeCodeFromRoute } from '../../utils'
+import { useSidebar } from '@/contexts/sidebar'
+import { NewFolderIcon } from '@/nextra/icons/new-folder'
+import { Folder, PageMapItem } from '@/nextra/types'
+import { useUrlSlug } from '@/hooks/use-url-slug'
+import { findFolder } from '../utils'
+import { NewPageIcon } from '@/nextra/icons/new-page'
+import { SeparatorIcon } from '@/nextra/icons/separator'
+import { removeCodeFromRoute } from '@/utils'
 
 type Props = {
   className: string
