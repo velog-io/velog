@@ -30,7 +30,7 @@ export type MenuItemProps = {
   style: CSSProperties
   parent: PageItem | Item | null
   isChildrenOver: boolean
-  level: number
+  depth: number
   indentationWidth: number
 }
 
@@ -120,7 +120,7 @@ function MenuInner({ item, items }: MenuInnerProps) {
     parent: item.parent,
     isParentOver: getIsParentOver(parent, over?.id),
     isChildrenOver: over ? item.childrenIds.includes(over?.id) : false,
-    level: item.level,
+    depth: item.depth,
     indentationWidth: 10,
   }
 

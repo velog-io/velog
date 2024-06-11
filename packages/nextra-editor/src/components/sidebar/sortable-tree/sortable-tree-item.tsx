@@ -15,17 +15,25 @@ type Props = {
   items: SortableItem[]
   collapsed: boolean
   onCollapse: (id: UniqueIdentifier) => void
+  clone?: boolean
+  indentationWidth: number
 }
 
 const animateLayoutChanges: AnimateLayoutChanges = ({ isSorting, isDragging }) =>
   isSorting || isDragging ? false : true
 
-const SortableTreeMenuNotMemoized = function SortableTreeItem({ item, items, onCollapse }: Props) {
+const SortableTreeMenuNotMemoized = function SortableTreeItem({
+  item,
+  items,
+  onCollapse,
+  clone = false,
+  indentationWidth,
+}: Props) {
   const disabled = item.name === 'index'
   const {
     attributes,
     listeners,
-    isDragging: isDragTarget,
+    isDragging: isGhost,
     isSorting,
     setDraggableNodeRef,
     setDroppableNodeRef,
@@ -53,12 +61,10 @@ const SortableTreeMenuNotMemoized = function SortableTreeItem({ item, items, onC
   const props: SortableTreeItemProps = {
     setNodeRef,
     setActivatorNodeRef,
-    attributes,
-    listeners,
-    isDragTarget,
+    isGhost,
     isSorting,
-    setDraggableNodeRef,
-    setDroppableNodeRef,
+    ref: setDraggableNodeRef,
+    wrapperRef: setDroppableNodeRef,
     transform,
     transition,
     isOver,
@@ -68,9 +74,14 @@ const SortableTreeMenuNotMemoized = function SortableTreeItem({ item, items, onC
     parent: item.parent,
     isParentOver: getIsParentOver(parent, over?.id),
     isChildrenOver: over ? item.childrenIds.includes(over?.id) : false,
-    level: item.level,
-    indentationWidth: 20,
+    depth: item.depth,
+    indentationWidth,
     onCollapse,
+    handleProps: {
+      ...attributes,
+      ...listeners,
+    },
+    clone,
   }
 
   return item.kind === 'Folder' ? (

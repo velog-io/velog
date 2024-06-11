@@ -1,7 +1,7 @@
 import cn from 'clsx'
 import { useRouter } from 'next/router'
 import type { Heading } from '../../nextra/types'
-import { useMounted } from '../../nextra/hooks'
+import { useFSRoute, useMounted } from '../../nextra/hooks'
 import { ExpandIcon } from '../../nextra/icons'
 import type { Item, PageItem, SortableItem } from '../../nextra/normalize-pages'
 import type { ReactElement } from 'react'
@@ -34,10 +34,11 @@ export function Sidebar({
   headings,
   includePlaceholder,
 }: SideBarProps): ReactElement {
-  const { isFolding, setIsFolding, setFocused } = useSidebar()
+  const { isFolding, setIsFolding, setFocusedItem } = useSidebar()
   const config = useConfig()
   const { menu, setMenu } = useMenu()
   const router = useRouter()
+  const routeOriginal = useFSRoute()
   const [showSidebar, setSidebar] = useState(true)
   const [showToggleAnimation, setToggleAnimation] = useState(false)
 
@@ -82,24 +83,25 @@ export function Sidebar({
 
   useEffect(() => {
     if (!isFolding) return
-    setFocused(null)
+    setFocusedItem(null)
     setIsFolding(false)
     setMenu(false)
   }, [isFolding])
 
   const hasI18n = config.i18n.length > 0
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton
+  const [route] = routeOriginal.split('#')
 
   const initDocDirectories: SortableItem[] = useMemo(
-    () => initilizeDirectories(docsDirectories),
-    [docsDirectories],
+    () => initilizeDirectories(docsDirectories, route),
+    [docsDirectories, route],
   )
 
   const [docDirectories, setDocDragItem] = useState<SortableItem[]>(initDocDirectories)
 
   const initFullDirectories: SortableItem[] = useMemo(
-    () => initilizeDirectories(fullDirectories),
-    [],
+    () => initilizeDirectories(fullDirectories, route),
+    [fullDirectories, route],
   )
 
   return (

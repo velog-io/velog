@@ -8,7 +8,6 @@ import { useRouter } from 'next/router'
 import { useMenu } from '@/contexts'
 import AddInputs from './sidebar-controller/add-inputs'
 import { classes } from './style'
-import { removeCodeFromRoute } from '@/utils'
 import { MenuItemProps } from './menu'
 import { useDndTree } from './sortable-tree'
 
@@ -17,7 +16,7 @@ type FileProps = {
 } & MenuItemProps
 
 export function File({ item, ...props }: FileProps): ReactElement {
-  const { setFocused } = useSidebar()
+  const { setFocusedItem } = useSidebar()
   const { isDragging, setDragItem } = useDndTree()
   const route = useFSRoute()
   const router = useRouter()
@@ -73,14 +72,14 @@ export function File({ item, ...props }: FileProps): ReactElement {
               e.preventDefault()
               return
             }
-            setFocused?.(removeCodeFromRoute(item.route))
+            setFocusedItem?.(item)
           }}
           onBlur={(e) => {
             if (isDragging) {
               e.preventDefault()
               return
             }
-            setFocused?.(null)
+            setFocusedItem?.(null)
           }}
         >
           <div {...attributes} {...listeners} ref={setDraggableNodeRef}>

@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import type { DocsThemeConfig } from './constants'
 import type { ProcessorOptions } from '@mdx-js/mdx'
 import type { UniqueIdentifier } from '@dnd-kit/core'
-import type { PageItem } from './nextra/normalize-pages'
+import type { PageItem, SortableItem } from './nextra/normalize-pages'
 
 export type Context = {
   pageOpts: PageOpts
@@ -70,7 +70,7 @@ export type TreeItem<T = PageMapItem> = {
   disableSorting?: boolean
 } & T
 
-export type FlattenedItem<T = PageMapItem> = {
+export type FlattenedItem<T = SortableItem> = {
   parentId: UniqueIdentifier | null
   /*
   How deep in the tree is current item.

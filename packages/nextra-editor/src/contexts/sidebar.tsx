@@ -1,6 +1,7 @@
 import { PageMapItem } from '../nextra/types'
 import { createContext, ReactElement, ReactNode, useContext, useState } from 'react'
 import { Context } from '../types'
+import { SortableItem } from '@/nextra/normalize-pages'
 
 export type ActionInfo = {
   parentUrlSlug: string
@@ -25,8 +26,8 @@ type Sidebar = {
   setIsFolding: (value: boolean) => void
   actionType: ActionType
   setActionType: (value: ActionType) => void
-  focused: null | string
-  setFocused: (value: null | string) => void
+  focusedItem: SortableItem | null
+  setFocusedItem: (value: SortableItem | null) => void
 }
 
 const SidebarContext = createContext<Sidebar>({
@@ -43,8 +44,8 @@ const SidebarContext = createContext<Sidebar>({
   setIsFolding: () => {},
   actionType: '',
   setActionType: () => {},
-  focused: null,
-  setFocused: () => {},
+  focusedItem: null,
+  setFocusedItem: () => {},
 })
 
 export function useSidebar() {
@@ -62,7 +63,7 @@ export const SidebarProvider = ({
   const [isFolding, setIsFolding] = useState(false)
   const [actionComplete, setActionComplete] = useState(false)
   const [actionActive, setActionActive] = useState(false)
-  const [focused, setFocused] = useState<null | string>(null)
+  const [focusedItem, setFocusedItem] = useState<null | SortableItem>(null)
   const [actionType, setActionType] = useState<ActionType>('')
   const [actionInfo, setActionInfo] = useState<ActionInfo>({
     parentUrlSlug: '/',
@@ -76,7 +77,7 @@ export const SidebarProvider = ({
     setActionActive(false)
     setActionComplete(false)
     setActionType('')
-    setFocused(null)
+    setFocusedItem(null)
   }
 
   const value: Sidebar = {
@@ -93,8 +94,8 @@ export const SidebarProvider = ({
     setIsFolding,
     actionType,
     setActionType,
-    focused,
-    setFocused,
+    focusedItem,
+    setFocusedItem,
   }
 
   return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>

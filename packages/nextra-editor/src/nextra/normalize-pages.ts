@@ -129,12 +129,13 @@ export type PageItem = (MdxFile | FolderWithoutChildren) & {
 
 export type SortableItem = {
   parentId: UniqueIdentifier | null
-  level: number
+  depth: number
   isLast: boolean
   parent: PageItem | Item | null
-  children: SortableItem[]
+  children: SortableItem[] | null
   childrenIds: UniqueIdentifier[]
   collapsed: boolean
+  index: number
 } & PageItem &
   Item
 

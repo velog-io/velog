@@ -8,7 +8,6 @@ type CollapseProps = {
   className?: string
   isOpen: boolean
   horizontal?: boolean
-  isDragTarget?: boolean
   style?: CSSProperties
 }
 
@@ -17,7 +16,6 @@ export function Collapse({
   className,
   isOpen,
   horizontal = false,
-  isDragTarget = false,
   style,
 }: CollapseProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -41,8 +39,8 @@ export function Collapse({
 
     if (horizontal) {
       // save initial width to avoid word wrapping when container width will be changed
-      inner.style.width = `${inner.clientWidth}px`
-      container.style.width = `${inner.clientWidth}px`
+      inner.style.width = `100%`
+      container.style.width = `100%`
     } else {
       container.style.height = `${inner.clientHeight}px`
     }
@@ -61,7 +59,7 @@ export function Collapse({
         }
       }, 0)
     }
-  }, [horizontal, isOpen, isDragTarget])
+  }, [horizontal, isOpen])
 
   useEffect(() => {
     initialRender.current = false

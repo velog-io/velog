@@ -78,6 +78,7 @@ function generateTitleCommand(level: number): ToolbarCommand {
       if (!view) return
       const lineInfo = view.state.doc.lineAt(view.state.selection.main.from)
       const mark = '#'.repeat(level)
+      
       const title = lineInfo.text.replace(/^#+/, '').trim()
       view.dispatch({
         changes: {

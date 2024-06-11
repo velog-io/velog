@@ -1,60 +1,45 @@
 import cn from 'clsx'
-import { ReactElement, useEffect } from 'react'
-import { ActionType, useSidebar } from '@/contexts/sidebar'
+import { forwardRef, useEffect } from 'react'
+import { type ActionType, useSidebar } from '@/contexts/sidebar'
 import { useFSRoute } from '@/nextra/hooks'
-import { PageItem, SortableItem } from '@/nextra/normalize-pages'
+import { type PageItem } from '@/nextra/normalize-pages'
 import { useRouter } from 'next/router'
 import { useMenu } from '@/contexts'
-
-import { removeCodeFromRoute } from '@/utils'
 import { useDndTree } from '..'
 import AddInputs from '../../sidebar-controller/add-inputs'
 import { classes, indentStyle } from '../../style'
-import { SortableTreeItemProps } from '../types'
+import type { SortableTreeComponentProps } from '../types'
 
-type FileProps = {
-  item: SortableItem
-} & SortableTreeItemProps
+export const SortableItemFile = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
+  (props, ref) => {
+    const { setFocusedItem } = useSidebar()
+    const { isDragging, setDragItem } = useDndTree()
+    const route = useFSRoute()
+    const router = useRouter()
 
-export function SortableItemFile({ item, ...props }: FileProps): ReactElement {
-  const { setFocused } = useSidebar()
-  const { isDragging, setDragItem } = useDndTree()
-  const route = useFSRoute()
-  const router = useRouter()
+    const { wrapperRef, handleProps, isGhost, isOver, depth, indentationWidth, style, item } = props
 
-  const {
-    setDraggableNodeRef,
-    setDroppableNodeRef,
-    attributes,
-    isDragTarget,
-    isOver,
-    listeners,
-    level,
-    indentationWidth,
-    style,
-  } = props
+    // It is possible that the item doesn't have any route - for example an external link.
+    const active = !isGhost && item.route && [route, route + '/'].includes(item.route + '/')
+    const { setMenu } = useMenu()
 
-  // It is possible that the item doesn't have any route - for example an external link.
-  const active = !isDragTarget && item.route && [route, route + '/'].includes(item.route + '/')
-  const { setMenu } = useMenu()
-
-  if (['newPage', 'newFolder', 'newSeparator'].includes(item.type)) {
-    const map: Record<string, ActionType> = {
-      newPage: 'page',
-      newFolder: 'folder',
-      newSeparator: 'separator',
+    if (['newPage', 'newFolder', 'newSeparator'].includes(item.type)) {
+      const map: Record<string, ActionType> = {
+        newPage: 'page',
+        newFolder: 'folder',
+        newSeparator: 'separator',
+      }
+      return <AddInputs type={map[item.type]} />
     }
-    return <AddInputs type={map[item.type]} />
-  }
 
-  useEffect(() => {
-    if (!isDragTarget) return
-    setDragItem(item)
-  }, [isDragTarget])
+    useEffect(() => {
+      if (!isGhost) return
+      setDragItem(item)
+    }, [isGhost])
 
-  return (
-    <>
+    return (
       <li
+        ref={wrapperRef}
         className={cn(
           {
             active,
@@ -62,13 +47,14 @@ export function SortableItemFile({ item, ...props }: FileProps): ReactElement {
           classes.link,
           active ? classes.active : classes.inactive,
           isOver && classes.over,
-          isDragTarget && classes.drag,
+          isGhost && classes.drag,
         )}
-        ref={setDroppableNodeRef}
-        style={{ ...style, ...indentStyle(level, indentationWidth) }}
+        style={{ ...style, ...indentStyle(depth, indentationWidth) }}
       >
         <div
-          className={cn('nx-px-2 nx-py-1.5')}
+          ref={ref}
+          {...handleProps}
+          className={cn('nx-w-full nx-px-2 nx-py-1.5')}
           onClick={(e) => {
             if (isDragging) {
               e.preventDefault()
@@ -82,21 +68,19 @@ export function SortableItemFile({ item, ...props }: FileProps): ReactElement {
               e.preventDefault()
               return
             }
-            setFocused?.(removeCodeFromRoute(item.route))
+            setFocusedItem(item)
           }}
           onBlur={(e) => {
             if (isDragging) {
               e.preventDefault()
               return
             }
-            setFocused?.(null)
+            setFocusedItem(null)
           }}
         >
-          <div {...attributes} {...listeners} ref={setDraggableNodeRef}>
-            {item.title}
-          </div>
+          <div>{item.title}</div>
         </div>
       </li>
-    </>
-  )
-}
+    )
+  },
+)

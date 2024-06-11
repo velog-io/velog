@@ -1,17 +1,14 @@
-import { Item, PageItem } from '@/nextra/normalize-pages'
-import { Active, DraggableAttributes, Over, UniqueIdentifier } from '@dnd-kit/core'
-import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities'
+import { Item, PageItem, SortableItem } from '@/nextra/normalize-pages'
+import { Active, Over, UniqueIdentifier } from '@dnd-kit/core'
 import { Transform } from '@dnd-kit/utilities'
 import { CSSProperties } from 'react'
 
 export type SortableTreeItemProps = {
   setNodeRef: (node: HTMLElement | null) => void
   setActivatorNodeRef: (node: HTMLElement | null) => void
-  setDraggableNodeRef: (node: HTMLElement | null) => void
-  setDroppableNodeRef: (node: HTMLElement | null) => void
-  attributes: DraggableAttributes
-  listeners: SyntheticListenerMap | undefined
-  isDragTarget: boolean
+  ref: (node: HTMLElement | null) => void
+  wrapperRef: (node: HTMLElement | null) => void
+  isGhost: boolean
   isSorting: boolean
   transform: Transform | null
   transition: string | undefined
@@ -22,7 +19,13 @@ export type SortableTreeItemProps = {
   style: CSSProperties
   parent: PageItem | Item | null
   isChildrenOver: boolean
-  level: number
+  depth: number
   indentationWidth: number
   onCollapse: (id: UniqueIdentifier) => void
+  handleProps: any
+  clone: boolean
 }
+
+export type SortableTreeComponentProps = {
+  item: SortableItem
+} & SortableTreeItemProps

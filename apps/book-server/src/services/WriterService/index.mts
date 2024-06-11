@@ -1,7 +1,11 @@
 import { Time } from '@constants/TimeConstants.mjs'
+import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { Writer } from '@graphql/generated.js'
+import { GraphQLContext } from '@interfaces/graphql.mjs'
+import { JwtService } from '@lib/jwt/JwtService.mjs'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { RedisService } from '@lib/redis/RedisService.mjs'
+import { RefreshTokenData } from '@packages/library/jwt'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
@@ -14,7 +18,11 @@ interface Service {
 @injectable()
 @singleton()
 export class WriterService implements Service {
-  constructor(private readonly mongo: MongoService, private readonly redis: RedisService) {}
+  constructor(
+    private readonly jwt: JwtService,
+    private readonly mongo: MongoService,
+    private readonly redis: RedisService,
+  ) {}
   public async findById(writerId: string): Promise<Writer | null> {
     return await this.mongo.writer.findUnique({
       where: {
@@ -82,6 +90,34 @@ export class WriterService implements Service {
       writerId: writer.id,
     }
   }
+  public async restoreAccessToken(
+    ctx: Pick<GraphQLContext, 'request' | 'reply'>,
+  ): Promise<RestoreAccessTokenResult> {
+    const refreshToken: string | undefined = ctx.request.cookies['refresh_token']
+
+    if (!refreshToken) {
+      throw new NotFoundError('Refresh token not found')
+    }
+
+    const decoded = await this.jwt.decodeToken<RefreshTokenData>(refreshToken)
+    const writer = await this.findByFkUserId(decoded.user_id)
+
+    if (!writer) {
+      throw new NotFoundError('Writer not found')
+    }
+
+    const token = await this.jwt.generateToken(
+      {
+        user_id: decoded.user_id,
+      },
+      {
+        subject: 'access_token',
+        expiresIn: '24h',
+      },
+    )
+
+    return { token, writer }
+  }
 }
 
 type CreateArgs = {
@@ -99,3 +135,8 @@ type CheckExistsWriterResult =
       writerId?: undefined
     }
   | { exists: true; writerId: string }
+
+type RestoreAccessTokenResult = {
+  token: string
+  writer: Writer
+}

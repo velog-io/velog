@@ -24,11 +24,11 @@ import cn from 'clsx'
 import { customCollisionDetectionAlgorithm } from './utils/customCollisionDetection'
 import { customListSortingStrategy } from './utils/customListSortingStrategy'
 import { createPortal } from 'react-dom'
-import { Menu } from '../menu'
 import SidebarController from '../sidebar-controller'
 import { Collapse } from '@/index'
-import { classes } from '../style'
 import { SortableTreeItem } from './sortable-tree-item'
+import { dropAnimation } from './utils/dropAnimation'
+import { useSidebar } from '@/contexts/sidebar'
 
 type Props = {
   items: SortableItem[]
@@ -56,9 +56,9 @@ const DndTreeContext = createContext<DndTreeContextType>({
 export const useDndTree = () => useContext(DndTreeContext)
 
 function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props) {
+  const { focusedItem } = useSidebar()
   const [isDragging, setDragging] = useState(false)
   const [dragItem, setDragItem] = useState<SortableItem | null>(null)
-
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
   const [overId, setOverId] = useState<UniqueIdentifier | null>(null)
   const [offsetLeft, setOffsetLeft] = useState(0)
@@ -70,30 +70,20 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
   const flattenedItems = useMemo(() => {
     const flattenedTree = flattenTree(items)
     const collapsedItems = flattenedTree.reduce<UniqueIdentifier[]>(
-      (acc, { children, collapsed, id }) => (collapsed && children?.length ? [...acc, id] : acc),
+      (acc, { collapsed, id }) => (collapsed ? [...acc, id] : acc),
       [],
     )
 
-    const result = removeChildrenOf(
-      flattenedTree,
-      activeId ? [activeId, ...collapsedItems] : collapsedItems,
-    )
+    const result = removeChildrenOf(flattenedTree, collapsedItems)
+
     return result
-  }, [activeId, items])
+  }, [activeId, items, focusedItem])
 
-  const keepGhostInPlace = true
   const indentationWidth = 20
-  const canRootHaveChildren = false
-
-  const projected = getProjection(
-    flattenedItems,
-    activeId,
-    overId,
-    offsetLeft,
-    indentationWidth ?? 0,
-    keepGhostInPlace,
-    canRootHaveChildren,
-  )
+  const projected =
+    activeId && overId
+      ? getProjection(flattenedItems, activeId, overId, offsetLeft, indentationWidth)
+      : null
 
   const itemsRef = useRef<SortableItem[]>(items)
   itemsRef.current = items
@@ -249,9 +239,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
   const onCollapse = useCallback(
     (id: UniqueIdentifier) => {
       onItemsChanged((items: SortableItem[]) =>
-        setProperty(items, id, 'collapsed', (value) => {
-          return !value
-        }),
+        setProperty(items, id, 'collapsed', (value) => !value),
       )
     },
     [onItemsChanged],
@@ -285,7 +273,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
             {showSidebar && (
               <Collapse isOpen={showSidebar} horizontal={true}>
                 <div className={cn('nx-relative')}>
-                  <ul className={cn(classes.list, 'nextra-menu-desktop nx-pl-3 max-md:nx-hidden')}>
+                  <ul className={cn('nextra-menu-desktop nx-pl-3 max-md:nx-hidden')}>
                     {flattenedItems.map((item) => {
                       const key = item.id || item.name || item.route
                       return (
@@ -295,6 +283,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
                           items={flattenedItems}
                           collapsed={item.collapsed && !!item.children.length}
                           onCollapse={onCollapse}
+                          indentationWidth={indentationWidth}
                         />
                       )
                     })}
@@ -308,19 +297,18 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
       {createPortal(
         <DragOverlay
           modifiers={modifiersArray}
-          // dropAnimation={dropAnimation}
+          dropAnimation={dropAnimation}
           className={cn('nx-opacity-80')}
-          style={{ width: '90%', maxWidth: '250px' }}
+          style={{ width: '100%', maxWidth: '250px' }}
         >
           {dragItem && (
-            <Menu
-              directories={[
-                {
-                  ...dragItem,
-                  children: [],
-                },
-              ]}
-              anchors={[]}
+            <SortableTreeItem
+              item={dragItem}
+              items={flattenedItems}
+              collapsed={false}
+              clone={true}
+              onCollapse={onCollapse}
+              indentationWidth={indentationWidth}
             />
           )}
         </DragOverlay>,

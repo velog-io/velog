@@ -26,6 +26,6 @@ export const classes = {
   drag: cn('nx-opacity-50'),
 }
 
-export const indentStyle = (level: number, indentationWidth: number): CSSProperties => ({
-  marginLeft: `${level * indentationWidth}px`,
+export const indentStyle = (depth: number, indentationWidth: number): CSSProperties => ({
+  marginLeft: `${depth * indentationWidth}px`,
 })

@@ -2,22 +2,28 @@ import { arrayMove } from '@dnd-kit/sortable'
 import { Active, UniqueIdentifier } from '@dnd-kit/core'
 import { FlattenedItem, TreeItem, TreeItems } from '@/types'
 import { Item, PageItem, SortableItem } from '@/nextra/normalize-pages'
+import { removeCodeFromRoute } from '@/utils'
 
-export function initilizeDirectories(
+function initilizeDirectories(
   items: PageItem[] | Item[],
+  route: string,
   parentId: UniqueIdentifier | null = null,
-  level = 0,
+  depth = 0,
   parent: PageItem | Item | null = null,
 ): SortableItem[] {
   return items.map((item, index) => {
+    const collapsed = route.startsWith(removeCodeFromRoute(item.route))
     const data: Omit<SortableItem, 'childrenIds'> = {
       ...item,
       parentId,
-      level,
+      depth,
       isLast: items.length === index + 1,
       parent,
-      children: item.children ? initilizeDirectories(item.children, item.id, level + 1, item) : [],
-      collapsed: false,
+      children: item.children
+        ? initilizeDirectories(item.children, route, item.id, depth + 1, item)
+        : [],
+      collapsed: collapsed && item.kind === 'Folder',
+      index,
     }
     return {
       ...data,
@@ -49,15 +55,15 @@ function flatten<T extends SortableItem>(
   }, [])
 }
 
-export function flattenTree<T extends SortableItem>(items: TreeItems<T>): FlattenedItem<T>[] {
+function flattenTree<T extends SortableItem>(items: TreeItems<T>): FlattenedItem<T>[] {
   return flatten(items)
 }
 
-export function findItem<T>(items: TreeItem<T>[], itemId: UniqueIdentifier) {
+function findItem<T>(items: TreeItem<T>[], itemId: UniqueIdentifier) {
   return items.find(({ id }) => id === itemId)
 }
 
-export function buildTree<T extends Record<string, any>>(
+function buildTree<T extends Record<string, any>>(
   flattenedItems: FlattenedItem<T>[],
 ): TreeItems<T> {
   const root: TreeItem<T> = { id: 'root', children: [] } as any
@@ -76,10 +82,7 @@ export function buildTree<T extends Record<string, any>>(
   return root.children ?? []
 }
 
-export function findItemDeep<T extends Record<string, any>>(
-  items: TreeItems<T>,
-  itemId: UniqueIdentifier,
-): TreeItem<T> | undefined {
+function findItemDeep(items: SortableItem[], itemId: UniqueIdentifier): SortableItem | undefined {
   for (const item of items) {
     const { id, children } = item
 
@@ -99,7 +102,7 @@ export function findItemDeep<T extends Record<string, any>>(
   return undefined
 }
 
-export function setProperty<T extends keyof SortableItem>(
+function setProperty<T extends keyof SortableItem>(
   items: SortableItem[],
   id: UniqueIdentifier,
   property: T,
@@ -118,7 +121,7 @@ export function setProperty<T extends keyof SortableItem>(
   return [...items]
 }
 
-export function removeItem<T extends Record<string, any>>(items: TreeItems<T>, id: string) {
+function removeItem<T extends Record<string, any>>(items: TreeItems<T>, id: string) {
   const newItems = []
 
   for (const item of items) {
@@ -129,25 +132,35 @@ export function removeItem<T extends Record<string, any>>(items: TreeItems<T>, i
     if (item.children?.length) {
       item.children = removeItem(item.children, id)
     }
-
     newItems.push(item)
   }
 
   return newItems
 }
 
-export function removeChildrenOf<T>(items: FlattenedItem<T>[], ids: UniqueIdentifier[]) {
-  const excludeParentIds = [...ids]
+function findAllParents(
+  item: FlattenedItem,
+  items: FlattenedItem[],
+  parents: FlattenedItem[] = [],
+): FlattenedItem[] {
+  if (item.depth === 0) return parents
+  const parent = items.find(({ id }) => id === item.parentId)
+  if (parent?.depth === 0) return [...parents, parent]
+  if (parent) return findAllParents(parent, items, [...parents, parent])
+  return parents
+}
 
+function removeChildrenOf(items: FlattenedItem[], ids: UniqueIdentifier[]): FlattenedItem[] {
+  const collapsedIds = [...ids]
   return items.filter((item) => {
-    if (item.parentId && excludeParentIds.includes(item.parentId)) {
-      if (item.children?.length) {
-        excludeParentIds.push(item.id)
-      }
-      return false
+    if (item.depth === 0) return true
+    if (item.parentId && collapsedIds.includes(item.parentId)) {
+      const parents = findAllParents(item, items)
+      const isAllOpen = parents.every((parent) => parent.collapsed)
+      if (!isAllOpen) return false
+      return true
     }
-
-    return true
+    return false
   })
 }
 
@@ -155,101 +168,34 @@ function getDragDepth(offset: number, indentationWidth: number) {
   return Math.round(offset / indentationWidth)
 }
 
-let _revertLastChanges = () => {}
-export function getProjection<T>(
-  items: FlattenedItem<T>[],
-  activeId: UniqueIdentifier | null,
-  overId: UniqueIdentifier | null,
+function getProjection(
+  items: SortableItem[],
+  activeId: UniqueIdentifier,
+  overId: UniqueIdentifier,
   dragOffset: number,
   indentationWidth: number,
-  keepGhostInPlace: boolean,
-  canRootHaveChildren?: boolean | ((dragItem: FlattenedItem<T>) => boolean),
-): {
-  depth: number
-  parentId: UniqueIdentifier | null
-  parent: FlattenedItem<T> | null
-  isLast: boolean
-} | null {
-  _revertLastChanges()
-  _revertLastChanges = () => {}
-  if (!activeId || !overId) return null
-
+) {
   const overItemIndex = items.findIndex(({ id }) => id === overId)
   const activeItemIndex = items.findIndex(({ id }) => id === activeId)
   const activeItem = items[activeItemIndex]
-  if (keepGhostInPlace) {
-    let parent: FlattenedItem<T> | null | undefined = items[overItemIndex]
-    parent = findParentWhichCanHaveChildren(parent, activeItem, canRootHaveChildren)
-    if (parent === undefined) return null
-    return {
-      depth: parent?.depth ?? 0 + 1,
-      parentId: parent?.id ?? null,
-      parent: parent,
-      isLast: !!parent?.isLast,
-    }
-  }
   const newItems = arrayMove(items, activeItemIndex, overItemIndex)
   const previousItem = newItems[overItemIndex - 1]
   const nextItem = newItems[overItemIndex + 1]
   const dragDepth = getDragDepth(dragOffset, indentationWidth)
   const projectedDepth = activeItem.depth + dragDepth
-
+  const maxDepth = getMaxDepth({
+    previousItem,
+  })
+  const minDepth = getMinDepth({ nextItem })
   let depth = projectedDepth
-  const directParent = findParentWithDepth(depth - 1, previousItem)
-  const parent = findParentWhichCanHaveChildren(directParent, activeItem, canRootHaveChildren)
-  if (parent === undefined) return null
-  const maxDepth = (parent?.depth ?? -1) + 1
-  const minDepth = nextItem?.depth ?? 0
-  if (minDepth > maxDepth) return null
-  if (depth >= maxDepth) {
+
+  if (projectedDepth >= maxDepth) {
     depth = maxDepth
-  } else if (depth < minDepth) {
+  } else if (projectedDepth < minDepth) {
     depth = minDepth
   }
-  const isLast = (nextItem?.depth ?? -1) < depth
 
-  if (parent && parent.isLast) {
-    _revertLastChanges = () => {
-      parent!.isLast = true
-    }
-    parent.isLast = false
-  }
-  return {
-    depth,
-    parentId: getParentId(),
-    parent,
-    isLast,
-  }
-
-  function findParentWithDepth(depth: number, previousItem: FlattenedItem<T>) {
-    if (!previousItem) return null
-    while (depth < previousItem.depth) {
-      if (previousItem.parent === null) return null
-      previousItem = previousItem.parent
-    }
-    return previousItem
-  }
-  function findParentWhichCanHaveChildren(
-    parent: FlattenedItem<T> | null,
-    dragItem: FlattenedItem<T>,
-    canRootHaveChildren?: boolean | ((dragItem: FlattenedItem<T>) => boolean),
-  ): FlattenedItem<T> | null | undefined {
-    if (!parent) {
-      const rootCanHaveChildren =
-        typeof canRootHaveChildren === 'function'
-          ? canRootHaveChildren(dragItem)
-          : canRootHaveChildren
-      if (rootCanHaveChildren === false) return undefined
-      return parent
-    }
-    const canHaveChildren =
-      typeof parent.canHaveChildren === 'function'
-        ? parent.canHaveChildren(dragItem)
-        : parent.canHaveChildren
-    if (canHaveChildren === false)
-      return findParentWhichCanHaveChildren(parent.parent, activeItem, canRootHaveChildren)
-    return parent
-  }
+  return { depth, maxDepth, minDepth, parentId: getParentId() }
 
   function getParentId() {
     if (depth === 0 || !previousItem) {
@@ -273,10 +219,23 @@ export function getProjection<T>(
   }
 }
 
-export const findParent = (
-  items: PageItem[] | Item[],
-  active: Active | null,
-): PageItem | Item | null => {
+function getMaxDepth({ previousItem }: { previousItem: SortableItem }) {
+  if (previousItem) {
+    return previousItem.depth + 1
+  }
+
+  return 0
+}
+
+function getMinDepth({ nextItem }: { nextItem: SortableItem }) {
+  if (nextItem) {
+    return nextItem.depth
+  }
+
+  return 0
+}
+
+const findParent = (items: PageItem[] | Item[], active: Active | null): PageItem | Item | null => {
   if (!active) return null
   for (const item of items) {
     if (item.id === active.id) {
@@ -291,11 +250,25 @@ export const findParent = (
   return null
 }
 
-export const getIsParentOver = (
+const getIsParentOver = (
   parent: PageItem | Item | null,
   overId: UniqueIdentifier | undefined,
 ): boolean => {
   if (!parent || !overId) return false
   if (parent.id === overId) return true
   return false
+}
+
+export {
+  initilizeDirectories,
+  flattenTree,
+  findItemDeep,
+  findItem,
+  removeItem,
+  setProperty,
+  removeChildrenOf,
+  getProjection,
+  buildTree,
+  findParent,
+  getIsParentOver,
 }

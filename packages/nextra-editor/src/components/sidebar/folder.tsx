@@ -1,16 +1,16 @@
 import { createContext, memo, ReactElement, useContext, useEffect, useState } from 'react'
 import cn from 'clsx'
-import { Item, SortableItem } from '../../nextra/normalize-pages'
-import { useSidebar } from '../../contexts/sidebar'
+import { Item, SortableItem } from '@/nextra/normalize-pages'
+import { useSidebar } from '@/contexts/sidebar'
 import { useRouter } from 'next/router'
-import { useConfig, useMenu } from '../../contexts'
-import { useFSRoute } from '../../nextra/hooks'
+import { useConfig, useMenu } from '@/contexts'
+import { useFSRoute } from '@/nextra/hooks'
 import { classes } from './style'
-import { ArrowRightIcon } from '../../nextra/icons'
-import { Collapse } from '../..'
+import { ArrowRightIcon } from '@/nextra/icons'
+
 import { Menu, MenuItemProps } from './menu'
-import { removeCodeFromRoute } from '../../utils'
 import { useDndTree } from './sortable-tree'
+import { Collapse } from '../collapse'
 
 let TreeState: Record<string, boolean> = Object.create(null)
 
@@ -31,7 +31,7 @@ export const Folder = memo(function FolderInner(props: FolderProps) {
 
 function FolderImpl({ item, ...props }: FolderProps): ReactElement {
   const { isDragging, setDragItem } = useDndTree()
-  const { isFolding, setFocused, focused: focusedRoute } = useSidebar()
+  const { isFolding, setFocusedItem, focusedItem } = useSidebar()
   const router = useRouter()
   const { setMenu } = useMenu()
   const routeOriginal = useFSRoute()
@@ -42,7 +42,7 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
 
   const active = !isDragTarget && [route, route + '/'].includes(item.route + '/')
   const activeRouteInside: boolean = active || route.startsWith(item.route + '/')
-  const focusedRouteInside = !!focusedRoute?.startsWith(item.route + '/')
+  const focusedRouteInside = !!focusedItem?.route?.startsWith(item.route + '/')
   const level = useContext(FolderLevelContext)
 
   const config = useConfig()
@@ -113,7 +113,7 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
           if (isDragTarget) return
 
           router.push(item.route, item.route, { shallow: true })
-          setFocused(removeCodeFromRoute(item.route))
+          setFocusedItem(item)
           const clickedToggleIcon = ['svg', 'path'].includes(
             (e.target as HTMLElement).tagName.toLowerCase(),
           )
@@ -154,11 +154,7 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
           )}
         />
       </div>
-      <Collapse
-        className={cn('ltr:nx-pr-0 rtl:nx-pl-0')}
-        isOpen={isCollapseOpen}
-        isDragTarget={isDragTarget}
-      >
+      <Collapse className={cn('ltr:nx-pr-0 rtl:nx-pl-0')} isOpen={isCollapseOpen}>
         {menuVisible && Array.isArray(item.children) ? (
           <Menu
             className={cn('nx-relative ltr:nx-ml-3 rtl:nx-mr-3')}
