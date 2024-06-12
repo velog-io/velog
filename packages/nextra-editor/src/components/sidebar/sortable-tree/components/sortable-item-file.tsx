@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import { useMenu } from '@/contexts'
 import { useDndTree } from '..'
 import AddInputs from '../../sidebar-controller/add-inputs'
-import { classes, indentStyle } from '../../style'
+import { classes} from '../../style'
 import type { SortableTreeComponentProps } from '../types'
 
 export const SortableItemFile = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
@@ -17,7 +17,7 @@ export const SortableItemFile = forwardRef<HTMLDivElement, SortableTreeComponent
     const route = useFSRoute()
     const router = useRouter()
 
-    const { wrapperRef, handleProps, isGhost, isOver, depth, indentationWidth, style, item } = props
+    const { wrapperRef, handleProps, isGhost, isOver, item } = props
 
     // It is possible that the item doesn't have any route - for example an external link.
     const active = !isGhost && item.route && [route, route + '/'].includes(item.route + '/')
@@ -56,10 +56,8 @@ export const SortableItemFile = forwardRef<HTMLDivElement, SortableTreeComponent
           },
           classes.link,
           active ? classes.active : classes.inactive,
-          !isGhost && isOver && classes.over,
           isGhost && classes.ghost,
         )}
-        style={{ ...style, ...indentStyle(depth, indentationWidth) }}
       >
         <div
           ref={ref}

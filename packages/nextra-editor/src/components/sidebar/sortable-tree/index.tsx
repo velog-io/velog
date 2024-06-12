@@ -30,10 +30,8 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-ki
 import { SortableItem } from '@/nextra/normalize-pages'
 import cn from 'clsx'
 import { customCollisionDetectionAlgorithm } from './utils/customCollisionDetection'
-import { customListSortingStrategy } from './utils/customListSortingStrategy'
 import { createPortal } from 'react-dom'
 import SidebarController from '../sidebar-controller'
-import { Collapse } from '@/index'
 import { SortableTreeItem } from './sortable-tree-item'
 import { dropAnimation } from './utils/dropAnimation'
 import { useSidebar } from '@/contexts/sidebar'
@@ -70,7 +68,7 @@ const DndTreeContext = createContext<DndTreeContextType>({
 export const useDndTree = () => useContext(DndTreeContext)
 
 function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props) {
-  const { focusedItem, isFolding } = useSidebar()
+  const { isFolding } = useSidebar()
   const [isDragging, setDragging] = useState(false)
   const [dragItem, setDragItem] = useState<SortableItem | null>(null)
   const [overItem, setOverItem] = useState<SortableItem | null>(null)

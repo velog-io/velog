@@ -21,7 +21,7 @@ export function File({ item, ...props }: FileProps): ReactElement {
   const route = useFSRoute()
   const router = useRouter()
 
-  const { setDraggableNodeRef, setDroppableNodeRef, attributes, isDragTarget, isOver, listeners } =
+  const { setDraggableNodeRef, setDroppableNodeRef, attributes, isDragTarget, listeners } =
     props
 
   // It is possible that the item doesn't have any route - for example an external link.
@@ -49,7 +49,6 @@ export function File({ item, ...props }: FileProps): ReactElement {
           classes.list,
           { active },
           isDragTarget && classes.ghost,
-          isOver && classes.over,
         )}
         ref={setDroppableNodeRef}
       >

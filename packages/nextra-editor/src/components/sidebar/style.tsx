@@ -1,5 +1,4 @@
 import cn from 'clsx'
-import { CSSProperties } from 'react'
 
 export const classes = {
   link: cn(
@@ -36,6 +35,5 @@ export const classes = {
   ),
 }
 
-export const indentStyle = (depth: number, indentationWidth: number): CSSProperties => ({
-  marginLeft: `${depth * indentationWidth}px`,
-})
+export const indentStyle = (depth: number, indentationWidth: number): string =>
+  `${depth * indentationWidth}px`

@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { useFSRoute } from '@/nextra/hooks'
 import { ArrowRightIcon } from '@/nextra/icons'
 import { useDndTree } from '..'
-import { classes, indentStyle } from '../../style'
+import { classes } from '../../style'
 import type { SortableTreeComponentProps } from '../types'
 
 export const SortableItemFolder = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
@@ -21,9 +21,6 @@ export const SortableItemFolder = forwardRef<HTMLDivElement, SortableTreeCompone
       handleProps,
       isGhost,
       isOver,
-      depth,
-      style,
-      indentationWidth,
       item,
       onCollapse,
     } = props
@@ -50,10 +47,8 @@ export const SortableItemFolder = forwardRef<HTMLDivElement, SortableTreeCompone
           { active, open },
           classes.link,
           active ? classes.active : classes.inactive,
-          !isGhost && isOver && classes.over,
           isGhost && classes.ghost,
         )}
-        style={{ ...style, ...indentStyle(depth, indentationWidth) }}
         onClick={() => onCollapse(item.id)}
       >
         <div

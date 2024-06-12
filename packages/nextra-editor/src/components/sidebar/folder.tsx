@@ -37,7 +37,7 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
   const routeOriginal = useFSRoute()
   const [route] = routeOriginal.split('#')
 
-  const { setDraggableNodeRef, setDroppableNodeRef, attributes, listeners, isDragTarget, isOver } =
+  const { setDraggableNodeRef, setDroppableNodeRef, attributes, listeners, isDragTarget } =
     props
 
   const active = !isDragTarget && [route, route + '/'].includes(item.route + '/')
@@ -94,7 +94,7 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
   const menuVisible = isDragging && isDragTarget ? false : true
 
   return (
-    <li className={cn({ active, open }, isOver && classes.over)}>
+    <li className={cn({ active, open })}>
       <div
         ref={setDroppableNodeRef}
         className={cn(

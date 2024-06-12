@@ -1,4 +1,4 @@
-import { CSSProperties, forwardRef, useEffect } from 'react'
+import {  forwardRef, useEffect } from 'react'
 import cn from 'clsx'
 import { ActionType, useSidebar } from '@/contexts/sidebar'
 import { useRouter } from 'next/router'
@@ -11,7 +11,7 @@ import AddInputs from '../sidebar-controller/add-inputs'
 
 export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
   (props, ref) => {
-    const { setDragItem, isDragging, overItem } = useDndTree()
+    const { setDragItem, isDragging } = useDndTree()
     const { setFocusedItem } = useSidebar()
     const router = useRouter()
     const routeOriginal = useFSRoute()
@@ -54,7 +54,7 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
         onClick={() => onCollapse(item.id)}
         style={{
           listStyle: 'none',
-          paddingLeft: `${indentationWidth * depth}px`,
+          paddingLeft: indentStyle(depth, indentationWidth),
           ...style,
         }}
       >
