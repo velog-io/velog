@@ -13,13 +13,16 @@
 @import './missing-tailwind.css';
 
 html {
-  @apply nx-antialiased nx-text-base nx-scroll-pt-[--nextra-navbar-height];
-  font-feature-settings: 'rlig' 1, 'calt' 1, 'ss01' 1;
+  @apply nx-scroll-pt-[--nextra-navbar-height] nx-text-base nx-antialiased;
+  font-feature-settings:
+    'rlig' 1,
+    'calt' 1,
+    'ss01' 1;
   -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  @apply nx-w-full nx-bg-white dark:nx-bg-dark dark:nx-text-gray-100 nx-max-h-screen;
+  @apply nx-max-h-screen nx-w-full nx-bg-white dark:nx-bg-dark dark:nx-text-gray-100;
 }
 
 a,
@@ -44,7 +47,7 @@ summary {
 
 @media (max-width: 767px) {
   .nextra-sidebar-container {
-    @apply nx-fixed nx-pt-[calc(var(--nextra-navbar-height))] nx-top-0 nx-w-full nx-bottom-0 nx-z-[15] nx-overscroll-contain nx-bg-white dark:nx-bg-dark;
+    @apply nx-fixed nx-bottom-0 nx-top-0 nx-z-[15] nx-w-full nx-overscroll-contain nx-bg-white nx-pt-[calc(var(--nextra-navbar-height))] dark:nx-bg-dark;
     transition: transform 0.8s cubic-bezier(0.52, 0.16, 0.04, 1);
     will-change: transform, opacity;
     contain: layout style;
@@ -113,10 +116,10 @@ article details > summary {
 
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .nextra-search ul {
-    @apply nx-backdrop-blur-lg nx-bg-white/70 dark:nx-bg-dark/80;
+    @apply nx-bg-white/70 nx-backdrop-blur-lg dark:nx-bg-dark/80;
   }
   .nextra-nav-container-blur {
-    @apply nx-backdrop-blur-md nx-bg-white/[.85] dark:!nx-bg-dark/80;
+    @apply nx-bg-white/[.85] nx-backdrop-blur-md dark:!nx-bg-dark/80;
   }
 }
 

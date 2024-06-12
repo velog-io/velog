@@ -1,7 +1,8 @@
 import { Item, PageItem, SortableItem } from '@/nextra/normalize-pages'
+import { FlattenedItem } from '@/types'
 import { Active, Over, UniqueIdentifier } from '@dnd-kit/core'
 import { Transform } from '@dnd-kit/utilities'
-import { CSSProperties } from 'react'
+import { CSSProperties, MutableRefObject } from 'react'
 
 export type SortableTreeItemProps = {
   setNodeRef: (node: HTMLElement | null) => void
@@ -29,3 +30,8 @@ export type SortableTreeItemProps = {
 export type SortableTreeComponentProps = {
   item: SortableItem
 } & SortableTreeItemProps
+
+export type SensorContext = MutableRefObject<{
+  items: FlattenedItem[]
+  offset: number
+}>

@@ -13,7 +13,7 @@ import type { SortableTreeComponentProps } from '../types'
 export const SortableItemFile = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
   (props, ref) => {
     const { setFocusedItem } = useSidebar()
-    const { isDragging, setDragItem } = useDndTree()
+    const { isDragging, setDragItem, setOverItem, overItem } = useDndTree()
     const route = useFSRoute()
     const router = useRouter()
 
@@ -37,6 +37,16 @@ export const SortableItemFile = forwardRef<HTMLDivElement, SortableTreeComponent
       setDragItem(item)
     }, [isGhost])
 
+    useEffect(() => {
+      if (isGhost) return
+      if (!isOver) return
+      setOverItem(item)
+    }, [isOver, isGhost])
+
+    useEffect(() => {
+      console.log('overItem', overItem)
+    }, [overItem])
+
     return (
       <li
         ref={wrapperRef}
@@ -46,8 +56,8 @@ export const SortableItemFile = forwardRef<HTMLDivElement, SortableTreeComponent
           },
           classes.link,
           active ? classes.active : classes.inactive,
-          isOver && classes.over,
-          isGhost && classes.drag,
+          !isGhost && isOver && classes.over,
+          isGhost && classes.ghost,
         )}
         style={{ ...style, ...indentStyle(depth, indentationWidth) }}
       >

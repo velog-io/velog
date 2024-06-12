@@ -3,11 +3,9 @@ import { CSSProperties, memo } from 'react'
 import { AnimateLayoutChanges, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { findParent, getIsParentOver } from './utils'
-import { SortableItemFolder } from './components/sortable-item-folder'
-import { SortableItemSeparator } from './components/sortable-item-separator'
-import { SortableItemFile } from './components/sortable-item-file'
 import { SortableTreeItemProps } from './types'
 import { UniqueIdentifier } from '@dnd-kit/core'
+import { SortableComponent } from './sortable-component'
 
 type Props = {
   className?: string
@@ -53,7 +51,7 @@ const SortableTreeMenuNotMemoized = function SortableTreeItem({
 
   const style: CSSProperties = {
     transform: CSS.Translate.toString(transform),
-    transition: transition ?? undefined,
+    transition,
   }
 
   const parent = findParent(items, active)
@@ -84,13 +82,7 @@ const SortableTreeMenuNotMemoized = function SortableTreeItem({
     clone,
   }
 
-  return item.kind === 'Folder' ? (
-    <SortableItemFolder key={item.id} item={item} {...props} />
-  ) : item.type === 'separator' ? (
-    <SortableItemSeparator key={item.id} item={item} {...props} />
-  ) : (
-    <SortableItemFile key={item.id} item={item} {...props} />
-  )
+  return <SortableComponent item={item} {...props} />
 }
 
 export const SortableTreeItem = memo(

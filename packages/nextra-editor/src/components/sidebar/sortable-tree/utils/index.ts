@@ -121,6 +121,21 @@ function setProperty<T extends keyof SortableItem>(
   return [...items]
 }
 
+function setPropertyAll<T extends keyof SortableItem>(
+  items: SortableItem[],
+  property: T,
+  setter: (value: SortableItem[T]) => SortableItem[T],
+): SortableItem[] {
+  for (const item of items) {
+    item[property] = setter(item[property])
+
+    if (item.children?.length) {
+      item.children = setPropertyAll(item.children, property, setter)
+    }
+  }
+  return [...items]
+}
+
 function removeItem<T extends Record<string, any>>(items: TreeItems<T>, id: string) {
   const newItems = []
 
@@ -266,6 +281,7 @@ export {
   findItem,
   removeItem,
   setProperty,
+  setPropertyAll,
   removeChildrenOf,
   getProjection,
   buildTree,

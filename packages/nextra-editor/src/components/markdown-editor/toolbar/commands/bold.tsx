@@ -74,3 +74,4 @@ function execute(view: EditorView | null) {
 }
 
 export default bold
+

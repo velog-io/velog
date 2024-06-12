@@ -94,7 +94,7 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
   const menuVisible = isDragging && isDragTarget ? false : true
 
   return (
-    <li className={cn({ active, open }, isOver && classes.over, isDragTarget && classes.drag)}>
+    <li className={cn({ active, open }, isOver && classes.over)}>
       <div
         ref={setDroppableNodeRef}
         className={cn(
@@ -106,7 +106,6 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
             ? 'hover:nx-bg-blue-100 dark:hover:nx-bg-primary-100/5'
             : 'nx-bg-transparent hover:nx-bg-transparent',
           active && isDragTarget && 'nx-bg-blue-100',
-          isDragTarget && classes.drag,
         )}
         onClick={(e) => {
           e.preventDefault()

@@ -48,7 +48,7 @@ export function File({ item, ...props }: FileProps): ReactElement {
         className={cn(
           classes.list,
           { active },
-          isDragTarget && classes.drag,
+          isDragTarget && classes.ghost,
           isOver && classes.over,
         )}
         ref={setDroppableNodeRef}

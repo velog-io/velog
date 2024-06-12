@@ -10,7 +10,7 @@ import type { SortableTreeComponentProps } from '../types'
 
 export const SortableItemFolder = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
   (props, ref) => {
-    const { setDragItem } = useDndTree()
+    const { setDragItem, setOverItem } = useDndTree()
     const { setFocusedItem } = useSidebar()
     const router = useRouter()
     const routeOriginal = useFSRoute()
@@ -36,6 +36,12 @@ export const SortableItemFolder = forwardRef<HTMLDivElement, SortableTreeCompone
       setDragItem(item)
     }, [isGhost])
 
+    useEffect(() => {
+      if (isGhost) return
+      if (!isOver) return
+      setOverItem(item)
+    }, [isOver, isGhost])
+
     const isLink = 'withIndexPage' in item && item.withIndexPage
     return (
       <li
@@ -44,8 +50,8 @@ export const SortableItemFolder = forwardRef<HTMLDivElement, SortableTreeCompone
           { active, open },
           classes.link,
           active ? classes.active : classes.inactive,
-          isOver && classes.over,
-          isGhost && classes.drag,
+          !isGhost && isOver && classes.over,
+          isGhost && classes.ghost,
         )}
         style={{ ...style, ...indentStyle(depth, indentationWidth) }}
         onClick={() => onCollapse(item.id)}

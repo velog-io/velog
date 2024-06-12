@@ -23,7 +23,7 @@ export const SortableItemSeparator = forwardRef<HTMLDivElement, SortableTreeComp
           '[word-break:break-word]',
           'nx-mb-2 nx-mt-5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100',
           isOver && classes.over,
-          isGhost && classes.drag,
+          isGhost && classes.ghost,
         )}
         style={{ ...style, ...indentStyle(depth, indentationWidth) }}
       >
