@@ -191,8 +191,8 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
   }
 
   const onDragOver = ({ over }: DragOverEvent) => {
-    // const item = flattenedItems.find((item) => item.id === over?.id)
-    // setOverItem(item ?? null)
+    const item = flattenedItems.find((item) => item.id === over?.id)
+    setOverItem(item ?? null)
   }
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {

@@ -26,7 +26,7 @@ export const classes = {
   ),
   ghost: cn('nx-opacity-80 nx-bg-primary-50 hover:nx-bg-transparent'),
   clone: cn(
-    'nx-opacity-80',
+    'nx-opacity-0',
     'nx-bg-primary-100 nx-font-semibold nx-text-primary-800 dark:nx-bg-primary-400/10 dark:nx-text-primary-600',
     'contrast-more:nx-border-primary-500 contrast-more:dark:nx-border-primary-500',
   ),

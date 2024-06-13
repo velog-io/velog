@@ -8,7 +8,6 @@ import { useDndTree } from '.'
 import { classes, indentStyle } from '../style'
 import type { SortableTreeComponentProps } from './types'
 import AddInputs from '../sidebar-controller/add-inputs'
-import { MAX_DEPTH } from './utils'
 
 export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
   (props, ref) => {
@@ -28,7 +27,6 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
       item,
       onCollapse,
       clone,
-      previousItem,
       isOver,
       transform,
     } = props
@@ -64,37 +62,11 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
       Object.assign(wrapperStyle, style)
     }
 
-    if (isGhost && overItem?.transform && transform && previousItem) {
-      const isUpper = overItem?.transform.y > transform?.y
-      const isUnder = overItem?.transform.y < transform?.y
-      console.log('--------------------------------')
-      console.log('overItem?.transform.y, transform?.y', overItem?.transform.y, transform?.y)
-      console.log('isUpper', isUpper)
-      console.log('isUnder', isUnder)
-      console.log('--------------------------------')
-      let newDepth = depth
-      if (isUpper && previousItem.collapsed) {
-        newDepth = previousItem.depth + 1
+    useEffect(() => {
+      if (isGhost && overItem?.id === item.id) {
+        setOverItem({ ...item, transform })
       }
-
-      if (isUpper && !previousItem.collapsed) {
-        newDepth = previousItem.depth
-      }
-
-      if (isUnder && overItem.collapsed) {
-        newDepth = overItem.depth + 1
-      }
-
-      if (isUnder && !overItem.collapsed) {
-        newDepth = overItem.depth
-      }
-
-      Object.assign(wrapperStyle, {
-        paddingLeft: indentStyle(Math.min(newDepth, MAX_DEPTH), indentationWidth),
-      })
-    }
-
-    if (isGhost && overItem?.id === item.id) return null
+    }, [])
 
     return (
       <li
@@ -114,7 +86,7 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
             !isDragging && !active && classes.inactiveBgColor,
             isGhost && classes.ghost,
             clone && classes.clone,
-            isOver && classes.over,
+            // isOver && classes.over,
           )}
           onClick={(e) => {
             e.preventDefault()

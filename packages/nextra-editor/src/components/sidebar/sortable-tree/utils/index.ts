@@ -197,8 +197,10 @@ function getProjection(
   const activeItem = items[activeItemIndex]
   const newItems = arrayMove(items, activeItemIndex, overItemIndex)
   const previousItem = newItems[overItemIndex - 1]
+
   const nextItem = newItems[overItemIndex + 1]
   const dragDepth = getDragDepth(dragOffset, indentationWidth)
+
   const projectedDepth = activeItem.depth + dragDepth
   const maxDepth = getMaxDepth({
     previousItem,
@@ -210,6 +212,10 @@ function getProjection(
     depth = maxDepth
   } else if (projectedDepth < minDepth) {
     depth = minDepth
+  }
+
+  if (previousItem && (previousItem.kind === 'MdxPage' || previousItem.type === 'separator')) {
+    depth = previousItem.depth
   }
 
   return { depth, maxDepth, minDepth, parentId: getParentId() }
