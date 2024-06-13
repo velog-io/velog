@@ -1,5 +1,5 @@
 import cn from 'clsx'
-import { ReactElement, useEffect } from 'react'
+import { ReactElement } from 'react'
 import { ActionType, useSidebar } from '@/contexts/sidebar'
 import { useFSRoute } from '@/nextra/hooks'
 import { PageItem, SortableItem } from '@/nextra/normalize-pages'
@@ -17,7 +17,7 @@ type FileProps = {
 
 export function File({ item, ...props }: FileProps): ReactElement {
   const { setFocusedItem } = useSidebar()
-  const { isDragging, setDragItem } = useDndTree()
+  const { isDragging } = useDndTree()
   const route = useFSRoute()
   const router = useRouter()
 
@@ -36,11 +36,6 @@ export function File({ item, ...props }: FileProps): ReactElement {
     }
     return <AddInputs type={map[item.type]} />
   }
-
-  useEffect(() => {
-    if (!isDragTarget) return
-    setDragItem(item)
-  }, [isDragTarget])
 
   return (
     <>

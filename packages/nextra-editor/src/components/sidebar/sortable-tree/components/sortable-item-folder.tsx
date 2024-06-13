@@ -10,7 +10,7 @@ import type { SortableTreeComponentProps } from '../types'
 
 export const SortableItemFolder = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
   (props, ref) => {
-    const { setDragItem, setOverItem } = useDndTree()
+    const {  setOverItem } = useDndTree()
     const { setFocusedItem } = useSidebar()
     const router = useRouter()
     const routeOriginal = useFSRoute()
@@ -28,10 +28,6 @@ export const SortableItemFolder = forwardRef<HTMLDivElement, SortableTreeCompone
     const active = !isGhost && [route, route + '/'].includes(item.route + '/')
     const open = isGhost ? false : item.collapsed
 
-    useEffect(() => {
-      if (!isGhost) return
-      setDragItem(item)
-    }, [isGhost])
 
     useEffect(() => {
       if (isGhost) return

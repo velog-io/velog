@@ -49,20 +49,22 @@ type DndTreeContextType = {
   activeId: UniqueIdentifier | null
   isDragging: boolean
   setDragging: (isDragging: boolean) => void
-  dragItem: SortableItem | null
-  setDragItem: (item: SortableItem) => void
+  ghostItem: SortableItem | null
+  setGhostItem: (item: SortableItem) => void
   overItem: SortableItem | null
   setOverItem: (item: SortableItem) => void
+  currentPosition: { parentId: UniqueIdentifier | null; overId: UniqueIdentifier } | null
 }
 
 const DndTreeContext = createContext<DndTreeContextType>({
   isDragging: false,
   setDragging: () => {},
   activeId: null,
-  dragItem: null,
-  setDragItem: () => {},
+  ghostItem: null,
+  setGhostItem: () => {},
   overItem: null,
   setOverItem: () => {},
+  currentPosition: null,
 })
 
 export const useDndTree = () => useContext(DndTreeContext)
@@ -70,7 +72,7 @@ export const useDndTree = () => useContext(DndTreeContext)
 function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props) {
   const { isFolding } = useSidebar()
   const [isDragging, setDragging] = useState(false)
-  const [dragItem, setDragItem] = useState<SortableItem | null>(null)
+  const [ghostItem, setGhostItem] = useState<SortableItem | null>(null)
   const [overItem, setOverItem] = useState<SortableItem | null>(null)
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
   const [offsetLeft, setOffsetLeft] = useState(0)
@@ -88,8 +90,11 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
       [],
     )
 
-    const result = removeChildrenOf(flattenedTree, collapsedItems)
-
+    console.log('activeId', activeId)
+    const result = removeChildrenOf(
+      flattenedTree,
+      activeId ? [activeId, ...collapsedItems] : collapsedItems,
+    )
     return result
   }, [activeId, items])
 
@@ -176,11 +181,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
     setActiveId(activeId)
 
     const activeItem = flattenedItems.find(({ id }) => id === activeId)
-
-    if (activeItem) {
-      setOverItem(activeItem)
-    }
-
+    setGhostItem(activeItem ?? null)
     if (activeItem) {
       setCurrentPosition({
         parentId: activeItem.parentId,
@@ -225,7 +226,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
 
   const resetState = () => {
     setDragging(false)
-    setDragItem(null)
+    setGhostItem(null)
     setOverItem(null)
     setActiveId(null)
     setOffsetLeft(0)
@@ -266,10 +267,11 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
             isDragging,
             setDragging,
             activeId,
-            dragItem,
-            setDragItem,
+            ghostItem,
+            setGhostItem,
             overItem,
             setOverItem,
+            currentPosition,
           }}
         >
           <div
@@ -304,9 +306,9 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
       </SortableContext>
       {createPortal(
         <DragOverlay modifiers={modifiersArray} dropAnimation={dropAnimation}>
-          {dragItem && (
+          {ghostItem && (
             <SortableTreeItem
-              item={dragItem}
+              item={ghostItem}
               items={flattenedItems}
               collapsed={false}
               clone={true}

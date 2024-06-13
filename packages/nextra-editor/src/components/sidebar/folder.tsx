@@ -30,7 +30,7 @@ export const Folder = memo(function FolderInner(props: FolderProps) {
 })
 
 function FolderImpl({ item, ...props }: FolderProps): ReactElement {
-  const { isDragging, setDragItem } = useDndTree()
+  const { isDragging } = useDndTree()
   const { isFolding, setFocusedItem, focusedItem } = useSidebar()
   const router = useRouter()
   const { setMenu } = useMenu()
@@ -76,11 +76,6 @@ function FolderImpl({ item, ...props }: FolderProps): ReactElement {
     }
     config.sidebar.autoCollapse ? updateAndPruneTreeState() : updateTreeState()
   }, [activeRouteInside, focusedRouteInside, item.route, config.sidebar.autoCollapse])
-
-  useEffect(() => {
-    if (!isDragTarget) return
-    setDragItem(item)
-  }, [isDragTarget])
 
   useEffect(() => {
     if (!isFolding) return

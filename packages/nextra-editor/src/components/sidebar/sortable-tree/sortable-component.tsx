@@ -1,4 +1,4 @@
-import {  forwardRef, useEffect } from 'react'
+import { CSSProperties, forwardRef, useEffect } from 'react'
 import cn from 'clsx'
 import { ActionType, useSidebar } from '@/contexts/sidebar'
 import { useRouter } from 'next/router'
@@ -11,7 +11,7 @@ import AddInputs from '../sidebar-controller/add-inputs'
 
 export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
   (props, ref) => {
-    const { setDragItem, isDragging } = useDndTree()
+    const { isDragging, overItem, ghostItem, currentPosition } = useDndTree()
     const { setFocusedItem } = useSidebar()
     const router = useRouter()
     const routeOriginal = useFSRoute()
@@ -27,12 +27,9 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
       item,
       onCollapse,
       clone,
+      previousItem,
+      isOver,
     } = props
-
-    useEffect(() => {
-      if (!isGhost) return
-      setDragItem(item)
-    }, [isGhost])
 
     const active = !isGhost && [route, route + '/'].includes(item.route + '/')
     // const isLink = 'withIndexPage' in item && item.withIndexPage
@@ -47,16 +44,36 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
     }
 
     const isSeparator = item.type === 'separator'
+
+    useEffect(() => {
+      if (!isGhost) return
+      console.log('previousItem', previousItem)
+    }, [previousItem, isGhost])
+
+    const wrapperStyle: CSSProperties = {
+      listStyle: 'none',
+      paddingLeft: indentStyle(depth, indentationWidth),
+    }
+
+    if (overItem?.name !== 'index') {
+      Object.assign(wrapperStyle, style)
+    }
+
+    if (isGhost && previousItem) {
+      Object.assign(wrapperStyle, {
+        paddingLeft: indentStyle(
+          previousItem.collapsed ? previousItem.depth + 1 : previousItem.depth,
+          indentationWidth,
+        ),
+      })
+    }
+
     return (
       <li
         {...handleProps}
         ref={wrapperRef}
         onClick={() => onCollapse(item.id)}
-        style={{
-          listStyle: 'none',
-          paddingLeft: indentStyle(depth, indentationWidth),
-          ...style,
-        }}
+        style={wrapperStyle}
       >
         <div
           ref={ref}
@@ -69,6 +86,7 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
             !isDragging && !active && classes.inactiveBgColor,
             isGhost && classes.ghost,
             clone && classes.clone,
+            isOver && classes.over,
           )}
           onClick={(e) => {
             e.preventDefault()

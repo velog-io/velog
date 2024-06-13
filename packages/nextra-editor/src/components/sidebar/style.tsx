@@ -33,6 +33,7 @@ export const classes = {
   separator: cn(
     'nx-mb-2 nx-mt-5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100',
   ),
+  over: cn('nx-bg-red-100 dark:nx-bg-primary-100/5'),
 }
 
 export const indentStyle = (depth: number, indentationWidth: number): string =>

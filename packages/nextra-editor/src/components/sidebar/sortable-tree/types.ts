@@ -19,6 +19,7 @@ export type SortableTreeItemProps = {
   active: Active | null
   style: CSSProperties
   parent: PageItem | Item | null
+  previousItem: FlattenedItem | null
   isChildrenOver: boolean
   depth: number
   indentationWidth: number

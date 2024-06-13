@@ -1,16 +1,18 @@
 import { SortableItem } from '@/nextra/normalize-pages'
-import { CSSProperties, memo } from 'react'
+import { CSSProperties, memo, useEffect, useState } from 'react'
 import { AnimateLayoutChanges, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { findParent, getIsParentOver } from './utils'
 import { SortableTreeItemProps } from './types'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { SortableComponent } from './sortable-component'
+import { FlattenedItem } from '@/types'
+import { useDndTree } from '.'
 
 type Props = {
   className?: string
   item: SortableItem
-  items: SortableItem[]
+  items: FlattenedItem[]
   collapsed: boolean
   onCollapse: (id: UniqueIdentifier) => void
   clone?: boolean
@@ -27,6 +29,9 @@ const SortableTreeMenuNotMemoized = function SortableTreeItem({
   clone = false,
   indentationWidth,
 }: Props) {
+  const { overItem } = useDndTree()
+  const [previousItem, setPreviousItem] = useState<FlattenedItem | null>(null)
+
   const disabled = item.name === 'index'
   const {
     attributes,
@@ -49,6 +54,14 @@ const SortableTreeMenuNotMemoized = function SortableTreeItem({
     animateLayoutChanges,
   })
 
+  useEffect(() => {
+    if (!isGhost) return
+    if (!overItem) return
+    const item = items.findIndex((i) => i.id === overItem.id)
+    const previousItem = items[item - 1]
+    setPreviousItem(previousItem ?? null)
+  }, [isGhost, overItem])
+
   const style: CSSProperties = {
     transform: CSS.Translate.toString(transform),
     transition,
@@ -69,7 +82,8 @@ const SortableTreeMenuNotMemoized = function SortableTreeItem({
     over,
     active,
     style,
-    parent: item.parent,
+    parent: parent,
+    previousItem, // over된 item의 이전 item을 의미함
     isParentOver: getIsParentOver(parent, over?.id),
     isChildrenOver: over ? item.childrenIds.includes(over?.id) : false,
     depth: item.depth,

@@ -1,19 +1,11 @@
 import cn from 'clsx'
-import { forwardRef, useEffect } from 'react'
-import { useDndTree } from '..'
-import { classes} from '../../style'
+import { forwardRef } from 'react'
+import { classes } from '../../style'
 import { SortableTreeComponentProps } from '../types'
 
 export const SortableItemSeparator = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
   (props, ref) => {
-    const { setDragItem } = useDndTree()
-
     const { wrapperRef, handleProps, isGhost, item } = props
-
-    useEffect(() => {
-      if (!isGhost) return
-      setDragItem(item)
-    }, [isGhost])
 
     return (
       <li

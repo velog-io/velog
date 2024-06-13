@@ -13,7 +13,7 @@ import type { SortableTreeComponentProps } from '../types'
 export const SortableItemFile = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
   (props, ref) => {
     const { setFocusedItem } = useSidebar()
-    const { isDragging, setDragItem, setOverItem, overItem } = useDndTree()
+    const { isDragging, setOverItem, overItem } = useDndTree()
     const route = useFSRoute()
     const router = useRouter()
 
@@ -31,11 +31,6 @@ export const SortableItemFile = forwardRef<HTMLDivElement, SortableTreeComponent
       }
       return <AddInputs type={map[item.type]} />
     }
-
-    useEffect(() => {
-      if (!isGhost) return
-      setDragItem(item)
-    }, [isGhost])
 
     useEffect(() => {
       if (isGhost) return

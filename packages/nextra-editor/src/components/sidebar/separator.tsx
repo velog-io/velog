@@ -1,8 +1,7 @@
 import cn from 'clsx'
-import { ReactElement, useEffect } from 'react'
+import { ReactElement } from 'react'
 import { SortableItem } from '@/nextra/normalize-pages'
 import { MenuItemProps } from './menu'
-import { useDndTree } from './sortable-tree'
 
 type SeparatorProps = {
   item: SortableItem
@@ -10,15 +9,10 @@ type SeparatorProps = {
 
 export function Separator({ item, ...props }: SeparatorProps): ReactElement {
   const { title } = item
-  const { setDragItem } = useDndTree()
 
-  const { setDraggableNodeRef, setDroppableNodeRef, attributes, isDragTarget, listeners } =
+  const { setDraggableNodeRef, setDroppableNodeRef, attributes, listeners } =
     props
 
-  useEffect(() => {
-    if (!isDragTarget) return
-    setDragItem(item)
-  }, [isDragTarget])
 
   return (
     <li
