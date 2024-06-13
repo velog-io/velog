@@ -12,6 +12,7 @@
     "clean": "find . -name \"node_modules\" -type d -prune -exec rm -rf '{}' +",
     "prisma:init": "pnpm -r prisma:generate"
   },
+  "packageManager": "pnpm@9.1.4",
   "engines": {
     "node": ">=20.11.1",
     "pnpm": ">=9.1.3",
