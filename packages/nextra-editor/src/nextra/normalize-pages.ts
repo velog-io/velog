@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { ERROR_ROUTES } from './constants'
 import type { Folder, MdxFile, MetaJsonFile, PageMapItem } from './types'
 import { UniqueIdentifier } from '@dnd-kit/core'
+import { Transform } from '@dnd-kit/utilities'
 
 const DEFAULT_PAGE_THEME: PageTheme = {
   breadcrumb: true,
@@ -136,6 +137,7 @@ export type SortableItem = {
   childrenIds: UniqueIdentifier[]
   collapsed: boolean
   index: number
+  transform?: Transform | null
 } & PageItem &
   Item
 

@@ -46,7 +46,6 @@ type Props = {
 }
 
 type DndTreeContextType = {
-  activeId: UniqueIdentifier | null
   isDragging: boolean
   setDragging: (isDragging: boolean) => void
   ghostItem: SortableItem | null
@@ -59,7 +58,6 @@ type DndTreeContextType = {
 const DndTreeContext = createContext<DndTreeContextType>({
   isDragging: false,
   setDragging: () => {},
-  activeId: null,
   ghostItem: null,
   setGhostItem: () => {},
   overItem: null,
@@ -74,7 +72,6 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
   const [isDragging, setDragging] = useState(false)
   const [ghostItem, setGhostItem] = useState<SortableItem | null>(null)
   const [overItem, setOverItem] = useState<SortableItem | null>(null)
-  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
   const [offsetLeft, setOffsetLeft] = useState(0)
   const [currentPosition, setCurrentPosition] = useState<{
     parentId: UniqueIdentifier | null
@@ -90,19 +87,18 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
       [],
     )
 
-    console.log('activeId', activeId)
     const result = removeChildrenOf(
       flattenedTree,
-      activeId ? [activeId, ...collapsedItems] : collapsedItems,
+      ghostItem ? [ghostItem.id, ...collapsedItems] : collapsedItems,
     )
     return result
-  }, [activeId, items])
+  }, [ghostItem, items])
 
   const indentationWidth = 20
 
   const projected =
-    activeId && overId
-      ? getProjection(flattenedItems, activeId, overId, offsetLeft, indentationWidth)
+    ghostItem && overId
+      ? getProjection(flattenedItems, ghostItem.id, overId, offsetLeft, indentationWidth)
       : null
 
   const itemsRef = useRef<SortableItem[]>(items)
@@ -150,7 +146,6 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
   }, [flattenedItems, offsetLeft])
 
   const sortedIds = useMemo(() => flattenedItems.map(({ id }) => id), [flattenedItems])
-  const activeItem = activeId ? flattenedItems.find(({ id }) => id === activeId) : null
 
   const measuring = {
     droppable: {
@@ -178,10 +173,9 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
 
   const onDragStart = ({ active: { id: activeId } }: DragStartEvent) => {
     setDragging(true)
-    setActiveId(activeId)
-
     const activeItem = flattenedItems.find(({ id }) => id === activeId)
     setGhostItem(activeItem ?? null)
+
     if (activeItem) {
       setCurrentPosition({
         parentId: activeItem.parentId,
@@ -197,8 +191,8 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
   }
 
   const onDragOver = ({ over }: DragOverEvent) => {
-    const item = flattenedItems.find((item) => item.id === over?.id)
-    setOverItem(item ?? null)
+    // const item = flattenedItems.find((item) => item.id === over?.id)
+    // setOverItem(item ?? null)
   }
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
@@ -228,7 +222,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
     setDragging(false)
     setGhostItem(null)
     setOverItem(null)
-    setActiveId(null)
+    setGhostItem(null)
     setOffsetLeft(0)
     setCurrentPosition(null)
 
@@ -266,7 +260,6 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
           value={{
             isDragging,
             setDragging,
-            activeId,
             ghostItem,
             setGhostItem,
             overItem,
@@ -296,6 +289,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
                       collapsed={item.collapsed && !!item.children.length}
                       onCollapse={onCollapse}
                       indentationWidth={indentationWidth}
+                      depth={item.id === ghostItem?.id && projected ? projected.depth : item.depth}
                     />
                   )
                 })}
@@ -309,6 +303,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
           {ghostItem && (
             <SortableTreeItem
               item={ghostItem}
+              depth={ghostItem.depth}
               items={flattenedItems}
               collapsed={false}
               clone={true}
@@ -383,7 +378,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
 const adjustTranslate: Modifier = ({ transform }) => {
   return {
     ...transform,
-    y: transform.y - 25,
+    y: transform.y - 35,
   }
 }
 

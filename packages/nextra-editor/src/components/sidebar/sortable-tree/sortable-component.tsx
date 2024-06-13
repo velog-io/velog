@@ -8,10 +8,11 @@ import { useDndTree } from '.'
 import { classes, indentStyle } from '../style'
 import type { SortableTreeComponentProps } from './types'
 import AddInputs from '../sidebar-controller/add-inputs'
+import { MAX_DEPTH } from './utils'
 
 export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
   (props, ref) => {
-    const { isDragging, overItem, ghostItem, currentPosition } = useDndTree()
+    const { isDragging, overItem, setOverItem } = useDndTree()
     const { setFocusedItem } = useSidebar()
     const router = useRouter()
     const routeOriginal = useFSRoute()
@@ -29,6 +30,7 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
       clone,
       previousItem,
       isOver,
+      transform,
     } = props
 
     const active = !isGhost && [route, route + '/'].includes(item.route + '/')
@@ -43,30 +45,56 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
       return <AddInputs type={map[item.type]} />
     }
 
-    const isSeparator = item.type === 'separator'
-
     useEffect(() => {
-      if (!isGhost) return
-      console.log('previousItem', previousItem)
-    }, [previousItem, isGhost])
+      if (isGhost) return
+      if (!isOver) return
+      setOverItem({ ...item, transform })
+    }, [isOver, isGhost])
+
+    const isSeparator = item.type === 'separator'
 
     const wrapperStyle: CSSProperties = {
       listStyle: 'none',
       paddingLeft: indentStyle(depth, indentationWidth),
     }
 
-    if (overItem?.name !== 'index') {
+    const cancelTransform = [overItem?.name !== 'index']
+
+    if (cancelTransform.every(Boolean)) {
       Object.assign(wrapperStyle, style)
     }
 
-    if (isGhost && previousItem) {
+    if (isGhost && overItem?.transform && transform && previousItem) {
+      const isUpper = overItem?.transform.y > transform?.y
+      const isUnder = overItem?.transform.y < transform?.y
+      console.log('--------------------------------')
+      console.log('overItem?.transform.y, transform?.y', overItem?.transform.y, transform?.y)
+      console.log('isUpper', isUpper)
+      console.log('isUnder', isUnder)
+      console.log('--------------------------------')
+      let newDepth = depth
+      if (isUpper && previousItem.collapsed) {
+        newDepth = previousItem.depth + 1
+      }
+
+      if (isUpper && !previousItem.collapsed) {
+        newDepth = previousItem.depth
+      }
+
+      if (isUnder && overItem.collapsed) {
+        newDepth = overItem.depth + 1
+      }
+
+      if (isUnder && !overItem.collapsed) {
+        newDepth = overItem.depth
+      }
+
       Object.assign(wrapperStyle, {
-        paddingLeft: indentStyle(
-          previousItem.collapsed ? previousItem.depth + 1 : previousItem.depth,
-          indentationWidth,
-        ),
+        paddingLeft: indentStyle(Math.min(newDepth, MAX_DEPTH), indentationWidth),
       })
     }
+
+    if (isGhost && overItem?.id === item.id) return null
 
     return (
       <li
@@ -105,7 +133,7 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
               className="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5"
               pathClassName={cn(
                 'nx-origin-center nx-transition-transform rtl:-nx-rotate-180',
-                item.collapsed && 'ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]',
+                !isGhost && item.collapsed && 'ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]',
               )}
             />
           )}

@@ -4,6 +4,8 @@ import { FlattenedItem, TreeItem, TreeItems } from '@/types'
 import { Item, PageItem, SortableItem } from '@/nextra/normalize-pages'
 import { removeCodeFromRoute } from '@/utils'
 
+export const MAX_DEPTH = 3
+
 function initilizeDirectories(
   items: PageItem[] | Item[],
   route: string,

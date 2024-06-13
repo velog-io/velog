@@ -17,6 +17,7 @@ type Props = {
   onCollapse: (id: UniqueIdentifier) => void
   clone?: boolean
   indentationWidth: number
+  depth: number
 }
 
 const animateLayoutChanges: AnimateLayoutChanges = ({ isSorting, isDragging }) =>
@@ -28,6 +29,7 @@ const SortableTreeMenuNotMemoized = function SortableTreeItem({
   onCollapse,
   clone = false,
   indentationWidth,
+  depth,
 }: Props) {
   const { overItem } = useDndTree()
   const [previousItem, setPreviousItem] = useState<FlattenedItem | null>(null)
@@ -86,7 +88,7 @@ const SortableTreeMenuNotMemoized = function SortableTreeItem({
     previousItem, // over된 item의 이전 item을 의미함
     isParentOver: getIsParentOver(parent, over?.id),
     isChildrenOver: over ? item.childrenIds.includes(over?.id) : false,
-    depth: item.depth,
+    depth,
     indentationWidth,
     onCollapse,
     handleProps: {
