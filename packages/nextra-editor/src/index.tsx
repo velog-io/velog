@@ -246,6 +246,7 @@ export {
 
 export const nextraCustomEventName = {
   addAction: 'addAction',
+  changeItem: 'changeItem',
 }
 
 export { CustomEventDetail, MdxCompilerOptions, MdxOptions, SearchResult } from './types'

@@ -63,9 +63,9 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
     }
 
     useEffect(() => {
-      if (isGhost && overItem?.id === item.id) {
-        setOverItem({ ...item, transform })
-      }
+      if (!isGhost) return
+      if (overItem?.id !== item.id) return
+      setOverItem({ ...item, transform })
     }, [])
 
     return (
@@ -86,7 +86,6 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
             !isDragging && !active && classes.inactiveBgColor,
             isGhost && classes.ghost,
             clone && classes.clone,
-            // isOver && classes.over,
           )}
           onClick={(e) => {
             e.preventDefault()

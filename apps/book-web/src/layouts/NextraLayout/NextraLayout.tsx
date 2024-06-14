@@ -22,12 +22,15 @@ function NextraLayout({ children, body }: Props) {
 
   useEffect(() => {
     if (!getPagesData?.pages) return
-    const metadata = generateBookMetadata({ pages: getPagesData.pages as Pages, bookUrl: bookUrlSlug })
+    const metadata = generateBookMetadata({
+      pages: getPagesData.pages as Pages,
+      bookUrl: bookUrlSlug,
+    })
     setBookMetadata(metadata)
   }, [getPagesData?.pages])
 
   useEffect(() => {
-    const addAction = async (e: CustomEventInit<CustomEventDetail['AddActionEventDetail']>) => {
+    const addAction = async (e: CustomEventInit<CustomEventDetail['addActionEvent']>) => {
       if (!e.detail) return
       const { title, parentUrlSlug, index, bookUrlSlug, type } = e.detail
       await createPageAsyncMutate({
@@ -46,6 +49,19 @@ function NextraLayout({ children, body }: Props) {
       window.removeEventListener(nextraCustomEventName.addAction, addAction)
     }
   })
+
+  useEffect(() => {
+    const changeItem = async (e: CustomEventInit<CustomEventDetail['changeItemEvent']>) => {
+      if (!e.detail) return
+      const { targetId, parentId, index } = e.detail
+      console.log('changeItem', targetId, parentId, index)
+    }
+
+    window.addEventListener(nextraCustomEventName.changeItem, changeItem)
+    return () => {
+      window.removeEventListener(nextraCustomEventName.changeItem, changeItem)
+    }
+  }, [])
 
   if (isLoading || !bookMetadata || !body) return <div>loading...</div>
   return (

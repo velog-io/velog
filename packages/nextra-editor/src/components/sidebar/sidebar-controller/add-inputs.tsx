@@ -31,7 +31,7 @@ function AddInputs({ type }: Props): ReactElement {
     onComplete()
     const { parentUrlSlug, bookUrlSlug, index, type } = sidebar.actionInfo
     if (type === '') return
-    const event = new CustomEvent<CustomEventDetail['AddActionEventDetail']>(
+    const event = new CustomEvent<CustomEventDetail['addActionEvent']>(
       nextraCustomEventName.addAction,
       {
         detail: { title, parentUrlSlug, index, bookUrlSlug, type },

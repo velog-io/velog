@@ -18,15 +18,22 @@ export type SearchResult = {
 }
 
 export interface CustomEventDetail {
-  AddActionEventDetail: AddActionEventDetail
+  addActionEvent: AddActionEvent
+  changeItemEvent: ChangeItemEvent
 }
 
-type AddActionEventDetail = {
+type AddActionEvent = {
   title: string
   parentUrlSlug: string
   index: number
   bookUrlSlug: string
   type: 'page' | 'folder' | 'separator'
+}
+
+type ChangeItemEvent = {
+  targetId: UniqueIdentifier
+  parentId: UniqueIdentifier | null
+  index: number
 }
 
 // for compiler
@@ -50,6 +57,7 @@ export type MdxCompilerOptions = Partial<
 export type TreeItems<T extends Record<string, any>> = TreeItem<T>[]
 export type TreeItem<T = PageMapItem> = {
   children?: TreeItem<T>[]
+  childrenIds?: UniqueIdentifier[]
   id: UniqueIdentifier
   /*
   Default: false.

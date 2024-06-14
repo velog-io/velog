@@ -78,13 +78,22 @@ function buildTree<T extends Record<string, any>>(
     const parent = nodes[parentId] ?? findItem(items, parentId)
     item.parent = null
     nodes[id] = item
-    parent?.children?.push(item)
+
+    if (parent) {
+      parent?.children?.push(item)
+      parent.childrenIds = parent ? parent.children?.map((child) => child.id) : []
+    }
   }
 
   return root.children ?? []
 }
 
-function findItemDeep(items: SortableItem[], itemId: UniqueIdentifier): SortableItem | undefined {
+function findItemDeep(
+  items: SortableItem[],
+  itemId: UniqueIdentifier | null,
+): SortableItem | undefined {
+  if (!itemId) return undefined
+
   for (const item of items) {
     const { id, children } = item
 

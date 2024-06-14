@@ -19,6 +19,7 @@ import {
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import {
   buildTree,
+  findItemDeep,
   flattenTree,
   getProjection,
   removeChildrenOf,
@@ -37,6 +38,7 @@ import { dropAnimation } from './utils/dropAnimation'
 import { useSidebar } from '@/contexts/sidebar'
 import { SensorContext } from './types'
 import { sortableTreeKeyboardCoordinates } from './utils/keyborardCoordinates'
+import { CustomEventDetail, nextraCustomEventName } from '@/index'
 
 type Props = {
   items: SortableItem[]
@@ -203,12 +205,39 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
       const clonedItems: FlattenedItem[] = JSON.parse(JSON.stringify(flattenTree(items)))
       const overIndex = clonedItems.findIndex(({ id }) => id === over.id)
       const activeIndex = clonedItems.findIndex(({ id }) => id === active.id)
+      const parentIndex = clonedItems.findIndex(({ id }) => id === parentId)
+
+      if (overIndex === 0) return
+
       const activeTreeItem = clonedItems[activeIndex]
 
-      clonedItems[activeIndex] = { ...activeTreeItem, depth, parentId }
+      clonedItems[activeIndex] = {
+        ...activeTreeItem,
+        depth,
+        parentId,
+        parent: clonedItems[parentIndex] ?? null,
+      }
 
       const sortedItems = arrayMove(clonedItems, activeIndex, overIndex)
       const newItems = buildTree(sortedItems)
+      const newParentItem = findItemDeep(newItems, parentId)
+
+      const event = new CustomEvent<CustomEventDetail['changeItemEvent']>(
+        nextraCustomEventName.changeItem,
+        {
+          detail: {
+            targetId: activeTreeItem.id,
+            parentId: parentId,
+            index: newParentItem
+              ? newParentItem.childrenIds.findIndex((id) => id === activeTreeItem.id)
+              : newItems
+                  .filter((item) => !item.parentId)
+                  .findIndex(({ id }) => id === activeTreeItem.id),
+          },
+        },
+      )
+
+      window.dispatchEvent(event)
 
       onItemsChanged(newItems)
     }

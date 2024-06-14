@@ -95,7 +95,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
   const createFolder = (page: Page) => {
     const key = map.get(page.url_slug)
     const result = {
-      id: page.id,
+      id: `${bookUrl}${page.url_slug}`,
       kind: 'Folder',
       name: key,
       route: `${bookUrl}${page.url_slug}`,
