@@ -22,11 +22,12 @@ type Page {
 }
 
 type Query {
-  pages(input: GetPagesInput!): [Page!]!
+  pages(input: GetPagesInput!): [Page!]! @auth
 }
 
 type Mutation {
-  create(input: CreatePageInput!): Page
+  create(input: CreatePageInput!): Page @auth
+  reorder(input: ReorderInput!): Void @auth
 }
 
 input GetPagesInput {
@@ -39,4 +40,11 @@ input CreatePageInput {
   parent_url_slug: String!
   book_url_slug: String!
   type: PageType!
+}
+
+input ReorderInput {
+  book_url_slug: String!
+  target_url_slug: String!
+  parent_url_slug: String
+  index: Int!
 }

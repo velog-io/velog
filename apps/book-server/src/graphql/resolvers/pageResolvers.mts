@@ -13,8 +13,11 @@ const pageResolvers: Resolvers = {
     create: async (_, { input }, ctx) => {
       const pageService = container.resolve(PageService)
       const page = await pageService.create(input, ctx.writer?.id)
-      console.log(page)
       return page
+    },
+    reorder: async (_, { input }, ctx) => {
+      const pageService = container.resolve(PageService)
+      await pageService.reorder(input, ctx.writer?.id)
     },
   },
 }

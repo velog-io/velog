@@ -2,7 +2,11 @@ import NextraDocLayout, { CustomEventDetail, nextraCustomEventName } from '@pack
 import { themeConfig } from './context'
 import { useEffect, useState } from 'react'
 import { BookMetadata, generateBookMetadata, Pages } from '@/lib/generateBookMetadata'
-import { useCreatePageMutation, useGetPagesQuery } from '@/graphql/bookServer/generated/bookServer'
+import {
+  useCreatePageMutation,
+  useGetPagesQuery,
+  useReorderPageMutation,
+} from '@/graphql/bookServer/generated/bookServer'
 import { useUrlSlug } from '@/hooks/useUrlSlug'
 
 type Props = {
@@ -19,6 +23,7 @@ function NextraLayout({ children, body }: Props) {
     refetch: getPagesRefetch,
     isLoading,
   } = useGetPagesQuery({ input: { book_url_slug: bookUrlSlug } })
+  const { mutateAsync } = useReorderPageMutation()
 
   useEffect(() => {
     if (!getPagesData?.pages) return
@@ -53,8 +58,16 @@ function NextraLayout({ children, body }: Props) {
   useEffect(() => {
     const changeItem = async (e: CustomEventInit<CustomEventDetail['changeItemEvent']>) => {
       if (!e.detail) return
-      const { targetId, parentId, index } = e.detail
-      console.log('changeItem', targetId, parentId, index)
+      const { bookUrlSlug, targetUrlSlug, parentUrlSlug, index } = e.detail
+
+      await mutateAsync({
+        input: {
+          book_url_slug: bookUrlSlug,
+          target_url_slug: targetUrlSlug,
+          parent_url_slug: parentUrlSlug,
+          index,
+        },
+      })
     }
 
     window.addEventListener(nextraCustomEventName.changeItem, changeItem)

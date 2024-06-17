@@ -59,6 +59,7 @@ export type Mutation = {
   build: Maybe<Scalars['Void']['output']>
   create: Maybe<Page>
   deploy: Maybe<Scalars['Void']['output']>
+  reorder: Maybe<Scalars['Void']['output']>
 }
 
 export type MutationBuildArgs = {
@@ -71,6 +72,10 @@ export type MutationCreateArgs = {
 
 export type MutationDeployArgs = {
   input: BookIdInput
+}
+
+export type MutationReorderArgs = {
+  input: ReorderInput
 }
 
 export type Page = {
@@ -103,6 +108,13 @@ export type QueryBookArgs = {
 
 export type QueryPagesArgs = {
   input: GetPagesInput
+}
+
+export type ReorderInput = {
+  book_url_slug: Scalars['String']['input']
+  index: Scalars['Int']['input']
+  parent_url_slug?: InputMaybe<Scalars['String']['input']>
+  target_url_slug: Scalars['String']['input']
 }
 
 export type SubScriptionPayload = {
@@ -177,6 +189,12 @@ export type CreatePageMutationVariables = Exact<{
 }>
 
 export type CreatePageMutation = { create: { id: string } | null }
+
+export type ReorderPageMutationVariables = Exact<{
+  input: ReorderInput
+}>
+
+export type ReorderPageMutation = { reorder: void | null }
 
 export const DeployDocument = `
     mutation deploy($input: BookIDInput!) {
@@ -293,3 +311,32 @@ useCreatePageMutation.fetcher = (
   options?: RequestInit['headers'],
 ) =>
   fetcher<CreatePageMutation, CreatePageMutationVariables>(CreatePageDocument, variables, options)
+
+export const ReorderPageDocument = `
+    mutation reorderPage($input: ReorderInput!) {
+  reorder(input: $input)
+}
+    `
+
+export const useReorderPageMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<ReorderPageMutation, TError, ReorderPageMutationVariables, TContext>,
+) => {
+  return useMutation<ReorderPageMutation, TError, ReorderPageMutationVariables, TContext>({
+    mutationKey: ['reorderPage'],
+    mutationFn: (variables?: ReorderPageMutationVariables) =>
+      fetcher<ReorderPageMutation, ReorderPageMutationVariables>(ReorderPageDocument, variables)(),
+    ...options,
+  })
+}
+
+useReorderPageMutation.getKey = () => ['reorderPage']
+
+useReorderPageMutation.fetcher = (
+  variables: ReorderPageMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<ReorderPageMutation, ReorderPageMutationVariables>(
+    ReorderPageDocument,
+    variables,
+    options,
+  )

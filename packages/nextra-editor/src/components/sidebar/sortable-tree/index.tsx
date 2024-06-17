@@ -39,6 +39,7 @@ import { useSidebar } from '@/contexts/sidebar'
 import { SensorContext } from './types'
 import { sortableTreeKeyboardCoordinates } from './utils/keyborardCoordinates'
 import { CustomEventDetail, nextraCustomEventName } from '@/index'
+import { useUrlSlug } from '@/hooks/use-url-slug'
 
 type Props = {
   items: SortableItem[]
@@ -70,6 +71,7 @@ const DndTreeContext = createContext<DndTreeContextType>({
 export const useDndTree = () => useContext(DndTreeContext)
 
 function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props) {
+  const { bookUrlSlug } = useUrlSlug()
   const { isFolding } = useSidebar()
   const [isDragging, setDragging] = useState(false)
   const [ghostItem, setGhostItem] = useState<SortableItem | null>(null)
@@ -210,7 +212,6 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
       if (overIndex === 0) return
 
       const activeTreeItem = clonedItems[activeIndex]
-
       clonedItems[activeIndex] = {
         ...activeTreeItem,
         depth,
@@ -226,8 +227,9 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
         nextraCustomEventName.changeItem,
         {
           detail: {
-            targetId: activeTreeItem.id,
-            parentId: parentId,
+            bookUrlSlug,
+            targetUrlSlug: activeTreeItem.id.replace(bookUrlSlug, ''),
+            parentUrlSlug: String(parentId).replace(bookUrlSlug, ''),
             index: newParentItem
               ? newParentItem.childrenIds.findIndex((id) => id === activeTreeItem.id)
               : newItems

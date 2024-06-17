@@ -1,18 +1,18 @@
 import { ConfilctError } from '@errors/ConfilctError.mjs'
 import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
-import { CreatePageInput } from '@graphql/generated.js'
-
+import type { CreatePageInput, ReorderInput } from '@graphql/generated.js'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { UtilsService } from '@lib/utils/UtilsService.mjs'
-import { Page } from '@packages/database/velog-book-mongo'
+import { Page, Prisma } from '@packages/database/velog-book-mongo'
 import { BookService } from '@services/BookService/index.mjs'
 import { injectable, singleton } from 'tsyringe'
 
 interface Service {
   updatePageAndChildrenUrlSlug(args: UpdatePageAndChildrenUrlSlugArgs): Promise<void>
   getPages(bookUrlSlug: string, signedWriterId?: string): Promise<Page[]>
-  create(args: CreatePageInput, signedWriterId?: string): Promise<Page>
+  create(input: CreatePageInput, signedWriterId?: string): Promise<Page>
+  reorder(input: ReorderInput, signedWriterId?: string): Promise<void>
 }
 
 @injectable()
@@ -99,15 +99,19 @@ export class PageService implements Service {
       throw new ConfilctError('Not owner of book')
     }
 
+    const orderBy: Prisma.PageOrderByWithRelationInput[] = [{ index: 'asc' }]
     const pages = await this.mongo.page.findMany({
       where: {
         book_id: book.id,
         parent_id: null,
       },
+      orderBy,
       include: {
         childrens: {
+          orderBy,
           include: {
             childrens: {
+              orderBy,
               include: {
                 childrens: true,
               },
@@ -115,7 +119,6 @@ export class PageService implements Service {
           },
         },
       },
-      orderBy: [{ index: 'asc' }],
     })
 
     return pages
@@ -171,6 +174,85 @@ export class PageService implements Service {
     })
 
     return page
+  }
+
+  public async reorder(input: ReorderInput, signedWriterId?: string): Promise<void> {
+    if (!signedWriterId) {
+      throw new UnauthorizedError('Not authorized')
+    }
+
+    console.log('input', input)
+    const { book_url_slug, target_url_slug, parent_url_slug, index } = input
+
+    const book = await this.bookSerivce.findByUrlSlug(book_url_slug)
+
+    if (!book) {
+      throw new NotFoundError('Not found book')
+    }
+
+    if (book.fk_writer_id !== signedWriterId) {
+      throw new ConfilctError('Not owner of book')
+    }
+
+    const page = await this.mongo.page.findUnique({
+      where: {
+        url_slug: target_url_slug,
+      },
+    })
+
+    if (!page) {
+      throw new NotFoundError('Not found page')
+    }
+
+    if (page.book_id !== book.id) {
+      throw new ConfilctError('Not related page')
+    }
+
+    const parentPage = parent_url_slug
+      ? await this.mongo.page.findUnique({
+          where: {
+            url_slug: parent_url_slug,
+          },
+        })
+      : null
+
+    if (parentPage && parentPage.book_id !== book.id) {
+      throw new ConfilctError('Not related parent page')
+    }
+
+    await this.mongo.page.update({
+      where: {
+        id: page.id,
+      },
+      data: {
+        parent_id: parentPage?.id || null,
+        index,
+        updated_at: new Date(),
+      },
+    })
+
+    const childrens = await this.mongo.page.findMany({
+      where: {
+        parent_id: parentPage?.id ?? null,
+        index: {
+          gte: index,
+        },
+      },
+      orderBy: [{ index: 'asc' }, { updated_at: 'desc' }],
+    })
+
+    const updatedChildrens = childrens.map((child, i) =>
+      this.mongo.page.update({
+        where: {
+          id: child.id,
+        },
+        data: {
+          index: index + i,
+        },
+      }),
+    )
+
+    await Promise.all(updatedChildrens)
   }
 }
 

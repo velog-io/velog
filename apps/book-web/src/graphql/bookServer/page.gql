@@ -30,3 +30,7 @@ mutation createPage($input: CreatePageInput!) {
     id
   }
 }
+
+mutation reorderPage($input: ReorderInput!) {
+  reorder(input: $input)
+}

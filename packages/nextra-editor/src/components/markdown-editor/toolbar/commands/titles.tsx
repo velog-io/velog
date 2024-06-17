@@ -69,16 +69,16 @@ const icons = [
   </svg>,
 ]
 
-function generateTitleCommand(level: number): ToolbarCommand {
+function generateTitleCommand(depth: number): ToolbarCommand {
   return {
-    name: `title-${level}`,
-    button: { 'aria-label': `Add title ${level}` },
-    icon: icons[level - 1],
+    name: `title-${depth}`,
+    button: { 'aria-label': `Add title ${depth}` },
+    icon: icons[depth - 1],
     execute(view) {
       if (!view) return
       const lineInfo = view.state.doc.lineAt(view.state.selection.main.from)
-      const mark = '#'.repeat(level)
-      
+      const mark = '#'.repeat(depth)
+
       const title = lineInfo.text.replace(/^#+/, '').trim()
       view.dispatch({
         changes: {

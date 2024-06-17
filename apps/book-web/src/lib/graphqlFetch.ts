@@ -8,7 +8,7 @@ export default async function graphqlFetch<T>({
   next,
   cache,
   ...init
-}: Parameter): Promise<T> {
+}: Parameter): Promise<T | null> {
   let targetUrl = url
 
   if (method === 'GET' && body) {
@@ -60,8 +60,9 @@ export default async function graphqlFetch<T>({
     throw new Error(message as any)
   }
 
-  const json = await res.json()
+  if (!res) return null
 
+  const json = await res?.json()
   return json.data as T
 }
 

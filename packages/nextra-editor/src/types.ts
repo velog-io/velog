@@ -31,8 +31,9 @@ type AddActionEvent = {
 }
 
 type ChangeItemEvent = {
-  targetId: UniqueIdentifier
-  parentId: UniqueIdentifier | null
+  bookUrlSlug: string
+  targetUrlSlug: string
+  parentUrlSlug: string | null
   index: number
 }
 

@@ -59,6 +59,7 @@ export type Mutation = {
   build?: Maybe<Scalars['Void']['output']>
   create?: Maybe<Page>
   deploy?: Maybe<Scalars['Void']['output']>
+  reorder?: Maybe<Scalars['Void']['output']>
 }
 
 export type MutationBuildArgs = {
@@ -71,6 +72,10 @@ export type MutationCreateArgs = {
 
 export type MutationDeployArgs = {
   input: BookIdInput
+}
+
+export type MutationReorderArgs = {
+  input: ReorderInput
 }
 
 export type Page = {
@@ -103,6 +108,13 @@ export type QueryBookArgs = {
 
 export type QueryPagesArgs = {
   input: GetPagesInput
+}
+
+export type ReorderInput = {
+  book_url_slug: Scalars['String']['input']
+  index: Scalars['Int']['input']
+  parent_url_slug?: InputMaybe<Scalars['String']['input']>
+  target_url_slug: Scalars['String']['input']
 }
 
 export type SubScriptionPayload = {
@@ -233,6 +245,7 @@ export type ResolversTypes = {
   PageType: PageType
   PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']['output']>
   Query: ResolverTypeWrapper<{}>
+  ReorderInput: ReorderInput
   String: ResolverTypeWrapper<Scalars['String']['output']>
   SubScriptionPayload: ResolverTypeWrapper<SubScriptionPayload>
   Subscription: ResolverTypeWrapper<{}>
@@ -255,6 +268,7 @@ export type ResolversParentTypes = {
   Page: PageModel
   PositiveInt: Scalars['PositiveInt']['output']
   Query: {}
+  ReorderInput: ReorderInput
   String: Scalars['String']['output']
   SubScriptionPayload: SubScriptionPayload
   Subscription: {}
@@ -312,6 +326,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationDeployArgs, 'input'>
+  >
+  reorder?: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationReorderArgs, 'input'>
   >
 }
 
