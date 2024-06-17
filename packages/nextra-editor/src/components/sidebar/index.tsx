@@ -99,7 +99,7 @@ export function Sidebar({
 
   useEffect(() => {
     setSortableItems(initSotableItems)
-  }, [initSotableItems])
+  }, [])
 
   const initFullDirectories: SortableItem[] = useMemo(
     () => initilizeDirectories(fullDirectories, route),
