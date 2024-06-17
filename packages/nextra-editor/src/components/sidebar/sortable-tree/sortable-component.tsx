@@ -31,17 +31,11 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
       transform,
     } = props
 
-    const active = !isGhost && [route, route + '/'].includes(item.route + '/')
-    // const isLink = 'withIndexPage' in item && item.withIndexPage
+    const isAddAction = ['newPage', 'newFolder', 'newSeparator'].includes(item.type)
 
-    if (['newPage', 'newFolder', 'newSeparator'].includes(item.type)) {
-      const map: Record<string, ActionType> = {
-        newPage: 'page',
-        newFolder: 'folder',
-        newSeparator: 'separator',
-      }
-      return <AddInputs type={map[item.type]} />
-    }
+    const active =
+      !isDragging && !isAddAction && !isGhost && [route, route + '/'].includes(item.route + '/')
+    // const isLink = 'withIndexPage' in item && item.withIndexPage
 
     useEffect(() => {
       if (isGhost) return
@@ -62,11 +56,11 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
       Object.assign(wrapperStyle, style)
     }
 
-    useEffect(() => {
-      if (!isGhost) return
-      if (overItem?.id !== item.id) return
-      setOverItem({ ...item, transform })
-    }, [])
+    const addActionMap: Record<string, ActionType> = {
+      newPage: 'page',
+      newFolder: 'folder',
+      newSeparator: 'separator',
+    }
 
     return (
       <li
@@ -95,18 +89,24 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
             setFocusedItem(item)
           }}
         >
-          <div className={cn('nx-w-full nx-px-2 nx-py-1.5 [word-break:keep-all]')}>
-            {item.title}
-          </div>
-          {item.kind === 'Folder' && (
-            <ArrowRightIcon
-              onClick={() => onCollapse(item.id)}
-              className="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5"
-              pathClassName={cn(
-                'nx-origin-center nx-transition-transform rtl:-nx-rotate-180',
-                !isGhost && item.collapsed && 'ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]',
+          {isAddAction ? (
+            <AddInputs type={addActionMap[item.type]} />
+          ) : (
+            <>
+              <div className={cn('nx-w-full nx-px-2 nx-py-1.5 [word-break:keep-all]')}>
+                {item.title}
+              </div>
+              {item.kind === 'Folder' && (
+                <ArrowRightIcon
+                  onClick={() => onCollapse(item.id)}
+                  className="nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5"
+                  pathClassName={cn(
+                    'nx-origin-center nx-transition-transform rtl:-nx-rotate-180',
+                    !isGhost && item.collapsed && 'ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]',
+                  )}
+                />
               )}
-            />
+            </>
           )}
         </div>
       </li>

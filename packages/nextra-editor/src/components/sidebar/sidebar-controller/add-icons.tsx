@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSidebar } from '@/contexts/sidebar'
 import { NewFolderIcon } from '@/nextra/icons/new-folder'
-import { Folder, PageMapItem } from '@/nextra/types'
+import type { Folder } from '@/nextra/types'
 import { useUrlSlug } from '@/hooks/use-url-slug'
 import { NewPageIcon } from '@/nextra/icons/new-page'
 import { SeparatorIcon } from '@/nextra/icons/separator'
 import { removeCodeFromRoute } from '@/utils'
 import { findFolder } from './utils'
+import type { SortableItem } from '@/nextra/normalize-pages'
 
 type Props = {
   className: string
@@ -18,12 +19,12 @@ const AddIcons = ({ className, type }: Props) => {
   const { bookUrlSlug, pageUrlSlug, fullUrlSlug } = useUrlSlug()
 
   const timeoutRef = useRef<NodeJS.Timeout>()
-  const [originPageMap, setOriginPageMap] = useState<PageMapItem[]>([])
+  const [originSortableItems, setOriginSortableItems] = useState<SortableItem[]>([])
 
   useEffect(() => {
     if (sidebar.actionType !== type) return
     if (!sidebar.actionComplete) return
-    sidebar.reset(originPageMap)
+    sidebar.reset(originSortableItems)
     return () => {
       if (!timeoutRef.current) return
       clearTimeout(timeoutRef.current)
@@ -32,72 +33,90 @@ const AddIcons = ({ className, type }: Props) => {
 
   const onClick = () => {
     if (sidebar.actionActive) {
-      sidebar.reset(originPageMap)
+      sidebar.reset(originSortableItems)
       return
     }
 
     sidebar.setActionType(type)
-
     const timeout = setTimeout(() => sidebar.setActionActive(true), 100)
     timeoutRef.current = timeout
 
     // remove code
-    let targetRoute = `/${removeCodeFromRoute(pageUrlSlug)}`
-    const isFolder = !!findFolder(sidebar.pageMap, fullUrlSlug)
+    let targetRoute = `/${pageUrlSlug}`
+    const isFolder = !!findFolder(sidebar.sortableItems, fullUrlSlug)
 
     // 폴더 타입이 아닐 경우 부모 폴더로 targetRoute를 변경
     if (!isFolder) {
       targetRoute = targetRoute.split('/').slice(0, -1).join('/') || '/'
     }
 
-    setOriginPageMap(sidebar.pageMap)
+    setOriginSortableItems(sidebar.sortableItems)
+    const coppeidPageMap = structuredClone(sidebar.sortableItems)
 
-    const coppeidPageMap = structuredClone(sidebar.pageMap)
-
-    function addNewFolderToPageMap(pageMap: PageMapItem[], parent?: Folder) {
-      for (const page of pageMap) {
-        const isMdxPage = page.kind === 'MdxPage'
+    function addNewFolderToItem(sortableItems: SortableItem[], parent?: Folder) {
+      for (const item of sortableItems) {
+        const isMdxPage = item.kind === 'MdxPage'
         if (isMdxPage) continue
 
-        const isMetaPage = page.kind === 'Meta'
-        const isFolderPage = page.kind === 'Folder'
+        const isFolderPage = item.kind === 'Folder'
+        const isSeparator = item.type === 'separator'
 
-        if (isFolderPage && page.children.length > 0) {
-          addNewFolderToPageMap(page.children, page)
-          continue
-        }
+        if (isSeparator) continue
 
-        if (!isMetaPage) continue
-
-        const isTarget = page.route === targetRoute
-        if (isTarget) {
-          const key = Math.random().toString(36).substring(7).slice(0, 9)
+        const isTarget = item.route.includes(targetRoute)
+        const addToTop = targetRoute === '/'
+        if (addToTop || isTarget) {
           const pageTypeMap = {
             page: 'newPage',
             folder: 'newFolder',
             separator: 'newSeparator',
           }
 
-          const newPageType = pageTypeMap[type]
-          const newPageData = { ...page.data, [key]: { title: key, type: newPageType } }
+          const index = addToTop ? coppeidPageMap.length : item.children.length
+          const newItem: SortableItem = {
+            id: Math.random().toString(36).substring(7).slice(0, 9),
+            title: 'addAction',
+            type: pageTypeMap[type],
+            depth: addToTop ? 1 : item.depth + 1,
+            parentId: addToTop ? null : item.id,
+            children: [],
+            childrenIds: [],
+            route: `${item.route}/addAction`,
+            kind: 'Folder',
+            name: 'addAction',
+            isLast: true,
+            collapsed: false,
+            index,
+            parent: addToTop ? null : item,
+          }
 
-          const removeBookUrlSlug = parent?.route.replace(bookUrlSlug, '')
+          const removeBookUrlSlug = addToTop ? '' : parent?.route.replace(bookUrlSlug, '')
           sidebar.setActionInfo({
             parentUrlSlug: removeBookUrlSlug ?? '',
-            index: Object.keys(newPageData).length - 1,
+            index,
             bookUrlSlug,
             type,
           })
 
-          page.data = newPageData
-          sidebar.setPageMap(coppeidPageMap)
+          if (addToTop) {
+            coppeidPageMap.push(newItem)
+          } else {
+            item.children.push(newItem)
+          }
+
+          sidebar.setSortableItems(coppeidPageMap)
           break
+        }
+
+        if (isFolderPage && item.children.length > 0) {
+          addNewFolderToItem(item.children, item)
+          continue
         }
       }
     }
-
-    addNewFolderToPageMap(coppeidPageMap)
+    addNewFolderToItem(coppeidPageMap)
   }
+
   return (
     <span className={className} onClick={onClick}>
       {type === 'page' && <NewPageIcon />}

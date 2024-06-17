@@ -137,7 +137,6 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
     if (!value) return
     const currentValue = view ? view.state.doc.toString() : ''
     if (view && value !== currentValue) {
-      console.log('annotation', value.length, currentValue.length)
       view.dispatch({
         changes: { from: 0, to: currentValue.length, insert: value || '' },
         annotations: [External.of(true)],

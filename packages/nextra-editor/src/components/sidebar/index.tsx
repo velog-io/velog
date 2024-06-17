@@ -34,7 +34,7 @@ export function Sidebar({
   headings,
   includePlaceholder,
 }: SideBarProps): ReactElement {
-  const { isFolding, setIsFolding, setFocusedItem } = useSidebar()
+  const { isFolding, setIsFolding, setFocusedItem, setSortableItems, sortableItems } = useSidebar()
   const config = useConfig()
   const { menu, setMenu } = useMenu()
   const router = useRouter()
@@ -92,12 +92,14 @@ export function Sidebar({
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton
   const [route] = routeOriginal.split('#')
 
-  const initDocDirectories: SortableItem[] = useMemo(
+  const initSotableItems: SortableItem[] = useMemo(
     () => initilizeDirectories(docsDirectories, route),
     [docsDirectories, route],
   )
 
-  const [docDirectories, setDocDragItem] = useState<SortableItem[]>(initDocDirectories)
+  useEffect(() => {
+    setSortableItems(initSotableItems)
+  }, [initSotableItems])
 
   const initFullDirectories: SortableItem[] = useMemo(
     () => initilizeDirectories(fullDirectories, route),
@@ -139,8 +141,8 @@ export function Sidebar({
           })}
         </div>
         <SortableTree
-          items={docDirectories}
-          onItemsChanged={setDocDragItem}
+          items={sortableItems}
+          onItemsChanged={setSortableItems}
           showSidebar={showSidebar}
           sidebarRef={sidebarRef}
         />

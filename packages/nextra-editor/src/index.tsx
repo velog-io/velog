@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import 'focus-visible'
 import cn from 'clsx'
 import './polyfill'
@@ -14,7 +14,7 @@ import { normalizePages, PageTheme } from './nextra/normalize-pages'
 import { useFSRoute } from './nextra/hooks/use-fs-route'
 import { NextraThemeLayoutProps, PageOpts } from './nextra/types'
 import { useMounted } from './nextra/hooks'
-import { SidebarProvider, useSidebar } from './contexts/sidebar'
+import { SidebarProvider } from './contexts/sidebar'
 import MarkdownEditor from './components/markdown-editor'
 import { MarkdownEditorProvider, useMarkdownEditor } from './contexts/markdown-editor'
 
@@ -103,19 +103,13 @@ const InnerLayout = ({
   frontMatter,
   headings,
   children,
-  pageMap: initPageMap,
+  pageMap,
 }: InnerLayoutProps): ReactElement => {
   const config = useConfig()
   const fsPath = useFSRoute()
-  const sidebar = useSidebar()
   const markdownEditor = useMarkdownEditor()
 
-  const { pageMap, actionActive, setPageMap } = sidebar
   const { mdxSource } = markdownEditor
-
-  useEffect(() => {
-    setPageMap(initPageMap)
-  }, [initPageMap])
 
   const {
     activeType,
@@ -135,7 +129,7 @@ const InnerLayout = ({
         defaultLocale: DEFAULT_LOCALE,
         route: '/',
       }),
-    [pageMap, fsPath, actionActive],
+    [pageMap, fsPath],
   )
 
   const themeContext = { ...activeThemeContext, ...frontMatter }
@@ -217,7 +211,7 @@ export default function NextraDocLayout({
   return (
     <ConfigProvider value={context}>
       <MarkdownEditorProvider value={{ editorValue }}>
-        <SidebarProvider value={context}>
+        <SidebarProvider>
           <InnerLayout {...context.pageOpts}>{children}</InnerLayout>
         </SidebarProvider>
       </MarkdownEditorProvider>

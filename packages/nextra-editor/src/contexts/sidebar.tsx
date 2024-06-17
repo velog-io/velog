@@ -1,7 +1,5 @@
-import { PageMapItem } from '../nextra/types'
 import { createContext, ReactElement, ReactNode, useContext, useState } from 'react'
-import { Context } from '../types'
-import { SortableItem } from '@/nextra/normalize-pages'
+import type { SortableItem } from '@/nextra/normalize-pages'
 
 export type ActionInfo = {
   parentUrlSlug: string
@@ -13,9 +11,9 @@ export type ActionInfo = {
 export type ActionType = 'folder' | 'page' | 'separator' | ''
 
 type Sidebar = {
-  pageMap: PageMapItem[]
-  setPageMap: (pageMap: PageMapItem[]) => void
-  reset: (pageMap: PageMapItem[]) => void
+  sortableItems: SortableItem[]
+  setSortableItems: (item: SortableItem[]) => void
+  reset: (pageMap: SortableItem[]) => void
   actionActive: boolean
   setActionActive: (value: boolean) => void
   actionComplete: boolean
@@ -31,8 +29,8 @@ type Sidebar = {
 }
 
 const SidebarContext = createContext<Sidebar>({
-  pageMap: [],
-  setPageMap: () => {},
+  sortableItems: [],
+  setSortableItems: () => {},
   reset: () => {},
   actionActive: false,
   setActionActive: () => {},
@@ -52,14 +50,8 @@ export function useSidebar() {
   return useContext(SidebarContext)
 }
 
-export const SidebarProvider = ({
-  children,
-  value: { pageOpts },
-}: {
-  children: ReactNode
-  value: Context
-}): ReactElement => {
-  const [pageMap, setPageMap] = useState(pageOpts.pageMap)
+export const SidebarProvider = ({ children }: { children: ReactNode }): ReactElement => {
+  const [sortableItems, setSortableItems] = useState<SortableItem[]>([])
   const [isFolding, setIsFolding] = useState(false)
   const [actionComplete, setActionComplete] = useState(false)
   const [actionActive, setActionActive] = useState(false)
@@ -72,8 +64,8 @@ export const SidebarProvider = ({
     type: 'page',
   })
 
-  const reset = (originPageMap: PageMapItem[]) => {
-    setPageMap(originPageMap)
+  const reset = (originSortableItem: SortableItem[]) => {
+    setSortableItems(originSortableItem)
     setActionActive(false)
     setActionComplete(false)
     setActionType('')
@@ -81,8 +73,8 @@ export const SidebarProvider = ({
   }
 
   const value: Sidebar = {
-    pageMap,
-    setPageMap,
+    sortableItems,
+    setSortableItems,
     reset,
     actionComplete,
     setActionComplete,

@@ -40,11 +40,11 @@ function AddInputs({ type }: Props): ReactElement {
     window.dispatchEvent(event)
   }
 
-  const { ref } = useOutsideClick<HTMLLIElement>(onComplete)
+  const { ref } = useOutsideClick<HTMLDivElement>(onComplete)
 
   if (type === '') return <></>
   return (
-    <li ref={ref} className={cn('nx-my-4 nx-flex [word-break:break-word]')}>
+    <div ref={ref} className={cn('nx-flex [word-break:break-word]')}>
       <span
         className={cn(
           'nx-text-gray-600 nx-transition-colors hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
@@ -55,7 +55,7 @@ function AddInputs({ type }: Props): ReactElement {
         {type === 'separator' && <SeparatorIcon />}
       </span>
       <input value={title} onChange={onChange} autoFocus={true} onKeyDown={onKeyDown} />
-    </li>
+    </div>
   )
 }
 
