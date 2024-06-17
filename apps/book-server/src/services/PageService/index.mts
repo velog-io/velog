@@ -181,7 +181,6 @@ export class PageService implements Service {
       throw new UnauthorizedError('Not authorized')
     }
 
-    console.log('input', input)
     const { book_url_slug, target_url_slug, parent_url_slug, index } = input
 
     const book = await this.bookSerivce.findByUrlSlug(book_url_slug)
@@ -220,7 +219,7 @@ export class PageService implements Service {
       throw new ConfilctError('Not related parent page')
     }
 
-    await this.mongo.page.update({
+    const targetPage = await this.mongo.page.update({
       where: {
         id: page.id,
       },
@@ -234,23 +233,23 @@ export class PageService implements Service {
     const childrens = await this.mongo.page.findMany({
       where: {
         parent_id: parentPage?.id ?? null,
-        index: {
-          gte: index,
+        id: {
+          not: targetPage.id,
         },
       },
       orderBy: [{ index: 'asc' }, { updated_at: 'desc' }],
     })
 
-    const updatedChildrens = childrens.map((child, i) =>
-      this.mongo.page.update({
+    const updatedChildrens = childrens.map((child, i) => {
+      return this.mongo.page.update({
         where: {
           id: child.id,
         },
         data: {
-          index: index + i,
+          index: i < index ? i : i + 1,
         },
-      }),
-    )
+      })
+    })
 
     await Promise.all(updatedChildrens)
   }

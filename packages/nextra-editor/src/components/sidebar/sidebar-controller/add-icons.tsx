@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSidebar } from '@/contexts/sidebar'
 import { NewFolderIcon } from '@/nextra/icons/new-folder'
-import type { Folder } from '@/nextra/types'
 import { useUrlSlug } from '@/hooks/use-url-slug'
 import { NewPageIcon } from '@/nextra/icons/new-page'
 import { SeparatorIcon } from '@/nextra/icons/separator'
-import { removeCodeFromRoute } from '@/utils'
 import { findFolder } from './utils'
 import type { SortableItem } from '@/nextra/normalize-pages'
 
@@ -53,7 +51,7 @@ const AddIcons = ({ className, type }: Props) => {
     setOriginSortableItems(sidebar.sortableItems)
     const coppeidPageMap = structuredClone(sidebar.sortableItems)
 
-    function addNewFolderToItem(sortableItems: SortableItem[], parent?: Folder) {
+    function addNewFolderToItem(sortableItems: SortableItem[]) {
       for (const item of sortableItems) {
         const isMdxPage = item.kind === 'MdxPage'
         if (isMdxPage) continue
@@ -65,6 +63,7 @@ const AddIcons = ({ className, type }: Props) => {
 
         const isTarget = item.route.includes(targetRoute)
         const addToTop = targetRoute === '/'
+
         if (addToTop || isTarget) {
           const pageTypeMap = {
             page: 'newPage',
@@ -90,7 +89,7 @@ const AddIcons = ({ className, type }: Props) => {
             parent: addToTop ? null : item,
           }
 
-          const removeBookUrlSlug = addToTop ? '' : parent?.route.replace(bookUrlSlug, '')
+          const removeBookUrlSlug = addToTop ? '' : item?.route.replace(bookUrlSlug, '')
           sidebar.setActionInfo({
             parentUrlSlug: removeBookUrlSlug ?? '',
             index,
@@ -109,7 +108,7 @@ const AddIcons = ({ className, type }: Props) => {
         }
 
         if (isFolderPage && item.children.length > 0) {
-          addNewFolderToItem(item.children, item)
+          addNewFolderToItem(item.children)
           continue
         }
       }
