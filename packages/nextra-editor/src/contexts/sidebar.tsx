@@ -26,17 +26,19 @@ type Sidebar = {
   setActionType: (value: ActionType) => void
   focusedItem: SortableItem | null
   setFocusedItem: (value: SortableItem | null) => void
-  collapsedTree: Map<string, boolean>
+  collapsedTree: Set<string>
   setCollapsedTree: (id: string, setter: (value: boolean) => boolean) => void
 }
 
-const collapsedTree = new Map<string, boolean>()
+let collapsedTree = new Set<string>()
+
 function setCollapsedTree(id: string, setter: (value: boolean) => boolean): void {
-  const exists = collapsedTree.get(id)
-  if (exists) {
-    collapsedTree.set(id, setter(exists))
+  const visible = collapsedTree.has(id)
+  const result = setter(visible)
+  if (result) {
+    collapsedTree.add(id)
   } else {
-    collapsedTree.set(id, setter(false))
+    collapsedTree.delete(id)
   }
 }
 
@@ -66,10 +68,10 @@ export function useSidebar() {
 
 export const SidebarProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const [sortableItems, setSortableItems] = useState<SortableItem[]>([])
-  const [isFolding, setIsFolding] = useState(false)
+  const [isFolding, setFolding] = useState(false)
   const [actionComplete, setActionComplete] = useState(false)
   const [actionActive, setActionActive] = useState(false)
-  const [focusedItem, setFocusItem] = useState<null | SortableItem>(null)
+  const [focusedItem, setFocusedItem] = useState<null | SortableItem>(null)
   const [actionType, setActionType] = useState<ActionType>('')
   const [actionInfo, setActionInfo] = useState<ActionInfo>({
     parentUrlSlug: '/',
@@ -86,12 +88,12 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
     setFocusedItem(null)
   }
 
-  const setFocusedItem = (item: SortableItem | null) => {
-    if (item) {
-      setCollapsedTree(item.id, (value) => !value)
+  const setIsFolding = (value: boolean) => {
+    if (value) {
+      collapsedTree = new Set<string>()
     }
 
-    setFocusItem(item)
+    setFolding(value)
   }
 
   const value: Sidebar = {

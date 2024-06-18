@@ -1,18 +1,18 @@
 import cn from 'clsx'
 import { useRouter } from 'next/router'
-import type { Heading } from '../../nextra/types'
-import { useFSRoute, useMounted } from '../../nextra/hooks'
-import { ExpandIcon } from '../../nextra/icons'
-import type { Item, PageItem, SortableItem } from '../../nextra/normalize-pages'
+import type { Heading } from '@/nextra/types'
+import { useFSRoute, useMounted } from '@/nextra/hooks'
+import { ExpandIcon } from '@/nextra/icons'
+import type { Item, PageItem, SortableItem } from '@/nextra/normalize-pages'
 import type { ReactElement } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
-import { useConfig, useMenu } from '../../contexts'
-import { renderComponent } from '../../utils'
+import { useConfig, useMenu } from '@/contexts'
+import { renderComponent } from '@/utils'
 
 import { LocaleSwitch } from '../locale-switch'
 
-import { useSidebar } from '../../contexts/sidebar'
+import { useSidebar } from '@/contexts/sidebar'
 import { Menu } from './menu'
 import SortableTree from './sortable-tree'
 import { initilizeDirectories } from './sortable-tree/utils'
@@ -101,8 +101,10 @@ export function Sidebar({
 
   const initSotableItems: SortableItem[] = useMemo(
     () => initilizeDirectories(docsDirectories, route, collapsedTree),
-    [docsDirectories, route, collapsedTree],
+    [docsDirectories],
   )
+
+
 
   useEffect(() => {
     setSortableItems(initSotableItems)
@@ -110,7 +112,7 @@ export function Sidebar({
 
   const initFullDirectories: SortableItem[] = useMemo(
     () => initilizeDirectories(fullDirectories, route, collapsedTree),
-    [fullDirectories, route, collapsedTree],
+    [fullDirectories],
   )
 
   return (

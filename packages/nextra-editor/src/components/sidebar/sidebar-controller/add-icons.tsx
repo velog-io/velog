@@ -80,7 +80,7 @@ const AddIcons = ({ className, type }: Props) => {
             parentId: addToTop ? null : item.id,
             children: [],
             childrenIds: [],
-            route: `${item.route}/addAction`,
+            route: `${item.route}`,
             kind: 'Folder',
             name: 'addAction',
             isLast: true,

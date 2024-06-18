@@ -17,13 +17,15 @@ type Props = {
 function NextraLayout({ children, body }: Props) {
   const { bookUrlSlug } = useUrlSlug()
   const [bookMetadata, setBookMetadata] = useState<BookMetadata | null>(null)
-  const { mutateAsync: createPageAsyncMutate } = useCreatePageMutation()
+  const { mutateAsync: createPageAsyncMutate, isPending: isCreatePagePending } =
+    useCreatePageMutation()
+  const { mutateAsync: reorderAsyncMutate, isPending: isReorderPagePending } =
+    useReorderPageMutation()
   const {
     data: getPagesData,
     refetch: getPagesRefetch,
     isLoading,
   } = useGetPagesQuery({ input: { book_url_slug: bookUrlSlug } })
-  const { mutateAsync } = useReorderPageMutation()
 
   useEffect(() => {
     if (!getPagesData?.pages) return
@@ -37,6 +39,7 @@ function NextraLayout({ children, body }: Props) {
   useEffect(() => {
     const addAction = async (e: CustomEventInit<CustomEventDetail['addActionEvent']>) => {
       if (!e.detail) return
+      if (isReorderPagePending) return
       const { title, parentUrlSlug, index, bookUrlSlug, type } = e.detail
       await createPageAsyncMutate({
         input: {
@@ -58,9 +61,11 @@ function NextraLayout({ children, body }: Props) {
   useEffect(() => {
     const changeItem = async (e: CustomEventInit<CustomEventDetail['changeItemEvent']>) => {
       if (!e.detail) return
+      if (isCreatePagePending) return
+
       const { bookUrlSlug, targetUrlSlug, parentUrlSlug, index } = e.detail
 
-      await mutateAsync({
+      await reorderAsyncMutate({
         input: {
           book_url_slug: bookUrlSlug,
           target_url_slug: targetUrlSlug,

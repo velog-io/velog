@@ -72,7 +72,7 @@ export const useDndTree = () => useContext(DndTreeContext)
 
 function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props) {
   const { bookUrlSlug } = useUrlSlug()
-  const { isFolding } = useSidebar()
+  const { isFolding, setCollapsedTree } = useSidebar()
   const [isDragging, setDragging] = useState(false)
   const [ghostItem, setGhostItem] = useState<SortableItem | null>(null)
   const [overItem, setOverItem] = useState<SortableItem | null>(null)
@@ -90,6 +90,10 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
       (acc, { collapsed, id }) => (collapsed ? [...acc, id] : acc),
       [],
     )
+
+    collapsedItems.forEach((id) => {
+      setCollapsedTree(String(id), () => true)
+    })
 
     const result = removeChildrenOf(
       flattenedTree,
@@ -263,7 +267,11 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
   const onCollapse = useCallback(
     (id: UniqueIdentifier) => {
       onItemsChanged((items: SortableItem[]) =>
-        setProperty(items, id, 'collapsed', (value) => !value),
+        setProperty(items, id, 'collapsed', (value) => {
+          const result = !value
+          setCollapsedTree(String(id), () => result)
+          return result
+        }),
       )
     },
     [onItemsChanged],

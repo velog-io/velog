@@ -12,7 +12,7 @@ import AddInputs from '../sidebar-controller/add-inputs'
 export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponentProps>(
   (props, ref) => {
     const { isDragging, overItem, setOverItem } = useDndTree()
-    const { setFocusedItem, focusedItem } = useSidebar()
+    const { focusedItem, setFocusedItem } = useSidebar()
     const router = useRouter()
     const routeOriginal = useFSRoute()
     const [route] = routeOriginal.split('#')
@@ -34,7 +34,7 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
     const isAddAction = ['newPage', 'newFolder', 'newSeparator'].includes(item.type)
 
     const active =
-      !isDragging && !isAddAction && !isGhost && [route, route + '/'].includes(item.route + '/')
+      !isDragging && !isAddAction && !isGhost && [route, `${route}/`].includes(item.route + '/')
     // const isLink = 'withIndexPage' in item && item.withIndexPage
 
     useEffect(() => {
@@ -79,6 +79,7 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
           onClick={() => {
             if (isGhost) return
             if (isSeparator) return
+
             if (!item.collapsed) {
               onCollapse(item.id)
             } else if (focusedItem?.id === item.id) {
@@ -86,6 +87,7 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
             }
 
             setFocusedItem(item)
+            if (isAddAction) return
             router.push(item.route, item.route, { shallow: true })
           }}
         >
