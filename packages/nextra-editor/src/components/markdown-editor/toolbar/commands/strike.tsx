@@ -4,9 +4,9 @@ import { EditorView } from 'codemirror'
 import { KeyBinding } from '@codemirror/view'
 
 export const strikeKeymap: KeyBinding = {
-  linux: 'Ctrl-s',
-  win: 'Ctrl-s',
-  mac: 'Meta-s',
+  linux: 'Shift-Ctrl-s',
+  win: 'Shift-Ctrl-s',
+  mac: 'Shift-Meta-s',
   run: (view) => {
     execute(view)
     return true

@@ -1,3 +1,4 @@
+import { TransactionSpec } from '@codemirror/state'
 import { ToolbarCommand } from './type'
 
 const icons = [
@@ -69,24 +70,49 @@ const icons = [
   </svg>,
 ]
 
-function generateTitleCommand(depth: number): ToolbarCommand {
+function generateTitleCommand(level: number): ToolbarCommand {
   return {
-    name: `title-${depth}`,
-    button: { 'aria-label': `Add title ${depth}` },
-    icon: icons[depth - 1],
+    name: `title-${level}`,
+    button: { 'aria-label': `Add title ${level}` },
+    icon: icons[level - 1],
     execute(view) {
       if (!view) return
-      const lineInfo = view.state.doc.lineAt(view.state.selection.main.from)
-      const mark = '#'.repeat(depth)
+      const { state, dispatch } = view
+      const selection = state.selection
+      const selectedText = state.doc.sliceString(selection.main.from, selection.main.to)
+      // const lineInfo = view.state.doc.lineAt(view.state.selection.main.from)
 
-      const title = lineInfo.text.replace(/^#+/, '').trim()
-      view.dispatch({
-        changes: {
-          from: lineInfo.from,
-          to: lineInfo.to,
-          insert: `${mark} ${title}`,
-        },
-      })
+      let transaction: TransactionSpec
+      const mark = '#'.repeat(level)
+      if (selectedText.length === 0) {
+        const insert = `${mark} 제목`
+        transaction = {
+          changes: { from: selection.main.from, insert: `${mark} 제목` },
+          selection: { anchor: selection.main.from, head: selection.main.from + insert.length },
+        }
+      } else {
+        const isTitlePattern = new RegExp('^#+')
+        const sameTitlePattern = selectedText.split(' ')[0] === mark
+        let newText
+        if (isTitlePattern.test(selectedText) && sameTitlePattern) {
+          newText = selectedText.replace(/#/g, '').trim()
+        } else if (!sameTitlePattern && isTitlePattern.test(selectedText)) {
+          newText = `${mark} ${selectedText.replace(/#/g, '').trim()}`
+        } else {
+          newText = `${mark} ${selectedText}`
+        }
+
+        transaction = {
+          changes: { from: selection.main.from, to: selection.main.to, insert: newText },
+          selection: {
+            anchor: selection.main.from,
+            head: selection.main.from + newText.length,
+          },
+        }
+      }
+
+      dispatch(state.update(transaction))
+      view.focus()
     },
   }
 }
