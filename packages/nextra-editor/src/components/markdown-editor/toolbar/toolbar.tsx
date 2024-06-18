@@ -1,6 +1,6 @@
 import cn from 'clsx'
 import { isValidElement, RefObject, useEffect, useState } from 'react'
-import { titles, bold, italic, strike, quote, link, image, code } from './commands'
+import { titles, bold, italic, strike, quote, link, image, code, save } from './commands'
 import { ToolbarCommand } from './commands/type'
 import { EditorSelection, EditorState } from '@codemirror/state'
 import { EditorView } from '@codemirror/view'
@@ -34,6 +34,8 @@ const Toolbar = ({ state, view }: Props) => {
     link,
     image,
     code,
+    seperator,
+    save,
   ]
 
   const init = () => {
@@ -74,6 +76,10 @@ const Toolbar = ({ state, view }: Props) => {
     upload({ file, info: { type: 'book', refId: '' } })
   }
 
+  const onCickSaveButton = () => {
+    console.log('save')
+  }
+
   useEffect(() => {
     // Handle Uploaded Image
     if (uploading) return
@@ -95,6 +101,19 @@ const Toolbar = ({ state, view }: Props) => {
     }
   }, [imagePath, view, state, file, selection])
 
+  const commandMapper = (command: Partial<ToolbarCommand>) => {
+    switch (command.name) {
+      case 'image':
+        onClickImageButton()
+        return
+      case 'save':
+        onCickSaveButton()
+        return
+      default:
+        onClick(command.execute!)
+    }
+  }
+
   return (
     <div className={cn('nx-flex nx-flex-row nx-items-center')}>
       {commands.map((command, index) => {
@@ -105,9 +124,7 @@ const Toolbar = ({ state, view }: Props) => {
         return (
           <div key={key}>
             <button
-              onClick={() =>
-                command.name === 'image' ? onClickImageButton() : onClick(command.execute!)
-              }
+              onClick={() => commandMapper(command)}
               className={cn(
                 'nx-h-12 nx-w-12 nx-cursor-pointer',
                 'nx-flex nx-items-center nx-justify-center',

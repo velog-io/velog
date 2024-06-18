@@ -9,6 +9,7 @@ import { italicKeymap } from '../toolbar/commands/italic'
 import { linkKeymap } from '../toolbar/commands/link'
 import { strikeKeymap } from '../toolbar/commands/strike'
 import { quoteKeymap } from '../toolbar/commands/quote'
+import { saveKeymap } from '../toolbar/commands/save'
 
 export type ExtensionOptions = {
   indentWithTab?: boolean
@@ -31,7 +32,15 @@ export const getDefaultExtensions = (options: ExtensionOptions) => {
 
   const getExtensions: Extension[] = []
 
-  const keymaps = [boldKeymap, italicKeymap, strikeKeymap, quoteKeymap, linkKeymap, codeKeymap]
+  const keymaps = [
+    boldKeymap,
+    italicKeymap,
+    strikeKeymap,
+    quoteKeymap,
+    linkKeymap,
+    codeKeymap,
+    saveKeymap,
+  ]
 
   if (defaultIndentWithTab) {
     keymaps.unshift(indentWithTab)
