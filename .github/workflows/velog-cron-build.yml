@@ -1,4 +1,4 @@
-name: Velog Server build workflow
+name: Velog cron build workflow
 
 on:
   pull_request:
