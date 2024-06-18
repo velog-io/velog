@@ -12,10 +12,14 @@ const MarkdownEditor = () => {
     maxHeight: '100%',
   })
 
+  const onClick = () => {
+    view?.focus()
+  }
+
   return (
     <div className={cn('nx-py-4')}>
       <Toolbar state={state} view={view} container={container} />
-      <div className={cn('')}>
+      <div onClick={onClick}>
         <div
           ref={container}
           style={{ height: containerHeight }}
