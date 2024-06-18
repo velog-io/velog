@@ -79,7 +79,6 @@ export const SortableComponent = forwardRef<HTMLDivElement, SortableTreeComponen
           onClick={() => {
             if (isGhost) return
             if (isSeparator) return
-
             if (!item.collapsed) {
               onCollapse(item.id)
             } else if (focusedItem?.id === item.id) {

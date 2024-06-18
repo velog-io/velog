@@ -34,7 +34,14 @@ export function Sidebar({
   headings,
   includePlaceholder,
 }: SideBarProps): ReactElement {
-  const { isFolding, setIsFolding, setFocusedItem, setSortableItems, sortableItems } = useSidebar()
+  const {
+    isFolding,
+    setIsFolding,
+    setFocusedItem,
+    setSortableItems,
+    sortableItems,
+    collapsedTree,
+  } = useSidebar()
   const config = useConfig()
   const { menu, setMenu } = useMenu()
   const router = useRouter()
@@ -93,8 +100,8 @@ export function Sidebar({
   const [route] = routeOriginal.split('#')
 
   const initSotableItems: SortableItem[] = useMemo(
-    () => initilizeDirectories(docsDirectories, route),
-    [docsDirectories, route],
+    () => initilizeDirectories(docsDirectories, route, collapsedTree),
+    [docsDirectories, route, collapsedTree],
   )
 
   useEffect(() => {
@@ -102,8 +109,8 @@ export function Sidebar({
   }, [initSotableItems])
 
   const initFullDirectories: SortableItem[] = useMemo(
-    () => initilizeDirectories(fullDirectories, route),
-    [fullDirectories, route],
+    () => initilizeDirectories(fullDirectories, route, collapsedTree),
+    [fullDirectories, route, collapsedTree],
   )
 
   return (

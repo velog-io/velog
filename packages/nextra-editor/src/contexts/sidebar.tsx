@@ -26,6 +26,18 @@ type Sidebar = {
   setActionType: (value: ActionType) => void
   focusedItem: SortableItem | null
   setFocusedItem: (value: SortableItem | null) => void
+  collapsedTree: Map<string, boolean>
+  setCollapsedTree: (id: string, setter: (value: boolean) => boolean) => void
+}
+
+const collapsedTree = new Map<string, boolean>()
+function setCollapsedTree(id: string, setter: (value: boolean) => boolean): void {
+  const exists = collapsedTree.get(id)
+  if (exists) {
+    collapsedTree.set(id, setter(exists))
+  } else {
+    collapsedTree.set(id, setter(false))
+  }
 }
 
 const SidebarContext = createContext<Sidebar>({
@@ -44,6 +56,8 @@ const SidebarContext = createContext<Sidebar>({
   setActionType: () => {},
   focusedItem: null,
   setFocusedItem: () => {},
+  collapsedTree,
+  setCollapsedTree,
 })
 
 export function useSidebar() {
@@ -55,7 +69,7 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
   const [isFolding, setIsFolding] = useState(false)
   const [actionComplete, setActionComplete] = useState(false)
   const [actionActive, setActionActive] = useState(false)
-  const [focusedItem, setFocusedItem] = useState<null | SortableItem>(null)
+  const [focusedItem, setFocusItem] = useState<null | SortableItem>(null)
   const [actionType, setActionType] = useState<ActionType>('')
   const [actionInfo, setActionInfo] = useState<ActionInfo>({
     parentUrlSlug: '/',
@@ -70,6 +84,14 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
     setActionComplete(false)
     setActionType('')
     setFocusedItem(null)
+  }
+
+  const setFocusedItem = (item: SortableItem | null) => {
+    if (item) {
+      setCollapsedTree(item.id, (value) => !value)
+    }
+
+    setFocusItem(item)
   }
 
   const value: Sidebar = {
@@ -88,6 +110,8 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
     setActionType,
     focusedItem,
     setFocusedItem,
+    collapsedTree,
+    setCollapsedTree,
   }
 
   return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>

@@ -9,12 +9,14 @@ export const MAX_DEPTH = 3
 function initilizeDirectories(
   items: PageItem[] | Item[],
   route: string,
+  collapsedTree?: Map<string, boolean>,
   parentId: UniqueIdentifier | null = null,
   depth = 0,
   parent: PageItem | Item | null = null,
 ): SortableItem[] {
   return items.map((item, index) => {
-    const collapsed = route.startsWith(removeCodeFromRoute(item.route))
+    const open = route.startsWith(removeCodeFromRoute(item.route))
+    const collapsed = item.kind === 'Folder' && ((open || collapsedTree?.get(item.id)) ?? false)
     const data: Omit<SortableItem, 'childrenIds'> = {
       ...item,
       parentId,
@@ -22,9 +24,9 @@ function initilizeDirectories(
       isLast: items.length === index + 1,
       parent,
       children: item.children
-        ? initilizeDirectories(item.children, route, item.id, depth + 1, item)
+        ? initilizeDirectories(item.children, route, collapsedTree, item.id, depth + 1, item)
         : [],
-      collapsed: collapsed && item.kind === 'Folder',
+      collapsed,
       index,
     }
     return {
