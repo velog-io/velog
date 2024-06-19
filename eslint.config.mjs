@@ -6,7 +6,6 @@ export default [
   {
     ignores: [
       'node_modules',
-      './packages/*',
       './apps/*',
       './infrastructure/*',
       '.lintstagedrc.mjs',

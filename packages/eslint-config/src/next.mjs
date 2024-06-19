@@ -1,11 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Linter } from 'eslint'
-import { resolve } from 'node:path'
+import { resolve, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 
 const project = resolve(process.cwd(), 'tsconfig.json')
-const __dirname = new URL('.', import.meta.url).pathname
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
