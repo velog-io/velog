@@ -107,9 +107,7 @@ const InnerLayout = ({
 }: InnerLayoutProps): ReactElement => {
   const config = useConfig()
   const fsPath = useFSRoute()
-  const markdownEditor = useMarkdownEditor()
-
-  const { mdxSource } = markdownEditor
+  const { mdxSource } = useMarkdownEditor()
 
   const {
     activeType,

@@ -232,7 +232,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
         {
           detail: {
             bookUrlSlug,
-            targetUrlSlug: activeTreeItem.id.replace(bookUrlSlug, ''),
+            targetUrlSlug: `${activeTreeItem.id.replace(bookUrlSlug, '')}`,
             parentUrlSlug: String(parentId).replace(bookUrlSlug, ''),
             index: newParentItem
               ? newParentItem.childrenIds.findIndex((id) => id === activeTreeItem.id)

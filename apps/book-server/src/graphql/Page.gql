@@ -28,7 +28,7 @@ type Query {
 
 type Mutation {
   create(input: CreatePageInput!): Page @auth
-  reorder(input: ReorderInput!): Void! @auth
+  reorder(input: ReorderInput!): Void @auth
 }
 
 input GetPagesInput {

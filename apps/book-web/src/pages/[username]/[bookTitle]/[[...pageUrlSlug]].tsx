@@ -27,13 +27,18 @@ export default Home
 export const getServerSideProps = (async (ctx) => {
   const { params, req } = ctx
   const bookUrlSlug = `/${params?.username}/${params?.bookTitle}`
-  const pageUrlSlug = `/${params?.pageUrlSlug.join('/')}` || '/'
 
-  const pages = await getPages(bookUrlSlug, req.cookies)
+  let pageUrlSlug = params?.pageUrlSlug ? `/${params?.pageUrlSlug?.join('/')}` : ''
 
-  if (pages) {
-    generateBookMetadata({ pages: pages, bookUrl: bookUrlSlug })
+  if (!pageUrlSlug) {
+    const pages = await getPages(bookUrlSlug, req.cookies)
+
+    if (!pages) {
+      throw new Error('failed get book metadata')
+    }
+    pageUrlSlug = pages[0].url_slug
   }
+
   const page = await getPage(bookUrlSlug, pageUrlSlug, req.cookies)
   const mdxText = page?.body ?? ''
   //   const mdxText = `

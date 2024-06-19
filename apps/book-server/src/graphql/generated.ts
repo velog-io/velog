@@ -61,10 +61,10 @@ export type GetPagesInput = {
 }
 
 export type Mutation = {
-  build: Scalars['Void']['output']
+  build?: Maybe<Scalars['Void']['output']>
   create?: Maybe<Page>
-  deploy: Scalars['Void']['output']
-  reorder: Scalars['Void']['output']
+  deploy?: Maybe<Scalars['Void']['output']>
+  reorder?: Maybe<Scalars['Void']['output']>
 }
 
 export type MutationBuildArgs = {
@@ -322,7 +322,7 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
   build?: Resolver<
-    ResolversTypes['Void'],
+    Maybe<ResolversTypes['Void']>,
     ParentType,
     ContextType,
     RequireFields<MutationBuildArgs, 'input'>
@@ -334,13 +334,13 @@ export type MutationResolvers<
     RequireFields<MutationCreateArgs, 'input'>
   >
   deploy?: Resolver<
-    ResolversTypes['Void'],
+    Maybe<ResolversTypes['Void']>,
     ParentType,
     ContextType,
     RequireFields<MutationDeployArgs, 'input'>
   >
   reorder?: Resolver<
-    ResolversTypes['Void'],
+    Maybe<ResolversTypes['Void']>,
     ParentType,
     ContextType,
     RequireFields<MutationReorderArgs, 'input'>

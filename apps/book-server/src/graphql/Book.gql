@@ -11,8 +11,8 @@ type Query {
 }
 
 type Mutation {
-  deploy(input: BookIDInput!): Void! @auth
-  build(input: BookIDInput!): Void! @auth
+  deploy(input: BookIDInput!): Void @auth
+  build(input: BookIDInput!): Void @auth
 }
 
 type Subscription {

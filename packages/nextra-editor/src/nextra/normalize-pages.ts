@@ -338,7 +338,7 @@ export function normalizePages({
 
     docsItem.isUnderCurrentDocsTree = isCurrentDocsTree
     if (['separator', 'newPage', 'newFolder', 'newSeparator'].includes(type)) {
-      item.id = a.name
+      item.id = a.id
       item.isUnderCurrentDocsTree = isCurrentDocsTree
     }
 

@@ -104,8 +104,6 @@ export function Sidebar({
     [docsDirectories],
   )
 
-
-
   useEffect(() => {
     setSortableItems(initSotableItems)
   }, [initSotableItems])

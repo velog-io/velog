@@ -131,8 +131,6 @@ export class PageService implements Service {
   }
 
   public async getPage(input: GetPageInput, signedWriterId?: string): Promise<Page | null> {
-    console.log('input', input)
-    console.log('signedWriterId', signedWriterId)
     if (!signedWriterId) {
       throw new UnauthorizedError('Not authorized')
     }
@@ -213,6 +211,7 @@ export class PageService implements Service {
   }
 
   public async reorder(input: ReorderInput, signedWriterId?: string): Promise<void> {
+    console.log('input', input)
     if (!signedWriterId) {
       throw new UnauthorizedError('Not authorized')
     }

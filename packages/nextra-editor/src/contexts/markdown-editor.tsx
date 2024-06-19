@@ -39,6 +39,10 @@ export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Pro
   const [stat, setStat] = useState<Statistics | null>(null)
 
   useEffect(() => {
+    setValue(editorValue)
+  }, [editorValue])
+
+  useEffect(() => {
     async function compileSource() {
       try {
         const result = await mdxCompiler(value, {
@@ -53,7 +57,7 @@ export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Pro
       }
     }
     compileSource()
-  }, [editorValue])
+  }, [value])
 
   const context: MarkdownEditorContext = {
     value,

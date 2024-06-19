@@ -103,6 +103,7 @@ function NextraLayout({ children, mdxText }: Props) {
           index,
         },
       })
+      getPagesRefetch()
     }
 
     window.addEventListener(nextraCustomEventName.changeItem, changeItem)

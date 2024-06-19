@@ -55,7 +55,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
           // save key
           map.set(page.url_slug, key)
           if (page.type === 'separator') {
-            Object.assign(value, { id: page.id, type: 'separator' })
+            Object.assign(value, { id: page.url_slug, type: 'separator' })
           }
           acc[key] = value
           return acc
@@ -132,16 +132,6 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
 
 export const generateBookMetadata = ({ pages, bookUrl }: Args): BookMetadata => {
   const pageMap = generatePageMap(pages, bookUrl)
-
-  // if (global.window === undefined) {
-  //   const fs = require('fs')
-  //   const path = require('path')
-
-  //   fs.writeFileSync(
-  //     path.resolve(process.cwd(), './src/lib/', './context.json'),
-  //     JSON.stringify(pageMap, null, 4),
-  //   )
-  // }
 
   return {
     pageOpts: {

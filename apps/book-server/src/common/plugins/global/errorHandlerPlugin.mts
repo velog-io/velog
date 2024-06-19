@@ -34,6 +34,7 @@ const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
   })
   fastify.setErrorHandler((error, request, reply) => {
     if (isHttpError(error)) {
+      console.log('isHttpError', error)
       reply.status(error.statusCode).send({
         message: error.message,
         name: error.name,
