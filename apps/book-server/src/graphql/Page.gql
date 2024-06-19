@@ -15,7 +15,7 @@ type Page {
   index: Int!
   url_slug: String!
   code: String!
-  level: Int!
+  depth: Int!
   created_at: Date!
   updated_at: Date!
   childrens: [Page!]!
@@ -23,15 +23,21 @@ type Page {
 
 type Query {
   pages(input: GetPagesInput!): [Page!]! @auth
+  page(input: GetPageInput!): Page @auth
 }
 
 type Mutation {
   create(input: CreatePageInput!): Page @auth
-  reorder(input: ReorderInput!): Void @auth
+  reorder(input: ReorderInput!): Void! @auth
 }
 
 input GetPagesInput {
   book_url_slug: String!
+}
+
+input GetPageInput {
+  book_url_slug: String!
+  page_url_slug: String!
 }
 
 input CreatePageInput {

@@ -1,4 +1,4 @@
-import { GetPagesDocument, GetPagesQuery } from '@/graphql/bookServer/generated/bookServer'
+import { GetPagesDocument, type GetPagesQuery } from '@/graphql/bookServer/generated/bookServer'
 import graphqlFetch, { type GraphqlRequestBody } from '@/lib/graphqlFetch'
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 
@@ -21,14 +21,15 @@ export default async function getPages(bookUrlSlug: string, cookies: NextApiRequ
       },
     }
 
-    const { pages } = await graphqlFetch<GetPagesQuery>({
+    const data = await graphqlFetch<GetPagesQuery>({
       method: 'GET',
       body,
       headers,
     })
 
-    return pages
-  } catch (_) {
+    return data?.pages || []
+  } catch (error) {
+    console.error('Get pages error:', error)
     return null
   }
 }

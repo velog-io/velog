@@ -51,15 +51,20 @@ export type CreatePageInput = {
   type: PageType
 }
 
+export type GetPageInput = {
+  book_url_slug: Scalars['String']['input']
+  page_url_slug: Scalars['String']['input']
+}
+
 export type GetPagesInput = {
   book_url_slug: Scalars['String']['input']
 }
 
 export type Mutation = {
-  build?: Maybe<Scalars['Void']['output']>
+  build: Scalars['Void']['output']
   create?: Maybe<Page>
-  deploy?: Maybe<Scalars['Void']['output']>
-  reorder?: Maybe<Scalars['Void']['output']>
+  deploy: Scalars['Void']['output']
+  reorder: Scalars['Void']['output']
 }
 
 export type MutationBuildArgs = {
@@ -84,10 +89,10 @@ export type Page = {
   childrens: Array<Page>
   code: Scalars['String']['output']
   created_at: Scalars['Date']['output']
+  depth: Scalars['Int']['output']
   fk_writer_id: Scalars['ID']['output']
   id: Scalars['ID']['output']
   index: Scalars['Int']['output']
-  level: Scalars['Int']['output']
   parent_id?: Maybe<Scalars['ID']['output']>
   title: Scalars['String']['output']
   type: Scalars['String']['output']
@@ -99,11 +104,16 @@ export type PageType = 'folder' | 'page' | 'separator'
 
 export type Query = {
   book?: Maybe<Book>
+  page?: Maybe<Page>
   pages: Array<Page>
 }
 
 export type QueryBookArgs = {
   input: BookIdInput
+}
+
+export type QueryPageArgs = {
+  input: GetPageInput
 }
 
 export type QueryPagesArgs = {
@@ -236,6 +246,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
   CreatePageInput: CreatePageInput
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
+  GetPageInput: GetPageInput
   GetPagesInput: GetPagesInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
   Int: ResolverTypeWrapper<Scalars['Int']['output']>
@@ -260,6 +271,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output']
   CreatePageInput: CreatePageInput
   Date: Scalars['Date']['output']
+  GetPageInput: GetPageInput
   GetPagesInput: GetPagesInput
   ID: Scalars['ID']['output']
   Int: Scalars['Int']['output']
@@ -310,7 +322,7 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
   build?: Resolver<
-    Maybe<ResolversTypes['Void']>,
+    ResolversTypes['Void'],
     ParentType,
     ContextType,
     RequireFields<MutationBuildArgs, 'input'>
@@ -322,13 +334,13 @@ export type MutationResolvers<
     RequireFields<MutationCreateArgs, 'input'>
   >
   deploy?: Resolver<
-    Maybe<ResolversTypes['Void']>,
+    ResolversTypes['Void'],
     ParentType,
     ContextType,
     RequireFields<MutationDeployArgs, 'input'>
   >
   reorder?: Resolver<
-    Maybe<ResolversTypes['Void']>,
+    ResolversTypes['Void'],
     ParentType,
     ContextType,
     RequireFields<MutationReorderArgs, 'input'>
@@ -344,10 +356,10 @@ export type PageResolvers<
   childrens?: Resolver<Array<ResolversTypes['Page']>, ParentType, ContextType>
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
+  depth?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   fk_writer_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-  level?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   parent_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>
@@ -370,6 +382,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryBookArgs, 'input'>
+  >
+  page?: Resolver<
+    Maybe<ResolversTypes['Page']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryPageArgs, 'input'>
   >
   pages?: Resolver<
     Array<ResolversTypes['Page']>,

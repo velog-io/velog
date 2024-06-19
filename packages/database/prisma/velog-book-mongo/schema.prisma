@@ -57,7 +57,7 @@ model Page {
   index        Int     @db.Int
   url_slug     String  @unique // example /${escapeUrl(${parent.title}/${title}).toLowerCase()}}-${code}
   code         String  @unique
-  level        Int     @default(1) @db.Int // max level 3
+  depth        Int     @default(1) @db.Int // max depth 3
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now())

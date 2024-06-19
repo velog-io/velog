@@ -51,15 +51,20 @@ export type CreatePageInput = {
   type: PageType
 }
 
+export type GetPageInput = {
+  book_url_slug: Scalars['String']['input']
+  page_url_slug: Scalars['String']['input']
+}
+
 export type GetPagesInput = {
   book_url_slug: Scalars['String']['input']
 }
 
 export type Mutation = {
-  build: Maybe<Scalars['Void']['output']>
+  build: Scalars['Void']['output']
   create: Maybe<Page>
-  deploy: Maybe<Scalars['Void']['output']>
-  reorder: Maybe<Scalars['Void']['output']>
+  deploy: Scalars['Void']['output']
+  reorder: Scalars['Void']['output']
 }
 
 export type MutationBuildArgs = {
@@ -84,10 +89,10 @@ export type Page = {
   childrens: Array<Page>
   code: Scalars['String']['output']
   created_at: Scalars['Date']['output']
+  depth: Scalars['Int']['output']
   fk_writer_id: Scalars['ID']['output']
   id: Scalars['ID']['output']
   index: Scalars['Int']['output']
-  level: Scalars['Int']['output']
   parent_id: Maybe<Scalars['ID']['output']>
   title: Scalars['String']['output']
   type: Scalars['String']['output']
@@ -99,11 +104,16 @@ export type PageType = 'folder' | 'page' | 'separator'
 
 export type Query = {
   book: Maybe<Book>
+  page: Maybe<Page>
   pages: Array<Page>
 }
 
 export type QueryBookArgs = {
   input: BookIdInput
+}
+
+export type QueryPageArgs = {
+  input: GetPageInput
 }
 
 export type QueryPagesArgs = {
@@ -151,7 +161,7 @@ export type DeployMutationVariables = Exact<{
   input: BookIdInput
 }>
 
-export type DeployMutation = { deploy: void | null }
+export type DeployMutation = { deploy: void }
 
 export type GetPagesQueryVariables = Exact<{
   input: GetPagesInput
@@ -184,6 +194,20 @@ export type GetPagesQuery = {
   }>
 }
 
+export type GetPageQueryVariables = Exact<{
+  input: GetPageInput
+}>
+
+export type GetPageQuery = {
+  page: {
+    id: string
+    title: string
+    url_slug: string
+    parent_id: string | null
+    body: string
+  } | null
+}
+
 export type CreatePageMutationVariables = Exact<{
   input: CreatePageInput
 }>
@@ -194,7 +218,7 @@ export type ReorderPageMutationVariables = Exact<{
   input: ReorderInput
 }>
 
-export type ReorderPageMutation = { reorder: void | null }
+export type ReorderPageMutation = { reorder: void }
 
 export const DeployDocument = `
     mutation deploy($input: BookIDInput!) {
@@ -284,6 +308,54 @@ useSuspenseGetPagesQuery.getKey = (variables: GetPagesQueryVariables) => [
 
 useGetPagesQuery.fetcher = (variables: GetPagesQueryVariables, options?: RequestInit['headers']) =>
   fetcher<GetPagesQuery, GetPagesQueryVariables>(GetPagesDocument, variables, options)
+
+export const GetPageDocument = `
+    query getPage($input: GetPageInput!) {
+  page(input: $input) {
+    id
+    title
+    url_slug
+    parent_id
+    body
+  }
+}
+    `
+
+export const useGetPageQuery = <TData = GetPageQuery, TError = unknown>(
+  variables: GetPageQueryVariables,
+  options?: Omit<UseQueryOptions<GetPageQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<GetPageQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetPageQuery, TError, TData>({
+    queryKey: ['getPage', variables],
+    queryFn: fetcher<GetPageQuery, GetPageQueryVariables>(GetPageDocument, variables),
+    ...options,
+  })
+}
+
+useGetPageQuery.getKey = (variables: GetPageQueryVariables) => ['getPage', variables]
+
+export const useSuspenseGetPageQuery = <TData = GetPageQuery, TError = unknown>(
+  variables: GetPageQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<GetPageQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<GetPageQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<GetPageQuery, TError, TData>({
+    queryKey: ['getPageSuspense', variables],
+    queryFn: fetcher<GetPageQuery, GetPageQueryVariables>(GetPageDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseGetPageQuery.getKey = (variables: GetPageQueryVariables) => [
+  'getPageSuspense',
+  variables,
+]
+
+useGetPageQuery.fetcher = (variables: GetPageQueryVariables, options?: RequestInit['headers']) =>
+  fetcher<GetPageQuery, GetPageQueryVariables>(GetPageDocument, variables, options)
 
 export const CreatePageDocument = `
     mutation createPage($input: CreatePageInput!) {

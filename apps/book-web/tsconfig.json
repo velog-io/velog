@@ -18,10 +18,10 @@
     "src/assets/**/svg",
     "scripts/*",
     "next.config.mjs",
-    "eslint.config.js",
+    "codegen.ts",
+    "eslint.config.mjs",
     ".next/types/**/*.ts",
-    "src/env.ts",
-    "src/**/*.mts"
+    "src/env.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

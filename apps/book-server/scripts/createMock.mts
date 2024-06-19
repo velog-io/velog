@@ -82,7 +82,7 @@ class Seeder {
         },
         data: {
           parent_id: parentId,
-          level: 2,
+          depth: 2,
         },
       })
 
@@ -110,7 +110,7 @@ class Seeder {
         },
         data: {
           parent_id: parentId,
-          level: 3,
+          depth: 3,
         },
       })
 

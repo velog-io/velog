@@ -40,7 +40,7 @@ const AddIcons = ({ className, type }: Props) => {
     timeoutRef.current = timeout
 
     // remove code
-    let targetRoute = `/${pageUrlSlug}`
+    let targetRoute = pageUrlSlug
     const isFolder = !!findFolder(sidebar.sortableItems, fullUrlSlug)
 
     // 폴더 타입이 아닐 경우 부모 폴더로 targetRoute를 변경

@@ -8,6 +8,10 @@ const pageResolvers: Resolvers = {
       const pageService = container.resolve(PageService)
       return await pageService.getPages(input.book_url_slug, ctx.writer?.id)
     },
+    page: async (_, { input }, ctx) => {
+      const pageService = container.resolve(PageService)
+      return await pageService.getPage(input, ctx.writer?.id)
+    },
   },
   Mutation: {
     create: async (_, { input }, ctx) => {

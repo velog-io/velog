@@ -25,6 +25,16 @@ query getPages($input: GetPagesInput!) {
   }
 }
 
+query getPage($input: GetPageInput!) {
+  page(input: $input) {
+    id
+    title
+    url_slug
+    parent_id
+    body
+  }
+}
+
 mutation createPage($input: CreatePageInput!) {
   create(input: $input) {
     id

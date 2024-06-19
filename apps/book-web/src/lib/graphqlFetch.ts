@@ -60,8 +60,6 @@ export default async function graphqlFetch<T>({
     throw new Error(message as any)
   }
 
-  if (!res) return null
-
   const json = await res?.json()
   return json.data as T
 }
@@ -94,8 +92,8 @@ type Parameter = {
   method?: 'GET' | 'POST'
 }
 
-export type GraphqlRequestBody = {
+export type GraphqlRequestBody<T = Record<any, any>> = {
   operationName?: string
   query: string
-  variables: Record<any, any>
+  variables: T
 }

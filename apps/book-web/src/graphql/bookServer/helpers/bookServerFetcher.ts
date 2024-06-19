@@ -6,7 +6,7 @@ export function fetcher<TData, TVariables extends Record<string, any>>(
   variables?: TVariables,
   headers?: RequestInit['headers'],
 ) {
-  return async (): Promise<TData> => {
+  return async (): Promise<Awaited<TData>> => {
     const data = await graphqlFetch<TData>({
       url: `${ENV.graphqlBookServerHost}/graphql`,
       method: 'POST',
@@ -16,6 +16,6 @@ export function fetcher<TData, TVariables extends Record<string, any>>(
       },
     })
 
-    return data
+    return data as Awaited<TData>
   }
 }

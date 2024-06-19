@@ -1,12 +1,12 @@
-import { KeyBinding } from '@codemirror/view'
+import { EditorView, KeyBinding } from '@codemirror/view'
 import { ToolbarCommand } from './type'
 
 export const saveKeymap: KeyBinding = {
   linux: 'Ctrl-s',
   win: 'Ctrl-s',
   mac: 'Meta-s',
-  run: () => {
-    console.log('save')
+  run: (view) => {
+    execute(view)
     return true
   },
   preventDefault: true,
@@ -36,6 +36,10 @@ const save: ToolbarCommand = {
   execute,
 }
 
-function execute() {}
+function execute(view: EditorView) {
+  const doc = view.state.doc.toString()
+  console.log(doc)
+  console.log('save')
+}
 
 export default save

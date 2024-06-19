@@ -1,9 +1,14 @@
-import NextraDocLayout, { CustomEventDetail, nextraCustomEventName } from '@packages/nextra-editor'
+import NextraDocLayout, {
+  CustomEventDetail,
+  mdxCompiler,
+  nextraCustomEventName,
+} from '@packages/nextra-editor'
 import { themeConfig } from './context'
 import { useEffect, useState } from 'react'
 import { BookMetadata, generateBookMetadata, Pages } from '@/lib/generateBookMetadata'
 import {
   useCreatePageMutation,
+  useGetPageQuery,
   useGetPagesQuery,
   useReorderPageMutation,
 } from '@/graphql/bookServer/generated/bookServer'
@@ -11,21 +16,35 @@ import { useUrlSlug } from '@/hooks/useUrlSlug'
 
 type Props = {
   children?: React.ReactNode
-  body: string
+  mdxText: string
 }
 
-function NextraLayout({ children, body }: Props) {
-  const { bookUrlSlug } = useUrlSlug()
+function NextraLayout({ children, mdxText }: Props) {
+  const { bookUrlSlug, pageUrlSlug } = useUrlSlug()
   const [bookMetadata, setBookMetadata] = useState<BookMetadata | null>(null)
+  const [mdx, setMdx] = useState<string>(mdxText)
+
   const { mutateAsync: createPageAsyncMutate, isPending: isCreatePagePending } =
     useCreatePageMutation()
   const { mutateAsync: reorderAsyncMutate, isPending: isReorderPagePending } =
     useReorderPageMutation()
+
   const {
     data: getPagesData,
     refetch: getPagesRefetch,
-    isLoading,
+    isLoading: isGetPagesLoading,
   } = useGetPagesQuery({ input: { book_url_slug: bookUrlSlug } })
+
+  const {
+    data: getPageData,
+    refetch: getPageRefetch,
+    isLoading: isGetPageLoading,
+  } = useGetPageQuery({
+    input: {
+      book_url_slug: bookUrlSlug,
+      page_url_slug: pageUrlSlug,
+    },
+  })
 
   useEffect(() => {
     if (!getPagesData?.pages) return
@@ -35,6 +54,17 @@ function NextraLayout({ children, body }: Props) {
     })
     setBookMetadata(metadata)
   }, [getPagesData?.pages])
+
+  useEffect(() => {
+    getPageRefetch()
+  }, [pageUrlSlug])
+
+  useEffect(() => {
+    if (isGetPageLoading) return
+    if (!getPageData?.page) return
+    if (!getPageData.page?.body) return
+    setMdx(getPageData.page.body)
+  }, [getPageData, isGetPageLoading])
 
   useEffect(() => {
     const addAction = async (e: CustomEventInit<CustomEventDetail['addActionEvent']>) => {
@@ -81,10 +111,10 @@ function NextraLayout({ children, body }: Props) {
     }
   }, [])
 
-  if (isLoading || !bookMetadata || !body) return <div>loading...</div>
+  if (isGetPagesLoading || !bookMetadata || !mdxText) return <div>loading...</div>
   return (
     <NextraDocLayout
-      editorValue={body}
+      editorValue={mdx}
       pageOpts={bookMetadata!.pageOpts}
       themeConfig={themeConfig}
       pageProps={{}}

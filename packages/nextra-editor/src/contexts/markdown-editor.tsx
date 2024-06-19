@@ -53,7 +53,7 @@ export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Pro
       }
     }
     compileSource()
-  }, [value])
+  }, [editorValue])
 
   const context: MarkdownEditorContext = {
     value,

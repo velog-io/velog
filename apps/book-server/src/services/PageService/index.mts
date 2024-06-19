@@ -1,7 +1,7 @@
 import { ConfilctError } from '@errors/ConfilctError.mjs'
 import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
-import type { CreatePageInput, ReorderInput } from '@graphql/generated.js'
+import type { CreatePageInput, GetPageInput, ReorderInput } from '@graphql/generated.js'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { UtilsService } from '@lib/utils/UtilsService.mjs'
 import { Page, Prisma } from '@packages/database/velog-book-mongo'
@@ -11,6 +11,7 @@ import { injectable, singleton } from 'tsyringe'
 interface Service {
   updatePageAndChildrenUrlSlug(args: UpdatePageAndChildrenUrlSlugArgs): Promise<void>
   getPages(bookUrlSlug: string, signedWriterId?: string): Promise<Page[]>
+  getPage(input: GetPageInput, signedWriterId?: string): Promise<Page | null>
   create(input: CreatePageInput, signedWriterId?: string): Promise<Page>
   reorder(input: ReorderInput, signedWriterId?: string): Promise<void>
 }
@@ -107,13 +108,18 @@ export class PageService implements Service {
       },
       orderBy,
       include: {
+        // depth 1
         childrens: {
           orderBy,
           include: {
+            // depth 2
             childrens: {
               orderBy,
               include: {
-                childrens: true,
+                // depth 3
+                childrens: {
+                  orderBy,
+                },
               },
             },
           },
@@ -122,6 +128,36 @@ export class PageService implements Service {
     })
 
     return pages
+  }
+
+  public async getPage(input: GetPageInput, signedWriterId?: string): Promise<Page | null> {
+    console.log('input', input)
+    console.log('signedWriterId', signedWriterId)
+    if (!signedWriterId) {
+      throw new UnauthorizedError('Not authorized')
+    }
+
+    const { book_url_slug, page_url_slug } = input
+
+    const book = await this.bookSerivce.findByUrlSlug(book_url_slug)
+
+    if (!book) {
+      throw new NotFoundError('Not found book')
+    }
+
+    if (book.fk_writer_id !== signedWriterId) {
+      throw new ConfilctError('Not owner of book')
+    }
+
+    const page = await this.mongo.page.findFirst({
+      where: {
+        url_slug: page_url_slug,
+        book_id: book.id,
+        fk_writer_id: signedWriterId,
+      },
+    })
+
+    return page
   }
 
   public async create(input: CreatePageInput, signedWriterId?: string): Promise<Page> {
@@ -168,7 +204,7 @@ export class PageService implements Service {
         fk_writer_id: signedWriterId,
         book_id: book.id,
         type,
-        level: parentPage ? parentPage.level + 1 : 1,
+        depth: Math.min(3, parentPage ? parentPage.depth + 1 : 1), // max level 3
         parent_id: parentPage ? parentPage!.id : null,
       },
     })

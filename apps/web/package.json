@@ -90,7 +90,7 @@
     "@types/sanitize-html": "^2.9.0",
     "@types/throttle-debounce": "^5.0.1",
     "encoding": "^0.1.13",
-    "eslint": "^9.0.0",
+    "eslint": "^9.5.0",
     "typescript": "^5.4.5",
     "typescript-plugin-css-modules": "^5.0.1"
   }

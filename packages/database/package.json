@@ -54,7 +54,7 @@
     "@types/inquirer": "^9.0.3",
     "@types/jest": "^29.5.3",
     "@types/node": "^20.12.5",
-    "eslint": "^9.0.0",
+    "eslint": "^9.5.0",
     "typescript": "^5.4.5"
   }
 }

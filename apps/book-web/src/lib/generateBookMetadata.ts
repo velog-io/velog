@@ -11,7 +11,7 @@ type Page = {
   type: string
   parent_id: string | null
   code: string
-  childrens: Page[]
+  childrens?: Page[]
 }
 
 type Args = {
@@ -51,16 +51,12 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
           // create unique key
           const key =
             index === 0 && !init ? 'index' : `${escapeForUrl(`${page.title}-${page.code}`)}`
-
           const value = { title: `${page.title}-${index}` }
-
           // save key
           map.set(page.url_slug, key)
-
           if (page.type === 'separator') {
             Object.assign(value, { id: page.id, type: 'separator' })
           }
-
           acc[key] = value
           return acc
         }, {} as Data),
@@ -102,18 +98,17 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
       children: [],
     }
 
-    if (page.childrens?.length > 0) {
+    if (page.childrens && page.childrens?.length > 0) {
       const children = page.childrens.reduce(recursive, []).flat()
       Object.assign(result, { children })
       return result
     }
 
-    if (page.childrens?.length === 0) {
+    if (page.childrens && page.childrens?.length === 0) {
       const route = page.url_slug.split('-').slice(0, -1).join('-')
       const metaJson = createMeta([], route)[0] as PageMapItem
       ;(result.children as PageMapItem[]).push(metaJson)
     }
-
     return result
   }
 
@@ -125,7 +120,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
     if (page.type !== 'separator') {
       result.push(createMdxPage(page))
     }
-    if (page.childrens?.length > 0 || page.type === 'folder') {
+    if (page.childrens && (page.childrens?.length > 0 || page.type === 'folder')) {
       result.push(createFolder(page))
     }
     return result

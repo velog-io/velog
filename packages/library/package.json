@@ -59,7 +59,7 @@
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/nanoid-dictionary": "^4.2.3",
-    "eslint": "^9.0.0",
+    "eslint": "^9.5.0",
     "tsx": "^4.7.2",
     "typescript": "^5.4.5"
   }

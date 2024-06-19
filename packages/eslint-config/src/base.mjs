@@ -2,6 +2,7 @@
 import { Linter } from 'eslint'
 import { resolve } from 'path'
 import { FlatCompat } from '@eslint/eslintrc'
+import js from '@eslint/js'
 
 const project = resolve(process.cwd(), 'tsconfig.json')
 const __dirname = new URL('.', import.meta.url).pathname
@@ -9,6 +10,8 @@ const __dirname = new URL('.', import.meta.url).pathname
 const compat = new FlatCompat({
   baseDirectory: __dirname,
   resolvePluginsRelativeTo: __dirname,
+  recommendedConfig: js.configs.recommended,
+  allConfig: js.configs.all,
 })
 
 /** @type {Linter.Config} */
