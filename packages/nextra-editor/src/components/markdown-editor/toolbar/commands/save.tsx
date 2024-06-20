@@ -1,12 +1,14 @@
 import { EditorView, KeyBinding } from '@codemirror/view'
 import { ToolbarCommand } from './type'
+import { CustomEventDetail } from '@/types'
+import { nextraCustomEventName } from '@/index'
 
 export const saveKeymap: KeyBinding = {
   linux: 'Ctrl-s',
   win: 'Ctrl-s',
   mac: 'Meta-s',
   run: (view) => {
-    execute(view)
+    saveExecute(view)
     return true
   },
   preventDefault: true,
@@ -33,13 +35,18 @@ const save: ToolbarCommand = {
       <path d="M7 3v4a1 1 0 0 0 1 1h7" />
     </svg>
   ),
-  execute,
+  execute: saveExecute,
 }
 
-function execute(view: EditorView) {
+export function saveExecute(view: EditorView) {
   const doc = view.state.doc.toString()
-  console.log(doc)
-  console.log('save')
+  const event = new CustomEvent<CustomEventDetail['saveItemBodyEvent']>(
+    nextraCustomEventName.saveItemBodyEvent,
+    {
+      detail: { body: doc },
+    },
+  )
+  window.dispatchEvent(event)
 }
 
 export default save

@@ -228,7 +228,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
       const newParentItem = findItemDeep(newItems, parentId)
 
       const event = new CustomEvent<CustomEventDetail['changeItemEvent']>(
-        nextraCustomEventName.changeItem,
+        nextraCustomEventName.changeItemEvent,
         {
           detail: {
             bookUrlSlug,

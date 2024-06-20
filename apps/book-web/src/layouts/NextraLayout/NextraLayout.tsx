@@ -82,9 +82,9 @@ function NextraLayout({ children, mdxText }: Props) {
       })
       getPagesRefetch()
     }
-    window.addEventListener(nextraCustomEventName.addAction, addAction)
+    window.addEventListener(nextraCustomEventName.addActionEvent, addAction)
     return () => {
-      window.removeEventListener(nextraCustomEventName.addAction, addAction)
+      window.removeEventListener(nextraCustomEventName.addActionEvent, addAction)
     }
   })
 
@@ -106,9 +106,23 @@ function NextraLayout({ children, mdxText }: Props) {
       getPagesRefetch()
     }
 
-    window.addEventListener(nextraCustomEventName.changeItem, changeItem)
+    window.addEventListener(nextraCustomEventName.changeItemEvent, changeItem)
     return () => {
-      window.removeEventListener(nextraCustomEventName.changeItem, changeItem)
+      window.removeEventListener(nextraCustomEventName.changeItemEvent, changeItem)
+    }
+  }, [])
+
+  useEffect(() => {
+    const saveItemBody = async (e: CustomEventInit<CustomEventDetail['saveItemBodyEvent']>) => {
+      if (!e.detail) return
+      const { body } = e.detail
+      console.log('body!', body)
+      
+    }
+
+    window.addEventListener(nextraCustomEventName.saveItemBodyEvent, saveItemBody)
+    return () => {
+      window.removeEventListener(nextraCustomEventName.saveItemBodyEvent, saveItemBody)
     }
   }, [])
 

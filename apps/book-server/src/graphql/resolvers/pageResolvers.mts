@@ -19,6 +19,7 @@ const pageResolvers: Resolvers = {
       const page = await pageService.create(input, ctx.writer?.id)
       return page
     },
+
     reorder: async (_, { input }, ctx) => {
       const pageService = container.resolve(PageService)
       await pageService.reorder(input, ctx.writer?.id)

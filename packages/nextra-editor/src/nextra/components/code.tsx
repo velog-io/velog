@@ -6,7 +6,7 @@ export const Code = ({ children, className, ...props }: ComponentProps<'code'>):
   return (
     <code
       className={cn(
-        'nx-break-words nx-rounded-md nx-border nx-border-black nx-border-opacity-[0.04] nx-bg-black nx-bg-opacity-[0.03] nx-px-[.25em] nx-py-0.5 nx-text-[.9em]',
+        'nx-break-words nx-rounded-md nx-border nx-border-black nx-border-opacity-[0.04] nx-bg-opacity-[0.03] nx-px-[.25em] nx-py-0.5 nx-text-[.9em]',
         'dark:nx-border-white/10 dark:nx-bg-white/10',
         hasLineNumbers && '[counter-reset:line]',
         className,

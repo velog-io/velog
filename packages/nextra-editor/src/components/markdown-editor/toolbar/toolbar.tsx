@@ -76,10 +76,6 @@ const Toolbar = ({ state, view }: Props) => {
     upload({ file, info: { type: 'book', refId: '' } })
   }
 
-  const onCickSaveButton = () => {
-    console.log('save')
-  }
-
   useEffect(() => {
     // Handle Uploaded Image
     if (uploading) return
@@ -105,9 +101,6 @@ const Toolbar = ({ state, view }: Props) => {
     switch (command.name) {
       case 'image':
         onClickImageButton()
-        return
-      case 'save':
-        onCickSaveButton()
         return
       default:
         onClick(command.execute!)

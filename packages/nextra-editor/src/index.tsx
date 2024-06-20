@@ -17,7 +17,7 @@ import { useMounted } from './nextra/hooks'
 import { SidebarProvider } from './contexts/sidebar'
 import MarkdownEditor from './components/markdown-editor'
 import { MarkdownEditorProvider, useMarkdownEditor } from './contexts/markdown-editor'
-
+import { CustomEventDetail, MdxCompilerOptions, MdxOptions, SearchResult } from './types'
 interface BodyProps {
   themeContext: PageTheme
   breadcrumb: ReactNode
@@ -236,12 +236,13 @@ export {
   LocaleSwitch,
 } from './components'
 
-export const nextraCustomEventName = {
-  addAction: 'addAction',
-  changeItem: 'changeItem',
+export const nextraCustomEventName: Record<keyof CustomEventDetail, string> = {
+  addActionEvent: 'addActionEvent',
+  changeItemEvent: 'changeItemEvent',
+  saveItemBodyEvent: 'saveItemBodyEvent',
 }
 
-export { CustomEventDetail, MdxCompilerOptions, MdxOptions, SearchResult } from './types'
+export { CustomEventDetail, MdxCompilerOptions, MdxOptions, SearchResult }
 
 export {
   attachMeta,

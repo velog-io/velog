@@ -52,12 +52,11 @@ function AddInputs({ type }: Props): ReactElement {
     const { parentUrlSlug, bookUrlSlug, index, type } = sidebar.actionInfo
     if (type === '') return
     const event = new CustomEvent<CustomEventDetail['addActionEvent']>(
-      nextraCustomEventName.addAction,
+      nextraCustomEventName.addActionEvent,
       {
         detail: { title, parentUrlSlug, index, bookUrlSlug, type },
       },
     )
-
     window.dispatchEvent(event)
   }
 

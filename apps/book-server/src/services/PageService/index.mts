@@ -1,7 +1,12 @@
 import { ConfilctError } from '@errors/ConfilctError.mjs'
 import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
-import type { CreatePageInput, GetPageInput, ReorderInput } from '@graphql/generated.js'
+import type {
+  CreatePageInput,
+  GetPageInput,
+  ReorderInput,
+  UpdatePageInput,
+} from '@graphql/generated.js'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { UtilsService } from '@lib/utils/UtilsService.mjs'
 import { Page, Prisma } from '@packages/database/velog-book-mongo'
@@ -13,6 +18,7 @@ interface Service {
   getPages(bookUrlSlug: string, signedWriterId?: string): Promise<Page[]>
   getPage(input: GetPageInput, signedWriterId?: string): Promise<Page | null>
   create(input: CreatePageInput, signedWriterId?: string): Promise<Page>
+  update(input: UpdatePageInput, signedWriterId?: string): Promise<Page>
   reorder(input: ReorderInput, signedWriterId?: string): Promise<void>
 }
 
@@ -137,8 +143,6 @@ export class PageService implements Service {
 
     const { book_url_slug, page_url_slug } = input
 
-    console.log('page_url_slug', page_url_slug)
-
     const book = await this.bookSerivce.findByUrlSlug(book_url_slug)
 
     if (!book) {
@@ -161,7 +165,6 @@ export class PageService implements Service {
       where: whereQuery,
     })
 
-    console.log('page', page?.title)
     return page
   }
 
@@ -218,6 +221,20 @@ export class PageService implements Service {
   }
   private generateUrlSlug({ parent_url_slug, title, code }: Record<string, string>) {
     return `${this.utils.removeCodeFromUrlSlug(parent_url_slug)}/${this.utils.escapeForUrl(title).toLowerCase()}-${code}`
+  }
+
+  public async update(input: UpdatePageInput, signedWriterId?: string): Promise<Page> {
+    if (!signedWriterId) {
+      throw new UnauthorizedError('Not authorized')
+    }
+
+    const { book_url_slug, page_url_slug, ...whereQuery } = input
+
+    const book = await this.bookSerivce.findByUrlSlug(book_url_slug)
+
+    if (!book) {
+      throw new NotFoundError('Not found book')
+    }
   }
 
   public async reorder(input: ReorderInput, signedWriterId?: string): Promise<void> {

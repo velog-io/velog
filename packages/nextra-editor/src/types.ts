@@ -20,6 +20,7 @@ export type SearchResult = {
 export interface CustomEventDetail {
   addActionEvent: AddActionEvent
   changeItemEvent: ChangeItemEvent
+  saveItemBodyEvent: SaveItemBodyEvent
 }
 
 type AddActionEvent = {
@@ -35,6 +36,10 @@ type ChangeItemEvent = {
   targetUrlSlug: string
   parentUrlSlug: string | null
   index: number
+}
+
+type SaveItemBodyEvent = {
+  body: string
 }
 
 // for compiler
