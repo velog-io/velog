@@ -137,6 +137,8 @@ export class PageService implements Service {
 
     const { book_url_slug, page_url_slug } = input
 
+    console.log('page_url_slug', page_url_slug)
+
     const book = await this.bookSerivce.findByUrlSlug(book_url_slug)
 
     if (!book) {
@@ -147,14 +149,19 @@ export class PageService implements Service {
       throw new ConfilctError('Not owner of book')
     }
 
+    const whereQuery = { book_id: book.id, fk_writer_id: signedWriterId }
+
+    if (page_url_slug === '/') {
+      Object.assign(whereQuery, { parent_id: null, index: 0 })
+    } else {
+      Object.assign(whereQuery, { url_slug: page_url_slug })
+    }
+
     const page = await this.mongo.page.findFirst({
-      where: {
-        url_slug: page_url_slug,
-        book_id: book.id,
-        fk_writer_id: signedWriterId,
-      },
+      where: whereQuery,
     })
 
+    console.log('page', page?.title)
     return page
   }
 
@@ -190,7 +197,7 @@ export class PageService implements Service {
     }
 
     const code = this.utils.randomString(8)
-    const urlSlug = `${this.utils.removeCodeFromUrlSlug(parent_url_slug)}/${this.utils.escapeForUrl(title).toLowerCase()}-${code}`
+    const urlSlug = this.generateUrlSlug({ parent_url_slug, title, code })
 
     const page = await this.mongo.page.create({
       data: {
@@ -209,9 +216,11 @@ export class PageService implements Service {
 
     return page
   }
+  private generateUrlSlug({ parent_url_slug, title, code }: Record<string, string>) {
+    return `${this.utils.removeCodeFromUrlSlug(parent_url_slug)}/${this.utils.escapeForUrl(title).toLowerCase()}-${code}`
+  }
 
   public async reorder(input: ReorderInput, signedWriterId?: string): Promise<void> {
-    console.log('input', input)
     if (!signedWriterId) {
       throw new UnauthorizedError('Not authorized')
     }

@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import 'focus-visible'
 import cn from 'clsx'
 import './polyfill'
-import { Banner, Breadcrumb, Head, NavLinks, Sidebar } from './components'
+import { Banner, Breadcrumb, Head, Header, NavLinks, Sidebar } from './components'
 import { DEFAULT_LOCALE, PartialDocsThemeConfig } from './constants'
 import { ActiveAnchorProvider, ConfigProvider, useConfig } from './contexts'
 import { getComponents } from './mdx-components'
@@ -138,7 +138,7 @@ const InnerLayout = ({
   }
 
   return (
-    <div dir={direction} className={cn('nx-h-screen nx-overflow-hidden')}>
+    <div dir={direction} className={cn('nx-relative nx-flex nx-flex-wrap')}>
       <script
         dangerouslySetInnerHTML={{
           __html: `document.documentElement.setAttribute('dir','${direction}')`,
@@ -146,13 +146,13 @@ const InnerLayout = ({
       />
       <Head />
       <Banner />
-      {themeContext.navbar &&
-        renderComponent(config.navbar.component, {
-          flatDirectories,
-          items: topLevelNavbarItems,
-        })}
+      <Header flatDirectories={flatDirectories} items={topLevelNavbarItems} />
       <div
-        className={cn('nx-mx-auto nx-flex', themeContext.layout === 'raw' && 'nx-max-w-[90rem]')}
+        className={cn(
+          'nextra-main',
+          'nx-mx-auto nx-flex nx-w-full',
+          themeContext.layout === 'raw' && 'nx-max-w-[90rem] nx-flex-row',
+        )}
       >
         <ActiveAnchorProvider>
           <Sidebar
@@ -163,11 +163,11 @@ const InnerLayout = ({
             asPopover={false}
             includePlaceholder={themeContext.layout === 'default'}
           />
-          <div className={cn('nx-flex nx-w-full')}>
+          <div className={cn('nx-flex nx-overflow-hidden')} style={{ width: 'calc(100% - 320px)' }}>
             <div className={cn('nextra-editor-container nx-w-1/2')}>
               <MarkdownEditor />
             </div>
-            <div className={cn('nextra-preview-container')} style={{ flex: 1 }}>
+            <div className={cn('nextra-preview-container nx-w-1/2')}>
               <Body
                 themeContext={themeContext}
                 breadcrumb={<Breadcrumb activePath={activePath} />}
@@ -228,7 +228,7 @@ export {
   Collapse,
   NotFoundPage,
   ServerSideErrorPage,
-  Navbar,
+  Header,
   Sidebar,
   SkipNavContent,
   SkipNavLink,

@@ -122,18 +122,17 @@ const Toolbar = ({ state, view }: Props) => {
           return <ToolbarSeparator key={key} />
         }
         return (
-          <div key={key}>
-            <button
-              onClick={() => commandMapper(command)}
-              className={cn(
-                'nx-h-12 nx-w-12 nx-cursor-pointer',
-                'nx-flex nx-items-center nx-justify-center',
-                classes.button,
-              )}
-            >
-              {command.icon}
-            </button>
-          </div>
+          <button
+            key={key}
+            onClick={() => commandMapper(command)}
+            className={cn(
+              'nx-h-12 nx-w-12 nx-cursor-pointer',
+              'nx-flex nx-items-center nx-justify-center',
+              classes.button,
+            )}
+          >
+            {command.icon}
+          </button>
         )
       })}
     </div>

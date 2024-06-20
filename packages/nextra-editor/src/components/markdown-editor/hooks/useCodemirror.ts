@@ -47,11 +47,16 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
       minWidth,
       maxWidth,
     },
+    '& .cm-editor': {
+      // height: '100%',
+    },
     '& .cm-scroller': {
+      width: '100%',
       height: '100% !important',
       scrollbarWidth: 'thin',
       scrollbarColor: 'oklch(55.55% 0 0 / 40%) transparent',
       scrollbarGutter: 'stable',
+      'overflow-x': 'hidden',
     },
   })
 

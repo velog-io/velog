@@ -5,8 +5,8 @@ import type { Item } from './nextra/normalize-pages'
 import type { FC, ReactNode } from 'react'
 import { isValidElement } from 'react'
 import { z } from 'zod'
-import { Anchor, Footer, Navbar, TOC } from './components'
-import type { NavBarProps } from './components/navbar'
+import { Anchor, Footer, Header, TOC } from './components'
+import type { NavBarProps } from './components/Header'
 import { themeOptionsSchema, ThemeSwitch } from './components/theme-switch'
 import type { TOCProps } from './components/toc'
 import { useConfig } from './contexts'
@@ -244,7 +244,7 @@ export const DEFAULT_THEME: DocsThemeConfig = {
   ),
   logoLink: true,
   navbar: {
-    component: Navbar,
+    component: Header,
   },
   navigation: false,
   nextThemes: {

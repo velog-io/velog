@@ -17,7 +17,7 @@ const MarkdownEditor = () => {
   }
 
   return (
-    <div className={cn('nx-py-4')}>
+    <>
       <Toolbar state={state} view={view} container={container} />
       <div onClick={onClick}>
         <div
@@ -27,7 +27,7 @@ const MarkdownEditor = () => {
           suppressContentEditableWarning={true}
         />
       </div>
-    </div>
+    </>
   )
 }
 

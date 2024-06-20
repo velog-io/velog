@@ -1,5 +1,4 @@
 .nextra-editor-container {
-  flex: 1;
   display: none;
   @media (min-width: 1024px) {
     display: block;
