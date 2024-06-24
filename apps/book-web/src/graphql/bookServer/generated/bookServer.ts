@@ -61,10 +61,11 @@ export type GetPagesInput = {
 }
 
 export type Mutation = {
-  build: Scalars['Void']['output']
+  build: Maybe<Scalars['Void']['output']>
   create: Maybe<Page>
-  deploy: Scalars['Void']['output']
-  reorder: Scalars['Void']['output']
+  deploy: Maybe<Scalars['Void']['output']>
+  reorder: Maybe<Scalars['Void']['output']>
+  update: Maybe<Page>
 }
 
 export type MutationBuildArgs = {
@@ -83,13 +84,17 @@ export type MutationReorderArgs = {
   input: ReorderInput
 }
 
+export type MutationUpdateArgs = {
+  input: UpdatePageInput
+}
+
 export type Page = {
   body: Scalars['String']['output']
-  book_id: Scalars['ID']['output']
   childrens: Array<Page>
   code: Scalars['String']['output']
   created_at: Scalars['Date']['output']
   depth: Scalars['Int']['output']
+  fk_book_id: Scalars['ID']['output']
   fk_writer_id: Scalars['ID']['output']
   id: Scalars['ID']['output']
   index: Scalars['Int']['output']
@@ -149,6 +154,14 @@ export type SubscriptionBookDeployCompletedArgs = {
   input: BookIdInput
 }
 
+export type UpdatePageInput = {
+  body?: InputMaybe<Scalars['String']['input']>
+  book_url_slug: Scalars['String']['input']
+  is_deleted?: InputMaybe<Scalars['Boolean']['input']>
+  page_url_slug: Scalars['String']['input']
+  title?: InputMaybe<Scalars['String']['input']>
+}
+
 export type Writer = {
   email: Scalars['String']['output']
   fk_user_id: Scalars['String']['output']
@@ -161,7 +174,7 @@ export type DeployMutationVariables = Exact<{
   input: BookIdInput
 }>
 
-export type DeployMutation = { deploy: void }
+export type DeployMutation = { deploy: void | null }
 
 export type GetPagesQueryVariables = Exact<{
   input: GetPagesInput
@@ -218,7 +231,7 @@ export type ReorderPageMutationVariables = Exact<{
   input: ReorderInput
 }>
 
-export type ReorderPageMutation = { reorder: void }
+export type ReorderPageMutation = { reorder: void | null }
 
 export const DeployDocument = `
     mutation deploy($input: BookIDInput!) {

@@ -49,7 +49,7 @@ model Book {
 model Page {
   id           String  @id @default(auto()) @map("_id") @db.ObjectId
   fk_writer_id String  @db.ObjectId
-  book_id      String  @db.ObjectId
+  fk_book_id   String  @db.ObjectId
   title        String  @db.String
   body         String  @db.String
   type         String  @db.String
@@ -65,7 +65,7 @@ model Page {
 
   parent    Page?  @relation("ParentChildren", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   childrens Page[] @relation("ParentChildren")
-  book      Book   @relation(fields: [book_id], references: [id])
+  book      Book   @relation(fields: [fk_book_id], references: [id])
 
   @@index([url_slug, code])
   @@map("pages")

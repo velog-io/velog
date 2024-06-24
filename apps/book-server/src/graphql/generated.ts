@@ -90,11 +90,11 @@ export type MutationUpdateArgs = {
 
 export type Page = {
   body: Scalars['String']['output']
-  book_id: Scalars['ID']['output']
   childrens: Array<Page>
   code: Scalars['String']['output']
   created_at: Scalars['Date']['output']
   depth: Scalars['Int']['output']
+  fk_book_id: Scalars['ID']['output']
   fk_writer_id: Scalars['ID']['output']
   id: Scalars['ID']['output']
   index: Scalars['Int']['output']
@@ -373,11 +373,11 @@ export type PageResolvers<
   ParentType extends ResolversParentTypes['Page'] = ResolversParentTypes['Page'],
 > = {
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  book_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   childrens?: Resolver<Array<ResolversTypes['Page']>, ParentType, ContextType>
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   created_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>
   depth?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  fk_book_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   fk_writer_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>

@@ -63,7 +63,7 @@ class Seeder {
 
     const pages = await this.mongo.page.findMany({
       where: {
-        book_id: book.id,
+        fk_book_id: book.id,
       },
     })
     const topLevel = pages

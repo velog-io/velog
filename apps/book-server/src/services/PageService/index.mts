@@ -52,7 +52,7 @@ export class PageService implements Service {
     if (urlPrefix === '') {
       const book = await this.mongo.book.findUnique({
         where: {
-          id: page.book_id,
+          id: page.fk_book_id,
         },
       })
 
@@ -109,7 +109,7 @@ export class PageService implements Service {
     const orderBy: Prisma.PageOrderByWithRelationInput[] = [{ index: 'asc' }]
     const pages = await this.mongo.page.findMany({
       where: {
-        book_id: book.id,
+        fk_book_id: book.id,
         parent_id: null,
       },
       orderBy,
@@ -153,7 +153,7 @@ export class PageService implements Service {
       throw new ConfilctError('Not owner of book')
     }
 
-    const whereQuery = { book_id: book.id, fk_writer_id: signedWriterId }
+    const whereQuery: Prisma.PageWhereInput = { fk_book_id: book.id, fk_writer_id: signedWriterId }
 
     if (page_url_slug === '/') {
       Object.assign(whereQuery, { parent_id: null, index: 0 })
@@ -210,7 +210,7 @@ export class PageService implements Service {
         code,
         body: '',
         fk_writer_id: signedWriterId,
-        book_id: book.id,
+        fk_book_id: book.id,
         type,
         depth: Math.min(3, parentPage ? parentPage.depth + 1 : 1), // max level 3
         parent_id: parentPage ? parentPage!.id : null,
@@ -228,13 +228,54 @@ export class PageService implements Service {
       throw new UnauthorizedError('Not authorized')
     }
 
-    const { book_url_slug, page_url_slug, ...whereQuery } = input
+    const { book_url_slug, page_url_slug, ...rest_input } = input
 
     const book = await this.bookSerivce.findByUrlSlug(book_url_slug)
 
     if (!book) {
       throw new NotFoundError('Not found book')
     }
+
+    if (book.fk_writer_id !== signedWriterId) {
+      throw new ConfilctError('Not owner of book')
+    }
+
+    const page = await this.mongo.page.findFirst({
+      where: {
+        url_slug: page_url_slug,
+        fk_writer_id: signedWriterId,
+      },
+    })
+
+    if (!page) {
+      throw new NotFoundError('Not found page')
+    }
+
+    const whereQuery: Prisma.PageUpdateInput = {}
+
+    if (typeof rest_input.body === 'string') {
+      Object.assign(whereQuery, { body: rest_input.body })
+    }
+
+    if (typeof rest_input.title === 'string') {
+      Object.assign(whereQuery, { title: rest_input.title })
+    }
+
+    if (typeof rest_input.is_deleted === 'boolean') {
+      Object.assign(whereQuery, { is_deleted: rest_input.is_deleted })
+    }
+
+    const updatedPage = await this.mongo.page.update({
+      where: {
+        id: page.id,
+      },
+      data: {
+        ...whereQuery,
+        updated_at: new Date(),
+      },
+    })
+
+    return updatedPage
   }
 
   public async reorder(input: ReorderInput, signedWriterId?: string): Promise<void> {
@@ -264,7 +305,7 @@ export class PageService implements Service {
       throw new NotFoundError('Not found page')
     }
 
-    if (page.book_id !== book.id) {
+    if (page.fk_book_id !== book.id) {
       throw new ConfilctError('Not related page')
     }
 
@@ -276,7 +317,7 @@ export class PageService implements Service {
         })
       : null
 
-    if (parentPage && parentPage.book_id !== book.id) {
+    if (parentPage && parentPage.fk_book_id !== book.id) {
       throw new ConfilctError('Not related parent page')
     }
 

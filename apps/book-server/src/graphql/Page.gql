@@ -7,7 +7,7 @@ enum PageType {
 type Page {
   id: ID!
   fk_writer_id: ID!
-  book_id: ID!
+  fk_book_id: ID!
   title: String!
   body: String!
   type: String!

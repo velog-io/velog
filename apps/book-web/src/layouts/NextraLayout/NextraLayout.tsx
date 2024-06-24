@@ -117,7 +117,6 @@ function NextraLayout({ children, mdxText }: Props) {
       if (!e.detail) return
       const { body } = e.detail
       console.log('body!', body)
-      
     }
 
     window.addEventListener(nextraCustomEventName.saveItemBodyEvent, saveItemBody)
