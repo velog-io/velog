@@ -5,7 +5,7 @@ const projectPath = resolve(process.cwd())
 
 /** @type {Linter.Config} */
 export default [
-  ...baseConfig,
+  ...baseConfig(projectPath),
   {
     ignores: ['node_modules', 'dist'],
   },
