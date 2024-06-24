@@ -98,6 +98,7 @@ export type Page = {
   fk_writer_id: Scalars['ID']['output']
   id: Scalars['ID']['output']
   index: Scalars['Int']['output']
+  is_deleted: Scalars['Boolean']['output']
   parent_id?: Maybe<Scalars['ID']['output']>
   title: Scalars['String']['output']
   type: Scalars['String']['output']
@@ -381,6 +382,7 @@ export type PageResolvers<
   fk_writer_id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  is_deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
   parent_id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>

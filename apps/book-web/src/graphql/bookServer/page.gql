@@ -44,3 +44,12 @@ mutation createPage($input: CreatePageInput!) {
 mutation reorderPage($input: ReorderInput!) {
   reorder(input: $input)
 }
+
+mutation updatePage($input: UpdatePageInput!) {
+  update(input: $input) {
+    id
+    title
+    body
+    is_deleted
+  }
+}

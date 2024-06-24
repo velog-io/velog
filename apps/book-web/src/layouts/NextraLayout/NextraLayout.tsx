@@ -11,6 +11,7 @@ import {
   useGetPageQuery,
   useGetPagesQuery,
   useReorderPageMutation,
+  useUpdatePageMutation,
 } from '@/graphql/bookServer/generated/bookServer'
 import { useUrlSlug } from '@/hooks/useUrlSlug'
 
@@ -28,6 +29,8 @@ function NextraLayout({ children, mdxText }: Props) {
     useCreatePageMutation()
   const { mutateAsync: reorderAsyncMutate, isPending: isReorderPagePending } =
     useReorderPageMutation()
+  const { mutateAsync: updatePageAsyncMutate, isPending: isUpdatePagePending } =
+    useUpdatePageMutation()
 
   const {
     data: getPagesData,
@@ -113,10 +116,21 @@ function NextraLayout({ children, mdxText }: Props) {
   }, [])
 
   useEffect(() => {
+    if (isUpdatePagePending) {
+      //TODO: show loading
+      return
+    }
     const saveItemBody = async (e: CustomEventInit<CustomEventDetail['saveItemBodyEvent']>) => {
       if (!e.detail) return
       const { body } = e.detail
-      console.log('body!', body)
+
+      await updatePageAsyncMutate({
+        input: {
+          book_url_slug: bookUrlSlug,
+          page_url_slug: pageUrlSlug,
+          body,
+        },
+      })
     }
 
     window.addEventListener(nextraCustomEventName.saveItemBodyEvent, saveItemBody)

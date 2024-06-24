@@ -16,6 +16,7 @@ type Page {
   url_slug: String!
   code: String!
   depth: Int!
+  is_deleted: Boolean!
   created_at: Date!
   updated_at: Date!
   childrens: [Page!]!

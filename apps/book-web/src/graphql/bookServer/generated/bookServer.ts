@@ -98,6 +98,7 @@ export type Page = {
   fk_writer_id: Scalars['ID']['output']
   id: Scalars['ID']['output']
   index: Scalars['Int']['output']
+  is_deleted: Scalars['Boolean']['output']
   parent_id: Maybe<Scalars['ID']['output']>
   title: Scalars['String']['output']
   type: Scalars['String']['output']
@@ -232,6 +233,14 @@ export type ReorderPageMutationVariables = Exact<{
 }>
 
 export type ReorderPageMutation = { reorder: void | null }
+
+export type UpdatePageMutationVariables = Exact<{
+  input: UpdatePageInput
+}>
+
+export type UpdatePageMutation = {
+  update: { id: string; title: string; body: string; is_deleted: boolean } | null
+}
 
 export const DeployDocument = `
     mutation deploy($input: BookIDInput!) {
@@ -425,3 +434,33 @@ useReorderPageMutation.fetcher = (
     variables,
     options,
   )
+
+export const UpdatePageDocument = `
+    mutation updatePage($input: UpdatePageInput!) {
+  update(input: $input) {
+    id
+    title
+    body
+    is_deleted
+  }
+}
+    `
+
+export const useUpdatePageMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<UpdatePageMutation, TError, UpdatePageMutationVariables, TContext>,
+) => {
+  return useMutation<UpdatePageMutation, TError, UpdatePageMutationVariables, TContext>({
+    mutationKey: ['updatePage'],
+    mutationFn: (variables?: UpdatePageMutationVariables) =>
+      fetcher<UpdatePageMutation, UpdatePageMutationVariables>(UpdatePageDocument, variables)(),
+    ...options,
+  })
+}
+
+useUpdatePageMutation.getKey = () => ['updatePage']
+
+useUpdatePageMutation.fetcher = (
+  variables: UpdatePageMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<UpdatePageMutation, UpdatePageMutationVariables>(UpdatePageDocument, variables, options)

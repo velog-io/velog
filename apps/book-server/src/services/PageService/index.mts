@@ -1,3 +1,4 @@
+import { BadRequestError } from '@errors/BadRequestErrors.mjs'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
 import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
@@ -229,6 +230,10 @@ export class PageService implements Service {
     }
 
     const { book_url_slug, page_url_slug, ...rest_input } = input
+
+    if (Object.values(rest_input).every((value) => typeof value === 'undefined')) {
+      throw new BadRequestError('No input')
+    }
 
     const book = await this.bookSerivce.findByUrlSlug(book_url_slug)
 
