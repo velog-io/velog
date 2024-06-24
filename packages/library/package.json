@@ -59,6 +59,8 @@
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/nanoid-dictionary": "^4.2.3",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.6.0",
     "eslint": "^9.5.0",
     "tsx": "^4.7.2",
     "typescript": "^5.4.5"

@@ -89,6 +89,8 @@
     "@types/react-dom": "18.2.6",
     "@types/sanitize-html": "^2.9.0",
     "@types/throttle-debounce": "^5.0.1",
+    "@typescript-eslint/eslint-plugin": "^7.5.0",
+    "@typescript-eslint/parser": "^7.6.0",
     "encoding": "^0.1.13",
     "eslint": "^9.5.0",
     "typescript": "^5.4.5",

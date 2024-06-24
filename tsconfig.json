@@ -3,5 +3,12 @@
   "compilerOptions": {
     "rootDir": "./"
   },
-  "exclude": ["apps/book-server/books/*", "node_modules", "**/node_modules"]
+  "exclude": [
+    "/apps/**",
+    "/packages/**",
+    "*.config.js",
+    "packages/**/node_modules/*.d.ts",
+    "node_modules/*.d.ts",
+    "**/dist/**/*"
+  ]
 }

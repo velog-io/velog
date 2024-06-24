@@ -4,5 +4,6 @@
   "editor.formatOnPaste": true, // optional
   "editor.formatOnSave": true, // optional
   "editor.formatOnSaveMode": "file", // required to format on save
-  "files.autoSave": "afterDelay" // optional but recommended
+  "files.autoSave": "afterDelay", // optional but recommended,
+  "eslint.workingDirectories": [{ "pattern": "./apps/*/" }, { "pattern": "./packages/*/" }]
 }

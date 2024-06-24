@@ -1,8 +1,11 @@
 import baseConfig from '@packages/eslint-config/base.mjs'
+import { resolve } from 'node:path'
+
+const project = resolve(process.cwd())
 
 /** @type {Linter.Config} */
 export default [
-  ...baseConfig,
+  ...baseConfig(project),
   {
     ignores: [
       'node_modules',
