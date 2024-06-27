@@ -131,13 +131,15 @@ function NextraLayout({ children, mdxText }: Props) {
           body,
         },
       })
+
+      getPageRefetch()
     }
 
     window.addEventListener(nextraCustomEventName.saveItemBodyEvent, saveItemBody)
     return () => {
       window.removeEventListener(nextraCustomEventName.saveItemBodyEvent, saveItemBody)
     }
-  }, [])
+  }, [pageUrlSlug])
 
   if (isGetPagesLoading || !bookMetadata || !mdxText) return <div>loading...</div>
   return (

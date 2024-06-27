@@ -245,9 +245,20 @@ export class PageService implements Service {
       throw new ConfilctError('Not owner of book')
     }
 
+    let pageUrlSlug = page_url_slug
+    if (page_url_slug === '/' || !page_url_slug) {
+      const initPage = await this.mongo.page.findFirst({
+        where: {
+          parent_id: null,
+          index: 0,
+        },
+      })
+      pageUrlSlug = initPage?.url_slug ?? page_url_slug
+    }
+
     const page = await this.mongo.page.findFirst({
       where: {
-        url_slug: page_url_slug,
+        url_slug: pageUrlSlug,
         fk_writer_id: signedWriterId,
       },
     })
@@ -256,18 +267,18 @@ export class PageService implements Service {
       throw new NotFoundError('Not found page')
     }
 
-    const whereQuery: Prisma.PageUpdateInput = {}
+    const updateInput: Prisma.PageUpdateInput = {}
 
     if (typeof rest_input.body === 'string') {
-      Object.assign(whereQuery, { body: rest_input.body })
+      Object.assign(updateInput, { body: rest_input.body })
     }
 
     if (typeof rest_input.title === 'string') {
-      Object.assign(whereQuery, { title: rest_input.title })
+      Object.assign(updateInput, { title: rest_input.title })
     }
 
     if (typeof rest_input.is_deleted === 'boolean') {
-      Object.assign(whereQuery, { is_deleted: rest_input.is_deleted })
+      Object.assign(updateInput, { is_deleted: rest_input.is_deleted })
     }
 
     const updatedPage = await this.mongo.page.update({
@@ -275,11 +286,12 @@ export class PageService implements Service {
         id: page.id,
       },
       data: {
-        ...whereQuery,
+        ...updateInput,
         updated_at: new Date(),
       },
     })
 
+    console.log('updatedPage', updatedPage)
     return updatedPage
   }
 

@@ -16,13 +16,15 @@ const pageResolvers: Resolvers = {
   Mutation: {
     create: async (_, { input }, ctx) => {
       const pageService = container.resolve(PageService)
-      const page = await pageService.create(input, ctx.writer?.id)
-      return page
+      return await pageService.create(input, ctx.writer?.id)
     },
-
     reorder: async (_, { input }, ctx) => {
       const pageService = container.resolve(PageService)
       await pageService.reorder(input, ctx.writer?.id)
+    },
+    update: async (_, { input }, ctx) => {
+      const pageService = container.resolve(PageService)
+      return await pageService.update(input, ctx.writer?.id)
     },
   },
 }
