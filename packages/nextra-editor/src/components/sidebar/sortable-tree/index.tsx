@@ -33,7 +33,7 @@ import cn from 'clsx'
 import { customCollisionDetectionAlgorithm } from './utils/customCollisionDetection'
 import { createPortal } from 'react-dom'
 import SidebarController from '../sidebar-controller'
-import { SortableTreeItem } from './sortable-tree-item'
+import { SortableItemWrapper } from './sortable-item-wrapper'
 import { dropAnimation } from './utils/dropAnimation'
 import { useSidebar } from '@/contexts/sidebar'
 import { SensorContext } from './types'
@@ -321,7 +321,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
                 {flattenedItems.map((item) => {
                   const key = item.id || item.name || item.route
                   return (
-                    <SortableTreeItem
+                    <SortableItemWrapper
                       key={key}
                       item={item}
                       items={flattenedItems}
@@ -340,7 +340,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
       {createPortal(
         <DragOverlay modifiers={modifiersArray} dropAnimation={dropAnimation}>
           {ghostItem && (
-            <SortableTreeItem
+            <SortableItemWrapper
               item={ghostItem}
               depth={ghostItem.depth}
               items={flattenedItems}

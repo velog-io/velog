@@ -1,17 +1,18 @@
-import path from 'path'
+import path from 'node:path'
 import fs from 'fs-extra'
 import { injectable, singleton } from 'tsyringe'
 import { BookService } from '@services/BookService/index.mjs'
 import { NotFoundError } from '@errors/NotfoundError.mjs'
-import { WriterService } from '../WriterService/index.mjs'
+import { WriterService } from '@services/WriterService/index.mjs'
 import { AwsS3Service } from '@lib/awsS3/AwsS3Service.mjs'
 import mime from 'mime'
 import { ENV } from '@env'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
+import { DeployResult } from '@graphql/generated.js'
 
 interface Service {
-  deploy: (bookId: string, signedWriterId?: string) => Promise<void>
+  deploy: (bookId: string, signedWriterId?: string) => Promise<DeployResult>
 }
 @injectable()
 @singleton()
@@ -21,7 +22,7 @@ export class BookDeployService implements Service {
     private readonly writerService: WriterService,
     private readonly bookService: BookService,
   ) {}
-  async deploy(bookId: string, signedWriterId?: string): Promise<void> {
+  async deploy(url_slug: string, signedWriterId?: string): Promise<DeployResult> {
     if (!signedWriterId) {
       throw new UnauthorizedError('Not logged in')
     }
@@ -32,7 +33,7 @@ export class BookDeployService implements Service {
       throw new NotFoundError('Not found writer')
     }
 
-    const book = await this.bookService.findById(bookId)
+    const book = await this.bookService.findByUrlSlug(url_slug)
 
     if (!book) {
       throw new NotFoundError('Not found book')
@@ -42,7 +43,7 @@ export class BookDeployService implements Service {
       throw new ConfilctError('Not owner of book')
     }
 
-    const output = path.resolve(process.cwd(), 'books', bookId, 'out')
+    const output = path.resolve(process.cwd(), 'books', book.id, 'out')
 
     // find output
     const exists = fs.existsSync(output)
@@ -79,12 +80,18 @@ export class BookDeployService implements Service {
 
     try {
       await Promise.all(promises)
+      const published_url = `https://books.velog.io/@${writer.username}/${book.url_slug}/index.html`
 
-      console.log(
-        `Deployed URL: , https://books.velog.io/@${writer.username}/${book.url_slug}/index.html`,
-      )
+      console.log(`Deployed URL: , ${published_url}`)
+
+      return {
+        published_url,
+      }
     } catch (error) {
       console.error(error)
+      return {
+        published_url: null,
+      }
     }
   }
 }

@@ -43,12 +43,24 @@ export type BookIdInput = {
   book_id: Scalars['ID']['input']
 }
 
+export type BookUrlSlugInput = {
+  url_slug: Scalars['String']['input']
+}
+
+export type BuildResult = {
+  result: Scalars['Boolean']['output']
+}
+
 export type CreatePageInput = {
   book_url_slug: Scalars['String']['input']
   index: Scalars['Int']['input']
   parent_url_slug: Scalars['String']['input']
   title: Scalars['String']['input']
   type: PageType
+}
+
+export type DeployResult = {
+  published_url: Maybe<Scalars['String']['output']>
 }
 
 export type GetPageInput = {
@@ -61,15 +73,15 @@ export type GetPagesInput = {
 }
 
 export type Mutation = {
-  build: Maybe<Scalars['Void']['output']>
+  build: BuildResult
   create: Maybe<Page>
-  deploy: Maybe<Scalars['Void']['output']>
+  deploy: DeployResult
   reorder: Maybe<Scalars['Void']['output']>
   update: Maybe<Page>
 }
 
 export type MutationBuildArgs = {
-  input: BookIdInput
+  input: BookUrlSlugInput
 }
 
 export type MutationCreateArgs = {
@@ -77,7 +89,7 @@ export type MutationCreateArgs = {
 }
 
 export type MutationDeployArgs = {
-  input: BookIdInput
+  input: BookUrlSlugInput
 }
 
 export type MutationReorderArgs = {
@@ -144,15 +156,15 @@ export type Subscription = {
 }
 
 export type SubscriptionBookBuildCompletedArgs = {
-  input: BookIdInput
+  input: BookUrlSlugInput
 }
 
 export type SubscriptionBookBuildInstalledArgs = {
-  input: BookIdInput
+  input: BookUrlSlugInput
 }
 
 export type SubscriptionBookDeployCompletedArgs = {
-  input: BookIdInput
+  input: BookUrlSlugInput
 }
 
 export type UpdatePageInput = {
@@ -172,10 +184,16 @@ export type Writer = {
 }
 
 export type DeployMutationVariables = Exact<{
-  input: BookIdInput
+  input: BookUrlSlugInput
 }>
 
-export type DeployMutation = { deploy: void | null }
+export type DeployMutation = { deploy: { published_url: string | null } }
+
+export type BuildMutationVariables = Exact<{
+  input: BookUrlSlugInput
+}>
+
+export type BuildMutation = { build: { result: boolean } }
 
 export type GetPagesQueryVariables = Exact<{
   input: GetPagesInput
@@ -243,8 +261,10 @@ export type UpdatePageMutation = {
 }
 
 export const DeployDocument = `
-    mutation deploy($input: BookIDInput!) {
-  deploy(input: $input)
+    mutation deploy($input: BookUrlSlugInput!) {
+  deploy(input: $input) {
+    published_url
+  }
 }
     `
 
@@ -265,6 +285,30 @@ useDeployMutation.fetcher = (
   variables: DeployMutationVariables,
   options?: RequestInit['headers'],
 ) => fetcher<DeployMutation, DeployMutationVariables>(DeployDocument, variables, options)
+
+export const BuildDocument = `
+    mutation build($input: BookUrlSlugInput!) {
+  build(input: $input) {
+    result
+  }
+}
+    `
+
+export const useBuildMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<BuildMutation, TError, BuildMutationVariables, TContext>,
+) => {
+  return useMutation<BuildMutation, TError, BuildMutationVariables, TContext>({
+    mutationKey: ['build'],
+    mutationFn: (variables?: BuildMutationVariables) =>
+      fetcher<BuildMutation, BuildMutationVariables>(BuildDocument, variables)(),
+    ...options,
+  })
+}
+
+useBuildMutation.getKey = () => ['build']
+
+useBuildMutation.fetcher = (variables: BuildMutationVariables, options?: RequestInit['headers']) =>
+  fetcher<BuildMutation, BuildMutationVariables>(BuildDocument, variables, options)
 
 export const GetPagesDocument = `
     query getPages($input: GetPagesInput!) {

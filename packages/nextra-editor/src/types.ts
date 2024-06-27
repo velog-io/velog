@@ -21,6 +21,8 @@ export interface CustomEventDetail {
   addActionEvent: AddActionEvent
   changeItemEvent: ChangeItemEvent
   saveItemBodyEvent: SaveItemBodyEvent
+  deployStartEvent: DeployStartEvent
+  deployEndEvent: DeployEndEvent
 }
 
 type AddActionEvent = {
@@ -40,6 +42,11 @@ type ChangeItemEvent = {
 
 type SaveItemBodyEvent = {
   body: string
+}
+
+type DeployStartEvent = {}
+type DeployEndEvent = {
+  publishedUrl: string | null
 }
 
 // for compiler

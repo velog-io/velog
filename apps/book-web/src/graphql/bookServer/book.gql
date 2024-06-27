@@ -1,3 +1,11 @@
-mutation deploy($input: BookIDInput!) {
-  deploy(input: $input)
+mutation deploy($input: BookUrlSlugInput!) {
+  deploy(input: $input) {
+    published_url
+  }
+}
+
+mutation build($input: BookUrlSlugInput!) {
+  build(input: $input) {
+    result
+  }
 }

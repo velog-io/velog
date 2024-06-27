@@ -1,17 +1,17 @@
-import { SortableItem } from '@/nextra/normalize-pages'
+import type { SortableItem as SortableItemType } from '@/nextra/normalize-pages'
 import { CSSProperties, memo, useEffect, useState } from 'react'
 import { AnimateLayoutChanges, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { findParent, getIsParentOver } from './utils'
-import { SortableTreeItemProps } from './types'
+import { SortableItemWrapperProps } from './types'
 import { UniqueIdentifier } from '@dnd-kit/core'
-import { SortableComponent } from './sortable-component'
+import { SortableItem } from './sortable-item'
 import { FlattenedItem } from '@/types'
 import { useDndTree } from '.'
 
 type Props = {
   className?: string
-  item: SortableItem
+  item: SortableItemType
   items: FlattenedItem[]
   collapsed: boolean
   onCollapse: (id: UniqueIdentifier) => void
@@ -23,7 +23,7 @@ type Props = {
 const animateLayoutChanges: AnimateLayoutChanges = ({ isSorting, isDragging }) =>
   isSorting || isDragging ? false : true
 
-const SortableTreeMenuNotMemoized = function SortableTreeItem({
+const SortableTreeMenuNotMemoized = function SortableItemWrapper({
   item,
   items,
   onCollapse,
@@ -71,7 +71,7 @@ const SortableTreeMenuNotMemoized = function SortableTreeItem({
 
   const parent = findParent(items, active)
 
-  const props: SortableTreeItemProps = {
+  const props: SortableItemWrapperProps = {
     setNodeRef,
     setActivatorNodeRef,
     isGhost,
@@ -98,9 +98,9 @@ const SortableTreeMenuNotMemoized = function SortableTreeItem({
     clone,
   }
 
-  return <SortableComponent item={item} {...props} />
+  return <SortableItem item={item} {...props} />
 }
 
-export const SortableTreeItem = memo(
+export const SortableItemWrapper = memo(
   SortableTreeMenuNotMemoized,
 ) as typeof SortableTreeMenuNotMemoized

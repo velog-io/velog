@@ -4,7 +4,7 @@ import { Active, Over, UniqueIdentifier } from '@dnd-kit/core'
 import { Transform } from '@dnd-kit/utilities'
 import { CSSProperties, MutableRefObject } from 'react'
 
-export type SortableTreeItemProps = {
+export type SortableItemWrapperProps = {
   setNodeRef: (node: HTMLElement | null) => void
   setActivatorNodeRef: (node: HTMLElement | null) => void
   ref: (node: HTMLElement | null) => void
@@ -28,9 +28,9 @@ export type SortableTreeItemProps = {
   clone: boolean
 }
 
-export type SortableTreeComponentProps = {
+export type SortableItemProps = {
   item: SortableItem
-} & SortableTreeItemProps
+} & SortableItemWrapperProps
 
 export type SensorContext = MutableRefObject<{
   items: FlattenedItem[]

@@ -13,13 +13,13 @@ const bookResolvers: Resolvers = {
     },
   },
   Mutation: {
-    deploy: async (_, { input }, ctx) => {
-      const bookDeployService = container.resolve(BookDeployService)
-      return await bookDeployService.deploy(input.book_id, ctx.writer?.id)
-    },
     build: async (_, { input }, ctx) => {
       const bookBuildService = container.resolve(BookBuildService)
-      return await bookBuildService.build(input.book_id, ctx.writer?.id)
+      return await bookBuildService.build(input.url_slug, ctx.writer?.id)
+    },
+    deploy: async (_, { input }, ctx) => {
+      const bookDeployService = container.resolve(BookDeployService)
+      return await bookDeployService.deploy(input.url_slug, ctx.writer?.id)
     },
   },
   Subscription: {
@@ -27,7 +27,7 @@ const bookResolvers: Resolvers = {
       subscribe: async (_, { input }, { pubsub }) => {
         const mqService = container.resolve(MqService)
         const generator = mqService.topicGenerator('bookBuildInstalled')
-        const topic = generator(input.book_id)
+        const topic = generator(input.url_slug)
         return pubsub.subscribe(topic)
       },
     },
@@ -35,7 +35,7 @@ const bookResolvers: Resolvers = {
       subscribe: async (_, { input }, { pubsub }) => {
         const mqService = container.resolve(MqService)
         const generator = mqService.topicGenerator('bookBuildCompleted')
-        const topic = generator(input.book_id)
+        const topic = generator(input.url_slug)
         return pubsub.subscribe(topic)
       },
     },
@@ -43,7 +43,7 @@ const bookResolvers: Resolvers = {
       subscribe: async (_, { input }, { pubsub }) => {
         const mqService = container.resolve(MqService)
         const generator = mqService.topicGenerator('bookDeployCompleted')
-        const topic = generator(input.book_id)
+        const topic = generator(input.url_slug)
         return pubsub.subscribe(topic)
       },
     },

@@ -240,6 +240,8 @@ export const nextraCustomEventName: Record<keyof CustomEventDetail, string> = {
   addActionEvent: 'addActionEvent',
   changeItemEvent: 'changeItemEvent',
   saveItemBodyEvent: 'saveItemBodyEvent',
+  deployStartEvent: 'deployStartEvent',
+  deployEndEvent: 'deployEndEvent',
 }
 
 export { CustomEventDetail, MdxCompilerOptions, MdxOptions, SearchResult }

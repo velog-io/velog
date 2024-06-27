@@ -43,12 +43,24 @@ export type BookIdInput = {
   book_id: Scalars['ID']['input']
 }
 
+export type BookUrlSlugInput = {
+  url_slug: Scalars['String']['input']
+}
+
+export type BuildResult = {
+  result: Scalars['Boolean']['output']
+}
+
 export type CreatePageInput = {
   book_url_slug: Scalars['String']['input']
   index: Scalars['Int']['input']
   parent_url_slug: Scalars['String']['input']
   title: Scalars['String']['input']
   type: PageType
+}
+
+export type DeployResult = {
+  published_url?: Maybe<Scalars['String']['output']>
 }
 
 export type GetPageInput = {
@@ -61,15 +73,15 @@ export type GetPagesInput = {
 }
 
 export type Mutation = {
-  build?: Maybe<Scalars['Void']['output']>
+  build: BuildResult
   create?: Maybe<Page>
-  deploy?: Maybe<Scalars['Void']['output']>
+  deploy: DeployResult
   reorder?: Maybe<Scalars['Void']['output']>
   update?: Maybe<Page>
 }
 
 export type MutationBuildArgs = {
-  input: BookIdInput
+  input: BookUrlSlugInput
 }
 
 export type MutationCreateArgs = {
@@ -77,7 +89,7 @@ export type MutationCreateArgs = {
 }
 
 export type MutationDeployArgs = {
-  input: BookIdInput
+  input: BookUrlSlugInput
 }
 
 export type MutationReorderArgs = {
@@ -144,15 +156,15 @@ export type Subscription = {
 }
 
 export type SubscriptionBookBuildCompletedArgs = {
-  input: BookIdInput
+  input: BookUrlSlugInput
 }
 
 export type SubscriptionBookBuildInstalledArgs = {
-  input: BookIdInput
+  input: BookUrlSlugInput
 }
 
 export type SubscriptionBookDeployCompletedArgs = {
-  input: BookIdInput
+  input: BookUrlSlugInput
 }
 
 export type UpdatePageInput = {
@@ -257,9 +269,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Book: ResolverTypeWrapper<BookModel>
   BookIDInput: BookIdInput
+  BookUrlSlugInput: BookUrlSlugInput
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>
+  BuildResult: ResolverTypeWrapper<BuildResult>
   CreatePageInput: CreatePageInput
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
+  DeployResult: ResolverTypeWrapper<DeployResult>
   GetPageInput: GetPageInput
   GetPagesInput: GetPagesInput
   ID: ResolverTypeWrapper<Scalars['ID']['output']>
@@ -283,9 +298,12 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Book: BookModel
   BookIDInput: BookIdInput
+  BookUrlSlugInput: BookUrlSlugInput
   Boolean: Scalars['Boolean']['output']
+  BuildResult: BuildResult
   CreatePageInput: CreatePageInput
   Date: Scalars['Date']['output']
+  DeployResult: DeployResult
   GetPageInput: GetPageInput
   GetPagesInput: GetPagesInput
   ID: Scalars['ID']['output']
@@ -325,8 +343,24 @@ export type BookResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
+export type BuildResultResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['BuildResult'] = ResolversParentTypes['BuildResult'],
+> = {
+  result?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date'
+}
+
+export type DeployResultResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends ResolversParentTypes['DeployResult'] = ResolversParentTypes['DeployResult'],
+> = {
+  published_url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
 export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
@@ -338,7 +372,7 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
   build?: Resolver<
-    Maybe<ResolversTypes['Void']>,
+    ResolversTypes['BuildResult'],
     ParentType,
     ContextType,
     RequireFields<MutationBuildArgs, 'input'>
@@ -350,7 +384,7 @@ export type MutationResolvers<
     RequireFields<MutationCreateArgs, 'input'>
   >
   deploy?: Resolver<
-    Maybe<ResolversTypes['Void']>,
+    ResolversTypes['DeployResult'],
     ParentType,
     ContextType,
     RequireFields<MutationDeployArgs, 'input'>
@@ -474,7 +508,9 @@ export type WriterResolvers<
 
 export type Resolvers<ContextType = GraphQLContext> = {
   Book?: BookResolvers<ContextType>
+  BuildResult?: BuildResultResolvers<ContextType>
   Date?: GraphQLScalarType
+  DeployResult?: DeployResultResolvers<ContextType>
   JSON?: GraphQLScalarType
   Mutation?: MutationResolvers<ContextType>
   Page?: PageResolvers<ContextType>

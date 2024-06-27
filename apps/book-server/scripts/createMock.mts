@@ -49,9 +49,6 @@ class Seeder {
         title: title,
         thumbnail: faker.image.dataUri(),
         description: faker.lorem.paragraph(2),
-        is_temp: false,
-        is_private: false,
-        is_published: true,
         url_slug,
         pages: {
           createMany: {

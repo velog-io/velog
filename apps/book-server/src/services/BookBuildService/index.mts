@@ -1,25 +1,26 @@
-import path from 'path'
+import path from 'node:path'
 import fs from 'fs-extra'
-import { exec as execCb } from 'child_process'
-import { promisify } from 'util'
+import { exec as execCb } from 'node:child_process'
+import { promisify } from 'node:util'
 import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { injectable, singleton } from 'tsyringe'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
-import { PageService } from '../PageService/index.mjs'
 import { themeConfigTemplate } from '@templates/themeConfigTemplate.mjs'
 import { urlAlphabet, random, customRandom } from 'nanoid'
 import { MqService } from '@lib/mq/MqService.mjs'
 import { nextConfigTempate } from '@templates/nextConfigTemplate.mjs'
-import { WriterService } from '../WriterService/index.mjs'
 import { ENV } from '@env'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
-import { Page } from '@packages/database/velog-book-mongo'
+import type { Page } from '@packages/database/velog-book-mongo'
+import { BookService } from '@services/BookService/index.mjs'
+import { WriterService } from '@services/WriterService/index.mjs'
+import { BuildResult } from '@graphql/generated.js'
 
 const exec = promisify(execCb)
 
 interface Service {
-  build(bookId: string, signedWriterId?: string): Promise<void>
+  build(bookId: string, signedWriterId?: string): Promise<BuildResult>
 }
 
 @injectable()
@@ -28,10 +29,10 @@ export class BookBuildService implements Service {
   constructor(
     private readonly mongo: MongoService,
     private readonly mq: MqService,
-    private readonly pageService: PageService,
+    private readonly bookService: BookService,
     private readonly writerService: WriterService,
   ) {}
-  public async build(bookId: string, signedWriterId?: string): Promise<void> {
+  public async build(url_slug: string, signedWriterId?: string): Promise<BuildResult> {
     // TODO: ADD authentication
     if (!signedWriterId) {
       throw new UnauthorizedError('Not logged in')
@@ -43,9 +44,7 @@ export class BookBuildService implements Service {
       throw new NotFoundError('Not found writer')
     }
 
-    const book = await this.mongo.book.findUnique({
-      where: { id: bookId },
-    })
+    const book = await this.bookService.findByUrlSlug(url_slug)
 
     if (!book) {
       throw new NotFoundError('Book not found')
@@ -56,7 +55,7 @@ export class BookBuildService implements Service {
     }
 
     // create folder
-    const dest = path.resolve(process.cwd(), 'books', bookId)
+    const dest = path.resolve(process.cwd(), 'books', book.id)
 
     // TODO: ADD handle cache from s3
 
@@ -76,7 +75,7 @@ export class BookBuildService implements Service {
     const stdout = await this.installDependencies('npm install', dest)
     if (stdout) {
       this.mq.publish({
-        topicParameter: bookId,
+        topicParameter: book.id,
         payload: {
           bookBuildInstalled: {
             message: stdout,
@@ -88,7 +87,7 @@ export class BookBuildService implements Service {
     // json to files
     const bookData = await this.mongo.book.findUnique({
       where: {
-        id: bookId,
+        id: book.id,
       },
       include: {
         pages: {
@@ -129,11 +128,15 @@ export class BookBuildService implements Service {
     const buildStdout = await this.buildTsToJs(dest)
     if (buildStdout) {
       this.mq.publish({
-        topicParameter: bookId,
+        topicParameter: book.id,
         payload: {
           bookBuildCompleted: { message: buildStdout },
         },
       })
+    }
+
+    return {
+      result: true,
     }
   }
   private async installDependencies(command: string, dest: string): Promise<string> {

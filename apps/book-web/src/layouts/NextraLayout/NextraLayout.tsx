@@ -7,7 +7,9 @@ import { themeConfig } from './context'
 import { useEffect, useState } from 'react'
 import { BookMetadata, generateBookMetadata, Pages } from '@/lib/generateBookMetadata'
 import {
+  useBuildMutation,
   useCreatePageMutation,
+  useDeployMutation,
   useGetPageQuery,
   useGetPagesQuery,
   useReorderPageMutation,
@@ -31,6 +33,8 @@ function NextraLayout({ children, mdxText }: Props) {
     useReorderPageMutation()
   const { mutateAsync: updatePageAsyncMutate, isPending: isUpdatePagePending } =
     useUpdatePageMutation()
+  const { mutateAsync: buildAsyncMutate, isPending: isBuildPending } = useBuildMutation()
+  const { mutateAsync: deployAsyncMutate, isPending: isDeployPending } = useDeployMutation()
 
   const {
     data: getPagesData,
@@ -141,8 +145,29 @@ function NextraLayout({ children, mdxText }: Props) {
     }
   }, [pageUrlSlug])
 
+  useEffect(() => {
+    const deployStart = async () => {
+      const { build } = await buildAsyncMutate({ input: { url_slug: bookUrlSlug } })
+      if (!build.result) {
+        //TODO: show error
+        return
+      }
+      const { deploy } = await deployAsyncMutate({ input: { url_slug: bookUrlSlug } })
+
+      const event = new CustomEvent(nextraCustomEventName.deployEndEvent, {
+        detail: { publishedUrl: deploy.published_url },
+      })
+      window.dispatchEvent(event)
+    }
+
+    window.addEventListener(nextraCustomEventName.deployStartEvent, deployStart)
+    return () => {
+      window.removeEventListener(nextraCustomEventName.deployStartEvent, deployStart)
+    }
+  }, [])
+
   if (isGetPagesLoading || !bookMetadata) return <div>loading...</div>
-  console.log('mdx', mdx)
+
   return (
     <NextraDocLayout
       editorValue={mdx}

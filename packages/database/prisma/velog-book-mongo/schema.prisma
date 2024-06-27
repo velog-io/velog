@@ -26,16 +26,18 @@ model Writer {
 }
 
 model Book {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  title        String    @db.String
-  thumbnail    String    @db.String
-  fk_writer_id String    @db.ObjectId
-  is_published Boolean   @default(false)
-  is_private   Boolean   @default(true)
-  is_temp      Boolean   @default(true)
-  description  String    @db.String
-  released_at  DateTime? @db.Timestamp
-  url_slug     String    @unique // example $@{username}/${escapeUrl(title).toLowerCase()}
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  title         String    @db.String
+  thumbnail     String    @db.String
+  fk_writer_id  String    @db.ObjectId
+  is_published  Boolean   @default(false)
+  is_private    Boolean   @default(true)
+  is_temp       Boolean   @default(true)
+  is_deleted    Boolean   @default(false)
+  description   String    @db.String
+  released_at   DateTime? @db.Timestamp
+  url_slug      String    @unique // example $@{username}/${escapeUrl(title).toLowerCase()}
+  published_url String    @default("") @db.String
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now())

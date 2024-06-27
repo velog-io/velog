@@ -7,6 +7,7 @@ import type { ReactElement, ReactNode } from 'react'
 import { useConfig, useMenu } from '../contexts'
 import { renderComponent } from '../utils'
 import { Anchor } from './anchor'
+import DeployButton from './deployButton'
 
 export type NavBarProps = {
   flatDirectories: Item[]
@@ -78,12 +79,12 @@ export function Header({ flatDirectories, items }: NavBarProps): ReactElement {
       <div
         className={cn(
           'nextra-nav-container-blur',
-          'nx-pointer-events-none nx-z-[-1] nx-h-full nx-w-full nx-bg-white dark:nx-bg-dark',
+          'nx-z-[-1] nx-h-full nx-w-full nx-bg-white dark:nx-bg-dark',
           'nx-shadow-[0_2px_4px_rgba(0,0,0,.02),0_1px_0_rgba(0,0,0,.06)] dark:nx-shadow-[0_-1px_0_rgba(255,255,255,.1)_inset]',
           'contrast-more:nx-shadow-[0_0_0_1px_#000] contrast-more:dark:nx-shadow-[0_0_0_1px_#fff]',
         )}
       >
-        <nav className="nx-mx-auto nx-flex nx-h-[var(--nextra-navbar-height)] nx-max-w-[120rem] nx-items-center nx-justify-end nx-gap-2 nx-pl-[max(env(safe-area-inset-left),1.5rem)] nx-pr-[max(env(safe-area-inset-right),1.5rem)]">
+        <nav className="nx-ml-[320px] nx-flex nx-h-[var(--nextra-navbar-height)] nx-max-w-[120rem] nx-items-center nx-justify-end nx-gap-2">
           {config.logoLink ? (
             <Anchor
               href={typeof config.logoLink === 'string' ? config.logoLink : '/'}
@@ -171,6 +172,7 @@ export function Header({ flatDirectories, items }: NavBarProps): ReactElement {
           >
             <MenuIcon className={cn({ open: menu })} />
           </button>
+          <DeployButton />
         </nav>
       </div>
     </div>

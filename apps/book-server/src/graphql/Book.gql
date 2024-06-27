@@ -11,20 +11,32 @@ type Query {
 }
 
 type Mutation {
-  deploy(input: BookIDInput!): Void @auth
-  build(input: BookIDInput!): Void @auth
+  deploy(input: BookUrlSlugInput!): DeployResult! @auth
+  build(input: BookUrlSlugInput!): BuildResult! @auth
 }
 
 type Subscription {
-  bookBuildInstalled(input: BookIDInput!): SubScriptionPayload @auth
-  bookBuildCompleted(input: BookIDInput!): SubScriptionPayload @auth
-  bookDeployCompleted(input: BookIDInput!): SubScriptionPayload @auth
+  bookBuildInstalled(input: BookUrlSlugInput!): SubScriptionPayload @auth
+  bookBuildCompleted(input: BookUrlSlugInput!): SubScriptionPayload @auth
+  bookDeployCompleted(input: BookUrlSlugInput!): SubScriptionPayload @auth
 }
 
 input BookIDInput {
   book_id: ID!
 }
 
+input BookUrlSlugInput {
+  url_slug: String!
+}
+
 type SubScriptionPayload {
   message: String!
+}
+
+type BuildResult {
+  result: Boolean!
+}
+
+type DeployResult {
+  published_url: String
 }
