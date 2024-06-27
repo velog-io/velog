@@ -65,7 +65,7 @@ function NextraLayout({ children, mdxText }: Props) {
   useEffect(() => {
     if (isGetPageLoading) return
     if (!getPageData?.page) return
-    if (!getPageData.page?.body) return
+    if (typeof getPageData.page?.body !== 'string') return
     setMdx(getPageData.page.body)
   }, [getPageData, isGetPageLoading])
 
@@ -141,7 +141,8 @@ function NextraLayout({ children, mdxText }: Props) {
     }
   }, [pageUrlSlug])
 
-  if (isGetPagesLoading || !bookMetadata || !mdxText) return <div>loading...</div>
+  if (isGetPagesLoading || !bookMetadata) return <div>loading...</div>
+  console.log('mdx', mdx)
   return (
     <NextraDocLayout
       editorValue={mdx}

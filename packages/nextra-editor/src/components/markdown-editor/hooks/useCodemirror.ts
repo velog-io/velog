@@ -139,7 +139,7 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
   }, [container, config, extenstions])
 
   useEffect(() => {
-    if (!value) return
+    if (typeof value !== 'string') return
     const currentValue = view ? view.state.doc.toString() : ''
     if (view && value !== currentValue) {
       view.dispatch({
