@@ -16,6 +16,7 @@ import type { Page } from '@packages/database/velog-book-mongo'
 import { BookService } from '@services/BookService/index.mjs'
 import { WriterService } from '@services/WriterService/index.mjs'
 import { BuildResult } from '@graphql/generated.js'
+import { PageService } from '@services/PageService/index.mjs'
 
 const exec = promisify(execCb)
 
@@ -31,6 +32,7 @@ export class BookBuildService implements Service {
     private readonly mq: MqService,
     private readonly bookService: BookService,
     private readonly writerService: WriterService,
+    private readonly pageService: PageService,
   ) {}
   public async build(url_slug: string, signedWriterId?: string): Promise<BuildResult> {
     // TODO: ADD authentication
@@ -85,31 +87,12 @@ export class BookBuildService implements Service {
     }
 
     // json to files
-    const bookData = await this.mongo.book.findUnique({
-      where: {
-        id: book.id,
-      },
-      include: {
-        pages: {
-          include: {
-            childrens: {
-              include: {
-                childrens: {
-                  include: {
-                    childrens: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    })
+    const pages = await this.pageService.getPages(book.url_slug, writer.id)
 
     // create meta.json
     const pagePathOfBook = `${dest}/pages`
     await this.writeMetaJson({
-      pages: bookData?.pages || [],
+      pages: pages || [],
       baseDest: pagePathOfBook,
       isRecursive: false,
     })
@@ -170,7 +153,7 @@ export class BookBuildService implements Service {
         return acc
       }
 
-      if (page.type === 'page') {
+      if (page.type === 'page' || page.type === 'folder') {
         const key = page.key
         acc[key] = page.title
         return acc
@@ -196,12 +179,12 @@ export class BookBuildService implements Service {
       const mdxTarget = path.resolve(baseDest, `${filename}.mdx`)
       fs.writeFileSync(mdxTarget, page.body)
 
-      if (page.type !== 'separator' && page.childrens?.length > 0) {
+      if (page.type !== 'separator' && (page as any)?.childrens?.length > 0) {
         const folderPath = page.key
         const targetPath = `${baseDest}/${folderPath}`
         fs.mkdirSync(targetPath)
         return this.writeMetaJson({
-          pages: page.childrens || [],
+          pages: (page as any)?.childrens || [],
           baseDest: targetPath,
           isRecursive: true,
         })
@@ -211,7 +194,7 @@ export class BookBuildService implements Service {
     await Promise.all(promises)
     return pages
   }
-  private insertKey = (book: PageData[]) => {
+  private insertKey = (book: Page[]) => {
     return book.map((page) => ({
       key: `${page.title}_${customRandom(urlAlphabet, 10, random)().toLocaleLowerCase()}`.replace(
         /[^a-zA-Z0-9-_]/g,

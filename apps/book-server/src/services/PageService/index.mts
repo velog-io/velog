@@ -16,7 +16,7 @@ import { injectable, singleton } from 'tsyringe'
 
 interface Service {
   updatePageAndChildrenUrlSlug(args: UpdatePageAndChildrenUrlSlugArgs): Promise<void>
-  getPages(bookUrlSlug: string, signedWriterId?: string): Promise<Page[]>
+  getPages(bookUrlSlug: string, signedWriterId?: string): Promise<PageWithChildren[]>
   getPage(input: GetPageInput, signedWriterId?: string): Promise<Page | null>
   create(input: CreatePageInput, signedWriterId?: string): Promise<Page>
   update(input: UpdatePageInput, signedWriterId?: string): Promise<Page>
@@ -92,7 +92,7 @@ export class PageService implements Service {
     }
   }
 
-  public async getPages(bookUrlSlug: string, signedWriterId?: string): Promise<Page[]> {
+  public async getPages(bookUrlSlug: string, signedWriterId?: string): Promise<PageWithChildren[]> {
     if (!signedWriterId) {
       throw new UnauthorizedError('Not authorized')
     }
@@ -374,12 +374,22 @@ export class PageService implements Service {
   }
 }
 
-export type PageData = {
-  childrens: Page[]
-} & Page
-
 type UpdatePageAndChildrenUrlSlugArgs = {
   pageId: string
   signedWriterId?: string
   urlPrefix?: string
 }
+
+export type PageWithChildren = Prisma.PageGetPayload<{
+  include: {
+    childrens: {
+      include: {
+        childrens: {
+          include: {
+            childrens: true
+          }
+        }
+      }
+    }
+  }
+}>
