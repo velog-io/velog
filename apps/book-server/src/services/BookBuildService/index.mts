@@ -17,6 +17,7 @@ import { BookService } from '@services/BookService/index.mjs'
 import { WriterService } from '@services/WriterService/index.mjs'
 import { BuildResult } from '@graphql/generated.js'
 import { PageService } from '@services/PageService/index.mjs'
+import { UtilsService } from '@lib/utils/UtilsService.mjs'
 
 const exec = promisify(execCb)
 
@@ -28,7 +29,7 @@ interface Service {
 @singleton()
 export class BookBuildService implements Service {
   constructor(
-    private readonly mongo: MongoService,
+    private readonly utils: UtilsService,
     private readonly mq: MqService,
     private readonly bookService: BookService,
     private readonly writerService: WriterService,
@@ -61,39 +62,41 @@ export class BookBuildService implements Service {
 
     // TODO: ADD handle cache from s3
 
-    const exists = fs.existsSync(dest)
-    if (exists) {
-      fs.rmSync(dest, { recursive: true, force: true })
-      throw new ConfilctError('Build process already in progress for this book')
-    }
+    const pagesDir = `${dest}/pages`
+    const baseExists = fs.existsSync(dest)
+    if (!baseExists) {
+      // Create folder
+      fs.mkdirSync(dest)
+      // COPY base file to target folder
+      const src = path.resolve(process.cwd(), 'books/base')
+      await fs.copy(src, dest, { dereference: true })
 
-    // Create folder
-    fs.mkdirSync(dest)
-
-    // COPY base file to target folder
-    const src = path.resolve(process.cwd(), 'books/base')
-    await fs.copy(src, dest, { dereference: true })
-
-    const stdout = await this.installDependencies('npm install', dest)
-    if (stdout) {
-      this.mq.publish({
-        topicParameter: book.id,
-        payload: {
-          bookBuildInstalled: {
-            message: stdout,
+      const stdout = await this.installDependencies('npm install', dest)
+      if (stdout) {
+        this.mq.publish({
+          topicParameter: book.id,
+          payload: {
+            bookBuildInstalled: {
+              message: stdout,
+            },
           },
-        },
-      })
+        })
+      }
+    } else {
+      fs.rmSync(pagesDir, { recursive: true, force: true })
+      await this.utils.sleep(100)
+      fs.mkdirSync(`${pagesDir}/.gitkeep`, { recursive: true })
+      await this.utils.sleep(100)
     }
 
     // json to files
     const pages = await this.pageService.getPages(book.url_slug, writer.id)
 
     // create meta.json
-    const pagePathOfBook = `${dest}/pages`
+
     await this.writeMetaJson({
       pages: pages || [],
-      baseDest: pagePathOfBook,
+      baseDest: pagesDir,
       isRecursive: false,
     })
 
@@ -107,7 +110,6 @@ export class BookBuildService implements Service {
     )
     fs.writeFileSync(`${dest}/theme.config.tsx`, themeConfigTemplate({ title: book.title }))
 
-    await exec('pnpm prettier -w .', { cwd: dest })
     const buildStdout = await this.buildTsToJs(dest)
     if (buildStdout) {
       this.mq.publish({
@@ -194,10 +196,10 @@ export class BookBuildService implements Service {
     await Promise.all(promises)
     return pages
   }
-  private insertKey = (book: Page[]) => {
-    return book.map((page) => ({
+  private insertKey = (pages: Page[]) => {
+    return pages.map((page) => ({
       key: `${page.title}_${customRandom(urlAlphabet, 10, random)().toLocaleLowerCase()}`.replace(
-        /[^a-zA-Z0-9-_]/g,
+        /[^a-zA-Z0-9-]/g,
         '_',
       ),
       ...page,

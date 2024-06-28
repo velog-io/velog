@@ -4,6 +4,7 @@ import nanoidDictionary from 'nanoid-dictionary'
 interface Service {
   escapeForUrl(text: string): string
   randomString(): string
+  sleep(ms: number): Promise<any>
 }
 
 export class UtilsService implements Service {
@@ -21,5 +22,8 @@ export class UtilsService implements Service {
   public randomString(size = 10) {
     const generateCode = customAlphabet(nanoidDictionary.alphanumeric, size)
     return generateCode()
+  }
+  public sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 }

@@ -23,8 +23,8 @@ export const nextConfigTempate = ({ bucketUrl, username, urlSlug }: Props) => {
     images: {
       unoptimized: true,
     },
-    assetPrefix: process.env.NODE_ENV === 'production' ? '${bucketUrl}/@${username}/${urlSlug}' : undefined,
-    basePath: '/@${username}/${urlSlug}',
+    assetPrefix: process.env.NODE_ENV === 'production' ? '${bucketUrl}${urlSlug}' : undefined,
+    basePath: '${urlSlug}',
     trailingSlash: false
   }
   
