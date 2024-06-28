@@ -38,6 +38,7 @@ model Book {
   released_at   DateTime? @db.Timestamp
   url_slug      String    @unique // example $@{username}/${escapeUrl(title).toLowerCase()}
   published_url String    @default("") @db.String
+  deploy_code   String?   @default("") @db.String
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now())

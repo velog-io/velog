@@ -29,6 +29,7 @@ interface Service {
 @singleton()
 export class BookBuildService implements Service {
   constructor(
+    private readonly mongo: MongoService,
     private readonly utils: UtilsService,
     private readonly mq: MqService,
     private readonly bookService: BookService,
@@ -56,6 +57,17 @@ export class BookBuildService implements Service {
     if (book.fk_writer_id !== writer.id) {
       throw new ConfilctError('Not owner of book')
     }
+
+    // create deploy code
+    const deployCode = this.utils.randomString(10).toLocaleLowerCase()
+    await this.mongo.book.update({
+      where: {
+        id: book.id,
+      },
+      data: {
+        deploy_code: deployCode,
+      },
+    })
 
     // create folder
     const dest = path.resolve(process.cwd(), 'books', book.id)
@@ -93,7 +105,6 @@ export class BookBuildService implements Service {
     const pages = await this.pageService.getPages(book.url_slug, writer.id)
 
     // create meta.json
-
     await this.writeMetaJson({
       pages: pages || [],
       baseDest: pagesDir,
@@ -104,7 +115,7 @@ export class BookBuildService implements Service {
       `${dest}/next.config.mjs`,
       nextConfigTempate({
         bucketUrl: ENV.bookBucketUrl,
-        username: writer.username,
+        deployCode: deployCode,
         urlSlug: book.url_slug,
       }),
     )
@@ -198,16 +209,13 @@ export class BookBuildService implements Service {
   }
   private insertKey = (pages: Page[]) => {
     return pages.map((page) => ({
-      key: `${page.title}_${customRandom(urlAlphabet, 10, random)().toLocaleLowerCase()}`.replace(
-        /[^a-zA-Z0-9-]/g,
-        '_',
-      ),
+      key: `${this.utils.escapeForUrl(page.title)}-${page.code}`.toLocaleLowerCase(),
       ...page,
     }))
   }
 }
 
-type MetaJsonSerpator = { id: string; type: 'separator'; title: string }
+type MetaJsonSerpator = { id?: string; type: 'separator' | 'page'; title?: string }
 type MetaJsonValue = string | MetaJsonSerpator
 type MetaJson = Record<string, MetaJsonValue>
 

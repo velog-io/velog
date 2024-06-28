@@ -11,6 +11,7 @@ import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
 import { DeployResult } from '@graphql/generated.js'
 import { UtilsService } from '@lib/utils/UtilsService.mjs'
+import { MongoService } from '@lib/mongo/MongoService.mjs'
 
 interface Service {
   deploy: (bookId: string, signedWriterId?: string) => Promise<DeployResult>
@@ -19,6 +20,7 @@ interface Service {
 @singleton()
 export class BookDeployService implements Service {
   constructor(
+    private readonly mongo: MongoService,
     private readonly awsS3: AwsS3Service,
     private readonly utils: UtilsService,
     private readonly writerService: WriterService,
@@ -65,21 +67,6 @@ export class BookDeployService implements Service {
     // upload to S3
     const baseUrl = `${book.url_slug}`.replace('/', '')
 
-    let existsDeployedBook = null
-    try {
-      existsDeployedBook = await this.awsS3.getObject({
-        bucketName: ENV.bookBucketName,
-        key: `${baseUrl}/index.html`,
-      })
-    } catch (_) {}
-
-    if (existsDeployedBook && existsDeployedBook['$metadata'].httpStatusCode === 200) {
-      await this.awsS3.deleteFolder({
-        bucketName: ENV.bookBucketName,
-        key: `${baseUrl}/`,
-      })
-    }
-
     const promises = targetFiles.map(async (filePath) => {
       const body = fs.readFileSync(filePath)
       let relativePath = filePath.replace(output, '')
@@ -87,7 +74,7 @@ export class BookDeployService implements Service {
       if (ext === '.html' && !relativePath.includes('index.html')) {
         relativePath = relativePath.replace('.html', '')
       }
-      const key = `${baseUrl}${relativePath}`
+      const key = `${baseUrl}/${book.deploy_code}${relativePath}`
       const contentType = mime.getType(filePath)
       await this.awsS3.uploadFile({
         bucketName: ENV.bookBucketName,
@@ -100,9 +87,16 @@ export class BookDeployService implements Service {
 
     try {
       await Promise.all(promises)
-      const published_url = `https://books.velog.io/${baseUrl}/index.html`
+      const published_url = `https://books.velog.io/${baseUrl}/${book.deploy_code}`
 
-      console.log(`Deployed URL: , ${published_url}`)
+      await this.mongo.book.update({
+        where: {
+          id: book.id,
+        },
+        data: {
+          published_url,
+        },
+      })
 
       return {
         published_url,

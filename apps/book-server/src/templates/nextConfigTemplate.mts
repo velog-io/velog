@@ -1,10 +1,10 @@
 type Props = {
   bucketUrl: string
-  username: string
+  deployCode: string
   urlSlug: string
 }
 
-export const nextConfigTempate = ({ bucketUrl, username, urlSlug }: Props) => {
+export const nextConfigTempate = ({ bucketUrl, deployCode, urlSlug }: Props) => {
   return `
   import nextra from 'nextra'
 
@@ -23,8 +23,8 @@ export const nextConfigTempate = ({ bucketUrl, username, urlSlug }: Props) => {
     images: {
       unoptimized: true,
     },
-    assetPrefix: process.env.NODE_ENV === 'production' ? '${bucketUrl}${urlSlug}' : undefined,
-    basePath: '${urlSlug}',
+    assetPrefix: process.env.NODE_ENV === 'production' ? 'https://books.velog.io${urlSlug}/${deployCode}' : undefined,
+    basePath: '${urlSlug}/${deployCode}',
     trailingSlash: false
   }
   
