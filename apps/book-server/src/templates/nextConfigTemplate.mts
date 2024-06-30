@@ -1,10 +1,9 @@
 type Props = {
-  bucketUrl: string
   deployCode: string
   urlSlug: string
 }
 
-export const nextConfigTempate = ({ bucketUrl, deployCode, urlSlug }: Props) => {
+export const nextConfigTempate = ({ deployCode, urlSlug }: Props) => {
   return `
   import nextra from 'nextra'
 

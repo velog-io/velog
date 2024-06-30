@@ -37,7 +37,6 @@ export class BookBuildService implements Service {
     private readonly pageService: PageService,
   ) {}
   public async build(url_slug: string, signedWriterId?: string): Promise<BuildResult> {
-    // TODO: ADD authentication
     if (!signedWriterId) {
       throw new UnauthorizedError('Not logged in')
     }
@@ -73,7 +72,6 @@ export class BookBuildService implements Service {
     const dest = path.resolve(process.cwd(), 'books', book.id)
 
     // TODO: ADD handle cache from s3
-
     const pagesDir = `${dest}/pages`
     const baseExists = fs.existsSync(dest)
     if (!baseExists) {
@@ -114,7 +112,6 @@ export class BookBuildService implements Service {
     fs.writeFileSync(
       `${dest}/next.config.mjs`,
       nextConfigTempate({
-        bucketUrl: ENV.bookBucketUrl,
         deployCode: deployCode,
         urlSlug: book.url_slug,
       }),
