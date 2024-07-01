@@ -40,12 +40,14 @@ export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Pro
   const [stat, setStat] = useState<Statistics | null>(null)
 
   useEffect(() => {
+    setValue(editorValue)
+  }, [editorValue])
+
+  useEffect(() => {
     if (isError) {
       setIsError(false)
     }
-  }, [value])
 
-  useEffect(() => {
     async function compileSource() {
       const result = await mdxCompiler(value, {
         onigHostUrl: process.env.NEXT_PUBLIC_CLIENT_HOST,
@@ -61,7 +63,7 @@ export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Pro
     }
 
     compileSource()
-  }, [value, isError])
+  }, [value])
 
   const context: MarkdownEditorContext = {
     value,

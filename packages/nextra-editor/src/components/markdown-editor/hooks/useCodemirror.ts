@@ -9,6 +9,7 @@ import { hyperLink } from '@uiw/codemirror-extensions-hyper-link'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
 import { handlePaste } from '../events/paste'
+import { useUpload } from '@/hooks/use-upload'
 
 type Config = {
   autoFocus?: boolean
@@ -20,10 +21,6 @@ type Config = {
   maxWidth?: string | null
 }
 
-// EditorView.domEventHandlers({
-//   paste: handlePaste,
-// })
-
 const External = Annotation.define<boolean>()
 
 export const useCodemirror = (container: RefObject<HTMLElement>, config: Config = {}) => {
@@ -31,7 +28,7 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
   const { value, setValue, setStat } = useMarkdownEditor()
   const [state, setState] = useState<EditorState | null>(null)
   const [view, setView] = useState<EditorView | null>(null)
-
+  const { upload } = useUpload()
   const {
     autoFocus = true,
     height = null,
@@ -41,6 +38,13 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
     minWidth = null,
     maxWidth = null,
   } = config
+
+  const eventHandlers = EditorView.domEventHandlers({
+    paste: (event, view) => handlePaste(event, view, upload),
+    drop: (event, view) => {
+      console.log('envet', event.dataTransfer?.files)
+    },
+  })
 
   const defaultThemeOption = EditorView.theme({
     '&': {
@@ -88,6 +92,7 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
     hyperLink,
     updateListener,
     defaultThemeOption,
+    eventHandlers,
     ...defaultExtensions,
   ]
 

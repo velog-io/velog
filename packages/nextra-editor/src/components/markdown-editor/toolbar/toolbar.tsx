@@ -47,7 +47,7 @@ const Toolbar = ({ state, view }: Props) => {
     excute(view)
   }
 
-  const onClickImageButton = async () => {
+  const onImageUpload = async () => {
     if (!view || !state) return
     if (uploading) return
     const file = await onClickInput()
@@ -100,7 +100,7 @@ const Toolbar = ({ state, view }: Props) => {
   const commandMapper = (command: Partial<ToolbarCommand>) => {
     switch (command.name) {
       case 'image':
-        onClickImageButton()
+        onImageUpload()
         return
       default:
         onClick(command.execute!)
