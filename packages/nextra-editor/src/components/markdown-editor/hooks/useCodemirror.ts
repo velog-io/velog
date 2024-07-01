@@ -8,6 +8,7 @@ import { getEditorStat } from '../lib/getEditorStat'
 import { hyperLink } from '@uiw/codemirror-extensions-hyper-link'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
+import { handlePaste } from '../events/paste'
 
 type Config = {
   autoFocus?: boolean
@@ -18,6 +19,10 @@ type Config = {
   minWidth?: string | null
   maxWidth?: string | null
 }
+
+// EditorView.domEventHandlers({
+//   paste: handlePaste,
+// })
 
 const External = Annotation.define<boolean>()
 
@@ -75,13 +80,7 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
     editable: true,
     placeholder: '당신의 이야기를 적어주세요...',
     indentWithTab: true,
-    basicSetup: {
-      // lineNumbers: true,
-      // history: true,
-      // foldGutter: true,
-      // foldKeymap: true,
-      // dropCursor: true,
-    },
+    basicSetup: true,
   })
 
   const extenstions = [
@@ -92,6 +91,7 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
     ...defaultExtensions,
   ]
 
+  // create state
   useEffect(() => {
     if (container?.current && !state) {
       const stateCurrent = EditorState.create({
@@ -102,12 +102,14 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
     }
   }, [container, state, value, extenstions])
 
+  // create view
   useEffect(() => {
     if (container?.current && state && !view) {
       const viewCurrent = new EditorView({
         state,
         parent: container.current,
       })
+
       setView(viewCurrent)
     }
 
@@ -118,6 +120,7 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
     }
   }, [container, state, view])
 
+  // destroy view
   useEffect(
     () => () => {
       if (!view) return

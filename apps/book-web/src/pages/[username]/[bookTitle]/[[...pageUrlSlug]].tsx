@@ -1,8 +1,6 @@
 import NextraLayout from '@/layouts/NextraLayout'
-import { generateBookMetadata } from '@/lib/generateBookMetadata'
 import getPage from '@/prefetch/getPage'
 import getPages from '@/prefetch/getPages'
-import { mdxCompiler } from '@packages/nextra-editor'
 
 import { GetServerSideProps } from 'next'
 

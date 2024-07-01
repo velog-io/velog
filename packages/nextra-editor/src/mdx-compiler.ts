@@ -1,4 +1,4 @@
-import type { MdxCompilerOptions } from './index'
+import type { MdxCompilerOptions, PageOpts } from './index'
 import { serialize } from 'next-mdx-remote/serialize'
 import grayMatter from 'gray-matter'
 // import { createProcessor } from '@mdx-js/mdx'
@@ -15,7 +15,7 @@ import remarkMath from 'remark-math'
 import remarkReadingTime from 'remark-reading-time'
 import remarkParse from 'remark-parse'
 import rehypeStringify from 'rehype-stringify'
-// import rehypeRaw from 'rehype-raw'
+import rehypeRaw from 'rehype-raw'
 import remarkMdx from 'remark-mdx'
 
 import {
@@ -33,6 +33,8 @@ import {
 // import theme from './theme'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import { truthy } from './nextra/utils'
+import { createProcessor } from '@mdx-js/mdx'
+import { ReadingTime, StructurizedData } from './nextra/types'
 
 const clonedRemarkLinkRewrite = remarkLinkRewrite.bind(null as any)
 
@@ -60,7 +62,7 @@ const MARKDOWN_URL_EXTENSION_REGEX = /\.mdx?(?:(?=[#?])|$)/
 
 export const mdxCompiler = async (
   source: string,
-  { defaultShowCopyCode = true, onigHostUrl = '' }: MdxCompilerOptions = {},
+  { defaultShowCopyCode = true, onigHostUrl = '', isError }: MdxCompilerOptions = {},
 ): Promise<MDXRemoteSerializeResult | null> => {
   const { content } = grayMatter(source)
 
@@ -68,18 +70,17 @@ export const mdxCompiler = async (
     throw new Error('onigHostUrl is required')
   }
 
-  try {
-    const onig = await fetch(`${onigHostUrl}/wasm/onig.wasm`)
-    setWasm(onig)
+  const onig = await fetch(`${onigHostUrl}/wasm/onig.wasm`)
+  setWasm(onig)
 
+  try {
     const result = await serialize(content, {
       mdxOptions: {
-        format: 'mdx',
+        format: isError ? 'md' : 'mdx',
         development: false,
         remarkPlugins: (
           [
             remarkParse,
-            remarkMdx,
             // remarkMermaid, // should be before remarkRemoveImports because contains `import { Mermaid } from ...`
             [
               remarkNpm2Yarn, // should be before remarkRemoveImports because contains `import { Tabs as $Tabs, Tab as $Tab } from ...`
@@ -138,7 +139,9 @@ export const mdxCompiler = async (
 
     return result
   } catch (error) {
-    console.log('serialize error', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Failed to compile source', error)
+    }
     return null
   }
 }

@@ -34,30 +34,34 @@ type Props = {
 }
 
 export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Props) => {
+  const [isError, setIsError] = useState<boolean>(false)
   const [value, setValue] = useState<string>(editorValue)
   const [mdxSource, setMdxSource] = useState<MDXRemoteSerializeResult | null>(null)
   const [stat, setStat] = useState<Statistics | null>(null)
 
   useEffect(() => {
-    setValue(editorValue)
-  }, [editorValue])
+    if (isError) {
+      setIsError(false)
+    }
+  }, [value])
 
   useEffect(() => {
     async function compileSource() {
-      try {
-        const result = await mdxCompiler(value, {
-          onigHostUrl: process.env.NEXT_PUBLIC_CLIENT_HOST,
-        })
+      const result = await mdxCompiler(value, {
+        onigHostUrl: process.env.NEXT_PUBLIC_CLIENT_HOST,
+        isError,
+      })
 
-        if (!result) return
-
-        setMdxSource(result)
-      } catch (error) {
-        console.error('failed mdx compile: ', error)
+      if (!result) {
+        setIsError(true)
+        return
       }
+
+      setMdxSource(result)
     }
+
     compileSource()
-  }, [value])
+  }, [value, isError])
 
   const context: MarkdownEditorContext = {
     value,

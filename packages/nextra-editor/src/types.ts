@@ -64,6 +64,7 @@ export type MdxCompilerOptions = Partial<
     useCachedCompiler?: boolean
     isPageImport?: boolean
     onigHostUrl: string
+    isError?: boolean
   }
 >
 

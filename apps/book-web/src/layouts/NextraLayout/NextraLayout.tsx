@@ -1,8 +1,4 @@
-import NextraDocLayout, {
-  CustomEventDetail,
-  mdxCompiler,
-  nextraCustomEventName,
-} from '@packages/nextra-editor'
+import NextraDocLayout, { CustomEventDetail, nextraCustomEventName } from '@packages/nextra-editor'
 import { themeConfig } from './context'
 import { useEffect, useState } from 'react'
 import { BookMetadata, generateBookMetadata, Pages } from '@/lib/generateBookMetadata'
