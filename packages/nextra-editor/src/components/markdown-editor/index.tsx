@@ -1,4 +1,3 @@
-import cn from 'clsx'
 import { useRef } from 'react'
 import { useCodemirror } from './hooks/useCodemirror'
 import Toolbar from './toolbar'

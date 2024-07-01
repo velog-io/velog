@@ -1,4 +1,4 @@
-import type { MdxCompilerOptions, PageOpts } from './index'
+import type { MdxCompilerOptions } from './index'
 import { serialize } from 'next-mdx-remote/serialize'
 import grayMatter from 'gray-matter'
 // import { createProcessor } from '@mdx-js/mdx'
@@ -33,8 +33,6 @@ import {
 // import theme from './theme'
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import { truthy } from './nextra/utils'
-import { createProcessor } from '@mdx-js/mdx'
-import { ReadingTime, StructurizedData } from './nextra/types'
 
 const clonedRemarkLinkRewrite = remarkLinkRewrite.bind(null as any)
 
@@ -72,7 +70,6 @@ export const mdxCompiler = async (
 
   const onig = await fetch(`${onigHostUrl}/wasm/onig.wasm`)
   setWasm(onig)
-
   try {
     const result = await serialize(content, {
       mdxOptions: {

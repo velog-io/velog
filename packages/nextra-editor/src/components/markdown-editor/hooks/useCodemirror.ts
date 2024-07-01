@@ -10,6 +10,7 @@ import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
 import { handlePaste } from '../events/paste'
 import { useUpload } from '@/hooks/use-upload'
+import { handleDrop } from '../events/drop'
 
 type Config = {
   autoFocus?: boolean
@@ -41,9 +42,7 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
 
   const eventHandlers = EditorView.domEventHandlers({
     paste: (event, view) => handlePaste(event, view, upload),
-    drop: (event, view) => {
-      console.log('envet', event.dataTransfer?.files)
-    },
+    drop: (event, view) => handleDrop(event, view, upload),
   })
 
   const defaultThemeOption = EditorView.theme({

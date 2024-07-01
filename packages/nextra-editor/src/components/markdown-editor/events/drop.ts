@@ -2,21 +2,21 @@ import { UploadImageArgs } from '@/api/routes/files'
 import { EditorSelection } from '@codemirror/state'
 import { EditorView } from 'codemirror'
 
-export const handlePaste = (
-  event: ClipboardEvent,
+export const handleDrop = (
+  event: DragEvent,
   view: EditorView,
   upload: (args: UploadImageArgs) => Promise<string>,
 ): void => {
-  const clipboardData = event.clipboardData
-  if (!clipboardData) return
-  const text = clipboardData.getData('Text')
-  if (text) return
-  
+  if (!event.dataTransfer) return
+  if (event.dataTransfer.files.length === 0) return
+
   event.preventDefault()
 
+  const files = event.dataTransfer?.files
+
   const itemArray = []
-  for (let i = 0; i < clipboardData.files.length; i++) {
-    itemArray.push(clipboardData.files[i])
+  for (let i = 0; i < files.length; i++) {
+    itemArray.push(files[i])
   }
 
   const tempUrls: string[] = []

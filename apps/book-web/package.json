@@ -10,7 +10,7 @@
     "lint": "next lint",
     "codegen": "pnpm env:copy -e development && graphql-codegen-esm --config codegen.ts -r dotenv/config",
     "env:copy": "tsx ./scripts/copyEnv.mts",
-    "create-component": "tsx ./scripts/createComponent.ts",
+    "create-component": "tsx ./scripts/createComponent.mts",
     "ssm": "tsx ./scripts/ssm.mts"
   },
   "dependencies": {
