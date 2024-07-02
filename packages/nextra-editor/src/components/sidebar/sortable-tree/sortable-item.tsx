@@ -1,4 +1,4 @@
-import { CSSProperties, forwardRef, MouseEventHandler, useEffect, useState } from 'react'
+import { CSSProperties, forwardRef, useEffect, useState } from 'react'
 import cn from 'clsx'
 import { ActionType, useSidebar } from '@/contexts/sidebar'
 import { useRouter } from 'next/router'
@@ -10,10 +10,12 @@ import type { SortableItemProps } from './types'
 import ControlInput from '../sidebar-controller/control-input'
 import ControlMenu from '../sidebar-controller/control-menu'
 import useOutsideClick from '@/hooks/use-outside-click'
+import { createPortal } from 'react-dom'
 
 export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props, ref) => {
   const { isDragging, overItem, setOverItem } = useDndTree()
   const { focusedItem, setFocusedItem, showMenuId, setShowMenuId } = useSidebar()
+  const [mousePosition, setMousePosition] = useState({ top: 0, left: 0 })
   const [isEdit, setIsEdit] = useState<boolean>(false)
 
   const router = useRouter()
@@ -32,7 +34,6 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     clone,
     isOver,
     transform,
-    disabled,
   } = props
 
   const isControlAction = ['newPage', 'newFolder', 'newSeparator'].includes(item.type)
@@ -53,6 +54,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     if (showMenuId === item.id) {
       setShowMenuId(null)
     } else {
+      setMousePosition({ top: e.clientY, left: e.clientX })
       setShowMenuId(item.id)
     }
   }
@@ -92,7 +94,10 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
       className={cn('nx-relative')}
       onContextMenu={onOpenMenu}
     >
-      <ControlMenu isOpen={showMenuId === item.id} ref={menuRef} />
+      {createPortal(
+        <ControlMenu ref={menuRef} isOpen={showMenuId === item.id} position={mousePosition} />,
+        document.getElementById('menu-root')!,
+      )}
       <div
         ref={ref}
         {...handleProps}

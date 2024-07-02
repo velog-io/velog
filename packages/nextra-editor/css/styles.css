@@ -19,7 +19,7 @@ html {
     'calt' 1,
     'ss01' 1;
   -webkit-tap-highlight-color: transparent;
-  @apply nx-overflow-hidden;
+  /* @apply nx-overflow-hidden; */
 }
 
 body {

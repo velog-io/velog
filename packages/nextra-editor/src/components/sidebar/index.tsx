@@ -115,6 +115,7 @@ export function Sidebar({
 
   return (
     <>
+      <div id="menu-root"></div>
       {includePlaceholder && asPopover ? (
         <div className="nx-h-0 nx-w-80 nx-shrink-0 max-xl:nx-hidden" />
       ) : null}
@@ -132,8 +133,7 @@ export function Sidebar({
           'nextra-sidebar-container nx-flex nx-flex-col',
           'motion-reduce:nx-transform-none md:nx-shrink-0',
           'nx-transform-gpu nx-transition-all nx-ease-in-out',
-          'print:nx-hidden',
-          'nx-relative nx-select-none nx-overflow-hidden',
+          'nx-relative nx-select-none',
           showSidebar ? 'md:nx-w-80' : 'md:nx-w-20',
           asPopover ? 'md:nx-hidden' : 'md:nx-relative md:nx-top-0 md:nx-self-start',
           menu
