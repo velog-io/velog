@@ -57,8 +57,8 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     }
   }
 
-  const onCloseMenu = (e: MouseEvent) => {
-    e.preventDefault()
+  const onCloseMenu = (e?: MouseEvent) => {
+    e?.preventDefault()
     if (item.id !== showMenuId) return
     setShowMenuId(null)
   }
