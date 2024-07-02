@@ -81,7 +81,9 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
   })
 
   const reset = (originSortableItem: SortableItem[]) => {
-    setSortableItems(originSortableItem)
+    if (originSortableItem.length > 0) {
+      setSortableItems(originSortableItem)
+    }
     setActionActive(false)
     setActionComplete(false)
     setActionType('')

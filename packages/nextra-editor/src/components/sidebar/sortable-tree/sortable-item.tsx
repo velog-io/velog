@@ -7,7 +7,7 @@ import { ArrowRightIcon } from '@/nextra/icons'
 import { useDndTree } from '.'
 import { classes, indentStyle } from '../style'
 import type { SortableItemProps } from './types'
-import AddInputs from '../sidebar-controller/add-inputs'
+import ControlInput from '../sidebar-controller/control-input'
 
 export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props, ref) => {
   const { isDragging, overItem, setOverItem } = useDndTree()
@@ -30,10 +30,10 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     transform,
   } = props
 
-  const isAddAction = ['newPage', 'newFolder', 'newSeparator'].includes(item.type)
+  const isControlAction = ['newPage', 'newFolder', 'newSeparator'].includes(item.type)
 
   const active =
-    !isDragging && !isAddAction && !isGhost && [route, `${route}/`].includes(item.route + '/')
+    !isDragging && !isControlAction && !isGhost && [route, `${route}/`].includes(item.route + '/')
   // const isLink = 'withIndexPage' in item && item.withIndexPage
 
   useEffect(() => {
@@ -68,12 +68,13 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
         {...handleProps}
         className={cn(
           'nx-flex nx-w-full nx-items-center nx-justify-between nx-gap-2 nx-text-left',
-          isSeparator && 'cursor-default',
+          isSeparator && 'nx-cursor-default',
           isSeparator ? classes.separator : classes.link,
           active ? classes.active : classes.inactive,
           !isDragging && !active && classes.inactiveBgColor,
           isGhost && classes.ghost,
           clone && classes.clone,
+          isControlAction && '!nx-pr-0',
         )}
         onClick={() => {
           if (isGhost) return
@@ -86,12 +87,12 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
           }
 
           setFocusedItem(item)
-          if (isAddAction) return
+          if (isControlAction) return
           router.push(item.route, item.route, { shallow: true })
         }}
       >
-        {isAddAction ? (
-          <AddInputs type={addActionMap[item.type]} />
+        {isControlAction ? (
+          <ControlInput type={addActionMap[item.type]} />
         ) : (
           <>
             <div className={cn('nx-w-full nx-px-2 nx-py-1.5 [word-break:keep-all]')}>

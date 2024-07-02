@@ -12,7 +12,7 @@ type Props = {
   type: ActionType
 }
 
-function AddInputs({ type }: Props): ReactElement {
+function ControlInput({ type }: Props): ReactElement {
   const sidebar = useSidebar()
   const [title, setTitle] = useState('')
 
@@ -65,20 +65,23 @@ function AddInputs({ type }: Props): ReactElement {
   return (
     <div
       ref={ref}
-      className={cn('nx-flex nx-w-full nx-items-center nx-px-2 nx-py-1.5 [word-break:break-word]')}
+      className={cn(
+        'nx-flex nx-w-full nx-items-center nx-px-2 nx-py-1.5 [word-break:break-word]',
+        'nx-transition-colors',
+      )}
       onClick={onClick}
     >
-      <span
-        className={cn(
-          'nx-text-gray-600 nx-transition-colors hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
-        )}
-      >
+      <span>
         {type === 'folder' && <EmptyFolderIcon />}
         {type === 'page' && <EmptyFileIcon />}
         {type === 'separator' && <SeparatorIcon />}
       </span>
       <input
-        className={cn('focus-visible:box-shadow-none nx-ml-1 nx-w-full nx-bg-red-100 nx-px-1')}
+        className={cn(
+          'focus-visible:box-shadow-none nx-ml-1 nx-w-full nx-px-1 nx-py-0.5',
+          'nx-bg-gray-100 nx-text-gray-600 ',
+          'dark:nx-bg-primary-100/5 dark:nx-text-gray-400',
+        )}
         value={title}
         onChange={onChange}
         autoFocus={true}
@@ -91,4 +94,4 @@ function AddInputs({ type }: Props): ReactElement {
   )
 }
 
-export default AddInputs
+export default ControlInput

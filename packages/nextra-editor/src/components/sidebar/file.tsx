@@ -6,7 +6,7 @@ import { PageItem, SortableItem } from '@/nextra/normalize-pages'
 
 import { useRouter } from 'next/router'
 import { useMenu } from '@/contexts'
-import AddInputs from './sidebar-controller/add-inputs'
+import AddInputs from './sidebar-controller/control-input'
 import { classes } from './style'
 import { MenuItemProps } from './menu'
 import { useDndTree } from './sortable-tree'
@@ -21,8 +21,7 @@ export function File({ item, ...props }: FileProps): ReactElement {
   const route = useFSRoute()
   const router = useRouter()
 
-  const { setDraggableNodeRef, setDroppableNodeRef, attributes, isDragTarget, listeners } =
-    props
+  const { setDraggableNodeRef, setDroppableNodeRef, attributes, isDragTarget, listeners } = props
 
   // It is possible that the item doesn't have any route - for example an external link.
   const active = !isDragTarget && item.route && [route, route + '/'].includes(item.route + '/')
@@ -40,11 +39,7 @@ export function File({ item, ...props }: FileProps): ReactElement {
   return (
     <>
       <li
-        className={cn(
-          classes.list,
-          { active },
-          isDragTarget && classes.ghost,
-        )}
+        className={cn(classes.list, { active }, isDragTarget && classes.ghost)}
         ref={setDroppableNodeRef}
       >
         <div

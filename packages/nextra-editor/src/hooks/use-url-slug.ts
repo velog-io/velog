@@ -8,7 +8,7 @@ export const useUrlSlug = () => {
   const pageUrlSlug = Array.isArray(query.pageUrlSlug) ? `/${query.pageUrlSlug.join('/')}` : '/'
   const bookUrlSlug = `/${query.username}/${query.bookTitle}`
   const username = `/${query.username}`
-  const fullUrlSlug = pageUrlSlug === '/' ? `${bookUrlSlug}` : `${bookUrlSlug}/${pageUrlSlug}`
+  const fullUrlSlug = pageUrlSlug === '/' ? `${bookUrlSlug}` : `${bookUrlSlug}${pageUrlSlug}`
 
   return { bookUrlSlug, pageUrlSlug, fullUrlSlug, username }
 }

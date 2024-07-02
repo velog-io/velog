@@ -116,6 +116,7 @@ export class BookBuildService implements Service {
         urlSlug: book.url_slug,
       }),
     )
+
     fs.writeFileSync(`${dest}/theme.config.tsx`, themeConfigTemplate({ title: book.title }))
 
     const buildStdout = await this.buildTsToJs(dest)

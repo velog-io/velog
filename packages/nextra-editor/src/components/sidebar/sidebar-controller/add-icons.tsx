@@ -113,6 +113,7 @@ const AddIcons = ({ className, type }: Props) => {
         }
       }
     }
+
     addNewFolderToItem(coppeidPageMap)
   }
 
