@@ -23,7 +23,9 @@ function ControlInput({ type }: Props): ReactElement {
 
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
-    onComplete()
+    if ((e.target as any).tagName !== 'INPUT') {
+      onComplete()
+    }
 
     if (title) {
       dispatchEvent()
@@ -78,6 +80,7 @@ function ControlInput({ type }: Props): ReactElement {
       </span>
       <input
         className={cn(
+          'nextra-add-contents-input',
           'focus-visible:box-shadow-none nx-ml-1 nx-w-full nx-px-1 nx-py-0.5',
           'nx-bg-gray-100 nx-text-gray-600 ',
           'dark:nx-bg-primary-100/5 dark:nx-text-gray-400',

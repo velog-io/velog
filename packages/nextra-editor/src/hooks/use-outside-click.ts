@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react'
 
-export default function useOutsideClick<T extends Element>(callback: () => any) {
+export default function useOutsideClick<T extends Element>(callback: (event?: MouseEvent) => any) {
   const ref = useRef<T>(null)
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as any)) {
-        callback()
+        callback(event)
       }
     }
 

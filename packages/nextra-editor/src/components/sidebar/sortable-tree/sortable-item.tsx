@@ -71,7 +71,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
           isSeparator && 'nx-cursor-default',
           isSeparator ? classes.separator : classes.link,
           active ? classes.active : classes.inactive,
-          !isDragging && !active && classes.inactiveBgColor,
+          !isControlAction && !isDragging && !active && classes.inactiveBgColor,
           isGhost && classes.ghost,
           clone && classes.clone,
           isControlAction && '!nx-pr-0',
