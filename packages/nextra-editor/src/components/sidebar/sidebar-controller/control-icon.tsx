@@ -12,7 +12,7 @@ type Props = {
   type: 'page' | 'folder' | 'separator'
 }
 
-const AddIcons = ({ className, type }: Props) => {
+const ControlIcon = ({ className, type }: Props) => {
   const sidebar = useSidebar()
   const { bookUrlSlug, pageUrlSlug, fullUrlSlug } = useUrlSlug()
 
@@ -126,4 +126,4 @@ const AddIcons = ({ className, type }: Props) => {
   )
 }
 
-export default AddIcons
+export default ControlIcon

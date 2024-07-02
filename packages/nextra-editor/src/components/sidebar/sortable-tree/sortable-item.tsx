@@ -1,4 +1,4 @@
-import { CSSProperties, forwardRef, useEffect } from 'react'
+import { CSSProperties, forwardRef, MouseEventHandler, useEffect, useState } from 'react'
 import cn from 'clsx'
 import { ActionType, useSidebar } from '@/contexts/sidebar'
 import { useRouter } from 'next/router'
@@ -8,10 +8,14 @@ import { useDndTree } from '.'
 import { classes, indentStyle } from '../style'
 import type { SortableItemProps } from './types'
 import ControlInput from '../sidebar-controller/control-input'
+import ControlMenu from '../sidebar-controller/control-menu'
+import useOutsideClick from '@/hooks/use-outside-click'
 
 export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props, ref) => {
   const { isDragging, overItem, setOverItem } = useDndTree()
-  const { focusedItem, setFocusedItem } = useSidebar()
+  const { focusedItem, setFocusedItem, showMenuId, setShowMenuId } = useSidebar()
+  const [isEdit, setIsEdit] = useState<boolean>(false)
+
   const router = useRouter()
   const routeOriginal = useFSRoute()
   const [route] = routeOriginal.split('#')
@@ -28,6 +32,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     clone,
     isOver,
     transform,
+    disabled,
   } = props
 
   const isControlAction = ['newPage', 'newFolder', 'newSeparator'].includes(item.type)
@@ -41,6 +46,22 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     if (!isOver) return
     setOverItem({ ...item, transform })
   }, [isOver, isGhost])
+
+  const onOpenMenu = (e: MouseEvent) => {
+    e.preventDefault()
+    if (item.name === 'index') return
+    if (showMenuId === item.id) {
+      setShowMenuId(null)
+    } else {
+      setShowMenuId(item.id)
+    }
+  }
+
+  const onCloseMenu = (e: MouseEvent) => {
+    e.preventDefault()
+    if (item.id !== showMenuId) return
+    setShowMenuId(null)
+  }
 
   const isSeparator = item.type === 'separator'
 
@@ -61,8 +82,17 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     newSeparator: 'separator',
   }
 
+  const { ref: menuRef } = useOutsideClick<HTMLDivElement>(onCloseMenu)
+
   return (
-    <li {...handleProps} ref={wrapperRef} style={wrapperStyle}>
+    <li
+      {...handleProps}
+      ref={wrapperRef}
+      style={wrapperStyle}
+      className={cn('nx-relative')}
+      onContextMenu={onOpenMenu}
+    >
+      <ControlMenu isOpen={showMenuId === item.id} ref={menuRef} />
       <div
         ref={ref}
         {...handleProps}
@@ -79,6 +109,8 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
         onClick={() => {
           if (isGhost) return
           if (isSeparator) return
+          if (isEdit) return
+          if (isControlAction) return
 
           if (!item.collapsed) {
             onCollapse(item.id)
@@ -87,7 +119,6 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
           }
 
           setFocusedItem(item)
-          if (isControlAction) return
           router.push(item.route, item.route, { shallow: true })
         }}
       >

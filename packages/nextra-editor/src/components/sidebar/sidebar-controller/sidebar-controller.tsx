@@ -1,6 +1,6 @@
 import cn from 'clsx'
 import CollapseAllIcon from './collapse-all-icon'
-import AddIcons from './add-icons'
+import AddIcons from './control-icon'
 
 type Props = {
   showSidebar: boolean

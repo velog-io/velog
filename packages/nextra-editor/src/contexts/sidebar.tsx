@@ -28,6 +28,8 @@ type Sidebar = {
   setFocusedItem: (value: SortableItem | null) => void
   collapsedTree: Set<string>
   setCollapsedTree: (id: string, setter: (value: boolean) => boolean) => void
+  showMenuId: string | null
+  setShowMenuId: (value: string | null) => void
 }
 
 let collapsedTree = new Set<string>()
@@ -60,6 +62,8 @@ const SidebarContext = createContext<Sidebar>({
   setFocusedItem: () => {},
   collapsedTree,
   setCollapsedTree,
+  showMenuId: null,
+  setShowMenuId: () => {},
 })
 
 export function useSidebar() {
@@ -71,6 +75,8 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
   const [isFolding, setFolding] = useState(false)
   const [actionComplete, setActionComplete] = useState(false)
   const [actionActive, setActionActive] = useState(false)
+  const [showMenuId, setShowMenuId] = useState<string | null>(null)
+
   const [focusedItem, setFocusedItem] = useState<null | SortableItem>(null)
   const [actionType, setActionType] = useState<ActionType>('')
   const [actionInfo, setActionInfo] = useState<ActionInfo>({
@@ -94,7 +100,6 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
     if (value) {
       collapsedTree = new Set<string>()
     }
-
     setFolding(value)
   }
 
@@ -116,6 +121,8 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
     setFocusedItem,
     collapsedTree,
     setCollapsedTree,
+    showMenuId,
+    setShowMenuId,
   }
 
   return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>

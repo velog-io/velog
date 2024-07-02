@@ -26,6 +26,7 @@ export type SortableItemWrapperProps = {
   onCollapse: (id: UniqueIdentifier) => void
   handleProps: any
   clone: boolean
+  disabled: boolean
 }
 
 export type SortableItemProps = {

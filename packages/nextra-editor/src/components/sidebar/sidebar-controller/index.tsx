@@ -1,6 +1,6 @@
 import cn from 'clsx'
 
-import AddIcons from './add-icons'
+import ControlIcon from './control-icon'
 import CollapseAllIcon from './collapse-all-icon'
 
 type Props = {
@@ -23,9 +23,9 @@ function SidebarController({ showSidebar }: Props) {
         showSidebar ? 'nx-block' : 'nx-hidden',
       )}
     >
-      <AddIcons className={style} type="page" />
-      <AddIcons className={style} type="folder" />
-      <AddIcons className={style} type="separator" />
+      <ControlIcon className={style} type="page" />
+      <ControlIcon className={style} type="folder" />
+      <ControlIcon className={style} type="separator" />
       <CollapseAllIcon className={style} />
     </div>
   )

@@ -8,6 +8,7 @@ import { UniqueIdentifier } from '@dnd-kit/core'
 import { SortableItem } from './sortable-item'
 import { FlattenedItem } from '@/types'
 import { useDndTree } from '.'
+import { useSidebar } from '@/contexts/sidebar'
 
 type Props = {
   className?: string
@@ -32,9 +33,10 @@ const SortableTreeMenuNotMemoized = function SortableItemWrapper({
   depth,
 }: Props) {
   const { overItem } = useDndTree()
+  const { showMenuId } = useSidebar()
   const [previousItem, setPreviousItem] = useState<FlattenedItem | null>(null)
 
-  const disabled = item.name === 'index'
+  const disabled = item.name === 'index' || showMenuId === item.id
   const {
     attributes,
     listeners,
@@ -96,6 +98,7 @@ const SortableTreeMenuNotMemoized = function SortableItemWrapper({
       ...listeners,
     },
     clone,
+    disabled,
   }
 
   return <SortableItem item={item} {...props} />
