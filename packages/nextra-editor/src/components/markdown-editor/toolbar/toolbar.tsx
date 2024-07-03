@@ -18,7 +18,14 @@ const seperator = {
   name: 'seperator',
 }
 
-const Toolbar = ({ state, view }: Props) => {
+const classes = {
+  button: cn(
+    'nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
+    'contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50',
+  ),
+}
+
+export const Toolbar = ({ state, view }: Props) => {
   const { onClick: onClickInput, file, setFile } = useClickImage()
   const { upload, image: imagePath, loading: uploading, setImage } = useUpload()
   const [selection, setSelection] = useState({ from: 0, to: 0 })
@@ -130,13 +137,4 @@ const Toolbar = ({ state, view }: Props) => {
       })}
     </div>
   )
-}
-
-export default Toolbar
-
-const classes = {
-  button: cn(
-    'nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:nx-text-neutral-500 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
-    'contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50',
-  ),
 }

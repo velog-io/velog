@@ -8,7 +8,7 @@ type Props = {
   className: string
 }
 
-const CollapseAllIcon = ({ className }: Props) => {
+export const CollapseAllIcon = ({ className }: Props) => {
   const { setIsFolding } = useSidebar()
   const { bookUrlSlug } = useUrlSlug()
   const router = useRouter()
@@ -32,5 +32,3 @@ const CollapseAllIcon = ({ className }: Props) => {
     </span>
   )
 }
-
-export default CollapseAllIcon

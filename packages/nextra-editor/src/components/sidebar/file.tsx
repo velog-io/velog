@@ -6,7 +6,7 @@ import { PageItem, SortableItem } from '@/nextra/normalize-pages'
 
 import { useRouter } from 'next/router'
 import { useMenu } from '@/contexts'
-import AddInputs from './sidebar-controller/control-input'
+import { ControlInput } from './sidebar-controller/control-input'
 import { classes } from './style'
 import { MenuItemProps } from './menu'
 import { useDndTree } from './sortable-tree'
@@ -33,7 +33,7 @@ export function File({ item, ...props }: FileProps): ReactElement {
       newFolder: 'folder',
       newSeparator: 'separator',
     }
-    return <AddInputs type={map[item.type]} />
+    return <ControlInput type={map[item.type]} />
   }
 
   return (

@@ -14,7 +14,7 @@ import { LocaleSwitch } from '../locale-switch'
 
 import { useSidebar } from '@/contexts/sidebar'
 import { Menu } from './menu'
-import SortableTree from './sortable-tree'
+import { SortableTree } from './sortable-tree'
 import { initilizeDirectories } from './sortable-tree/utils'
 
 interface SideBarProps {

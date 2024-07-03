@@ -1,12 +1,12 @@
 import cn from 'clsx'
-import CollapseAllIcon from './collapse-all-icon'
-import AddIcons from './control-icon'
+import { ControlIcon } from './control-icon'
+import { CollapseAllIcon } from '@/nextra/icons/collapse-all'
 
 type Props = {
   showSidebar: boolean
 }
 
-function SidebarController({ showSidebar }: Props) {
+export function SidebarController({ showSidebar }: Props) {
   const style = cn(
     'nextra-sidebar-controller',
     'nx-cursor-pointer nx-p-1',
@@ -22,12 +22,10 @@ function SidebarController({ showSidebar }: Props) {
         showSidebar ? 'nx-block' : 'nx-hidden',
       )}
     >
-      <AddIcons className={style} type="page" />
-      <AddIcons className={style} type="folder" />
-      <AddIcons className={style} type="separator" />
+      <ControlIcon className={style} type="page" />
+      <ControlIcon className={style} type="folder" />
+      <ControlIcon className={style} type="separator" />
       <CollapseAllIcon className={style} />
     </div>
   )
 }
-
-export default SidebarController

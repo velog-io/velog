@@ -18,7 +18,7 @@ const style = {
   svg: cn('nx-mr-2'),
 }
 
-const ControlMenu = forwardRef<HTMLDivElement, Props>(
+export const ControlMenu = forwardRef<HTMLDivElement, Props>(
   ({ isOpen, position, onEdit, onDelete }, ref) => {
     return (
       <div
@@ -45,5 +45,3 @@ const ControlMenu = forwardRef<HTMLDivElement, Props>(
     )
   },
 )
-
-export default ControlMenu

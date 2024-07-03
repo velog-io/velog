@@ -15,7 +15,7 @@ import { useFSRoute } from './nextra/hooks/use-fs-route'
 import { NextraThemeLayoutProps, PageOpts } from './nextra/types'
 import { useMounted } from './nextra/hooks'
 import { SidebarProvider } from './contexts/sidebar'
-import MarkdownEditor from './components/markdown-editor'
+import { MarkdownEditor } from './components/markdown-editor'
 import { MarkdownEditorProvider, useMarkdownEditor } from './contexts/markdown-editor'
 import { CustomEventDetail, MdxCompilerOptions, MdxOptions, SearchResult } from './types'
 interface BodyProps {

@@ -13,7 +13,7 @@ type Props = {
   type: ActionType
 }
 
-function ControlInput({ type }: Props): ReactElement {
+export function ControlInput({ type }: Props): ReactElement {
   const sidebar = useSidebar()
   const [title, setTitle] = useState<string | null>(null)
   const [error, setError] = useState('')
@@ -138,5 +138,3 @@ function ControlInput({ type }: Props): ReactElement {
     </div>
   )
 }
-
-export default ControlInput

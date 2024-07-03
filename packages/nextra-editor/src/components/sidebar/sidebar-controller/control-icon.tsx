@@ -12,7 +12,7 @@ type Props = {
   type: 'page' | 'folder' | 'separator'
 }
 
-const ControlIcon = ({ className, type }: Props) => {
+export const ControlIcon = ({ className, type }: Props) => {
   const sidebar = useSidebar()
   const { bookUrlSlug, pageUrlSlug, fullUrlSlug } = useUrlSlug()
 
@@ -117,5 +117,3 @@ const ControlIcon = ({ className, type }: Props) => {
     </span>
   )
 }
-
-export default ControlIcon

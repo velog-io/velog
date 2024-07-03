@@ -7,10 +7,11 @@ import { ArrowRightIcon } from '@/nextra/icons'
 import { useDndTree } from '.'
 import { classes, indentStyle } from '../style'
 import type { SortableItemProps } from './types'
-import ControlInput from '../sidebar-controller/control-input'
-import ControlMenu from '../sidebar-controller/control-menu'
+
 import useOutsideClick from '@/hooks/use-outside-click'
 import { createPortal } from 'react-dom'
+import { ControlMenu } from '../sidebar-controller'
+import { ControlInput } from '../sidebar-controller/control-input'
 
 export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props, ref) => {
   const { isDragging, overItem, setOverItem } = useDndTree()
@@ -78,7 +79,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
   }
 
   const onEdit = () => {
-    onCloseMenu() 
+    onCloseMenu()
     setIsEdit(!isEdit)
   }
 
