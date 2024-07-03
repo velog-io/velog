@@ -51,7 +51,7 @@ export function Sidebar({
 
   const anchors = useMemo(() => headings.filter((v) => v.depth === 2), [headings])
   const sidebarRef = useRef<HTMLDivElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const sortableTreeRef = useRef<HTMLDivElement>(null)
   const mounted = useMounted()
 
   useEffect(() => {
@@ -63,15 +63,14 @@ export function Sidebar({
   }, [menu])
 
   useEffect(() => {
-    const activeElement = sidebarRef.current?.querySelector('li.active')
-
+    const activeElement = sortableTreeRef.current?.querySelector('li.active')
     if (activeElement && (window.innerWidth > 767 || menu)) {
       const scroll = () => {
         scrollIntoView(activeElement, {
           block: 'center',
           inline: 'center',
           scrollMode: 'always',
-          boundary: containerRef.current,
+          boundary: sidebarRef.current,
         })
       }
       if (menu) {
@@ -93,6 +92,7 @@ export function Sidebar({
     setFocusedItem(null)
     setIsFolding(false)
     setMenu(false)
+    sortableTreeRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
   }, [isFolding])
 
   const hasI18n = config.i18n.length > 0
@@ -136,7 +136,7 @@ export function Sidebar({
             ? 'max-md:[transform:translate3d(0,0,0)]'
             : 'max-md:[transform:translate3d(0,-100%,0)]',
         )}
-        ref={containerRef}
+        ref={sidebarRef}
       >
         <div className="nx-px-4 nx-pt-4 md:nx-hidden">
           {renderComponent(config.search.component, {
@@ -147,7 +147,7 @@ export function Sidebar({
           items={sortableItems}
           onItemsChanged={setSortableItems}
           showSidebar={showSidebar}
-          sidebarRef={sidebarRef}
+          sidebarRef={sortableTreeRef}
         />
         {mounted && window.innerWidth < 768 && (
           <Menu

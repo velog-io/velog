@@ -34,6 +34,8 @@ function ControlInput({ type }: Props): ReactElement {
       setError(`${typeName} 이름에 사용해서는 안 되는 기호가 포함되어 있습니다.`)
     } else if (title === '') {
       setError(`${typeName} 이름을 입력해야 합니다.`)
+    } else if (title.startsWith(' ')) {
+      setError(`${typeName} 이름은 공백으로 시작할 수 없습니다.`)
     } else {
       setError('')
     }
@@ -53,7 +55,12 @@ function ControlInput({ type }: Props): ReactElement {
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === ' ') {
+    if (e.key === ' ' && title === null) {
+      e.preventDefault()
+      return
+    }
+
+    if (e.key === ' ' && title !== null) {
       e.preventDefault()
       setTitle((title) => `${title} `)
       return

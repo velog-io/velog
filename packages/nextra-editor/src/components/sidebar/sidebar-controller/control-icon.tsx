@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useSidebar } from '@/contexts/sidebar'
 import { NewFolderIcon } from '@/nextra/icons/new-folder'
 import { useUrlSlug } from '@/hooks/use-url-slug'
