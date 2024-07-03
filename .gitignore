@@ -24,3 +24,7 @@
 out
 # Turborepo
 .turbo
+
+
+# Claude
+.gpt-runner

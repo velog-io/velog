@@ -26,7 +26,7 @@ const ControlMenu = forwardRef<HTMLDivElement, Props>(({ isOpen, position }, ref
         'nx-bg-white nx-text-gray-600',
         'dark:nx-bg-neutral-800 dark:nx-text-gray-300',
       )}
-      style={{ top: position.top, left: 280, display: isOpen ? 'block' : 'none' }}
+      style={{ top: position.top, left: 260, display: isOpen ? 'block' : 'none' }}
     >
       <ul>
         <li className={style.list}>

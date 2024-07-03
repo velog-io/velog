@@ -13,11 +13,9 @@ export type ActionType = 'folder' | 'page' | 'separator' | ''
 type Sidebar = {
   sortableItems: SortableItem[]
   setSortableItems: (item: SortableItem[]) => void
-  reset: (pageMap: SortableItem[]) => void
+  reset: (pageMap?: SortableItem[]) => void
   actionActive: boolean
   setActionActive: (value: boolean) => void
-  actionComplete: boolean
-  setActionComplete: (value: boolean) => void
   actionInfo: ActionInfo
   setActionInfo: (args: ActionInfo) => void
   isFolding: boolean
@@ -50,8 +48,6 @@ const SidebarContext = createContext<Sidebar>({
   reset: () => {},
   actionActive: false,
   setActionActive: () => {},
-  actionComplete: false,
-  setActionComplete: () => {},
   actionInfo: { parentUrlSlug: '/', index: 0, bookUrlSlug: '/', type: 'page' },
   setActionInfo: () => {},
   isFolding: false,
@@ -73,7 +69,6 @@ export function useSidebar() {
 export const SidebarProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const [sortableItems, setSortableItems] = useState<SortableItem[]>([])
   const [isFolding, setFolding] = useState(false)
-  const [actionComplete, setActionComplete] = useState(false)
   const [actionActive, setActionActive] = useState(false)
   const [showMenuId, setShowMenuId] = useState<string | null>(null)
 
@@ -86,12 +81,9 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
     type: 'page',
   })
 
-  const reset = (originSortableItem: SortableItem[]) => {
-    if (originSortableItem.length > 0) {
-      setSortableItems(originSortableItem)
-    }
+  const reset = () => {
+    setSortableItems(sortableItems)
     setActionActive(false)
-    setActionComplete(false)
     setActionType('')
     setFocusedItem(null)
   }
@@ -107,8 +99,6 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
     sortableItems,
     setSortableItems,
     reset,
-    actionComplete,
-    setActionComplete,
     actionActive,
     setActionActive,
     actionInfo,

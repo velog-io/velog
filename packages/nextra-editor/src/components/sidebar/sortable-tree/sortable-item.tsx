@@ -42,6 +42,8 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     !isDragging && !isControlAction && !isGhost && [route, `${route}/`].includes(item.route + '/')
   // const isLink = 'withIndexPage' in item && item.withIndexPage
 
+  const isShowMenu = showMenuId === item.id
+
   useEffect(() => {
     if (isGhost) return
     if (!isOver) return
@@ -109,6 +111,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
           !isControlAction && !isDragging && !active && classes.inactiveBgColor,
           isGhost && classes.ghost,
           clone && classes.clone,
+          isShowMenu && classes.showMenuActive,
           isControlAction && '!nx-pr-0',
         )}
         onClick={() => {

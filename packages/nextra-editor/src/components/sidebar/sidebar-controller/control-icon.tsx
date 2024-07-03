@@ -19,25 +19,18 @@ const ControlIcon = ({ className, type }: Props) => {
   const timeoutRef = useRef<NodeJS.Timeout>()
   const [originSortableItems, setOriginSortableItems] = useState<SortableItem[]>([])
 
-  useEffect(() => {
-    if (sidebar.actionType !== type) return
-    if (!sidebar.actionComplete) return
-    sidebar.reset(originSortableItems)
-    return () => {
-      if (!timeoutRef.current) return
-      clearTimeout(timeoutRef.current)
-    }
-  }, [sidebar.actionComplete])
-
   const onClick = () => {
     if (sidebar.actionActive) {
-      sidebar.reset(originSortableItems)
+      sidebar.reset()
+      sidebar.setSortableItems(originSortableItems)
       return
     }
 
     sidebar.setActionType(type)
     const timeout = setTimeout(() => sidebar.setActionActive(true), 100)
     timeoutRef.current = timeout
+
+    setOriginSortableItems(sidebar.sortableItems)
 
     // remove code
     let targetRoute = pageUrlSlug
@@ -48,7 +41,6 @@ const ControlIcon = ({ className, type }: Props) => {
       targetRoute = targetRoute.split('/').slice(0, -1).join('/') || '/'
     }
 
-    setOriginSortableItems(sidebar.sortableItems)
     const coppeidPageMap = structuredClone(sidebar.sortableItems)
 
     function addNewFolderToItem(sortableItems: SortableItem[]) {

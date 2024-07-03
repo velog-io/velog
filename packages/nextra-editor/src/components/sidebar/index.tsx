@@ -99,14 +99,10 @@ export function Sidebar({
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton
   const [route] = routeOriginal.split('#')
 
-  const initSotableItems: SortableItem[] = useMemo(
-    () => initilizeDirectories(docsDirectories, route, collapsedTree),
-    [docsDirectories],
-  )
-
   useEffect(() => {
+    const initSotableItems = initilizeDirectories(docsDirectories, route, collapsedTree)
     setSortableItems(initSotableItems)
-  }, [initSotableItems])
+  }, [docsDirectories])
 
   const initFullDirectories: SortableItem[] = useMemo(
     () => initilizeDirectories(fullDirectories, route, collapsedTree),
