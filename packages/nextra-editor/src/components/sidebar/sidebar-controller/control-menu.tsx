@@ -21,7 +21,7 @@ const ControlMenu = forwardRef<HTMLDivElement, Props>(({ isOpen, position }, ref
     <div
       ref={ref}
       className={cn(
-        'nx-absolute nx-z-20 nx-w-[150px] nx-rounded-md nx-py-2 nx-shadow-lg',
+        'nx-absolute nx-z-20 nx-rounded-md nx-py-2 nx-shadow-lg',
         'nx-text-sm',
         'nx-bg-white nx-text-gray-600',
         'dark:nx-bg-neutral-800 dark:nx-text-gray-300',

@@ -126,15 +126,11 @@ function ControlInput({ type }: Props): ReactElement {
           className={cn(
             'nx-absolute nx-left-0 nx-top-[35px] nx-z-10 nx-w-full',
             'nx-bg-white nx-text-[12px] nx-font-medium nx-text-gray-500',
+            'dark:nx-bg-dark',
             'nx-px-2',
           )}
         >
-          <div
-            className={cn(
-              'nx-border dark:nx-border-gray-100/20 dark:nx-bg-dark/50 ',
-              'nx-px-2 nx-py-1',
-            )}
-          >
+          <div className={cn('nx-border dark:nx-border-gray-100/20', 'nx-px-2 nx-py-1')}>
             {error}
           </div>
         </div>

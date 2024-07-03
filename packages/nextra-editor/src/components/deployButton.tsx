@@ -34,10 +34,10 @@ function DeployButton({}) {
       className={cn(
         'nx-select-none',
         'nx-rounded nx-bg-white nx-px-2 nx-py-1.5 nx-font-mono nx-text-[16px] nx-font-medium nx-text-gray-500',
-        'nx-border dark:nx-border-gray-100/20 dark:nx-bg-dark/50',
+        'nx-border dark:nx-border-gray-100 dark:nx-bg-dark/50 dark:nx-text-gray-100',
         'contrast-more:nx-border-current contrast-more:nx-text-current contrast-more:dark:nx-border-current',
         'hover:nx-shadow-md:hover nx-shadow-gray-100 hover:nx-border-gray-300 hover:nx-bg-slate-50 hover:nx-shadow-gray-100',
-        'dark:hover:nx-border-neutral-700 dark:hover:nx-bg-neutral-900 dark:hover:nx-shadow-none',
+        'dark:hover:nx-border-gray-50 dark:hover:nx-bg-neutral-900 dark:hover:nx-shadow-none',
         'nx-items-center nx-transition-opacity',
         'nx-z-20 nx-flex',
         isDeploying
