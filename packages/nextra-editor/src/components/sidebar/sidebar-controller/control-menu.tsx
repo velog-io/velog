@@ -6,6 +6,8 @@ import { forwardRef } from 'react'
 type Props = {
   isOpen: boolean
   position: { top: number; left: number }
+  onEdit: () => void
+  onDelete: () => void
 }
 
 const style = {
@@ -16,30 +18,32 @@ const style = {
   svg: cn('nx-mr-2'),
 }
 
-const ControlMenu = forwardRef<HTMLDivElement, Props>(({ isOpen, position }, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        'nx-absolute nx-z-20 nx-rounded-md nx-py-2 nx-shadow-lg',
-        'nx-text-sm',
-        'nx-bg-white nx-text-gray-600',
-        'dark:nx-bg-neutral-800 dark:nx-text-gray-300',
-      )}
-      style={{ top: position.top, left: 260, display: isOpen ? 'block' : 'none' }}
-    >
-      <ul>
-        <li className={style.list}>
-          <EditIcon className={style.svg} />
-          <span>이름 바꾸기</span>
-        </li>
-        <li className={style.list}>
-          <TrashIcon className={style.svg} />
-          <span>삭제</span>
-        </li>
-      </ul>
-    </div>
-  )
-})
+const ControlMenu = forwardRef<HTMLDivElement, Props>(
+  ({ isOpen, position, onEdit, onDelete }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'nx-absolute nx-z-20 nx-rounded-md nx-py-2 nx-shadow-lg',
+          'nx-text-sm',
+          'nx-bg-white nx-text-gray-600',
+          'dark:nx-bg-neutral-800 dark:nx-text-gray-300',
+        )}
+        style={{ top: position.top, left: 260, display: isOpen ? 'block' : 'none' }}
+      >
+        <ul>
+          <li className={style.list} onClick={onEdit}>
+            <EditIcon className={style.svg} />
+            <span>이름 바꾸기</span>
+          </li>
+          <li className={style.list} onClick={onDelete}>
+            <TrashIcon className={style.svg} />
+            <span>삭제</span>
+          </li>
+        </ul>
+      </div>
+    )
+  },
+)
 
 export default ControlMenu

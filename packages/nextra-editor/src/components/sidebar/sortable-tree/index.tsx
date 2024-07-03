@@ -72,7 +72,7 @@ export const useDndTree = () => useContext(DndTreeContext)
 
 function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props) {
   const { bookUrlSlug } = useUrlSlug()
-  const { isFolding, setCollapsedTree } = useSidebar()
+  const { isFolding, setCollapsedTree, actionActive } = useSidebar()
   const [isDragging, setDragging] = useState(false)
   const [ghostItem, setGhostItem] = useState<SortableItem | null>(null)
   const [overItem, setOverItem] = useState<SortableItem | null>(null)
@@ -206,7 +206,7 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     resetState()
 
-    if (projected && over) {
+    if (projected && over && !actionActive) {
       const { depth, parentId } = projected
       const clonedItems: FlattenedItem[] = JSON.parse(JSON.stringify(flattenTree(items)))
       const overIndex = clonedItems.findIndex(({ id }) => id === over.id)
@@ -227,8 +227,8 @@ function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props)
       const newItems = buildTree(sortedItems)
       const newParentItem = findItemDeep(newItems, parentId)
 
-      const event = new CustomEvent<CustomEventDetail['changeItemEvent']>(
-        nextraCustomEventName.changeItemEvent,
+      const event = new CustomEvent<CustomEventDetail['changeItemOrderEvent']>(
+        nextraCustomEventName.changeItemOrderEvent,
         {
           detail: {
             bookUrlSlug,

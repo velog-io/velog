@@ -18,14 +18,16 @@ export type SearchResult = {
 }
 
 export interface CustomEventDetail {
-  addActionEvent: AddActionEvent
-  changeItemEvent: ChangeItemEvent
+  createOrUpdateItemEvent: CreateOrUpdateItemEvent
+  changeItemOrderEvent: ChangeItemOrderEvent
+  deleteItemEvent: DeleteItemEvent
   saveItemBodyEvent: SaveItemBodyEvent
   deployStartEvent: DeployStartEvent
   deployEndEvent: DeployEndEvent
 }
 
-type AddActionEvent = {
+type CreateOrUpdateItemEvent = {
+  pageId?: string
   title: string
   parentUrlSlug: string
   index: number
@@ -33,7 +35,7 @@ type AddActionEvent = {
   type: 'page' | 'folder' | 'separator'
 }
 
-type ChangeItemEvent = {
+type ChangeItemOrderEvent = {
   bookUrlSlug: string
   targetUrlSlug: string
   parentUrlSlug: string | null
@@ -45,8 +47,13 @@ type SaveItemBodyEvent = {
 }
 
 type DeployStartEvent = {}
+
 type DeployEndEvent = {
   publishedUrl: string | null
+}
+
+type DeleteItemEvent = {
+  pageId: string
 }
 
 // for compiler

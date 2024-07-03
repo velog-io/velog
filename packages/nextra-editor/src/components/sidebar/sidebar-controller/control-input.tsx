@@ -76,8 +76,8 @@ function ControlInput({ type }: Props): ReactElement {
       if (type === '') return
       if (!title) return
       if (error) return
-      const event = new CustomEvent<CustomEventDetail['addActionEvent']>(
-        nextraCustomEventName.addActionEvent,
+      const event = new CustomEvent<CustomEventDetail['createOrUpdateItemEvent']>(
+        nextraCustomEventName.createOrUpdateItemEvent,
         {
           detail: { title, parentUrlSlug, index, bookUrlSlug, type },
         },

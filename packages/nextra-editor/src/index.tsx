@@ -237,11 +237,12 @@ export {
 } from './components'
 
 export const nextraCustomEventName: Record<keyof CustomEventDetail, string> = {
-  addActionEvent: 'addActionEvent',
-  changeItemEvent: 'changeItemEvent',
+  createOrUpdateItemEvent: 'createOrUpdateItemEvent',
+  changeItemOrderEvent: 'changeItemOrderEvent',
   saveItemBodyEvent: 'saveItemBodyEvent',
   deployStartEvent: 'deployStartEvent',
   deployEndEvent: 'deployEndEvent',
+  deleteItemEvent: 'deleteItemEvent',
 }
 
 export { CustomEventDetail, MdxCompilerOptions, MdxOptions, SearchResult }

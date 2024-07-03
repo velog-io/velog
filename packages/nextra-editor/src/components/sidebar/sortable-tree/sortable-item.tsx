@@ -37,12 +37,18 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
   } = props
 
   const isControlAction = ['newPage', 'newFolder', 'newSeparator'].includes(item.type)
-
   const active =
     !isDragging && !isControlAction && !isGhost && [route, `${route}/`].includes(item.route + '/')
   // const isLink = 'withIndexPage' in item && item.withIndexPage
 
   const isShowMenu = showMenuId === item.id
+  const isSeparator = item.type === 'separator'
+
+  const actionMap: Record<string, ActionType> = {
+    newPage: 'page',
+    newFolder: 'folder',
+    newSeparator: 'separator',
+  }
 
   useEffect(() => {
     if (isGhost) return
@@ -67,7 +73,14 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     setShowMenuId(null)
   }
 
-  const isSeparator = item.type === 'separator'
+  const onDelete = () => {
+    console.log('delete')
+  }
+
+  const onEdit = () => {
+    onCloseMenu() 
+    setIsEdit(!isEdit)
+  }
 
   const wrapperStyle: CSSProperties = {
     listStyle: 'none',
@@ -78,12 +91,6 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
 
   if (cancelTransform.every(Boolean)) {
     Object.assign(wrapperStyle, style)
-  }
-
-  const addActionMap: Record<string, ActionType> = {
-    newPage: 'page',
-    newFolder: 'folder',
-    newSeparator: 'separator',
   }
 
   const { ref: menuRef } = useOutsideClick<HTMLDivElement>(onCloseMenu)
@@ -97,7 +104,13 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
       onContextMenu={onOpenMenu}
     >
       {createPortal(
-        <ControlMenu ref={menuRef} isOpen={showMenuId === item.id} position={mousePosition} />,
+        <ControlMenu
+          ref={menuRef}
+          isOpen={showMenuId === item.id}
+          position={mousePosition}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />,
         document.getElementById('menu-root')!,
       )}
       <div
@@ -107,7 +120,8 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
           'nx-flex nx-w-full nx-items-center nx-justify-between nx-gap-2 nx-text-left',
           isSeparator && 'nx-cursor-default',
           isSeparator ? classes.separator : classes.link,
-          active ? classes.active : classes.inactive,
+          !isControlAction && active && classes.active,
+          !isControlAction && !active && classes.inactive,
           !isControlAction && !isDragging && !active && classes.inactiveBgColor,
           isGhost && classes.ghost,
           clone && classes.clone,
@@ -130,8 +144,8 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
           router.push(item.route, item.route, { shallow: true })
         }}
       >
-        {isControlAction ? (
-          <ControlInput type={addActionMap[item.type]} />
+        {isControlAction || isEdit ? (
+          <ControlInput type={actionMap[item.type]} />
         ) : (
           <>
             <div className={cn('nx-w-full nx-px-2 nx-py-1.5 [word-break:keep-all]')}>

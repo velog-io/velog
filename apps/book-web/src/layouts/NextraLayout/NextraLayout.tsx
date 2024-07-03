@@ -70,7 +70,9 @@ function NextraLayout({ children, mdxText }: Props) {
   }, [getPageData, isGetPageLoading])
 
   useEffect(() => {
-    const addAction = async (e: CustomEventInit<CustomEventDetail['addActionEvent']>) => {
+    const createOrUpdate = async (
+      e: CustomEventInit<CustomEventDetail['createOrUpdateItemEvent']>,
+    ) => {
       if (!e.detail) return
       if (isReorderPagePending) return
       const { title, parentUrlSlug, index, bookUrlSlug, type } = e.detail
@@ -85,14 +87,14 @@ function NextraLayout({ children, mdxText }: Props) {
       })
       getPagesRefetch()
     }
-    window.addEventListener(nextraCustomEventName.addActionEvent, addAction)
+    window.addEventListener(nextraCustomEventName.createOrUpdateItemEvent, createOrUpdate)
     return () => {
-      window.removeEventListener(nextraCustomEventName.addActionEvent, addAction)
+      window.removeEventListener(nextraCustomEventName.createOrUpdateItemEvent, createOrUpdate)
     }
   })
 
   useEffect(() => {
-    const changeItem = async (e: CustomEventInit<CustomEventDetail['changeItemEvent']>) => {
+    const changeItem = async (e: CustomEventInit<CustomEventDetail['changeItemOrderEvent']>) => {
       if (!e.detail) return
       if (isCreatePagePending) return
 
@@ -109,9 +111,9 @@ function NextraLayout({ children, mdxText }: Props) {
       getPagesRefetch()
     }
 
-    window.addEventListener(nextraCustomEventName.changeItemEvent, changeItem)
+    window.addEventListener(nextraCustomEventName.changeItemOrderEvent, changeItem)
     return () => {
-      window.removeEventListener(nextraCustomEventName.changeItemEvent, changeItem)
+      window.removeEventListener(nextraCustomEventName.changeItemOrderEvent, changeItem)
     }
   }, [])
 
