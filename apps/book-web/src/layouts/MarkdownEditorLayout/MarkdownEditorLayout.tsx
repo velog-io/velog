@@ -58,10 +58,12 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     setBookMetadata(metadata)
   }, [getPagesData?.pages])
 
+  // 페이지 변경시 item 데이터 불러오기
   useEffect(() => {
     getPageRefetch()
   }, [pageUrlSlug])
 
+  // new Mdx
   useEffect(() => {
     if (isGetPageLoading) return
     if (!getPageData?.page) return
@@ -69,6 +71,7 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     setMdx(getPageData.page.body)
   }, [getPageData, isGetPageLoading])
 
+  // create or update item
   useEffect(() => {
     const createOrUpdate = async (
       e: CustomEventInit<CustomEventDetail['createOrUpdateItemEvent']>,
@@ -93,6 +96,7 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     }
   })
 
+  // change Item order
   useEffect(() => {
     const changeItem = async (e: CustomEventInit<CustomEventDetail['changeItemOrderEvent']>) => {
       if (!e.detail) return
@@ -117,6 +121,7 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     }
   }, [])
 
+  // saveItemBody
   useEffect(() => {
     if (isUpdatePagePending) {
       //TODO: show loading
@@ -143,6 +148,7 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     }
   }, [pageUrlSlug])
 
+  // deploy start and dispatch deploy end event
   useEffect(() => {
     const deployStart = async () => {
       const { build } = await buildAsyncMutate({ input: { url_slug: bookUrlSlug } })
@@ -161,6 +167,20 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     window.addEventListener(nextraCustomEventName.deployStartEvent, deployStart)
     return () => {
       window.removeEventListener(nextraCustomEventName.deployStartEvent, deployStart)
+    }
+  }, [])
+
+  useEffect(() => {
+    const deleteItemStart = async (
+      e: CustomEventInit<CustomEventDetail['deleteItemStartEvent']>,
+    ) => {
+      if (!e.detail) return
+      console.log('isDetail', e.detail)
+    }
+
+    window.addEventListener(nextraCustomEventName.deleteItemStartEvent, deleteItemStart)
+    return () => {
+      window.removeEventListener(nextraCustomEventName.deleteItemStartEvent, deleteItemStart)
     }
   }, [])
 

@@ -9,6 +9,8 @@ interface Modal {
   setMode: (value: ModalMode | null) => void
   onOpen: (type: ModalMode) => void
   onClose: () => void
+  isConfirm: boolean
+  setIsConfirm: (value: boolean) => void
 }
 
 const ModalContext = createContext<Modal>({
@@ -18,6 +20,8 @@ const ModalContext = createContext<Modal>({
   setMode: () => {},
   onOpen: () => {},
   onClose: () => {},
+  isConfirm: false,
+  setIsConfirm: () => {},
 })
 
 export function useModal() {
@@ -27,6 +31,7 @@ export function useModal() {
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [mode, setMode] = useState<ModalMode | null>(null)
+  const [isConfirm, setIsConfirm] = useState<boolean>(false)
 
   const onOpen = (mode: ModalMode) => {
     setIsOpen(true)
@@ -36,6 +41,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const onClose = () => {
     setIsOpen(false)
     setMode(null)
+    setIsConfirm(false)
   }
 
   const value: Modal = {
@@ -45,6 +51,8 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     setMode,
     onOpen,
     onClose,
+    isConfirm,
+    setIsConfirm,
   }
 
   return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>

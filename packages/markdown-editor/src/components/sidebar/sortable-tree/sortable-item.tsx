@@ -13,13 +13,15 @@ import { createPortal } from 'react-dom'
 import { ControlMenu } from '../sidebar-controller'
 import { ControlInput } from '../sidebar-controller/control-input'
 import { useModal } from '@/contexts/modal'
+import { CustomEventDetail } from '@/types'
+import { nextraCustomEventName } from '@/index'
 
 export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props, ref) => {
   const { isDragging, overItem, setOverItem } = useDndTree()
   const { focusedItem, setFocusedItem, showMenuId, setShowMenuId } = useSidebar()
   const [mousePosition, setMousePosition] = useState({ top: 0, left: 0 })
   const [isEdit, setIsEdit] = useState<boolean>(false)
-  const { onOpen } = useModal()
+  const { onOpen, onClose, isConfirm, mode } = useModal()
 
   const router = useRouter()
   const routeOriginal = useFSRoute()
@@ -54,10 +56,19 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
   }
 
   useEffect(() => {
+    // setItem info
     if (isGhost) return
     if (!isOver) return
     setOverItem({ ...item, transform })
   }, [isOver, isGhost])
+
+  useEffect(() => {
+    // deleteItem
+    if (!isConfirm) return
+    if (mode !== 'deleteSortableItem') return
+    onDeleteItem()
+    onClose()
+  }, [isConfirm])
 
   const onOpenMenu = (e: MouseEvent) => {
     e.preventDefault()
@@ -84,6 +95,19 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
   const onEdit = () => {
     onCloseMenu()
     setIsEdit(!isEdit)
+  }
+
+  const onDeleteItem = () => {
+    if (showMenuId !== item.id) return
+    const event = new CustomEvent<CustomEventDetail['deleteItemStartEvent']>(
+      nextraCustomEventName.deleteItemStartEvent,
+      {
+        detail: {
+          urlSlug: item.route,
+        },
+      },
+    )
+    window.dispatchEvent(event)
   }
 
   const wrapperStyle: CSSProperties = {

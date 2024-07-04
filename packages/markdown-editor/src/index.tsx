@@ -16,6 +16,7 @@ export const nextraCustomEventName: Record<keyof CustomEventDetail, string> = {
   saveItemBodyEvent: 'saveItemBodyEvent',
   deployStartEvent: 'deployStartEvent',
   deployEndEvent: 'deployEndEvent',
-  deleteItemEvent: 'deleteItemEvent',
+  deleteItemStartEvent: 'deleteItemStartEvent',
+  deleteItemEndEvent: 'deleteItemEndEvent',
 }
 export { MarkdownEditor } from './layouts'

@@ -20,19 +20,20 @@ export type SearchResult = {
 export interface CustomEventDetail {
   createOrUpdateItemEvent: CreateOrUpdateItemEvent
   changeItemOrderEvent: ChangeItemOrderEvent
-  deleteItemEvent: DeleteItemEvent
+  deleteItemStartEvent: DeleteItemStartEvent
+  deleteItemEndEvent: DeleteItemEndEvent
   saveItemBodyEvent: SaveItemBodyEvent
   deployStartEvent: DeployStartEvent
   deployEndEvent: DeployEndEvent
 }
 
 type CreateOrUpdateItemEvent = {
-  pageId?: string
   title: string
   parentUrlSlug: string
   index: number
   bookUrlSlug: string
   type: 'page' | 'folder' | 'separator'
+  urlSlug?: string
 }
 
 type ChangeItemOrderEvent = {
@@ -52,9 +53,11 @@ type DeployEndEvent = {
   publishedUrl: string | null
 }
 
-type DeleteItemEvent = {
-  pageId: string
+type DeleteItemStartEvent = {
+  urlSlug: string
 }
+
+type DeleteItemEndEvent = {}
 
 // for compiler
 export type MdxOptions = LoaderOptions['mdxOptions'] &
