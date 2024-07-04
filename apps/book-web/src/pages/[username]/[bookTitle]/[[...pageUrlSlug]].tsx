@@ -1,4 +1,4 @@
-import NextraLayout from '@/layouts/NextraLayout'
+import MarkdownEditorLayout from '@/layouts/MarkdownEditorLayout'
 import getPage from '@/prefetch/getPage'
 import getPages from '@/prefetch/getPages'
 
@@ -17,7 +17,7 @@ const Home = ({ mdxText }: Props) => {
     return <div>isFallback Loading...</div>
   }
 
-  return <NextraLayout mdxText={mdxText} />
+  return <MarkdownEditorLayout mdxText={mdxText} />
 }
 
 export default Home

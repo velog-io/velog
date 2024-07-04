@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import type { DocsThemeConfig } from '@packages/nextra-editor'
+import type { DocsThemeConfig } from '@packages/markdown-editor'
 
 const bookUrl = `/@test_carrick/learning-bunjs-is-fun`
 

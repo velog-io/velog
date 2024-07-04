@@ -1,4 +1,4 @@
-import '@packages/nextra-editor/style.css'
+import '@packages/markdown-editor/style.css'
 import '../styles/global.css'
 import { ErrorBoundary } from 'next/dist/client/components/error-boundary'
 

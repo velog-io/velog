@@ -1,7 +1,7 @@
 {
-  "name": "@packages/nextra-editor",
+  "name": "@packages/markdown-editor",
   "version": "1.0.0",
-  "description": "A Nextra theme with codemirrro markdown editor",
+  "description": "A Velog markdown editor with codemirrro markdown editor",
   "repository": "https://github.com/velog-io/velog",
   "author": "Winverse <public.winverse@gmail.com>",
   "license": "MIT",

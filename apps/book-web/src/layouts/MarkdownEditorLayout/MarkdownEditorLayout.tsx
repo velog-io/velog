@@ -1,4 +1,8 @@
-import NextraDocLayout, { CustomEventDetail, nextraCustomEventName } from '@packages/nextra-editor'
+import {
+  VelogMarkdownEditor,
+  CustomEventDetail,
+  nextraCustomEventName,
+} from '@packages/markdown-editor'
 import { themeConfig } from './context'
 import { useEffect, useState } from 'react'
 import { BookMetadata, generateBookMetadata, Pages } from '@/lib/generateBookMetadata'
@@ -18,7 +22,7 @@ type Props = {
   mdxText: string
 }
 
-function NextraLayout({ children, mdxText }: Props) {
+function MarkdownEditorLayout({ children, mdxText }: Props) {
   const { bookUrlSlug, pageUrlSlug } = useUrlSlug()
   const [bookMetadata, setBookMetadata] = useState<BookMetadata | null>(null)
   const [mdx, setMdx] = useState<string>(mdxText)
@@ -167,15 +171,15 @@ function NextraLayout({ children, mdxText }: Props) {
   if (isGetPagesLoading || !bookMetadata) return <div>loading...</div>
 
   return (
-    <NextraDocLayout
+    <VelogMarkdownEditor
       editorValue={mdx}
       pageOpts={bookMetadata!.pageOpts}
       themeConfig={themeConfig}
       pageProps={{}}
     >
       {children}
-    </NextraDocLayout>
+    </VelogMarkdownEditor>
   )
 }
 
-export default NextraLayout
+export default MarkdownEditorLayout

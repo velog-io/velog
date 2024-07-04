@@ -1,4 +1,4 @@
-import type { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/nextra-editor'
+import type { DocsThemeConfig, PageMapItem, PageOpts } from '@packages/markdown-editor'
 import { escapeForUrl } from './utils'
 // import fs from 'node:fs'
 // import path from 'node:path'
