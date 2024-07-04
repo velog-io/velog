@@ -1,18 +1,18 @@
 import cn from 'clsx'
 import { ControlIcon } from './control-icon'
-import { CollapseAllIcon } from '@/nextra/icons/collapse-all'
+import { CollapseAllIcon } from './collapse-all-icon'
 
 type Props = {
   showSidebar: boolean
 }
 
-export function SidebarController({ showSidebar }: Props) {
-  const style = cn(
-    'nextra-sidebar-controller',
-    'nx-cursor-pointer nx-p-1',
-    'nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
-  )
+const style = cn(
+  'nextra-sidebar-control-icon',
+  'nx-cursor-pointer nx-p-1',
+  'nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
+)
 
+export function SidebarController({ showSidebar }: Props) {
   return (
     <div
       className={cn(

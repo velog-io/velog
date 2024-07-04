@@ -1,8 +1,4 @@
-import {
-  VelogMarkdownEditor,
-  CustomEventDetail,
-  nextraCustomEventName,
-} from '@packages/markdown-editor'
+import { MarkdownEditor, CustomEventDetail, nextraCustomEventName } from '@packages/markdown-editor'
 import { themeConfig } from './context'
 import { useEffect, useState } from 'react'
 import { BookMetadata, generateBookMetadata, Pages } from '@/lib/generateBookMetadata'
@@ -171,14 +167,14 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
   if (isGetPagesLoading || !bookMetadata) return <div>loading...</div>
 
   return (
-    <VelogMarkdownEditor
+    <MarkdownEditor
       editorValue={mdx}
       pageOpts={bookMetadata!.pageOpts}
       themeConfig={themeConfig}
       pageProps={{}}
     >
       {children}
-    </VelogMarkdownEditor>
+    </MarkdownEditor>
   )
 }
 

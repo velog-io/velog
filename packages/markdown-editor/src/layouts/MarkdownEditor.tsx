@@ -4,12 +4,14 @@ import { SidebarProvider } from '@/contexts/sidebar'
 import type { NextraThemeLayoutProps } from '@/nextra/types'
 import type { ReactElement } from 'react'
 import { InnerLayout } from './InnerLayout'
+import { ModalProvider } from '@/contexts/modal'
+import { Potals } from '@/components/potals'
 
 type NextraDocLayoutProps = NextraThemeLayoutProps & {
   editorValue: string
 }
 
-export function VelogMarkdownEditor({
+export function MarkdownEditor({
   children,
   editorValue,
   ...context
@@ -17,9 +19,12 @@ export function VelogMarkdownEditor({
   return (
     <ConfigProvider value={context}>
       <MarkdownEditorProvider value={{ editorValue }}>
-        <SidebarProvider>
-          <InnerLayout {...context.pageOpts}>{children}</InnerLayout>
-        </SidebarProvider>
+        <ModalProvider>
+          <SidebarProvider>
+            <Potals />
+            <InnerLayout {...context.pageOpts}>{children}</InnerLayout>
+          </SidebarProvider>
+        </ModalProvider>
       </MarkdownEditorProvider>
     </ConfigProvider>
   )

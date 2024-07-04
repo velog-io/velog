@@ -44,6 +44,8 @@
   --shiki-color-ansi-bright-cyan-dim: #3192aa80;
   --shiki-color-ansi-bright-white: #d1d5da;
   --shiki-color-ansi-bright-white-dim: #d1d5da80;
+
+  --opaque-layer: rgba(249, 249, 249, 0.85);
 }
 
 .dark {
@@ -91,4 +93,6 @@
   --shiki-color-ansi-bright-cyan-dim: #56d4dd80;
   --shiki-color-ansi-bright-white: #fafbfc;
   --shiki-color-ansi-bright-white-dim: #fafbfc80;
+
+  --opaque-layer: rgba(0, 0, 0, 0.85);
 }

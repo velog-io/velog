@@ -10,8 +10,6 @@ export type {
   MdxOptions,
   SearchResult,
 }
-
-export { VelogMarkdownEditor } from './layouts'
 export const nextraCustomEventName: Record<keyof CustomEventDetail, string> = {
   createOrUpdateItemEvent: 'createOrUpdateItemEvent',
   changeItemOrderEvent: 'changeItemOrderEvent',
@@ -20,3 +18,4 @@ export const nextraCustomEventName: Record<keyof CustomEventDetail, string> = {
   deployEndEvent: 'deployEndEvent',
   deleteItemEvent: 'deleteItemEvent',
 }
+export { MarkdownEditor } from './layouts'

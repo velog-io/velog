@@ -1,14 +1,14 @@
-.nx-text-transparent {
+/* .nx-text-transparent {
   color: transparent;
 }
 
-/* .nx-w-[\1\/3] {
+.nx-w-[\1\/3] {
   @apply nx-w-1/3;
 }
 
 .nx-w-[\4\/5] {
   @apply nx-w-4/5;
-} */
+}
 
 .nx-h-scren {
   @apply nx-h-screen;
@@ -20,4 +20,6 @@
 
 .nx-left-0 {
   left: 0;
-}
+} 
+
+*/

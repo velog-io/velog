@@ -11,6 +11,7 @@
 @import './typesetting-article.css';
 @import './editor.css';
 @import './missing-tailwind.css';
+@import './animations.css';
 
 html {
   @apply nx-scroll-pt-[--nextra-navbar-height] nx-text-base nx-antialiased;

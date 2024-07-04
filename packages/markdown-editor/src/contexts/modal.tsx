@@ -1,22 +1,23 @@
-import * as React from 'react'
-import { createContext, ReactNode, useContext, useState } from 'react'
+import { createContext, type ReactNode, useContext, useState } from 'react'
 
-type ModalType = 'deleteItem'
+export type ModalMode = 'deleteSortableItem'
 
 interface Modal {
-  isModalOpen: boolean
-  setIsModalOpen: (value: boolean) => void
-  modalType: ModalType | null
-  setModalType: (value: ModalType | null) => void
-  reset: () => void
+  isOpen: boolean
+  setIsOpen: (value: boolean) => void
+  mode: ModalMode | null
+  setMode: (value: ModalMode | null) => void
+  onOpen: (type: ModalMode) => void
+  onClose: () => void
 }
 
 const ModalContext = createContext<Modal>({
-  isModalOpen: false,
-  setIsModalOpen: () => {},
-  modalType: null,
-  setModalType: () => {},
-  reset: () => {},
+  isOpen: false,
+  setIsOpen: () => {},
+  mode: null,
+  setMode: () => {},
+  onOpen: () => {},
+  onClose: () => {},
 })
 
 export function useModal() {
@@ -24,20 +25,26 @@ export function useModal() {
 }
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-  const [modalType, setModalType] = useState<ModalType | null>(null)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [mode, setMode] = useState<ModalMode | null>(null)
 
-  const reset = () => {
-    setIsModalOpen(false)
-    setModalType(null)
+  const onOpen = (mode: ModalMode) => {
+    setIsOpen(true)
+    setMode(mode)
+  }
+
+  const onClose = () => {
+    setIsOpen(false)
+    setMode(null)
   }
 
   const value: Modal = {
-    isModalOpen,
-    setIsModalOpen,
-    modalType,
-    setModalType,
-    reset,
+    isOpen,
+    setIsOpen,
+    mode,
+    setMode,
+    onOpen,
+    onClose,
   }
 
   return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>

@@ -22,8 +22,8 @@ export const CollapseAllIcon = ({ className }: Props) => {
   }, [])
 
   const onClick = () => {
-    setIsFolding(true)
     router.push(bookUrlSlug)
+    setIsFolding(true)
   }
 
   return (

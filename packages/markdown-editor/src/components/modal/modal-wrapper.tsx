@@ -1,35 +1,56 @@
-import React, { useEffect, useState } from 'react'
-import ModalShadow from './modal-shadow'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import cn from 'clsx'
 
-interface ModalWrapperProps {
-  isOpen: boolean
-  onClose: () => void
+type Props = {
   children: React.ReactNode
+  isVisible: boolean
+  onOverlayClick: VoidFunction
 }
 
-const ModalWrapper: React.FC<ModalWrapperProps> = ({ isOpen, onClose, children }) => {
-  const [isVisible, setIsVisible] = useState(isOpen)
+const style = {
+  backdrop: cn(
+    'nx-fixed nx-inset-0 nx-w-[100vw] nx-h-[100svh] nx-bg-[var(--opaque-layer)] nx-z-10 nx-flex nx-items-center nx-justify-center',
+  ),
+}
 
+export function ModalWrapper({ children, isVisible, onOverlayClick }: Props) {
+  const [isClosed, setIsClosed] = useState(false)
+  const backdropRef = useRef<HTMLDivElement>(null)
+  const timeoutId = useRef<NodeJS.Timeout | null>(null)
+
+  const handleClickBackdrop: React.MouseEventHandler<HTMLDivElement> = useCallback(
+    (ev) => {
+      if (ev.target === backdropRef.current) {
+        onOverlayClick?.()
+      }
+    },
+    [onOverlayClick],
+  )
+
+  // TODO: Using React.Potal
   useEffect(() => {
-    if (isOpen) {
-      setIsVisible(true)
+    if (isVisible) {
+      setIsClosed(false)
     } else {
-      setTimeout(() => setIsVisible(false), 300) // 애니메이션 시간이 300ms라고 가정
+      timeoutId.current = setTimeout(() => {
+        setIsClosed(true)
+      }, 100)
     }
-  }, [isOpen])
+    return () => {
+      if (timeoutId.current) {
+        clearTimeout(timeoutId.current)
+      }
+    }
+  }, [isVisible])
 
-  if (!isVisible) return null
-
+  if (!isVisible && isClosed) return null
   return (
-    <div className="nx-fixed nx-inset-0 nx-z-50 nx-flex nx-items-center nx-justify-center">
-      <ModalShadow isOpen={isOpen} onClose={onClose} />
-      <div
-        className={`nx-z-50 nx-transform nx-rounded nx-bg-white nx-p-8 nx-shadow-lg nx-transition-transform ${isOpen ? 'nx-translate-y-0' : 'nx-translate-y-full'}`}
-      >
-        {children}
-      </div>
+    <div
+      ref={backdropRef}
+      className={cn(style.backdrop, isVisible ? 'fadeIn' : 'fadeOut')}
+      onClick={handleClickBackdrop}
+    >
+      {children}
     </div>
   )
 }
-
-export default ModalWrapper

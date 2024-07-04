@@ -12,12 +12,14 @@ import useOutsideClick from '@/hooks/use-outside-click'
 import { createPortal } from 'react-dom'
 import { ControlMenu } from '../sidebar-controller'
 import { ControlInput } from '../sidebar-controller/control-input'
+import { useModal } from '@/contexts/modal'
 
 export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props, ref) => {
   const { isDragging, overItem, setOverItem } = useDndTree()
   const { focusedItem, setFocusedItem, showMenuId, setShowMenuId } = useSidebar()
   const [mousePosition, setMousePosition] = useState({ top: 0, left: 0 })
   const [isEdit, setIsEdit] = useState<boolean>(false)
+  const { onOpen } = useModal()
 
   const router = useRouter()
   const routeOriginal = useFSRoute()
@@ -75,7 +77,8 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
   }
 
   const onDelete = () => {
-    console.log('delete')
+    onCloseMenu()
+    onOpen('deleteSortableItem')
   }
 
   const onEdit = () => {
