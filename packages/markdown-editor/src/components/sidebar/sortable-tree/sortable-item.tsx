@@ -145,7 +145,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
       )}
       <div
         ref={ref}
-        {...handleProps}
+        // {...handleProps}
         className={cn(
           'nx-flex nx-w-full nx-items-center nx-justify-between nx-gap-2 nx-text-left',
           isSeparator && 'nx-cursor-default',
@@ -158,7 +158,8 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
           isShowMenu && classes.showMenuActive,
           isControlAction && '!nx-pr-0',
         )}
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault()
           if (isGhost) return
           if (isSeparator) return
           if (isEdit) return

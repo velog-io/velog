@@ -130,13 +130,13 @@ export function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }:
     offset: offsetLeft,
   })
 
-  const [coordinateGetter] = useState(() =>
-    sortableTreeKeyboardCoordinates(sensorContext, indentationWidth),
-  )
+  // const [coordinateGetter] = useState(() =>
+  //   sortableTreeKeyboardCoordinates(sensorContext, indentationWidth),
+  // )
 
-  const keyboardSensor = useSensor(KeyboardSensor, {
-    coordinateGetter,
-  })
+  // const keyboardSensor = useSensor(KeyboardSensor, {
+  //   coordinateGetter,
+  // })
 
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: {
@@ -144,7 +144,7 @@ export function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }:
     },
   })
 
-  const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor, pointerSensor)
+  const sensors = useSensors(mouseSensor, touchSensor, pointerSensor)
 
   useEffect(() => {
     sensorContext.current = {
@@ -203,9 +203,11 @@ export function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }:
   }
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
+    if (actionActive) return
+    console.log('onDragEnd', { active, over })
     resetState()
 
-    if (projected && over && !actionActive) {
+    if (!actionActive && projected && over) {
       const { depth, parentId } = projected
       const clonedItems: FlattenedItem[] = JSON.parse(JSON.stringify(flattenTree(items)))
       const overIndex = clonedItems.findIndex(({ id }) => id === over.id)
@@ -243,7 +245,6 @@ export function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }:
       )
 
       window.dispatchEvent(event)
-
       onItemsChanged(newItems)
     }
   }

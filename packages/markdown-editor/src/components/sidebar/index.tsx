@@ -101,7 +101,6 @@ export function Sidebar({
 
   useEffect(() => {
     const initSotableItems = initilizeDirectories(docsDirectories, route, collapsedTree)
-    console.log('initSotableItems', initSotableItems.length)
     setSortableItems(initSotableItems)
   }, [docsDirectories])
 
