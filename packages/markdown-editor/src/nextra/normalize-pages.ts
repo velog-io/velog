@@ -114,6 +114,8 @@ export type Item = (MdxFile | FolderWithoutChildren) & {
   withIndexPage?: boolean
   theme?: PageTheme
   isUnderCurrentDocsTree?: boolean
+  code: string
+  urlSlug: string
 }
 
 export type PageItem = (MdxFile | FolderWithoutChildren) & {
@@ -126,6 +128,8 @@ export type PageItem = (MdxFile | FolderWithoutChildren) & {
   display?: Display
   withIndexPage?: boolean
   isUnderCurrentDocsTree?: boolean
+  code: string
+  urlSlug: string
 }
 
 export type SortableItem = {
@@ -138,6 +142,8 @@ export type SortableItem = {
   collapsed: boolean
   index: number
   transform?: Transform | null
+  code: string
+  urlSlug: string
 } & PageItem &
   Item
 
@@ -153,6 +159,8 @@ type DocsItem = (MdxFile | FolderWithoutChildren) & {
   firstChildRoute?: string
   withIndexPage?: boolean
   isUnderCurrentDocsTree?: boolean
+  code: string
+  urlSlug: string
 }
 
 function findFirstRoute(items: DocsItem[]): string | undefined {

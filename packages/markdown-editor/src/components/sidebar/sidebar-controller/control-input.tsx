@@ -29,7 +29,7 @@ export function ControlInput({ type }: Props): ReactElement {
   const typeName = nameMapper[type]
 
   useEffect(() => {
-    if (title === null) return
+    if (title === null || title === '') return
     if (forbiddenCharsRegex.test(title)) {
       setError(`${typeName} 이름에 사용해서는 안 되는 기호가 포함되어 있습니다.`)
     } else if (title === '') {

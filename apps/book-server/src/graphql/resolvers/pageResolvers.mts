@@ -26,6 +26,10 @@ const pageResolvers: Resolvers = {
       const pageService = container.resolve(PageService)
       return await pageService.update(input, ctx.writer?.id)
     },
+    delete: async (_, { input }, ctx) => {
+      const pageService = container.resolve(PageService)
+      return await pageService.delete(input, ctx.writer?.id)
+    },
   },
 }
 

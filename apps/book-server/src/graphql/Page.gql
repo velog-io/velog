@@ -31,6 +31,7 @@ type Mutation {
   create(input: CreatePageInput!): Page @auth
   reorder(input: ReorderInput!): Void @auth
   update(input: UpdatePageInput!): Page @auth
+  delete(input: DeletePageInput!): Void @auth
 }
 
 input GetPagesInput {
@@ -61,6 +62,11 @@ input UpdatePageInput {
   title: String
   body: String
   is_deleted: Boolean
+  page_url_slug: String!
+  book_url_slug: String!
+}
+
+input DeletePageInput {
   page_url_slug: String!
   book_url_slug: String!
 }

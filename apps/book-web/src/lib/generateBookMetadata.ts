@@ -74,6 +74,8 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
           kind: 'MdxPage',
           name: key,
           route: `${bookUrl}${page.url_slug}`,
+          code: page.code,
+          urlSlug: page.url_slug,
         },
       ]
     }
@@ -84,6 +86,8 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
         kind: 'MdxPage',
         name: 'index',
         route: `${bookUrl}`,
+        code: page.code,
+        urlSlug: page.url_slug,
       },
     ]
   }
@@ -95,16 +99,18 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
       kind: 'Folder',
       name: key,
       route: `${bookUrl}${page.url_slug}`,
+      code: page.code,
+      urlSlug: page.url_slug,
       children: [],
     }
 
-    if (page.childrens && page.childrens?.length > 0) {
+    if (page.childrens && page.childrens.length > 0) {
       const children = page.childrens.reduce(recursive, []).flat()
       Object.assign(result, { children })
       return result
     }
 
-    if (page.childrens && page.childrens?.length === 0) {
+    if (page.childrens && page.childrens.length === 0) {
       const route = page.url_slug.split('-').slice(0, -1).join('-')
       const metaJson = createMeta([], route)[0] as PageMapItem
       ;(result.children as PageMapItem[]).push(metaJson)
@@ -120,7 +126,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
     if (page.type !== 'separator') {
       result.push(createMdxPage(page))
     }
-    if (page.childrens && (page.childrens?.length > 0 || page.type === 'folder')) {
+    if (page.childrens && (page.childrens.length > 0 || page.type === 'folder')) {
       result.push(createFolder(page))
     }
     return result

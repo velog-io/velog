@@ -59,6 +59,11 @@ export type CreatePageInput = {
   type: PageType
 }
 
+export type DeletePageInput = {
+  book_url_slug: Scalars['String']['input']
+  page_url_slug: Scalars['String']['input']
+}
+
 export type DeployResult = {
   published_url: Maybe<Scalars['String']['output']>
 }
@@ -75,6 +80,7 @@ export type GetPagesInput = {
 export type Mutation = {
   build: BuildResult
   create: Maybe<Page>
+  delete: Maybe<Scalars['Void']['output']>
   deploy: DeployResult
   reorder: Maybe<Scalars['Void']['output']>
   update: Maybe<Page>
@@ -86,6 +92,10 @@ export type MutationBuildArgs = {
 
 export type MutationCreateArgs = {
   input: CreatePageInput
+}
+
+export type MutationDeleteArgs = {
+  input: DeletePageInput
 }
 
 export type MutationDeployArgs = {
@@ -259,6 +269,12 @@ export type UpdatePageMutationVariables = Exact<{
 export type UpdatePageMutation = {
   update: { id: string; title: string; body: string; is_deleted: boolean } | null
 }
+
+export type DeletePageMutationVariables = Exact<{
+  input: DeletePageInput
+}>
+
+export type DeletePageMutation = { delete: void | null }
 
 export const DeployDocument = `
     mutation deploy($input: BookUrlSlugInput!) {
@@ -508,3 +524,28 @@ useUpdatePageMutation.fetcher = (
   options?: RequestInit['headers'],
 ) =>
   fetcher<UpdatePageMutation, UpdatePageMutationVariables>(UpdatePageDocument, variables, options)
+
+export const DeletePageDocument = `
+    mutation deletePage($input: DeletePageInput!) {
+  delete(input: $input)
+}
+    `
+
+export const useDeletePageMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<DeletePageMutation, TError, DeletePageMutationVariables, TContext>,
+) => {
+  return useMutation<DeletePageMutation, TError, DeletePageMutationVariables, TContext>({
+    mutationKey: ['deletePage'],
+    mutationFn: (variables?: DeletePageMutationVariables) =>
+      fetcher<DeletePageMutation, DeletePageMutationVariables>(DeletePageDocument, variables)(),
+    ...options,
+  })
+}
+
+useDeletePageMutation.getKey = () => ['deletePage']
+
+useDeletePageMutation.fetcher = (
+  variables: DeletePageMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<DeletePageMutation, DeletePageMutationVariables>(DeletePageDocument, variables, options)

@@ -53,3 +53,7 @@ mutation updatePage($input: UpdatePageInput!) {
     is_deleted
   }
 }
+
+mutation deletePage($input: DeletePageInput!) {
+  delete(input: $input)
+}

@@ -13,7 +13,6 @@ export const DeleteSortableItemModal: React.FC = () => {
 
   const onConfirm = () => {
     setIsConfirm(true)
-    // onClose() in sortable-item with useEffect
   }
 
   const isVisible = isOpen && mode === 'deleteSortableItem'

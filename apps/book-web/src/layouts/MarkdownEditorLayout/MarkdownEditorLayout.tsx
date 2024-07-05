@@ -5,6 +5,7 @@ import { BookMetadata, generateBookMetadata, Pages } from '@/lib/generateBookMet
 import {
   useBuildMutation,
   useCreatePageMutation,
+  useDeletePageMutation,
   useDeployMutation,
   useGetPageQuery,
   useGetPagesQuery,
@@ -31,6 +32,8 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     useUpdatePageMutation()
   const { mutateAsync: buildAsyncMutate, isPending: isBuildPending } = useBuildMutation()
   const { mutateAsync: deployAsyncMutate, isPending: isDeployPending } = useDeployMutation()
+  const { mutateAsync: deletePageAsyncMutate, isPending: isDeletePagePending } =
+    useDeletePageMutation()
 
   const {
     data: getPagesData,
@@ -138,7 +141,6 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
           body,
         },
       })
-
       getPageRefetch()
     }
 
@@ -171,16 +173,19 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
   }, [])
 
   useEffect(() => {
-    const deleteItemStart = async (
-      e: CustomEventInit<CustomEventDetail['deleteItemStartEvent']>,
-    ) => {
+    const deleteItemStart = async (e: CustomEventInit<CustomEventDetail['deleteItemEvent']>) => {
       if (!e.detail) return
-      console.log('isDetail', e.detail)
+      await deletePageAsyncMutate({
+        input: {
+          page_url_slug: e.detail.pageUrlSlug,
+          book_url_slug: bookUrlSlug,
+        },
+      })
+      getPagesRefetch()
     }
-
-    window.addEventListener(nextraCustomEventName.deleteItemStartEvent, deleteItemStart)
+    window.addEventListener(nextraCustomEventName.deleteItemEvent, deleteItemStart)
     return () => {
-      window.removeEventListener(nextraCustomEventName.deleteItemStartEvent, deleteItemStart)
+      window.removeEventListener(nextraCustomEventName.deleteItemEvent, deleteItemStart)
     }
   }, [])
 

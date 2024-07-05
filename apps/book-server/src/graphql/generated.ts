@@ -59,6 +59,11 @@ export type CreatePageInput = {
   type: PageType
 }
 
+export type DeletePageInput = {
+  book_url_slug: Scalars['String']['input']
+  page_url_slug: Scalars['String']['input']
+}
+
 export type DeployResult = {
   published_url?: Maybe<Scalars['String']['output']>
 }
@@ -75,6 +80,7 @@ export type GetPagesInput = {
 export type Mutation = {
   build: BuildResult
   create?: Maybe<Page>
+  delete?: Maybe<Scalars['Void']['output']>
   deploy: DeployResult
   reorder?: Maybe<Scalars['Void']['output']>
   update?: Maybe<Page>
@@ -86,6 +92,10 @@ export type MutationBuildArgs = {
 
 export type MutationCreateArgs = {
   input: CreatePageInput
+}
+
+export type MutationDeleteArgs = {
+  input: DeletePageInput
 }
 
 export type MutationDeployArgs = {
@@ -274,6 +284,7 @@ export type ResolversTypes = {
   BuildResult: ResolverTypeWrapper<BuildResult>
   CreatePageInput: CreatePageInput
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
+  DeletePageInput: DeletePageInput
   DeployResult: ResolverTypeWrapper<DeployResult>
   GetPageInput: GetPageInput
   GetPagesInput: GetPagesInput
@@ -303,6 +314,7 @@ export type ResolversParentTypes = {
   BuildResult: BuildResult
   CreatePageInput: CreatePageInput
   Date: Scalars['Date']['output']
+  DeletePageInput: DeletePageInput
   DeployResult: DeployResult
   GetPageInput: GetPageInput
   GetPagesInput: GetPagesInput
@@ -382,6 +394,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationCreateArgs, 'input'>
+  >
+  delete?: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationDeleteArgs, 'input'>
   >
   deploy?: Resolver<
     ResolversTypes['DeployResult'],

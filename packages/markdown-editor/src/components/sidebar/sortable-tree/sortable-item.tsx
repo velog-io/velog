@@ -19,9 +19,10 @@ import { nextraCustomEventName } from '@/index'
 export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props, ref) => {
   const { isDragging, overItem, setOverItem } = useDndTree()
   const { focusedItem, setFocusedItem, showMenuId, setShowMenuId } = useSidebar()
+  const { onOpen: onOpenModal, onClose: onCloseModal, isConfirm, mode } = useModal()
   const [mousePosition, setMousePosition] = useState({ top: 0, left: 0 })
   const [isEdit, setIsEdit] = useState<boolean>(false)
-  const { onOpen, onClose, isConfirm, mode } = useModal()
+  const [isDeleteTarget, setIsDeleteTarget] = useState<boolean>(false)
 
   const router = useRouter()
   const routeOriginal = useFSRoute()
@@ -66,8 +67,9 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     // deleteItem
     if (!isConfirm) return
     if (mode !== 'deleteSortableItem') return
-    onDeleteItem()
-    onClose()
+    if (!isDeleteTarget) return
+    onDispatchDeleteEvent()
+    onCloseModal()
   }, [isConfirm])
 
   const onOpenMenu = (e: MouseEvent) => {
@@ -89,7 +91,8 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
 
   const onDelete = () => {
     onCloseMenu()
-    onOpen('deleteSortableItem')
+    setIsDeleteTarget(true)
+    onOpenModal('deleteSortableItem')
   }
 
   const onEdit = () => {
@@ -97,13 +100,12 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     setIsEdit(!isEdit)
   }
 
-  const onDeleteItem = () => {
-    if (showMenuId !== item.id) return
-    const event = new CustomEvent<CustomEventDetail['deleteItemStartEvent']>(
-      nextraCustomEventName.deleteItemStartEvent,
+  const onDispatchDeleteEvent = () => {
+    const event = new CustomEvent<CustomEventDetail['deleteItemEvent']>(
+      nextraCustomEventName.deleteItemEvent,
       {
         detail: {
-          urlSlug: item.route,
+          pageUrlSlug: item.urlSlug,
         },
       },
     )

@@ -4,6 +4,7 @@ import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
 import type {
   CreatePageInput,
+  DeletePageInput,
   GetPageInput,
   ReorderInput,
   UpdatePageInput,
@@ -21,6 +22,7 @@ interface Service {
   create(input: CreatePageInput, signedWriterId?: string): Promise<Page>
   update(input: UpdatePageInput, signedWriterId?: string): Promise<Page>
   reorder(input: ReorderInput, signedWriterId?: string): Promise<void>
+  delete(input: DeletePageInput, signedWriterId?: string): Promise<void>
 }
 
 @injectable()
@@ -108,33 +110,32 @@ export class PageService implements Service {
     }
 
     const orderBy: Prisma.PageOrderByWithRelationInput[] = [{ index: 'asc' }]
+
+    const fetchChildren = (depth: number): Prisma.PageInclude => {
+      if (depth === 0) return {}
+
+      return {
+        childrens: {
+          where: {
+            is_deleted: false,
+          },
+          orderBy,
+          include: fetchChildren(depth - 1),
+        },
+      }
+    }
+
     const pages = await this.mongo.page.findMany({
       where: {
         fk_book_id: book.id,
         parent_id: null,
+        is_deleted: false,
       },
       orderBy,
-      include: {
-        // depth 1
-        childrens: {
-          orderBy,
-          include: {
-            // depth 2
-            childrens: {
-              orderBy,
-              include: {
-                // depth 3
-                childrens: {
-                  orderBy,
-                },
-              },
-            },
-          },
-        },
-      },
+      include: fetchChildren(3),
     })
 
-    return pages
+    return pages as any
   }
 
   public async getPage(input: GetPageInput, signedWriterId?: string): Promise<Page | null> {
@@ -371,6 +372,51 @@ export class PageService implements Service {
     })
 
     await Promise.all(updatedChildrens)
+  }
+
+  public async delete(input: DeletePageInput, signedWriterId?: string): Promise<void> {
+    console.log('delete page', input)
+    if (!signedWriterId) {
+      throw new UnauthorizedError('Not authorized')
+    }
+
+    const { book_url_slug, page_url_slug } = input
+
+    const book = await this.bookSerivce.findByUrlSlug(book_url_slug)
+
+    if (!book) {
+      throw new NotFoundError('Not found book')
+    }
+
+    if (book.fk_writer_id !== signedWriterId) {
+      throw new ConfilctError('Not owner of book')
+    }
+
+    const page = await this.mongo.page.findFirst({
+      where: {
+        fk_book_id: book.id,
+        url_slug: page_url_slug,
+        fk_writer_id: signedWriterId,
+      },
+    })
+
+    if (!page) {
+      throw new NotFoundError('Not found page')
+    }
+
+    if (page.is_deleted) {
+      throw new BadRequestError('Already deleted')
+    }
+
+    await this.mongo.page.update({
+      where: {
+        id: page.id,
+      },
+      data: {
+        is_deleted: true,
+        updated_at: new Date(),
+      },
+    })
   }
 }
 

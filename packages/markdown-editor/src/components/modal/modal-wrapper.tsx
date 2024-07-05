@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import cn from 'clsx'
+import { useModal } from '@/contexts/modal'
 
 type Props = {
   children: React.ReactNode
@@ -14,6 +15,7 @@ const style = {
 }
 
 export function ModalWrapper({ children, isVisible, onOverlayClick }: Props) {
+  const { mode } = useModal()
   const [isClosed, setIsClosed] = useState(false)
   const backdropRef = useRef<HTMLDivElement>(null)
   const timeoutId = useRef<NodeJS.Timeout | null>(null)
@@ -43,6 +45,7 @@ export function ModalWrapper({ children, isVisible, onOverlayClick }: Props) {
     }
   }, [isVisible])
 
+  if (!mode) return
   if (!isVisible && isClosed) return null
   return (
     <div
