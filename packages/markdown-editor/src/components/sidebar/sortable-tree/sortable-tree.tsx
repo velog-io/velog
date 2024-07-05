@@ -6,7 +6,6 @@ import {
   DragOverEvent,
   DragOverlay,
   DragStartEvent,
-  KeyboardSensor,
   MeasuringStrategy,
   Modifier,
   MouseSensor,
@@ -36,7 +35,6 @@ import { SortableItemWrapper } from './sortable-item-wrapper'
 import { dropAnimation } from './utils/dropAnimation'
 import { useSidebar } from '@/contexts/sidebar'
 import { SensorContext } from './types'
-import { sortableTreeKeyboardCoordinates } from './utils/keyborardCoordinates'
 import { CustomEventDetail, nextraCustomEventName } from '@/index'
 import { useUrlSlug } from '@/hooks/use-url-slug'
 import { SidebarController } from '../sidebar-controller'
