@@ -21,7 +21,7 @@ export const ControlIcon = ({ className, type }: Props) => {
 
   const onClick = () => {
     if (sidebar.actionActive) {
-      sidebar.reset()
+      sidebar.restore()
       sidebar.setSortableItems(originSortableItems)
       return
     }
@@ -77,6 +77,8 @@ export const ControlIcon = ({ className, type }: Props) => {
             name: 'addAction',
             isLast: true,
             collapsed: false,
+            code: 'code',
+            urlSlug: '',
             index,
             parent: addToTop ? null : item,
           }

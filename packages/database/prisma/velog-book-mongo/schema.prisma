@@ -57,7 +57,7 @@ model Page {
   body         String  @db.String
   type         String  @db.String
   parent_id    String? @db.ObjectId
-  index        Int     @db.Int
+  index        Int?    @db.Int
   url_slug     String  @unique // example /${escapeUrl(${parent.title}/${title}).toLowerCase()}}-${code}
   code         String  @unique
   depth        Int     @default(1) @db.Int // max depth 3

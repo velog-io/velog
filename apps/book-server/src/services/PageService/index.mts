@@ -292,7 +292,6 @@ export class PageService implements Service {
       },
     })
 
-    console.log('updatedPage', updatedPage)
     return updatedPage
   }
 
@@ -350,9 +349,10 @@ export class PageService implements Service {
       },
     })
 
-    const childrens = await this.mongo.page.findMany({
+    const siblings = await this.mongo.page.findMany({
       where: {
         parent_id: parentPage?.id ?? null,
+        is_deleted: false,
         id: {
           not: targetPage.id,
         },
@@ -360,10 +360,10 @@ export class PageService implements Service {
       orderBy: [{ index: 'asc' }, { updated_at: 'desc' }],
     })
 
-    const updatedChildrens = childrens.map((child, i) => {
+    const updatedSiblings = siblings.map((sibling, i) => {
       return this.mongo.page.update({
         where: {
-          id: child.id,
+          id: sibling.id,
         },
         data: {
           index: i < index ? i : i + 1,
@@ -371,11 +371,10 @@ export class PageService implements Service {
       })
     })
 
-    await Promise.all(updatedChildrens)
+    await Promise.all(updatedSiblings)
   }
 
   public async delete(input: DeletePageInput, signedWriterId?: string): Promise<void> {
-    console.log('delete page', input)
     if (!signedWriterId) {
       throw new UnauthorizedError('Not authorized')
     }
@@ -414,6 +413,7 @@ export class PageService implements Service {
       },
       data: {
         is_deleted: true,
+        index: null,
         updated_at: new Date(),
       },
     })

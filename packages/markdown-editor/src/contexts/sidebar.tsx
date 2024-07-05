@@ -13,7 +13,8 @@ export type ActionType = 'folder' | 'page' | 'separator' | ''
 type Sidebar = {
   sortableItems: SortableItem[]
   setSortableItems: (item: SortableItem[]) => void
-  reset: (pageMap?: SortableItem[]) => void
+  restore: (pageMap?: SortableItem[]) => void
+  reset: () => void
   actionActive: boolean
   setActionActive: (value: boolean) => void
   actionInfo: ActionInfo
@@ -45,6 +46,7 @@ function setCollapsedTree(id: string, setter: (value: boolean) => boolean): void
 const SidebarContext = createContext<Sidebar>({
   sortableItems: [],
   setSortableItems: () => {},
+  restore: () => {},
   reset: () => {},
   actionActive: false,
   setActionActive: () => {},
@@ -81,8 +83,15 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
     type: 'page',
   })
 
-  const reset = () => {
+  // cacnel Action
+  const restore = () => {
     setSortableItems(sortableItems)
+    setActionActive(false)
+    setActionType('')
+    setFocusedItem(null)
+  }
+
+  const reset = () => {
     setActionActive(false)
     setActionType('')
     setFocusedItem(null)
@@ -98,6 +107,7 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
   const value: Sidebar = {
     sortableItems,
     setSortableItems,
+    restore,
     reset,
     actionActive,
     setActionActive,
