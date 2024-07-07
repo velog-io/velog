@@ -82,17 +82,17 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
 
   useEffect(() => {
     if (!isEdit) return
-    if (actionInfo === null) {
-      // Dispached by other component
+    // Dispached by other component
+    if (actionInfo === null || !isEditAction(actionInfo)) {
       setIsEdit(false)
       return
     }
 
-    // other item is edit
-    if (!isEditAction(actionInfo)) return
-    if ((actionInfo as EditActionInfo).pageUrlSlug === item.urlSlug) return
+    // Check if the editing item is different
+    const editActionInfo = actionInfo as EditActionInfo
+    if (editActionInfo.pageUrlSlug === item.urlSlug) return
     setIsEdit(false)
-  }, [actionInfo])
+  }, [actionInfo, isEdit])
 
   const onOpenMenu = (e: MouseEvent) => {
     e.preventDefault()
