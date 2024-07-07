@@ -11,6 +11,8 @@ export type ActionInfo = {
 export type ActionType = 'folder' | 'page' | 'separator' | ''
 
 type Sidebar = {
+  originSortableItems: SortableItem[]
+  setOriginSortableItems: (item: SortableItem[]) => void
   sortableItems: SortableItem[]
   setSortableItems: (item: SortableItem[]) => void
   reset: () => void
@@ -43,6 +45,8 @@ function setCollapsedTree(id: string, setter: (value: boolean) => boolean): void
 }
 
 const SidebarContext = createContext<Sidebar>({
+  originSortableItems: [],
+  setOriginSortableItems: () => {},
   sortableItems: [],
   setSortableItems: () => {},
   reset: () => {},
@@ -67,6 +71,7 @@ export function useSidebar() {
 }
 
 export const SidebarProvider = ({ children }: { children: ReactNode }): ReactElement => {
+  const [originSortableItems, setOriginSortableItems] = useState<SortableItem[]>([])
   const [sortableItems, setSortableItems] = useState<SortableItem[]>([])
   const [isFolding, setFolding] = useState(false)
   const [actionActive, setActionActive] = useState(false)
@@ -82,6 +87,7 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
   })
 
   const reset = () => {
+    setOriginSortableItems([])
     setActionActive(false)
     setActionType('')
     setFocusedItem(null)
@@ -95,6 +101,8 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
   }
 
   const value: Sidebar = {
+    originSortableItems,
+    setOriginSortableItems,
     sortableItems,
     setSortableItems,
     reset,

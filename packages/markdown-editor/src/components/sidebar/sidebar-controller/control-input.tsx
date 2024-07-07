@@ -48,11 +48,16 @@ export function ControlInput({ type }: Props): ReactElement {
     setTitle(value)
   }
 
-  const onComplete = () => {
+  const onOutsideClick = () => {
     if (!sidebar.actionActive) return
-    dispatchEvent()
+    if (title) {
+      dispatchEvent()
+    } else {
+      // cancel
+      sidebar.setSortableItems(sidebar.originSortableItems)
+      sidebar.reset()
+    }
     setTitle('')
-    sidebar.reset()
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -89,7 +94,7 @@ export function ControlInput({ type }: Props): ReactElement {
     { leading: true },
   )
 
-  const { ref } = useOutsideClick<HTMLDivElement>(onComplete)
+  const { ref } = useOutsideClick<HTMLDivElement>(onOutsideClick)
   if (type === '') return <></>
   return (
     <div

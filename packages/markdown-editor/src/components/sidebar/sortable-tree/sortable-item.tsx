@@ -105,7 +105,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
       nextraCustomEventName.deleteItemEvent,
       {
         detail: {
-          pageUrlSlug: item.urlSlug,
+          pageUrlSlug: item.urlSlug ?? item.id, // urlSlug가 없는 경우 id로 대체
         },
       },
     )
@@ -145,7 +145,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
       )}
       <div
         ref={ref}
-        // {...handleProps}
+        {...handleProps}
         className={cn(
           'nx-flex nx-w-full nx-items-center nx-justify-between nx-gap-2 nx-text-left',
           isSeparator && 'nx-cursor-default',

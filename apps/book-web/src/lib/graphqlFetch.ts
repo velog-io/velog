@@ -60,6 +60,7 @@ export default async function graphqlFetch<T>({
     throw new Error(message as any)
   }
 
+  
   const json = await res?.json()
   return json.data as T
 }

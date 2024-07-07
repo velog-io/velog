@@ -67,7 +67,6 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
   const createMdxPage = (page: Page) => {
     if (init) {
       const key = map.get(page.url_slug)
-
       return [
         {
           id: `${bookUrl}${page.url_slug}`,

@@ -3,7 +3,7 @@ import { ControlIcon } from './control-icon'
 import { CollapseAllIcon } from './collapse-all-icon'
 import { ActionType, useSidebar } from '@/contexts/sidebar'
 import { useUrlSlug } from '@/hooks/use-url-slug'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { SortableItem } from '@/nextra/normalize-pages'
 import { findFolder } from './utils'
 
@@ -22,20 +22,19 @@ export function SidebarController({ showSidebar }: Props) {
   const { bookUrlSlug, pageUrlSlug, fullUrlSlug } = useUrlSlug()
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const [originSortableItems, setOriginSortableItems] = useState<SortableItem[]>([])
 
   const onClickIcon = (type: ActionType) => {
     if (type === '') return
     if (sidebar.actionActive) {
+      sidebar.setSortableItems(sidebar.originSortableItems)
       sidebar.reset()
-      sidebar.setSortableItems(originSortableItems)
       return
     }
 
+    // init
     sidebar.setActionType(type)
-    const timeout = setTimeout(() => sidebar.setActionActive(true), 100)
-    timeoutRef.current = timeout
-    setOriginSortableItems(sidebar.sortableItems)
+    timeoutRef.current = setTimeout(() => sidebar.setActionActive(true), 100)
+    sidebar.setOriginSortableItems(sidebar.sortableItems) // 취소 되었을때 원래 데이터로 복구하기 위함
 
     // remove code
     let targetRoute = pageUrlSlug
