@@ -14,9 +14,9 @@ export type {
   PageOpts,
 }
 export const nextraCustomEventName: Record<keyof CustomEventDetail, string> = {
-  createOrUpdateItemEvent: 'createOrUpdateItemEvent',
+  createItemEvent: 'createItemEvent',
+  updateItemEvent: 'updateItemEvent',
   changeItemOrderEvent: 'changeItemOrderEvent',
-  saveItemBodyEvent: 'saveItemBodyEvent',
   deployStartEvent: 'deployStartEvent',
   deployEndEvent: 'deployEndEvent',
   deleteItemEvent: 'deleteItemEvent',

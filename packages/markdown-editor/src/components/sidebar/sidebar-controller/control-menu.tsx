@@ -6,6 +6,7 @@ import { forwardRef } from 'react'
 type Props = {
   isOpen: boolean
   position: { top: number; left: number }
+  isIndex: boolean
   onEdit: () => void
   onDelete: () => void
 }
@@ -19,7 +20,7 @@ const style = {
 }
 
 export const ControlMenu = forwardRef<HTMLDivElement, Props>(
-  ({ isOpen, position, onEdit, onDelete }, ref) => {
+  ({ isOpen, isIndex, position, onEdit, onDelete }, ref) => {
     return (
       <div
         ref={ref}
@@ -36,10 +37,12 @@ export const ControlMenu = forwardRef<HTMLDivElement, Props>(
             <EditIcon className={style.svg} />
             <span>이름 바꾸기</span>
           </li>
-          <li className={style.list} onClick={onDelete}>
-            <TrashIcon className={style.svg} />
-            <span>삭제</span>
-          </li>
+          {!isIndex && (
+            <li className={style.list} onClick={onDelete}>
+              <TrashIcon className={style.svg} />
+              <span>삭제</span>
+            </li>
+          )}
         </ul>
       </div>
     )

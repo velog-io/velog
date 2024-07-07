@@ -1,14 +1,27 @@
 import { createContext, ReactElement, ReactNode, useContext, useState } from 'react'
 import type { SortableItem } from '@/nextra/normalize-pages'
 
-export type ActionInfo = {
-  parentUrlSlug: string
-  index: number
-  bookUrlSlug: string
-  type: ActionType
+type ActionInfo<T = string> = T extends 'add'
+  ? AddActionInfo
+  : T extends 'edit'
+    ? EditActionInfo
+    : null
+
+export type AddActionInfo = {
+  action: 'add'
+  parentUrlSlug?: string
+  bookUrlSlug?: string
+  type?: PageType
+  index?: number
 }
 
-export type ActionType = 'folder' | 'page' | 'separator' | ''
+export type EditActionInfo = {
+  action: 'edit'
+  title?: string
+  pageUrlSlug?: string
+}
+
+export type PageType = 'folder' | 'page' | 'separator' | ''
 
 type Sidebar = {
   originSortableItems: SortableItem[]
@@ -16,20 +29,20 @@ type Sidebar = {
   sortableItems: SortableItem[]
   setSortableItems: (item: SortableItem[]) => void
   reset: () => void
-  actionActive: boolean
-  setActionActive: (value: boolean) => void
+  isActionActive: boolean
+  setIsActionActive: (value: boolean) => void
   actionInfo: ActionInfo
-  setActionInfo: (args: ActionInfo) => void
+  setActionInfo: <T>(args: ActionInfo<T>) => void
   isFolding: boolean
   setIsFolding: (value: boolean) => void
-  actionType: ActionType
-  setActionType: (value: ActionType) => void
   focusedItem: SortableItem | null
   setFocusedItem: (value: SortableItem | null) => void
   collapsedTree: Set<string>
   setCollapsedTree: (id: string, setter: (value: boolean) => boolean) => void
   showMenuId: string | null
   setShowMenuId: (value: string | null) => void
+  isAddAction: (args: any) => boolean
+  isEditAction: (args: any) => boolean
 }
 
 let collapsedTree = new Set<string>()
@@ -50,20 +63,20 @@ const SidebarContext = createContext<Sidebar>({
   sortableItems: [],
   setSortableItems: () => {},
   reset: () => {},
-  actionActive: false,
-  setActionActive: () => {},
-  actionInfo: { parentUrlSlug: '/', index: 0, bookUrlSlug: '/', type: 'page' },
+  isActionActive: false,
+  setIsActionActive: () => {},
+  actionInfo: null,
   setActionInfo: () => {},
   isFolding: false,
   setIsFolding: () => {},
-  actionType: '',
-  setActionType: () => {},
   focusedItem: null,
   setFocusedItem: () => {},
   collapsedTree,
   setCollapsedTree,
   showMenuId: null,
   setShowMenuId: () => {},
+  isAddAction: () => false,
+  isEditAction: () => false,
 })
 
 export function useSidebar() {
@@ -74,23 +87,17 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
   const [originSortableItems, setOriginSortableItems] = useState<SortableItem[]>([])
   const [sortableItems, setSortableItems] = useState<SortableItem[]>([])
   const [isFolding, setFolding] = useState(false)
-  const [actionActive, setActionActive] = useState(false)
+  const [isActionActive, setIsActionActive] = useState(false)
   const [showMenuId, setShowMenuId] = useState<string | null>(null)
 
   const [focusedItem, setFocusedItem] = useState<null | SortableItem>(null)
-  const [actionType, setActionType] = useState<ActionType>('')
-  const [actionInfo, setActionInfo] = useState<ActionInfo>({
-    parentUrlSlug: '/',
-    index: 0,
-    bookUrlSlug: '/',
-    type: 'page',
-  })
+  const [actionInfo, setActionInfo] = useState<ActionInfo>(null)
 
   const reset = () => {
     setOriginSortableItems([])
-    setActionActive(false)
-    setActionType('')
+    setIsActionActive(false)
     setFocusedItem(null)
+    setActionInfo(null)
   }
 
   const setIsFolding = (value: boolean) => {
@@ -100,26 +107,38 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
     setFolding(value)
   }
 
+  function setActionInformation<T = 'add' | 'edit'>(args: ActionInfo<T>): void {
+    setActionInfo(args as any)
+  }
+
+  function isAddAction(args: any): args is AddActionInfo {
+    return args.action === 'add'
+  }
+
+  function isEditAction(args: any): args is EditActionInfo {
+    return args.action === 'edit'
+  }
+
   const value: Sidebar = {
     originSortableItems,
     setOriginSortableItems,
     sortableItems,
     setSortableItems,
     reset,
-    actionActive,
-    setActionActive,
+    isActionActive,
+    setIsActionActive,
     actionInfo,
-    setActionInfo,
+    setActionInfo: setActionInformation,
     isFolding,
     setIsFolding,
-    actionType,
-    setActionType,
     focusedItem,
     setFocusedItem,
     collapsedTree,
     setCollapsedTree,
     showMenuId,
     setShowMenuId,
+    isAddAction,
+    isEditAction,
   }
 
   return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>

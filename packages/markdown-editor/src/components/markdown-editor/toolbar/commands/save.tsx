@@ -40,8 +40,8 @@ const save: ToolbarCommand = {
 
 export function saveExecute(view: EditorView) {
   const doc = view.state.doc.toString()
-  const event = new CustomEvent<CustomEventDetail['saveItemBodyEvent']>(
-    nextraCustomEventName.saveItemBodyEvent,
+  const event = new CustomEvent<CustomEventDetail['updateItemEvent']>(
+    nextraCustomEventName.updateItemEvent,
     {
       detail: { body: doc },
     },

@@ -1,6 +1,6 @@
 import { CSSProperties, forwardRef, useEffect, useState } from 'react'
 import cn from 'clsx'
-import { ActionType, useSidebar } from '@/contexts/sidebar'
+import { EditActionInfo, PageType, useSidebar } from '@/contexts/sidebar'
 import { useRouter } from 'next/router'
 import { useFSRoute } from '@/nextra/hooks'
 import { ArrowRightIcon } from '@/nextra/icons'
@@ -18,7 +18,15 @@ import { nextraCustomEventName } from '@/index'
 
 export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props, ref) => {
   const { isDragging, overItem, setOverItem } = useDndTree()
-  const { focusedItem, setFocusedItem, showMenuId, setShowMenuId } = useSidebar()
+  const {
+    focusedItem,
+    setFocusedItem,
+    showMenuId,
+    setShowMenuId,
+    setActionInfo,
+    actionInfo,
+    isEditAction,
+  } = useSidebar()
   const { onOpen: onOpenModal, onClose: onCloseModal, isConfirm, mode } = useModal()
   const [mousePosition, setMousePosition] = useState({ top: 0, left: 0 })
   const [isEdit, setIsEdit] = useState<boolean>(false)
@@ -42,29 +50,29 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     transform,
   } = props
 
-  const isControlAction = ['newPage', 'newFolder', 'newSeparator'].includes(item.type)
+  const isAction = ['newPage', 'newFolder', 'newSeparator'].includes(item.type) || isEdit
   const active =
-    !isDragging && !isControlAction && !isGhost && [route, `${route}/`].includes(item.route + '/')
+    !isDragging && !isAction && !isGhost && [route, `${route}/`].includes(item.route + '/')
   // const isLink = 'withIndexPage' in item && item.withIndexPage
 
   const isShowMenu = showMenuId === item.id
   const isSeparator = item.type === 'separator'
 
-  const actionMap: Record<string, ActionType> = {
+  const actionMap: Record<string, PageType> = {
     newPage: 'page',
     newFolder: 'folder',
     newSeparator: 'separator',
   }
 
+  // setItem info
   useEffect(() => {
-    // setItem info
     if (isGhost) return
     if (!isOver) return
     setOverItem({ ...item, transform })
   }, [isOver, isGhost])
 
+  // deleteItem
   useEffect(() => {
-    // deleteItem
     if (!isConfirm) return
     if (mode !== 'deleteSortableItem') return
     if (!isDeleteTarget) return
@@ -72,9 +80,22 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     onCloseModal()
   }, [isConfirm])
 
+  useEffect(() => {
+    if (!isEdit) return
+    if (actionInfo === null) {
+      // Dispached by other component
+      setIsEdit(false)
+      return
+    }
+
+    // other item is edit
+    if (!isEditAction(actionInfo)) return
+    if ((actionInfo as EditActionInfo).pageUrlSlug === item.urlSlug) return
+    setIsEdit(false)
+  }, [actionInfo])
+
   const onOpenMenu = (e: MouseEvent) => {
     e.preventDefault()
-    if (item.name === 'index') return
     if (showMenuId === item.id) {
       setShowMenuId(null)
     } else {
@@ -98,6 +119,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
   const onEdit = () => {
     onCloseMenu()
     setIsEdit(!isEdit)
+    setActionInfo<'edit'>({ action: 'edit', pageUrlSlug: item.urlSlug ?? item.id })
   }
 
   const onDispatchDeleteEvent = () => {
@@ -140,6 +162,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
           position={mousePosition}
           onEdit={onEdit}
           onDelete={onDelete}
+          isIndex={item.name === 'index'}
         />,
         document.getElementById('menu-root')!,
       )}
@@ -150,20 +173,17 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
           'nx-flex nx-w-full nx-items-center nx-justify-between nx-gap-2 nx-text-left',
           isSeparator && 'nx-cursor-default',
           isSeparator ? classes.separator : classes.link,
-          !isControlAction && active && classes.active,
-          !isControlAction && !active && classes.inactive,
-          !isControlAction && !isDragging && !active && classes.inactiveBgColor,
+          !isAction && active && classes.active,
+          !isAction && !active && classes.inactive,
+          !isAction && !isDragging && !active && classes.inactiveBgColor,
           isGhost && classes.ghost,
           clone && classes.clone,
           isShowMenu && classes.showMenuActive,
-          isControlAction && '!nx-pr-0',
+          isAction && '!nx-pr-0',
         )}
         onClick={(e) => {
           e.preventDefault()
-          if (isGhost) return
-          if (isSeparator) return
-          if (isEdit) return
-          if (isControlAction) return
+          if ([isGhost, isSeparator, isAction].some(Boolean)) return
 
           if (!item.collapsed) {
             onCollapse(item.id)
@@ -175,7 +195,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
           router.push(item.route, item.route, { shallow: true })
         }}
       >
-        {isControlAction || isEdit ? (
+        {isAction ? (
           <ControlInput type={actionMap[item.type]} />
         ) : (
           <>

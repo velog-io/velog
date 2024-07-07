@@ -1,6 +1,6 @@
 import cn from 'clsx'
 import { ReactElement } from 'react'
-import { ActionType, useSidebar } from '@/contexts/sidebar'
+import { PageType, useSidebar } from '@/contexts/sidebar'
 import { useFSRoute } from '@/nextra/hooks'
 import { PageItem, SortableItem } from '@/nextra/normalize-pages'
 
@@ -28,7 +28,7 @@ export function File({ item, ...props }: FileProps): ReactElement {
   const { setMenu } = useMenu()
 
   if (['newPage', 'newFolder', 'newSeparator'].includes(item.type)) {
-    const map: Record<string, ActionType> = {
+    const map: Record<string, PageType> = {
       newPage: 'page',
       newFolder: 'folder',
       newSeparator: 'separator',

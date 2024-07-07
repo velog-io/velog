@@ -24,12 +24,9 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
   const [bookMetadata, setBookMetadata] = useState<BookMetadata | null>(null)
   const [mdx, setMdx] = useState<string>(mdxText)
 
-  const { mutateAsync: createPageAsyncMutate, isPending: isCreatePagePending } =
-    useCreatePageMutation()
-  const { mutateAsync: reorderAsyncMutate, isPending: isReorderPagePending } =
-    useReorderPageMutation()
-  const { mutateAsync: updatePageAsyncMutate, isPending: isUpdatePagePending } =
-    useUpdatePageMutation()
+  const { mutateAsync: createPageAsyncMutate, isPending: isCreatePending } = useCreatePageMutation()
+  const { mutateAsync: reorderAsyncMutate, isPending: isReorderPending } = useReorderPageMutation()
+  const { mutateAsync: updatePageAsyncMutate, isPending: isUpdatePending } = useUpdatePageMutation()
   const { mutateAsync: buildAsyncMutate, isPending: isBuildPending } = useBuildMutation()
   const { mutateAsync: deployAsyncMutate, isPending: isDeployPending } = useDeployMutation()
   const { mutateAsync: deletePageAsyncMutate, isPending: isDeletePagePending } =
@@ -74,39 +71,72 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     setMdx(getPageData.page.body)
   }, [getPageData, isGetPageLoading])
 
-  // create or update item
+  // create item
   useEffect(() => {
-    const createOrUpdate = async (
-      e: CustomEventInit<CustomEventDetail['createOrUpdateItemEvent']>,
-    ) => {
+    if (isCreatePending) return
+    const create = async (e: CustomEventInit<CustomEventDetail['createItemEvent']>) => {
       if (!e.detail) return
-      if (isReorderPagePending) return
       const { title, parentUrlSlug, index, bookUrlSlug, type } = e.detail
       await createPageAsyncMutate({
         input: {
           title,
           parent_url_slug: parentUrlSlug,
-          index,
           book_url_slug: bookUrlSlug,
-          type: type,
+          index,
+          type,
         },
       })
       getPagesRefetch()
     }
-    window.addEventListener(nextraCustomEventName.createOrUpdateItemEvent, createOrUpdate)
+    window.addEventListener(nextraCustomEventName.createItemEvent, create)
     return () => {
-      window.removeEventListener(nextraCustomEventName.createOrUpdateItemEvent, createOrUpdate)
+      window.removeEventListener(nextraCustomEventName.createItemEvent, create)
     }
-  })
+  }, [])
+
+  // update item
+  useEffect(() => {
+    if (isUpdatePending) return
+    const update = async (e: CustomEventInit<CustomEventDetail['updateItemEvent']>) => {
+      if (!e.detail) return
+      const bodyInput = {
+        book_url_slug: bookUrlSlug,
+        page_url_slug: pageUrlSlug,
+        body: e.detail?.body,
+      }
+
+      const titleInput = {
+        book_url_slug: bookUrlSlug,
+        page_url_slug: e.detail.pageUrlSlug ?? '',
+        title: e.detail.title,
+      }
+
+      const isUpdateTitle = !!e.detail.title
+
+      await updatePageAsyncMutate({
+        input: isUpdateTitle ? titleInput : bodyInput,
+      })
+
+      getPageRefetch()
+
+      if (isUpdateTitle) {
+        getPagesRefetch()
+      }
+    }
+
+    window.addEventListener(nextraCustomEventName.updateItemEvent, update)
+    return () => {
+      window.removeEventListener(nextraCustomEventName.updateItemEvent, update)
+    }
+  }, [pageUrlSlug, bookUrlSlug])
 
   // change Item order
   useEffect(() => {
     const changeItem = async (e: CustomEventInit<CustomEventDetail['changeItemOrderEvent']>) => {
       if (!e.detail) return
-      if (isCreatePagePending) return
+      if (isReorderPending) return
 
       const { bookUrlSlug, targetUrlSlug, parentUrlSlug, index } = e.detail
-
       await reorderAsyncMutate({
         input: {
           book_url_slug: bookUrlSlug,
@@ -124,36 +154,11 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     }
   }, [])
 
-  // saveItemBody
-  useEffect(() => {
-    if (isUpdatePagePending) {
-      //TODO: show loading
-      return
-    }
-    const saveItemBody = async (e: CustomEventInit<CustomEventDetail['saveItemBodyEvent']>) => {
-      if (!e.detail) return
-      const { body } = e.detail
-
-      await updatePageAsyncMutate({
-        input: {
-          book_url_slug: bookUrlSlug,
-          page_url_slug: pageUrlSlug,
-          body,
-        },
-      })
-      getPageRefetch()
-    }
-
-    window.addEventListener(nextraCustomEventName.saveItemBodyEvent, saveItemBody)
-    return () => {
-      window.removeEventListener(nextraCustomEventName.saveItemBodyEvent, saveItemBody)
-    }
-  }, [pageUrlSlug])
-
   // deploy start and dispatch deploy end event
   useEffect(() => {
     const deployStart = async () => {
       const { build } = await buildAsyncMutate({ input: { url_slug: bookUrlSlug } })
+
       if (!build.result) {
         //TODO: show error
         return
@@ -170,8 +175,9 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     return () => {
       window.removeEventListener(nextraCustomEventName.deployStartEvent, deployStart)
     }
-  }, [])
+  }, [bookUrlSlug])
 
+  // deleteItem
   useEffect(() => {
     const deleteItemStart = async (e: CustomEventInit<CustomEventDetail['deleteItemEvent']>) => {
       if (!e.detail) return
@@ -187,10 +193,9 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     return () => {
       window.removeEventListener(nextraCustomEventName.deleteItemEvent, deleteItemStart)
     }
-  }, [])
+  }, [bookUrlSlug])
 
   if (isGetPagesLoading || !bookMetadata) return <div>loading...</div>
-
   return (
     <MarkdownEditor
       editorValue={mdx}

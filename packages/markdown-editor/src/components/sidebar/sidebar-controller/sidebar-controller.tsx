@@ -1,7 +1,7 @@
 import cn from 'clsx'
 import { ControlIcon } from './control-icon'
 import { CollapseAllIcon } from './collapse-all-icon'
-import { ActionType, useSidebar } from '@/contexts/sidebar'
+import { PageType, useSidebar } from '@/contexts/sidebar'
 import { useUrlSlug } from '@/hooks/use-url-slug'
 import { useRef } from 'react'
 import { SortableItem } from '@/nextra/normalize-pages'
@@ -23,17 +23,16 @@ export function SidebarController({ showSidebar }: Props) {
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  const onClickIcon = (type: ActionType) => {
+  const onClickIcon = (type: PageType) => {
     if (type === '') return
-    if (sidebar.actionActive) {
+    if (sidebar.isActionActive) {
       sidebar.setSortableItems(sidebar.originSortableItems)
       sidebar.reset()
       return
     }
 
     // init
-    sidebar.setActionType(type)
-    timeoutRef.current = setTimeout(() => sidebar.setActionActive(true), 100)
+    timeoutRef.current = setTimeout(() => sidebar.setIsActionActive(true), 100)
     sidebar.setOriginSortableItems(sidebar.sortableItems) // 취소 되었을때 원래 데이터로 복구하기 위함
 
     // remove code
@@ -79,7 +78,7 @@ export function SidebarController({ showSidebar }: Props) {
             route: `${item.route}`,
             kind: 'Folder',
             name: 'addAction',
-            isLast: true,
+            isLast: false,
             collapsed: false,
             code: 'code',
             urlSlug: '',
@@ -88,7 +87,8 @@ export function SidebarController({ showSidebar }: Props) {
           }
 
           const removeBookUrlSlug = addToTop ? '' : item?.route.replace(bookUrlSlug, '')
-          sidebar.setActionInfo({
+          sidebar.setActionInfo<'add'>({
+            action: 'add',
             parentUrlSlug: removeBookUrlSlug ?? '',
             index,
             bookUrlSlug,

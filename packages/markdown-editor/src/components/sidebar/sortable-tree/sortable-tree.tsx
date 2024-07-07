@@ -70,7 +70,7 @@ export const useDndTree = () => useContext(DndTreeContext)
 
 export function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }: Props) {
   const { bookUrlSlug } = useUrlSlug()
-  const { isFolding, setCollapsedTree, actionActive } = useSidebar()
+  const { isFolding, setCollapsedTree, isActionActive } = useSidebar()
   const [isDragging, setDragging] = useState(false)
   const [ghostItem, setGhostItem] = useState<SortableItem | null>(null)
   const [overItem, setOverItem] = useState<SortableItem | null>(null)
@@ -201,11 +201,10 @@ export function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }:
   }
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
-    if (actionActive) return
-    console.log('onDragEnd', { active, over })
+    if (isActionActive) return
     resetState()
 
-    if (!actionActive && projected && over) {
+    if (!isActionActive && projected && over) {
       const { depth, parentId } = projected
       const clonedItems: FlattenedItem[] = JSON.parse(JSON.stringify(flattenTree(items)))
       const overIndex = clonedItems.findIndex(({ id }) => id === over.id)

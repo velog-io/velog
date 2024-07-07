@@ -1,12 +1,12 @@
-import { ActionType } from '@/contexts/sidebar'
+import { PageType } from '@/contexts/sidebar'
 import { NewFolderIcon } from '@/nextra/icons/new-folder'
 import { NewPageIcon } from '@/nextra/icons/new-page'
 import { SeparatorIcon } from '@/nextra/icons/separator'
 
 type Props = {
   className: string
-  type: ActionType
-  onClick: (type: ActionType) => void
+  type: PageType
+  onClick: (type: PageType) => void
 }
 
 export const ControlIcon = ({ className, type, onClick }: Props) => {

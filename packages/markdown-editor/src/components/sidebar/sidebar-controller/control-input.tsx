@@ -1,7 +1,7 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import cn from 'clsx'
 
-import { ActionType, useSidebar } from '@/contexts/sidebar'
+import { PageType, useSidebar } from '@/contexts/sidebar'
 import useOutsideClick from '@/hooks/use-outside-click'
 import { EmptyFolderIcon } from '@/nextra/icons/empty-folder'
 import { EmptyFileIcon } from '@/nextra/icons/empty-file'
@@ -10,15 +10,16 @@ import { type CustomEventDetail, nextraCustomEventName } from '@/index'
 import { useDebouncedCallback } from 'use-debounce'
 
 type Props = {
-  type: ActionType
+  type: PageType
 }
 
 export function ControlInput({ type }: Props): ReactElement {
   const sidebar = useSidebar()
+  const { isAddAction, isEditAction } = useSidebar()
   const [title, setTitle] = useState<string | null>(null)
   const [error, setError] = useState('')
 
-  const nameMapper: Record<ActionType, string> = {
+  const nameMapper: Record<PageType, string> = {
     folder: '폴더',
     page: '페이지',
     separator: '구분선',
@@ -44,52 +45,59 @@ export function ControlInput({ type }: Props): ReactElement {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     // 두개 이상의 공백은 하나의 공백으로 변경
-    const value = e.target.value.replace(/\s\s+/g, ' ').trim()
+    const value = e.target.value.replace(/\s\s+/g, ' ').trimStart()
     setTitle(value)
   }
 
   const onOutsideClick = () => {
-    if (!sidebar.actionActive) return
+    if (!sidebar.isActionActive) return
     if (title) {
       dispatchEvent()
     } else {
-      // cancel
-      sidebar.setSortableItems(sidebar.originSortableItems)
-      sidebar.reset()
+      sidebar.setSortableItems(sidebar.originSortableItems) // cancel
     }
+    sidebar.reset()
     setTitle('')
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === ' ' && title === null) {
-      e.preventDefault()
-      return
-    }
-
-    if (e.key === ' ' && title !== null) {
-      e.preventDefault()
-      setTitle((title) => `${title} `)
-      return
-    }
     if (e.key !== 'Enter') return
     e.preventDefault()
     dispatchEvent()
+    sidebar.reset()
   }
 
   const dispatchEvent = useDebouncedCallback(
-    () => {
-      const { parentUrlSlug, bookUrlSlug, index, type } = sidebar.actionInfo
-      if (type === '') return
-      if (!title) return
-      if (error) return
-      const event = new CustomEvent<CustomEventDetail['createOrUpdateItemEvent']>(
-        nextraCustomEventName.createOrUpdateItemEvent,
-        {
-          detail: { title, parentUrlSlug, index, bookUrlSlug, type },
-        },
-      )
-      window.dispatchEvent(event)
-    },
+    useCallback(() => {
+      if (sidebar.actionInfo === null) return
+      if (isAddAction(sidebar.actionInfo)) {
+        const { parentUrlSlug, bookUrlSlug, index, type } = sidebar.actionInfo
+        if (type === '') return
+        if (!title) return
+        if (error) return
+        const event = new CustomEvent<CustomEventDetail['createItemEvent']>(
+          nextraCustomEventName.createItemEvent,
+          {
+            detail: { title, parentUrlSlug, index, bookUrlSlug, type },
+          },
+        )
+        window.dispatchEvent(event)
+      }
+
+      if (isEditAction(sidebar.actionInfo)) {
+        if (type === '') return
+        if (title === null) return
+        if (error) return
+        const { pageUrlSlug } = sidebar.actionInfo
+        const event = new CustomEvent<CustomEventDetail['updateItemEvent']>(
+          nextraCustomEventName.updateItemEvent,
+          {
+            detail: { title, pageUrlSlug },
+          },
+        )
+        window.dispatchEvent(event)
+      }
+    }, [title, error, sidebar.actionInfo]),
     1000,
     { leading: true },
   )
