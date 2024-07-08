@@ -29,6 +29,7 @@ export function ControlInput({ type }: Props): ReactElement {
   const forbiddenCharsRegex = /[<>#%"{}|\^~\[\]`\/:@=&+$,;!*()\\']/
   const typeName = nameMapper[type]
 
+  // validate title
   useEffect(() => {
     if (title === null || title === '') return
     if (forbiddenCharsRegex.test(title)) {
@@ -69,12 +70,14 @@ export function ControlInput({ type }: Props): ReactElement {
 
   const dispatchEvent = useDebouncedCallback(
     useCallback(() => {
+      if (type === '') return
+      if (title === null) return
+      if (title.trim() === '') return
+      if (error) return
       if (sidebar.actionInfo === null) return
+
       if (isAddAction(sidebar.actionInfo)) {
         const { parentUrlSlug, bookUrlSlug, index, type } = sidebar.actionInfo
-        if (type === '') return
-        if (!title) return
-        if (error) return
         const event = new CustomEvent<CustomEventDetail['createItemEvent']>(
           nextraCustomEventName.createItemEvent,
           {
@@ -85,9 +88,6 @@ export function ControlInput({ type }: Props): ReactElement {
       }
 
       if (isEditAction(sidebar.actionInfo)) {
-        if (type === '') return
-        if (title === null) return
-        if (error) return
         const { pageUrlSlug } = sidebar.actionInfo
         const event = new CustomEvent<CustomEventDetail['updateItemEvent']>(
           nextraCustomEventName.updateItemEvent,
@@ -97,7 +97,7 @@ export function ControlInput({ type }: Props): ReactElement {
         )
         window.dispatchEvent(event)
       }
-    }, [title, error, sidebar.actionInfo]),
+    }, [title, error, sidebar.actionInfo, type]),
     1000,
     { leading: true },
   )

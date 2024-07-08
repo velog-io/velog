@@ -86,7 +86,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
       return
     }
 
-    // Check if the editing item is different
+    // 이름 변경할 대상이 다른 아이템으로 변경 된 경우
     const editActionInfo = actionInfo as EditActionInfo
     if (editActionInfo.pageUrlSlug === item.urlSlug) return
     setIsEdit(false)
@@ -112,6 +112,11 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     onCloseMenu()
     setIsDeleteTarget(true)
     onOpenModal('deleteSortableItem')
+    setActionInfo<'delete'>({
+      action: 'delete',
+      title: item.title,
+      childrenCount: item.children.length,
+    })
   }
 
   const onEdit = () => {

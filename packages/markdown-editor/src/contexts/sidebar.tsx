@@ -5,7 +5,9 @@ type ActionInfo<T = string> = T extends 'add'
   ? AddActionInfo
   : T extends 'edit'
     ? EditActionInfo
-    : null
+    : T extends 'delete'
+      ? DeleteActionInfo
+      : null
 
 export type AddActionInfo = {
   action: 'add'
@@ -19,6 +21,12 @@ export type EditActionInfo = {
   action: 'edit'
   title?: string
   pageUrlSlug?: string
+}
+
+export type DeleteActionInfo = {
+  action: 'delete'
+  title: string
+  childrenCount: number
 }
 
 export type PageType = 'folder' | 'page' | 'separator' | ''
