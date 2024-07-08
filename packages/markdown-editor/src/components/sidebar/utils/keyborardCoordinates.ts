@@ -5,7 +5,6 @@ import {
   KeyboardCoordinateGetter,
   DroppableContainer,
 } from '@dnd-kit/core'
-
 import { getProjection } from '.'
 import { SensorContext } from '../sortable-tree/types'
 

@@ -1,4 +1,5 @@
-import { SortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { type SortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable'
+
 export const customListSortingStrategy = (
   isValid: (activeIndex: any, overIndex: any) => boolean,
 ): SortingStrategy => {

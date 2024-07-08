@@ -51,7 +51,7 @@ const generatePageMap = (pages: Pages, bookUrl: string) => {
           // create unique key
           const key =
             index === 0 && !init ? 'index' : `${escapeForUrl(`${page.title}-${page.code}`)}`
-          const value = { title: `${page.title}-${index}` }
+          const value = { title: page.title }
           // save key
           map.set(page.url_slug, key)
           if (page.type === 'separator') {

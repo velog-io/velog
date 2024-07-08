@@ -2,44 +2,13 @@ import { arrayMove } from '@dnd-kit/sortable'
 import { Active, UniqueIdentifier } from '@dnd-kit/core'
 import { FlattenedItem, TreeItem, TreeItems } from '@/types'
 import { Item, PageItem, SortableItem } from '@/nextra/normalize-pages'
-import { removeCodeFromRoute } from '@/utils'
 import { customCollisionDetectionAlgorithm } from './customCollisionDetection'
 import { customListSortingStrategy } from './customListSortingStrategy'
 import { dropAnimation } from './dropAnimation'
 import { keyboardCoordinates } from './keyborardCoordinates'
+import { normalizePageToTreeData } from './normalizePageToTreeData'
 
 export const MAX_DEPTH = 3
-
-function initilizeDirectories(
-  items: PageItem[] | Item[],
-  route: string,
-  collapsedTree: Set<string>,
-  parentId: UniqueIdentifier | null = null,
-  depth = 0,
-  parent: PageItem | Item | null = null,
-): SortableItem[] {
-  return items.map((item, index) => {
-    const open = route.startsWith(removeCodeFromRoute(item.route))
-    const opened = collapsedTree.has(item.id)
-    const collapsed = item.kind === 'Folder' && (open || opened)
-    const data: Omit<SortableItem, 'childrenIds'> = {
-      ...item,
-      parentId,
-      depth,
-      isLast: items.length === index + 1,
-      parent,
-      children: item.children
-        ? initilizeDirectories(item.children, route, collapsedTree, item.id, depth + 1, item)
-        : [],
-      collapsed: collapsed && item.kind === 'Folder',
-      index,
-    }
-    return {
-      ...data,
-      childrenIds: data.children.map((child: SortableItem) => child.id),
-    } as SortableItem
-  })
-}
 
 function flatten<T extends SortableItem>(
   items: TreeItems<T>,
@@ -299,7 +268,7 @@ const getIsParentOver = (
 }
 
 export {
-  initilizeDirectories,
+  normalizePageToTreeData,
   flattenTree,
   findItemDeep,
   findItem,

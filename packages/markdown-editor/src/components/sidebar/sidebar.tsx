@@ -15,7 +15,7 @@ import { LocaleSwitch } from '../locale-switch'
 import { useSidebar } from '@/contexts/sidebar'
 import { Menu } from './menu'
 import { SortableTree } from './sortable-tree'
-import { initilizeDirectories } from './utils'
+import { normalizePageToTreeData } from './utils'
 
 interface SideBarProps {
   docsDirectories: PageItem[]
@@ -99,13 +99,14 @@ export function Sidebar({
   const hasMenu = config.darkMode || hasI18n || config.sidebar.toggleButton
   const [route] = routeOriginal.split('#')
 
+  // sidebar items에 변화가 생겼을때, sortableItems를 업데이트 (ex, 이름 변경, 순서 변경, 삭제...)
   useEffect(() => {
-    const initSotableItems = initilizeDirectories(docsDirectories, route, collapsedTree)
+    const initSotableItems = normalizePageToTreeData(docsDirectories, route, collapsedTree)
     setSortableItems(initSotableItems)
   }, [docsDirectories])
 
   const initFullDirectories: SortableItem[] = useMemo(
-    () => initilizeDirectories(fullDirectories, route, collapsedTree),
+    () => normalizePageToTreeData(fullDirectories, route, collapsedTree),
     [fullDirectories],
   )
 
