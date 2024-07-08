@@ -275,7 +275,8 @@ export class PageService implements Service {
     }
 
     if (typeof rest_input.title === 'string') {
-      Object.assign(updateInput, { title: rest_input.title })
+      const newUrlSlug = `/${this.utils.escapeForUrl(rest_input.title)}-${page.code}`
+      Object.assign(updateInput, { title: rest_input.title, url_slug: newUrlSlug })
     }
 
     if (typeof rest_input.is_deleted === 'boolean') {
