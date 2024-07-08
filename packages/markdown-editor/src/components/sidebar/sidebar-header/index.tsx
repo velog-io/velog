@@ -1,5 +1,5 @@
 export { SidebarHeader } from './sidebar-header'
 export { CollapseAllIcon } from './collapse-all-icon'
-export { ControlIcon } from './control-icon'
-export { ControlMenu } from './control-menu'
+export { ControlIcons } from './control-icons'
+export { ControlOption } from './control-option'
 export { ControlInput } from './control-input'

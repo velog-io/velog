@@ -7,6 +7,7 @@ import { customListSortingStrategy } from './customListSortingStrategy'
 import { dropAnimation } from './dropAnimation'
 import { keyboardCoordinates } from './keyborardCoordinates'
 import { normalizePageToTreeData } from './normalizePageToTreeData'
+import { findFolder } from './findFolder'
 
 export const MAX_DEPTH = 3
 
@@ -284,4 +285,5 @@ export {
   customListSortingStrategy,
   dropAnimation,
   keyboardCoordinates,
+  findFolder,
 }

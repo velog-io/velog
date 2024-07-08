@@ -14,9 +14,17 @@ type Props = {
 }
 
 export function ControlInput({ type }: Props): ReactElement {
-  const sidebar = useSidebar()
-  const { isAddAction, isEditAction } = useSidebar()
-  const [title, setTitle] = useState<string | null>(null)
+  const {
+    isActionActive,
+    actionInfo,
+    isAddAction,
+    isEditAction,
+    originSortableItems,
+    setSortableItems,
+    reset,
+  } = useSidebar()
+
+  const [input, setInput] = useState<string | null>(null)
   const [error, setError] = useState('')
 
   const nameMapper: Record<PageType, string> = {
@@ -31,78 +39,83 @@ export function ControlInput({ type }: Props): ReactElement {
 
   // validate title
   useEffect(() => {
-    if (title === null || title === '') return
-    if (forbiddenCharsRegex.test(title)) {
+    if (input === null || input === '') return
+    if (forbiddenCharsRegex.test(input)) {
       setError(`${typeName} 이름에 사용해서는 안 되는 기호가 포함되어 있습니다.`)
-    } else if (title === '') {
+    } else if (input === '') {
       setError(`${typeName} 이름을 입력해야 합니다.`)
-    } else if (title.startsWith(' ')) {
+    } else if (input.startsWith(' ')) {
       setError(`${typeName} 이름은 공백으로 시작할 수 없습니다.`)
     } else {
       setError('')
     }
-  }, [title])
+  }, [input])
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     // 두개 이상의 공백은 하나의 공백으로 변경
     const value = e.target.value.replace(/\s\s+/g, ' ').trimStart()
-    setTitle(value)
+    setInput(value)
   }
 
-  const onOutsideClick = () => {
-    if (!sidebar.isActionActive) return
-    if (title) {
+  const onOutsideClick = (e?: MouseEvent) => {
+    e?.preventDefault()
+    if (!isActionActive) return
+    if (actionInfo === null) return
+    if (!isAddAction(actionInfo)) return
+
+    if (input) {
       dispatchEvent()
     } else {
-      sidebar.setSortableItems(sidebar.originSortableItems) // cancel
+      setSortableItems(originSortableItems) // cancel
     }
-    sidebar.reset()
-    setTitle('')
+    reset()
+    setInput('')
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter') return
     e.preventDefault()
     dispatchEvent()
-    sidebar.reset()
+    reset()
+    setInput('')
   }
 
   const dispatchEvent = useDebouncedCallback(
     useCallback(() => {
       if (type === '') return
-      if (title === null) return
-      if (title.trim() === '') return
+      if (input === null) return
+      if (input.trim() === '') return
       if (error) return
-      if (sidebar.actionInfo === null) return
+      if (actionInfo === null) return
 
-      if (isAddAction(sidebar.actionInfo)) {
-        const { parentUrlSlug, bookUrlSlug, index, type } = sidebar.actionInfo
+      if (isAddAction(actionInfo)) {
+        const { parentUrlSlug, bookUrlSlug, index, type } = actionInfo
         const event = new CustomEvent<CustomEventDetail['createItemEvent']>(
           nextraCustomEventName.createItemEvent,
           {
-            detail: { title, parentUrlSlug, index, bookUrlSlug, type },
+            detail: { title: input, parentUrlSlug, index, bookUrlSlug, type },
           },
         )
         window.dispatchEvent(event)
       }
 
-      if (isEditAction(sidebar.actionInfo)) {
-        const { pageUrlSlug } = sidebar.actionInfo
+      if (isEditAction(actionInfo)) {
+        const { pageUrlSlug } = actionInfo
         const event = new CustomEvent<CustomEventDetail['updateItemEvent']>(
           nextraCustomEventName.updateItemEvent,
           {
-            detail: { title, pageUrlSlug },
+            detail: { title: input, pageUrlSlug },
           },
         )
         window.dispatchEvent(event)
       }
-    }, [title, error, sidebar.actionInfo, type]),
+    }, [input, error, actionInfo, type]),
     1000,
     { leading: true },
   )
 
-  const { ref } = useOutsideClick<HTMLDivElement>(onOutsideClick)
+  const { ref } = useOutsideClick<HTMLDivElement>((e) => onOutsideClick(e))
   if (type === '') return <></>
   return (
     <div
@@ -125,7 +138,7 @@ export function ControlInput({ type }: Props): ReactElement {
           'nx-bg-gray-100 nx-text-gray-600 ',
           'dark:nx-bg-primary-100/5 dark:nx-text-gray-400',
         )}
-        value={title === null ? '' : title}
+        value={input === null ? '' : input}
         onChange={onChange}
         onKeyDown={onKeyDown}
         autoFocus={true}

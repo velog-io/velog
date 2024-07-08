@@ -39,7 +39,7 @@ export const DeleteSortableItemModal: React.FC = () => {
             <X size={24} />
           </button>
         </div>
-        <p className="nx-text-gray-600 dark:nx-text-gray-300">{`${action.title ?? '이'} 항목을 삭제하시겠습니까?`}</p>
+        <p className="nx-text-gray-600 dark:nx-text-gray-300">{`${action.title ?? '이 항목'}을 삭제하시겠습니까?`}</p>
         {action.childrenCount > 0 && (
           <p className="nx-mt-1 nx-text-sm nx-text-gray-600 dark:nx-text-gray-300">
             하위 항목도 모두 함께 삭제됩니다.

@@ -1,11 +1,11 @@
 import cn from 'clsx'
-import { ControlIcon } from './control-icon'
+import { ControlIcons } from './control-icons'
 import { CollapseAllIcon } from './collapse-all-icon'
 import { PageType, useSidebar } from '@/contexts/sidebar'
 import { useUrlSlug } from '@/hooks/use-url-slug'
 import { useRef } from 'react'
 import { SortableItem } from '@/nextra/normalize-pages'
-import { findFolder } from './utils'
+import { findFolder } from '../utils'
 
 type Props = {
   showSidebar: boolean
@@ -18,33 +18,45 @@ const style = cn(
 )
 
 export function SidebarHeader({ showSidebar }: Props) {
-  const sidebar = useSidebar()
+  const {
+    isActionActive,
+    originSortableItems,
+    setOriginSortableItems,
+    setSortableItems,
+    sortableItems,
+    reset,
+    setIsActionActive,
+    setActionInfo,
+  } = useSidebar()
   const { bookUrlSlug, pageUrlSlug, fullUrlSlug } = useUrlSlug()
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const onClickIcon = (type: PageType) => {
     if (type === '') return
-    if (sidebar.isActionActive) {
-      sidebar.setSortableItems(sidebar.originSortableItems)
-      sidebar.reset()
+    if (isActionActive) {
+      console.log('isCancel')
+      if (originSortableItems.length > 0) {
+        setSortableItems(originSortableItems)
+      }
+      reset()
       return
     }
 
     // init
-    timeoutRef.current = setTimeout(() => sidebar.setIsActionActive(true), 100)
-    sidebar.setOriginSortableItems(sidebar.sortableItems) // 취소 되었을때 원래 데이터로 복구하기 위함
+    timeoutRef.current = setTimeout(() => setIsActionActive(true), 200)
+    setOriginSortableItems(sortableItems) // 취소 되었을때 원래 데이터로 복구하기 위함
 
     // remove code
     let targetRoute = pageUrlSlug
-    const isFolder = !!findFolder(sidebar.sortableItems, fullUrlSlug)
+    const isFolder = !!findFolder(sortableItems, fullUrlSlug)
 
     // 폴더 타입이 아닐 경우 부모 폴더로 targetRoute를 변경
     if (!isFolder) {
       targetRoute = targetRoute.split('/').slice(0, -1).join('/') || '/'
     }
 
-    const coppeidPageMap = structuredClone(sidebar.sortableItems)
+    const coppeidPageMap = structuredClone(sortableItems)
 
     function addNewFolderToItem(sortableItems: SortableItem[]) {
       for (const item of sortableItems) {
@@ -87,7 +99,7 @@ export function SidebarHeader({ showSidebar }: Props) {
           }
 
           const removeBookUrlSlug = addToTop ? '' : item?.route.replace(bookUrlSlug, '')
-          sidebar.setActionInfo<'add'>({
+          setActionInfo<'add'>({
             action: 'add',
             parentUrlSlug: removeBookUrlSlug ?? '',
             index,
@@ -101,7 +113,7 @@ export function SidebarHeader({ showSidebar }: Props) {
             item.children.push(newItem)
           }
 
-          sidebar.setSortableItems(coppeidPageMap)
+          setSortableItems(coppeidPageMap)
           break
         }
 
@@ -123,9 +135,9 @@ export function SidebarHeader({ showSidebar }: Props) {
         showSidebar ? 'nx-block' : 'nx-hidden',
       )}
     >
-      <ControlIcon className={style} onClick={onClickIcon} type="page" />
-      <ControlIcon className={style} onClick={onClickIcon} type="folder" />
-      <ControlIcon className={style} onClick={onClickIcon} type="separator" />
+      <ControlIcons className={style} onClick={onClickIcon} type="page" />
+      <ControlIcons className={style} onClick={onClickIcon} type="folder" />
+      <ControlIcons className={style} onClick={onClickIcon} type="separator" />
       <CollapseAllIcon className={style} />
     </div>
   )

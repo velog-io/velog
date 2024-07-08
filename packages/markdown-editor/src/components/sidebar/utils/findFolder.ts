@@ -1,4 +1,4 @@
-import { Folder, PageMapItem } from '@/nextra/types'
+import type { Folder, PageMapItem } from '@/nextra/types'
 
 export function findFolder(pageMap: PageMapItem[], route: string): Folder | undefined {
   const folders = pageMap.filter((page) => page.kind === 'Folder')

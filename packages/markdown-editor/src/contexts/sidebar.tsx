@@ -51,6 +51,7 @@ type Sidebar = {
   setShowMenuId: (value: string | null) => void
   isAddAction: (args: any) => boolean
   isEditAction: (args: any) => boolean
+  isDeleteAction: (args: any) => boolean
 }
 
 let collapsedTree = new Set<string>()
@@ -85,6 +86,7 @@ const SidebarContext = createContext<Sidebar>({
   setShowMenuId: () => {},
   isAddAction: () => false,
   isEditAction: () => false,
+  isDeleteAction: () => false,
 })
 
 export function useSidebar() {
@@ -115,7 +117,10 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
     setFolding(value)
   }
 
-  function setActionInformation<T = 'add' | 'edit'>(args: ActionInfo<T>): void {
+  function setActionInformation<T = 'add' | 'edit' | 'delete'>(args: ActionInfo<T>): void {
+    if (!isActionActive) {
+      setIsActionActive(true)
+    }
     setActionInfo(args as any)
   }
 
@@ -125,6 +130,10 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
 
   function isEditAction(args: any): args is EditActionInfo {
     return args.action === 'edit'
+  }
+
+  function isDeleteAction(args: any): args is DeleteActionInfo {
+    return args.action === 'delete'
   }
 
   const value: Sidebar = {
@@ -147,6 +156,7 @@ export const SidebarProvider = ({ children }: { children: ReactNode }): ReactEle
     setShowMenuId,
     isAddAction,
     isEditAction,
+    isDeleteAction,
   }
 
   return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>

@@ -19,7 +19,7 @@ const style = {
   svg: cn('nx-mr-2'),
 }
 
-export const ControlMenu = forwardRef<HTMLDivElement, Props>(
+export const ControlOption = forwardRef<HTMLDivElement, Props>(
   ({ isOpen, isIndex, position, onEdit, onDelete }, ref) => {
     return (
       <div

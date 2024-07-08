@@ -9,7 +9,7 @@ import { classes, indentStyle } from '../style'
 import type { SortableItemProps } from './types'
 import useOutsideClick from '@/hooks/use-outside-click'
 import { createPortal } from 'react-dom'
-import { ControlMenu, ControlInput } from '../sidebar-header'
+import { ControlOption, ControlInput } from '../sidebar-header'
 import { useModal } from '@/contexts/modal'
 import { CustomEventDetail } from '@/types'
 import { nextraCustomEventName } from '@/index'
@@ -24,6 +24,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     setActionInfo,
     actionInfo,
     isEditAction,
+    reset,
   } = useSidebar()
   const { onOpen: onOpenModal, onClose: onCloseModal, isConfirm, mode } = useModal()
   const [mousePosition, setMousePosition] = useState({ top: 0, left: 0 })
@@ -76,6 +77,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     if (!isDeleteTarget) return
     onDispatchDeleteEvent()
     onCloseModal()
+    reset()
   }, [isConfirm])
 
   useEffect(() => {
@@ -159,7 +161,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
       onContextMenu={onOpenMenu}
     >
       {createPortal(
-        <ControlMenu
+        <ControlOption
           ref={menuRef}
           isOpen={showMenuId === item.id}
           position={mousePosition}
