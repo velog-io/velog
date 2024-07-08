@@ -6,7 +6,7 @@ import { PageItem, SortableItem } from '@/nextra/normalize-pages'
 
 import { useRouter } from 'next/router'
 import { useMenu } from '@/contexts'
-import { ControlInput } from './sidebar-controller/control-input'
+import { ControlInput } from './sidebar-header'
 import { classes } from './style'
 import { MenuItemProps } from './menu'
 import { useDndTree } from './sortable-tree'

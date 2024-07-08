@@ -5,8 +5,9 @@ import {
   KeyboardCoordinateGetter,
   DroppableContainer,
 } from '@dnd-kit/core'
-import { SensorContext } from '../types'
+
 import { getProjection } from '.'
+import { SensorContext } from '../sortable-tree/types'
 
 const directions: string[] = [
   KeyboardCode.Down,
@@ -17,7 +18,7 @@ const directions: string[] = [
 
 const horizontal: string[] = [KeyboardCode.Left, KeyboardCode.Right]
 
-export const sortableTreeKeyboardCoordinates: (
+export const keyboardCoordinates: (
   context: SensorContext,
   indentationWidth: number,
   indicator?: boolean,

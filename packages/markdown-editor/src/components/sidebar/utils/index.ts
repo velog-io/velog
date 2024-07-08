@@ -3,6 +3,10 @@ import { Active, UniqueIdentifier } from '@dnd-kit/core'
 import { FlattenedItem, TreeItem, TreeItems } from '@/types'
 import { Item, PageItem, SortableItem } from '@/nextra/normalize-pages'
 import { removeCodeFromRoute } from '@/utils'
+import { customCollisionDetectionAlgorithm } from './customCollisionDetection'
+import { customListSortingStrategy } from './customListSortingStrategy'
+import { dropAnimation } from './dropAnimation'
+import { keyboardCoordinates } from './keyborardCoordinates'
 
 export const MAX_DEPTH = 3
 
@@ -307,4 +311,8 @@ export {
   buildTree,
   findParent,
   getIsParentOver,
+  customCollisionDetectionAlgorithm,
+  customListSortingStrategy,
+  dropAnimation,
+  keyboardCoordinates,
 }

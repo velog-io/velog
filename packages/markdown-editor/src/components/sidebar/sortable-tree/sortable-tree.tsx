@@ -24,20 +24,20 @@ import {
   removeChildrenOf,
   setProperty,
   setPropertyAll,
-} from './utils'
+  customCollisionDetectionAlgorithm,
+  dropAnimation,
+} from '../utils'
 import { FlattenedItem } from '@/types'
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { SortableItem } from '@/nextra/normalize-pages'
 import cn from 'clsx'
-import { customCollisionDetectionAlgorithm } from './utils/customCollisionDetection'
 import { createPortal } from 'react-dom'
 import { SortableItemWrapper } from './sortable-item-wrapper'
-import { dropAnimation } from './utils/dropAnimation'
 import { useSidebar } from '@/contexts/sidebar'
 import { SensorContext } from './types'
 import { CustomEventDetail, nextraCustomEventName } from '@/index'
 import { useUrlSlug } from '@/hooks/use-url-slug'
-import { SidebarController } from '../sidebar-controller'
+import { SidebarHeader } from '../sidebar-header'
 
 type Props = {
   items: SortableItem[]
@@ -312,7 +312,7 @@ export function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }:
             )}
             ref={sidebarRef}
           >
-            <SidebarController showSidebar={showSidebar} />
+            <SidebarHeader showSidebar={showSidebar} />
             {showSidebar && (
               <ul className={cn('nextra-menu-desktop max-md:nx-hidden')}>
                 {flattenedItems.map((item) => {

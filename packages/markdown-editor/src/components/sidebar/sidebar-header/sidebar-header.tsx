@@ -17,7 +17,7 @@ const style = cn(
   'nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50',
 )
 
-export function SidebarController({ showSidebar }: Props) {
+export function SidebarHeader({ showSidebar }: Props) {
   const sidebar = useSidebar()
   const { bookUrlSlug, pageUrlSlug, fullUrlSlug } = useUrlSlug()
 
