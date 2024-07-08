@@ -33,7 +33,8 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
 
   const router = useRouter()
   const routeOriginal = useFSRoute()
-  const [route] = routeOriginal.split('#')
+  const [originRoute] = routeOriginal.split('#')
+  const route = decodeURIComponent(originRoute)
 
   const {
     wrapperRef,
@@ -50,8 +51,10 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
   } = props
 
   const isAction = ['newPage', 'newFolder', 'newSeparator'].includes(item.type) || isEdit
+
   const active =
     !isDragging && !isAction && !isGhost && [route, `${route}/`].includes(item.route + '/')
+
   // const isLink = 'withIndexPage' in item && item.withIndexPage
 
   const isShowMenu = showMenuId === item.id
