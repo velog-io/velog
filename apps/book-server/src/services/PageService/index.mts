@@ -1,6 +1,6 @@
 import { BadRequestError } from '@errors/BadRequestErrors.mjs'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
-import { NotFoundError } from '@errors/NotfoundError.mjs'
+import { NotFoundError } from '@errors/NotFoundError.mjs'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
 import type {
   CreatePageInput,

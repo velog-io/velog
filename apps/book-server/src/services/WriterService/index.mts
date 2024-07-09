@@ -1,5 +1,5 @@
 import { Time } from '@constants/TimeConstants.mjs'
-import { NotFoundError } from '@errors/NotfoundError.mjs'
+import { NotFoundError } from '@errors/NotFoundError.mjs'
 import { Writer } from '@graphql/generated.js'
 import { GraphQLContext } from '@interfaces/graphql.mjs'
 import { JwtService } from '@lib/jwt/JwtService.mjs'

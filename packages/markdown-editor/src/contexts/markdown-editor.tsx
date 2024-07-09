@@ -34,8 +34,8 @@ type Props = {
 }
 
 export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Props) => {
-  const [isError, setIsError] = useState<boolean>(false)
   const [value, setValue] = useState<string>(editorValue)
+  const [isError, setIsError] = useState<boolean>(false)
   const [mdxSource, setMdxSource] = useState<MDXRemoteSerializeResult | null>(null)
   const [stat, setStat] = useState<Statistics | null>(null)
 
@@ -54,10 +54,12 @@ export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Pro
           onigHostUrl: process.env.NEXT_PUBLIC_CLIENT_HOST,
           isError,
         })
+
         if (!result) {
           setIsError(true)
           return
         }
+
         setMdxSource(result)
       } catch (_) {}
     }

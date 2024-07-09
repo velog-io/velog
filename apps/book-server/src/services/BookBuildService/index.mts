@@ -2,7 +2,7 @@ import path from 'node:path'
 import fs from 'fs-extra'
 import { exec as execCb } from 'node:child_process'
 import { promisify } from 'node:util'
-import { NotFoundError } from '@errors/NotfoundError.mjs'
+import { NotFoundError } from '@errors/NotFoundError.mjs'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { injectable, singleton } from 'tsyringe'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
@@ -117,6 +117,7 @@ export class BookBuildService implements Service {
 
     fs.writeFileSync(`${dest}/theme.config.tsx`, themeConfigTemplate({ title: book.title }))
 
+    await exec('pnpm prettier -w .', { cwd: dest })
     const buildStdout = await this.buildTsToJs(dest)
     if (buildStdout) {
       this.mq.publish({
@@ -148,6 +149,7 @@ export class BookBuildService implements Service {
       const { stdout, stderr } = await exec('pnpm next build', { cwd: dest })
       if (stderr) {
         console.error(`stderr: ${stderr}`)
+        return stderr
       }
       return stdout
     } catch (error) {

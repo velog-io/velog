@@ -165,6 +165,7 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
       }
       const { deploy } = await deployAsyncMutate({ input: { url_slug: bookUrlSlug } })
 
+      console.log('deploy', deploy)
       const event = new CustomEvent(nextraCustomEventName.deployEndEvent, {
         detail: { publishedUrl: deploy.published_url },
       })

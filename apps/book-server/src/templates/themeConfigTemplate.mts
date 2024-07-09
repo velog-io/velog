@@ -6,8 +6,20 @@ export const themeConfigTemplate = ({ title }: Props) => {
   return `
   import { useRouter } from 'next/router'
   import type { DocsThemeConfig } from 'nextra-theme-docs'
-  import { useConfig } from 'nextra-theme-docs'
-  
+  import {
+  useConfig,
+  Callout,
+  Bleed,
+  Card,
+  Cards,
+  FileTree,
+  Tabs,
+  Tab,
+  Steps,
+} from 'nextra-theme-docs'
+
+  const components = { Callout, Bleed, Card, Cards, FileTree, Tabs, Tab, Steps } as any
+
   const config: DocsThemeConfig = {
     logo: <span>${title}</span>,
     editLink: {
@@ -72,6 +84,9 @@ export const themeConfigTemplate = ({ title }: Props) => {
           />
         </>
       )
+    },
+    components: {
+      ...components,
     },
   }
   

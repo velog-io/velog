@@ -5,7 +5,6 @@ import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 import fp from 'fastify-plugin'
 
-// TODO: apply fastify-plugin
 const errorHandlerPlugin: FastifyPluginCallback = (fastify, _, done) => {
   fastify.addHook('preHandler', function (request, reply, done) {
     if (request.body) {

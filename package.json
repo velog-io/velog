@@ -44,6 +44,6 @@
     "next": "14.2.3"
   },
   "dependencies": {
-    "turbo": "^2.0.4"
+    "turbo": "^2.0.6"
   }
 }

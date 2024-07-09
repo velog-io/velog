@@ -135,9 +135,10 @@ export const mdxCompiler = async (
     })
 
     return result
-  } catch (error) {
+  } catch (error: any) {
     if (process.env.NODE_ENV === 'development') {
       console.log('Failed to compile source', error)
+      throw new Error(error)
     }
     return null
   }

@@ -2,7 +2,7 @@ import path from 'node:path'
 import fs from 'fs-extra'
 import { injectable, singleton } from 'tsyringe'
 import { BookService } from '@services/BookService/index.mjs'
-import { NotFoundError } from '@errors/NotfoundError.mjs'
+import { NotFoundError } from '@errors/NotFoundError.mjs'
 import { WriterService } from '@services/WriterService/index.mjs'
 import { AwsS3Service } from '@lib/awsS3/AwsS3Service.mjs'
 import mime from 'mime'
@@ -34,12 +34,14 @@ export class BookDeployService implements Service {
     const writer = await this.writerService.findById(signedWriterId)
 
     if (!writer) {
+      console.log('Not found writer')
       throw new NotFoundError('Not found writer')
     }
 
     const book = await this.bookService.findByUrlSlug(url_slug)
 
     if (!book) {
+      console.log('Not found book')
       throw new NotFoundError('Not found book')
     }
 
@@ -52,6 +54,7 @@ export class BookDeployService implements Service {
     // find output
     const exists = fs.existsSync(output)
     if (!exists) {
+      console.log('Not found book output')
       throw new NotFoundError('Not found book output')
     }
 

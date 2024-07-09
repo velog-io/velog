@@ -1,4 +1,4 @@
-import { NotFoundError } from '@errors/NotfoundError.mjs'
+import { NotFoundError } from '@errors/NotFoundError.mjs'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { injectable, singleton } from 'tsyringe'
 import { BadRequestError } from '@errors/BadRequestErrors.mjs'
