@@ -70,67 +70,69 @@ export const mdxCompiler = async (
 
   const onig = await fetch(`${onigHostUrl}/wasm/onig.wasm`)
   setWasm(onig)
+
+  const remarkPlugins = (
+    [
+      remarkParse,
+      // remarkMermaid, // should be before remarkRemoveImports because contains `import { Mermaid } from ...`
+      [
+        remarkNpm2Yarn, // should be before remarkRemoveImports because contains `import { Tabs as $Tabs, Tab as $Tab } from ...`
+        {
+          packageName: 'nextra/components',
+          tabNamesProp: 'items',
+          storageKey: 'selectedPackageManager',
+        },
+      ] satisfies Pluggable,
+      remarkRemoveImports,
+      remarkGfm,
+      [remarkMdxDisableExplicitJsx, { whiteList: ['details', 'summary'] }] satisfies Pluggable,
+      remarkCustomHeadingId,
+      [remarkHeadings, { isRemoteContent: true }] satisfies Pluggable,
+      remarkStaticImage,
+      remarkReadingTime,
+      remarkMath,
+      remarkReplaceImports,
+      [
+        remarkRehype,
+        {
+          allowDangerousHtml: true,
+          passThrough: [
+            'mdxjsEsm',
+            'mdxFlowExpression',
+            'mdxJsxFlowElement',
+            'mdxJsxTextElement',
+            'mdxTextExpression',
+          ],
+        },
+      ],
+      [
+        clonedRemarkLinkRewrite,
+        {
+          pattern: MARKDOWN_URL_EXTENSION_REGEX,
+          replace: '',
+          excludeExternalLinks: true,
+        },
+      ] satisfies Pluggable,
+    ] as any
+  ).filter(truthy)
+
+  const rehypePlugins = (
+    [
+      // [rehypeRaw, { allowDangerousHtml: true }],
+      [parseMeta, { defaultShowCopyCode }] satisfies Pluggable,
+      rehypeKatex,
+      attachMeta,
+      rehypeStringify,
+    ] as any
+  ).filter(truthy)
+
   try {
     const result = await serialize(content, {
       mdxOptions: {
         format: isError ? 'md' : 'mdx',
         development: false,
-        remarkPlugins: (
-          [
-            remarkParse,
-            // remarkMermaid, // should be before remarkRemoveImports because contains `import { Mermaid } from ...`
-            [
-              remarkNpm2Yarn, // should be before remarkRemoveImports because contains `import { Tabs as $Tabs, Tab as $Tab } from ...`
-              {
-                packageName: 'nextra/components',
-                tabNamesProp: 'items',
-                storageKey: 'selectedPackageManager',
-              },
-            ] satisfies Pluggable,
-            remarkRemoveImports,
-            remarkGfm,
-            [
-              remarkMdxDisableExplicitJsx,
-              { whiteList: ['details', 'summary'] },
-            ] satisfies Pluggable,
-            remarkCustomHeadingId,
-            [remarkHeadings, { isRemoteContent: true }] satisfies Pluggable,
-            remarkStaticImage,
-            remarkReadingTime,
-            remarkMath,
-            remarkReplaceImports,
-            [
-              remarkRehype,
-              {
-                allowDangerousHtml: true,
-                passThrough: [
-                  'mdxjsEsm',
-                  'mdxFlowExpression',
-                  'mdxJsxFlowElement',
-                  'mdxJsxTextElement',
-                  'mdxTextExpression',
-                ],
-              },
-            ],
-            [
-              clonedRemarkLinkRewrite,
-              {
-                pattern: MARKDOWN_URL_EXTENSION_REGEX,
-                replace: '',
-                excludeExternalLinks: true,
-              },
-            ] satisfies Pluggable,
-          ] as any
-        ).filter(truthy),
-        rehypePlugins: (
-          [
-            // [rehypeRaw, { allowDangerousHtml: true }],
-            [parseMeta, { defaultShowCopyCode }] satisfies Pluggable,
-            rehypeKatex,
-            attachMeta,
-            rehypeStringify,
-          ] as any
-        ).filter(truthy),
+        remarkPlugins,
+        rehypePlugins,
       },
     })
 
@@ -138,8 +140,16 @@ export const mdxCompiler = async (
   } catch (error: any) {
     if (process.env.NODE_ENV === 'development') {
       console.log('Failed to compile source', error)
-      throw new Error(error)
     }
-    return null
+    const result = await serialize(content, {
+      mdxOptions: {
+        format: 'md',
+        development: false,
+        remarkPlugins,
+        rehypePlugins,
+      },
+    })
+
+    return result
   }
 }
