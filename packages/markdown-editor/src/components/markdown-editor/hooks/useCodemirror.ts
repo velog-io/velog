@@ -66,6 +66,11 @@ export const useCodemirror = (container: RefObject<HTMLElement>, config: Config 
       scrollbarGutter: 'stable',
       'overflow-x': 'hidden',
     },
+    '.cm-heading1': { fontSize: '24px' },
+    '.cm-heading2': { fontSize: '20px' },
+    '.cm-heading3': { fontSize: '18px' },
+    '.cm-heading4': { fontSize: '16px' },
+    '.cm-heading5': { fontSize: '14px' },
   })
 
   const updateListener = EditorView.updateListener.of((viewUpdate: ViewUpdate) => {
