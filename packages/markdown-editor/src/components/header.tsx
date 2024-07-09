@@ -84,7 +84,7 @@ export function Header({ flatDirectories, items }: NavBarProps): ReactElement {
           'contrast-more:nx-shadow-[0_0_0_1px_#000] contrast-more:dark:nx-shadow-[0_0_0_1px_#fff]',
         )}
       >
-        <nav className="nx-ml-[320px] nx-flex nx-h-[var(--nextra-navbar-height)] nx-max-w-[120rem] nx-items-center nx-justify-end nx-gap-2">
+        <nav className="nx-ml-[20px] nx-mr-[24px] nx-flex nx-h-[var(--nextra-navbar-height)] nx-items-center nx-justify-end nx-gap-2">
           {config.logoLink ? (
             <Anchor
               href={typeof config.logoLink === 'string' ? config.logoLink : '/'}

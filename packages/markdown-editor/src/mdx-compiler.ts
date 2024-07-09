@@ -139,17 +139,25 @@ export const mdxCompiler = async (
     return result
   } catch (error: any) {
     if (process.env.NODE_ENV === 'development') {
-      console.log('Failed to compile source', error)
+      console.log('Failed to compile source as mdx', error)
     }
-    const result = await serialize(content, {
-      mdxOptions: {
-        format: 'md',
-        development: false,
-        remarkPlugins,
-        rehypePlugins,
-      },
-    })
 
-    return result
+    try {
+      const result = await serialize(content, {
+        mdxOptions: {
+          format: 'md',
+          development: false,
+          remarkPlugins,
+          rehypePlugins,
+        },
+      })
+
+      return result
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Failed to compile source as md', error)
+      }
+      return null
+    }
   }
 }

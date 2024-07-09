@@ -29,7 +29,7 @@ export function Card({
   icon,
   image,
   arrow,
-  href,
+  href = '/',
   ...props
 }: {
   children: ReactNode
@@ -37,7 +37,7 @@ export function Card({
   icon: ReactNode
   image?: boolean
   arrow?: boolean
-  href: string
+  href?: string
 }) {
   const animatedArrow = arrow ? arrowEl : null
 
