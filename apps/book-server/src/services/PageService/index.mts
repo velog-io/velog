@@ -335,8 +335,19 @@ export class PageService implements Service {
         })
       : null
 
-    if (parentPage && parentPage.fk_book_id !== book.id) {
+    if (parentPage && parentPage?.fk_book_id !== book.id) {
       throw new ConfilctError('Not related parent page')
+    }
+
+    if (parentPage && parentPage.type !== 'folder') {
+      await this.mongo.page.update({
+        where: {
+          id: parentPage.id,
+        },
+        data: {
+          type: 'folder',
+        },
+      })
     }
 
     const targetPage = await this.mongo.page.update({
@@ -408,7 +419,7 @@ export class PageService implements Service {
       throw new BadRequestError('Already deleted')
     }
 
-    await this.mongo.page.update({
+    const deletedPage = await this.mongo.page.update({
       where: {
         id: page.id,
       },
@@ -418,6 +429,30 @@ export class PageService implements Service {
         updated_at: new Date(),
       },
     })
+
+    const siblings = await this.mongo.page.findMany({
+      where: {
+        parent_id: page.parent_id,
+        is_deleted: false,
+        id: {
+          not: deletedPage.id,
+        },
+      },
+      orderBy: [{ index: 'asc' }, { updated_at: 'desc' }],
+    })
+
+    const updateSiblings = siblings.map((sibling, index) => {
+      return this.mongo.page.update({
+        where: {
+          id: sibling.id,
+        },
+        data: {
+          index,
+        },
+      })
+    })
+
+    await Promise.all(updateSiblings)
   }
 }
 
