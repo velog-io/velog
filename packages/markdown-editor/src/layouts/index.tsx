@@ -1,3 +1,2 @@
-export { Body } from './Body'
-export { InnerLayout } from './InnerLayout'
-export { MarkdownEditor } from './MarkdownEditor'
+export { InnerLayout } from './lnner-layout'
+export { Layout } from './layout'

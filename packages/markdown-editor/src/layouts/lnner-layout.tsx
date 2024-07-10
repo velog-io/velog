@@ -1,30 +1,20 @@
 import cn from 'clsx'
 import { DEFAULT_LOCALE } from '@/constants'
-import { ActiveAnchorProvider, useConfig } from '@/contexts'
-import { useMarkdownEditor } from '@/contexts/markdown-editor'
+import { ActiveAnchorProvider } from '@/contexts'
 import { useFSRoute } from '@/nextra/hooks'
 import { normalizePages } from '@/nextra/normalize-pages'
 import type { PageOpts } from '@/nextra/types'
 import { useMemo, type ReactElement, type ReactNode } from 'react'
 import { Banner, Breadcrumb, Head, Header, NavLinks, Sidebar } from '@/components'
+import { MarkdownPreview } from '@/components/markdown-preview'
 import { MarkdownEditor } from '@/components/markdown-editor'
-import { Body } from './Body'
-import { MDXRemote } from 'next-mdx-remote'
-import { getComponents } from '@/mdx-components'
 
 type InnerLayoutProps = PageOpts & {
   children: ReactNode
 }
 
-export const InnerLayout = ({
-  frontMatter,
-  headings,
-  children,
-  pageMap,
-}: InnerLayoutProps): ReactElement => {
-  const config = useConfig()
+export const InnerLayout = ({ frontMatter, headings, pageMap }: InnerLayoutProps): ReactElement => {
   const fsPath = useFSRoute()
-  const { mdxSource } = useMarkdownEditor()
 
   const {
     activeType,
@@ -49,10 +39,6 @@ export const InnerLayout = ({
 
   const themeContext = { ...activeThemeContext, ...frontMatter }
   const direction = 'ltr'
-
-  if (!mdxSource) {
-    return <div>Mdx source Loading...</div>
-  }
 
   return (
     <div dir={direction} className={cn('nx-relative nx-flex nx-flex-wrap')}>
@@ -85,7 +71,7 @@ export const InnerLayout = ({
               <MarkdownEditor />
             </div>
             <div className={cn('nextra-preview-container nx-w-1/2')}>
-              <Body
+              <MarkdownPreview
                 themeContext={themeContext}
                 breadcrumb={<Breadcrumb activePath={activePath} />}
                 timestamp={new Date().getTime()}
@@ -94,18 +80,7 @@ export const InnerLayout = ({
                     <NavLinks flatDirectories={flatDocsDirectories} currentIndex={activeIndex} />
                   ) : null
                 }
-              >
-                <MDXRemote
-                  compiledSource={mdxSource.compiledSource}
-                  frontmatter={mdxSource.frontmatter}
-                  scope={mdxSource.scope}
-                  components={getComponents({
-                    isRawLayout: themeContext.layout === 'raw',
-                    components: config.components,
-                  })}
-                />
-                {children}
-              </Body>
+              ></MarkdownPreview>
             </div>
           </div>
         </ActiveAnchorProvider>

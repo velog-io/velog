@@ -13,6 +13,7 @@ export type {
   PageMapItem,
   PageOpts,
 }
+export { Layout as MarkdownEditor } from './layouts'
 export const nextraCustomEventName: Record<keyof CustomEventDetail, string> = {
   createItemEvent: 'createItemEvent',
   updateItemEvent: 'updateItemEvent',
@@ -21,4 +22,3 @@ export const nextraCustomEventName: Record<keyof CustomEventDetail, string> = {
   deployEndEvent: 'deployEndEvent',
   deleteItemEvent: 'deleteItemEvent',
 }
-export { MarkdownEditor } from './layouts'

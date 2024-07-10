@@ -4,13 +4,16 @@ import { useMounted } from '@/nextra/hooks'
 import type { PageTheme } from '@/nextra/normalize-pages'
 import type { ReactNode, ReactElement } from 'react'
 import { renderComponent } from '@/utils'
+import { MDXRemote } from 'next-mdx-remote'
+import { getComponents } from '@/mdx-components'
+import { useMarkdownEditor } from '@/contexts/markdown-editor'
 
-interface BodyProps {
+interface MarkdownPreviewProps {
   themeContext: PageTheme
   breadcrumb: ReactNode
   timestamp?: number
   navigation: ReactNode
-  children: ReactNode
+  children?: ReactNode
 }
 
 const classes = {
@@ -18,9 +21,14 @@ const classes = {
   main: cn('nextra-scrollbar nx-break-words nx-h-screen nx-overflow-y-auto'),
 }
 
-export const Body = ({ themeContext, navigation, children }: BodyProps): ReactElement => {
+export const MarkdownPreview = ({
+  themeContext,
+  navigation,
+  children,
+}: MarkdownPreviewProps): ReactElement => {
   const config = useConfig()
   const isMount = useMounted()
+  const { mdxSource } = useMarkdownEditor()
 
   if (themeContext.layout === 'raw') {
     return <div className={classes.main}>{children}</div>
@@ -38,9 +46,21 @@ export const Body = ({ themeContext, navigation, children }: BodyProps): ReactEl
       <div className="nx-mt-16" />
     )
 
+  if (!mdxSource) {
+    return <div>Mdx source Loading...</div>
+  }
+
   const content = (
     <>
-      {children}
+      <MDXRemote
+        compiledSource={mdxSource.compiledSource}
+        frontmatter={mdxSource.frontmatter}
+        scope={mdxSource.scope}
+        components={getComponents({
+          isRawLayout: false,
+          components: config.components,
+        })}
+      />
       {gitTimestampEl}
       {navigation}
     </>
