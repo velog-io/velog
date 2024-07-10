@@ -72,7 +72,6 @@ const SortableTreeMenuNotMemoized = function SortableItemWrapper({
   }
 
   const parent = findParent(items, active)
-
   const props: SortableItemWrapperProps = {
     setNodeRef,
     setActivatorNodeRef,
@@ -87,7 +86,7 @@ const SortableTreeMenuNotMemoized = function SortableItemWrapper({
     active,
     style,
     parent: parent,
-    previousItem, // over된 item의 이전 item을 의미함
+    previousItem, // over된 item의 이전 item을 의미함 // TODO: remove
     isParentOver: getIsParentOver(parent, over?.id),
     isChildrenOver: over ? item.childrenIds.includes(over?.id) : false,
     depth,

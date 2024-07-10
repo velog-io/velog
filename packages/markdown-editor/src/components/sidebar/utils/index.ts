@@ -200,7 +200,7 @@ function getProjection(
     depth = minDepth
   }
 
-  if (previousItem && (previousItem.kind === 'MdxPage' || previousItem.type === 'separator')) {
+  if (previousItem && previousItem.type === 'separator') {
     depth = previousItem.depth
   }
 

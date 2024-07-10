@@ -11,9 +11,9 @@ export function normalizePageToTreeData(
   parent: PageItem | Item | null = null,
 ): SortableItem[] {
   return items.map((item, index) => {
-    const open = route.startsWith(removeCodeFromRoute(item.route))
-    const opened = collapsedTree.has(item.id)
-    const collapsed = item.kind === 'Folder' && (open || opened)
+    const isFocus = route.startsWith(removeCodeFromRoute(item.route))
+    const isCollapsed = collapsedTree.has(item.id)
+    const collapsed = item.kind === 'Folder' && (isFocus || isCollapsed)
     const data: Omit<SortableItem, 'childrenIds'> = {
       ...item,
       parentId,

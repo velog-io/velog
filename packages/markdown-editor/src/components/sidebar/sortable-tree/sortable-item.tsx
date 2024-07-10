@@ -85,7 +85,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
 
   useEffect(() => {
     if (!isEdit) return
-    // Dispached by other component
+    // action이 edit이 아닌 경우
     if (actionInfo === null || !isEditAction(actionInfo)) {
       setIsEdit(false)
       return
