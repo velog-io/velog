@@ -14,14 +14,14 @@ type NextraDocLayoutProps = NextraThemeLayoutProps & {
 export function Layout({ children, editorValue, ...context }: NextraDocLayoutProps): ReactElement {
   return (
     <ConfigProvider value={context}>
-      <MarkdownEditorProvider value={{ editorValue }}>
-        <ModalProvider>
-          <SidebarProvider>
+      <ModalProvider>
+        <SidebarProvider>
+          <MarkdownEditorProvider value={{ editorValue }}>
             <Potals />
             <InnerLayout {...context.pageOpts}>{children}</InnerLayout>
-          </SidebarProvider>
-        </ModalProvider>
-      </MarkdownEditorProvider>
+          </MarkdownEditorProvider>
+        </SidebarProvider>
+      </ModalProvider>
     </ConfigProvider>
   )
 }

@@ -5,7 +5,7 @@ import { useFSRoute } from '@/nextra/hooks'
 import { normalizePages } from '@/nextra/normalize-pages'
 import type { PageOpts } from '@/nextra/types'
 import { useMemo, type ReactElement, type ReactNode } from 'react'
-import { Banner, Breadcrumb, Head, Header, NavLinks, Sidebar } from '@/components'
+import { Banner, Head, Header, Sidebar } from '@/components'
 import { MarkdownPreview } from '@/components/markdown-preview'
 import { MarkdownEditor } from '@/components/markdown-editor'
 
@@ -16,26 +16,17 @@ type InnerLayoutProps = PageOpts & {
 export const InnerLayout = ({ frontMatter, headings, pageMap }: InnerLayoutProps): ReactElement => {
   const fsPath = useFSRoute()
 
-  const {
-    activeType,
-    activeIndex,
-    activeThemeContext,
-    activePath,
-    docsDirectories,
-    flatDirectories,
-    flatDocsDirectories,
-    directories,
-    topLevelNavbarItems,
-  } = useMemo(
-    () =>
-      normalizePages({
-        list: pageMap,
-        locale: DEFAULT_LOCALE,
-        defaultLocale: DEFAULT_LOCALE,
-        route: '/',
-      }),
-    [pageMap, fsPath],
-  )
+  const { activeThemeContext, docsDirectories, flatDirectories, directories, topLevelNavbarItems } =
+    useMemo(
+      () =>
+        normalizePages({
+          list: pageMap,
+          locale: DEFAULT_LOCALE,
+          defaultLocale: DEFAULT_LOCALE,
+          route: '/',
+        }),
+      [pageMap, fsPath],
+    )
 
   const themeContext = { ...activeThemeContext, ...frontMatter }
   const direction = 'ltr'
@@ -50,13 +41,7 @@ export const InnerLayout = ({ frontMatter, headings, pageMap }: InnerLayoutProps
       <Head />
       <Banner />
       <Header flatDirectories={flatDirectories} items={topLevelNavbarItems} />
-      <div
-        className={cn(
-          'nextra-main',
-          'nx-mx-auto nx-flex nx-w-full',
-          themeContext.layout === 'raw' && 'nx-max-w-[90rem] nx-flex-row',
-        )}
-      >
+      <div className={cn('nextra-main', 'nx-mx-auto nx-flex nx-w-full')}>
         <ActiveAnchorProvider>
           <Sidebar
             docsDirectories={docsDirectories}
@@ -71,16 +56,7 @@ export const InnerLayout = ({ frontMatter, headings, pageMap }: InnerLayoutProps
               <MarkdownEditor />
             </div>
             <div className={cn('nextra-preview-container nx-w-1/2')}>
-              <MarkdownPreview
-                themeContext={themeContext}
-                breadcrumb={<Breadcrumb activePath={activePath} />}
-                timestamp={new Date().getTime()}
-                navigation={
-                  activeType !== 'page' && themeContext.pagination ? (
-                    <NavLinks flatDirectories={flatDocsDirectories} currentIndex={activeIndex} />
-                  ) : null
-                }
-              ></MarkdownPreview>
+              <MarkdownPreview />
             </div>
           </div>
         </ActiveAnchorProvider>

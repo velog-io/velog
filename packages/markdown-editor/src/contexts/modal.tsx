@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useContext, useState } from 'react'
+import { createContext, type ReactNode, useContext, useEffect, useRef, useState } from 'react'
 
 export type ModalMode = 'deleteSortableItem'
 
@@ -32,16 +32,27 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [mode, setMode] = useState<ModalMode | null>(null)
   const [isConfirm, setIsConfirm] = useState<boolean>(false)
+  const timer = useRef<NodeJS.Timeout | null>(null)
 
+  useEffect(
+    () => () => {
+      if (timer.current) {
+        clearTimeout(timer.current)
+      }
+    },
+    [],
+  )
   const onOpen = (mode: ModalMode) => {
     setIsOpen(true)
     setMode(mode)
   }
 
   const onClose = () => {
-    setIsOpen(false)
-    setMode(null)
-    setIsConfirm(false)
+    timer.current = setTimeout(() => {
+      setIsOpen(false)
+      setMode(null)
+      setIsConfirm(false)
+    }, 100)
   }
 
   const value: Modal = {

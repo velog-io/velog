@@ -73,7 +73,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
     setOverItem({ ...item, transform })
   }, [isOver, isGhost])
 
-  // deleteItem
+  // deleteItem confirm
   useEffect(() => {
     if (!isConfirm) return
     if (mode !== 'deleteSortableItem') return
@@ -154,7 +154,6 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
   }
 
   const { ref: menuRef } = useOutsideClick<HTMLDivElement>(onCloseMenu)
-
   return (
     <li
       {...handleProps}
