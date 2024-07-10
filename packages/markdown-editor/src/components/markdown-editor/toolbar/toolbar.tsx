@@ -1,10 +1,10 @@
 import cn from 'clsx'
-import { isValidElement, RefObject, useEffect, useState } from 'react'
+import { isValidElement, useEffect, useState } from 'react'
 import { titles, bold, italic, strike, quote, link, image, code, save } from './commands'
 import { ToolbarCommand } from './commands/type'
 import { EditorSelection, EditorState } from '@codemirror/state'
 import { EditorView } from '@codemirror/view'
-import ToolbarSeparator from './toolbar-separator'
+import { ToolbarSeparator } from './toolbar-separator'
 import useClickImage from '@/hooks/use-click-img'
 import { useUpload } from '@/hooks/use-upload'
 

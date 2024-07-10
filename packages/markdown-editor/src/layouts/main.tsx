@@ -4,19 +4,10 @@ import { ActiveAnchorProvider } from '@/contexts'
 import { useFSRoute } from '@/nextra/hooks'
 import { normalizePages } from '@/nextra/normalize-pages'
 import type { PageOpts } from '@/nextra/types'
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactElement,
-  type ReactNode,
-} from 'react'
+import { useCallback, useEffect, useMemo, useRef, type ReactElement, type ReactNode } from 'react'
 import { Banner, Head, Header, Sidebar } from '@/components'
 import { MarkdownPreview } from '@/components/markdown-preview'
 import { MarkdownEditor } from '@/components/markdown-editor'
-import { useMarkdownEditor } from '@/contexts/markdown-editor'
 import { ReactCodeMirrorRef } from '@/types'
 import * as events from '@uiw/codemirror-extensions-events'
 
@@ -26,7 +17,6 @@ type MainProps = PageOpts & {
 
 export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElement => {
   const fsPath = useFSRoute()
-  const { mdxSource } = useMarkdownEditor()
   const editorRef = useRef<ReactCodeMirrorRef>(null)
   const previewRef = useRef<HTMLDivElement>(null)
   const active = useRef<'editor' | 'preview'>('editor')
@@ -47,13 +37,9 @@ export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElemen
   const direction = 'ltr'
   const mainHeight = 'calc(100vh - (var(--nextra-navbar-height)))'
 
-  const previewScrollHandle = useCallback((event: Event) => {
-    const target = event.target as HTMLDivElement
-
-    const percent = target.scrollTop / target.scrollHeight
-
-    console.log('percent', percent)
-    console.log('active.current', active.current)
+  const previewScrollHandle = useCallback(() => {
+    // const target = event.target as HTMLDivElement
+    // const percent = target.scrollTop / target.scrollHeight
 
     if (active.current === 'editor' && previewRef.current) {
       const previewHeight = previewRef.current?.scrollHeight || 0

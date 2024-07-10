@@ -91,7 +91,6 @@ export const getDefaultExtensions = (options: ExtensionOptions) => {
       { tag: tags.heading4, class: 'cm-heading4' },
       { tag: tags.heading5, class: 'cm-heading5' },
     ])
-
     getExtensions.push(syntaxHighlighting(headHighlightStyle))
   }
 
