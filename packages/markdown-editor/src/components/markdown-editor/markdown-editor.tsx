@@ -1,35 +1,57 @@
-import { forwardRef, useEffect } from 'react'
+import cn from 'clsx'
+import { forwardRef, useEffect, useRef } from 'react'
 import { useCodemirror } from './hooks/useCodemirror'
 import { Toolbar } from './toolbar'
+import { ReactCodeMirrorRef } from '@/types'
+import { Extension } from '@codemirror/state'
 
-export const MarkdownEditor = forwardRef<HTMLDivElement>(({}, container) => {
-  const containerHeight = 'calc(100vh - (var(--nextra-navbar-height)))'
-  const { state, view } = useCodemirror(container, {
-    autoFocus: true,
-    minHeight: '100%',
-    maxHeight: '100%',
-  })
+interface MarkdownEditorProps {
+  codeMirrorExtensions?: Extension[]
+}
 
-  const onClick = () => {
-    console.log('clicked!')
-    view?.focus()
-  }
+export const MarkdownEditor = forwardRef<ReactCodeMirrorRef, MarkdownEditorProps>(
+  ({ codeMirrorExtensions = [] }, editorRef) => {
+    const codemirror = useRef<HTMLDivElement | null>(null)
+    const { state, view } = useCodemirror(codemirror, {
+      autoFocus: true,
+      minHeight: '100%',
+      maxHeight: '100%',
+      extension: codeMirrorExtensions,
+    })
 
-  useEffect(() => {
-    onClick()
-  }, [])
+    useEffect(() => {
+      if (!codemirror.current) return
+      if (!view || !state) return
+      if (typeof editorRef === 'function') {
+        editorRef({ editor: codemirror.current, view, state })
+      } else if (editorRef && 'current' in editorRef) {
+        editorRef.current = {
+          editor: codemirror.current,
+          view,
+          state,
+        }
+      }
+    }, [editorRef, view, state])
 
-  return (
-    <>
-      <Toolbar state={state} view={view} />
-      <div onClick={onClick}>
+    const onClick = () => {
+      view?.focus()
+    }
+
+    return (
+      <>
+        <Toolbar state={state} view={view} />
         <div
-          ref={container}
-          style={{ height: containerHeight }}
+          className={cn('markdown-editor-codemirror')}
+          onClick={onClick}
+          ref={codemirror}
           suppressHydrationWarning={true}
           suppressContentEditableWarning={true}
+          style={{
+            height:
+              'calc(100vh - (var(--nextra-navbar-height)) - var(--nextra-editor-toolbar-height))',
+          }}
         />
-      </div>
-    </>
-  )
-})
+      </>
+    )
+  },
+)

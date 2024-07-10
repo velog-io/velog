@@ -1,8 +1,8 @@
 import { getDefaultExtensions } from './../lib/getDefaultExtensions'
-import { Annotation, EditorState, StateEffect } from '@codemirror/state'
+import { Annotation, EditorState, Extension, StateEffect } from '@codemirror/state'
 import { EditorView, ViewUpdate } from '@codemirror/view'
 import { useTheme } from 'next-themes'
-import { ForwardedRef, RefObject, useEffect, useState } from 'react'
+import { RefObject, useEffect, useState } from 'react'
 import { useMarkdownEditor } from '../../../contexts/markdown-editor'
 import { getEditorStat } from '../lib/getEditorStat'
 import { hyperLink } from '@uiw/codemirror-extensions-hyper-link'
@@ -20,11 +20,12 @@ type Config = {
   width?: string | null
   minWidth?: string | null
   maxWidth?: string | null
+  extension?: Extension[]
 }
 
 const External = Annotation.define<boolean>()
 
-export const useCodemirror = (container: ForwardedRef<HTMLDivElement>, config: Config = {}) => {
+export const useCodemirror = (container: RefObject<HTMLDivElement>, config: Config = {}) => {
   const { theme: currentTheme } = useTheme()
   const { value, setValue, setStat } = useMarkdownEditor()
   const [state, setState] = useState<EditorState | null>(null)
@@ -38,6 +39,7 @@ export const useCodemirror = (container: ForwardedRef<HTMLDivElement>, config: C
     width = null,
     minWidth = null,
     maxWidth = null,
+    extension = [],
   } = config
 
   const eventHandlers = EditorView.domEventHandlers({
@@ -56,7 +58,7 @@ export const useCodemirror = (container: ForwardedRef<HTMLDivElement>, config: C
       maxWidth,
     },
     '& .cm-editor': {
-      // height: '100%',
+      height: '100%',
     },
     '& .cm-scroller': {
       width: '100%',
@@ -98,6 +100,7 @@ export const useCodemirror = (container: ForwardedRef<HTMLDivElement>, config: C
     defaultThemeOption,
     eventHandlers,
     ...defaultExtensions,
+    ...extension,
   ]
 
   // create state

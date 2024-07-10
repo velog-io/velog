@@ -4,10 +4,21 @@ import { ActiveAnchorProvider } from '@/contexts'
 import { useFSRoute } from '@/nextra/hooks'
 import { normalizePages } from '@/nextra/normalize-pages'
 import type { PageOpts } from '@/nextra/types'
-import { useEffect, useMemo, useRef, useState, type ReactElement, type ReactNode } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactElement,
+  type ReactNode,
+} from 'react'
 import { Banner, Head, Header, Sidebar } from '@/components'
 import { MarkdownPreview } from '@/components/markdown-preview'
 import { MarkdownEditor } from '@/components/markdown-editor'
+import { useMarkdownEditor } from '@/contexts/markdown-editor'
+import { ReactCodeMirrorRef } from '@/types'
+import * as events from '@uiw/codemirror-extensions-events'
 
 type MainProps = PageOpts & {
   children: ReactNode
@@ -15,20 +26,10 @@ type MainProps = PageOpts & {
 
 export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElement => {
   const fsPath = useFSRoute()
-  const editorRef = useRef<HTMLDivElement>(null)
+  const { mdxSource } = useMarkdownEditor()
+  const editorRef = useRef<ReactCodeMirrorRef>(null)
   const previewRef = useRef<HTMLDivElement>(null)
-
-  const rerender = useState({})[1]
-
-  useEffect(() => {
-    const trigger = () => rerender({})
-    trigger()
-  }, [])
-
-  useEffect(() => {
-    console.log('editorRef:', editorRef)
-    console.log('previewRef:', previewRef)
-  }, [editorRef, previewRef])
+  const active = useRef<'editor' | 'preview'>('editor')
 
   const { activeThemeContext, docsDirectories, flatDirectories, directories, topLevelNavbarItems } =
     useMemo(
@@ -45,6 +46,48 @@ export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElemen
   const themeContext = { ...activeThemeContext, ...frontMatter }
   const direction = 'ltr'
   const mainHeight = 'calc(100vh - (var(--nextra-navbar-height)))'
+
+  const previewScrollHandle = useCallback((event: Event) => {
+    const target = event.target as HTMLDivElement
+
+    const percent = target.scrollTop / target.scrollHeight
+
+    console.log('percent', percent)
+    console.log('active.current', active.current)
+
+    if (active.current === 'editor' && previewRef.current) {
+      const previewHeight = previewRef.current?.scrollHeight || 0
+      previewRef.current.scrollTop = previewHeight
+    }
+    // else if (editorRef.current && editorRef.current.view) {
+    //   const editorScrollDom = editorRef.current.view.scrollDOM
+    //   const editorScrollHeihgt = editorRef.current.view.scrollDOM.scrollHeight || 0
+    //   editorScrollDom.scrollTop = editorScrollHeihgt * percent
+    // }
+  }, [])
+
+  const mouseoverHandle = () => (active.current = 'preview')
+  const mouseleaveHandle = () => (active.current = 'editor')
+  useEffect(() => {
+    const $preview = previewRef.current
+    if ($preview) {
+      console.log('add event listener')
+      $preview.addEventListener('mouseover', mouseoverHandle, false)
+      $preview.addEventListener('mouseleave', mouseleaveHandle, false)
+      $preview.addEventListener('scroll', previewScrollHandle, false)
+    }
+    return () => {
+      if ($preview) {
+        $preview.removeEventListener('mouseover', mouseoverHandle)
+        $preview.removeEventListener('mouseleave', mouseoverHandle)
+        $preview.addEventListener('mouseleave', previewScrollHandle, false)
+      }
+    }
+  }, [previewRef, previewScrollHandle])
+
+  const scrollExtensions = events.scroll({
+    scroll: previewScrollHandle,
+  })
 
   return (
     <div
@@ -75,10 +118,10 @@ export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElemen
             includePlaceholder={themeContext.layout === 'default'}
           />
           <div className={cn('nx-flex nx-overflow-hidden')} style={{ width: 'calc(100% - 320px)' }}>
-            <div className={cn('nextra-editor-container nx-w-1/2')}>
-              <MarkdownEditor ref={editorRef} />
+            <div className={cn('nextra-editor-container nx-h-[100%] nx-w-1/2')}>
+              <MarkdownEditor ref={editorRef} codeMirrorExtensions={[scrollExtensions]} />
             </div>
-            <div className={cn('nextra-preview-container nx-w-1/2')}>
+            <div className={cn('nextra-preview-container nx-h-[100%] nx-w-1/2')}>
               <MarkdownPreview ref={previewRef} />
             </div>
           </div>

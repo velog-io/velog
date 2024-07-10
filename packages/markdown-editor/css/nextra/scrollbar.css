@@ -1,10 +1,10 @@
-.nextra-scrollbar {
+.markdown-editor-scrollbar {
   scrollbar-width: thin; /* Firefox */
   scrollbar-color: oklch(55.55% 0 0 / 40%) transparent; /* Firefox */
 
   scrollbar-gutter: stable;
   &::-webkit-scrollbar {
-    @apply nx-w-3 nx-h-3;
+    @apply nx-h-3 nx-w-3;
   }
   &::-webkit-scrollbar-track {
     @apply nx-bg-transparent;

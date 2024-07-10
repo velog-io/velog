@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  name: 'nextra-editor',
+  name: 'markdown-editor',
   entry: ['src/index.tsx'],
   format: 'esm',
   dts: true,

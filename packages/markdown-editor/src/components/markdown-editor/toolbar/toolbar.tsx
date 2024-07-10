@@ -114,7 +114,7 @@ export const Toolbar = ({ state, view }: Props) => {
   }
 
   return (
-    <div className={cn('nx-flex nx-flex-row nx-items-center')}>
+    <div className={cn('markdown-editor-toolbar nx-flex nx-flex-row nx-items-center')}>
       {commands.map((command, index) => {
         const key = `${command.name}-${index}`
         if (!isValidElement(command.icon)) {

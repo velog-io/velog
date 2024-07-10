@@ -4,6 +4,8 @@ import type { DocsThemeConfig } from './constants'
 import type { ProcessorOptions } from '@mdx-js/mdx'
 import type { UniqueIdentifier } from '@dnd-kit/core'
 import type { PageItem, SortableItem } from './nextra/normalize-pages'
+import type { EditorState } from '@codemirror/state'
+import type { EditorView } from 'codemirror'
 
 export type Context = {
   pageOpts: PageOpts
@@ -163,3 +165,9 @@ export type ItemChangedReason<T = PageItem> =
        */
       item: TreeItem<T>
     }
+
+export interface ReactCodeMirrorRef {
+  editor?: HTMLDivElement | null
+  state?: EditorState
+  view?: EditorView
+}

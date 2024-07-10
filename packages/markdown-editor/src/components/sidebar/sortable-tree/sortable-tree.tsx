@@ -308,7 +308,7 @@ export function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }:
               'nx-overflow-y-auto',
               'nx-grow nx-px-4 md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]',
               'nx-pb-4',
-              showSidebar ? 'nextra-scrollbar' : 'no-scrollbar',
+              showSidebar ? 'markdown-editor-scrollbar' : 'no-scrollbar',
             )}
             ref={sidebarRef}
           >

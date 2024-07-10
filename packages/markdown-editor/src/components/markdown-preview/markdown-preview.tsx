@@ -8,7 +8,7 @@ import { useMarkdownEditor } from '@/contexts/markdown-editor'
 interface MarkdownPreviewProps {}
 
 export const MarkdownPreview = forwardRef<HTMLDivElement, MarkdownPreviewProps>(
-  ({}, ref): ReactElement => {
+  (props, ref): ReactElement => {
     const config = useConfig()
     const { mdxSource } = useMarkdownEditor()
 
@@ -20,7 +20,8 @@ export const MarkdownPreview = forwardRef<HTMLDivElement, MarkdownPreviewProps>(
       <div
         ref={ref}
         className={cn(
-          'nextra-scrollbar nx-h-screen nx-overflow-y-auto nx-break-words nx-pb-16',
+          'markdown-editor-preview',
+          'markdown-editor-scrollbar nx-h-screen nx-overflow-y-auto nx-break-words nx-pb-16',
         )}
       >
         <main className="nx-mt-6 nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6 nx-pt-6">

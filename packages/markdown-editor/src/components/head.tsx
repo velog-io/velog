@@ -53,6 +53,7 @@ export function Head(): ReactElement {
           --nextra-navbar-height: 4rem;
           --nextra-menu-height: 3.75rem;
           --nextra-banner-height: 2.5rem;
+          --nextra-editor-toolbar-height: 3rem;
         }
         
         .dark {
