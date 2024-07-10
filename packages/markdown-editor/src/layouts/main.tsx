@@ -37,10 +37,11 @@ export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElemen
   const direction = 'ltr'
   const mainHeight = 'calc(100vh - (var(--nextra-navbar-height)))'
 
-  const previewScrollHandle = useCallback(() => {
-    // const target = event.target as HTMLDivElement
-    // const percent = target.scrollTop / target.scrollHeight
+  const previewScrollHandle = useCallback((event: Event) => {
+    const target = event.target as HTMLDivElement
+    const percent = target.scrollTop / target.scrollHeight
 
+    console.log('percent', percent)
     if (active.current === 'editor' && previewRef.current) {
       const previewHeight = previewRef.current?.scrollHeight || 0
       previewRef.current.scrollTop = previewHeight
