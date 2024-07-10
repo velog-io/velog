@@ -27,6 +27,10 @@ body {
   @apply nx-max-h-screen nx-w-full nx-bg-white dark:nx-bg-dark dark:nx-text-gray-100;
 }
 
+#__next {
+  @apply nx-h-screen nx-overflow-hidden;
+}
+
 a,
 summary,
 button,
@@ -65,7 +69,7 @@ summary {
     .nextra-sidebar-container {
       @apply nx-pt-[6.5rem];
     }
-    &.nextra-nav-container {
+    &.nextra-header-container {
       @apply nx-top-10 md:nx-top-0;
     }
   }
@@ -73,7 +77,7 @@ summary {
     .nextra-banner-container ~ div .nextra-sidebar-container {
       @apply nx-pt-16;
     }
-    .nextra-nav-container {
+    .nextra-header-container {
       @apply !nx-top-0;
     }
   }
@@ -120,7 +124,7 @@ article details > summary {
   .nextra-search ul {
     @apply nx-bg-white/70 nx-backdrop-blur-lg dark:nx-bg-dark/80;
   }
-  .nextra-nav-container-blur {
+  .nextra-header-container-blur {
     @apply nx-bg-white/[.85] nx-backdrop-blur-md dark:!nx-bg-dark/80;
   }
 }

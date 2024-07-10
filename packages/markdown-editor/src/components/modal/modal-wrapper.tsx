@@ -7,20 +7,14 @@ type Props = {
   onOverlayClick: VoidFunction
 }
 
-const style = {
-  backdrop: cn(
-    'nx-fixed nx-inset-0 nx-w-[100vw] nx-h-[100svh] nx-bg-[var(--opaque-layer)] nx-z-10 nx-flex nx-items-center nx-justify-center',
-  ),
-}
-
 export function ModalWrapper({ children, isVisible, onOverlayClick }: Props) {
   const [isClosed, setIsClosed] = useState(false)
   const backdropRef = useRef<HTMLDivElement>(null)
   const timeoutId = useRef<NodeJS.Timeout | null>(null)
 
-  const handleClickBackdrop: React.MouseEventHandler<HTMLDivElement> = useCallback(
-    (ev) => {
-      if (ev.target === backdropRef.current) {
+  const onBackdropClick: React.MouseEventHandler<HTMLDivElement> = useCallback(
+    (event) => {
+      if (event.target === backdropRef.current) {
         onOverlayClick?.()
       }
     },
@@ -46,8 +40,11 @@ export function ModalWrapper({ children, isVisible, onOverlayClick }: Props) {
   return (
     <div
       ref={backdropRef}
-      className={cn(style.backdrop, isVisible ? 'fadeIn' : 'fadeOut')}
-      onClick={handleClickBackdrop}
+      onClick={onBackdropClick}
+      className={cn(
+        'nx-fixed nx-inset-0 nx-z-10 nx-flex nx-h-[100svh] nx-w-[100vw] nx-items-center nx-justify-center nx-bg-[var(--opaque-layer)]',
+        isVisible ? 'fadeIn' : 'fadeOut',
+      )}
     >
       {children}
     </div>

@@ -3,7 +3,7 @@ import { MarkdownEditorProvider } from '@/contexts/markdown-editor'
 import { SidebarProvider } from '@/contexts/sidebar'
 import type { NextraThemeLayoutProps } from '@/nextra/types'
 import type { ReactElement } from 'react'
-import { InnerLayout } from './lnner-layout'
+import { Main } from './main'
 import { ModalProvider } from '@/contexts/modal'
 import { Potals } from '@/components/potals'
 
@@ -18,7 +18,7 @@ export function Layout({ children, editorValue, ...context }: NextraDocLayoutPro
         <SidebarProvider>
           <MarkdownEditorProvider value={{ editorValue }}>
             <Potals />
-            <InnerLayout {...context.pageOpts}>{children}</InnerLayout>
+            <Main {...context.pageOpts}>{children}</Main>
           </MarkdownEditorProvider>
         </SidebarProvider>
       </ModalProvider>

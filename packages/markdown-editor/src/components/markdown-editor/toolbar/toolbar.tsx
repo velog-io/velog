@@ -11,7 +11,6 @@ import { useUpload } from '@/hooks/use-upload'
 type Props = {
   state: EditorState | null
   view: EditorView | null
-  container: RefObject<HTMLElement>
 }
 
 const seperator = {

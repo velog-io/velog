@@ -1,10 +1,9 @@
-import { useRef } from 'react'
+import { forwardRef, useEffect } from 'react'
 import { useCodemirror } from './hooks/useCodemirror'
 import { Toolbar } from './toolbar'
 
-export const MarkdownEditor = () => {
-  const container = useRef<HTMLDivElement>(null)
-  const containerHeight = 'calc(100vh - 64px)'
+export const MarkdownEditor = forwardRef<HTMLDivElement>(({}, container) => {
+  const containerHeight = 'calc(100vh - (var(--nextra-navbar-height)))'
   const { state, view } = useCodemirror(container, {
     autoFocus: true,
     minHeight: '100%',
@@ -12,12 +11,17 @@ export const MarkdownEditor = () => {
   })
 
   const onClick = () => {
+    console.log('clicked!')
     view?.focus()
   }
 
+  useEffect(() => {
+    onClick()
+  }, [])
+
   return (
     <>
-      <Toolbar state={state} view={view} container={container} />
+      <Toolbar state={state} view={view} />
       <div onClick={onClick}>
         <div
           ref={container}
@@ -28,4 +32,4 @@ export const MarkdownEditor = () => {
       </div>
     </>
   )
-}
+})
