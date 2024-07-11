@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useSidebar } from '@/contexts/sidebar'
 import { CollapseAllIcon as Icon } from '@/nextra/icons/collapse-all'
 import { useRouter } from 'next/router'
-import { useUrlSlug } from '@/hooks/use-url-slug'
+import { useUrlSlug } from '@/hooks'
 
 type Props = {
   className: string

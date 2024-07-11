@@ -7,12 +7,13 @@ import { ArrowRightIcon } from '@/nextra/icons'
 import { useDndTree } from '.'
 import { classes, indentStyle } from '../style'
 import type { SortableItemProps } from './types'
-import useOutsideClick from '@/hooks/use-outside-click'
+
 import { createPortal } from 'react-dom'
 import { ControlOption, ControlInput } from '../sidebar-header'
 import { useModal } from '@/contexts/modal'
 import { CustomEventDetail } from '@/types'
 import { markdownCustomEventName } from '@/index'
+import { useOutsideClick } from '@/hooks'
 
 export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props, ref) => {
   const { isDragging, overItem, setOverItem } = useDndTree()

@@ -21,6 +21,10 @@ export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElemen
   const previewRef = useRef<HTMLDivElement>(null)
   const active = useRef<'editor' | 'preview'>('editor')
 
+  useEffect(() => {
+    console.log('editorRef', editorRef)
+  }, [editorRef])
+
   const { activeThemeContext, docsDirectories, flatDirectories, directories, topLevelNavbarItems } =
     useMemo(
       () =>
@@ -37,7 +41,7 @@ export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElemen
   const direction = 'ltr'
   const mainHeight = 'calc(100vh - (var(--nextra-navbar-height)))'
 
-  const previewScrollHandle = useCallback(() => {
+  const onPreviewScroll = useCallback((event: Event) => {
     // const target = event.target as HTMLDivElement
     // const percent = target.scrollTop / target.scrollHeight
 
@@ -52,27 +56,33 @@ export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElemen
     // }
   }, [])
 
-  const mouseoverHandle = () => (active.current = 'preview')
-  const mouseleaveHandle = () => (active.current = 'editor')
+  const onMouseOver = () => {
+    console.log('onMouseOver')
+    active.current = 'preview'
+  }
+  const onMouseLeave = () => {
+    console.log('onMouseLeave')
+    active.current = 'editor'
+  }
+
   useEffect(() => {
     const $preview = previewRef.current
-    if ($preview) {
-      console.log('add event listener')
-      $preview.addEventListener('mouseover', mouseoverHandle, false)
-      $preview.addEventListener('mouseleave', mouseleaveHandle, false)
-      $preview.addEventListener('scroll', previewScrollHandle, false)
-    }
+    if (!$preview) return
+    console.log('previewRef', $preview)
+    console.log('add event listener')
+    $preview.addEventListener('mouseover', onMouseOver)
+    $preview.addEventListener('mouseleave', onMouseLeave)
+    $preview.addEventListener('scroll', onPreviewScroll)
+
     return () => {
-      if ($preview) {
-        $preview.removeEventListener('mouseover', mouseoverHandle)
-        $preview.removeEventListener('mouseleave', mouseoverHandle)
-        $preview.addEventListener('mouseleave', previewScrollHandle, false)
-      }
+      $preview.removeEventListener('mouseover', onMouseOver)
+      $preview.removeEventListener('mouseleave', onMouseLeave)
+      $preview.addEventListener('scroll', onPreviewScroll)
     }
-  }, [previewRef, previewScrollHandle])
+  }, [previewRef, onPreviewScroll])
 
   const scrollExtensions = events.scroll({
-    scroll: previewScrollHandle,
+    scroll: onPreviewScroll,
   })
 
   return (

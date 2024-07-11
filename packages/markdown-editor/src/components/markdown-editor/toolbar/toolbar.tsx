@@ -1,12 +1,11 @@
 import cn from 'clsx'
 import { isValidElement, useEffect, useState } from 'react'
 import { titles, bold, italic, strike, quote, link, image, code, save } from './commands'
-import { ToolbarCommand } from './commands/type'
-import { EditorSelection, EditorState } from '@codemirror/state'
-import { EditorView } from '@codemirror/view'
+import type { ToolbarCommand } from './commands/type'
+import { EditorSelection, type EditorState } from '@codemirror/state'
+import type { EditorView } from '@codemirror/view'
 import { ToolbarSeparator } from './toolbar-separator'
-import useClickImage from '@/hooks/use-click-img'
-import { useUpload } from '@/hooks/use-upload'
+import { useClickImage, useUpload } from '@/hooks'
 
 type Props = {
   state: EditorState | null

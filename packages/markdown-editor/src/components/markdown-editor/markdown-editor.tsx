@@ -1,9 +1,10 @@
 import cn from 'clsx'
 import { forwardRef, useEffect, useRef } from 'react'
-import { useCodemirror } from './hooks/useCodemirror'
+
 import { Toolbar } from './toolbar'
 import { ReactCodeMirrorRef } from '@/types'
 import { Extension } from '@codemirror/state'
+import { useCodemirror } from '@/hooks'
 
 interface MarkdownEditorProps {
   codeMirrorExtensions?: Extension[]

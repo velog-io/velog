@@ -36,7 +36,7 @@ import { SortableItemWrapper } from './sortable-item-wrapper'
 import { useSidebar } from '@/contexts/sidebar'
 import { SensorContext } from './types'
 import { CustomEventDetail, markdownCustomEventName } from '@/index'
-import { useUrlSlug } from '@/hooks/use-url-slug'
+import { useUrlSlug } from '@/hooks'
 import { SidebarHeader } from '../sidebar-header'
 
 type Props = {

@@ -1,4 +1,8 @@
-import { MarkdownEditor, CustomEventDetail, nextraCustomEventName } from '@packages/markdown-editor'
+import {
+  MarkdownEditor,
+  CustomEventDetail,
+  markdownCustomEventName,
+} from '@packages/markdown-editor'
 import { themeConfig } from './context'
 import { useEffect, useState } from 'react'
 import { BookMetadata, generateBookMetadata, Pages } from '@/lib/generateBookMetadata'
@@ -63,7 +67,7 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     getPageRefetch()
   }, [pageUrlSlug])
 
-  // new Mdx
+  // new Page data
   useEffect(() => {
     if (isGetPageLoading) return
     if (!getPageData?.page) return
@@ -88,9 +92,9 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
       })
       getPagesRefetch()
     }
-    window.addEventListener(nextraCustomEventName.createItemEvent, create)
+    window.addEventListener(markdownCustomEventName.createItemEvent, create)
     return () => {
-      window.removeEventListener(nextraCustomEventName.createItemEvent, create)
+      window.removeEventListener(markdownCustomEventName.createItemEvent, create)
     }
   }, [])
 
@@ -113,9 +117,21 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
 
       const isUpdateTitle = !!e.detail.title
 
-      await updatePageAsyncMutate({
-        input: isUpdateTitle ? titleInput : bodyInput,
-      })
+      try {
+        await updatePageAsyncMutate({
+          input: isUpdateTitle ? titleInput : bodyInput,
+        })
+
+        const event = new CustomEvent(markdownCustomEventName.updateItemResultEvent, {
+          detail: { result: 'success' },
+        })
+        dispatchEvent(event)
+      } catch (error) {
+        const event = new CustomEvent(markdownCustomEventName.updateItemResultEvent, {
+          detail: { result: 'error' },
+        })
+        dispatchEvent(event)
+      }
 
       getPageRefetch()
 
@@ -124,9 +140,9 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
       }
     }
 
-    window.addEventListener(nextraCustomEventName.updateItemEvent, update)
+    window.addEventListener(markdownCustomEventName.updateItemEvent, update)
     return () => {
-      window.removeEventListener(nextraCustomEventName.updateItemEvent, update)
+      window.removeEventListener(markdownCustomEventName.updateItemEvent, update)
     }
   }, [pageUrlSlug, bookUrlSlug])
 
@@ -148,9 +164,9 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
       getPagesRefetch()
     }
 
-    window.addEventListener(nextraCustomEventName.changeItemOrderEvent, changeItem)
+    window.addEventListener(markdownCustomEventName.changeItemOrderEvent, changeItem)
     return () => {
-      window.removeEventListener(nextraCustomEventName.changeItemOrderEvent, changeItem)
+      window.removeEventListener(markdownCustomEventName.changeItemOrderEvent, changeItem)
     }
   }, [])
 
@@ -164,15 +180,15 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
         return
       }
       const { deploy } = await deployAsyncMutate({ input: { url_slug: bookUrlSlug } })
-      const event = new CustomEvent(nextraCustomEventName.deployEndEvent, {
+      const event = new CustomEvent(markdownCustomEventName.deployEndEvent, {
         detail: { publishedUrl: deploy.published_url },
       })
       window.dispatchEvent(event)
     }
 
-    window.addEventListener(nextraCustomEventName.deployStartEvent, deployStart)
+    window.addEventListener(markdownCustomEventName.deployStartEvent, deployStart)
     return () => {
-      window.removeEventListener(nextraCustomEventName.deployStartEvent, deployStart)
+      window.removeEventListener(markdownCustomEventName.deployStartEvent, deployStart)
     }
   }, [bookUrlSlug])
 
@@ -188,9 +204,9 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
       })
       getPagesRefetch()
     }
-    window.addEventListener(nextraCustomEventName.deleteItemEvent, deleteItemStart)
+    window.addEventListener(markdownCustomEventName.deleteItemEvent, deleteItemStart)
     return () => {
-      window.removeEventListener(nextraCustomEventName.deleteItemEvent, deleteItemStart)
+      window.removeEventListener(markdownCustomEventName.deleteItemEvent, deleteItemStart)
     }
   }, [bookUrlSlug])
 

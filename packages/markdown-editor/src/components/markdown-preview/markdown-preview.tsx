@@ -24,7 +24,7 @@ export const MarkdownPreview = forwardRef<HTMLDivElement, MarkdownPreviewProps>(
           'markdown-editor-scrollbar nx-h-screen nx-overflow-y-auto nx-break-words nx-pb-16',
         )}
       >
-        <main className="nx-mt-6 nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6 nx-pb-12 nx-pt-6">
+        <main className="nx-mt-6 nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6 nx-pb-[8rem] nx-pt-6">
           <MDXRemote
             compiledSource={mdxSource.compiledSource}
             frontmatter={mdxSource.frontmatter}

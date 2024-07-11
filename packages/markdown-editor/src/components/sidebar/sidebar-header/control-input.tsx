@@ -2,12 +2,13 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import cn from 'clsx'
 
 import { PageType, useSidebar } from '@/contexts/sidebar'
-import useOutsideClick from '@/hooks/use-outside-click'
+
 import { EmptyFolderIcon } from '@/nextra/icons/empty-folder'
 import { EmptyFileIcon } from '@/nextra/icons/empty-file'
 import { SeparatorIcon } from '@/nextra/icons/separator'
 import { type CustomEventDetail, markdownCustomEventName } from '@/index'
 import { useDebouncedCallback } from 'use-debounce'
+import { useOutsideClick } from '@/hooks'
 
 type Props = {
   type: PageType

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-export default function useClickImage() {
+export function useClickImage() {
   const [file, setFile] = useState<File | null>(null)
 
   const onClick = useCallback(() => {
