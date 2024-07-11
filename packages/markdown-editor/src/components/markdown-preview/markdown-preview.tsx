@@ -5,9 +5,11 @@ import { MDXRemote } from 'next-mdx-remote'
 import { getComponents } from '@/mdx-components'
 import { useMarkdownEditor } from '@/contexts/markdown-editor'
 
-interface MarkdownPreviewProps {}
+interface MarkdownPreviewProps {
+  height: string
+}
 
-export const MarkdownPreview = ({}: MarkdownPreviewProps): ReactElement => {
+export const MarkdownPreview = ({ height }: MarkdownPreviewProps): ReactElement => {
   const config = useConfig()
   const { mdxSource } = useMarkdownEditor()
 
@@ -16,24 +18,27 @@ export const MarkdownPreview = ({}: MarkdownPreviewProps): ReactElement => {
   }
 
   return (
-    <div
-      id="markdown-editor-preview"
-      className={cn(
-        'markdown-editor-preview',
-        'markdown-editor-scrollbar nx-h-screen nx-overflow-y-auto nx-break-words nx-pb-16',
-      )}
-    >
-      <main className="nx-mt-6 nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6 nx-pb-[8rem] nx-pt-6">
-        <MDXRemote
-          compiledSource={mdxSource.compiledSource}
-          frontmatter={mdxSource.frontmatter}
-          scope={mdxSource.scope}
-          components={getComponents({
-            isRawLayout: false,
-            components: config.components,
-          })}
-        />
-      </main>
-    </div>
+    <>
+      <div
+        id="markdown-editor-preview"
+        className={cn(
+          'markdown-editor-preview',
+          'markdown-editor-scrollbar nx-h-screen nx-overflow-y-auto nx-scroll-smooth nx-break-words',
+        )}
+        style={{ height }}
+      >
+        <main className="nx-w-full nx-px-6 ">
+          <MDXRemote
+            compiledSource={mdxSource.compiledSource}
+            frontmatter={mdxSource.frontmatter}
+            scope={mdxSource.scope}
+            components={getComponents({
+              isRawLayout: false,
+              components: config.components,
+            })}
+          />
+        </main>
+      </div>
+    </>
   )
 }

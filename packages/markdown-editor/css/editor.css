@@ -1,6 +1,6 @@
-.nextra-editor-container {
+.markdown-editor-container {
   display: none;
   @media (min-width: 1024px) {
-    display: block;
+    display: flex;
   }
 }

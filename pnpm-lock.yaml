@@ -1309,6 +1309,9 @@ importers:
       slash:
         specifier: 3.0.0
         version: 3.0.0
+      throttle-debounce:
+        specifier: ^5.0.0
+        version: 5.0.0
       title:
         specifier: 3.5.3
         version: 3.5.3
@@ -1355,6 +1358,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.7
         version: 18.3.0
+      '@types/throttle-debounce':
+        specifier: ^5.0.1
+        version: 5.0.2
       '@types/title':
         specifier: ^3.4.3
         version: 3.4.3
@@ -15058,23 +15064,6 @@ snapshots:
   '@swc/core-win32-x64-msvc@1.5.24':
     optional: true
 
-  '@swc/core@1.5.24':
-    dependencies:
-      '@swc/counter': 0.1.3
-      '@swc/types': 0.1.7
-    optionalDependencies:
-      '@swc/core-darwin-arm64': 1.5.24
-      '@swc/core-darwin-x64': 1.5.24
-      '@swc/core-linux-arm-gnueabihf': 1.5.24
-      '@swc/core-linux-arm64-gnu': 1.5.24
-      '@swc/core-linux-arm64-musl': 1.5.24
-      '@swc/core-linux-x64-gnu': 1.5.24
-      '@swc/core-linux-x64-musl': 1.5.24
-      '@swc/core-win32-arm64-msvc': 1.5.24
-      '@swc/core-win32-ia32-msvc': 1.5.24
-      '@swc/core-win32-x64-msvc': 1.5.24
-    optional: true
-
   '@swc/core@1.5.24(@swc/helpers@0.5.5)':
     dependencies:
       '@swc/counter': 0.1.3
@@ -23220,7 +23209,7 @@ snapshots:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optionalDependencies:
-      '@swc/core': 1.5.24
+      '@swc/core': 1.5.24(@swc/helpers@0.5.5)
     optional: true
 
   ts-paths-esm-loader@1.4.3(ts-node@10.9.2(@swc/core@1.5.24(@swc/helpers@0.5.5))(@types/node@20.12.13)(typescript@5.4.5))(tsconfig-paths@4.2.0):
@@ -23266,7 +23255,7 @@ snapshots:
       sucrase: 3.35.0
       tree-kill: 1.2.2
     optionalDependencies:
-      '@swc/core': 1.5.24
+      '@swc/core': 1.5.24(@swc/helpers@0.5.5)
       postcss: 8.4.38
       typescript: 5.4.5
     transitivePeerDependencies:

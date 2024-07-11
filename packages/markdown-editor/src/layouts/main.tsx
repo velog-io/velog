@@ -31,7 +31,7 @@ export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElemen
   const themeContext = { ...activeThemeContext, ...frontMatter }
   const direction = 'ltr'
   const mainHeight = 'calc(100vh - (var(--nextra-navbar-height)))'
-
+  const height = 'calc(100vh - (var(--nextra-navbar-height)) - var(--nextra-editor-toolbar-height))'
   return (
     <div
       dir={direction}
@@ -60,14 +60,16 @@ export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElemen
             asPopover={false}
             includePlaceholder={themeContext.layout === 'default'}
           />
-          <div className={cn('nx-flex nx-overflow-hidden')} style={{ width: 'calc(100% - 320px)' }}>
-            <div className={cn('nextra-editor-container nx-h-[100%] nx-w-1/2')}>
-              <MarkdownEditor />
+          <main className={cn('markdown-main nx-flex nx-w-full nx-overflow-hidden')}>
+            <div
+              className={cn('markdown-editor-container nx-relative nx-flex nx-w-1/2 nx-flex-col')}
+            >
+              <MarkdownEditor height={height} />
             </div>
-            <div className={cn('nextra-preview-container nx-h-[100%] nx-w-1/2')}>
-              <MarkdownPreview />
+            <div className={cn('markdown-preview-container nx-flex nx-w-1/2')}>
+              <MarkdownPreview height={height} />
             </div>
-          </div>
+          </main>
         </ActiveAnchorProvider>
       </div>
     </div>

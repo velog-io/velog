@@ -79,6 +79,7 @@ export const useCodemirror = (container: RefObject<HTMLDivElement>, config: Conf
           scrollbarColor: 'oklch(55.55% 0 0 / 40%) transparent',
           scrollbarGutter: 'stable',
           'overflow-x': 'hidden',
+          'scroll-behavior': 'smooth',
         },
         '.cm-heading1': { fontSize: '24px' },
         '.cm-heading2': { fontSize: '20px' },

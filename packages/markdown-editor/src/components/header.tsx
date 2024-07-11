@@ -75,7 +75,7 @@ export function Header({ flatDirectories, items }: NavBarProps): ReactElement {
   const { menu, setMenu } = useMenu()
 
   return (
-    <div className="nextra-header-container nx-w-full">
+    <div className="nextra-header-container nx-flex nx-w-full">
       <div
         className={cn(
           'nextra-header-container-blur',

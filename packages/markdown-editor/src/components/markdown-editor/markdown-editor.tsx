@@ -1,11 +1,13 @@
 import cn from 'clsx'
-import {  useRef } from 'react'
+import { useRef } from 'react'
 import { Toolbar } from './toolbar'
 import { useCodemirror } from '@/hooks'
 
-interface MarkdownEditorProps {}
+interface MarkdownEditorProps {
+  height: string
+}
 
-export const MarkdownEditor = ({}: MarkdownEditorProps) => {
+export const MarkdownEditor = ({ height }: MarkdownEditorProps) => {
   const codemirror = useRef<HTMLDivElement | null>(null)
   const { state, view } = useCodemirror(codemirror, {
     autoFocus: true,
@@ -26,10 +28,7 @@ export const MarkdownEditor = ({}: MarkdownEditorProps) => {
         ref={codemirror}
         suppressHydrationWarning={true}
         suppressContentEditableWarning={true}
-        style={{
-          height:
-            'calc(100vh - (var(--nextra-navbar-height)) - var(--nextra-editor-toolbar-height))',
-        }}
+        style={{ height }}
       />
     </>
   )
