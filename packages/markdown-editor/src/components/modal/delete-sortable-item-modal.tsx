@@ -7,7 +7,7 @@ import { DeleteActionInfo, useSidebar } from '@/contexts/sidebar'
 
 export const DeleteSortableItemModal: React.FC = () => {
   const { onClose, mode, isOpen, setIsConfirm } = useModal()
-  const { actionInfo } = useSidebar()
+  const { actionInfo, isDeleteAction } = useSidebar()
 
   const onCloseModal = () => {
     onClose()
@@ -18,6 +18,7 @@ export const DeleteSortableItemModal: React.FC = () => {
   }
 
   if (!actionInfo) return null
+  if (!isDeleteAction(actionInfo)) return
 
   const action = actionInfo as DeleteActionInfo
   const isVisible = isOpen && mode === 'deleteSortableItem'
