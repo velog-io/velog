@@ -58,7 +58,6 @@
     "@theguild/remark-mermaid": "0.0.6",
     "@theguild/remark-npm2yarn": "0.2.0",
     "@uiw/codemirror-extensions-basic-setup": "^4.22.1",
-    "@uiw/codemirror-extensions-events": "^4.23.0",
     "@uiw/codemirror-extensions-hyper-link": "^4.22.1",
     "@uiw/codemirror-themes": "^4.22.1",
     "@uiw/codemirror-themes-all": "^4.22.1",

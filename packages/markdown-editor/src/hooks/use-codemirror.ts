@@ -1,17 +1,19 @@
-import { getDefaultExtensions } from '../components/markdown-editor/lib/getDefaultExtensions'
+import { getDefaultExtensions, getEditorStat } from '../components/markdown-editor/lib'
 import { Annotation, EditorState, Extension, StateEffect } from '@codemirror/state'
 import { EditorView, ViewUpdate } from '@codemirror/view'
 import { useTheme } from 'next-themes'
 import { RefObject, useEffect, useMemo, useState } from 'react'
 import { useMarkdownEditor } from '../contexts/markdown-editor'
-import { getEditorStat } from '../components/markdown-editor/lib/getEditorStat'
 import { hyperLink } from '@uiw/codemirror-extensions-hyper-link'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
-import { handlePaste } from '../components/markdown-editor/events/paste'
-
-import { handleDrop } from '../components/markdown-editor/events/drop'
 import { useUpload } from './use-upload'
+import {
+  handlePaste,
+  handleDrop,
+  handleScroll,
+  handleKeydown,
+} from '@/components/markdown-editor/events'
 
 type Config = {
   autoFocus?: boolean
@@ -49,6 +51,8 @@ export const useCodemirror = (container: RefObject<HTMLDivElement>, config: Conf
       EditorView.domEventHandlers({
         paste: (event, view) => handlePaste(event, view, upload),
         drop: (event, view) => handleDrop(event, view, upload),
+        scroll: handleScroll,
+        keydown: handleKeydown,
       }),
     [upload],
   )

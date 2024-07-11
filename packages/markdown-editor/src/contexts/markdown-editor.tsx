@@ -1,7 +1,7 @@
 import { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { mdxCompiler } from '../mdx-compiler'
-import { Statistics } from '../components/markdown-editor/lib/getEditorStat'
+import { Statistics } from '../components/markdown-editor/lib/get-editor-stat'
 import { ViewUpdate } from '@codemirror/view'
 
 type MarkdownEditorContext = {
