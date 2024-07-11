@@ -1,7 +1,8 @@
 import { EditorView, KeyBinding } from '@codemirror/view'
 import { ToolbarCommand } from './type'
 import { CustomEventDetail } from '@/types'
-import { nextraCustomEventName } from '@/index'
+import { markdownCustomEventName } from '@/index'
+import toast from 'react-hot-toast'
 
 export const saveKeymap: KeyBinding = {
   linux: 'Ctrl-s',
@@ -41,7 +42,7 @@ const save: ToolbarCommand = {
 export function saveExecute(view: EditorView) {
   const doc = view.state.doc.toString()
   const event = new CustomEvent<CustomEventDetail['updateItemEvent']>(
-    nextraCustomEventName.updateItemEvent,
+    markdownCustomEventName.updateItemEvent,
     {
       detail: { body: doc },
     },

@@ -22,6 +22,7 @@ export type SearchResult = {
 export interface CustomEventDetail {
   createItemEvent: CreateItemEvent
   updateItemEvent: UpdateItemEvent
+  updateItemResultEvent: UpdateItemResultEvent
   changeItemOrderEvent: ChangeItemOrderEvent
   deleteItemEvent: DeleteItemEvent
   deployStartEvent: DeployStartEvent
@@ -57,6 +58,10 @@ type DeployEndEvent = {
 
 type DeleteItemEvent = {
   pageUrlSlug: string
+}
+
+type UpdateItemResultEvent = {
+  result: 'success' | 'error'
 }
 
 // for compiler

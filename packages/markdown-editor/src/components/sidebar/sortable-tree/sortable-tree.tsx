@@ -35,7 +35,7 @@ import { createPortal } from 'react-dom'
 import { SortableItemWrapper } from './sortable-item-wrapper'
 import { useSidebar } from '@/contexts/sidebar'
 import { SensorContext } from './types'
-import { CustomEventDetail, nextraCustomEventName } from '@/index'
+import { CustomEventDetail, markdownCustomEventName } from '@/index'
 import { useUrlSlug } from '@/hooks/use-url-slug'
 import { SidebarHeader } from '../sidebar-header'
 
@@ -226,7 +226,7 @@ export function SortableTree({ items, sidebarRef, showSidebar, onItemsChanged }:
       const newParentItem = findItemDeep(newItems, parentId)
 
       const event = new CustomEvent<CustomEventDetail['changeItemOrderEvent']>(
-        nextraCustomEventName.changeItemOrderEvent,
+        markdownCustomEventName.changeItemOrderEvent,
         {
           detail: {
             bookUrlSlug,

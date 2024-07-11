@@ -6,6 +6,8 @@ import type { ReactElement } from 'react'
 import { Main } from './main'
 import { ModalProvider } from '@/contexts/modal'
 import { Potals } from '@/components/potals'
+import { Toaster } from 'react-hot-toast'
+import { EventProvider } from '@/providers'
 
 type NextraDocLayoutProps = NextraThemeLayoutProps & {
   editorValue: string
@@ -14,6 +16,8 @@ type NextraDocLayoutProps = NextraThemeLayoutProps & {
 export function Layout({ children, editorValue, ...context }: NextraDocLayoutProps): ReactElement {
   return (
     <ConfigProvider value={context}>
+      <Toaster />
+      <EventProvider />
       <ModalProvider>
         <SidebarProvider>
           <MarkdownEditorProvider value={{ editorValue }}>

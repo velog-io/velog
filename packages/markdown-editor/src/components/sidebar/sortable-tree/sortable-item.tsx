@@ -12,7 +12,7 @@ import { createPortal } from 'react-dom'
 import { ControlOption, ControlInput } from '../sidebar-header'
 import { useModal } from '@/contexts/modal'
 import { CustomEventDetail } from '@/types'
-import { nextraCustomEventName } from '@/index'
+import { markdownCustomEventName } from '@/index'
 
 export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props, ref) => {
   const { isDragging, overItem, setOverItem } = useDndTree()
@@ -132,7 +132,7 @@ export const SortableItem = forwardRef<HTMLDivElement, SortableItemProps>((props
 
   const onDispatchDeleteEvent = () => {
     const event = new CustomEvent<CustomEventDetail['deleteItemEvent']>(
-      nextraCustomEventName.deleteItemEvent,
+      markdownCustomEventName.deleteItemEvent,
       {
         detail: {
           pageUrlSlug: item.urlSlug ?? item.id, // urlSlug가 없는 경우 id로 대체

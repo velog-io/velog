@@ -7,7 +7,7 @@ import type { ReactElement, ReactNode } from 'react'
 import { useConfig, useMenu } from '../contexts'
 import { renderComponent } from '../utils'
 import { Anchor } from './anchor'
-import DeployButton from './deployButton'
+import DeployButton from './deploy-button'
 
 export type NavBarProps = {
   flatDirectories: Item[]

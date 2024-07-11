@@ -1,5 +1,5 @@
 import { getDefaultExtensions } from './../lib/getDefaultExtensions'
-import { Annotation, EditorState, Extension } from '@codemirror/state'
+import { Annotation, EditorState, Extension, StateEffect } from '@codemirror/state'
 import { EditorView, ViewUpdate } from '@codemirror/view'
 import { useTheme } from 'next-themes'
 import { RefObject, useEffect, useState } from 'react'
@@ -150,8 +150,8 @@ export const useCodemirror = (container: RefObject<HTMLDivElement>, config: Conf
 
   useEffect(() => {
     if (!view) return
-    // view.dispatch({ effects: StateEffect.reconfigure.of(extenstions) })
-  }, [container, config, extenstions])
+    view.dispatch({ effects: StateEffect.reconfigure.of(extenstions) })
+  }, [view, currentTheme])
 
   useEffect(() => {
     if (typeof value !== 'string') return

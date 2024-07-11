@@ -1,5 +1,5 @@
 import cn from 'clsx'
-import { CustomEventDetail, nextraCustomEventName } from '..'
+import { CustomEventDetail, markdownCustomEventName } from '..'
 import { useEffect, useState } from 'react'
 
 function DeployButton({}) {
@@ -11,9 +11,9 @@ function DeployButton({}) {
       console.log('deployEndEvent', e.detail.publishedUrl)
       setIsDeploying(false)
     }
-    window.addEventListener(nextraCustomEventName.deployEndEvent, deployEndEvent)
+    window.addEventListener(markdownCustomEventName.deployEndEvent, deployEndEvent)
     return () => {
-      window.removeEventListener(nextraCustomEventName.deployEndEvent, deployEndEvent)
+      window.removeEventListener(markdownCustomEventName.deployEndEvent, deployEndEvent)
     }
   }, [])
 
@@ -21,7 +21,7 @@ function DeployButton({}) {
     if (isDeploying) return
     setIsDeploying(true)
     const event = new CustomEvent<CustomEventDetail['deployStartEvent']>(
-      nextraCustomEventName.deployStartEvent,
+      markdownCustomEventName.deployStartEvent,
       {},
     )
     window.dispatchEvent(event)

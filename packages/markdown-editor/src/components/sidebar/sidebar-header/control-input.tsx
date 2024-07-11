@@ -6,7 +6,7 @@ import useOutsideClick from '@/hooks/use-outside-click'
 import { EmptyFolderIcon } from '@/nextra/icons/empty-folder'
 import { EmptyFileIcon } from '@/nextra/icons/empty-file'
 import { SeparatorIcon } from '@/nextra/icons/separator'
-import { type CustomEventDetail, nextraCustomEventName } from '@/index'
+import { type CustomEventDetail, markdownCustomEventName } from '@/index'
 import { useDebouncedCallback } from 'use-debounce'
 
 type Props = {
@@ -92,7 +92,7 @@ export function ControlInput({ type }: Props): ReactElement {
       if (isAddAction(actionInfo)) {
         const { parentUrlSlug, bookUrlSlug, index, type } = actionInfo
         const event = new CustomEvent<CustomEventDetail['createItemEvent']>(
-          nextraCustomEventName.createItemEvent,
+          markdownCustomEventName.createItemEvent,
           {
             detail: { title: input, parentUrlSlug, index, bookUrlSlug, type },
           },
@@ -103,7 +103,7 @@ export function ControlInput({ type }: Props): ReactElement {
       if (isEditAction(actionInfo)) {
         const { pageUrlSlug } = actionInfo
         const event = new CustomEvent<CustomEventDetail['updateItemEvent']>(
-          nextraCustomEventName.updateItemEvent,
+          markdownCustomEventName.updateItemEvent,
           {
             detail: { title: input, pageUrlSlug },
           },
