@@ -15,6 +15,7 @@ export const MarkdownEditor = ({}: MarkdownEditorProps) => {
   const [isAutoSave, setAutoSave] = useState<boolean>(false)
   const [isFocus, setIsFocus] = useState<boolean>(false)
   const codemirror = useRef<HTMLDivElement | null>(null)
+  const interval = useRef<NodeJS.Timeout | null>(null)
   const { state, view } = useCodemirror(codemirror, {
     autoFocus: true,
     minHeight: '100%',
@@ -40,6 +41,19 @@ export const MarkdownEditor = ({}: MarkdownEditorProps) => {
       router.events.off('beforeHistoryChange', handleRouteChange)
     }
   }, [router, view])
+
+  // 30초마다 자동 저장
+  useEffect(() => {
+    if (!view) return
+    interval.current = setInterval(() => {
+      setAutoSave(true)
+      saveExecute(view)
+    }, 30000) // 30초
+    return () => {
+      if (!interval.current) return
+      clearInterval(interval.current)
+    }
+  }, [view])
 
   // 저장 되고 나면 toast 메시지
   useEffect(() => {

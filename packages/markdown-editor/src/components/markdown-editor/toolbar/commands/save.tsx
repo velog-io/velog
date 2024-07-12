@@ -49,7 +49,6 @@ export function saveExecute(view: EditorView) {
   }
 
   prevDoc.set(currentUrl, doc)
-  console.log('save!')
   const event = new CustomEvent<CustomEventDetail['updateItemEvent']>(
     markdownCustomEventName.updateItemEvent,
     {
