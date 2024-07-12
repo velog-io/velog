@@ -2,7 +2,6 @@ import { EditorView, KeyBinding } from '@codemirror/view'
 import { ToolbarCommand } from './type'
 import { CustomEventDetail } from '@/types'
 import { markdownCustomEventName } from '@/index'
-import toast from 'react-hot-toast'
 
 export const saveKeymap: KeyBinding = {
   linux: 'Ctrl-s',
@@ -39,8 +38,17 @@ const save: ToolbarCommand = {
   execute: saveExecute,
 }
 
+const prevDoc: Map<string, string> = new Map()
+
 export function saveExecute(view: EditorView) {
   const doc = view.state.doc.toString()
+
+  const currentUrl = window.location.href
+  if (prevDoc.has(currentUrl) && prevDoc.get(currentUrl) === doc) {
+    return
+  }
+  prevDoc.set(currentUrl, doc)
+
   const event = new CustomEvent<CustomEventDetail['updateItemEvent']>(
     markdownCustomEventName.updateItemEvent,
     {

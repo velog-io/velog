@@ -1,6 +1,6 @@
 import cn from 'clsx'
 import { useConfig } from '@/contexts'
-import { useEffect, useRef, useState, type ReactElement } from 'react'
+import { useEffect, useRef, type ReactElement } from 'react'
 import { MDXRemote } from 'next-mdx-remote'
 import { getComponents } from '@/mdx-components'
 import { useMarkdownEditor } from '@/contexts/markdown-editor'
