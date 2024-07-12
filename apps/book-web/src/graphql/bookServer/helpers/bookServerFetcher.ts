@@ -1,5 +1,8 @@
 import { ENV } from '@/env'
 import graphqlFetch from '@/lib/graphqlFetch'
+import { pipe, subscribe } from 'wonka'
+import { urqlClient } from './bookServerUrlql'
+import { AnyVariables } from 'urql'
 
 export function fetcher<TData, TVariables extends Record<string, any>>(
   query: string,
@@ -18,4 +21,21 @@ export function fetcher<TData, TVariables extends Record<string, any>>(
 
     return data as Awaited<TData>
   }
+}
+export function subscriptionFetcher<TData, TVariables extends AnyVariables>(
+  query: string,
+  variables: TVariables,
+) {
+  return new Promise<TData>((resolve) => {
+    const subscription = pipe(
+      urqlClient.subscription<TData, TVariables>(query, variables),
+      subscribe((result) => {
+        if (result.data) {
+          resolve(result.data)
+        }
+      }),
+    )
+
+    return () => subscription.unsubscribe()
+  })
 }

@@ -53,7 +53,7 @@ export class MqService {
 
 type SubscriptionResolverKey = keyof SubscriptionResolvers
 type Payload = {
-  [K in SubscriptionResolverKey]?: { message: string }
+  [K in SubscriptionResolverKey]?: { message: string } & { [k in string]: any }
 }
 type TopicMap = {
   [K in SubscriptionResolverKey]: (args: any) => string

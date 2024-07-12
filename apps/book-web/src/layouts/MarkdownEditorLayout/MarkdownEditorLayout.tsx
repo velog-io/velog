@@ -7,6 +7,7 @@ import { themeConfig } from './context'
 import { useEffect, useState } from 'react'
 import { BookMetadata, generateBookMetadata, Pages } from '@/lib/generateBookMetadata'
 import {
+  DeployCompletedDocument,
   useBuildMutation,
   useCreatePageMutation,
   useDeletePageMutation,
@@ -18,6 +19,7 @@ import {
   useUpdatePageMutation,
 } from '@/graphql/bookServer/generated/bookServer'
 import { useUrlSlug } from '@/hooks/useUrlSlug'
+import { useSubscription } from 'urql'
 
 type Props = {
   children?: React.ReactNode
@@ -53,6 +55,15 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
       page_url_slug: pageUrlSlug,
     },
   })
+
+  const deployCompleted = useSubscription({
+    query: DeployCompletedDocument,
+    variables: { input: { book_url_slug: bookUrlSlug } },
+  })
+
+  useEffect(() => {
+    console.log(deployCompleted)
+  }, [deployCompleted])
 
   const { data: isDeployData } = useIsDeployQuery({
     input: {
@@ -230,7 +241,6 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     }
 
     const timeoutId = setTimeout(dispatchDeployEvent, 200)
-
     return () => {
       clearTimeout(timeoutId)
     }

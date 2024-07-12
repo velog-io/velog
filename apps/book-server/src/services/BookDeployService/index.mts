@@ -12,6 +12,7 @@ import { ConfilctError } from '@errors/ConfilctError.mjs'
 import { DeployResult } from '@graphql/generated.js'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
 import { RedisService } from '@lib/redis/RedisService.mjs'
+import { MqService } from '@lib/mq/MqService.mjs'
 
 interface Service {
   deploy: (bookId: string, signedWriterId?: string) => Promise<DeployResult>
@@ -23,6 +24,7 @@ export class BookDeployService implements Service {
     private readonly mongo: MongoService,
     private readonly awsS3: AwsS3Service,
     private readonly redis: RedisService,
+    private readonly mq: MqService,
     private readonly writerService: WriterService,
     private readonly bookService: BookService,
   ) {}
@@ -111,6 +113,16 @@ export class BookDeployService implements Service {
             published_url,
           },
         })
+      })
+
+      this.mq.publish({
+        topicParameter: book.id,
+        payload: {
+          deployCompleted: {
+            message: 'Deploy completed',
+            published_url,
+          },
+        },
       })
 
       return {

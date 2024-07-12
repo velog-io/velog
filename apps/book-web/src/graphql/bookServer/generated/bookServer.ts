@@ -222,6 +222,12 @@ export type IsDeployQueryVariables = Exact<{
 
 export type IsDeployQuery = { isDeploy: boolean }
 
+export type DeployCompletedSubscriptionVariables = Exact<{
+  input: BookUrlSlugInput
+}>
+
+export type DeployCompletedSubscription = { deployCompleted: { message: string } | null }
+
 export type GetPagesQueryVariables = Exact<{
   input: GetPagesInput
 }>
@@ -385,6 +391,13 @@ useSuspenseIsDeployQuery.getKey = (variables: IsDeployQueryVariables) => [
 useIsDeployQuery.fetcher = (variables: IsDeployQueryVariables, options?: RequestInit['headers']) =>
   fetcher<IsDeployQuery, IsDeployQueryVariables>(IsDeployDocument, variables, options)
 
+export const DeployCompletedDocument = `
+    subscription DeployCompleted($input: BookUrlSlugInput!) {
+  deployCompleted(input: $input) {
+    message
+  }
+}
+    `
 export const GetPagesDocument = `
     query getPages($input: GetPagesInput!) {
   pages(input: $input) {

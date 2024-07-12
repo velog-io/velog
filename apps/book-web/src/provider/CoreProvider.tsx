@@ -1,4 +1,5 @@
 import ReactQueryProvider from './ReactQueryProvider'
+import UrqlProvider from './UrqlProvider'
 
 type Props = {
   children: React.ReactNode
@@ -7,7 +8,9 @@ type Props = {
 function CoreProvider({ children }: Props) {
   return (
     <>
-      <ReactQueryProvider>{children}</ReactQueryProvider>
+      <ReactQueryProvider>
+        <UrqlProvider>{children}</UrqlProvider>
+      </ReactQueryProvider>
     </>
   )
 }

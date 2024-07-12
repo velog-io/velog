@@ -254,6 +254,9 @@ importers:
       graphql-tag:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.8.1)
+      graphql-ws:
+        specifier: ^5.16.0
+        version: 5.16.0(graphql@16.8.1)
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3
@@ -290,9 +293,15 @@ importers:
       unified:
         specifier: ^10.1.2
         version: 10.1.2
+      urql:
+        specifier: ^4.1.0
+        version: 4.1.0(@urql/core@5.0.4(graphql@16.8.1))(react@18.3.1)
       vscode-oniguruma:
         specifier: ^2.0.1
         version: 2.0.1
+      wonka:
+        specifier: ^6.3.4
+        version: 6.3.4
       zod:
         specifier: ^3.23.7
         version: 3.23.8
@@ -1541,6 +1550,14 @@ importers:
   packages/tsconfig: {}
 
 packages:
+
+  '@0no-co/graphql.web@1.0.7':
+    resolution: {integrity: sha512-E3Qku4mTzdrlwVWGPxklDnME5ANrEGetvYw4i2GCRlppWXXE4QD66j7pwb8HelZwS6LnqEChhrSOGCXpbiu6MQ==}
+    peerDependencies:
+      graphql: 16.8.1
+    peerDependenciesMeta:
+      graphql:
+        optional: true
 
   '@adobe/css-tools@4.3.3':
     resolution: {integrity: sha512-rE0Pygv0sEZ4vBWHlAgJLGDU7Pm8xoO6p3wsEceb7GYAjScrOHpEo8KK/eVkAcnSM+slAEtXjA2JpdjLp4fJQQ==}
@@ -4689,6 +4706,9 @@ packages:
 
   '@ungap/structured-clone@1.2.0':
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
+
+  '@urql/core@5.0.4':
+    resolution: {integrity: sha512-gl86J6B6gWXvvkx5omZ+CaGiPQ0chCUGM0jBsm0zTtkDQPRqufv0NSUN6sp2JhGGtTOB0NR6Pd+w7XAVGGyUOA==}
 
   '@vitejs/plugin-react@4.3.0':
     resolution: {integrity: sha512-KcEbMsn4Dpk+LIbHMj7gDPRKaTMStxxWRkRmxsg/jVdFdJCZWt1SchZcf0M4t8lIKdwwMsEyzhrcOXRrDPtOBw==}
@@ -10749,6 +10769,12 @@ packages:
   urlpattern-polyfill@8.0.2:
     resolution: {integrity: sha512-Qp95D4TPJl1kC9SKigDcqgyM2VDVO4RiJc2d4qe5GrYm+zbIQCWWKAFaJNQ4BhdFeDGwBmAxqJBwWSJDb9T3BQ==}
 
+  urql@4.1.0:
+    resolution: {integrity: sha512-NfbfTvxy1sM89EQAJWm89qJZihUWk7BSMfrWgfljFXLOf+e7RK7DtV/Tbg2+82HnCG2x3LcEOJenxiFSYEC+bw==}
+    peerDependencies:
+      '@urql/core': ^5.0.0
+      react: '>= 16.8.0'
+
   use-debounce@10.0.1:
     resolution: {integrity: sha512-0uUXjOfm44e6z4LZ/woZvkM8FwV1wiuoB6xnrrOmeAEjRDDzTLQNRFtYHvqUsJdrz1X37j0rVGIVp144GLHGKg==}
     engines: {node: '>= 16.0.0'}
@@ -11004,6 +11030,9 @@ packages:
     engines: {node: '>=8'}
     hasBin: true
 
+  wonka@6.3.4:
+    resolution: {integrity: sha512-CjpbqNtBGNAeyNS/9W6q3kSkKE52+FjIj7AkFlLr11s/VWGUu6a2CdYSdGxocIhIVjaW/zchesBQUKPVU69Cqg==}
+
   word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
@@ -11141,6 +11170,10 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
 snapshots:
+
+  '@0no-co/graphql.web@1.0.7(graphql@16.8.1)':
+    optionalDependencies:
+      graphql: 16.8.1
 
   '@adobe/css-tools@4.3.3': {}
 
@@ -15925,6 +15958,13 @@ snapshots:
       '@codemirror/view': 6.26.3
 
   '@ungap/structured-clone@1.2.0': {}
+
+  '@urql/core@5.0.4(graphql@16.8.1)':
+    dependencies:
+      '@0no-co/graphql.web': 1.0.7(graphql@16.8.1)
+      wonka: 6.3.4
+    transitivePeerDependencies:
+      - graphql
 
   '@vitejs/plugin-react@4.3.0(vite@5.2.12(@types/node@20.14.5)(less@4.2.0)(lightningcss@1.25.1)(sass@1.77.4)(stylus@0.62.0))':
     dependencies:
@@ -23621,6 +23661,12 @@ snapshots:
 
   urlpattern-polyfill@8.0.2: {}
 
+  urql@4.1.0(@urql/core@5.0.4(graphql@16.8.1))(react@18.3.1):
+    dependencies:
+      '@urql/core': 5.0.4(graphql@16.8.1)
+      react: 18.3.1
+      wonka: 6.3.4
+
   use-debounce@10.0.1(react@18.3.1):
     dependencies:
       react: 18.3.1
@@ -23904,6 +23950,8 @@ snapshots:
     dependencies:
       siginfo: 2.0.0
       stackback: 0.0.2
+
+  wonka@6.3.4: {}
 
   word-wrap@1.2.5: {}
 

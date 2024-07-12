@@ -13,3 +13,9 @@ mutation build($input: BookUrlSlugInput!) {
 query isDeploy($input: IsDeployInput!) {
   isDeploy(input: $input)
 }
+
+subscription DeployCompleted($input: BookUrlSlugInput!) {
+  deployCompleted(input: $input) {
+    message
+  }
+}
