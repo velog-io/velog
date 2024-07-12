@@ -10,8 +10,8 @@ import { ENV } from '@env'
 import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
 import { ConfilctError } from '@errors/ConfilctError.mjs'
 import { DeployResult } from '@graphql/generated.js'
-import { UtilsService } from '@lib/utils/UtilsService.mjs'
 import { MongoService } from '@lib/mongo/MongoService.mjs'
+import { RedisService } from '@lib/redis/RedisService.mjs'
 
 interface Service {
   deploy: (bookId: string, signedWriterId?: string) => Promise<DeployResult>
@@ -22,7 +22,7 @@ export class BookDeployService implements Service {
   constructor(
     private readonly mongo: MongoService,
     private readonly awsS3: AwsS3Service,
-    private readonly utils: UtilsService,
+    private readonly redis: RedisService,
     private readonly writerService: WriterService,
     private readonly bookService: BookService,
   ) {}
@@ -49,56 +49,68 @@ export class BookDeployService implements Service {
       throw new ConfilctError('Not owner of book')
     }
 
-    const output = path.resolve(process.cwd(), 'books', book.id, 'out')
+    const deployKey = this.redis.generateKey.deployBook(book.id)
+    const isDeploying = await this.redis.exists(deployKey)
 
-    // find output
-    const exists = fs.existsSync(output)
-    if (!exists) {
-      console.log('Not found book output')
-      throw new NotFoundError('Not found book output')
+    if (isDeploying) {
+      return {
+        published_url: null,
+        message: 'Already deploying',
+      }
     }
 
-    const files = await fs.readdir(output, { recursive: true, encoding: 'utf8' })
-    const targetFiles: string[] = files
-      .map((file) => {
-        const filePath = path.join(output, file)
-        const stat = fs.statSync(filePath)
-        return stat.isFile() ? filePath : ''
-      })
-      .filter(Boolean)
-
-    // upload to S3
-    const baseUrl = `${book.url_slug}`.replace('/', '')
-
-    const promises = targetFiles.map(async (filePath) => {
-      const body = fs.readFileSync(filePath)
-      let relativePath = filePath.replace(output, '')
-      const ext = path.extname(relativePath)
-      if (ext === '.html' && !relativePath.includes('index.html')) {
-        relativePath = relativePath.replace('.html', '')
-      }
-      const key = `${baseUrl}/${book.deploy_code}${relativePath}`
-      const contentType = mime.getType(filePath)
-      await this.awsS3.uploadFile({
-        bucketName: ENV.bookBucketName,
-        key,
-        body: body,
-        ContentType: contentType ?? 'application/octet-stream',
-        ACL: 'public-read',
-      })
-    })
-
     try {
+      const output = path.resolve(process.cwd(), 'books', book.id, 'out')
+
+      // find output
+      const exists = fs.existsSync(output)
+      if (!exists) {
+        console.log('Not found book output')
+        throw new NotFoundError('Not found book output')
+      }
+
+      const files = await fs.readdir(output, { recursive: true, encoding: 'utf8' })
+      const targetFiles: string[] = files
+        .map((file) => {
+          const filePath = path.join(output, file)
+          const stat = fs.statSync(filePath)
+          return stat.isFile() ? filePath : ''
+        })
+        .filter(Boolean)
+
+      // upload to S3
+      const baseUrl = `${book.url_slug}`.replace('/', '')
+
+      const promises = targetFiles.map(async (filePath) => {
+        const body = fs.readFileSync(filePath)
+        let relativePath = filePath.replace(output, '')
+        const ext = path.extname(relativePath)
+        if (ext === '.html' && !relativePath.includes('index.html')) {
+          relativePath = relativePath.replace('.html', '')
+        }
+        const key = `${baseUrl}/${book.deploy_code}${relativePath}`
+        const contentType = mime.getType(filePath)
+        await this.awsS3.uploadFile({
+          bucketName: ENV.bookBucketName,
+          key,
+          body: body,
+          ContentType: contentType ?? 'application/octet-stream',
+          ACL: 'public-read',
+        })
+      })
+
       await Promise.all(promises)
       const published_url = `https://books.velog.io/${baseUrl}/${book.deploy_code}`
 
-      await this.mongo.book.update({
-        where: {
-          id: book.id,
-        },
-        data: {
-          published_url,
-        },
+      setImmediate(async () => {
+        await this.mongo.book.update({
+          where: {
+            id: book.id,
+          },
+          data: {
+            published_url,
+          },
+        })
       })
 
       return {
@@ -109,6 +121,8 @@ export class BookDeployService implements Service {
       return {
         published_url: null,
       }
+    } finally {
+      await this.redis.del(deployKey)
     }
   }
 }

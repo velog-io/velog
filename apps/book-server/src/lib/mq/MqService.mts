@@ -32,9 +32,9 @@ export class MqService {
 
   public topicGenerator<T extends SubscriptionResolverKey>(type: T): (args: any) => string {
     const map: TopicMap = {
-      bookBuildCompleted: (bookId: string) => `BOOK_BUILD:completed:${bookId}`,
-      bookBuildInstalled: (bookId: string) => `BOOK_BUILD:installed:${bookId}`,
-      bookDeployCompleted: (bookId: string) => `BOOK_DEPLOY:completed:${bookId}`,
+      buildCompleted: (bookId: string) => `BOOK_BUILD:completed:${bookId}`,
+      buildInstalled: (bookId: string) => `BOOK_BUILD:installed:${bookId}`,
+      deployCompleted: (bookId: string) => `BOOK_DEPLOY:completed:${bookId}`,
     }
     const generator = map[type]
     if (!generator) {

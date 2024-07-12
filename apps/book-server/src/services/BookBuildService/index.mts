@@ -16,6 +16,8 @@ import { WriterService } from '@services/WriterService/index.mjs'
 import { BuildResult } from '@graphql/generated.js'
 import { PageService } from '@services/PageService/index.mjs'
 import { UtilsService } from '@lib/utils/UtilsService.mjs'
+import { RedisService } from '@lib/redis/RedisService.mjs'
+import { Time } from '@constants/TimeConstants.mjs'
 
 const exec = promisify(execCb)
 
@@ -30,6 +32,7 @@ export class BookBuildService implements Service {
     private readonly mongo: MongoService,
     private readonly utils: UtilsService,
     private readonly mq: MqService,
+    private readonly redis: RedisService,
     private readonly bookService: BookService,
     private readonly writerService: WriterService,
     private readonly pageService: PageService,
@@ -55,81 +58,97 @@ export class BookBuildService implements Service {
       throw new ConfilctError('Not owner of book')
     }
 
-    // create deploy code
-    const deployCode = this.utils.randomString(10).toLocaleLowerCase()
-    await this.mongo.book.update({
-      where: {
-        id: book.id,
-      },
-      data: {
-        deploy_code: deployCode,
-      },
-    })
+    const buildKey = this.redis.generateKey.buildBook(book.id)
+    const isBuilding = await this.redis.exists(buildKey)
 
-    // create folder
-    const dest = path.resolve(process.cwd(), 'books', book.id)
+    if (isBuilding) {
+      return {
+        result: false,
+        message: 'Already building',
+      }
+    }
 
-    // TODO: ADD handle cache from s3
-    const pagesDir = `${dest}/pages`
-    const baseExists = fs.existsSync(dest)
-    if (!baseExists) {
-      // Create folder
-      fs.mkdirSync(dest)
-      // COPY base file to target folder
-      const src = path.resolve(process.cwd(), 'books/base')
-      await fs.copy(src, dest, { dereference: true })
+    try {
+      await this.redis.set(buildKey, 'deploying', 'EX', Time.ONE_MINUTE_IN_S * 10)
 
-      const stdout = await this.installDependencies('npm install', dest)
-      if (stdout) {
+      // create deploy code
+      const deployCode = this.utils.randomString(10).toLocaleLowerCase()
+      await this.mongo.book.update({
+        where: {
+          id: book.id,
+        },
+        data: {
+          deploy_code: deployCode,
+        },
+      })
+
+      // create folder
+      const dest = path.resolve(process.cwd(), 'books', book.id)
+
+      // TODO: ADD handle cache from s3
+      const pagesDir = `${dest}/pages`
+      const baseExists = fs.existsSync(dest)
+      if (!baseExists) {
+        // Create folder
+        fs.mkdirSync(dest)
+        // COPY base file to target folder
+        const src = path.resolve(process.cwd(), 'books/base')
+        await fs.copy(src, dest, { dereference: true })
+
+        const stdout = await this.installDependencies('npm install', dest)
+        if (stdout) {
+          this.mq.publish({
+            topicParameter: book.id,
+            payload: {
+              buildInstalled: {
+                message: stdout,
+              },
+            },
+          })
+        }
+      } else {
+        fs.rmSync(pagesDir, { recursive: true, force: true })
+        await this.utils.sleep(100)
+        fs.mkdirSync(`${pagesDir}/.gitkeep`, { recursive: true })
+        await this.utils.sleep(100)
+      }
+
+      // json to files
+      const pages = await this.pageService.getPages(book.url_slug, writer.id)
+
+      // create meta.json
+      await this.writeMetaJson({
+        pages: pages || [],
+        baseDest: pagesDir,
+        isRecursive: false,
+      })
+
+      fs.writeFileSync(
+        `${dest}/next.config.mjs`,
+        nextConfigTempate({
+          deployCode: deployCode,
+          urlSlug: book.url_slug,
+        }),
+      )
+
+      fs.writeFileSync(`${dest}/theme.config.tsx`, themeConfigTemplate({ title: book.title }))
+
+      await exec('pnpm prettier -w .', { cwd: dest })
+      const buildStdout = await this.buildTsToJs(dest)
+      if (buildStdout) {
         this.mq.publish({
           topicParameter: book.id,
           payload: {
-            bookBuildInstalled: {
-              message: stdout,
-            },
+            buildCompleted: { message: buildStdout },
           },
         })
       }
-    } else {
-      fs.rmSync(pagesDir, { recursive: true, force: true })
-      await this.utils.sleep(100)
-      fs.mkdirSync(`${pagesDir}/.gitkeep`, { recursive: true })
-      await this.utils.sleep(100)
-    }
 
-    // json to files
-    const pages = await this.pageService.getPages(book.url_slug, writer.id)
-
-    // create meta.json
-    await this.writeMetaJson({
-      pages: pages || [],
-      baseDest: pagesDir,
-      isRecursive: false,
-    })
-
-    fs.writeFileSync(
-      `${dest}/next.config.mjs`,
-      nextConfigTempate({
-        deployCode: deployCode,
-        urlSlug: book.url_slug,
-      }),
-    )
-
-    fs.writeFileSync(`${dest}/theme.config.tsx`, themeConfigTemplate({ title: book.title }))
-
-    await exec('pnpm prettier -w .', { cwd: dest })
-    const buildStdout = await this.buildTsToJs(dest)
-    if (buildStdout) {
-      this.mq.publish({
-        topicParameter: book.id,
-        payload: {
-          bookBuildCompleted: { message: buildStdout },
-        },
-      })
-    }
-
-    return {
-      result: true,
+      return {
+        result: true,
+      }
+    } finally {
+      await this.redis.del(buildKey)
     }
   }
   private async installDependencies(command: string, dest: string): Promise<string> {

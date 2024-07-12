@@ -11,39 +11,43 @@ const bookResolvers: Resolvers = {
       const bookService = container.resolve(BookService)
       return await bookService.getBook(input.book_id)
     },
+    isDeploy: async (_, { input }, ctx) => {
+      const bookService = container.resolve(BookService)
+      return await bookService.isDeploy(input, ctx.writer?.id)
+    },
   },
   Mutation: {
     build: async (_, { input }, ctx) => {
       const bookBuildService = container.resolve(BookBuildService)
-      return await bookBuildService.build(input.url_slug, ctx.writer?.id)
+      return await bookBuildService.build(input.book_url_slug, ctx.writer?.id)
     },
     deploy: async (_, { input }, ctx) => {
       const bookDeployService = container.resolve(BookDeployService)
-      return await bookDeployService.deploy(input.url_slug, ctx.writer?.id)
+      return await bookDeployService.deploy(input.book_url_slug, ctx.writer?.id)
     },
   },
   Subscription: {
-    bookBuildInstalled: {
+    buildInstalled: {
       subscribe: async (_, { input }, { pubsub }) => {
         const mqService = container.resolve(MqService)
-        const generator = mqService.topicGenerator('bookBuildInstalled')
-        const topic = generator(input.url_slug)
+        const generator = mqService.topicGenerator('buildInstalled')
+        const topic = generator(input.book_url_slug)
         return pubsub.subscribe(topic)
       },
     },
-    bookBuildCompleted: {
+    buildCompleted: {
       subscribe: async (_, { input }, { pubsub }) => {
         const mqService = container.resolve(MqService)
-        const generator = mqService.topicGenerator('bookBuildCompleted')
-        const topic = generator(input.url_slug)
+        const generator = mqService.topicGenerator('buildCompleted')
+        const topic = generator(input.book_url_slug)
         return pubsub.subscribe(topic)
       },
     },
-    bookDeployCompleted: {
+    deployCompleted: {
       subscribe: async (_, { input }, { pubsub }) => {
         const mqService = container.resolve(MqService)
-        const generator = mqService.topicGenerator('bookDeployCompleted')
-        const topic = generator(input.url_slug)
+        const generator = mqService.topicGenerator('deployCompleted')
+        const topic = generator(input.book_url_slug)
         return pubsub.subscribe(topic)
       },
     },

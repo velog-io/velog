@@ -27,6 +27,7 @@ export interface CustomEventDetail {
   deleteItemEvent: DeleteItemEvent
   deployStartEvent: DeployStartEvent
   deployEndEvent: DeployEndEvent
+  checkIsDeployEvent: CheckIsDeployEvent
 }
 
 type CreateItemEvent = {
@@ -62,6 +63,10 @@ type DeleteItemEvent = {
 
 type UpdateItemResultEvent = {
   result: 'success' | 'error'
+}
+
+type CheckIsDeployEvent = {
+  isDeploy: boolean
 }
 
 // for compiler

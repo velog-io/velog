@@ -9,3 +9,7 @@ mutation build($input: BookUrlSlugInput!) {
     result
   }
 }
+
+query isDeploy($input: IsDeployInput!) {
+  isDeploy(input: $input)
+}

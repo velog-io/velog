@@ -44,10 +44,11 @@ export type BookIdInput = {
 }
 
 export type BookUrlSlugInput = {
-  url_slug: Scalars['String']['input']
+  book_url_slug: Scalars['String']['input']
 }
 
 export type BuildResult = {
+  message: Maybe<Scalars['String']['output']>
   result: Scalars['Boolean']['output']
 }
 
@@ -65,6 +66,7 @@ export type DeletePageInput = {
 }
 
 export type DeployResult = {
+  message: Maybe<Scalars['String']['output']>
   published_url: Maybe<Scalars['String']['output']>
 }
 
@@ -74,6 +76,10 @@ export type GetPageInput = {
 }
 
 export type GetPagesInput = {
+  book_url_slug: Scalars['String']['input']
+}
+
+export type IsDeployInput = {
   book_url_slug: Scalars['String']['input']
 }
 
@@ -132,12 +138,17 @@ export type PageType = 'folder' | 'page' | 'separator'
 
 export type Query = {
   book: Maybe<Book>
+  isDeploy: Scalars['Boolean']['output']
   page: Maybe<Page>
   pages: Array<Page>
 }
 
 export type QueryBookArgs = {
   input: BookIdInput
+}
+
+export type QueryIsDeployArgs = {
+  input: IsDeployInput
 }
 
 export type QueryPageArgs = {
@@ -160,20 +171,20 @@ export type SubScriptionPayload = {
 }
 
 export type Subscription = {
-  bookBuildCompleted: Maybe<SubScriptionPayload>
-  bookBuildInstalled: Maybe<SubScriptionPayload>
-  bookDeployCompleted: Maybe<SubScriptionPayload>
+  buildCompleted: Maybe<SubScriptionPayload>
+  buildInstalled: Maybe<SubScriptionPayload>
+  deployCompleted: Maybe<SubScriptionPayload>
 }
 
-export type SubscriptionBookBuildCompletedArgs = {
+export type SubscriptionBuildCompletedArgs = {
   input: BookUrlSlugInput
 }
 
-export type SubscriptionBookBuildInstalledArgs = {
+export type SubscriptionBuildInstalledArgs = {
   input: BookUrlSlugInput
 }
 
-export type SubscriptionBookDeployCompletedArgs = {
+export type SubscriptionDeployCompletedArgs = {
   input: BookUrlSlugInput
 }
 
@@ -204,6 +215,12 @@ export type BuildMutationVariables = Exact<{
 }>
 
 export type BuildMutation = { build: { result: boolean } }
+
+export type IsDeployQueryVariables = Exact<{
+  input: IsDeployInput
+}>
+
+export type IsDeployQuery = { isDeploy: boolean }
 
 export type GetPagesQueryVariables = Exact<{
   input: GetPagesInput
@@ -325,6 +342,48 @@ useBuildMutation.getKey = () => ['build']
 
 useBuildMutation.fetcher = (variables: BuildMutationVariables, options?: RequestInit['headers']) =>
   fetcher<BuildMutation, BuildMutationVariables>(BuildDocument, variables, options)
+
+export const IsDeployDocument = `
+    query isDeploy($input: IsDeployInput!) {
+  isDeploy(input: $input)
+}
+    `
+
+export const useIsDeployQuery = <TData = IsDeployQuery, TError = unknown>(
+  variables: IsDeployQueryVariables,
+  options?: Omit<UseQueryOptions<IsDeployQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<IsDeployQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<IsDeployQuery, TError, TData>({
+    queryKey: ['isDeploy', variables],
+    queryFn: fetcher<IsDeployQuery, IsDeployQueryVariables>(IsDeployDocument, variables),
+    ...options,
+  })
+}
+
+useIsDeployQuery.getKey = (variables: IsDeployQueryVariables) => ['isDeploy', variables]
+
+export const useSuspenseIsDeployQuery = <TData = IsDeployQuery, TError = unknown>(
+  variables: IsDeployQueryVariables,
+  options?: Omit<UseSuspenseQueryOptions<IsDeployQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseSuspenseQueryOptions<IsDeployQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useSuspenseQuery<IsDeployQuery, TError, TData>({
+    queryKey: ['isDeploySuspense', variables],
+    queryFn: fetcher<IsDeployQuery, IsDeployQueryVariables>(IsDeployDocument, variables),
+    ...options,
+  })
+}
+
+useSuspenseIsDeployQuery.getKey = (variables: IsDeployQueryVariables) => [
+  'isDeploySuspense',
+  variables,
+]
+
+useIsDeployQuery.fetcher = (variables: IsDeployQueryVariables, options?: RequestInit['headers']) =>
+  fetcher<IsDeployQuery, IsDeployQueryVariables>(IsDeployDocument, variables, options)
 
 export const GetPagesDocument = `
     query getPages($input: GetPagesInput!) {

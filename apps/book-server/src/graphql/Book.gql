@@ -7,7 +7,8 @@ type Book {
 }
 
 type Query {
-  book(input: BookIDInput!): Book
+  book(input: BookIdInput!): Book
+  isDeploy(input: IsDeployInput!): Boolean! @auth
 }
 
 type Mutation {
@@ -16,17 +17,17 @@ type Mutation {
 }
 
 type Subscription {
-  bookBuildInstalled(input: BookUrlSlugInput!): SubScriptionPayload @auth
-  bookBuildCompleted(input: BookUrlSlugInput!): SubScriptionPayload @auth
-  bookDeployCompleted(input: BookUrlSlugInput!): SubScriptionPayload @auth
+  buildInstalled(input: BookUrlSlugInput!): SubScriptionPayload @auth
+  buildCompleted(input: BookUrlSlugInput!): SubScriptionPayload @auth
+  deployCompleted(input: BookUrlSlugInput!): SubScriptionPayload @auth
 }
 
-input BookIDInput {
+input BookIdInput {
   book_id: ID!
 }
 
 input BookUrlSlugInput {
-  url_slug: String!
+  book_url_slug: String!
 }
 
 type SubScriptionPayload {
@@ -35,8 +36,14 @@ type SubScriptionPayload {
 
 type BuildResult {
   result: Boolean!
+  message: String
 }
 
 type DeployResult {
   published_url: String
+  message: String
+}
+
+input IsDeployInput {
+  book_url_slug: String!
 }

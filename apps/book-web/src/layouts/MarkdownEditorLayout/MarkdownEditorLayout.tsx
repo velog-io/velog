@@ -13,6 +13,7 @@ import {
   useDeployMutation,
   useGetPageQuery,
   useGetPagesQuery,
+  useIsDeployQuery,
   useReorderPageMutation,
   useUpdatePageMutation,
 } from '@/graphql/bookServer/generated/bookServer'
@@ -50,6 +51,12 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     input: {
       book_url_slug: bookUrlSlug,
       page_url_slug: pageUrlSlug,
+    },
+  })
+
+  const { data: isDeployData } = useIsDeployQuery({
+    input: {
+      book_url_slug: bookUrlSlug,
     },
   })
 
@@ -173,13 +180,13 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
   // deploy start and dispatch deploy end event
   useEffect(() => {
     const deployStart = async () => {
-      const { build } = await buildAsyncMutate({ input: { url_slug: bookUrlSlug } })
+      const { build } = await buildAsyncMutate({ input: { book_url_slug: bookUrlSlug } })
 
       if (!build.result) {
         //TODO: show error
         return
       }
-      const { deploy } = await deployAsyncMutate({ input: { url_slug: bookUrlSlug } })
+      const { deploy } = await deployAsyncMutate({ input: { book_url_slug: bookUrlSlug } })
       const event = new CustomEvent(markdownCustomEventName.deployEndEvent, {
         detail: { publishedUrl: deploy.published_url },
       })
@@ -209,6 +216,25 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
       window.removeEventListener(markdownCustomEventName.deleteItemEvent, deleteItemStart)
     }
   }, [bookUrlSlug])
+
+  // check isDeploying...
+  useEffect(() => {
+    if (!isDeployData) return
+    const dispatchDeployEvent = () => {
+      const event = new CustomEvent(markdownCustomEventName.checkIsDeployEvent, {
+        detail: {
+          isDeploy: isDeployData.isDeploy,
+        },
+      })
+      window.dispatchEvent(event)
+    }
+
+    const timeoutId = setTimeout(dispatchDeployEvent, 200)
+
+    return () => {
+      clearTimeout(timeoutId)
+    }
+  }, [bookUrlSlug, isDeployData])
 
   if (isGetPagesLoading || !bookMetadata) return <div>loading...</div>
   return (

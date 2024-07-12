@@ -2,9 +2,23 @@ import cn from 'clsx'
 import { CustomEventDetail, markdownCustomEventName } from '..'
 import { useEffect, useState } from 'react'
 
-function DeployButton({}) {
+function DeployButton() {
   const [isDeploying, setIsDeploying] = useState<Boolean>(false)
 
+  // check isDeploying...
+  useEffect(() => {
+    const checkIsDeployEvent = (e: CustomEventInit<CustomEventDetail['checkIsDeployEvent']>) => {
+      if (!e?.detail) return
+      setIsDeploying(e.detail.isDeploy)
+    }
+
+    window.addEventListener(markdownCustomEventName.checkIsDeployEvent, checkIsDeployEvent)
+    return () => {
+      window.removeEventListener(markdownCustomEventName.checkIsDeployEvent, checkIsDeployEvent)
+    }
+  }, [])
+
+  // deploy end event
   useEffect(() => {
     const deployEndEvent = (e: CustomEventInit<CustomEventDetail['deployEndEvent']>) => {
       if (!e?.detail) return

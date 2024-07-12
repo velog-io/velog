@@ -22,4 +22,5 @@ export const markdownCustomEventName: Record<keyof CustomEventDetail, string> = 
   deployStartEvent: 'deployStartEvent',
   deployEndEvent: 'deployEndEvent',
   deleteItemEvent: 'deleteItemEvent',
+  checkIsDeployEvent: 'checkIsDeployEvent',
 }

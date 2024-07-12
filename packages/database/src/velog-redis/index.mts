@@ -44,6 +44,7 @@ export class RedisService extends Redis.default implements Service {
       existsUser: (userId: string) => `exists:user:${userId}`,
       existsWriter: (userId: string) => `exists:writer:${userId}`,
       errorMessageCache: (type: string, userId: string) => `error:${type}:${userId}`,
+      buildBook: (bookId: string) => `book:build:${bookId}`,
       deployBook: (bookId: string) => `book:deploy:${bookId}`,
     }
   }
@@ -76,6 +77,7 @@ type GenerateRedisKey = {
   existsUser: (userId: string) => string
   existsWriter: (userId: string) => string
   errorMessageCache: (type: string, userId: string) => string
+  buildBook: (bookId: string) => string
   deployBook: (bookId: string) => string
 }
 

@@ -6,6 +6,9 @@ import { faker } from '@faker-js/faker'
 import { UtilsService } from '@lib/utils/UtilsService.mjs'
 import { PageService } from '@services/PageService/index.mjs'
 import { BookService } from '@services/BookService/index.mjs'
+import { RedisService } from '@lib/redis/RedisService.mjs'
+import { WriterService } from '@services/WriterService/index.mjs'
+import { JwtService } from '@lib/jwt/JwtService.mjs'
 
 class Seeder {
   constructor(
@@ -140,7 +143,11 @@ class Seeder {
 const main = async () => {
   const mongo = new MongoService()
   const utils = new UtilsService()
-  const bookService = new BookService(mongo)
+  const redis = new RedisService()
+  const jwt = new JwtService()
+
+  const writerService = new WriterService(jwt, mongo, redis)
+  const bookService = new BookService(mongo, redis, writerService)
   const pageService = new PageService(mongo, utils, bookService)
   const seeder = new Seeder(mongo, utils, pageService)
 
