@@ -47,8 +47,9 @@ export function saveExecute(view: EditorView) {
   if (prevDoc.has(currentUrl) && prevDoc.get(currentUrl) === doc) {
     return
   }
-  prevDoc.set(currentUrl, doc)
 
+  prevDoc.set(currentUrl, doc)
+  console.log('save!')
   const event = new CustomEvent<CustomEventDetail['updateItemEvent']>(
     markdownCustomEventName.updateItemEvent,
     {
