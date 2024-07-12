@@ -3,11 +3,9 @@ import { useRef } from 'react'
 import { Toolbar } from './toolbar'
 import { useCodemirror } from '@/hooks'
 
-interface MarkdownEditorProps {
-  height: string
-}
+interface MarkdownEditorProps {}
 
-export const MarkdownEditor = ({ height }: MarkdownEditorProps) => {
+export const MarkdownEditor = ({}: MarkdownEditorProps) => {
   const codemirror = useRef<HTMLDivElement | null>(null)
   const { state, view } = useCodemirror(codemirror, {
     autoFocus: true,
@@ -23,12 +21,16 @@ export const MarkdownEditor = ({ height }: MarkdownEditorProps) => {
     <>
       <Toolbar state={state} view={view} />
       <div
+        id="markdown-editor-codemirror"
         className={cn('markdown-editor-codemirror')}
         onClick={onClick}
         ref={codemirror}
         suppressHydrationWarning={true}
         suppressContentEditableWarning={true}
-        style={{ height }}
+        style={{
+          height:
+            'calc(100vh - (var(--nextra-navbar-height)) - var(--nextra-editor-toolbar-height))',
+        }}
       />
     </>
   )

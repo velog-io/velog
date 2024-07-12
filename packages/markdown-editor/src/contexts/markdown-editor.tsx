@@ -11,6 +11,8 @@ type MarkdownEditorContext = {
   setMdxSource: (value: MDXRemoteSerializeResult | null) => void
   stat: Statistics | null
   setStat: (value: Statistics) => void
+  active: 'editor' | 'preview'
+  setActive: (value: 'editor' | 'preview') => void
 }
 
 const MarkdownEditorConext = createContext<MarkdownEditorContext>({
@@ -20,6 +22,8 @@ const MarkdownEditorConext = createContext<MarkdownEditorContext>({
   setMdxSource: () => {},
   stat: null,
   setStat: () => {},
+  active: 'editor',
+  setActive: () => {},
 })
 
 export function useMarkdownEditor() {
@@ -38,6 +42,7 @@ export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Pro
   const [isError, setIsError] = useState<boolean>(false)
   const [mdxSource, setMdxSource] = useState<MDXRemoteSerializeResult | null>(null)
   const [stat, setStat] = useState<Statistics | null>(null)
+  const [active, setActive] = useState<'editor' | 'preview'>('editor')
 
   useEffect(() => {
     setValue(editorValue)
@@ -74,6 +79,8 @@ export const MarkdownEditorProvider = ({ children, value: { editorValue } }: Pro
     setMdxSource,
     stat,
     setStat,
+    active,
+    setActive,
   }
 
   return <MarkdownEditorConext.Provider value={context}>{children}</MarkdownEditorConext.Provider>

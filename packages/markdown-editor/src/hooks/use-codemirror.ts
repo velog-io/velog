@@ -30,7 +30,7 @@ const External = Annotation.define<boolean>()
 
 export const useCodemirror = (container: RefObject<HTMLDivElement>, config: Config = {}) => {
   const { theme: currentTheme } = useTheme()
-  const { value, setValue, setStat } = useMarkdownEditor()
+  const { value, setValue, setStat, active } = useMarkdownEditor()
   const [state, setState] = useState<EditorState | null>(null)
   const [view, setView] = useState<EditorView | null>(null)
 
@@ -51,10 +51,10 @@ export const useCodemirror = (container: RefObject<HTMLDivElement>, config: Conf
       EditorView.domEventHandlers({
         paste: (event, view) => handlePaste(event, view, upload),
         drop: (event, view) => handleDrop(event, view, upload),
-        scroll: handleScroll,
+        scroll: (event, view) => handleScroll(event, view, active === 'editor'),
         keydown: handleKeydown,
       }),
-    [upload],
+    [upload, active],
   )
 
   const defaultThemeOption = useMemo(

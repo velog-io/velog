@@ -31,7 +31,6 @@ export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElemen
   const themeContext = { ...activeThemeContext, ...frontMatter }
   const direction = 'ltr'
   const mainHeight = 'calc(100vh - (var(--nextra-navbar-height)))'
-  const height = 'calc(100vh - (var(--nextra-navbar-height)) - var(--nextra-editor-toolbar-height))'
   return (
     <div
       dir={direction}
@@ -64,10 +63,10 @@ export const Main = ({ frontMatter, headings, pageMap }: MainProps): ReactElemen
             <div
               className={cn('markdown-editor-container nx-relative nx-flex nx-w-1/2 nx-flex-col')}
             >
-              <MarkdownEditor height={height} />
+              <MarkdownEditor  />
             </div>
             <div className={cn('markdown-preview-container nx-flex nx-w-1/2')}>
-              <MarkdownPreview height={height} />
+              <MarkdownPreview />
             </div>
           </main>
         </ActiveAnchorProvider>
