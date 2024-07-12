@@ -44,6 +44,7 @@ export class RedisService extends Redis.default implements Service {
       existsUser: (userId: string) => `exists:user:${userId}`,
       existsWriter: (userId: string) => `exists:writer:${userId}`,
       errorMessageCache: (type: string, userId: string) => `error:${type}:${userId}`,
+      deployBook: (bookId: string) => `book:deploy:${bookId}`,
     }
   }
 
@@ -71,10 +72,11 @@ type GenerateRedisKey = {
   userCache: (username: string) => string
   postSeries: (username: string, seriesUrlSlug: string) => string
   changeEmail: (code: string) => string
+  trendingWriters: () => string
   existsUser: (userId: string) => string
   existsWriter: (userId: string) => string
   errorMessageCache: (type: string, userId: string) => string
-  trendingWriters: () => string
+  deployBook: (bookId: string) => string
 }
 
 type QueueName = 'createFeed' | 'checkPostSpam'
