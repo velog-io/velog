@@ -1,5 +1,5 @@
 import { createClient, subscriptionExchange, cacheExchange, fetchExchange, Provider } from 'urql'
-import { createClient as createWSClient, SubscribePayload } from 'graphql-ws'
+import { createClient as createWSClient } from 'graphql-ws'
 import { ENV } from '@/env'
 
 type Props = {
