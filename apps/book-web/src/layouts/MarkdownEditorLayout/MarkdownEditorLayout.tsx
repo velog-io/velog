@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { BookMetadata, generateBookMetadata, Pages } from '@/lib/generateBookMetadata'
 import {
   DeployCompletedDocument,
+  DeployCompletedPayload,
   useBuildMutation,
   useCreatePageMutation,
   useDeletePageMutation,
@@ -56,13 +57,23 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
     },
   })
 
-  const deployCompleted = useSubscription({
+  const [deployCompleted] = useSubscription<DeployCompletedPayload>({
     query: DeployCompletedDocument,
     variables: { input: { book_url_slug: bookUrlSlug } },
   })
 
+  // 재접속시에 deploy 결과 확인
   useEffect(() => {
+    if (!deployCompleted.data) return
     console.log(deployCompleted)
+    const { message, published_url } = deployCompleted.data
+    if (published_url) {
+      console.log('published_url in client', published_url)
+      const event = new CustomEvent(markdownCustomEventName.deployEndEvent, {
+        detail: { publishedUrl: published_url },
+      })
+      window.dispatchEvent(event)
+    }
   }, [deployCompleted])
 
   const { data: isDeployData } = useIsDeployQuery({

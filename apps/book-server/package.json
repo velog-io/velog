@@ -27,6 +27,7 @@
     "@fastify/cookie": "^9.3.1",
     "@fastify/cors": "^8.3.0",
     "@fastify/mongodb": "^8.0.0",
+    "@fastify/websocket": "^10.0.1",
     "@graphql-tools/utils": "^10.2.1",
     "@packages/commonjs": "workspace:*",
     "@packages/database": "workspace:*",

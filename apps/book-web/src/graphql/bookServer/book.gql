@@ -14,8 +14,9 @@ query isDeploy($input: IsDeployInput!) {
   isDeploy(input: $input)
 }
 
-subscription DeployCompleted($input: BookUrlSlugInput!) {
+subscription deployCompleted($input: BookUrlSlugInput!) {
   deployCompleted(input: $input) {
     message
+    published_url
   }
 }

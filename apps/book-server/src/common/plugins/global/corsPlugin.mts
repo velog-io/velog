@@ -4,8 +4,8 @@ import cors from '@fastify/cors'
 import { ForbiddenError } from '@errors/ForbiddenError.mjs'
 import { ENV } from '@env'
 
-const corsPlugin: FastifyPluginAsync = async (fastify) => {
-  const corsWhitelist: RegExp[] = [
+export const getWhiteList = (): RegExp[] => {
+  const whiteList: RegExp[] = [
     /^https:\/\/velog.io$/,
     /^https:\/\/(.*).velog.io$/,
     /^https:\/\/(.*\.velog\.io)$/,
@@ -14,13 +14,19 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
   ]
 
   if (ENV.appEnv === 'development') {
-    corsWhitelist.push(/^http:\/\/localhost/)
+    whiteList.push(/^http:\/\/localhost/)
   }
+
+  return whiteList
+}
+
+const corsPlugin: FastifyPluginAsync = async (fastify) => {
+  const corsWhiteList = getWhiteList()
 
   await fastify.register(cors, {
     credentials: true,
     origin: (origin, callback) => {
-      if (!origin || corsWhitelist.some((re) => re.test(origin))) {
+      if (!origin || corsWhiteList.some((re) => re.test(origin))) {
         callback(null, true)
       } else {
         callback(new ForbiddenError('Not allow origin'), false)

@@ -65,6 +65,11 @@ export type DeletePageInput = {
   page_url_slug: Scalars['String']['input']
 }
 
+export type DeployCompletedPayload = {
+  message: Scalars['String']['output']
+  published_url: Scalars['String']['output']
+}
+
 export type DeployResult = {
   message: Maybe<Scalars['String']['output']>
   published_url: Maybe<Scalars['String']['output']>
@@ -173,7 +178,7 @@ export type SubScriptionPayload = {
 export type Subscription = {
   buildCompleted: Maybe<SubScriptionPayload>
   buildInstalled: Maybe<SubScriptionPayload>
-  deployCompleted: Maybe<SubScriptionPayload>
+  deployCompleted: Maybe<DeployCompletedPayload>
 }
 
 export type SubscriptionBuildCompletedArgs = {
@@ -226,7 +231,9 @@ export type DeployCompletedSubscriptionVariables = Exact<{
   input: BookUrlSlugInput
 }>
 
-export type DeployCompletedSubscription = { deployCompleted: { message: string } | null }
+export type DeployCompletedSubscription = {
+  deployCompleted: { message: string; published_url: string } | null
+}
 
 export type GetPagesQueryVariables = Exact<{
   input: GetPagesInput
@@ -392,9 +399,10 @@ useIsDeployQuery.fetcher = (variables: IsDeployQueryVariables, options?: Request
   fetcher<IsDeployQuery, IsDeployQueryVariables>(IsDeployDocument, variables, options)
 
 export const DeployCompletedDocument = `
-    subscription DeployCompleted($input: BookUrlSlugInput!) {
+    subscription deployCompleted($input: BookUrlSlugInput!) {
   deployCompleted(input: $input) {
     message
+    published_url
   }
 }
     `

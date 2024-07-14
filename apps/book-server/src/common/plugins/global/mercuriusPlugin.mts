@@ -9,6 +9,7 @@ import { MqService } from '@lib/mq/MqService.mjs'
 import { GraphQLContextBase } from '@interfaces/graphql.mjs'
 import { ENV } from '@env'
 import { schemaTransforms } from '@graphql/transformer/index.mjs'
+import { getWhiteList } from './corsPlugin.mjs'
 
 const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
   const mqService = container.resolve(MqService)
@@ -21,12 +22,11 @@ const mercuriusPlugin: FastifyPluginAsync = async (fastify) => {
     subscription: {
       emitter: mqService.emitter,
       verifyClient: (info, next) => {
-        // if (info.req.headers['x-fastify-header'] !== 'fastify is awesome !') {
-        //   return next(false) // the connection is not allowed
-        // }
-
-        next(false)
-        // next(true) // the connection is allowed
+        const whiteList = getWhiteList()
+        if (info.origin && !whiteList.some((re) => re.test(info.origin))) {
+          return next(false)
+        }
+        next(true) // the connection is allowed
       },
     },
     context: (request, reply): GraphQLContextBase => {

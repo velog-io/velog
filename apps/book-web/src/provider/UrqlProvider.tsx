@@ -10,16 +10,19 @@ const wsClient = createWSClient({
   url: `ws://${ENV.graphqlBookServerHost.replace(/^http(s)?:\/\//, '')}/graphql`,
 })
 
-export const urqlClient = createClient({
+const urqlClient = createClient({
   url: `${ENV.graphqlBookServerHost}/graphql`,
   exchanges: [
     cacheExchange,
     fetchExchange,
     subscriptionExchange({
-      forwardSubscription: (operation) => ({
-        subscribe: (sink) => ({
-          unsubscribe: wsClient.subscribe(operation as SubscribePayload, sink),
-        }),
+      forwardSubscription: (request) => ({
+        subscribe: (sink) => {
+          const input = { ...request, query: request.query || '' }
+          return {
+            unsubscribe: wsClient.subscribe(input, sink),
+          }
+        },
       }),
     }),
   ],

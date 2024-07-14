@@ -98,7 +98,7 @@ export class BookBuildService implements Service {
         const stdout = await this.installDependencies('npm install', dest)
         if (stdout) {
           this.mq.publish({
-            topicParameter: book.id,
+            topicParameter: book.url_slug,
             payload: {
               buildInstalled: {
                 message: stdout,
@@ -137,7 +137,7 @@ export class BookBuildService implements Service {
       const buildStdout = await this.buildTsToJs(dest)
       if (buildStdout) {
         this.mq.publish({
-          topicParameter: book.id,
+          topicParameter: book.url_slug,
           payload: {
             buildCompleted: { message: buildStdout },
           },

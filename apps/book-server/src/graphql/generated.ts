@@ -65,6 +65,11 @@ export type DeletePageInput = {
   page_url_slug: Scalars['String']['input']
 }
 
+export type DeployCompletedPayload = {
+  message: Scalars['String']['output']
+  published_url: Scalars['String']['output']
+}
+
 export type DeployResult = {
   message?: Maybe<Scalars['String']['output']>
   published_url?: Maybe<Scalars['String']['output']>
@@ -173,7 +178,7 @@ export type SubScriptionPayload = {
 export type Subscription = {
   buildCompleted?: Maybe<SubScriptionPayload>
   buildInstalled?: Maybe<SubScriptionPayload>
-  deployCompleted?: Maybe<SubScriptionPayload>
+  deployCompleted?: Maybe<DeployCompletedPayload>
 }
 
 export type SubscriptionBuildCompletedArgs = {
@@ -296,6 +301,7 @@ export type ResolversTypes = {
   CreatePageInput: CreatePageInput
   Date: ResolverTypeWrapper<Scalars['Date']['output']>
   DeletePageInput: DeletePageInput
+  DeployCompletedPayload: ResolverTypeWrapper<DeployCompletedPayload>
   DeployResult: ResolverTypeWrapper<DeployResult>
   GetPageInput: GetPageInput
   GetPagesInput: GetPagesInput
@@ -327,6 +333,7 @@ export type ResolversParentTypes = {
   CreatePageInput: CreatePageInput
   Date: Scalars['Date']['output']
   DeletePageInput: DeletePageInput
+  DeployCompletedPayload: DeployCompletedPayload
   DeployResult: DeployResult
   GetPageInput: GetPageInput
   GetPagesInput: GetPagesInput
@@ -379,6 +386,16 @@ export type BuildResultResolvers<
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date'
+}
+
+export type DeployCompletedPayloadResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes['DeployCompletedPayload'] = ResolversParentTypes['DeployCompletedPayload'],
+> = {
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  published_url?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
 export type DeployResultResolvers<
@@ -521,7 +538,7 @@ export type SubscriptionResolvers<
     RequireFields<SubscriptionBuildInstalledArgs, 'input'>
   >
   deployCompleted?: SubscriptionResolver<
-    Maybe<ResolversTypes['SubScriptionPayload']>,
+    Maybe<ResolversTypes['DeployCompletedPayload']>,
     'deployCompleted',
     ParentType,
     ContextType,
@@ -549,6 +566,7 @@ export type Resolvers<ContextType = GraphQLContext> = {
   Book?: BookResolvers<ContextType>
   BuildResult?: BuildResultResolvers<ContextType>
   Date?: GraphQLScalarType
+  DeployCompletedPayload?: DeployCompletedPayloadResolvers<ContextType>
   DeployResult?: DeployResultResolvers<ContextType>
   JSON?: GraphQLScalarType
   Mutation?: MutationResolvers<ContextType>

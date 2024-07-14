@@ -115,8 +115,9 @@ export class BookDeployService implements Service {
         })
       })
 
+      console.log('published_urlpublished_url', published_url)
       this.mq.publish({
-        topicParameter: book.id,
+        topicParameter: book.url_slug,
         payload: {
           deployCompleted: {
             message: 'Deploy completed',

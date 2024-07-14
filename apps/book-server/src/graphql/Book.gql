@@ -19,7 +19,7 @@ type Mutation {
 type Subscription {
   buildInstalled(input: BookUrlSlugInput!): SubScriptionPayload @auth
   buildCompleted(input: BookUrlSlugInput!): SubScriptionPayload @auth
-  deployCompleted(input: BookUrlSlugInput!): SubScriptionPayload @auth
+  deployCompleted(input: BookUrlSlugInput!): DeployCompletedPayload
 }
 
 input BookIdInput {
@@ -34,14 +34,19 @@ type SubScriptionPayload {
   message: String!
 }
 
+type DeployCompletedPayload {
+  message: String!
+  published_url: String!
+}
+
 type BuildResult {
   result: Boolean!
   message: String
 }
 
 type DeployResult {
+  message: String!
   published_url: String
-  message: String
 }
 
 input IsDeployInput {
