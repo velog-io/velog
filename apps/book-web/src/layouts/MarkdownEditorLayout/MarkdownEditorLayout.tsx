@@ -35,10 +35,9 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
   const { mutateAsync: createPageAsyncMutate, isPending: isCreatePending } = useCreatePageMutation()
   const { mutateAsync: reorderAsyncMutate, isPending: isReorderPending } = useReorderPageMutation()
   const { mutateAsync: updatePageAsyncMutate, isPending: isUpdatePending } = useUpdatePageMutation()
-  const { mutateAsync: buildAsyncMutate, isPending: isBuildPending } = useBuildMutation()
-  const { mutateAsync: deployAsyncMutate, isPending: isDeployPending } = useDeployMutation()
-  const { mutateAsync: deletePageAsyncMutate, isPending: isDeletePagePending } =
-    useDeletePageMutation()
+  const { mutateAsync: buildAsyncMutate } = useBuildMutation()
+  const { mutateAsync: deployAsyncMutate } = useDeployMutation()
+  const { mutateAsync: deletePageAsyncMutate } = useDeletePageMutation()
 
   const {
     data: getPagesData,
@@ -66,7 +65,7 @@ function MarkdownEditorLayout({ children, mdxText }: Props) {
   useEffect(() => {
     if (!deployCompleted.data) return
     console.log(deployCompleted)
-    const { message, published_url } = deployCompleted.data
+    const { published_url } = deployCompleted.data
     if (published_url) {
       console.log('published_url in client', published_url)
       const event = new CustomEvent(markdownCustomEventName.deployEndEvent, {
