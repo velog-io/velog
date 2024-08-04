@@ -8,11 +8,11 @@ import { Post, Tag } from '@packages/database/velog-rds'
 import { PostLikeService } from '@services/PostLikeService/index.js'
 import { DbService } from '@lib/db/DbService.js'
 
-import { SeriesService } from '@services/SeriesService/index.js'
+import { SeriesService } from '@services/SeriesService/index.mjs'
 import { TagService } from '@services/TagService/index.js'
 import { FollowUserService } from '@services/FollowUser/index.js'
 import { FeedService } from '@services/FeedService/index.js'
-import { PostApiService } from '@services/PostApiService/index.js'
+import { PostApiService } from '@services/PostApiService/index.mjs'
 
 const postResolvers: Resolvers = {
   Post: {

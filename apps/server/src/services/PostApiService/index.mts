@@ -13,7 +13,7 @@ import { BadRequestError } from '@errors/BadRequestErrors.js'
 import geoip from 'geoip-country'
 import { Post, Series, Tag } from '@packages/database/velog-rds'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
-import { SeriesService } from '@services/SeriesService/index.js'
+import { SeriesService } from '@services/SeriesService/index.mjs'
 import { SearchService } from '@services/SearchService/index.js'
 import { ExternalIntegrationService } from '@services/ExternalIntegrationService/index.js'
 import { PostService } from '@services/PostService/index.js'
@@ -98,6 +98,14 @@ export class PostApiService implements Service {
         this.db.seriesPost.delete({
           where: {
             id: prevSeriesPost.id,
+          },
+        }),
+        this.db.series.update({
+          where: {
+            id: prevSeriesPost.fk_series_id!,
+          },
+          data: {
+            updated_at: new Date(),
           },
         }),
       ])

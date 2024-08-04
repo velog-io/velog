@@ -1,5 +1,5 @@
 import { Resolvers } from '@graphql/helpers/generated.js'
-import { SeriesService } from '@services/SeriesService/index.js'
+import { SeriesService } from '@services/SeriesService/index.mjs'
 import { UserService } from '@services/UserService/index.js'
 import { container } from 'tsyringe'
 

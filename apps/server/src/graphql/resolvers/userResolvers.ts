@@ -1,7 +1,7 @@
 import { Resolvers } from '@graphql/helpers/generated.js'
 import { AuthService } from '@services/AuthService/index.js'
 import { FollowUserService } from '@services/FollowUser/index.js'
-import { SeriesService } from '@services/SeriesService/index.js'
+import { SeriesService } from '@services/SeriesService/index.mjs'
 import { UserMetaService } from '@services/UserMetaService/index.js'
 import { UserProfileService } from '@services/UserProfileService/index.js'
 

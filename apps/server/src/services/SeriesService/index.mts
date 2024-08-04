@@ -1,3 +1,4 @@
+import { NotFoundError } from '@errors/NotfoundError.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { GetSeriesInput } from '@graphql/helpers/generated.js'
 import { DbService } from '@lib/db/DbService.js'
@@ -156,6 +157,7 @@ export class SeriesService implements Service {
   }
 
   public async appendToSeries(seriesId: string, postId: string): Promise<void> {
+    console.log('appendToSeries')
     const postsCount = await this.db.seriesPost.count({
       where: {
         fk_series_id: seriesId,
@@ -169,13 +171,24 @@ export class SeriesService implements Service {
       },
     })
 
-    if (!series) return
+    if (!series) {
+      throw new NotFoundError('Series not found')
+    }
 
     await this.db.seriesPost.create({
       data: {
         fk_post_id: postId,
         fk_series_id: seriesId,
         index: nextIndex,
+      },
+    })
+
+    await this.db.series.update({
+      where: {
+        id: seriesId,
+      },
+      data: {
+        updated_at: new Date(),
       },
     })
   }
