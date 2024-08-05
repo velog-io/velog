@@ -3,7 +3,6 @@
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import format from 'date-fns/format'
 import koLocale from 'date-fns/locale/ko'
-import { utcToZonedTime } from 'date-fns-tz'
 import { useEffect, useState } from 'react'
 
 export function useTimeFormat(date: string) {
@@ -13,8 +12,8 @@ export function useTimeFormat(date: string) {
   useEffect(() => {
     setLoading(true)
 
-    const targetDate = utcToZonedTime(new Date(date), 'Asia/Seoul')
-    const now = utcToZonedTime(new Date(), 'Asia/Seoul')
+    const targetDate = new Date(date)
+    const now = new Date()
     const diff = now.getTime() - targetDate.getTime()
 
     const getTimeDescription = () => {

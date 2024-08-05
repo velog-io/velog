@@ -1,4 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
+import fp from 'fastify-plugin'
 
 const ipaddrPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('ipaddr', null)
@@ -16,4 +17,4 @@ const ipaddrPlugin: FastifyPluginAsync = async (fastify) => {
   })
 }
 
-export default ipaddrPlugin
+export default fp(ipaddrPlugin)
