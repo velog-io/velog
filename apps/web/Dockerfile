@@ -1,4 +1,4 @@
-FROM node:20-slim AS base
+FROM node:20.12.0-alpine AS base
 
 RUN corepack enable
 
