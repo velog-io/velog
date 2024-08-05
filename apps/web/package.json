@@ -26,7 +26,7 @@
     "ssm": "tsx ./scripts/ssm.mts"
   },
   "dependencies": {
-    "@packages/scripts": "workspace:*",
+    "@packages/markdown-editor": "workspace:*",
     "@sentry/browser": "^7.75.0",
     "@tanstack/react-query": "^5.29.0",
     "axios": "^1.4.0",
@@ -74,8 +74,9 @@
     "@graphql-codegen/plugin-helpers": "^5.0.3",
     "@graphql-codegen/typescript-operations": "^4.2.0",
     "@graphql-codegen/typescript-react-query": "^6.1.0",
+    "@packages/commonjs": "workspace:*",
     "@packages/eslint-config": "workspace:*",
-    "@packages/markdown-editor": "workspace:*",
+    "@packages/scripts": "workspace:*",
     "@packages/tsconfig": "workspace:*",
     "@svgr/cli": "^8.0.1",
     "@testing-library/react": "^14.0.0",

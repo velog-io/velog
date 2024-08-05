@@ -18,8 +18,9 @@
     "build": "tsc -p tsconfig.build.json && cp ./src/index.d.mts ./dist/index.d.mts"
   },
   "dependencies": {
-    "@packages/eslint-config": "workspace:*",
-    "@packages/tsconfig": "workspace:*",
+    "@graphql-tools/graphql-file-loader": "^8.0.1",
+    "@graphql-tools/load": "^8.0.2",
+    "@graphql-tools/merge": "^9.0.4",
     "axios": "^1.4.0"
   },
   "devDependencies": {
