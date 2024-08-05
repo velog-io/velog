@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  web:
+    build:
+      context: ../../
+      dockerfile: ./apps/web/Dockerfile
+      no_cache: true
+      args:
+        DOCKER_ENV: stage
+        AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+        AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+        TURBO_TEAM: ${TURBO_TEAM}
+        TURBO_TOKEN: ${TURBO_TOKEN}
+        TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${TURBO_REMOTE_CACHE_SIGNATURE_KEY}
+    tty: true
+    stdin_open: true
+    ports:
+      - 3001:3001

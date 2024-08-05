@@ -1,0 +1,27 @@
+{
+  "extends": "@packages/tsconfig/next.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "rootDir": "./",
+    "typeRoots": ["node_modules/@types/", "./src/types/", "./node_modules/@packages/**/**/*.d.ts"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/public/*": ["./public/*"]
+    },
+    "strictNullChecks": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "public/*",
+    "src/assets/**/svg",
+    "scripts/*",
+    "next.config.mjs",
+    "codegen.ts",
+    "eslint.config.mjs",
+    ".next/types/**/*.ts",
+    "src/env.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

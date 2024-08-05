@@ -1,0 +1,14 @@
+{
+  "extends": "@packages/tsconfig/next.json",
+  "compilerOptions": {
+    "rootDir": "./"
+  },
+  "exclude": [
+    "/apps/**",
+    "/packages/**",
+    "*.config.js",
+    "packages/**/node_modules/*.d.ts",
+    "node_modules/*.d.ts",
+    "**/dist/**/*"
+  ]
+}

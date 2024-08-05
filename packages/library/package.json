@@ -1,0 +1,68 @@
+{
+  "name": "@packages/library",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "author": {
+    "name": "velopert",
+    "email": "public.velopert@gmail.com"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11.1"
+  },
+  "exports": {
+    "./awsS3": {
+      "default": "./dist/awsS3/AwsS3Service.mjs",
+      "types": "./dist/awsS3/AwsS3Service.d.mts"
+    },
+    "./discord": {
+      "default": "./dist/discord/DiscordService.mjs",
+      "types": "./dist/discord/DiscordService.d.mts"
+    },
+    "./fastifyCookie": {
+      "default": "./dist/fastifyCookie/FastifyCookieService.mjs",
+      "types": "./dist/fastifyCookie/FastifyCookieService.d.mts"
+    },
+    "./jwt": {
+      "default": "./dist/jwt/JwtService.mjs",
+      "types": "./dist/jwt/JwtService.d.mts"
+    },
+    "./r2": {
+      "default": "./dist/cloudflare/R2/R2Service.mjs",
+      "types": "./dist/cloudflare/R2/R2Service.d.mts"
+    },
+    "./utils": {
+      "default": "./dist/utils/UtilsService.mjs",
+      "types:": "./dist/utils/UtilsService.d.mts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "create-service": "tsx ./scripts/createService.mts",
+    "lint": "eslint --fix"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.587.0",
+    "@fastify/cookie": "^9.3.1",
+    "@packages/commonjs": "workspace:*",
+    "@packages/scripts": "workspace:*",
+    "discord.js": "^14.14.1",
+    "fastify": "^4.26.2",
+    "jsonwebtoken": "^9.0.2",
+    "nanoid": "^5.0.7",
+    "nanoid-dictionary": "^4.3.0"
+  },
+  "devDependencies": {
+    "@packages/eslint-config": "workspace:*",
+    "@packages/tsconfig": "workspace:*",
+    "@types/jest": "^29.5.12",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/nanoid-dictionary": "^4.2.3",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.6.0",
+    "eslint": "^9.5.0",
+    "tsx": "^4.7.2",
+    "typescript": "^5.4.5"
+  }
+}

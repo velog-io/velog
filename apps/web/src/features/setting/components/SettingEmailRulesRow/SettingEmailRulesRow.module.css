@@ -1,0 +1,31 @@
+.block {
+  border-top: 1px solid var(--border4);
+
+  .rules {
+    margin: 0;
+    padding: 0;
+
+    & li {
+      display: flex;
+      justify-content: space-between;
+      user-select: none;
+      list-style: none;
+      width: 224px;
+
+      @media screen and (max-width: 768px) {
+        width: 300px;
+      }
+
+      @media screen and (max-width: 425px) {
+        width: 100%;
+      }
+      .toggle {
+        margin-left: 10px;
+      }
+    }
+
+    & li + li {
+      margin-top: 8px;
+    }
+  }
+}

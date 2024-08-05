@@ -1,0 +1,6 @@
+.markdown-editor-container {
+  display: none;
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+}

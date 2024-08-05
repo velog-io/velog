@@ -1,0 +1,22 @@
+mutation deploy($input: BookUrlSlugInput!) {
+  deploy(input: $input) {
+    published_url
+  }
+}
+
+mutation build($input: BookUrlSlugInput!) {
+  build(input: $input) {
+    result
+  }
+}
+
+query isDeploy($input: IsDeployInput!) {
+  isDeploy(input: $input)
+}
+
+subscription deployCompleted($input: BookUrlSlugInput!) {
+  deployCompleted(input: $input) {
+    message
+    published_url
+  }
+}

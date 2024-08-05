@@ -1,0 +1,32 @@
+{
+  "name": "@packages/commonjs",
+  "version": "1.0.0",
+  "description": "",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && cp ./src/index.d.mts ./dist/index.d.mts"
+  },
+  "dependencies": {
+    "@packages/eslint-config": "workspace:*",
+    "@packages/tsconfig": "workspace:*",
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.6.0",
+    "eslint": "^9.5.0",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,56 @@
+import { injectable, singleton } from 'tsyringe'
+import { Client, GatewayIntentBits } from 'discord.js'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const ENV = {
+  discordBotToken: process.env.DISCORD_BOT_TOKEN,
+}
+
+@injectable()
+@singleton()
+export class DiscordService {
+  private client!: Client
+  construct() {}
+  public connection(): Promise<Client> {
+    return new Promise((resolve) => {
+      this.client = new Client({
+        intents: [GatewayIntentBits.MessageContent],
+      })
+
+      this.client.on('ready', () => {
+        console.log('Discord Client ready!')
+        resolve(this.client)
+      })
+
+      this.client.login(ENV.discordBotToken)
+    })
+  }
+  public sendMessage(channelId: string, message: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const isReady = this.client.isReady()
+
+        if (!isReady) {
+          throw new Error('Discord bot is not ready')
+        }
+
+        const channel = await this.client.channels.fetch(channelId)
+
+        if (channel?.isTextBased()) {
+          const chunkSize = 2000
+          for (let i = 0; i < message.length; i += chunkSize) {
+            await channel.send(message.slice(i, i + chunkSize))
+          }
+        } else {
+          throw new Error('Wrong channel type')
+        }
+        resolve('Message sent successfully!')
+      } catch (error) {
+        reject('Failed to send meesage')
+        throw error
+      }
+    })
+  }
+}

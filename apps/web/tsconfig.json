@@ -1,0 +1,33 @@
+{
+  "extends": "@packages/tsconfig/next.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "rootDir": "./",
+    "typeRoots": ["node_modules/@types/", "./src/types/", "./node_modules/@packages/**/**/*.d.ts"],
+    "plugins": [
+      {
+        "name": "next"
+      },
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/public/*": ["./public/*"]
+    },
+    "strictNullChecks": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "public/*",
+    "src/assets/**/svg",
+    "scripts/*",
+    "next.config.mjs",
+    "eslint.config.js",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

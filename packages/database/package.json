@@ -1,0 +1,62 @@
+{
+  "name": "@packages/database",
+  "version": "1.0.0",
+  "author": {
+    "name": "velopert",
+    "email": "public.velopert@gmail.com"
+  },
+  "description": "The database used in the Velog project include pg, mongo, redis, etc",
+  "exports": {
+    "./velog-rds": {
+      "default": "./dist/velog-rds/index.mjs",
+      "types": "./dist/velog-rds/index.d.ts"
+    },
+    "./velog-book-mongo": {
+      "default": "./dist/velog-book-mongo/index.mjs",
+      "types": "./dist/velog-book-mongo/index.d.ts"
+    },
+    "./velog-redis": {
+      "default": "./dist/velog-redis/index.mjs",
+      "types": "./dist/velog-redis/index.mjs"
+    }
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11.1"
+  },
+  "type": "module",
+  "scripts": {
+    "create-mock": "tsx ./scripts/createMock.mts",
+    "prisma-migrate:dev": "pnpm env:copy --only-dev && pnpm prisma migrate dev --schema=./prisma/velog-rds/schema.prisma --create-only",
+    "prisma-deploy:rds": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/rdsDeploy.mts",
+    "prisma-deploy:mongo": "pnpm env:copy && dotenv -e .env -- tsx ./scripts/mongoDeploy.mts",
+    "prisma:generate": "tsx ./scripts/generatePrisma.mts",
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint --fix",
+    "env:copy": "tsx ./scripts/copyEnv.mts",
+    "ssm": "tsx ./scripts/ssm.mts"
+  },
+  "dependencies": {
+    "@packages/scripts": "workspace:*",
+    "@prisma/client": "^5.17.0",
+    "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.2.1",
+    "inquirer": "^9.2.23",
+    "ioredis": "^5.3.2",
+    "prisma": "^5.17.0",
+    "tsx": "^4.7.1",
+    "tsyringe": "^4.7.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@packages/eslint-config": "workspace:*",
+    "@packages/tsconfig": "workspace:*",
+    "@types/inquirer": "^9.0.3",
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.12.5",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.6.0",
+    "eslint": "^9.5.0",
+    "typescript": "^5.4.5"
+  }
+}

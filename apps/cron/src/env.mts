@@ -1,0 +1,61 @@
+import dotenv from 'dotenv'
+import { container } from 'tsyringe'
+import { UtilsService } from '@lib/utils/UtilsService.js'
+import { existsSync } from 'fs'
+import { z } from 'zod'
+
+type DockerEnv = 'development' | 'stage' | 'production'
+type AppEnvironment = 'development' | 'production'
+export type EnvFiles = Record<DockerEnv, string>
+
+const envFiles: EnvFiles = {
+  development: '.env.development',
+  stage: '.env.stage',
+  production: '.env.production',
+}
+
+const dockerEnv = (process.env.DOCKER_ENV as DockerEnv) || 'development'
+const appEnv: AppEnvironment = ['stage', 'production'].includes(dockerEnv)
+  ? 'production'
+  : 'development'
+
+const envFile = envFiles[dockerEnv]
+const prefix = './env'
+
+const utils = container.resolve(UtilsService)
+const configPath = utils.resolveDir(`${prefix}/${envFile}`)
+
+if (!existsSync(configPath)) {
+  console.log(`Read target: ${configPath}`)
+  throw new Error('Not found environment file')
+}
+
+dotenv.config({ path: configPath })
+
+const env = z.object({
+  dockerEnv: z.enum(['development', 'production', 'stage']),
+  appEnv: z.enum(['development', 'production']),
+  port: z.number(),
+  databaseUrl: z.string(),
+  cronApiKey: z.string(),
+  redisHost: z.string(),
+  redisPort: z.number(),
+  discordBotToken: z.string(),
+  discordStatsChannel: z.string(),
+  discordSpamChannel: z.string(),
+  discordErrorChannel: z.string(),
+})
+
+export const ENV = env.parse({
+  dockerEnv,
+  appEnv,
+  port: Number(process.env.PORT),
+  databaseUrl: process.env.DATABASE_URL,
+  cronApiKey: process.env.CRON_API_KEY,
+  redisHost: process.env.REDIS_HOST,
+  redisPort: Number(process.env.REDIS_PORT),
+  discordBotToken: process.env.DISCORD_BOT_TOKEN,
+  discordStatsChannel: process.env.DISCORD_STATS_CHANNEL,
+  discordSpamChannel: process.env.DISCORD_SPAM_CHANNEL,
+  discordErrorChannel: process.env.DISCORD_ERROR_CHANNEL,
+})

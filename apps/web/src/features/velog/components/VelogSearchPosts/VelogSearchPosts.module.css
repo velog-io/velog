@@ -1,0 +1,18 @@
+.block {
+  position: relative;
+
+  .info {
+    margin-bottom: 4rem;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    color: var(--text2);
+    @media screen and (max-width: 768px) {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    & b {
+      color: var(--text1);
+    }
+  }
+}

@@ -1,0 +1,59 @@
+query getPages($input: GetPagesInput!) {
+  pages(input: $input) {
+    id
+    title
+    url_slug
+    type
+    parent_id
+    code
+    childrens {
+      id
+      title
+      url_slug
+      type
+      parent_id
+      code
+      childrens {
+        id
+        title
+        url_slug
+        type
+        parent_id
+        code
+      }
+    }
+  }
+}
+
+query getPage($input: GetPageInput!) {
+  page(input: $input) {
+    id
+    title
+    url_slug
+    parent_id
+    body
+  }
+}
+
+mutation createPage($input: CreatePageInput!) {
+  create(input: $input) {
+    id
+  }
+}
+
+mutation reorderPage($input: ReorderInput!) {
+  reorder(input: $input)
+}
+
+mutation updatePage($input: UpdatePageInput!) {
+  update(input: $input) {
+    id
+    title
+    body
+    is_deleted
+  }
+}
+
+mutation deletePage($input: DeletePageInput!) {
+  delete(input: $input)
+}

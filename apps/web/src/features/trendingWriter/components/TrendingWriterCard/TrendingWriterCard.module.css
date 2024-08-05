@@ -1,0 +1,136 @@
+.block {
+  width: 100%;
+  background-color: var(--bg-element1);
+  box-shadow: 1px 4px 16px 0px rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+
+  .header {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .left {
+      display: flex;
+      align-items: center;
+
+      .thumbnail {
+        width: 32px;
+        height: 32px;
+        & img {
+          border-radius: 50%;
+          box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+        }
+      }
+
+      .displayName {
+        display: inline;
+        margin-left: 8px;
+        font-weight: 700;
+        font-size: 14px;
+        max-width: 200px;
+        color: var(--text1);
+
+        @media screen and (max-width: 768px) {
+          max-width: 150px;
+        }
+
+        @media screen and (max-width: 425px) {
+          max-width: 120px;
+        }
+      }
+    }
+
+    .right {
+      padding: 8px;
+    }
+  }
+
+  .content {
+    border-top: 1px solid var(--border4);
+    padding: 8px;
+    padding-right: 16px;
+    min-height: 144px;
+    .post {
+      list-style: none;
+      font-size: 14px;
+      color: var(--text1);
+
+      &:active,
+      &:hover {
+        text-decoration: underline;
+      }
+
+      @media screen and (max-width: 768px) {
+        font-size: 12px;
+      }
+
+      .title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        word-break: keep-all;
+        -webkit-line-clamp: 2;
+        max-height: 40px;
+      }
+    }
+
+    .post + .post {
+      margin-top: 10px;
+    }
+  }
+}
+
+.skeletonBlock {
+  padding-bottom: 24px;
+  .header {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+
+    .displayName {
+      width: 150px;
+      height: 18px;
+
+      @media screen and (max-width: 768px) {
+        width: 120px;
+      }
+
+      @media screen and (max-width: 425px) {
+        width: 90px;
+      }
+    }
+
+    .button {
+      width: 96px;
+      height: 32px;
+      border-radius: 16px;
+
+      @media screen and (max-width: 768px) {
+        width: 80px;
+        height: 24px;
+      }
+    }
+  }
+
+  .content {
+    .pc {
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    }
+    .mobile {
+      display: none;
+      @media screen and (max-width: 768px) {
+        display: inline-block;
+      }
+    }
+
+    .spacer {
+      height: 8px;
+      width: 1px;
+    }
+  }
+}

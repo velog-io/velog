@@ -1,6 +1,0 @@
-/prisma
-
-/data/*
-!/data/.gitkeep
-
-dist
