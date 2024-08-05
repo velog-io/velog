@@ -15,7 +15,7 @@ function HeaderUserIcon({ user, onClick }: Props) {
   return (
     <div className={cx('block')} onClick={onClick}>
       <Image
-        src={user.profile.thumbnail || '/images/user-thumbnail.png'}
+        src={user.profile.thumbnail || 'https://velcdn.com/images/user-thumbnail.png'}
         alt="user thumbnail"
         width={40}
         height={40}

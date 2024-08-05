@@ -90,7 +90,7 @@ function UserProfile({ style, userId, profile, followersCount, followingsCount }
         <div className={cx('left')}>
           <Link href={velogUrl}>
             <Image
-              src={thumbnail || '/images/user-thumbnail.png'}
+              src={thumbnail || 'https://velcdn.com/images/user-thumbnail.png'}
               width={128}
               height={128}
               alt="profile"

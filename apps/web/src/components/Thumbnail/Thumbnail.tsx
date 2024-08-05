@@ -15,7 +15,7 @@ function Thumbnail({ src, alt = 'thumbnail', className, priority = false }: Prop
   return (
     <div className={cx('block', className)}>
       <Image
-        src={src || '/images/user-thumbnail.png'}
+        src={src || 'https://velcdn.com/images/user-thumbnail.png'}
         alt={alt}
         fill={true}
         style={styles}

@@ -58,7 +58,7 @@ function PostCard({ post, forHome = false, forPost = false, onClick }: Props) {
       <div className={cx('footer')}>
         <Link className={cx('userInfo')} href={`/@${post.user?.username}/posts`}>
           <Image
-            src={post.user?.profile?.thumbnail || '/images/user-thumbnail.png'}
+            src={post.user?.profile?.thumbnail || 'https://velcdn.com/images/user-thumbnail.png'}
             alt={`user thumbnail of ${post.user?.profile.display_name}`}
             width={24}
             height={24}
