@@ -10,9 +10,9 @@
     "build": "turbo build",
     "lint": "pnpm -r lint",
     "clean": "find . -name \"node_modules\" -type d -prune -exec rm -rf '{}' +",
-    "prisma:init": "pnpm -r prisma:generate"
+    "prisma:init": "pnpm --filter=@packages/database prisma:generate"
   },
-  "packageManager": "pnpm@9.4.0",
+  "packageManager": "pnpm@9.6.0",
   "engines": {
     "node": ">=20.11.1",
     "pnpm": ">=9.1.3",
@@ -36,14 +36,14 @@
     "@eslint/eslintrc": "^3.0.2",
     "@packages/eslint-config": "workspace:*",
     "@packages/tsconfig": "workspace:*",
-    "husky": "^8.0.0",
-    "lint-staged": "^13.2.3"
+    "husky": "^9.1.4",
+    "lint-staged": "^15.2.8"
   },
   "resolutions": {
     "graphql": "16.8.1",
-    "next": "14.2.3"
+    "next": "14.2.5"
   },
   "dependencies": {
-    "turbo": "^2.0.6"
+    "turbo": "^2.0.11"
   }
 }

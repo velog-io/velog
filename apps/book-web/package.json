@@ -27,7 +27,7 @@
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.16.0",
     "gray-matter": "^4.0.3",
-    "next": "14.2.3",
+    "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
     "rehype-katex": "^7.0.0",

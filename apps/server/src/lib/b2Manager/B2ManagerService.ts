@@ -3,6 +3,7 @@ import B2 from 'backblaze-b2'
 import { ENV } from '@env'
 import { finished } from 'stream/promises'
 import { Readable } from 'stream'
+import { ReadableStream } from 'stream/web'
 
 interface Service {
   authorize(): Promise<boolean>
@@ -53,9 +54,9 @@ export class B2ManagerService implements Service {
     return { authorizationToken, uploadUrl }
   }
 
-  public async streamUpload(stream: Readable, fileName: string, contentLength?: number) {
+  public async streamUpload(stream: any, fileName: string, contentLength?: number) {
     const chunks: any[] = []
-    stream.on('data', (chunk) => chunks.push(chunk))
+    stream.on('data', (chunk: string) => chunks.push(chunk))
     await finished(stream)
 
     const buffer = Buffer.concat(chunks)

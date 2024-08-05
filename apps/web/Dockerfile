@@ -40,7 +40,7 @@ COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=pruner /app/out/full/ ./
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prefer-frozen-lockfile
 
 RUN pnpm --filter ${APP_NAME} ssm pull -e ${DOCKER_ENV}
 RUN pnpm --filter ${APP_NAME} env:copy -e ${DOCKER_ENV}
