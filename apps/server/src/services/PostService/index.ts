@@ -525,8 +525,9 @@ export class PostService implements Service {
     if (temp_only) {
       if (!username) throw new BadRequestError('username is missing')
       if (!user) throw new NotFoundError('Invalid username')
-      if (user.id !== signedUserId)
+      if (user.id !== signedUserId) {
         throw new UnauthorizedError('You have no permission to load temp posts')
+      }
 
       Object.assign(whereQuery, { is_temp: true })
     } else {
