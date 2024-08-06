@@ -25,6 +25,14 @@
   animation-timing-function: ease-in-out;
 }
 
+.shining {
+  animation-name: shining;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
 @keyframes fade-in {
   0% {
     opacity: 0;
@@ -66,5 +74,17 @@
   100% {
     opacity: 0;
     transform: translateY(400px) scale(0.75);
+  }
+}
+
+@keyframes shining {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
   }
 }

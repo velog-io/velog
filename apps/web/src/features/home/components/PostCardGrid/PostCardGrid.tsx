@@ -73,7 +73,6 @@ function PostCardGrid({
   }
 
   if (isLoading) return <PostCardSkeletonGrid forHome={forHome} forPost={forPost} />
-
   return (
     <ul className={cx('block', 'homeGrid')}>
       {posts.map((post, i) => {

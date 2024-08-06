@@ -1,7 +1,6 @@
 .block {
-  background: var(--bg-element4);
-  animation: shining 1s ease-in-out infinite;
   display: inline-block;
+  background: var(--bg-element4);
   border-radius: 4px;
   height: 1em;
 
@@ -13,17 +12,5 @@
 
   &.circle {
     border-radius: 50%;
-  }
-
-  @keyframes shining {
-    0% {
-      opacity: 0.5;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0.5;
-    }
   }
 }

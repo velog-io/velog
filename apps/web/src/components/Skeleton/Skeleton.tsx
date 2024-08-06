@@ -26,7 +26,7 @@ function Skeleton({
 }: Props) {
   return (
     <div
-      className={cx('block', className, {
+      className={cx('block', 'shining', className, {
         noSpacing: noSpacing || !!marginRight,
         circle,
       })}
