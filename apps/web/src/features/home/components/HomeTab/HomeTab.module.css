@@ -25,7 +25,6 @@
   position: relative;
   display: flex;
   align-items: center;
-  background-color: gold;
 
   & > a {
     display: flex;
