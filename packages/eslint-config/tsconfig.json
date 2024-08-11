@@ -1,0 +1,11 @@
+{
+  "extends": "@packages/tsconfig/base.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "declaration": true,
+    "allowJs": true
+  },
+  "exclude": ["node_modules", "dist"]
+}

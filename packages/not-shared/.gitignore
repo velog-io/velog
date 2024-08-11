@@ -1,0 +1,10 @@
+/prisma
+
+/data/*
+!/data/.gitkeep
+
+dist
+
+.env
+/env/*
+!/env/*.example

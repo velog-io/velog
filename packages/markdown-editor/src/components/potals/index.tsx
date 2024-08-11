@@ -1,0 +1,1 @@
+export { Potals } from './potals'

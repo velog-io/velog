@@ -1,0 +1,8 @@
+# Ignore node_modules
+node_modules
+# Ignore dist
+dist
+
+# Ignore build process files
+books/*
+!books/base

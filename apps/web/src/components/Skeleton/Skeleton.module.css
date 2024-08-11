@@ -1,0 +1,16 @@
+.block {
+  display: inline-block;
+  background: var(--bg-element4);
+  border-radius: 4px;
+  height: 1em;
+
+  &.noSpacing {
+    & + & {
+      margin-left: 0.5rem;
+    }
+  }
+
+  &.circle {
+    border-radius: 50%;
+  }
+}

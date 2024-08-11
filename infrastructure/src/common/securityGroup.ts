@@ -1,6 +1,5 @@
 import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
-import { ENV } from '../env'
 import { PackageType } from '../type.d'
 import { portMapper } from '../lib/portMapper'
 

@@ -1,3 +1,4 @@
 packages:
-  - packages/*
-  - infrastructure/
+  - 'packages/*'
+  - 'apps/*'
+  - 'infrastructure/'

@@ -8,11 +8,8 @@ import * as pulumi from '@pulumi/pulumi'
 import { createVPC } from './common/vpc'
 import { getCertificate } from './common/certificate'
 import { createCronInfra } from './packages/cron'
-import { execCommand } from './lib/execCommand'
 import { createECRImage, createECRRepository, getECRImage, getECRRepository } from './common/ecr'
 import { getCluster } from './common/ecs'
-
-execCommand('pnpm -r prisma:copy')
 
 const config = new pulumi.Config()
 const target = config.get('target')
@@ -54,11 +51,11 @@ const createInfraMapper: Record<PackageType, (func: CreateInfraParameter) => voi
 
 export const imageUrls = getCluster().then((cluster) =>
   Object.entries(createInfraMapper).map(async ([pack, func]) => {
-    let type = pack as PackageType
+    const type = pack as PackageType
     let imageUri: pulumi.Output<string>
     if (targets.includes(type) || target === 'all') {
-      const newRepo = createECRRepository(type)
-      imageUri = createECRImage(type, newRepo)
+      const repo = createECRRepository(type)
+      imageUri = createECRImage(type, repo)
     } else {
       const repo = await getECRRepository(type)
       imageUri = getECRImage(repo)

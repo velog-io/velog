@@ -1,0 +1,54 @@
+type Book {
+  id: ID!
+  thumbnail: String!
+  fk_writer_id: String!
+  is_published: Boolean!
+  pages: [Page!]!
+}
+
+type Query {
+  book(input: BookIdInput!): Book
+  isDeploy(input: IsDeployInput!): Boolean! @auth
+}
+
+type Mutation {
+  deploy(input: BookUrlSlugInput!): DeployResult! @auth
+  build(input: BookUrlSlugInput!): BuildResult! @auth
+}
+
+type Subscription {
+  buildInstalled(input: BookUrlSlugInput!): SubScriptionPayload @auth
+  buildCompleted(input: BookUrlSlugInput!): SubScriptionPayload @auth
+  deployCompleted(input: BookUrlSlugInput!): DeployCompletedPayload
+}
+
+input BookIdInput {
+  book_id: ID!
+}
+
+input BookUrlSlugInput {
+  book_url_slug: String!
+}
+
+type SubScriptionPayload {
+  message: String!
+}
+
+type DeployCompletedPayload {
+  message: String!
+  published_url: String!
+}
+
+type BuildResult {
+  result: Boolean!
+  message: String
+}
+
+type DeployResult {
+  message: String!
+  published_url: String
+}
+
+input IsDeployInput {
+  book_url_slug: String!
+}

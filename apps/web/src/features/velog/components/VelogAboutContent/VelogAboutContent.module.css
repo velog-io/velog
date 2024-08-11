@@ -1,0 +1,58 @@
+.block {
+  width: 100%;
+
+  .empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    & svg {
+      width: 320px;
+      height: 320px;
+      margin-bottom: 32px;
+      display: block;
+    }
+    .message {
+      font-size: 32px;
+      color: var(--text3);
+      margin-bottom: 32px;
+
+      @media screen and (max-width: 425px) {
+        font-size: 24px;
+      }
+    }
+  }
+}
+
+.skeletonBlock {
+  width: 100%;
+
+  @media screen and (max-width: 768px) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  & h1 {
+    font-size: 48px;
+    margin-bottom: 32px;
+
+    @media screen and (max-width: 768px) {
+      margin-bottom: 26px;
+    }
+  }
+  .lines {
+    width: 100%;
+    .line {
+      margin-bottom: 12px;
+      display: flex;
+      font-size: 18px;
+    }
+  }
+
+  .lines + .lines {
+    margin-top: 48px;
+
+    @media screen and (max-width: 768px) {
+      margin-top: 32px;
+    }
+  }
+}

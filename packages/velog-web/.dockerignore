@@ -1,9 +1,0 @@
-Dockerfile
-.dockerignore
-node_modules
-README.md
-.next
-.git
-.out
-.prettierrc
-.env

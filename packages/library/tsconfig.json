@@ -1,0 +1,12 @@
+{
+  "extends": "@packages/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "rootDir": "./",
+    "typeRoots": ["./node_modules/@types"],
+    "outDir": "./dist",
+    "declaration": true
+  },
+  "include": ["./src", "./scripts", "eslint.config.js"],
+  "exclude": ["node_modules", "dist"]
+}

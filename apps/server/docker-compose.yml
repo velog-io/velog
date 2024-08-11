@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+  server:
+    container_name: velog-server
+    build:
+      context: ../../
+      dockerfile: ./apps/server/Dockerfile
+      no_cache: true
+      args:
+        DOCKER_ENV: stage
+        AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+        AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+        TURBO_TEAM: ${TURBO_TEAM}
+        TURBO_TOKEN: ${TURBO_TOKEN}
+        TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${TURBO_REMOTE_CACHE_SIGNATURE_KEY}
+
+    tty: true
+    stdin_open: true
+    ports:
+      - 5003:5003
+    deploy:
+      resources:
+        limits:
+          cpus: '1' # range 0.01 to 10.00
+          memory: '2G'
+        reservations:
+          cpus: '0.25'
+          memory: '256M'

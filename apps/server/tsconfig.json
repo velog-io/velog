@@ -1,0 +1,33 @@
+{
+  "extends": "@packages/tsconfig/base.json",
+  "compilerOptions": {
+    "rootDir": "./",
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "paths": {
+      "@plugins/*": ["src/common/plugins/*"],
+      "@constants/*": ["src/common/constants/*"],
+      "@errors/*": ["src/common/errors/*"],
+      "@templates/*": ["src/common/templates/*"],
+      "@interfaces/*": ["src/common/interfaces/*"],
+      "@graphql/*": ["src/graphql/*"],
+      "@test/*": ["src/test/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@routes/*": ["src/routes/*"],
+      "@services/*": ["src/services/*"],
+      "@env": ["src/env.mts"],
+      "@template/*": ["src/template/*"]
+    }
+  },
+  "include": [
+    "./src",
+    "jest.*",
+    "codegen.ts",
+    "./test/**/*.ts",
+    "scripts/**/*.ts",
+    "scripts/**.mts",
+    "scripts/**/*.mts",
+    "eslint.config.js"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

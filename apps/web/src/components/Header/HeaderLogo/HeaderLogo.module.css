@@ -1,0 +1,18 @@
+.block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 21px;
+  font-family: Fira Mono, monospace;
+  height: 100%;
+  line-height: 10px;
+
+  & svg {
+    color: var(--text1);
+    height: 24px;
+    @media screen and (max-width: 1024px) {
+      height: 20px;
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@packages/scripts",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "lint": "eslint --fix"
+  },
+  "main": "./index.mts",
+  "types": "./index.mts",
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.540.0",
+    "inquirer": "^9.2.23",
+    "reflect-metadata": "^0.1.13",
+    "tsx": "^4.7.1",
+    "tsyringe": "^4.7.0",
+    "typescript": "^5.4.5",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@packages/eslint-config": "workspace:*",
+    "@packages/tsconfig": "workspace:*",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.12.5",
+    "eslint": "^9.5.0"
+  }
+}

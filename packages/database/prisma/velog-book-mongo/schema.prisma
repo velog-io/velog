@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/@prisma/velog-book-mongo/client"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("VELOG_BOOK_MONGO_URL")
+}
+
+model Writer {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  fk_user_id       String   @unique
+  username         String   @unique
+  display_name     String   @db.String
+  thumbnail        String   @db.String
+  email            String   @unique
+  short_bio        String?  @db.String
+  last_accessed_at DateTime @default(now())
+  books            Book[]
+  images           Image[]
+
+  created_at DateTime @default(now())
+
+  @@map("writers")
+}
+
+model Book {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  title         String    @db.String
+  thumbnail     String    @db.String
+  fk_writer_id  String    @db.ObjectId
+  is_published  Boolean   @default(false)
+  is_private    Boolean   @default(true)
+  is_temp       Boolean   @default(true)
+  is_deleted    Boolean   @default(false)
+  description   String    @db.String
+  released_at   DateTime? @db.Timestamp
+  url_slug      String    @unique // example $@{username}/${escapeUrl(title).toLowerCase()}
+  published_url String    @default("") @db.String
+  deploy_code   String?   @default("") @db.String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  writer Writer @relation(fields: [fk_writer_id], references: [id])
+  pages  Page[]
+
+  @@map("books")
+}
+
+model Page {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  fk_writer_id String  @db.ObjectId
+  fk_book_id   String  @db.ObjectId
+  title        String  @db.String
+  body         String  @db.String
+  type         String  @db.String
+  parent_id    String? @db.ObjectId
+  index        Int?    @db.Int
+  url_slug     String  @unique // example /${escapeUrl(${parent.title}/${title}).toLowerCase()}}-${code}
+  code         String  @unique
+  depth        Int     @default(1) @db.Int // max depth 3
+  is_deleted   Boolean @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  parent    Page?  @relation("ParentChildren", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  childrens Page[] @relation("ParentChildren")
+  book      Book   @relation(fields: [fk_book_id], references: [id])
+
+  @@index([url_slug, code])
+  @@map("pages")
+}
+
+model PageHistory {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  fk_writer_id String @db.ObjectId
+  fk_page_id   String @db.String
+  title        String @db.String
+  body         String @db.String
+
+  @@index([fk_page_id])
+  @@map("post_histories")
+}
+
+model Image {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  fk_writer_id String   @db.ObjectId
+  path         String?  @db.String
+  filesize     Int?     @db.Int
+  type         String?  @db.String
+  key          String?  @default("") @db.String
+  ref_id       String?  @db.ObjectId
+  created_at   DateTime @default(now())
+
+  writer Writer @relation(fields: [fk_writer_id], references: [id])
+
+  @@map("images")
+}
