@@ -37,6 +37,10 @@
       margin-top: 16px;
       font-size: 32px;
 
+      .text {
+        color: var(--text2);
+      }
+
       @media screen and (max-width: 768px) {
         font-size: 24px;
       }
