@@ -5,7 +5,7 @@ import * as clientEcs from '@aws-sdk/client-ecs'
 import { withPrefix } from '../lib/prefix'
 import { ecsTaskExecutionRole } from './iam'
 import { ENV } from '../env'
-import { CreateECSFargateParams } from '../type'
+import type { CreateECSFargateParams } from '../type'
 import { portMapper } from '../lib/portMapper'
 import { ecsOption } from '../lib/ecsOptions'
 

@@ -1,6 +1,7 @@
-import * as aws from '@pulumi/aws'
-import { withPrefix } from '../../lib/prefix'
-import { Input } from '@pulumi/pulumi'
+import aws from '@pulumi/aws'
+
+import type { Input } from '@pulumi/pulumi'
+import { withPrefix } from '../../lib/prefix.js'
 
 export const createServerSubnet = (vpcId: Input<string>) => {
   const publicServerSubnet1Name = withPrefix('server-public-subnet-1')

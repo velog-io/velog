@@ -84,17 +84,12 @@
     "@types/gtag.js": "^0.0.12",
     "@types/inquirer": "^9.0.7",
     "@types/jest": "^29.5.2",
-    "@types/node": "^20.12.5",
     "@types/prismjs": "^1.26.2",
     "@types/react": "^18.2.48",
     "@types/react-dom": "18.2.6",
     "@types/sanitize-html": "^2.9.0",
     "@types/throttle-debounce": "^5.0.1",
-    "@typescript-eslint/eslint-plugin": "^7.13.1",
-    "@typescript-eslint/parser": "^7.16.0",
     "encoding": "^0.1.13",
-    "eslint": "^9.5.0",
-    "typescript": "^5.4.5",
     "typescript-plugin-css-modules": "^5.0.1"
   }
 }

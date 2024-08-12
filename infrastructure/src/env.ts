@@ -1,7 +1,7 @@
+import { resolve } from 'node:path'
+import { existsSync } from 'node:fs'
 import * as dotenv from 'dotenv'
 import * as pulumi from '@pulumi/pulumi'
-import { resolve } from 'path'
-import { existsSync } from 'fs'
 import { z } from 'zod'
 
 const config = new pulumi.Config()

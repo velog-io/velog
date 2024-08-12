@@ -1,11 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Linter } from 'eslint'
 import { resolve } from 'node:path'
 import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
+import type { Linter } from 'eslint'
 
-/** @type {Linter.Config} */
-const nextConfig = (projectPath) => {
+const baseConfig = (projectPath: string) => {
   const tsconfigPath = resolve(projectPath, 'tsconfig.json')
 
   const compat = new FlatCompat({
@@ -14,10 +12,9 @@ const nextConfig = (projectPath) => {
     recommendedConfig: js.configs.recommended,
     allConfig: js.configs.all,
   })
-
   return [
     {
-      ignores: ['node_modules', '.next', '.out'],
+      ignores: ['node_modules'],
     },
     ...compat.config({
       parser: '@typescript-eslint/parser',
@@ -27,29 +24,23 @@ const nextConfig = (projectPath) => {
         tsconfigRootDir: projectPath,
       },
       plugins: ['@typescript-eslint'],
-      extends: [
-        'plugin:@typescript-eslint/eslint-recommended',
-        'plugin:@typescript-eslint/recommended',
-        // 'plugin:react-hooks/recommended', // not yey support eslint 9
-      ],
+      extends: ['plugin:@typescript-eslint/recommended'],
       root: true,
-      globals: {
-        React: true,
-        JSX: true,
-      },
       env: {
         node: true,
-        browser: true,
+        jest: true,
       },
       rules: {
-        '@typescript-eslint/ban-types': 'off',
+        '@typescript-eslint/interface-name-prefix': 'off',
+        '@typescript-eslint/explicit-function-return-type': 'off',
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
-        '@typescript-eslint/no-unused-vars': 'warn',
-        '@next/next/no-html-link-for-pages': 'off',
+        '@typescript-eslint/no-non-null-assertion': 'off',
+        '@typescript-eslint/no-empty-interface': 'off',
         '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
       },
     }),
-  ]
+  ] satisfies Linter.Config[]
 }
 
-export default nextConfig
+export default baseConfig

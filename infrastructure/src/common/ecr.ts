@@ -1,12 +1,12 @@
-import { PackageType } from './../type.d'
 import * as clientEcr from '@aws-sdk/client-ecr'
 import * as aws from '@pulumi/aws'
-import { withPrefix } from '../lib/prefix'
-import { ENV } from '../env'
 import { Repository } from '@pulumi/aws/ecr'
 import * as pulumi from '@pulumi/pulumi'
 import * as docker from '@pulumi/docker'
+import { ENV } from '../env'
 import { getRandomSHA256Hash } from '../lib/hash'
+import { withPrefix } from '../lib/prefix'
+import type { PackageType } from '../type'
 
 const ecrClient = new clientEcr.ECR({ region: 'ap-northeast-2' })
 

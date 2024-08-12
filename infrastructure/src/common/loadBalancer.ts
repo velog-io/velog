@@ -1,8 +1,8 @@
-import { PackageType } from './../type.d'
 import * as aws from '@pulumi/aws'
+import type { SecurityGroup } from '@pulumi/aws/ec2'
 import { withPrefix } from '../lib/prefix'
-import { SecurityGroup } from '@pulumi/aws/ec2'
 import { portMapper } from '../lib/portMapper'
+import type { PackageType } from '../type'
 
 type CreateLoadBalancerParameter = {
   vpcId: Promise<string>

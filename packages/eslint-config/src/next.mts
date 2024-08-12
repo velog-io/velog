@@ -1,8 +1,9 @@
+import { Linter } from 'eslint'
 import { resolve } from 'node:path'
 import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 
-const baseConfig = (projectPath) => {
+const nextConfig = (projectPath: string) => {
   const tsconfigPath = resolve(projectPath, 'tsconfig.json')
 
   const compat = new FlatCompat({
@@ -11,9 +12,10 @@ const baseConfig = (projectPath) => {
     recommendedConfig: js.configs.recommended,
     allConfig: js.configs.all,
   })
+
   return [
     {
-      ignores: ['node_modules'],
+      ignores: ['node_modules', '.next', '.out'],
     },
     ...compat.config({
       parser: '@typescript-eslint/parser',
@@ -23,23 +25,28 @@ const baseConfig = (projectPath) => {
         tsconfigRootDir: projectPath,
       },
       plugins: ['@typescript-eslint'],
-      extends: ['plugin:@typescript-eslint/recommended'],
+      extends: [
+        'plugin:@typescript-eslint/eslint-recommended',
+        'plugin:@typescript-eslint/recommended',
+        // 'plugin:react-hooks/recommended', // not yey support eslint 9
+      ],
       root: true,
+      globals: {
+        React: true,
+        JSX: true,
+      },
       env: {
         node: true,
-        jest: true,
+        browser: true,
       },
       rules: {
-        '@typescript-eslint/interface-name-prefix': 'off',
-        '@typescript-eslint/explicit-function-return-type': 'off',
-        '@typescript-eslint/explicit-module-boundary-types': 'off',
+        '@typescript-eslint/ban-types': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
-        '@typescript-eslint/no-non-null-assertion': 'off',
-        '@typescript-eslint/no-empty-interface': 'off',
+        '@next/next/no-html-link-for-pages': 'off',
         '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
       },
     }),
-  ]
+  ] satisfies Linter.Config[]
 }
 
-export default baseConfig
+export default nextConfig

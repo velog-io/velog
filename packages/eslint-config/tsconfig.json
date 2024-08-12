@@ -5,7 +5,8 @@
     "baseUrl": "./",
     "outDir": "./dist",
     "declaration": true,
-    "allowJs": true
+    "allowJs": true,
+    "typeRoots": ["./node_modules/@types", "./types"]
   },
   "exclude": ["node_modules", "dist"]
 }

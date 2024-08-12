@@ -1,6 +1,6 @@
 import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
-import { PackageType } from '../type.d'
+import { PackageType } from '../type'
 import { portMapper } from '../lib/portMapper'
 
 type CreateSecurityGroupParameter = {

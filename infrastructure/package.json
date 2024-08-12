@@ -8,17 +8,17 @@
     "@aws-sdk/client-ecr": "^3.413.0",
     "@aws-sdk/client-ecs": "^3.418.0",
     "@aws-sdk/client-ssm": "^3.379.1",
-    "@pulumi/aws": "^6.27.0",
-    "@pulumi/awsx": "^2.6.0",
-    "@pulumi/docker": "^4.5.2",
-    "@pulumi/pulumi": "^3.111.1",
+    "@pulumi/aws": "^6.48.0",
+    "@pulumi/awsx": "^2.14.0",
+    "@pulumi/docker": "^4.5.5",
+    "@pulumi/pulumi": "^3.128.0",
     "dotenv": "^16.4.5",
     "tsx": "^4.7.1",
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@types/node": "^20.12.5",
-    "eslint": "^9.5.0",
-    "typescript": "^5.3.3"
+    "@packages/eslint-config": "workspace:*",
+    "@packages/tsconfig": "workspace:*",
+    "ts-node": "^10.9.2"
   }
 }

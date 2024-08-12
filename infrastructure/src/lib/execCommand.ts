@@ -1,4 +1,4 @@
-import { exec } from 'child_process'
+import { exec } from 'node:child_process'
 
 export const execCommand = (command: string) => {
   exec(command, (error, stdout, _stderr) => {
