@@ -243,9 +243,16 @@ export class PostApiService implements Service {
         },
       })
 
-      if (post?.is_temp && !data.is_temp) {
+      const createdAt = post?.created_at ? new Date(post.created_at).getTime() : NaN
+      const releasedAt = post?.released_at ? new Date(post.released_at).getTime() : NaN
+      const isNotReleased = createdAt === releasedAt
+      const isInitRelease = isNotReleased && post?.is_temp && !data.is_temp && !data.is_private
+
+      if (post && isInitRelease) {
         Object.assign(data, { released_at: new Date() })
       }
+
+      Object.assign(data, { updated_at: new Date() })
     }
 
     if (!post) {
