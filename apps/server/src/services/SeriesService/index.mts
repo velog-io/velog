@@ -157,7 +157,6 @@ export class SeriesService implements Service {
   }
 
   public async appendToSeries(seriesId: string, postId: string): Promise<void> {
-    console.log('appendToSeries')
     const postsCount = await this.db.seriesPost.count({
       where: {
         fk_series_id: seriesId,

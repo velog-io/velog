@@ -81,6 +81,7 @@ export class PostApiService implements Service {
       },
     })
 
+    // 처음 시리즈를 등록하는 경우
     if (!prevSeriesPost && series_id) {
       await this.seriesService.appendToSeries(series_id, post.id)
     }
@@ -100,7 +101,7 @@ export class PostApiService implements Service {
             id: prevSeriesPost.id,
           },
         }),
-        this.db.series.update({
+        this.db.series.updateMany({
           where: {
             id: prevSeriesPost.fk_series_id!,
           },
@@ -248,7 +249,7 @@ export class PostApiService implements Service {
       const isNotReleased = createdAt === releasedAt
       const isInitRelease = isNotReleased && post?.is_temp && !data.is_temp && !data.is_private
 
-      if (post && isInitRelease) {
+      if (isInitRelease) {
         Object.assign(data, { released_at: new Date() })
       }
 
