@@ -22,5 +22,8 @@
     "@graphql-tools/load": "^8.0.2",
     "@graphql-tools/merge": "^9.0.4",
     "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0"
   }
 }
