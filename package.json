@@ -35,13 +35,13 @@
     "@packages/tsconfig": "workspace:*",
     "@types/eslint": "^9.6.0",
     "@types/eslint__js": "^8.42.3",
-    "@types/node": "^20.14.0",
-    "@typescript-eslint/eslint-plugin": "^7.13.1",
-    "@typescript-eslint/parser": "^7.16.0",
+    "@types/node": "^20.16.1",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "eslint": "^9.9.0",
     "husky": "^9.1.4",
     "jiti": "^1.21.6",
-    "lint-staged": "^15.2.8",
+    "lint-staged": "^15.2.9",
     "typescript": "^5.5.4"
   },
   "resolutions": {
@@ -49,6 +49,6 @@
     "next": "14.2.5"
   },
   "dependencies": {
-    "turbo": "^2.0.11"
+    "turbo": "^2.0.14"
   }
 }
