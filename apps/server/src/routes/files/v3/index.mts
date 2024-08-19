@@ -1,8 +1,8 @@
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
 import multer from 'fastify-multer'
-import { CreateUrlBody, UploadBody, createUrlBodySchema } from './schema.js'
-import { FilesController } from './filesController.js'
+import { CreateUrlBody, UploadBody, createUrlBodySchema } from './schema.mjs'
+import { FilesController } from './filesController.mjs'
 import authGuardPlugin from '@plugins/encapsulated/authGuardPlugin.js'
 
 const v3: FastifyPluginCallback = (fastify, opts, done) => {

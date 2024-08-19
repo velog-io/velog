@@ -1,4 +1,4 @@
-import socialRoute from '@routes/auth/v3/social/index.js'
+import socialRoute from '@routes/auth/v3/social/index.mjs'
 import { FastifyPluginCallback } from 'fastify'
 
 const v3: FastifyPluginCallback = (fastify, opts, done) => {

@@ -1,6 +1,6 @@
 import { injectable, singleton } from 'tsyringe'
 import { AwsService } from '@lib/aws/AwsService.js'
-import { CreateUrlBody, UploadBody } from './schema.js'
+import { CreateUrlBody, UploadBody } from './schema.mjs'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { UserService } from '@services/UserService/index.js'
 import { DbService } from '@lib/db/DbService.js'

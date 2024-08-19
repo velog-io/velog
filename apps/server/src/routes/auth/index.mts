@@ -1,4 +1,4 @@
-import v3 from './v3/index.js'
+import v3 from './v3/index.mjs'
 
 import { FastifyPluginCallback } from 'fastify'
 

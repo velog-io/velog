@@ -1,4 +1,4 @@
-import { SocialController } from '@routes/auth/v3/social/SocialController.js'
+import { SocialController } from '@routes/auth/v3/social/SocialController.mjs'
 import { SocialProvider } from '@services/SocialService/SocialServiceInterface.js'
 import { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify'
 import { container } from 'tsyringe'

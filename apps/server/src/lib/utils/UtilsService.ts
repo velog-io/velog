@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url'
 import { z } from 'zod'
 import { customAlphabet } from 'nanoid'
 import nanoidDictionary from 'nanoid-dictionary'
+import { UtilsService as Utils } from '@packages/library/utils'
 
 interface Service {
   resolveDir(dir: string): string
@@ -28,7 +29,7 @@ interface Service {
 
 @injectable()
 @singleton()
-export class UtilsService implements Service {
+export class UtilsService extends Utils implements Service {
   public resolveDir(dir: string): string {
     const __filename = fileURLToPath(import.meta.url)
     const splited = dirname(__filename).split('/src')

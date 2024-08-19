@@ -1,6 +1,6 @@
-import authRoute from '@routes/auth/index.js'
-import postsRoute from '@routes/posts/index.js'
-import filesRoute from '@routes/files/index.js'
+import authRoute from '@routes/auth/index.mjs'
+import postsRoute from '@routes/posts/index.mjs'
+import filesRoute from '@routes/files/index.mjs'
 import { format } from 'date-fns'
 import type { FastifyPluginCallback } from 'fastify'
 

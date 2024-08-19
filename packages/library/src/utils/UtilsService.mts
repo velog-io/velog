@@ -4,7 +4,8 @@ import nanoidDictionary from 'nanoid-dictionary'
 interface Service {
   escapeForUrl(text: string): string
   randomString(): string
-  sleep(ms: number): Promise<any>
+  sleep(ms: number): Promise<void>
+  removeKoreanChars(str: string): string
 }
 
 export class UtilsService implements Service {
@@ -23,7 +24,10 @@ export class UtilsService implements Service {
     const generateCode = customAlphabet(nanoidDictionary.alphanumeric, size)
     return generateCode()
   }
-  public sleep(ms: number) {
+  public sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+  public removeKoreanChars(str: string): string {
+    return str.replace(/[\uAC00-\uD7A3\u3131-\u3163]/g, '')
   }
 }

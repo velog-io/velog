@@ -1,6 +1,6 @@
 import { HttpStatus } from '@constants/HttpStatusConstants.js'
 import { HttpStatusMessage } from '@constants/HttpStatusMesageConstants.js'
-import { postScoreParamsSchema } from '@routes/posts/v3/schame.js'
+import { postScoreParamsSchema } from '@routes/posts/v3/schame.mjs'
 import { PostService } from '@services/PostService/index.js'
 import { FastifyPluginCallback } from 'fastify'
 import { FromSchema } from 'json-schema-to-ts'

@@ -20,6 +20,7 @@ import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { ConfilctError } from '@errors/ConfilctError.js'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
+import { UtilsService } from '@lib/utils/UtilsService.js'
 
 interface Controller {
   googleCallback(request: FastifyRequest<{ Querystring: { code: string } }>): Promise<void>
@@ -46,6 +47,7 @@ export class SocialController implements Controller {
     private readonly cookie: CookieService,
     private readonly file: FileService,
     private readonly b2Manager: B2ManagerService,
+    private readonly utils: UtilsService,
     private readonly externalInterationService: ExternalIntegrationService,
   ) {}
   private get redirectUri(): string {
@@ -138,7 +140,7 @@ export class SocialController implements Controller {
           maxAge: Time.ONE_DAY_IN_S * 30,
         })
 
-        const redirectUrl = ENV.clientV3Host
+        const redirectHost = ENV.clientV3Host
         const state = queryState
           ? (JSON.parse(queryState) as { next: string; integrateState?: string })
           : null
@@ -154,7 +156,10 @@ export class SocialController implements Controller {
           }
         }
 
-        reply.redirect(decodeURI(redirectUrl.concat(next)))
+        const redirectUri = this.utils
+          .removeKoreanChars(decodeURI(redirectHost.concat(next)))
+          .trim()
+        reply.redirect(redirectUri)
         return
       }
     }
