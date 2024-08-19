@@ -1,8 +1,9 @@
+import geoip from 'geoip-country'
+import { customAlphabet } from 'nanoid'
 import { EditPostInput, WritePostInput } from '@graphql/helpers/generated.js'
 import { DbService } from '@lib/db/DbService.js'
 import { UtilsService } from '@lib/utils/UtilsService.js'
 import { injectable, singleton } from 'tsyringe'
-import { customAlphabet } from 'nanoid'
 import { TagService } from '@services/TagService/index.js'
 import { PostTagService } from '@services/PostTagService/index.js'
 import { Time } from '@constants/TimeConstants.js'
@@ -10,7 +11,6 @@ import { DiscordService } from '@lib/discord/DiscordService.js'
 import { UnauthorizedError } from '@errors/UnauthorizedError.js'
 import { NotFoundError } from '@errors/NotfoundError.js'
 import { BadRequestError } from '@errors/BadRequestErrors.js'
-import geoip from 'geoip-country'
 import { Post, Series, Tag } from '@packages/database/velog-rds'
 import { ForbiddenError } from '@errors/ForbiddenError.js'
 import { SeriesService } from '@services/SeriesService/index.mjs'
@@ -112,12 +112,17 @@ export class PostApiService implements Service {
       ])
     }
 
-    await this.db.post.update({
-      where: {
-        id: post.id,
-      },
-      data,
-    })
+    try {
+      await this.db.post.update({
+        where: {
+          id: post.id,
+        },
+        data,
+      })
+    } catch (error) {
+      console.error('Prisma update error:', error)
+      throw new Error('Failed to update post')
+    }
 
     try {
       await Promise.all([
@@ -223,15 +228,20 @@ export class PostApiService implements Service {
 
     let post: Post | null = null
     if (type === 'write') {
-      post = await this.db.post.create({
-        data: {
-          ...(data as Omit<WritePostInput, 'tags' | 'token' | 'series_id'>),
-          fk_user_id: signedUserId,
-        },
-        include: {
-          user: true,
-        },
-      })
+      try {
+        post = await this.db.post.create({
+          data: {
+            ...(data as Omit<WritePostInput, 'tags' | 'token' | 'series_id'>),
+            fk_user_id: signedUserId,
+          },
+          include: {
+            user: true,
+          },
+        })
+      } catch (error) {
+        console.log('Prisma create post error:', error)
+        throw new Error('Failed to create post')
+      }
     }
 
     if (type === 'edit') {
@@ -323,7 +333,7 @@ export class PostApiService implements Service {
     //   await this.imageService.trackImages(images, data.body)
     // }, 0)
 
-    return { data, isPublish, post, userId: signedUserId, series_id }
+    return { data: { ...data }, isPublish, post, userId: signedUserId, series_id }
   }
   private async generateUrlSlug({ input, urlSlug, userId }: GenerateUrlSlugArgs) {
     let processedUrlSlug = this.utils.escapeForUrl(urlSlug)
