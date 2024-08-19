@@ -20,7 +20,6 @@ export class DiscordService {
         console.log('Discord Client ready')
         resolve(this.client)
       })
-
       this.client.login(ENV.discordBotToken)
     })
   }
@@ -101,8 +100,8 @@ export class DiscordService {
   }
 }
 
-type MessageType = 'error' | 'spam'
-type MessagePayload = {
+export type MessageType = 'error' | 'spam'
+export type MessagePayload = {
   type: string
   body?: any
   query?: any
