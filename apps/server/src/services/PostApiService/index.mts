@@ -57,6 +57,10 @@ export class PostApiService implements Service {
       ip,
     })
 
+    if (!post) {
+      throw new NotFoundError('Not found post when create post')
+    }
+
     if (series_id && !data.is_temp) {
       await this.seriesService.appendToSeries(series_id, post.id)
     }
@@ -74,6 +78,10 @@ export class PostApiService implements Service {
       type: 'edit',
       ip,
     })
+
+    if (!post) {
+      throw new NotFoundError('Not found post when edit post')
+    }
 
     const prevSeriesPost = await this.db.seriesPost.findFirst({
       where: {
