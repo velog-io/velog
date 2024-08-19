@@ -121,7 +121,7 @@ export class PostApiService implements Service {
       })
     } catch (error) {
       console.error('Prisma update error:', error)
-      throw new Error('Failed to update post')
+      throw error
     }
 
     try {
@@ -240,7 +240,7 @@ export class PostApiService implements Service {
         })
       } catch (error) {
         console.log('Prisma create post error:', error)
-        throw new Error('Failed to create post')
+        throw error
       }
     }
 
@@ -336,7 +336,7 @@ export class PostApiService implements Service {
     return { data: { ...data }, isPublish, post, userId: signedUserId, series_id }
   }
   private async generateUrlSlug({ input, urlSlug, userId }: GenerateUrlSlugArgs) {
-    let processedUrlSlug = this.utils.escapeForUrl(urlSlug)
+    let processedUrlSlug = this.utils.escapeForUrl(urlSlug).slice(0, 240)
     const urlSlugDuplicate = await this.db.post.findFirst({
       where: {
         fk_user_id: userId,
