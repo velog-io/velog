@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createServerSubnet } from '../apps/server/subnet.js'
+import { createServerSubnet } from '../apps/server/subnet'
 import * as aws from '@pulumi/aws'
 import { withPrefix } from '../lib/prefix'
 

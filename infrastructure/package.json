@@ -8,7 +8,7 @@
     "@aws-sdk/client-ecr": "^3.413.0",
     "@aws-sdk/client-ecs": "^3.418.0",
     "@aws-sdk/client-ssm": "^3.379.1",
-    "@pulumi/aws": "^6.48.0",
+    "@pulumi/aws": "^6.49.1",
     "@pulumi/awsx": "^2.14.0",
     "@pulumi/docker": "^4.5.5",
     "@pulumi/pulumi": "^3.128.0",
@@ -18,7 +18,6 @@
   },
   "devDependencies": {
     "@packages/eslint-config": "workspace:*",
-    "@packages/tsconfig": "workspace:*",
-    "ts-node": "^10.9.2"
+    "@packages/tsconfig": "workspace:*"
   }
 }
