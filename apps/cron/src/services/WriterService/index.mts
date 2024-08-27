@@ -1,5 +1,5 @@
-import { DbService } from '@lib/db/DbService.js'
-import { UtilsService } from '@lib/utils/UtilsService.js'
+import { DbService } from '@lib/db/DbService.mjs'
+import { UtilsService } from '@lib/utils/UtilsService.mjs'
 import { Prisma } from '@packages/database/velog-rds'
 import { injectable, singleton } from 'tsyringe'
 import { subMonths } from 'date-fns'
@@ -11,10 +11,7 @@ interface Service {
 @injectable()
 @singleton()
 export class WriterService implements Service {
-  constructor(
-    private readonly db: DbService,
-    private readonly utils: UtilsService,
-  ) {}
+  constructor(private readonly db: DbService, private readonly utils: UtilsService) {}
   public async generateTrendingWriters(): Promise<GenerateTrendingWriters[]> {
     const threeMonthAgo = subMonths(this.utils.now, 3)
     const sixMonthAgo = subMonths(this.utils.now, 6)

@@ -1,6 +1,6 @@
-import { DbService } from '@lib/db/DbService.js'
-import { UtilsService } from '@lib/utils/UtilsService.js'
-import { FollowUserService } from '@services/FollowUserService/index.js'
+import { DbService } from '@lib/db/DbService.mjs'
+import { UtilsService } from '@lib/utils/UtilsService.mjs'
+import { FollowUserService } from '@services/FollowUserService/index.mjs'
 import { subHours } from 'date-fns'
 
 import { injectable, singleton } from 'tsyringe'

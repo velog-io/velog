@@ -1,5 +1,5 @@
 import { FastifyPluginCallback } from 'fastify'
-import v1 from './v1/index.js'
+import v1 from './v1/index.mjs'
 
 const postRoute: FastifyPluginCallback = (fastify, opts, done) => {
   fastify.register(v1, { prefix: '/v1' })

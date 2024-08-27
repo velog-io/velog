@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { FastifyPluginCallback } from 'fastify'
-import post from '@routes/posts/index.js'
-import { HttpStatusMessage } from '@constants/HttpStatusMessageConstants.js'
+import post from '@routes/posts/index.mjs'
+import { HttpStatusMessage } from '@constants/HttpStatusMessageConstants.mjs'
 
 const api: FastifyPluginCallback = (fastify, opts, done) => {
   fastify.register(post, { prefix: '/posts' })

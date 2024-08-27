@@ -1,9 +1,9 @@
 import { FastifyPluginCallback } from 'fastify'
 import { container } from 'tsyringe'
-import { PostScoreParams, PostScoreSchema } from '@routes/posts/v1/schema.js'
-import { HttpStatus } from '@constants/HttpStatusConstants.js'
-import { HttpStatusMessage } from '@constants/HttpStatusMessageConstants.js'
-import { PostController } from '@routes/posts/v1/PostController.js'
+import { PostScoreParams, PostScoreSchema } from '@routes/posts/v1/schema.mjs'
+import { HttpStatus } from '@constants/HttpStatusConstants.mjs'
+import { HttpStatusMessage } from '@constants/HttpStatusMessageConstants.mjs'
+import { PostController } from '@routes/posts/v1/PostController.mjs'
 
 const v1: FastifyPluginCallback = (fastify, opts, done) => {
   const postController = container.resolve(PostController)

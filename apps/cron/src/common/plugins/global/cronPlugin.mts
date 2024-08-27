@@ -1,15 +1,16 @@
+import fp from 'fastify-plugin'
 import { StatsDaily, StatsWeekly, StatsMonthly } from '@jobs/stats/index.js'
-import { GenerateFeedJob } from '@jobs/GenerateFeedJob.js'
-import { CalculatePostScoreJob } from '@jobs/CalculatePostScoreJob.js'
-import { GenerateTrendingWritersJob } from '@jobs/GenerateTrendingWritersJob.js'
-import { DeleteFeedJob } from '@jobs/DeleteFeedJob.js'
-import { FastifyPluginCallback } from 'fastify'
+import { GenerateFeedJob } from '@jobs/GenerateFeedJob.mjs'
+import { CalculatePostScoreJob } from '@jobs/CalculatePostScoreJob.mjs'
+import { GenerateTrendingWritersJob } from '@jobs/GenerateTrendingWritersJob.mjs'
+import { DeleteFeedJob } from '@jobs/DeleteFeedJob.mjs'
+import { FastifyPluginAsync } from 'fastify'
 import { container } from 'tsyringe'
 import { ENV } from '@env'
-import { CheckSpamPostJob } from '@jobs/CheckSpamPostJob.js'
-import fp from 'fastify-plugin'
+import { CheckSpamPostJob } from '@jobs/CheckSpamPostJob.mjs'
+import { DeletePostReadJob } from '@jobs/DeletePostReadJob.mjs'
 
-const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
+const cronPlugin: FastifyPluginAsync = async (fastfiy) => {
   const calculatePostScoreJob = container.resolve(CalculatePostScoreJob)
   const generateFeedJob = container.resolve(GenerateFeedJob)
   const generateTrendingWritersJob = container.resolve(GenerateTrendingWritersJob)
@@ -18,6 +19,7 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
   const statsWeeklyJob = container.resolve(StatsWeekly)
   const statsMonthlyJob = container.resolve(StatsMonthly)
   const checkSpamPostJob = container.resolve(CheckSpamPostJob)
+  const deleteReadPostJob = container.resolve(DeletePostReadJob)
 
   // 덜 실행하면서, 실행되는 순서로 정렬
   // crontime은 UTC 기준으로 작성되기 때문에 KST에서 9시간을 빼줘야함
@@ -54,6 +56,11 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
       cronTime: '*/2 * * * *', // every 2 minutes
       jobService: checkSpamPostJob,
     },
+    {
+      name: 'delete post read in every 2 minutes',
+      cronTime: '*/2 * * * *', // every 2 minutes
+      jobService: deleteReadPostJob,
+    },
     // Stats Start
     {
       name: 'providing a count of new users and posts from the past 1 day',
@@ -82,33 +89,31 @@ const cronPlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
     })
   }
 
-  try {
-    // for Test
+  const initializeJobs = async () => {
     if (ENV.appEnv !== 'production') {
+      console.log('start')
       const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediateExecute)
       await Promise.all(immediateRunJobs.map(createTick))
       const crons = immediateRunJobs.map(createJob)
-      await Promise.all(
-        crons.map((cron) => {
-          console.log(`${cron.name} is registered`)
-          cron.start()
-        }),
-      )
+      for (const cron of crons) {
+        console.log(`${cron.name} is registered`)
+        cron.start()
+      }
     }
 
     if (ENV.dockerEnv === 'production') {
       const crons = jobDescription.map(createJob)
-      await Promise.all(
-        crons.map((cron) => {
-          console.log(`${cron.name} is registered`)
-          cron.start()
-        }),
-      )
+      for (const cron of crons) {
+        console.log(`${cron.name} is registered`)
+        cron.start()
+      }
     }
+  }
+
+  try {
+    await initializeJobs()
   } catch (error) {
     console.error('Error initializing cron jobs:', error)
-  } finally {
-    done()
   }
 }
 
@@ -148,6 +153,7 @@ type JobService =
   | StatsWeekly
   | StatsMonthly
   | CheckSpamPostJob
+  | DeletePostReadJob
 
 type BaseJobService = {
   name: string
@@ -164,4 +170,10 @@ type NotNeedParamJobService = Omit<BaseJobService, 'param'> & {
   jobService: Exclude<JobService, CalculatePostScoreJob>
 }
 
-export default fp(cronPlugin)
+export default fp(cronPlugin, {
+  name: 'cronPlugin',
+  fastify: '4.x',
+  decorators: {
+    fastify: ['cron'],
+  },
+})

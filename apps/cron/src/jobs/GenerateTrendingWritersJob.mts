@@ -1,15 +1,12 @@
 import { injectable, singleton } from 'tsyringe'
-import { Job, JobProgress } from './JobProgress.js'
-import { RedisService } from '@lib/redis/RedisService.js'
-import { WriterService } from '@services/WriterService/index.js'
+import { Job, JobProgress } from './JobProgress.mjs'
+import { RedisService } from '@lib/redis/RedisService.mjs'
+import { WriterService } from '@services/WriterService/index.mjs'
 
 @singleton()
 @injectable()
 export class GenerateTrendingWritersJob extends JobProgress implements Job {
-  constructor(
-    private readonly redis: RedisService,
-    private readonly writerService: WriterService,
-  ) {
+  constructor(private readonly redis: RedisService, private readonly writerService: WriterService) {
     super()
   }
   public async runner(): Promise<void> {

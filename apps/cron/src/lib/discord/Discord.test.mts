@@ -1,5 +1,5 @@
 import { container } from 'tsyringe'
-import { DiscordService } from './DiscordService.js'
+import { DiscordService } from './DiscordService.mjs'
 
 describe('DiscordService', () => {
   const service = container.resolve(DiscordService)

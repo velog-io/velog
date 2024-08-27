@@ -1,14 +1,13 @@
-import { BadRequestError } from '@errors/BadRequestErrors.js'
-import { NotFoundError } from '@errors/NotfoundError.js'
-import { DbService } from '@lib/db/DbService.js'
-import { PostService } from '@services/PostService/index.js'
+import { BadRequestError } from '@errors/BadRequestErrors.mjs'
+import { NotFoundError } from '@errors/NotfoundError.mjs'
+import { DbService } from '@lib/db/DbService.mjs'
+import { PostService } from '@services/PostService/index.mjs'
 import { container, injectable, singleton } from 'tsyringe'
-import { toZonedTime } from 'date-fns-tz'
 import { startOfDay, subMonths } from 'date-fns'
 import { ENV } from '@env'
 import fs from 'fs'
 import path from 'path'
-import { UtilsService } from '@lib/utils/UtilsService.js'
+import { UtilsService } from '@lib/utils/UtilsService.mjs'
 
 interface Controller {
   updatePostScore(postId: string): Promise<void>
