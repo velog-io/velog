@@ -1,8 +1,8 @@
-import { UserService } from '@services/UserService/index.js'
-import { DbService } from '@lib/db/DbService.js'
+import { UserService } from '@services/UserService/index.mjs'
+import { DbService } from '@lib/db/DbService.mjs'
 import { Prisma } from '@packages/database/velog-rds'
 import { injectable, singleton } from 'tsyringe'
-import { NotFoundError } from '@errors/NotfoundError.js'
+import { NotFoundError } from '@errors/NotfoundError.mjs'
 
 interface Service {
   getFollowings(fk_follower_id: string): Promise<User[]>
@@ -12,10 +12,7 @@ interface Service {
 @injectable()
 @singleton()
 export class FollowUserService implements Service {
-  constructor(
-    private readonly db: DbService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly db: DbService, private readonly userService: UserService) {}
   public async getFollowings(fk_follower_id: string): Promise<User[]> {
     const follower = await this.userService.findByUserId(fk_follower_id)
 

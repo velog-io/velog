@@ -1,5 +1,5 @@
 import { container } from 'tsyringe'
-import { FeedService } from './index.js'
+import { FeedService } from './index.mjs'
 
 describe('FeedService', () => {
   const service = container.resolve(FeedService)

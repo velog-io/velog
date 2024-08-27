@@ -1,6 +1,6 @@
 import { injectable, singleton } from 'tsyringe'
-import { Job, JobProgress } from './JobProgress.js'
-import { FeedService } from '@services/FeedService/index.js'
+import { Job, JobProgress } from './JobProgress.mjs'
+import { FeedService } from '@services/FeedService/index.mjs'
 
 @singleton()
 @injectable()

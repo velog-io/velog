@@ -1,8 +1,8 @@
 import { injectable, singleton } from 'tsyringe'
-import { Job, JobProgress } from './JobProgress.js'
-import { PostService } from '@services/PostService/index.js'
-import { CheckPostSpamArgs, RedisService } from '@lib/redis/RedisService.js'
-import { DiscordService } from '@lib/discord/DiscordService.js'
+import { Job, JobProgress } from './JobProgress.mjs'
+import { PostService } from '@services/PostService/index.mjs'
+import { CheckPostSpamArgs, RedisService } from '@lib/redis/RedisService.mjs'
+import { DiscordService } from '@lib/discord/DiscordService.mjs'
 
 @injectable()
 @singleton()

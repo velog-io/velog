@@ -1,4 +1,4 @@
-import { HttpError } from './HttpError.js'
+import { HttpError } from './HttpError.mjs'
 
 export class ConfilctError extends HttpError {
   constructor(message = 'CONFILCT') {

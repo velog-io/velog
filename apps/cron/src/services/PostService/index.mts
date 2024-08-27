@@ -1,10 +1,10 @@
-import { DbService } from '@lib/db/DbService.js'
+import { DbService } from '@lib/db/DbService.mjs'
 import { Post, Prisma } from '@packages/database/velog-rds'
 import { injectable, singleton } from 'tsyringe'
 import geoip from 'geoip-country'
 import { subMonths } from 'date-fns'
-import { DiscordService } from '@lib/discord/DiscordService.js'
-import { CheckPostSpamArgs } from '@lib/redis/RedisService.js'
+import { DiscordService } from '@lib/discord/DiscordService.mjs'
+import { CheckPostSpamArgs } from '@lib/redis/RedisService.mjs'
 
 interface Service {
   findById(postId: string): Promise<Post | null>
@@ -15,10 +15,7 @@ interface Service {
 @singleton()
 @injectable()
 export class PostService implements Service {
-  constructor(
-    private readonly db: DbService,
-    private readonly discord: DiscordService,
-  ) {}
+  constructor(private readonly db: DbService, private readonly discord: DiscordService) {}
 
   public async findById(postId: string): Promise<Post | null> {
     const post = await this.db.post.findUnique({

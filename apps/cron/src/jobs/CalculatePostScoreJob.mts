@@ -1,15 +1,12 @@
-import { DbService } from '@lib/db/DbService.js'
-import { PostService } from '@services/PostService/index.js'
+import { DbService } from '@lib/db/DbService.mjs'
+import { PostService } from '@services/PostService/index.mjs'
 import { injectable, singleton } from 'tsyringe'
-import { Job, JobProgress } from '@jobs/JobProgress.js'
+import { Job, JobProgress } from '@jobs/JobProgress.mjs'
 
 @singleton()
 @injectable()
 export class CalculatePostScoreJob extends JobProgress implements Job {
-  constructor(
-    private readonly postService: PostService,
-    private readonly db: DbService,
-  ) {
+  constructor(private readonly postService: PostService, private readonly db: DbService) {
     super()
   }
   public async runner(score: number) {

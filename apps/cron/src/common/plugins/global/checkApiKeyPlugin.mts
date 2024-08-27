@@ -1,5 +1,5 @@
 import { ENV } from '@env'
-import { UnauthorizedError } from '@errors/UnauthorizedError.js'
+import { UnauthorizedError } from '@errors/UnauthorizedError.mjs'
 import { FastifyPluginCallback } from 'fastify'
 import fp from 'fastify-plugin'
 

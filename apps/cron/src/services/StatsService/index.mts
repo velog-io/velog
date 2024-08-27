@@ -1,5 +1,5 @@
-import { DbService } from '@lib/db/DbService.js'
-import { DiscordService } from '@lib/discord/DiscordService.js'
+import { DbService } from '@lib/db/DbService.mjs'
+import { DiscordService } from '@lib/discord/DiscordService.mjs'
 import { injectable, singleton } from 'tsyringe'
 import {
   endOfDay,
@@ -23,10 +23,7 @@ interface Service {
 @injectable()
 @singleton()
 export class StatsService implements Service {
-  constructor(
-    private readonly db: DbService,
-    private readonly discord: DiscordService,
-  ) {}
+  constructor(private readonly db: DbService, private readonly discord: DiscordService) {}
   public async daily(): Promise<void> {
     const start = startOfDay(subDays(new Date(), 1))
     const end = endOfDay(subDays(new Date(), 1))

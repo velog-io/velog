@@ -1,5 +1,5 @@
 import { container } from 'tsyringe'
-import { WriterService } from './index.js'
+import { WriterService } from './index.mjs'
 
 describe('WriterService', () => {
   const service = container.resolve(WriterService)

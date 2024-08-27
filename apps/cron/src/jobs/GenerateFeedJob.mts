@@ -1,15 +1,12 @@
-import { Job, JobProgress } from '@jobs/JobProgress.js'
-import { RedisService } from '@lib/redis/RedisService.js'
-import { FeedService } from '@services/FeedService/index.js'
+import { Job, JobProgress } from '@jobs/JobProgress.mjs'
+import { RedisService } from '@lib/redis/RedisService.mjs'
+import { FeedService } from '@services/FeedService/index.mjs'
 import { injectable, singleton } from 'tsyringe'
 
 @singleton()
 @injectable()
 export class GenerateFeedJob extends JobProgress implements Job {
-  constructor(
-    private readonly redis: RedisService,
-    private readonly feedService: FeedService,
-  ) {
+  constructor(private readonly redis: RedisService, private readonly feedService: FeedService) {
     super()
   }
   public async runner() {

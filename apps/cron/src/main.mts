@@ -1,11 +1,11 @@
 import 'reflect-metadata'
 import { ENV } from '@env'
-import { disableKeepAlive } from '@plugins/encapsulated/closePlugin.js'
+import { disableKeepAlive } from '@plugins/encapsulated/closePlugin.mjs'
 import app from './app.mjs'
 import { container } from 'tsyringe'
-import { DbService } from '@lib/db/DbService.js'
-import { RedisService } from '@lib/redis/RedisService.js'
-import { DiscordService } from '@lib/discord/DiscordService.js'
+import { DbService } from '@lib/db/DbService.mjs'
+import { RedisService } from '@lib/redis/RedisService.mjs'
+import { DiscordService } from '@lib/discord/DiscordService.mjs'
 
 async function main() {
   const discord = container.resolve(DiscordService)

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import { container } from 'tsyringe'
-import { UtilsService } from '@lib/utils/UtilsService.js'
+import { UtilsService } from '@lib/utils/UtilsService.mjs'
 import { existsSync } from 'fs'
 import { z } from 'zod'
 
