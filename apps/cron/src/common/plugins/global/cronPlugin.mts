@@ -90,22 +90,21 @@ const cronPlugin: FastifyPluginAsync = async (fastfiy) => {
   }
 
   const initializeJobs = async () => {
+    console.log('Initializing cron jobs...')
     if (ENV.appEnv !== 'production') {
-      console.log('start')
-      const immediateRunJobs = jobDescription.filter((job) => !!job.isImmediateExecute)
-      await Promise.all(immediateRunJobs.map(createTick))
-      const crons = immediateRunJobs.map(createJob)
+      const immediateRunJobs = jobDescription.filter((job) => job.isImmediateExecute)
+      const crons = await Promise.all(immediateRunJobs.map(createJob))
       for (const cron of crons) {
-        console.log(`${cron.name} is registered`)
         cron.start()
+        console.log(`${cron.name} is registered`)
       }
     }
 
-    if (ENV.dockerEnv === 'production') {
-      const crons = jobDescription.map(createJob)
+    if (['production', 'stage'].includes(ENV.dockerEnv)) {
+      const crons = await Promise.all(jobDescription.map(createJob))
       for (const cron of crons) {
-        console.log(`${cron.name} is registered`)
         cron.start()
+        console.log(`${cron.name} is registered`)
       }
     }
   }
