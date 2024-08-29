@@ -1,4 +1,4 @@
-FROM node:20.12.0-alpine AS base
+FROM node:20.16.0-alpine AS base
 RUN apk update
 RUN apk add --no-cache libc6-compat
 
@@ -45,7 +45,7 @@ COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=pruner /app/out/json/ ./
 COPY --from=pruner /app/out/full/ ./
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prefer-frozen-lockfile
 
 RUN pnpm --filter @packages/database prisma:generate
 RUN pnpm --filter ${APP_NAME} ssm pull -e ${DOCKER_ENV}
