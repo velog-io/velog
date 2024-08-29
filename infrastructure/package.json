@@ -17,7 +17,8 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@packages/eslint-config": "workspace:*",
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.5.0",
     "@packages/tsconfig": "workspace:*"
   }
 }

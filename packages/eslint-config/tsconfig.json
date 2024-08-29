@@ -8,5 +8,6 @@
     "allowJs": true,
     "typeRoots": ["./node_modules/@types", "./types"]
   },
+  "include": ["./src", "./types.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

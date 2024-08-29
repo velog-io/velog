@@ -1,4 +1,3 @@
-import { NotFoundError } from '@errors/NotfoundError.mjs'
 import { DbService } from '@lib/db/DbService.mjs'
 import { PostRead } from '@packages/database/velog-rds'
 import { injectable, singleton } from 'tsyringe'
@@ -43,11 +42,12 @@ export class PostReadService implements Service {
       console.log(`Not found postReadId: ${postReadId}`)
       return
     }
-
-    await this.db.postRead.delete({
-      where: {
-        id: postReadId,
-      },
-    })
+    try {
+      await this.db.postRead.deleteMany({
+        where: {
+          id: postReadId,
+        },
+      })
+    } catch (_) {}
   }
 }
