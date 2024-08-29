@@ -40,7 +40,8 @@ export class PostReadService implements Service {
     const postRead = await this.findById(postReadId)
 
     if (!postRead) {
-      throw new NotFoundError('Not found PostRead')
+      console.log(`Not found postReadId: ${postReadId}`)
+      return
     }
 
     await this.db.postRead.delete({
