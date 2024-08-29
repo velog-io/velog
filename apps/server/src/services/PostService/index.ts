@@ -258,7 +258,7 @@ export class PostService implements Service {
       throw new BadRequestError('Invalid timeframe')
     }
 
-    if (timeframe === 'year' && offset > 1000) {
+    if (timeframe === 'year' && (offset > 1000 || limit > 20)) {
       console.log('Detected GraphQL Abuse', ip)
       return []
     }
