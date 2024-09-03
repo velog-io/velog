@@ -1,4 +1,4 @@
 config:
   aws:region: ap-northeast-2
   velog:DOCKER_ENV: stage
-  velog:target: cron
+  velog:target: server
