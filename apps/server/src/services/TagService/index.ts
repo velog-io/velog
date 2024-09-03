@@ -14,7 +14,7 @@ interface Service {
   tagLoader(): DataLoader<string, Tag[]>
   getOriginTag(tagname: string): Promise<Tag | null>
   getUserTags(username: string, signedUserId?: string): Promise<GetUserTagsResult>
-  findOrCreate(name: string): Promise<Tag>
+  findOrCreate(name: string): Promise<Tag | null>
 }
 
 @injectable()
@@ -73,9 +73,11 @@ export class TagService implements Service {
         ],
       })
       return this.utils
-        .groupById<
-          Prisma.PostTagGetPayload<{ include: { tag: true } }>
-        >(postIds as string[], postsTags, (pt) => pt.fk_post_id!)
+        .groupById<Prisma.PostTagGetPayload<{ include: { tag: true } }>>(
+          postIds as string[],
+          postsTags,
+          (pt) => pt.fk_post_id!,
+        )
         .map((array) => array.map((pt) => pt.tag!))
     })
   }
@@ -157,7 +159,7 @@ export class TagService implements Service {
     return rawData.map((data) => ({ ...data, posts_count: Number(data.posts_count) }))
   }
 
-  public async findOrCreate(name: string): Promise<Tag> {
+  public async findOrCreate(name: string): Promise<Tag | null> {
     const tag = await this.findByName(name)
     if (tag) return tag
 
@@ -179,7 +181,7 @@ export class TagService implements Service {
           name: name,
         },
       })
-      return tag!
+      return tag
     }
   }
 }
