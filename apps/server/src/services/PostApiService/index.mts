@@ -379,9 +379,12 @@ export class PostApiService implements Service {
     return false
   }
   private async handleTags(tags: string[], postId: string): Promise<Tag[]> {
-    const tagsData = await Promise.all(tags.map((tag) => this.tagService.findOrCreate(tag)))
-    await this.postTagService.syncPostTags(postId, tagsData)
-    return tagsData
+    const tagsData = await Promise.all(
+      tags.map((tag) => this.tagService.findOrCreate(tag.trim().slice(0, 255))),
+    )
+    const validTags = tagsData.filter((tag): tag is Tag => !!tag)
+    await this.postTagService.syncPostTags(postId, validTags)
+    return validTags
   }
   private async isPostLimitReached(signedUserId: string): Promise<boolean> {
     const recentPostCount = await this.db.post.count({
