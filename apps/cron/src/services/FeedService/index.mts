@@ -12,7 +12,7 @@ interface Service {
 @injectable()
 @singleton()
 export class FeedService implements Service {
-  constructor(
+constructor(
     private readonly db: DbService,
     private readonly utils: UtilsService,
     private readonly followUserService: FollowUserService,

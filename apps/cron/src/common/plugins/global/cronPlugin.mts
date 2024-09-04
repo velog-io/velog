@@ -7,7 +7,7 @@ import { DeleteFeedJob } from '@jobs/DeleteFeedJob.mjs'
 import { FastifyPluginAsync } from 'fastify'
 import { container } from 'tsyringe'
 import { ENV } from '@env'
-import { CheckSpamPostJob } from '@jobs/CheckSpamPostJob.mjs'
+import { CheckPostSpamJob } from '@jobs/CheckPostSpamJob.mjs'
 import { DeletePostReadJob } from '@jobs/DeletePostReadJob.mjs'
 
 const cronPlugin: FastifyPluginAsync = async (fastfiy) => {
@@ -18,7 +18,7 @@ const cronPlugin: FastifyPluginAsync = async (fastfiy) => {
   const statsDailyJob = container.resolve(StatsDaily)
   const statsWeeklyJob = container.resolve(StatsWeekly)
   const statsMonthlyJob = container.resolve(StatsMonthly)
-  const checkSpamPostJob = container.resolve(CheckSpamPostJob)
+  const checkPostSpamJob = container.resolve(CheckPostSpamJob)
   const deleteReadPostJob = container.resolve(DeletePostReadJob)
 
   // 덜 실행하면서, 실행되는 순서로 정렬
@@ -54,7 +54,7 @@ const cronPlugin: FastifyPluginAsync = async (fastfiy) => {
     {
       name: 'check post spam in every 2 minutes',
       cronTime: '*/2 * * * *', // every 2 minutes
-      jobService: checkSpamPostJob,
+      jobService: checkPostSpamJob,
     },
     {
       name: 'delete post read in every 2 minutes',
@@ -151,7 +151,7 @@ type JobService =
   | StatsDaily
   | StatsWeekly
   | StatsMonthly
-  | CheckSpamPostJob
+  | CheckPostSpamJob
   | DeletePostReadJob
 
 type BaseJobService = {
