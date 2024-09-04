@@ -205,10 +205,20 @@ export class PostApiService implements Service {
     const isTusted = await this.userService.checkTrust(signedUserId)
     if (isPublish && !isTusted) {
       const isVerified = await this.verifyTurnstile(token)
-      checks.push({
-        type: 'turnstile',
-        value: !isVerified,
-      })
+      if (!isVerified) {
+        await this.alertIsSpam({
+          action: type,
+          userId: user.id,
+          title: input.title!,
+          country,
+          ip,
+          type: 'turnstile',
+        })
+      }
+      // checks.push({
+      //   type: 'turnstile',
+      //   value: !isVerified,
+      // })
     }
 
     const isSpam = checks.map(({ value }) => value).some((check) => check)
