@@ -19,11 +19,13 @@ const v1: FastifyPluginCallback = (fastify, opts, done) => {
     },
   )
 
+  // dev 환경에서만 사용 가능
   fastify.patch('/score', async (_, reply) => {
     const processedPostsCount = await postController.calculateRecentPostScore()
     reply.status(HttpStatus.OK).send({ processedPostsCount })
   })
 
+  // dev 환경에서만 사용 가능
   fastify.post('/test/spam-filter', async (_, reply) => {
     await postController.spamFilterTestRunner()
     reply.status(HttpStatus.OK).send(HttpStatusMessage.Ok)

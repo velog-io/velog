@@ -1,12 +1,12 @@
 import { injectable, singleton } from 'tsyringe'
 import { Job, JobProgress } from './JobProgress.mjs'
 import { PostService } from '@services/PostService/index.mjs'
-import { CheckPostSpamArgs, RedisService } from '@lib/redis/RedisService.mjs'
+import { type CheckPostSpamQueueData, RedisService } from '@lib/redis/RedisService.mjs'
 import { DiscordService } from '@lib/discord/DiscordService.mjs'
 
 @injectable()
 @singleton()
-export class CheckSpamPostJob extends JobProgress implements Job {
+export class CheckPostSpamJob extends JobProgress implements Job {
   constructor(
     private readonly redis: RedisService,
     private readonly discord: DiscordService,
@@ -23,7 +23,7 @@ export class CheckSpamPostJob extends JobProgress implements Job {
     while (true) {
       const item = await this.redis.lindex(spamQueueName, 0)
       if (!item) break
-      const data: CheckPostSpamArgs = JSON.parse(item)
+      const data: CheckPostSpamQueueData = JSON.parse(item)
       try {
         await this.postService.checkSpam(data)
       } catch (error) {

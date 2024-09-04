@@ -17,7 +17,11 @@ import { SeriesService } from '@services/SeriesService/index.mjs'
 import { SearchService } from '@services/SearchService/index.js'
 import { ExternalIntegrationService } from '@services/ExternalIntegrationService/index.js'
 import { PostService } from '@services/PostService/index.js'
-import { CreateFeedArgs, RedisService, CheckPostSpamArgs } from '@lib/redis/RedisService.js'
+import {
+  RedisService,
+  type CreateFeedQueueData,
+  type CheckPostSpamQueueData,
+} from '@lib/redis/RedisService.js'
 import { GraphcdnService } from '@lib/graphcdn/GraphcdnService.js'
 import { ImageService } from '@services/ImageService/index.js'
 import { UserService } from '@services/UserService/index.js'
@@ -201,10 +205,20 @@ export class PostApiService implements Service {
     const isTusted = await this.userService.checkTrust(signedUserId)
     if (isPublish && !isTusted) {
       const isVerified = await this.verifyTurnstile(token)
-      checks.push({
-        type: 'turnstile',
-        value: !isVerified,
-      })
+      if (!isVerified) {
+        await this.alertIsSpam({
+          action: type,
+          userId: user.id,
+          title: input.title!,
+          country,
+          ip,
+          type: 'turnstile',
+        })
+      }
+      // checks.push({
+      //   type: 'turnstile',
+      //   value: !isVerified,
+      // })
     }
 
     const isSpam = checks.map(({ value }) => value).some((check) => check)
@@ -315,11 +329,11 @@ export class PostApiService implements Service {
       // create feed
       setTimeout(() => {
         if (!post) return
-        const queueData: CreateFeedArgs = {
+        const queueData: CreateFeedQueueData = {
           fk_following_id: signedUserId,
           fk_post_id: post.id,
         }
-        this.redis.createFeedQueue(queueData)
+        this.redis.addToCreateFeedQueue(queueData)
       }, 0)
 
       // check spam
@@ -327,12 +341,12 @@ export class PostApiService implements Service {
         if (!post) return
         if (isSpam) return
         if (isTusted) return
-        const queueData: CheckPostSpamArgs = {
+        const queueData: CheckPostSpamQueueData = {
           post_id: post.id,
           user_id: signedUserId,
           ip,
         }
-        this.redis.addToSpamCheckQueue(queueData)
+        this.redis.addToCheckPostSpamQueue(queueData)
       }, 0)
     }
 

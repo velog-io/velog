@@ -4,11 +4,12 @@ import { GenerateFeedJob } from '@jobs/GenerateFeedJob.mjs'
 import { CalculatePostScoreJob } from '@jobs/CalculatePostScoreJob.mjs'
 import { GenerateTrendingWritersJob } from '@jobs/GenerateTrendingWritersJob.mjs'
 import { DeleteFeedJob } from '@jobs/DeleteFeedJob.mjs'
-import { FastifyPluginAsync } from 'fastify'
+import type { FastifyPluginAsync } from 'fastify'
 import { container } from 'tsyringe'
 import { ENV } from '@env'
-import { CheckSpamPostJob } from '@jobs/CheckSpamPostJob.mjs'
+import { CheckPostSpamJob } from '@jobs/CheckPostSpamJob.mjs'
 import { DeletePostReadJob } from '@jobs/DeletePostReadJob.mjs'
+import { ScorePostJob } from '@jobs/ScorePostJob.mjs'
 
 const cronPlugin: FastifyPluginAsync = async (fastfiy) => {
   const calculatePostScoreJob = container.resolve(CalculatePostScoreJob)
@@ -18,8 +19,9 @@ const cronPlugin: FastifyPluginAsync = async (fastfiy) => {
   const statsDailyJob = container.resolve(StatsDaily)
   const statsWeeklyJob = container.resolve(StatsWeekly)
   const statsMonthlyJob = container.resolve(StatsMonthly)
-  const checkSpamPostJob = container.resolve(CheckSpamPostJob)
+  const checkPostSpamJob = container.resolve(CheckPostSpamJob)
   const deleteReadPostJob = container.resolve(DeletePostReadJob)
+  const scorePostJob = container.resolve(ScorePostJob)
 
   // 덜 실행하면서, 실행되는 순서로 정렬
   // crontime은 UTC 기준으로 작성되기 때문에 KST에서 9시간을 빼줘야함
@@ -52,9 +54,14 @@ const cronPlugin: FastifyPluginAsync = async (fastfiy) => {
       param: 0.5,
     },
     {
+      name: 'score post in every 1 minutes',
+      cronTime: '*/1 * * * *', // every 1 minutes
+      jobService: scorePostJob,
+    },
+    {
       name: 'check post spam in every 2 minutes',
       cronTime: '*/2 * * * *', // every 2 minutes
-      jobService: checkSpamPostJob,
+      jobService: checkPostSpamJob,
     },
     {
       name: 'delete post read in every 2 minutes',
@@ -151,8 +158,9 @@ type JobService =
   | StatsDaily
   | StatsWeekly
   | StatsMonthly
-  | CheckSpamPostJob
+  | CheckPostSpamJob
   | DeletePostReadJob
+  | ScorePostJob
 
 type BaseJobService = {
   name: string

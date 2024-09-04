@@ -15,10 +15,7 @@ interface Service {
 @injectable()
 @singleton()
 export class FeedService implements Service {
-  constructor(
-    private readonly db: DbService,
-    private readonly utils: UtilsService,
-  ) {}
+  constructor(private readonly db: DbService, private readonly utils: UtilsService) {}
   async getFeedPosts(input: FeedPostsInput, singedUserId?: string): Promise<Post[]> {
     if (!singedUserId) {
       return []
