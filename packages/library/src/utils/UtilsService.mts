@@ -6,6 +6,7 @@ interface Service {
   randomString(): string
   sleep(ms: number): Promise<void>
   removeKoreanChars(str: string): string
+  removeNullBytes(str: string): string
 }
 
 export class UtilsService implements Service {
@@ -29,5 +30,8 @@ export class UtilsService implements Service {
   }
   public removeKoreanChars(str: string): string {
     return str.replace(/[\uAC00-\uD7A3\u3131-\u3163]/g, '')
+  }
+  public removeNullBytes(str: string): string {
+    return str.replace(/\0/g, '')
   }
 }
