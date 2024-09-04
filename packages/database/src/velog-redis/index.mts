@@ -59,19 +59,19 @@ export class RedisService extends Redis.default implements Service {
     }
   }
 
-  public addToCreateFeedQueue(data: CreateFeedQueueData) {
+  public async addToCreateFeedQueue(data: CreateFeedQueueData): Promise<number> {
     const queueName = this.queueName.createFeed
-    return this.lpush(queueName, JSON.stringify(data))
+    return await this.lpush(queueName, JSON.stringify(data))
   }
 
-  public addToCheckPostSpamQueue(data: CheckPostSpamQueueData): Promise<number> {
+  public async addToCheckPostSpamQueue(data: CheckPostSpamQueueData): Promise<number> {
     const queueName = this.queueName.checkPostSpam
-    return this.lpush(queueName, JSON.stringify(data))
+    return await this.lpush(queueName, JSON.stringify(data))
   }
 
-  public addToScorePostQueue(data: ScorePostQueueData): Promise<number> {
+  public async addToScorePostQueue(data: ScorePostQueueData): Promise<number> {
     const queueName = this.queueName.scorePost
-    return this.lpush(queueName, JSON.stringify(data))
+    return await this.lpush(queueName, JSON.stringify(data))
   }
 }
 
