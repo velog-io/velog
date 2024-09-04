@@ -4,7 +4,9 @@ interface Service {
   connection(): Promise<void>
   get generateKey(): GenerateRedisKey
   get queueName(): Record<QueueName, string>
-  createFeedQueue(data: CreateFeedArgs): Promise<number>
+  addToCreateFeedQueue(data: CreateFeedQueueData): Promise<number>
+  addToCheckPostSpamQueue(data: CheckPostSpamQueueData): Promise<number>
+  addToScorePostQueue(data: ScorePostQueueData): Promise<number>
 }
 
 type RedisOptions = {
@@ -53,17 +55,23 @@ export class RedisService extends Redis.default implements Service {
     return {
       createFeed: 'queue:feed',
       checkPostSpam: 'queue:checkPostSpam',
+      scorePost: 'queue:scorePost',
     }
   }
 
-  public async createFeedQueue(data: CreateFeedArgs): Promise<number> {
+  public addToCreateFeedQueue(data: CreateFeedQueueData) {
     const queueName = this.queueName.createFeed
-    return await this.lpush(queueName, JSON.stringify(data))
+    return this.lpush(queueName, JSON.stringify(data))
   }
 
-  public async addToSpamCheckQueue(data: CheckPostSpamArgs): Promise<number> {
+  public addToCheckPostSpamQueue(data: CheckPostSpamQueueData): Promise<number> {
     const queueName = this.queueName.checkPostSpam
-    return await this.lpush(queueName, JSON.stringify(data))
+    return this.lpush(queueName, JSON.stringify(data))
+  }
+
+  public addToScorePostQueue(data: ScorePostQueueData): Promise<number> {
+    const queueName = this.queueName.scorePost
+    return this.lpush(queueName, JSON.stringify(data))
   }
 }
 
@@ -81,20 +89,24 @@ type GenerateRedisKey = {
   deployBook: (bookId: string) => string
 }
 
-type QueueName = 'createFeed' | 'checkPostSpam'
+type QueueName = 'createFeed' | 'checkPostSpam' | 'scorePost'
 
 export type ChangeEmailArgs = {
   email: string
   userId: string
 }
 
-export type CreateFeedArgs = {
+export type CreateFeedQueueData = {
   fk_following_id: string
   fk_post_id: string
 }
 
-export type CheckPostSpamArgs = {
+export type CheckPostSpamQueueData = {
   post_id: string
   user_id: string
   ip: string
+}
+
+export type ScorePostQueueData = {
+  post_id: string
 }
