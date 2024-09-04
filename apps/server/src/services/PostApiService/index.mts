@@ -185,6 +185,7 @@ export class PostApiService implements Service {
     }
 
     data.title = data.title.slice(0, 255) ?? ''
+    data.body = this.utils.removeNullBytes(data.body)
 
     const isPublish = !data.is_temp && !data.is_private
 
