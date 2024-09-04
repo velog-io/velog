@@ -38,7 +38,7 @@ export class ScorePostJob extends JobProgress implements Job {
       }
     }
 
-    console.log(`handled Queue count: ${handledQueueCount}`)
+    console.log(`handled Score Post Queue count: ${handledQueueCount}`)
     console.timeEnd('ScorePostJob')
   }
 }
