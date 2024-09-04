@@ -22,12 +22,12 @@ export class GenerateFeedJob extends JobProgress implements Job {
       const { fk_following_id, fk_post_id } = data
       try {
         await this.feedService.createFeed({ followingId: fk_following_id, postId: fk_post_id })
-        await this.redis.lpop(feedQueueName)
-        handledQueueCount++
       } catch (error) {
         console.log('Error occurred while creating feed', error)
         console.log('data', data)
-        continue
+      } finally {
+        await this.redis.lpop(feedQueueName)
+        handledQueueCount++
       }
     }
     console.log(`Created Feed Count: ${handledQueueCount}`)
