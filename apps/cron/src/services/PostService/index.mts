@@ -4,12 +4,12 @@ import { injectable, singleton } from 'tsyringe'
 import geoip from 'geoip-country'
 import { subMonths } from 'date-fns'
 import { DiscordService } from '@lib/discord/DiscordService.mjs'
-import { CheckPostSpamArgs } from '@lib/redis/RedisService.mjs'
+import type { CheckPostSpamQueueData } from '@lib/redis/RedisService.mjs'
 
 interface Service {
   findById(postId: string): Promise<Post | null>
   scoreCalculator(postId: string): Promise<void>
-  checkSpam(args: CheckPostSpamArgs): Promise<void>
+  checkSpam(data: CheckPostSpamQueueData): Promise<void>
 }
 
 @singleton()
@@ -68,7 +68,7 @@ export class PostService implements Service {
     })
   }
 
-  public async checkSpam({ post_id, user_id, ip }: CheckPostSpamArgs): Promise<void> {
+  public async checkSpam({ post_id, user_id, ip }: CheckPostSpamQueueData): Promise<void> {
     const post = await this.db.post.findUnique({
       where: {
         id: post_id,
