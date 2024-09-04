@@ -1,6 +1,6 @@
 {
   "name": "velog",
-  "version": "3.0.0",
+  "version": "2.4.6",
   "description": "Velog is a blog platform for developers.",
   "private": true,
   "scripts": {
