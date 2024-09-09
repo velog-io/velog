@@ -69,9 +69,10 @@ export class PostApiService implements Service {
       await this.seriesService.appendToSeries(series_id, post.id)
     }
 
-    if (!data.is_temp) {
-      await this.searchService.searchSync.update(post.id)
-    }
+    setTimeout(() => {
+      if (data.is_temp) return
+      this.searchService.searchSync.update(post.id).catch(console.error)
+    })
 
     return post
   }
