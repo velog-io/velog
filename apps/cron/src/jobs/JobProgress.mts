@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 export abstract class Job {
   public async runner(param?: any): Promise<void> {}
 }

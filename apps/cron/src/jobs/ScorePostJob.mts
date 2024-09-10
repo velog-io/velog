@@ -28,9 +28,9 @@ export class ScorePostJob extends JobProgress implements Job {
       const data: ScorePostQueueData = JSON.parse(item)
       try {
         await this.postService.scoreCalculator(data.post_id)
-      } catch (error) {
+      } catch (error: any) {
         console.log('ScorePostJob error', error)
-        const message = { message: 'ScorePostJob error', payload: item, error: error }
+        const message = { message: 'ScorePostJob error', payload: item, error: error?.message }
         this.discord.sendMessage('error', JSON.stringify(message))
       } finally {
         await this.redis.lpop(scorePostQueueName)
