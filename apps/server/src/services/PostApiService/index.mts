@@ -137,14 +137,12 @@ export class PostApiService implements Service {
       throw error
     }
 
-    try {
-      await Promise.all([
+    setTimeout(() => {
+      Promise.all([
         data.is_temp ? null : this.searchService.searchSync.update(post.id),
         this.graphcdn.purgePost(post.id),
-      ])
-    } catch (error) {
-      console.error(error)
-    }
+      ]).catch(console.error)
+    })
 
     if (!post.is_private && data.is_private) {
       setTimeout(async () => {
