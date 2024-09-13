@@ -6,6 +6,7 @@ import { startClosing } from '@plugins/global/keepAlivePlugin.mjs'
 import { DbService } from '@lib/db/DbService.js'
 import { RedisService } from '@lib/redis/RedisService.js'
 import { DiscordService } from '@lib/discord/DiscordService.js'
+import { ElasticSearchService } from '@lib/elasticSearch/ElasticSearchService.js'
 
 async function main() {
   app.listen({ port: ENV.port, host: '::' })
@@ -18,6 +19,9 @@ async function main() {
 
   const discord = container.resolve(DiscordService)
   await discord.connection()
+
+  const elasticSearch = container.resolve(ElasticSearchService)
+  elasticSearch.connection()
 
   process.send?.('ready')
   process.on('SIGINT', function () {

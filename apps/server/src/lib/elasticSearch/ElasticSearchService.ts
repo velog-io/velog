@@ -7,18 +7,29 @@ import { Post } from '@packages/database/velog-rds'
 import { UserService } from '@services/UserService/index.js'
 
 interface Service {
-  get client(): Client
+  getClient(): Client
   keywordSearch(input: KeywordSearchArgs): Promise<{ count: number; posts: Post[] }>
 }
 
 @injectable()
 @singleton()
 export class ElasticSearchService implements Service {
+  public client!: Client
   constructor(
     private readonly userService: UserService,
     private readonly buildQueryService: BuildQueryService,
   ) {}
-  public get client(): Client {
+  public connection(): Promise<Client> {
+    return new Promise((resolve) => {
+      const client = new Client({ node: ENV.esHost })
+      this.client = client
+      resolve(client)
+    })
+  }
+  public getClient(): Client {
+    if (this.client) {
+      return this.client
+    }
     return new Client({ node: ENV.esHost })
   }
   public get buildQuery() {
