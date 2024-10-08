@@ -23,7 +23,11 @@ function NotificationTitle({}: Props) {
     refetch()
   }, [data, mutate, refetch])
 
-  return <div className={cx('block')}>알림</div>
+  return (
+    <div className={cx('block')}>
+      <div className={cx('title')}>알림</div>
+    </div>
+  )
 }
 
 export default NotificationTitle
