@@ -4,3 +4,7 @@
   font-size: 32px;
   font-weight: 700;
 }
+
+.title {
+  color: var(--text2);
+}
