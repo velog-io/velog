@@ -2,7 +2,8 @@ FROM node:20.16.0-alpine AS base
 RUN apk update
 RUN apk add --no-cache libc6-compat
 
-RUN corepack enable
+# RUN corepack enable
+RUN npm install --global corepack@latest
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"

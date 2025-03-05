@@ -12,6 +12,5 @@
     {
       "pattern": "./packages/*/"
     }
-  ],
-  "CodeGPT.apiKey": "CodeGPT Plus Beta"
+  ]
 }

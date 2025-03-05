@@ -12,7 +12,7 @@ const webProdEcsOption: EcsBaseOption = {
   desiredCount: 2,
   cpu: 1, // unit 1024
   memory: 2, // unit 1024
-  maxCapacity: 12,
+  maxCapacity: 10,
   minCapacity: 2,
 }
 
@@ -20,7 +20,7 @@ const webStageEcsOption: EcsBaseOption = {
   desiredCount: 1,
   cpu: 0.5, // unit 1024
   memory: 1, // unit 1024
-  maxCapacity: 12,
+  maxCapacity: 10,
   minCapacity: 1,
 }
 
@@ -36,7 +36,7 @@ const serverStageEcsOption: EcsBaseOption = {
   desiredCount: 1,
   cpu: 0.25, // unit 1024
   memory: 1, // unit 1024
-  maxCapacity: 12,
+  maxCapacity: 10,
   minCapacity: 1,
 }
 
