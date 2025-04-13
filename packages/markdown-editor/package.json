@@ -30,7 +30,8 @@
     "test": "echo ❗ No tests, previous tests were moved to the `nextra` package",
     "types": "tsup --dts-only",
     "types:check": "tsc --noEmit",
-    "lint": "eslint --fix"
+    "lint": "eslint --fix",
+    "ssm": "tsx ./scripts/ssm.mts"
   },
   "peerDependencies": {
     "react": ">=16.13.1",
