@@ -7,7 +7,7 @@
   "dependencies": {
     "@aws-sdk/client-ecr": "^3.413.0",
     "@aws-sdk/client-ecs": "^3.418.0",
-    "@aws-sdk/client-ssm": "^3.379.1",
+    "@aws-sdk/client-ssm": "^3.540.0",
     "@pulumi/aws": "^6.49.1",
     "@pulumi/awsx": "^2.14.0",
     "@pulumi/docker": "^4.5.5",
