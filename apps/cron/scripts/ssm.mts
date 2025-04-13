@@ -1,4 +1,4 @@
 import { SSMScript } from '@packages/scripts'
 
-const ssm = new SSMScript({ packageName: 'cron' })
-ssm.excute()
+const ssmScript = new SSMScript({ packageName: 'cron' })
+ssmScript.execute()

@@ -11,7 +11,7 @@ export class CopyEnvScript {
   constructor(envFolderPath = './env') {
     this.envFolderPath = envFolderPath
   }
-  public async excute() {
+  public async execute() {
     try {
       const envName = this.getEnvironment() || (await this.getEnvName())
 

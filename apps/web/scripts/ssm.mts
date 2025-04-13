@@ -1,4 +1,4 @@
 import { SSMScript } from '@packages/scripts'
 
-const script = new SSMScript({ packageName: 'web' })
-script.excute()
+const ssm = new SSMScript({ packageName: 'web' })
+ssm.execute()

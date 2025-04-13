@@ -54,7 +54,7 @@ export class SSMScript {
     fs.writeFileSync(this.envPath, env, { encoding: 'utf-8' })
   }
 
-  public async excute() {
+  public async execute() {
     if (!this.packageName) {
       console.error('packageName is required')
       process.exit(1)
