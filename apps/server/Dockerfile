@@ -8,6 +8,12 @@ RUN npm install --global corepack@latest
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
+RUN npm i -g corepack@latest \
+ && corepack --version \
+ && corepack enable \
+ && corepack prepare pnpm@10.4.1 --activate \
+ && pnpm --version
+
 RUN pnpm add -g turbo
 RUN turbo telemetry disable
 
