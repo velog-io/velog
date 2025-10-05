@@ -26,7 +26,6 @@
     "ssm": "tsx ./scripts/ssm.mts"
   },
   "dependencies": {
-    "@packages/markdown-editor": "workspace:*",
     "@sentry/browser": "^7.75.0",
     "@tanstack/react-query": "^5.29.0",
     "axios": "^1.4.0",
@@ -43,6 +42,7 @@
     "nanoid": "^5.0.7",
     "next": "^14.2.5",
     "next-seo": "^6.0.0",
+    "postcss": "8.4.41",
     "prismjs": "^1.29.0",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
