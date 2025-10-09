@@ -21,6 +21,7 @@ const env = z.object({
   graphqlBookServerHost: z.string(),
   defaultPostLimit: z.number().default(20),
   gaMeasurementId: z.string(),
+  cachedApiHost: z.string(),
 })
 
 export const ENV = env.parse({
@@ -36,4 +37,5 @@ export const ENV = env.parse({
   graphqlServerHostNoCDN: process.env.NEXT_PUBLIC_GRAPHQL_SERVER_HOST_NOCDN,
   graphqlBookServerHost: process.env.NEXT_PUBLIC_GRAPHQL_BOOK_SERVER_HOST,
   gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
+  cachedApiHost: process.env.NEXT_PUBLIC_CACHED_API_HOST,
 })

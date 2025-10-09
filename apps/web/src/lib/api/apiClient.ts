@@ -6,4 +6,8 @@ const apiClient = axios.create({
   withCredentials: true,
 })
 
+export const cachedApiClient = axios.create({
+  baseURL: ENV.cachedApiHost,
+})
+
 export default apiClient

@@ -12,6 +12,7 @@ import { motion } from 'framer-motion'
 import { timeframes } from '@/features/home/utils/timeframeMap'
 import TimeframePicker from '@/features/home/components/TimeframePicker'
 import HomeMoreButton from '@/features/home/components/HomeMoreButton'
+import { CardsStarIcon } from '@/assets/icons/components'
 
 const cx = bindClassNames(styles)
 
@@ -30,6 +31,19 @@ function HomeTab({ isFloatingHeader = false }: Props) {
   const timeframeRef = useRef<HTMLDivElement | null>(null)
   const isRecent = pathname === '/recent'
   const isFeed = pathname === '/feed'
+  const isCurated = pathname === '/curated'
+
+  // Calculate indicator position based on active tab
+  const getIndicatorStyle = () => {
+    let position = 0
+    if (isCurated) position = 1
+    else if (isRecent) position = 2
+    else if (isFeed) position = 3
+
+    return {
+      '--tab-index': position
+    } as React.CSSProperties
+  }
 
   const handleToggle = () => {
     if (isFetching) return
@@ -39,7 +53,7 @@ function HomeTab({ isFloatingHeader = false }: Props) {
   return (
     <div className={cx('wrapper', 'mainHeaderResponsive', { isFloating: isFloatingHeader })}>
       <nav className={cx('left')}>
-        <div className={cx('tab')}>
+        <div className={cx('tab')} style={getIndicatorStyle()}>
           <ActiveLink
             href="/trending/week"
             className={cx({
@@ -48,6 +62,10 @@ function HomeTab({ isFloatingHeader = false }: Props) {
           >
             <MdTrendingUp />
             <span>트렌딩</span>
+          </ActiveLink>
+          <ActiveLink href="/curated" className={cx({ active: pathname.includes('/curated') })}>
+            <CardsStarIcon className={cx('icon')} />
+            <span>추천</span>
           </ActiveLink>
           <ActiveLink href="/recent" className={cx({ active: pathname.includes('/recent') })}>
             <MdAccessTime />
@@ -59,9 +77,6 @@ function HomeTab({ isFloatingHeader = false }: Props) {
           </ActiveLink>
           <motion.div
             initial={false}
-            animate={{
-              left: isFeed ? '70.33%' : isRecent ? '38.33%' : '2%',
-            }}
             className={cx('indicator')}
           />
         </div>

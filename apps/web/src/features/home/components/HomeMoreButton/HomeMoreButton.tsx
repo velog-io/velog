@@ -18,8 +18,7 @@ function HomeMoreButton({ isVisible, onClose }: Props) {
   const {
     value: { theme },
   } = useTheme()
-  const img =
-    theme === 'dark' ? 'https://graphcdn.io/badge-light.svg' : 'https://graphcdn.io/badge.svg'
+  const img = theme === 'dark' ? '/images/stellate/badge-light.svg' : '/images/stellate/badge.svg'
 
   return (
     <AnimatePresence>
@@ -53,13 +52,8 @@ function HomeMoreButton({ isVisible, onClose }: Props) {
               <div className={cx('email')}>contact@velog.io</div>
             </div>
             <div className={cx('graphCdn')}>
-              <a href="https://graphcdn.io/?ref=powered-by">
-                <Image
-                  src={img}
-                  alt="Powered by GraphCDN, the GraphQL CDN"
-                  height={53}
-                  width={120}
-                />
+              <a href="https://stellate.co/?ref=powered-by">
+                <img src={img} />
               </a>
             </div>
           </div>

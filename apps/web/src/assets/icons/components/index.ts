@@ -1,4 +1,5 @@
 export { default as AddListIcon } from './AddListIcon'
+export { default as CardsStarIcon } from './CardsStarIcon'
 export { default as CheckIcon } from './CheckIcon'
 export { default as ClipIcon } from './ClipIcon'
 export { default as EmailIcon } from './EmailIcon'

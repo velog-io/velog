@@ -1,5 +1,5 @@
-import getRecentPosts from '@/prefetch/getRecentPosts'
-import RecentPosts from '@/features/home/components/RecentPosts'
+import getCachedPosts from '@/prefetch/getCachedPosts'
+import CachedRecentPosts from '@/features/home/components/RecentPosts/CachedRecentPosts'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 }
 
 export default async function RecentHome() {
-  const data = await getRecentPosts({ limit: 50 })
+  const data = await getCachedPosts({ limit: 50 })
 
-  if (!data) {
+  if (!data || data.posts.length === 0) {
     notFound()
   }
 
-  return <RecentPosts data={data} />
+  return <CachedRecentPosts data={data} />
 }

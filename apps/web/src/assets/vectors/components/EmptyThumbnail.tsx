@@ -5,7 +5,7 @@ const SvgEmptyThumbnail = (props: SVGProps<SVGSVGElement>) => (
     <path fill="#F1F3F5" d="M0 0h180v180H0z" />
     <path
       fill="#CED4DA"
-      d="M69 79.5c0-2.484 2.016-4.5 4.5-4.5s4.5 2.016 4.5 4.5a4.5 4.5 0 1 1-9 0ZM96 81l-7.557 12L81 87.12 69 105h42L96 81Zm24-12v42H60V69h60Zm6-6H54v54h72V63Z"
+      d="M69 79.5c0-2.484 2.016-4.5 4.5-4.5s4.5 2.016 4.5 4.5a4.5 4.5 0 1 1-9 0M96 81l-7.557 12L81 87.12 69 105h42zm24-12v42H60V69zm6-6H54v54h72z"
     />
   </svg>
 )

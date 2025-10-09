@@ -10,6 +10,12 @@
     padding-top: 0;
     padding-bottom: 0;
   }
+
+  @media screen and (max-width: 500px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
 }
 
 .left {
@@ -19,12 +25,21 @@
   position: relative;
   height: 48px;
   user-select: none;
+
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
 }
 
 .tab {
   position: relative;
   display: flex;
   align-items: center;
+
+  @media screen and (max-width: 500px) {
+    width: 100%;
+    justify-content: space-between;
+  }
 
   & > a {
     display: flex;
@@ -34,6 +49,8 @@
     text-decoration: none;
     white-space: nowrap;
     color: var(--text3);
+    width: 100px;
+    flex-shrink: 0;
 
     &.active {
       color: var(--text1);
@@ -46,8 +63,24 @@
     }
 
     @media screen and (max-width: 768px) {
+      width: 80px;
       & svg {
         font-size: 18px;
+      }
+    }
+
+    @media screen and (max-width: 500px) {
+      flex: 1;
+      width: auto;
+      font-size: 14px;
+
+      & span {
+        font-size: 14px;
+      }
+
+      & svg {
+        font-size: 20px;
+        margin-right: 4px;
       }
     }
 
@@ -58,34 +91,56 @@
     }
   }
 
-  & a + a {
-    margin-left: 20px;
-    @media screen and (max-width: 768px) {
-      margin-left: 8px;
-    }
-
-    @media screen and (max-width: 425px) {
-      margin-left: 5px;
-    }
-  }
-
   .indicator {
     position: absolute;
-    width: 32%;
+    width: 100px;
     height: 2px;
     background: var(--border1);
     bottom: -10px;
+    left: calc(var(--tab-index) * 100px);
+    transition: left 0.2s ease-in-out;
 
-    @media screen and (max-width: 430px) {
-      width: 34%;
-      margin-left: 3px;
+    @media screen and (max-width: 768px) {
+      width: 80px;
+      left: calc(var(--tab-index) * 80px);
     }
+
+    @media screen and (max-width: 500px) {
+      width: 25%;
+      left: calc(var(--tab-index) * 25%);
+    }
+  }
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+
+  @media screen and (max-width: 768px) {
+    width: 18px;
+    height: 18px;
+  }
+
+  @media screen and (max-width: 500px) {
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
+  }
+
+  @media screen and (max-width: 425px) {
+    width: 16px;
+    height: 16px;
   }
 }
 
 .right {
   position: relative;
   display: flex;
+
+  @media screen and (max-width: 500px) {
+    width: 100%;
+    justify-content: flex-end;
+  }
 
   .selector {
     background: var(--bg-element1);
