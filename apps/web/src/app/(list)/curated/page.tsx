@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   description: '벨로그에서 엄선한 추천 포스트들을 읽어보세요.',
 }
 
+// Revalidate every 60 seconds
+export const revalidate = 60
+
 export default async function CuratedHome() {
   const data = await getCuratedPostsPrefetch({ limit: 50 })
 
