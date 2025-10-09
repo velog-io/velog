@@ -33,7 +33,14 @@ export function useTimeFormat(date: string) {
       return format(targetDate, 'yyyy년 M월 d일')
     }
 
-    setTime(getTimeDescription())
+    try {
+      const time = getTimeDescription()
+      setTime(time)
+    } catch (e) {
+      console.log('Error Date:', date)
+      console.error(e)
+    }
+
     setLoading(false)
   }, [date])
 

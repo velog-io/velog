@@ -25,6 +25,7 @@ type Props = {
   isFetching: boolean
   isLoading: boolean
   fetchMore: () => void
+  onPostCardClick?: () => void
 }
 
 function PostCardGrid({
@@ -34,6 +35,7 @@ function PostCardGrid({
   isFetching,
   isLoading,
   fetchMore,
+  onPostCardClick,
 }: Props) {
   const params = useParams()
   const pathname = usePathname()
@@ -44,16 +46,20 @@ function PostCardGrid({
 
   const isFeed = pathname === '/feed'
   const isRecent = pathname === '/recent'
-  // TODO: remove
-  const onPostCardClick = () => {
-    const prefix = isRecent ? 'recentPosts' : !isFeed ? `trendingPosts/${timeframe}` : ''
+  const isCurated = pathname === '/curated'
 
+  // Default handler for trending pages (localStorage)
+  const handlePostCardClick = onPostCardClick || (() => {
+    // Only save localStorage for trending pages
+    if (isRecent || isCurated || isFeed) return
+
+    const prefix = `trendingPosts/${timeframe}`
     const stringify = JSON.stringify(posts)
     const scrollHeight = window.scrollY.toString()
     if (scrollHeight === '0' || [scrollHeight, stringify].includes('undefined')) return
     localStorage.setItem(prefix, stringify)
     localStorage.setItem(`${prefix}/scrollPosition`, scrollHeight)
-  }
+  })
 
   function isPost(args: any): args is Post {
     if (!args.is_ad) return true
@@ -79,7 +85,7 @@ function PostCardGrid({
         if (isPost(post)) {
           return (
             <Fragment key={post.id}>
-              <PostCard post={post} forHome={forHome} forPost={forPost} onClick={onPostCardClick} />
+              <PostCard post={post} forHome={forHome} forPost={forPost} onClick={handlePostCardClick} />
               {posts.length - 1 === i && !isFeed && (
                 <PostCardSkeleton forHome={forHome} forPost={forPost} fetchMore={fetchMore} />
               )}

@@ -2,16 +2,15 @@
 
 import PostCardGrid from '@/features/home/components/PostCardGrid/PostCardGrid'
 import useCachedRecentPosts from '@/features/home/hooks/useCachedRecentPosts'
-import { useEffect, useRef, useState, useMemo } from 'react'
+import { useMemo, useEffect, useState, useRef } from 'react'
 import { PostsResponse, Post as CachedPost } from '@/lib/api/cached/posts'
-import { Post as GraphQLPost } from '@/graphql/server/generated/server'
 
 type Props = {
   data: PostsResponse
 }
 
 // Transform cached API post to GraphQL Post format for PostCardGrid compatibility
-function transformCachedPost(cachedPost: CachedPost): GraphQLPost {
+function transformCachedPost(cachedPost: CachedPost): any {
   return {
     id: cachedPost.id,
     title: cachedPost.title,
@@ -51,57 +50,68 @@ function transformCachedPost(cachedPost: CachedPost): GraphQLPost {
     recommended_posts: [],
     series: null,
     tags: [],
-  } as GraphQLPost
+    views: 0,
+  }
 }
 
 function CachedRecentPosts({ data }: Props) {
-  const hasEffectRun = useRef<boolean>(false)
+  const [initialPosts, setInitialPosts] = useState<CachedPost[]>(data.posts)
+  const hasRestoredRef = useRef(false)
+  const { posts, isFetching, fetchMore, isLoading } = useCachedRecentPosts(initialPosts)
 
-  const [initialData, setInitialData] = useState<CachedPost[]>([])
-  const { posts, isFetching, fetchMore, isLoading } = useCachedRecentPosts(initialData)
+  // Save posts and scroll position when post is clicked
+  const handlePostClick = () => {
+    if (typeof window === 'undefined') return
+    if (posts.length > 0) {
+      try {
+        sessionStorage.setItem('recentPosts', JSON.stringify(posts))
+        sessionStorage.setItem('recentPostsScroll', window.scrollY.toString())
+      } catch (error) {
+        // Ignore sessionStorage errors
+      }
+    }
+  }
+
+  // Restore posts and scroll position on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (hasRestoredRef.current) return
+    hasRestoredRef.current = true
+
+    try {
+      const savedPosts = sessionStorage.getItem('recentPosts')
+      const savedScroll = sessionStorage.getItem('recentPostsScroll')
+
+      if (savedPosts) {
+        const parsed: CachedPost[] = JSON.parse(savedPosts)
+        if (parsed.length > data.posts.length) {
+          setInitialPosts(parsed)
+        }
+
+        if (savedScroll) {
+          const scrollPosition = Number(savedScroll)
+          if (scrollPosition > 0) {
+            // Restore scroll immediately
+            window.scrollTo({
+              top: scrollPosition,
+              behavior: 'instant',
+            })
+          }
+        }
+
+        // Clear after restoring
+        sessionStorage.removeItem('recentPosts')
+        sessionStorage.removeItem('recentPostsScroll')
+      }
+    } catch (error) {
+      console.error('Failed to restore recent posts:', error)
+    }
+  }, [data.posts])
 
   // Transform cached posts to GraphQL format
   const transformedPosts = useMemo(() => {
     return posts.map(transformCachedPost)
   }, [posts])
-
-  useEffect(() => {
-    if (hasEffectRun.current) return
-    hasEffectRun.current = true
-
-    const storageKey = 'recentPosts'
-    let timeout: NodeJS.Timeout
-    try {
-      const infiniteData = localStorage.getItem(storageKey)
-
-      if (!infiniteData) {
-        setInitialData(data.posts)
-        return
-      }
-
-      const parsed: CachedPost[] = JSON.parse(infiniteData) || []
-      const savedPosts = parsed?.slice(data.posts.length) || []
-      setInitialData([...data.posts, ...savedPosts])
-
-      const position = Number(localStorage.getItem(`${storageKey}/scrollPosition`))
-      if (!position) return
-      timeout = setTimeout(() => {
-        window.scrollTo({
-          top: position,
-          behavior: 'instant',
-        })
-      }, 1000)
-    } catch (error) {
-      console.log('getRecentPosts from storage error', error)
-    } finally {
-      localStorage.removeItem(storageKey)
-      localStorage.removeItem(`${storageKey}/scrollPosition`)
-    }
-
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [data])
 
   return (
     <PostCardGrid
@@ -111,6 +121,7 @@ function CachedRecentPosts({ data }: Props) {
       isFetching={isFetching}
       isLoading={isLoading}
       fetchMore={fetchMore}
+      onPostCardClick={handlePostClick}
     />
   )
 }
