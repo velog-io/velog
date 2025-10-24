@@ -1,0 +1,25 @@
+.container {
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+.count {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text1);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .header {
+    margin-bottom: 1.5rem;
+  }
+
+  .count {
+    font-size: 1.25rem;
+  }
+}

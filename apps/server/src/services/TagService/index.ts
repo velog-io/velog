@@ -184,6 +184,18 @@ export class TagService implements Service {
       return tag
     }
   }
+
+  public async getPostsCount(tagId: string): Promise<number> {
+    return await this.db.postTag.count({
+      where: {
+        fk_tag_id: tagId,
+        post: {
+          is_temp: false,
+          is_private: false,
+        },
+      },
+    })
+  }
 }
 
 type GetUserPostTagsResult = Tag & { posts_count: number }

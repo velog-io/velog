@@ -401,6 +401,7 @@ export type Query = {
   searchPosts: SearchResult;
   series: Maybe<Series>;
   seriesList: Array<Series>;
+  tag: Maybe<Tag>;
   trendingPosts: Array<Post>;
   trendingWriters: Array<TrendingWriter>;
   unregisterToken: Scalars['String']['output'];
@@ -472,6 +473,11 @@ export type QuerySeriesArgs = {
 
 export type QuerySeriesListArgs = {
   input: GetSeriesListInput;
+};
+
+
+export type QueryTagArgs = {
+  name: Scalars['String']['input'];
 };
 
 
@@ -848,6 +854,13 @@ export type UserTagsQueryVariables = Exact<{
 
 
 export type UserTagsQuery = { userTags: { posts_count: number, tags: Array<{ id: string, name: string | null, description: string | null, posts_count: number | null, thumbnail: string | null }> } | null };
+
+export type TagQueryVariables = Exact<{
+  name: Scalars['String']['input'];
+}>;
+
+
+export type TagQuery = { tag: { id: string, name: string | null, posts_count: number | null, description: string | null, thumbnail: string | null } | null };
 
 export type GetUserQueryVariables = Exact<{
   input: GetUserInput;
@@ -1963,6 +1976,57 @@ useSuspenseUserTagsQuery.getKey = (variables: UserTagsQueryVariables) => ['userT
 
 
 useUserTagsQuery.fetcher = (variables: UserTagsQueryVariables, options?: RequestInit['headers']) => fetcher<UserTagsQuery, UserTagsQueryVariables>(UserTagsDocument, variables, options);
+
+export const TagDocument = `
+    query tag($name: String!) {
+  tag(name: $name) {
+    id
+    name
+    posts_count
+    description
+    thumbnail
+  }
+}
+    `;
+
+export const useTagQuery = <
+      TData = TagQuery,
+      TError = unknown
+    >(
+      variables: TagQueryVariables,
+      options?: Omit<UseQueryOptions<TagQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<TagQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useQuery<TagQuery, TError, TData>(
+      {
+    queryKey: ['tag', variables],
+    queryFn: fetcher<TagQuery, TagQueryVariables>(TagDocument, variables),
+    ...options
+  }
+    )};
+
+useTagQuery.getKey = (variables: TagQueryVariables) => ['tag', variables];
+
+export const useSuspenseTagQuery = <
+      TData = TagQuery,
+      TError = unknown
+    >(
+      variables: TagQueryVariables,
+      options?: Omit<UseSuspenseQueryOptions<TagQuery, TError, TData>, 'queryKey'> & { queryKey?: UseSuspenseQueryOptions<TagQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useSuspenseQuery<TagQuery, TError, TData>(
+      {
+    queryKey: ['tagSuspense', variables],
+    queryFn: fetcher<TagQuery, TagQueryVariables>(TagDocument, variables),
+    ...options
+  }
+    )};
+
+useSuspenseTagQuery.getKey = (variables: TagQueryVariables) => ['tagSuspense', variables];
+
+
+useTagQuery.fetcher = (variables: TagQueryVariables, options?: RequestInit['headers']) => fetcher<TagQuery, TagQueryVariables>(TagDocument, variables, options);
 
 export const GetUserDocument = `
     query getUser($input: GetUserInput!) {

@@ -7,16 +7,17 @@ const cx = bindClassNames(styles)
 
 interface Props {
   children?: React.ReactNode
+  hideTab?: boolean
 }
 
-function HomeLayout({ children }: Props) {
+function HomeLayout({ children, hideTab = false }: Props) {
   return (
     <div className={cx('block')}>
       <FloatingHeader header={<Header />} />
       <div className={cx('mainResponsive')}>
         <div className={cx('innerBlock')}>
           <Header />
-          <HomeTab />
+          {!hideTab && <HomeTab />}
           <div className={cx('mainWrapper')}>
             <main>{children}</main>
           </div>

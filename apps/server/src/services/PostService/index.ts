@@ -474,13 +474,16 @@ export class PostService implements Service {
       throw new BadRequestError('Max limit is 100')
     }
 
-    const user = await this.db.user.findUnique({
-      where: {
-        username,
-      },
-    })
+    const user = username
+      ? await this.db.user.findUnique({
+          where: {
+            username,
+          },
+        })
+      : null
 
     if (tag) {
+      console.log('eee')
       return this.findPostsByTag({
         cursor,
         tagName: tag,

@@ -14,7 +14,7 @@ type UserTags {
 
 type Query {
   #   tags(sort: String!, cursor: ID, limit: Int): [Tag]
-  #   tag(name: String!): Tag
+  tag(name: String!): Tag
   userTags(input: UserTagsInput!): UserTags
 }
 

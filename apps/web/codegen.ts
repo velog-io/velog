@@ -51,17 +51,6 @@ const config: CodegenConfig = {
       },
       plugins: commonGenerateOptions.plugins,
     },
-    'src/graphql/bookServer/generated/bookServer.ts': {
-      schema: `${ENV.graphqlBookServerHost}/graphql`,
-      documents: './src/graphql/bookServer/*.gql',
-      config: {
-        ...commonGenerateOptions.config,
-        fetcher: {
-          func: '../helpers/bookServerFetcher#fetcher',
-        },
-      },
-      plugins: commonGenerateOptions.plugins,
-    },
   },
 }
 

@@ -10,3 +10,13 @@ query userTags($input: UserTagsInput!) {
     posts_count
   }
 }
+
+query tag($name: String!) {
+  tag(name: $name) {
+    id
+    name
+    posts_count
+    description
+    thumbnail
+  }
+}
